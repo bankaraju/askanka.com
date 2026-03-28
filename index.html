@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anka Research | AI-Augmented Market Intelligence</title>
+    <meta name="description" content="Weekly wartime stock market research by Bharat Ankaraju. AI-augmented analysis across 8 global indices.">
+    <meta property="og:title" content="Anka Research | AI-Augmented Market Intelligence">
+    <meta property="og:description" content="Weekly stock market intelligence during geopolitical conflict. Data-driven analysis across S&P 500, Nifty 50, KOSPI, Nikkei 225, CSI 300, FTSE 100, CAC 40, DAX.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://askanka.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --border: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 80px 20px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1a3e 50%, #0a0e1a 100%);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, var(--accent-gold), #d97706);
+            border-radius: 16px;
+            font-size: 32px;
+            font-weight: 800;
+            color: #0a0e1a;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .tagline {
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .hero .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .author-line {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .author-line strong {
+            color: var(--text-secondary);
+        }
+
+        /* Reports Section */
+        .section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .section-header .line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .report-card {
+            display: block;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .report-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .report-card .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .report-card .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .report-card .badge.latest::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .report-card .date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .report-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .report-card .description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .report-card .metrics {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .report-card .metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .report-card .metric-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .report-card .metric-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-value.up { color: var(--accent-green); }
+        .metric-value.down { color: var(--accent-red); }
+        .metric-value.neutral { color: var(--accent-blue); }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .disclaimer {
+            max-width: 600px;
+            margin: 12px auto 0;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2rem; }
+            .report-card { padding: 20px; }
+            .report-card .metrics { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div class="logo-badge">A</div>
+        <h1>Anka Research</h1>
+        <p class="tagline">AI-Augmented Market Intelligence</p>
+        <p class="subtitle">Weekly stock market intelligence during geopolitical conflict. Data-driven analysis across 8 global indices with predictive scenario modeling.</p>
+        <p class="author-line">By <strong>Bharat Ankaraju</strong></p>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Weekly Research Briefs</h2>
+            <div class="line"></div>
+        </div>
+
+        <a href="reports/week-001.html" class="report-card">
+            <div class="card-top">
+                <span class="badge latest">Latest</span>
+                <span class="date">2026-03-28</span>
+            </div>
+            <h3>Weekly Brief #001 — Iran-Israel-US Conflict: Four Weeks That Rewired Global Markets</h3>
+            <p class="description">Operation Epic Fury reshaped risk premia across all 8 major indices. Defense and energy are the clear structural winners. Strait of Hormuz closure disrupted 20% of global oil and LNG.</p>
+            <div class="metrics">
+                <div class="metric">
+                    <span class="metric-label">Brent Crude</span>
+                    <span class="metric-value up">+51% $112.57</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">S&P 500</span>
+                    <span class="metric-value down">-5.0% MTD</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">DXY</span>
+                    <span class="metric-value up">99.65 +3.8%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">VIX</span>
+                    <span class="metric-value neutral">24.3 avg</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Indices Covered</span>
+                    <span class="metric-value neutral">8</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Stocks Analyzed</span>
+                    <span class="metric-value neutral">40</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Future weeks will be added here as new report-card blocks -->
+
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 Anka Research. All rights reserved.</p>
+        <p class="disclaimer">This site is for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. All data is sourced from public markets and verified against multiple sources.</p>
+    </div>
+
+</body>
+</html>
