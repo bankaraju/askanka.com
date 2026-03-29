@@ -369,11 +369,63 @@
             line-height: 1.5;
         }
 
+        /* Pipeline Section */
+        .pipeline-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px 20px;
+        }
+
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .pipeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 16px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            min-width: 110px;
+            text-align: center;
+        }
+
+        .pipeline-step .step-icon {
+            font-size: 1.4rem;
+        }
+
+        .pipeline-step .step-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            line-height: 1.3;
+        }
+
+        .pipeline-arrow {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
             .hero h1 { font-size: 2rem; }
             .report-card { padding: 20px; }
             .report-card .metrics { gap: 16px; }
+            .pipeline-step { min-width: 80px; padding: 12px 8px; }
+            .pipeline-step .step-icon { font-size: 1.1rem; }
+            .pipeline-step .step-label { font-size: 0.6rem; }
+            .pipeline-arrow { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -383,8 +435,42 @@
         <div class="logo-badge">A</div>
         <h1>Anka Research</h1>
         <p class="tagline">AI-Augmented Market Intelligence</p>
-        <p class="subtitle">Weekly stock market intelligence during geopolitical conflict. Data-driven analysis across 8 global indices with predictive scenario modeling.</p>
-        <p class="author-line">By <strong>Bharat Ankaraju</strong></p>
+        <p class="subtitle">Agentic pipeline turning geopolitical events into backtested spread-trade signals. Political sentiment analysis across 12+ world leaders, automated delivery via Telegram, daily P&L tracking. 8 global indices. Built with Claude, Python, and real market data.</p>
+        <p class="author-line">By <strong>Bharat Ankaraju</strong> &nbsp;|&nbsp; <a href="https://t.me/ANKASIGNALS" target="_blank" rel="noopener" style="color: var(--accent-gold); text-decoration: none;">Join @ANKASIGNALS</a></p>
+    </div>
+
+    <div class="pipeline-section">
+        <div class="pipeline-flow">
+            <div class="pipeline-step">
+                <span class="step-icon">📰</span>
+                <span class="step-label">RSS News<br>7 Feeds</span>
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">
+                <span class="step-icon">🧠</span>
+                <span class="step-label">Event<br>Classify</span>
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">
+                <span class="step-icon">📊</span>
+                <span class="step-label">Backtest<br>Validate</span>
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">
+                <span class="step-icon">🎯</span>
+                <span class="step-label">Signal<br>Generate</span>
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">
+                <span class="step-icon">📡</span>
+                <span class="step-label">Telegram<br>Deliver</span>
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">
+                <span class="step-icon">📈</span>
+                <span class="step-label">P&L<br>Track</span>
+            </div>
+        </div>
     </div>
 
     <div class="section">
