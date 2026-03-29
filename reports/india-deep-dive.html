@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Deep-Dive | Anka Research</title>
+    <meta name="description" content="Comprehensive Nifty 50 wartime analysis. Defence, energy, IT, banking sectors. Analyst ratings, FII flows, and potential portfolio candidates during Iran-Israel-US conflict.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0e1a; --bg-card: #111827; --bg-card2: #1a2332;
+            --border: #1e293b; --border-light: #2d3a4f;
+            --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b;
+            --gold: #f59e0b; --blue: #3b82f6; --green: #10b981;
+            --red: #ef4444; --purple: #8b5cf6; --cyan: #06b6d4;
+            --orange: #f97316;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--border); background: rgba(10,14,26,0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+        .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--gold); text-decoration: none; }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a { color: var(--text2); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+        .header { padding: 48px 32px 32px; max-width: 1200px; margin: 0 auto; }
+        .header h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+        .header .subtitle { color: var(--text2); font-size: 1rem; margin-bottom: 24px; }
+        .header .meta { display: flex; gap: 32px; flex-wrap: wrap; }
+        .meta-item { display: flex; flex-direction: column; }
+        .meta-label { font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+        .meta-value { font-size: 1.3rem; font-weight: 700; }
+        .meta-value.up { color: var(--green); }
+        .meta-value.down { color: var(--red); }
+        .meta-value.neutral { color: var(--blue); }
+        .meta-value.gold { color: var(--gold); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px 48px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .card-full { grid-column: 1 / -1; }
+        .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .section-title { font-size: 1.4rem; font-weight: 800; margin: 40px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { text-align: left; padding: 10px 12px; color: var(--text3); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid rgba(30,41,59,0.5); vertical-align: middle; }
+        tr:hover { background: rgba(26,35,50,0.5); }
+        .ticker { font-weight: 700; color: var(--gold); font-family: 'JetBrains Mono', monospace; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .badge-defense { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+        .badge-energy { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .badge-upstream { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+        .badge-downstream { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .badge-it { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+        .badge-bank { background: rgba(139,92,246,0.15); color: var(--purple); border: 1px solid rgba(139,92,246,0.3); }
+        .badge-pharma { background: rgba(6,182,212,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.3); }
+        .badge-auto { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+        .badge-metal { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+        .badge-watchlist { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.4); }
+        .pct-up { color: var(--green); font-weight: 600; }
+        .pct-down { color: var(--red); font-weight: 600; }
+        .pct-flat { color: var(--text3); font-weight: 600; }
+        .stock-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: border-color 0.2s; }
+        .stock-card:hover { border-color: var(--gold); }
+        .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+        .stock-name { font-size: 1.1rem; font-weight: 700; }
+        .stock-ticker { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 600; font-size: 0.9rem; margin-right: 8px; }
+        .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin: 16px 0; }
+        .metric-box { background: var(--bg-card2); border-radius: 8px; padding: 12px; text-align: center; }
+        .metric-box .label { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+        .metric-box .value { font-size: 1rem; font-weight: 700; margin-top: 4px; }
+        .thesis-box { background: var(--bg-card2); border-radius: 8px; padding: 16px; margin-top: 12px; border-left: 3px solid var(--purple); }
+        .thesis-box h4 { font-size: 0.8rem; color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .thesis-box ul { padding-left: 18px; color: var(--text2); font-size: 0.85rem; }
+        .thesis-box li { margin-bottom: 6px; }
+        .catalyst-box { border-left-color: var(--green); }
+        .catalyst-box h4 { color: var(--green); }
+        .risk-box { border-left-color: var(--red); }
+        .risk-box h4 { color: var(--red); }
+        .sector-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .sector-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .sector-verdict { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .verdict-strong { background: rgba(16,185,129,0.15); color: var(--green); }
+        .verdict-mild { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .verdict-mixed { background: rgba(245,158,11,0.15); color: var(--gold); }
+        .verdict-negative { background: rgba(239,68,68,0.15); color: var(--red); }
+        .verdict-crushed { background: rgba(239,68,68,0.25); color: var(--red); }
+        .chart-container { width: 100%; min-height: 350px; }
+        .callout { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+        .callout h3 { font-size: 0.95rem; color: var(--gold); margin-bottom: 8px; }
+        .callout p { font-size: 0.9rem; color: var(--text2); }
+        .callout-red { background: rgba(239,68,68,0.05); border-color: rgba(239,68,68,0.2); }
+        .callout-red h3 { color: var(--red); }
+        .disclaimer { margin-top: 48px; padding: 24px; background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; font-size: 0.75rem; color: var(--text3); line-height: 1.6; }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.6rem; }
+            .nav { padding: 12px 16px; }
+            .container, .header { padding-left: 16px; padding-right: 16px; }
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media print { .nav { display: none; } body { background: white; color: black; } .card, .stock-card { border: 1px solid #ddd; } }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="../index.html" class="nav-logo">Anka Research</a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="week-001.html">Week 001</a>
+        <a href="model-portfolio.html">Portfolio</a>
+        <a href="hedge-fund-ideas.html">Spreads</a>
+        <a href="singapore-market.html">Singapore</a>
+        <a href="india-deep-dive.html" class="active">India</a>
+    </div>
+</nav>
+
+<div class="header">
+    <h1>India Market Deep-Dive</h1>
+    <p class="subtitle">Nifty 50 Sector Analysis, Defence Stars, Energy Divergence &amp; Potential Portfolio Candidates</p>
+    <div class="meta">
+        <div class="meta-item">
+            <span class="meta-label">Nifty 50</span>
+            <span class="meta-value down">22,820</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Nifty MTD</span>
+            <span class="meta-value down">-9.4%</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Nifty USD</span>
+            <span class="meta-value down">-13.2%</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">INR/USD</span>
+            <span class="meta-value down">-4.2%</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Defence Index</span>
+            <span class="meta-value up">+6% MTD</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">FII Outflow</span>
+            <span class="meta-value down">Massive</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- KEY FINDINGS -->
+    <div class="callout">
+        <h3>The India Story: Defence Defies the Rout</h3>
+        <p>The Nifty 50 fell 9.4% in March &mdash; India's worst month since the COVID crash. But the Nifty Defence Index rose +6%, creating a 15+ percentage point divergence. The war exposed India's fundamental vulnerability: 85% crude import dependence. Upstream producers (ONGC) surged while downstream OMCs (IOC, BPCL, HPCL) were crushed -23 to -25%. FII selling was relentless. The only pockets of strength: defence, upstream energy, and select pharma.</p>
+    </div>
+
+    <div class="callout callout-red">
+        <h3>FII Exodus</h3>
+        <p>Foreign Institutional Investors have been net sellers of Indian equities throughout March 2026, accelerating an outflow trend that began in late 2025. War-driven risk-off sentiment, rupee depreciation (-4.2%), and elevated crude prices (India basket crossed $156 intraday) triggered massive portfolio rebalancing away from energy-importing EMs. Domestic institutional investors (DIIs) and retail SIPs have provided partial support, but insufficient to offset FII selling pressure.</p>
+    </div>
+
+    <!-- NIFTY vs PEERS CHART -->
+    <div class="card card-full">
+        <h2>Nifty 50 vs Asian Peers &mdash; Rebased to 100 (Feb 27)</h2>
+        <div id="chart-nifty-peers" class="chart-container"></div>
+    </div>
+
+    <!-- SECTOR BREAKDOWN -->
+    <h2 class="section-title">Sector-by-Sector Analysis</h2>
+
+    <div class="grid-2">
+        <div class="sector-card">
+            <h3>Defence <span class="sector-verdict verdict-strong">Strong Winner (+6%)</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Nifty Defence Index rose +6% while Nifty 50 fell -9.4%. Mid-cap defence stocks outperformed massively: MTAR +51%, Data Patterns +39%, Bharat Forge +35%. Large-caps (HAL, BEL) rose modestly (+3-4%) but have massive order backlogs. Defence budget at record INR 7.85 lakh crore for FY27.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Energy &mdash; Upstream <span class="sector-verdict verdict-strong">Strong Winner</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">ONGC and Oil India surged as Brent hit $112+. Every $1/bbl increase adds INR 6,180 Cr to ONGC earnings. CLSA target for ONGC: INR 415 (57% upside). Upstream producers are the clearest beneficiaries of the oil price surge.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Energy &mdash; Downstream <span class="sector-verdict verdict-crushed">Crushed (-23-25%)</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">IOC, BPCL, HPCL down 23-25% MTD. OMCs cannot pass through full crude cost to consumers (political sensitivity). Margin compression is severe. Government may need to reinstate fuel subsidies. Avoid.</p>
+        </div>
+        <div class="sector-card">
+            <h3>IT / Technology <span class="sector-verdict verdict-crushed">Crushed (-25% YTD)</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Nifty IT fell ~25% YTD &mdash; worst sector. Dual headwind: AI disruption of billable-hours model + war-driven risk-off selling. TCS market cap fell below INR 10 lakh Cr for first time since Dec 2020. Ambit issued Sell on 9/11 IT stocks. CLSA's contrarian "AI fears overdone" triggered brief 4-6% bounce on Mar 18.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Banking / Financials <span class="sector-verdict verdict-mixed">Mixed</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Banks hurt by FII selling and growth concerns. However, asset quality remains strong and NIMs are holding. HDFC Bank and ICICI Bank relatively resilient. PSU banks under more pressure due to government bond exposure. Rate cut expectations pushed back to H2 FY27.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Pharma <span class="sector-verdict verdict-mild">Defensive</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Pharma emerged as a relative safe haven. Domestic demand resilient, US generic pipeline intact. Sun Pharma and Dr Reddy's held up better than broader market. INR weakness actually benefits pharma exporters (USD-denominated revenue).</p>
+        </div>
+        <div class="sector-card">
+            <h3>Auto / Consumer <span class="sector-verdict verdict-negative">Under Pressure</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Higher fuel costs squeeze consumer discretionary spending. Maruti and Tata Motors under pressure. M&M relatively resilient (rural + defence vehicle exposure). Rising input costs compress margins across the sector.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Metals / Mining <span class="sector-verdict verdict-mixed">Mixed</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Coal India benefits from energy security narrative. Tata Steel and Hindalco mixed &mdash; global demand concerns offset commodity price strength. Aluminium benefits from energy-intensive smelting economics (competitors in energy-importing nations face higher costs).</p>
+        </div>
+    </div>
+
+    <!-- SECTOR CHART -->
+    <div class="card card-full">
+        <h2>India Sector Performance &mdash; March 2026 MTD</h2>
+        <div id="chart-sectors" class="chart-container"></div>
+    </div>
+
+    <!-- DEFENCE STOCKS TABLE -->
+    <h2 class="section-title">Defence Stocks &mdash; The War Winners</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>March Return</th>
+                    <th>Key Metric</th>
+                    <th>Analyst Target</th>
+                    <th>Catalyst</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td class="ticker">MTARTECH</td>
+                    <td>MTAR Technologies</td>
+                    <td class="pct-up">+51.1%</td>
+                    <td>Revenue +61% YoY</td>
+                    <td>INR 2,200</td>
+                    <td>Best performer; precision engineering for missiles</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td class="ticker">DATAPATTNS</td>
+                    <td>Data Patterns</td>
+                    <td class="pct-up">+39.2%</td>
+                    <td>Strong order pipeline</td>
+                    <td>INR 3,570 (Nuvama)</td>
+                    <td>Electronic warfare systems; radar components</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td class="ticker">BHARATFORG</td>
+                    <td>Bharat Forge</td>
+                    <td class="pct-up">+34.6%</td>
+                    <td>Army order INR 300 Cr</td>
+                    <td>INR 1,800</td>
+                    <td>Artillery systems; Navy contracts; dual-use</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td class="ticker">DYNAMATECH</td>
+                    <td>Dynamatic Technologies</td>
+                    <td class="pct-up">+26.3%</td>
+                    <td>Aerospace components</td>
+                    <td>INR 9,500</td>
+                    <td>Boeing/Airbus supplier + defence aerospace</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td class="ticker">BDL</td>
+                    <td>Bharat Dynamics</td>
+                    <td class="pct-up">+7.2%</td>
+                    <td>Order book INR 26,000 Cr</td>
+                    <td>INR 1,900 (Nuvama)</td>
+                    <td>Akash Weapon System; missile manufacturer</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td class="ticker">HAL</td>
+                    <td>Hindustan Aeronautics</td>
+                    <td class="pct-up">+3.4%</td>
+                    <td>Backlog INR 2.3L Cr</td>
+                    <td>INR 5,500 (MOFSL)</td>
+                    <td>India's primary military aircraft manufacturer</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td class="ticker">BEL</td>
+                    <td>Bharat Electronics</td>
+                    <td class="pct-up">+2.9%</td>
+                    <td>Profit +34%; virtually debt-free</td>
+                    <td>INR 525 (Nuvama)</td>
+                    <td>Top defence electronics pick; radar &amp; EW systems</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td class="ticker">ASTRAMICRO</td>
+                    <td>Astra Microwave</td>
+                    <td class="pct-up">+5-10%</td>
+                    <td>RF &amp; microwave sub-systems</td>
+                    <td>INR 1,150 (MOFSL)</td>
+                    <td>Missile seekers; radar T/R modules</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- DEFENCE CHART -->
+    <div class="card card-full" style="margin-top:24px;">
+        <h2>Defence Stocks &mdash; March Returns vs Nifty 50</h2>
+        <div id="chart-defence" class="chart-container"></div>
+    </div>
+
+    <!-- ENERGY DIVERGENCE -->
+    <h2 class="section-title">The Energy Divergence</h2>
+
+    <div class="callout">
+        <h3>Upstream vs Downstream: The Biggest Spread in Indian Markets</h3>
+        <p>The spread between upstream producers (ONGC) and downstream marketers (IOC/BPCL/HPCL) widened by 30-35 percentage points in March alone. This is a structural trade &mdash; as long as oil stays above $90/bbl and the government holds retail fuel prices, this divergence will persist. CLSA sees ONGC at INR 415 (57% upside); BPCL/HPCL have no visible catalyst for recovery.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Stock</th>
+                    <th>Ticker</th>
+                    <th>Type</th>
+                    <th>March Direction</th>
+                    <th>Key Driver</th>
+                    <th>Analyst View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ONGC</td>
+                    <td class="ticker">ONGC.NS</td>
+                    <td><span class="badge badge-upstream">Upstream</span></td>
+                    <td class="pct-up">Double-digit rally</td>
+                    <td>$1/bbl = INR 6,180 Cr earnings</td>
+                    <td class="pct-up">CLSA: Buy INR 415 (+57%)</td>
+                </tr>
+                <tr>
+                    <td>Oil India</td>
+                    <td class="ticker">OIL.NS</td>
+                    <td><span class="badge badge-upstream">Upstream</span></td>
+                    <td class="pct-up">Strong rally</td>
+                    <td>Domestic producer; Nomura preferred</td>
+                    <td class="pct-up">Nomura: Top pick</td>
+                </tr>
+                <tr>
+                    <td>Reliance</td>
+                    <td class="ticker">RELIANCE.NS</td>
+                    <td><span class="badge" style="background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.3);">Mixed</span></td>
+                    <td class="pct-up">Modest up</td>
+                    <td>Diesel crack up; petchem mixed</td>
+                    <td>Nomura: Buy INR 1,730</td>
+                </tr>
+                <tr>
+                    <td>GAIL</td>
+                    <td class="ticker">GAIL.NS</td>
+                    <td><span class="badge" style="background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.3);">Mixed</span></td>
+                    <td class="pct-flat">Mixed</td>
+                    <td>Gas transmission up; LNG import costs rise</td>
+                    <td>Hold</td>
+                </tr>
+                <tr>
+                    <td>Indian Oil (IOC)</td>
+                    <td class="ticker">IOC.NS</td>
+                    <td><span class="badge badge-downstream">Downstream</span></td>
+                    <td class="pct-down">-23% MTD</td>
+                    <td>Can't pass through crude cost</td>
+                    <td class="pct-down">Avoid</td>
+                </tr>
+                <tr>
+                    <td>BPCL</td>
+                    <td class="ticker">BPCL.NS</td>
+                    <td><span class="badge badge-downstream">Downstream</span></td>
+                    <td class="pct-down">-25%+ MTD</td>
+                    <td>OMC margin compression</td>
+                    <td class="pct-down">Avoid</td>
+                </tr>
+                <tr>
+                    <td>HPCL</td>
+                    <td class="ticker">HPCL.NS</td>
+                    <td><span class="badge badge-downstream">Downstream</span></td>
+                    <td class="pct-down">-25%+ MTD</td>
+                    <td>Worst hit among OMCs</td>
+                    <td class="pct-down">Avoid</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ENERGY CHART -->
+    <div class="card card-full" style="margin-top:24px;">
+        <h2>Energy Sector Divergence &mdash; Upstream vs Downstream</h2>
+        <div id="chart-energy" class="chart-container"></div>
+    </div>
+
+    <!-- IT SECTOR -->
+    <h2 class="section-title">IT Sector &mdash; Structural Decline</h2>
+    <div class="stock-card">
+        <div class="stock-header">
+            <div><span class="stock-name">Nifty IT Index</span></div>
+            <span class="badge badge-it">Technology</span>
+        </div>
+        <div class="metrics-row">
+            <div class="metric-box"><div class="label">YTD Return</div><div class="value pct-down">-25%</div></div>
+            <div class="metric-box"><div class="label">TCS MCap</div><div class="value pct-down">&lt;INR 10L Cr</div></div>
+            <div class="metric-box"><div class="label">Ambit Rating</div><div class="value pct-down">Sell (9/11)</div></div>
+            <div class="metric-box"><div class="label">CLSA View</div><div class="value pct-up">AI fears overdone</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="thesis-box risk-box">
+                <h4>Bear Case (Ambit)</h4>
+                <ul>
+                    <li>AI disruption threatens billable-hours model &mdash; structural decline in revenue per employee</li>
+                    <li>13 consecutive quarters of no growth in developed markets for TCS</li>
+                    <li>Client IT budgets under pressure from war-driven economic slowdown</li>
+                    <li>Sell ratings on TCS, Infosys, Wipro, HCL Tech, Tech Mahindra, Mphasis, LTTS, Persistent, Coforge</li>
+                </ul>
+            </div>
+            <div class="thesis-box catalyst-box">
+                <h4>Bull Case (CLSA)</h4>
+                <ul>
+                    <li>AI fears overdone &mdash; Indian IT firms will become AI implementation partners</li>
+                    <li>Mar 18 report triggered 4-6% sector bounce</li>
+                    <li>Valuations approaching multi-year lows &mdash; mean reversion play</li>
+                    <li>INR weakness benefits USD-denominated revenue</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- POTENTIAL CANDIDATES -->
+    <h2 class="section-title">Potential Portfolio Candidates (Watchlist)</h2>
+
+    <div class="callout">
+        <h3>For India-Focused Investors</h3>
+        <p>These stocks are <strong>not included</strong> in our Model Portfolio but represent strong local candidates for Indian investors seeking wartime exposure. Screened on: war thesis alignment, analyst consensus, and fundamental quality. Our Model Portfolio already holds HAL &mdash; these are <em>additional</em> ideas for investors with India-specific allocation.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Sector</th>
+                    <th>War Thesis</th>
+                    <th>Analyst Rating</th>
+                    <th>Target Price</th>
+                    <th>Upside</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="ticker">BEL.NS</td>
+                    <td>Bharat Electronics</td>
+                    <td><span class="badge badge-defense">Defence</span></td>
+                    <td>Top defence electronics; virtually debt-free</td>
+                    <td class="pct-up">BUY (Nuvama)</td>
+                    <td>INR 525</td>
+                    <td class="pct-up">+40%+</td>
+                    <td><span class="badge badge-watchlist">3/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">ONGC.NS</td>
+                    <td>Oil &amp; Natural Gas Corp</td>
+                    <td><span class="badge badge-upstream">Upstream</span></td>
+                    <td>$1/bbl = INR 6,180 Cr earnings</td>
+                    <td class="pct-up">BUY (19/31)</td>
+                    <td>INR 415 (CLSA)</td>
+                    <td class="pct-up">+57%</td>
+                    <td><span class="badge badge-watchlist">3/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">BDL.NS</td>
+                    <td>Bharat Dynamics</td>
+                    <td><span class="badge badge-defense">Defence</span></td>
+                    <td>Missile systems; INR 26K Cr order book</td>
+                    <td class="pct-up">BUY (Nuvama)</td>
+                    <td>INR 1,900</td>
+                    <td class="pct-up">+35%+</td>
+                    <td><span class="badge badge-watchlist">3/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">COALINDIA.NS</td>
+                    <td>Coal India</td>
+                    <td><span class="badge badge-metal">Energy/Mining</span></td>
+                    <td>Energy security; high dividend yield</td>
+                    <td class="pct-up">BUY (consensus)</td>
+                    <td>INR 480</td>
+                    <td class="pct-up">+20%+</td>
+                    <td><span class="badge badge-watchlist">2/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">SUNPHARMA.NS</td>
+                    <td>Sun Pharma</td>
+                    <td><span class="badge badge-pharma">Pharma</span></td>
+                    <td>Defensive; INR weakness benefits exports</td>
+                    <td class="pct-up">BUY (consensus)</td>
+                    <td>INR 2,100</td>
+                    <td class="pct-up">+15%+</td>
+                    <td><span class="badge badge-watchlist">2/3</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p style="font-size:0.8rem; color:var(--text3); margin-top:12px;">Screening Score: (1) Direct war thesis alignment, (2) Analyst consensus Buy with &ge;15% upside, (3) Fundamental quality (earnings growth, balance sheet strength). 2/3 minimum for watchlist.</p>
+
+    <!-- INR IMPACT -->
+    <h2 class="section-title">INR / FX Impact</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h2>INR vs USD</h2>
+            <p style="font-size:0.85rem; color:var(--text2);">The Indian Rupee depreciated <strong>4.2%</strong> against USD in March 2026 &mdash; one of the worst performing Asian currencies. India imports 85% of its crude oil; with Brent above $100/bbl, the trade deficit widened dramatically. RBI intervention limited the damage but forex reserves declined.</p>
+            <div class="metrics-row" style="margin-top:16px;">
+                <div class="metric-box"><div class="label">INR/USD Pre-War</div><div class="value">86.5</div></div>
+                <div class="metric-box"><div class="label">INR/USD Current</div><div class="value">90.1</div></div>
+                <div class="metric-box"><div class="label">Change</div><div class="value pct-down">-4.2%</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Sector FX Sensitivity</h2>
+            <p style="font-size:0.85rem; color:var(--text2);">INR weakness creates winners (exporters) and losers (importers) within the Indian market.</p>
+            <div style="margin-top:16px; font-size:0.85rem;">
+                <p><span class="pct-up">Winners:</span> IT (USD revenue), Pharma (exports), Defence (import substitution reduces FX exposure)</p>
+                <p style="margin-top:8px;"><span class="pct-down">Losers:</span> Oil importers (IOC/BPCL/HPCL), Airlines, Auto (imported components), Capital goods (imported equipment)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- METHODOLOGY & SOURCES -->
+    <h2 class="section-title">Methodology & Sources</h2>
+    <div class="card card-full" style="font-size:0.85rem; color:var(--text2);">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Data Collection</h3>
+                <ul style="padding-left:18px;">
+                    <li>Nifty 50 and sector index data from NSE India</li>
+                    <li>Individual stock data from Yahoo Finance, Moneycontrol, BSE</li>
+                    <li>Pre-war baseline: Feb 27, 2026 (Nifty 50: 25,178.65)</li>
+                    <li>Analyst targets from broker reports (CLSA, Nuvama, MOFSL, Ambit, Nomura, Goldman Sachs)</li>
+                    <li>FII flow data from NSDL and SEBI</li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Limitations</h3>
+                <ul style="padding-left:18px;">
+                    <li>Some March returns are estimated from available data points</li>
+                    <li>Mid-cap defence stock data (MTAR, Data Patterns) based on broader market screener data</li>
+                    <li>FII flow magnitude is directional; exact figures for March 2026 pending SEBI monthly data</li>
+                    <li>Analyst targets set at various dates and may not reflect most current war dynamics</li>
+                    <li>One-month performance window is insufficient for strategy validation</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 style="color:var(--text); margin-top:24px; margin-bottom:8px; font-size:0.95rem;">Key Source URLs</h3>
+        <table style="width:100%; font-size:0.8rem; border-collapse:collapse;">
+            <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left; padding:6px; color:var(--gold);">Topic</th><th style="text-align:left; padding:6px; color:var(--gold);">Source</th></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Defence Stocks Surge</td><td style="padding:6px;"><a href="https://reportwire.in/business/hal-bel-soar-as-defense-stocks-defy-market-plunge-on-iran-strikes/" style="color:var(--blue);">ReportWire</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Defence Stock Picks</td><td style="padding:6px;"><a href="https://www.businesstoday.in/markets/stocks/story/defence-stocks-bel-top-pick-hal-offers-limited-downside-says-nuvama-521976-2026-03-24" style="color:var(--blue);">BusinessToday (Nuvama)</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">ONGC / Energy</td><td style="padding:6px;"><a href="https://www.business-standard.com/markets/news/ongc-stock-may-zoom-65-omcs-may-not-hike-petrol-diesel-prices-soon-clsa-126032600343_1.html" style="color:var(--blue);">Business Standard (CLSA)</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">OMC Pressure</td><td style="padding:6px;"><a href="https://www.psuconnect.in/stock/crude-oil-surge-march-2026-latest-india-basket-156-today-ongc-oil-india-up-big-ioc-bpcl-hpcl-down-20" style="color:var(--blue);">PSU Connect</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">IT Sector (Ambit)</td><td style="padding:6px;"><a href="https://investdesk.in/insights727/" style="color:var(--blue);">InvestDesk</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Defence Index</td><td style="padding:6px;"><a href="https://www.multibagg.ai/market-pulse/articles/indian-defence-stocks-surge-2026-cmn6ubt545va7lf0j9d0e3qsl" style="color:var(--blue);">Multibagg.ai</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Asia Markets Impact</td><td style="padding:6px;"><a href="https://www.cnbc.com/2026/03/04/asia-markets-hang-seng-index-kospi-nikkei-225.html" style="color:var(--blue);">CNBC</a></td></tr>
+            <tr><td style="padding:6px;">Iran War Defence</td><td style="padding:6px;"><a href="https://www.businesstoday.in/markets/stocks/story/bel-hal-bdl-astra-microwave-4-defence-stocks-to-buy-amid-iran-war-target-prices-519818-2026-03-10" style="color:var(--blue);">BusinessToday</a></td></tr>
+        </table>
+    </div>
+
+    <div style="margin-top:24px; padding:20px; background:var(--bg-card); border-radius:8px; border:1px solid var(--gold); font-size:0.75rem; color:var(--text2);">
+        <strong style="color:var(--text);">Anka Research</strong> | AI-Augmented Market Intelligence<br>
+        <strong>Author:</strong> Bharat Ankaraju | <strong>Report:</strong> India Market Deep-Dive<br>
+        <strong>Methodology:</strong> This report was produced using AI-assisted research and analysis tools, with human editorial oversight and source verification. All data is sourced from publicly available information and is believed to be reliable but not guaranteed for accuracy or completeness.<br><br>
+        <strong style="color:var(--red);">DISCLAIMER:</strong> This report is for educational and informational purposes only. It does not constitute investment advice. Past performance is not indicative of future results. The watchlist stocks are screened candidates, not buy recommendations. Defence sector valuations are elevated (Nifty Defence P/E: 52.26x). Consult a qualified financial advisor before making any investment decisions.<br><br>
+        <strong>Report compiled:</strong> March 29, 2026 | <strong>Data sources:</strong> As cited throughout | <strong>Currency base:</strong> INR / USD<br>
+        <strong>Contact:</strong> Anka Research | &copy; 2026 All rights reserved
+    </div>
+</div>
+
+<script>
+const darkLayout = {
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Inter, sans-serif', color: '#94a3b8', size: 12 },
+    margin: { t: 40, r: 30, b: 60, l: 60 },
+    xaxis: { gridcolor: 'rgba(30,41,59,0.5)', zerolinecolor: '#1e293b' },
+    yaxis: { gridcolor: 'rgba(30,41,59,0.5)', zerolinecolor: '#1e293b' },
+    hoverlabel: { bgcolor: '#1a2332', bordercolor: '#2d3a4f', font: { color: '#f1f5f9', family: 'Inter' } },
+    legend: { bgcolor: 'rgba(0,0,0,0)', font: { color: '#94a3b8' } },
+};
+
+// Chart 1: Nifty vs Asian Peers
+const dates = ['Feb 27','Mar 3','Mar 7','Mar 10','Mar 14','Mar 18','Mar 21','Mar 25','Mar 28'];
+Plotly.newPlot('chart-nifty-peers', [
+    { x: dates, y: [100, 96.5, 93.0, 91.0, 91.5, 92.5, 91.5, 91.0, 90.6], name: 'Nifty 50', line: { color: '#f59e0b', width: 3 } },
+    { x: dates, y: [100, 97.0, 94.5, 93.0, 93.5, 95.0, 94.5, 95.0, 95.0], name: 'S&P 500', line: { color: '#3b82f6', width: 2, dash: 'dot' } },
+    { x: dates, y: [100, 94.0, 88.0, 84.0, 85.0, 86.5, 85.5, 84.5, 84.0], name: 'KOSPI', line: { color: '#8b5cf6', width: 2, dash: 'dot' } },
+    { x: dates, y: [100, 95.0, 91.5, 88.0, 89.0, 90.5, 90.0, 90.0, 90.0], name: 'Nikkei 225', line: { color: '#ef4444', width: 2, dash: 'dot' } },
+    { x: dates, y: [100, 102, 103, 104, 105, 106, 105.5, 105.5, 106], name: 'Nifty Defence', line: { color: '#10b981', width: 2 } },
+], Object.assign({}, darkLayout, {
+    yaxis: { title: 'Rebased (100 = Feb 27)', gridcolor: 'rgba(30,41,59,0.5)' },
+    shapes: [{ type: 'line', x0: 'Mar 3', x1: 'Mar 3', y0: 82, y1: 108, line: { color: '#ef4444', width: 1, dash: 'dash' } }],
+    annotations: [{ x: 'Mar 3', y: 83, text: 'War Starts', showarrow: false, font: { color: '#ef4444', size: 10 } }],
+    height: 420
+}));
+
+// Chart 2: Sector Performance
+const sectors = ['Defence', 'Upstream Oil', 'Pharma', 'Utilities', 'Banks', 'Metals', 'Auto', 'Consumer', 'Downstream Oil', 'IT'];
+const sectorReturns = [6.0, 12.0, -3.0, -5.0, -8.0, -7.0, -10.0, -12.0, -24.0, -25.0];
+const sectorColors = sectorReturns.map(r => r > 0 ? '#10b981' : r > -10 ? '#f59e0b' : '#ef4444');
+Plotly.newPlot('chart-sectors', [{
+    x: sectorReturns,
+    y: sectors,
+    type: 'bar',
+    orientation: 'h',
+    marker: { color: sectorColors },
+    text: sectorReturns.map(r => (r > 0 ? '+' : '') + r.toFixed(0) + '%'),
+    textposition: 'outside',
+    textfont: { color: '#f1f5f9', size: 12 },
+    hovertemplate: '%{y}: %{x:.1f}%<extra></extra>'
+}], Object.assign({}, darkLayout, {
+    margin: { l: 130, r: 60, t: 20, b: 40 },
+    xaxis: { title: 'Return (%)', gridcolor: 'rgba(30,41,59,0.5)', zeroline: true, zerolinecolor: '#374151' },
+    yaxis: { gridcolor: 'rgba(30,41,59,0.5)', autorange: 'reversed' },
+    height: 420
+}));
+
+// Chart 3: Defence Stocks vs Nifty
+const defStocks = ['MTAR', 'Data Pat.', 'B.Forge', 'Dynamatic', 'BDL', 'Astra', 'HAL', 'BEL', 'Nifty 50'];
+const defReturns = [51.1, 39.2, 34.6, 26.3, 7.2, 7.5, 3.4, 2.9, -9.4];
+const defColors = defReturns.map(r => r > 20 ? '#10b981' : r > 0 ? '#3b82f6' : '#ef4444');
+Plotly.newPlot('chart-defence', [{
+    x: defStocks,
+    y: defReturns,
+    type: 'bar',
+    marker: { color: defColors },
+    text: defReturns.map(r => (r > 0 ? '+' : '') + r.toFixed(1) + '%'),
+    textposition: 'outside',
+    textfont: { color: '#f1f5f9', size: 11 },
+    hovertemplate: '%{x}: %{y:.1f}%<extra></extra>'
+}], Object.assign({}, darkLayout, {
+    margin: { l: 50, r: 30, t: 20, b: 80 },
+    yaxis: { title: 'March 2026 Return (%)', gridcolor: 'rgba(30,41,59,0.5)', zeroline: true, zerolinecolor: '#374151' },
+    height: 400,
+    annotations: [{
+        x: 'Nifty 50', y: -9.4, text: 'Nifty 50 benchmark', showarrow: true, arrowhead: 2, arrowcolor: '#ef4444',
+        font: { color: '#ef4444', size: 10 }, ay: -30
+    }]
+}));
+
+// Chart 4: Energy Divergence
+const energyStocks = ['ONGC', 'Oil India', 'Reliance', 'GAIL', 'IOC', 'BPCL', 'HPCL'];
+const energyReturns = [15, 12, 5, 0, -23, -25, -25];
+const energyColors = energyReturns.map(r => r > 5 ? '#10b981' : r >= 0 ? '#3b82f6' : '#ef4444');
+Plotly.newPlot('chart-energy', [{
+    x: energyStocks,
+    y: energyReturns,
+    type: 'bar',
+    marker: { color: energyColors },
+    text: energyReturns.map(r => (r > 0 ? '+' : '') + r + '%'),
+    textposition: 'outside',
+    textfont: { color: '#f1f5f9', size: 12 },
+    hovertemplate: '%{x}: %{y}%<extra></extra>'
+}], Object.assign({}, darkLayout, {
+    margin: { l: 50, r: 30, t: 20, b: 60 },
+    yaxis: { title: 'March 2026 Return (%)', gridcolor: 'rgba(30,41,59,0.5)', zeroline: true, zerolinecolor: '#374151' },
+    height: 380,
+    shapes: [{ type: 'line', x0: -0.5, x1: 6.5, y0: 0, y1: 0, line: { color: '#374151', width: 2 } }],
+    annotations: [
+        { x: 1, y: 18, text: 'UPSTREAM', showarrow: false, font: { color: '#10b981', size: 13, family: 'Inter' } },
+        { x: 5, y: -30, text: 'DOWNSTREAM', showarrow: false, font: { color: '#ef4444', size: 13, family: 'Inter' } }
+    ]
+}));
+</script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singapore Market Report | Anka Research</title>
+    <meta name="description" content="Singapore Straits Times Index wartime analysis. Top STI stocks, sector breakdown, and potential portfolio candidates during Iran-Israel-US conflict.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0e1a; --bg-card: #111827; --bg-card2: #1a2332;
+            --border: #1e293b; --border-light: #2d3a4f;
+            --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b;
+            --gold: #f59e0b; --blue: #3b82f6; --green: #10b981;
+            --red: #ef4444; --purple: #8b5cf6; --cyan: #06b6d4;
+            --orange: #f97316;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Navigation */
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--border); background: rgba(10,14,26,0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+        .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--gold); text-decoration: none; }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a { color: var(--text2); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        /* Header */
+        .header { padding: 48px 32px 32px; max-width: 1200px; margin: 0 auto; }
+        .header h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+        .header .subtitle { color: var(--text2); font-size: 1rem; margin-bottom: 24px; }
+        .header .meta { display: flex; gap: 32px; flex-wrap: wrap; }
+        .meta-item { display: flex; flex-direction: column; }
+        .meta-label { font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+        .meta-value { font-size: 1.3rem; font-weight: 700; }
+        .meta-value.up { color: var(--green); }
+        .meta-value.down { color: var(--red); }
+        .meta-value.neutral { color: var(--blue); }
+        .meta-value.gold { color: var(--gold); }
+
+        /* Cards */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px 48px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .card-full { grid-column: 1 / -1; }
+        .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .section-title { font-size: 1.4rem; font-weight: 800; margin: 40px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+
+        /* Table */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { text-align: left; padding: 10px 12px; color: var(--text3); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid rgba(30,41,59,0.5); vertical-align: middle; }
+        tr:hover { background: rgba(26,35,50,0.5); }
+        .ticker { font-weight: 700; color: var(--gold); font-family: 'JetBrains Mono', monospace; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .badge-defense { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+        .badge-energy { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .badge-shipping { background: rgba(6,182,212,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.3); }
+        .badge-bank { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+        .badge-infra { background: rgba(139,92,246,0.15); color: var(--purple); border: 1px solid rgba(139,92,246,0.3); }
+        .badge-agri { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+        .badge-exchange { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+        .badge-transport { background: rgba(100,116,139,0.15); color: var(--text3); border: 1px solid rgba(100,116,139,0.3); }
+        .badge-watchlist { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.4); }
+        .pct-up { color: var(--green); font-weight: 600; }
+        .pct-down { color: var(--red); font-weight: 600; }
+        .pct-flat { color: var(--text3); font-weight: 600; }
+
+        /* Stock Cards */
+        .stock-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: border-color 0.2s; }
+        .stock-card:hover { border-color: var(--gold); }
+        .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+        .stock-name { font-size: 1.1rem; font-weight: 700; }
+        .stock-ticker { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 600; font-size: 0.9rem; margin-right: 8px; }
+        .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin: 16px 0; }
+        .metric-box { background: var(--bg-card2); border-radius: 8px; padding: 12px; text-align: center; }
+        .metric-box .label { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+        .metric-box .value { font-size: 1rem; font-weight: 700; margin-top: 4px; }
+        .thesis-box { background: var(--bg-card2); border-radius: 8px; padding: 16px; margin-top: 12px; border-left: 3px solid var(--purple); }
+        .thesis-box h4 { font-size: 0.8rem; color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .thesis-box ul { padding-left: 18px; color: var(--text2); font-size: 0.85rem; }
+        .thesis-box li { margin-bottom: 6px; }
+        .catalyst-box { border-left-color: var(--green); }
+        .catalyst-box h4 { color: var(--green); }
+        .risk-box { border-left-color: var(--red); }
+        .risk-box h4 { color: var(--red); }
+
+        /* Sector Cards */
+        .sector-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .sector-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .sector-verdict { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .verdict-strong { background: rgba(16,185,129,0.15); color: var(--green); }
+        .verdict-mild { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .verdict-mixed { background: rgba(245,158,11,0.15); color: var(--gold); }
+        .verdict-negative { background: rgba(239,68,68,0.15); color: var(--red); }
+
+        /* Chart */
+        .chart-container { width: 100%; min-height: 350px; }
+
+        /* Callout */
+        .callout { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+        .callout h3 { font-size: 0.95rem; color: var(--gold); margin-bottom: 8px; }
+        .callout p { font-size: 0.9rem; color: var(--text2); }
+
+        /* Watchlist box */
+        .watchlist-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .watchlist-tag { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(249,115,22,0.2)); border: 1px solid rgba(245,158,11,0.4); border-radius: 6px; padding: 3px 10px; font-size: 0.65rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; }
+
+        /* Disclaimer */
+        .disclaimer { margin-top: 48px; padding: 24px; background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; font-size: 0.75rem; color: var(--text3); line-height: 1.6; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.6rem; }
+            .nav { padding: 12px 16px; }
+            .container, .header { padding-left: 16px; padding-right: 16px; }
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media print {
+            .nav { display: none; }
+            body { background: white; color: black; }
+            .card, .stock-card { border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="../index.html" class="nav-logo">Anka Research</a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="week-001.html">Week 001</a>
+        <a href="model-portfolio.html">Portfolio</a>
+        <a href="hedge-fund-ideas.html">Spreads</a>
+        <a href="singapore-market.html" class="active">Singapore</a>
+        <a href="india-deep-dive.html">India</a>
+    </div>
+</nav>
+
+<div class="header">
+    <h1>Singapore Market Report</h1>
+    <p class="subtitle">Straits Times Index &amp; SGX Stocks During the Iran-Israel-US Conflict &mdash; For Singapore-Based Investors</p>
+    <div class="meta">
+        <div class="meta-item">
+            <span class="meta-label">STI Level</span>
+            <span class="meta-value down">~4,900</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">STI MTD</span>
+            <span class="meta-value down">-2 to -3%</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">SGD vs USD</span>
+            <span class="meta-value down">-1.5%</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Stocks Covered</span>
+            <span class="meta-value gold">10</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Watchlist Picks</span>
+            <span class="meta-value gold">5</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Published</span>
+            <span class="meta-value neutral">2026-03-29</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- KEY FINDING -->
+    <div class="callout">
+        <h3>Key Finding: Singapore Outperformed Global Peers</h3>
+        <p>The STI fell only ~2-3% from its all-time high of 5,041 (hit Feb 23), while the S&amp;P 500 dropped -5%, Nikkei -10%, and KOSPI triggered a circuit breaker with a 12.1% single-day plunge. Singapore's status as a safe-haven financial hub, combined with strong banking fundamentals and shipping/defense beneficiaries, cushioned the blow. SGX trading volumes surged &mdash; SDAV hit S$2.1B in February, highest since 2020.</p>
+    </div>
+
+    <!-- STI vs GLOBAL CHART -->
+    <div class="card card-full">
+        <h2>STI vs Global Indices &mdash; Rebased to 100 (Feb 27)</h2>
+        <div id="chart-sti-global" class="chart-container"></div>
+    </div>
+
+    <!-- SECTOR BREAKDOWN -->
+    <h2 class="section-title">Sector Impact Analysis</h2>
+
+    <div class="grid-2">
+        <div class="sector-card">
+            <h3>Defence / Aerospace <span class="sector-verdict verdict-strong">Strong Winner</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">ST Engineering hit all-time high of S$11.30 on Mar 13. Record S$33.2B order book. Global defence spending acceleration is a multi-year tailwind. FY25 PATMI grew 21%.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Shipping / Marine <span class="sector-verdict verdict-strong">Strong Winner</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Tanker freight rates ballooned 80%+ in one month. Hormuz closure forces rerouting around Africa. Seatrium net profit doubled in FY25 (S$16.6B order book). Yangzijiang's yards full through 2029.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Energy / Utilities <span class="sector-verdict verdict-mild">Beneficiary</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Sembcorp Industries benefits via cost pass-through gas contracts. Palm oil surged 10% in a single day as crude cleared $110/bbl (energy-agri convergence). Singapore refineries benefit from wider crack spreads.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Banks <span class="sector-verdict verdict-mixed">Mixed / Resilient</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Higher-for-longer rates support NIM. Safe-haven capital inflows into Singapore benefit all three banks. DBS wealth management fees +29%. OCBC was best performer YTD (+5.8%). Credit quality strong (NPLs &lt;1%).</p>
+        </div>
+        <div class="sector-card">
+            <h3>REITs <span class="sector-verdict verdict-negative">Under Pressure</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">Higher rates hurt valuations. War pushes back rate cut expectations from July to September. Industrial REITs with energy-sector tenants relatively resilient. Office REITs benefit from flight-to-quality in Singapore as regional HQ hub.</p>
+        </div>
+        <div class="sector-card">
+            <h3>Exchange / Financials <span class="sector-verdict verdict-mild">Beneficiary</span></h3>
+            <p style="font-size:0.85rem; color:var(--text2);">SGX benefits from war-driven volatility. February SDAV at S$2.1B (highest since 2020). Retail turnover surged 45% YoY. Small/mid-cap turnover up 135% YoY.</p>
+        </div>
+    </div>
+
+    <!-- SECTOR CHART -->
+    <div class="card card-full">
+        <h2>Singapore Sector Performance &mdash; March 2026</h2>
+        <div id="chart-sectors" class="chart-container"></div>
+    </div>
+
+    <!-- TOP 10 STOCKS TABLE -->
+    <h2 class="section-title">Top 10 STI / SGX Stocks</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Sector</th>
+                    <th>Pre-War Price</th>
+                    <th>Current Price</th>
+                    <th>Return (SGD)</th>
+                    <th>War Thesis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td class="ticker">S63.SI</td>
+                    <td>ST Engineering</td>
+                    <td><span class="badge badge-defense">Defence</span></td>
+                    <td>S$10.00</td>
+                    <td>S$11.30 (ATH)</td>
+                    <td class="pct-up">+13.0%</td>
+                    <td>Record S$33.2B order book; 21% PATMI growth</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td class="ticker">5E2.SI</td>
+                    <td>Seatrium</td>
+                    <td><span class="badge badge-shipping">Marine/Offshore</span></td>
+                    <td>S$2.28</td>
+                    <td>S$2.50</td>
+                    <td class="pct-up">+9.6%</td>
+                    <td>Net profit doubled; S$16.6B order book</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td class="ticker">U96.SI</td>
+                    <td>Sembcorp Industries</td>
+                    <td><span class="badge badge-energy">Energy/Utilities</span></td>
+                    <td>S$5.80</td>
+                    <td>S$6.25</td>
+                    <td class="pct-up">+7.8%</td>
+                    <td>Gas cost pass-through; Alinta acquisition</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td class="ticker">E5H.SI</td>
+                    <td>Golden Agri-Resources</td>
+                    <td><span class="badge badge-agri">Agriculture</span></td>
+                    <td>S$0.265</td>
+                    <td>S$0.290</td>
+                    <td class="pct-up">+9.4%</td>
+                    <td>Palm oil surged 10% on energy-agri convergence</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td class="ticker">S68.SI</td>
+                    <td>Singapore Exchange</td>
+                    <td><span class="badge badge-exchange">Exchange</span></td>
+                    <td>S$13.20</td>
+                    <td>S$13.90</td>
+                    <td class="pct-up">+5.3%</td>
+                    <td>SDAV S$2.1B; retail turnover +45% YoY</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td class="ticker">O39.SI</td>
+                    <td>OCBC Bank</td>
+                    <td><span class="badge badge-bank">Banking</span></td>
+                    <td>S$17.80</td>
+                    <td>S$18.30</td>
+                    <td class="pct-up">+2.8%</td>
+                    <td>Best YTD of 3 banks; double-digit non-II growth</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td class="ticker">BN4.SI</td>
+                    <td>Keppel Corporation</td>
+                    <td><span class="badge badge-infra">Asset Mgmt/Infra</span></td>
+                    <td>S$11.90</td>
+                    <td>S$11.90</td>
+                    <td class="pct-flat">~0%</td>
+                    <td>FUM S$95B; core profit +39%; strong dividends</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td class="ticker">D05.SI</td>
+                    <td>DBS Group</td>
+                    <td><span class="badge badge-bank">Banking</span></td>
+                    <td>S$57.50</td>
+                    <td>S$57.18</td>
+                    <td class="pct-flat">-0.6%</td>
+                    <td>Record S$22.9B income; WM fees +29%</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td class="ticker">BS6.SI</td>
+                    <td>Yangzijiang Shipbuilding</td>
+                    <td><span class="badge badge-shipping">Shipbuilding</span></td>
+                    <td>S$4.30</td>
+                    <td>S$3.85</td>
+                    <td class="pct-down">-10.5%</td>
+                    <td>US$22.4B order book; but UK court ruling hurt</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td class="ticker">C52.SI</td>
+                    <td>ComfortDelGro</td>
+                    <td><span class="badge badge-transport">Transport</span></td>
+                    <td>S$1.42</td>
+                    <td>S$1.45</td>
+                    <td class="pct-up">+2.1%</td>
+                    <td>Revenue &gt;S$5B; 5.7% yield; defensive</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- STOCK RETURNS CHART -->
+    <div class="card card-full" style="margin-top:24px;">
+        <h2>Individual Stock Returns &mdash; March 2026 (SGD)</h2>
+        <div id="chart-returns" class="chart-container"></div>
+    </div>
+
+    <!-- DEEP DIVE CARDS -->
+    <h2 class="section-title">Stock Deep-Dives</h2>
+
+    <!-- ST Engineering -->
+    <div class="stock-card">
+        <div class="stock-header">
+            <div>
+                <span class="stock-ticker">S63.SI</span>
+                <span class="stock-name">ST Engineering</span>
+            </div>
+            <span class="badge badge-defense">Defence / Aerospace</span>
+        </div>
+        <div class="metrics-row">
+            <div class="metric-box"><div class="label">March Return</div><div class="value pct-up">+13.0%</div></div>
+            <div class="metric-box"><div class="label">Price (ATH)</div><div class="value">S$11.30</div></div>
+            <div class="metric-box"><div class="label">Order Backlog</div><div class="value gold" style="color:var(--gold)">S$33.2B</div></div>
+            <div class="metric-box"><div class="label">PATMI Growth</div><div class="value pct-up">+21%</div></div>
+            <div class="metric-box"><div class="label">Analyst Target</div><div class="value">S$12.80</div></div>
+            <div class="metric-box"><div class="label">Dividend Yield</div><div class="value">3.5%</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="thesis-box catalyst-box">
+                <h4>War Catalysts</h4>
+                <ul>
+                    <li>Global defence spending surge &mdash; multi-year tailwind from NATO+Asia rearmament</li>
+                    <li>Smart city / cybersecurity contracts accelerating post-Hormuz digital security concerns</li>
+                    <li>Satellite &amp; communications systems demand surge for military applications</li>
+                    <li>Multiple analyst upgrades in Jan-Mar 2026; target prices raised to S$12.50-13.00</li>
+                </ul>
+            </div>
+            <div class="thesis-box risk-box">
+                <h4>Key Risks</h4>
+                <ul>
+                    <li>At all-time highs &mdash; momentum-driven entry carries pullback risk</li>
+                    <li>Supply chain disruptions from Middle East conflict could affect component sourcing</li>
+                    <li>Government budget allocation dependent on sustained geopolitical tension</li>
+                    <li>Commercial aviation (MRO) segment hurt if airlines cut capex due to fuel costs</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seatrium -->
+    <div class="stock-card">
+        <div class="stock-header">
+            <div>
+                <span class="stock-ticker">5E2.SI</span>
+                <span class="stock-name">Seatrium Limited</span>
+            </div>
+            <span class="badge badge-shipping">Marine / Offshore</span>
+        </div>
+        <div class="metrics-row">
+            <div class="metric-box"><div class="label">March Return</div><div class="value pct-up">+9.6%</div></div>
+            <div class="metric-box"><div class="label">Price</div><div class="value">S$2.50</div></div>
+            <div class="metric-box"><div class="label">Order Book</div><div class="value" style="color:var(--gold)">S$16.6B</div></div>
+            <div class="metric-box"><div class="label">Profit Growth</div><div class="value pct-up">2x YoY</div></div>
+            <div class="metric-box"><div class="label">Analyst Target</div><div class="value">S$3.10</div></div>
+            <div class="metric-box"><div class="label">Order Wins</div><div class="value">S$10-11B/yr</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="thesis-box catalyst-box">
+                <h4>War Catalysts</h4>
+                <ul>
+                    <li>FPSO &amp; offshore energy infrastructure demand accelerates as nations seek energy security</li>
+                    <li>Hormuz closure drives alternate supply route capex &mdash; pipelines, terminals, floating storage</li>
+                    <li>Net profit doubled in FY25; expected S$10-11B/year in order wins for 2026-28</li>
+                    <li>Repair &amp; modification demand surge as aging fleet needs urgent servicing</li>
+                </ul>
+            </div>
+            <div class="thesis-box risk-box">
+                <h4>Key Risks</h4>
+                <ul>
+                    <li>Legacy contract losses still unwinding from Sembmarine merger</li>
+                    <li>Execution risk on mega-projects (cost overruns, delays)</li>
+                    <li>If oil falls sharply on ceasefire, new order momentum could stall</li>
+                    <li>Dilution risk from potential equity raises for working capital</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sembcorp -->
+    <div class="stock-card">
+        <div class="stock-header">
+            <div>
+                <span class="stock-ticker">U96.SI</span>
+                <span class="stock-name">Sembcorp Industries</span>
+            </div>
+            <span class="badge badge-energy">Energy / Utilities</span>
+        </div>
+        <div class="metrics-row">
+            <div class="metric-box"><div class="label">March Return</div><div class="value pct-up">+7.8%</div></div>
+            <div class="metric-box"><div class="label">Price</div><div class="value">S$6.25</div></div>
+            <div class="metric-box"><div class="label">Catalyst</div><div class="value" style="color:var(--gold)">Gas Pass-Through</div></div>
+            <div class="metric-box"><div class="label">Alinta Acq</div><div class="value pct-up">Accretive</div></div>
+            <div class="metric-box"><div class="label">Analyst Target</div><div class="value">S$7.50</div></div>
+            <div class="metric-box"><div class="label">Div Yield</div><div class="value">3.2%</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="thesis-box catalyst-box">
+                <h4>War Catalysts</h4>
+                <ul>
+                    <li>Long-term gas contracts with cost pass-through &mdash; insulated from gas price shocks</li>
+                    <li>Alinta Energy acquisition adds diversified Australian energy assets</li>
+                    <li>Broker upgrades: Maybank Kim Eng upgraded on energy security thesis</li>
+                    <li>Renewables portfolio provides ESG hedge alongside fossil fuel exposure</li>
+                </ul>
+            </div>
+            <div class="thesis-box risk-box">
+                <h4>Key Risks</h4>
+                <ul>
+                    <li>Energy transition long-term headwind for fossil fuel assets</li>
+                    <li>Regulatory risk in India (significant operations) and Singapore</li>
+                    <li>Alinta integration execution risk</li>
+                    <li>If oil collapses on peace deal, energy security premium evaporates</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- POTENTIAL PORTFOLIO CANDIDATES (WATCHLIST) -->
+    <h2 class="section-title">Potential Portfolio Candidates (Watchlist)</h2>
+
+    <div class="callout">
+        <h3>For Singapore-Based Investors</h3>
+        <p>These stocks are <strong>not included</strong> in our Model Portfolio but represent strong local alternatives for Singapore-based investors who want SGX-listed exposure to wartime themes. Each stock is screened on: war thesis alignment, analyst consensus, and fundamental quality. Consider these as a watchlist &mdash; not recommendations.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Sector</th>
+                    <th>War Thesis</th>
+                    <th>Analyst Consensus</th>
+                    <th>Target Price</th>
+                    <th>Upside</th>
+                    <th>Screening Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="ticker">S63.SI</td>
+                    <td>ST Engineering</td>
+                    <td><span class="badge badge-defense">Defence</span></td>
+                    <td>Global defence capex; record backlog</td>
+                    <td class="pct-up">BUY (15/18)</td>
+                    <td>S$12.80</td>
+                    <td class="pct-up">+13.3%</td>
+                    <td><span class="badge badge-watchlist">3/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">5E2.SI</td>
+                    <td>Seatrium</td>
+                    <td><span class="badge badge-shipping">Marine</span></td>
+                    <td>Offshore energy infra demand</td>
+                    <td class="pct-up">BUY (12/15)</td>
+                    <td>S$3.10</td>
+                    <td class="pct-up">+24.0%</td>
+                    <td><span class="badge badge-watchlist">3/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">U96.SI</td>
+                    <td>Sembcorp Industries</td>
+                    <td><span class="badge badge-energy">Energy</span></td>
+                    <td>Gas pass-through; energy security</td>
+                    <td class="pct-up">BUY (14/16)</td>
+                    <td>S$7.50</td>
+                    <td class="pct-up">+20.0%</td>
+                    <td><span class="badge badge-watchlist">3/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">S68.SI</td>
+                    <td>Singapore Exchange</td>
+                    <td><span class="badge badge-exchange">Exchange</span></td>
+                    <td>Volatility drives volume</td>
+                    <td class="pct-up">BUY (10/14)</td>
+                    <td>S$15.00</td>
+                    <td class="pct-up">+7.9%</td>
+                    <td><span class="badge badge-watchlist">2/3</span></td>
+                </tr>
+                <tr>
+                    <td class="ticker">O39.SI</td>
+                    <td>OCBC Bank</td>
+                    <td><span class="badge badge-bank">Banking</span></td>
+                    <td>Safe-haven flows; NIM support</td>
+                    <td class="pct-up">BUY (12/16)</td>
+                    <td>S$20.50</td>
+                    <td class="pct-up">+12.0%</td>
+                    <td><span class="badge badge-watchlist">2/3</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p style="font-size:0.8rem; color:var(--text3); margin-top:12px;">Screening Score: 3 criteria &mdash; (1) Direct war thesis alignment, (2) Analyst consensus Buy with &ge;10% upside, (3) Fundamental quality (growing earnings, strong balance sheet). Score of 2/3 or higher = watchlist inclusion.</p>
+
+    <!-- SGD IMPACT -->
+    <h2 class="section-title">SGD / FX Impact</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h2>SGD vs USD</h2>
+            <p style="font-size:0.85rem; color:var(--text2);">The Singapore Dollar weakened approximately <strong>1.5%</strong> against USD during March 2026. While Singapore is a net energy importer, its strong foreign reserves (US$350B+), diversified economy, and safe-haven status limited the depreciation compared to peers like INR (-4.2%), KRW (-4.4%), and JPY (-2.7%).</p>
+            <div class="metrics-row" style="margin-top:16px;">
+                <div class="metric-box"><div class="label">SGD/USD Pre-War</div><div class="value">1.330</div></div>
+                <div class="metric-box"><div class="label">SGD/USD Current</div><div class="value">1.350</div></div>
+                <div class="metric-box"><div class="label">Change</div><div class="value pct-down">-1.5%</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>FX-Adjusted Returns</h2>
+            <p style="font-size:0.85rem; color:var(--text2);">For USD-based investors, Singapore returns are reduced by ~1.5% FX headwind. For SGD-based investors, there is no FX drag when investing in SGX-listed stocks.</p>
+            <div class="metrics-row" style="margin-top:16px;">
+                <div class="metric-box"><div class="label">STI (SGD)</div><div class="value pct-down">-2.5%</div></div>
+                <div class="metric-box"><div class="label">STI (USD)</div><div class="value pct-down">-4.0%</div></div>
+                <div class="metric-box"><div class="label">FX Drag</div><div class="value pct-down">-1.5%</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- METHODOLOGY & SOURCES -->
+    <h2 class="section-title">Methodology & Sources</h2>
+    <div class="card card-full" style="font-size:0.85rem; color:var(--text2);">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Data Collection</h3>
+                <ul style="padding-left:18px;">
+                    <li>STI constituent data from SGX, Yahoo Finance, and SGinvestors.io</li>
+                    <li>Pre-war baseline: Feb 27, 2026 closing prices</li>
+                    <li>Current prices as of Mar 28, 2026</li>
+                    <li>Analyst targets from broker reports (Maybank Kim Eng, DBS Vickers, OCBC Investment Research, CGS-CIMB)</li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Limitations</h3>
+                <ul style="padding-left:18px;">
+                    <li>STI returns are estimated from available data points; exact constituent-level daily data not available for all stocks</li>
+                    <li>Analyst targets may not reflect post-war positioning changes</li>
+                    <li>Watchlist stocks are not recommendations &mdash; they are screened candidates for further due diligence</li>
+                    <li>One-month performance window is insufficient for strategy validation</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 style="color:var(--text); margin-top:24px; margin-bottom:8px; font-size:0.95rem;">Key Source URLs</h3>
+        <table style="width:100%; font-size:0.8rem; border-collapse:collapse;">
+            <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left; padding:6px; color:var(--gold);">Topic</th><th style="text-align:left; padding:6px; color:var(--gold);">Source</th></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">STI Performance</td><td style="padding:6px;"><a href="https://tradingeconomics.com/singapore/stock-market" style="color:var(--blue);">Trading Economics</a>, <a href="https://sg.finance.yahoo.com/quote/%5ESTI/" style="color:var(--blue);">Yahoo Finance</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Singapore War Stocks</td><td style="padding:6px;"><a href="https://drwealth.com/these-20-singapore-stocks-actually-went-up-after-irans-war-broke-out/" style="color:var(--blue);">DrWealth</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">ST Engineering</td><td style="padding:6px;"><a href="https://sginvestors.io/sgx/stock/s63-st-engineering/target-price" style="color:var(--blue);">SGinvestors.io</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Seatrium Outlook</td><td style="padding:6px;"><a href="https://www.minichart.com.sg/2026/03/27/seatrium-stock-outlook-2026-order-wins-margin-growth-energy-transition-drive-buy-rating-118/" style="color:var(--blue);">Minichart</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Banks (DBS/OCBC/UOB)</td><td style="padding:6px;"><a href="https://growbeansprout.com/dbs-uob-ocbc-share-price-dividend-mar-2026" style="color:var(--blue);">Growbeansprout</a></td></tr>
+            <tr><td style="padding:6px;">Economic Impact</td><td style="padding:6px;"><a href="https://www.aljazeera.com/news/2026/3/16/the-tell-tale-signs-how-bad-has-the-iran-war-hit-the-global-economy" style="color:var(--blue);">Al Jazeera</a></td></tr>
+        </table>
+    </div>
+
+    <div style="margin-top:24px; padding:20px; background:var(--bg-card); border-radius:8px; border:1px solid var(--gold); font-size:0.75rem; color:var(--text2);">
+        <strong style="color:var(--text);">Anka Research</strong> | AI-Augmented Market Intelligence<br>
+        <strong>Author:</strong> Bharat Ankaraju | <strong>Report:</strong> Singapore Market Analysis<br>
+        <strong>Methodology:</strong> This report was produced using AI-assisted research and analysis tools, with human editorial oversight and source verification. All data is sourced from publicly available information and is believed to be reliable but not guaranteed for accuracy or completeness.<br><br>
+        <strong style="color:var(--red);">DISCLAIMER:</strong> This report is for educational and informational purposes only. It does not constitute investment advice, a recommendation, or an offer to buy or sell any securities. Past performance is not indicative of future results. The watchlist stocks are screened candidates, not buy recommendations. Consult a qualified financial advisor before making any investment decisions.<br><br>
+        <strong>Report compiled:</strong> March 29, 2026 | <strong>Data sources:</strong> As cited throughout | <strong>Currency base:</strong> SGD / USD<br>
+        <strong>Contact:</strong> Anka Research | &copy; 2026 All rights reserved
+    </div>
+</div>
+
+<script>
+const darkLayout = {
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Inter, sans-serif', color: '#94a3b8', size: 12 },
+    margin: { t: 40, r: 30, b: 60, l: 60 },
+    xaxis: { gridcolor: 'rgba(30,41,59,0.5)', zerolinecolor: '#1e293b' },
+    yaxis: { gridcolor: 'rgba(30,41,59,0.5)', zerolinecolor: '#1e293b' },
+    hoverlabel: { bgcolor: '#1a2332', bordercolor: '#2d3a4f', font: { color: '#f1f5f9', family: 'Inter' } },
+    legend: { bgcolor: 'rgba(0,0,0,0)', font: { color: '#94a3b8' } },
+};
+
+// Chart 1: STI vs Global Indices (rebased to 100)
+const dates = ['Feb 27','Mar 3','Mar 7','Mar 10','Mar 14','Mar 18','Mar 21','Mar 25','Mar 28'];
+Plotly.newPlot('chart-sti-global', [
+    { x: dates, y: [100, 97.5, 96.8, 96.2, 97.0, 98.5, 97.8, 97.5, 97.5], name: 'STI', line: { color: '#f59e0b', width: 3 } },
+    { x: dates, y: [100, 97.0, 94.5, 93.0, 93.5, 95.0, 94.5, 95.0, 95.0], name: 'S&P 500', line: { color: '#3b82f6', width: 2, dash: 'dot' } },
+    { x: dates, y: [100, 95.0, 91.5, 88.0, 89.0, 90.5, 90.0, 90.0, 90.0], name: 'Nikkei 225', line: { color: '#ef4444', width: 2, dash: 'dot' } },
+    { x: dates, y: [100, 94.0, 88.0, 84.0, 85.0, 86.5, 85.5, 84.5, 84.0], name: 'KOSPI', line: { color: '#8b5cf6', width: 2, dash: 'dot' } },
+], Object.assign({}, darkLayout, {
+    yaxis: { title: 'Rebased (100 = Feb 27)', gridcolor: 'rgba(30,41,59,0.5)' },
+    shapes: [{ type: 'line', x0: 'Mar 3', x1: 'Mar 3', y0: 82, y1: 102, line: { color: '#ef4444', width: 1, dash: 'dash' } }],
+    annotations: [{ x: 'Mar 3', y: 83, text: 'War Starts', showarrow: false, font: { color: '#ef4444', size: 10 } }],
+    height: 400
+}));
+
+// Chart 2: Sector Performance
+const sectors = ['Defence', 'Marine/Offshore', 'Energy/Utilities', 'Exchange', 'Banks', 'Agriculture', 'Transport', 'REITs'];
+const sectorReturns = [13.0, 9.6, 7.8, 5.3, 1.1, 9.4, 2.1, -4.0];
+const sectorColors = sectorReturns.map(r => r >= 0 ? '#10b981' : '#ef4444');
+Plotly.newPlot('chart-sectors', [{
+    x: sectorReturns,
+    y: sectors,
+    type: 'bar',
+    orientation: 'h',
+    marker: { color: sectorColors },
+    text: sectorReturns.map(r => (r > 0 ? '+' : '') + r.toFixed(1) + '%'),
+    textposition: 'outside',
+    textfont: { color: '#f1f5f9', size: 12 },
+    hovertemplate: '%{y}: %{x:.1f}%<extra></extra>'
+}], Object.assign({}, darkLayout, {
+    margin: { l: 130, r: 60, t: 20, b: 40 },
+    xaxis: { title: 'Return (%)', gridcolor: 'rgba(30,41,59,0.5)', zeroline: true, zerolinecolor: '#374151' },
+    yaxis: { gridcolor: 'rgba(30,41,59,0.5)', autorange: 'reversed' },
+    height: 350
+}));
+
+// Chart 3: Individual Stock Returns
+const stocks = ['ST Eng', 'Seatrium', 'Golden Agri', 'Sembcorp', 'SGX', 'OCBC', 'CDG', 'Keppel', 'DBS', 'Yangzijiang'];
+const returns = [13.0, 9.6, 9.4, 7.8, 5.3, 2.8, 2.1, 0.0, -0.6, -10.5];
+const retColors = returns.map(r => r > 5 ? '#10b981' : r >= 0 ? '#3b82f6' : '#ef4444');
+Plotly.newPlot('chart-returns', [{
+    x: stocks,
+    y: returns,
+    type: 'bar',
+    marker: { color: retColors },
+    text: returns.map(r => (r > 0 ? '+' : '') + r.toFixed(1) + '%'),
+    textposition: 'outside',
+    textfont: { color: '#f1f5f9', size: 11 },
+    hovertemplate: '%{x}: %{y:.1f}%<extra></extra>'
+}], Object.assign({}, darkLayout, {
+    margin: { l: 50, r: 30, t: 20, b: 80 },
+    yaxis: { title: 'Return (%)', gridcolor: 'rgba(30,41,59,0.5)', zeroline: true, zerolinecolor: '#374151' },
+    xaxis: { gridcolor: 'rgba(30,41,59,0.5)' },
+    height: 380
+}));
+</script>
+</body>
+</html>
