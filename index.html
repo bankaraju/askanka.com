@@ -228,6 +228,125 @@
         .metric-value.down { color: var(--accent-red); }
         .metric-value.neutral { color: var(--accent-blue); }
 
+        /* Telegram Section */
+        .telegram-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .telegram-card {
+            background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2a 50%, #1a1a3e 100%);
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .telegram-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 136, 204, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .telegram-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #0088cc, #0077b5);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 136, 204, 0.3);
+        }
+
+        .telegram-icon svg {
+            width: 28px; height: 28px;
+            fill: white;
+        }
+
+        .telegram-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .telegram-card .tg-tagline {
+            color: #0088cc;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        .telegram-card .tg-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 520px;
+            margin: 0 auto 24px;
+            line-height: 1.7;
+        }
+
+        .telegram-features {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .tg-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .tg-feature .dot {
+            width: 6px; height: 6px;
+            background: #0088cc;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #0088cc, #0077b5);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0, 136, 204, 0.3);
+        }
+
+        .telegram-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 136, 204, 0.4);
+        }
+
+        .telegram-btn svg {
+            width: 20px; height: 20px;
+            fill: white;
+        }
+
+        .tg-handle {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -441,6 +560,27 @@
         <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">What do you want researched next? Your requests shape our weekly coverage. We analyze stocks, sectors, and macro themes across 8 global indices.</p>
         <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe3c3_S93hQYStWt5I0fh89GmOGYCqxzzZUW6W2z_bor2wSFQ/viewform?embedded=true" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0" style="background: transparent;">Loading...</iframe>
+        </div>
+    </div>
+
+    <div class="telegram-section">
+        <div class="telegram-card">
+            <div class="telegram-icon">
+                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            </div>
+            <div class="tg-tagline">Real-Time Signal Channel</div>
+            <h2>Live Political Event Signals</h2>
+            <p class="tg-description">Get automated trading signals when geopolitical events hit the wire. Pre-market Asian cascade briefings, intraday spread ideas, and end-of-day P&L dashboards — delivered to your Telegram.</p>
+            <div class="telegram-features">
+                <div class="tg-feature"><span class="dot"></span> Pre-market briefing (8:30 AM IST)</div>
+                <div class="tg-feature"><span class="dot"></span> Intraday event signals</div>
+                <div class="tg-feature"><span class="dot"></span> EOD dashboard + P&L</div>
+            </div>
+            <a href="https://t.me/ANKASIGNALS" target="_blank" rel="noopener" class="telegram-btn">
+                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Join @ANKASIGNALS
+            </a>
+            <p class="tg-handle">t.me/ANKASIGNALS</p>
         </div>
     </div>
 

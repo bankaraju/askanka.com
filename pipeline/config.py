@@ -83,5 +83,146 @@ VOLATILITY = {
     "VIX": {"eodhd": "VIX.INDX", "yf": "^VIX"},
 }
 
+# === INDIA SIGNAL STOCKS (for political sentiment engine) ===
+INDIA_SIGNAL_STOCKS = {
+    # Winners (defense + upstream energy + defensives)
+    "HAL":        {"yf": "HAL.NS",        "sector": "Defense/Aerospace",    "group": "winner"},
+    "BEL":        {"yf": "BEL.NS",        "sector": "Defense Electronics",  "group": "winner"},
+    "BDL":        {"yf": "BDL.NS",        "sector": "Defense/Missiles",     "group": "winner"},
+    "MTAR":       {"yf": "MTARTECH.NS",   "sector": "Defense/Precision",    "group": "winner"},
+    "ONGC":       {"yf": "ONGC.NS",       "sector": "Energy/Upstream",      "group": "winner"},
+    "OIL":        {"yf": "OIL.NS",        "sector": "Energy/Upstream",      "group": "winner"},
+    "RELIANCE":   {"yf": "RELIANCE.NS",   "sector": "Energy/Conglomerate",  "group": "winner"},
+    "COALINDIA":  {"yf": "COALINDIA.NS",  "sector": "Energy/Coal",          "group": "winner"},
+    "SUNPHARMA":  {"yf": "SUNPHARMA.NS",  "sector": "Pharma",              "group": "winner"},
+    "BHARATFORG": {"yf": "BHARATFORG.NS", "sector": "Defense/Forging",      "group": "winner"},
+    # Losers (downstream OMCs + IT)
+    "IOC":        {"yf": "IOC.NS",        "sector": "Energy/Downstream",    "group": "loser"},
+    "BPCL":       {"yf": "BPCL.NS",       "sector": "Energy/Downstream",    "group": "loser"},
+    "HPCL":       {"yf": "HINDPETRO.NS",  "sector": "Energy/Downstream",    "group": "loser"},
+    "TCS":        {"yf": "TCS.NS",        "sector": "IT Services",          "group": "loser"},
+    "INFY":       {"yf": "INFY.NS",       "sector": "IT Services",          "group": "loser"},
+    "WIPRO":      {"yf": "WIPRO.NS",      "sector": "IT Services",          "group": "loser"},
+}
+
+# === INDIA SPREAD PAIRS ===
+INDIA_SPREAD_PAIRS = [
+    {
+        "name": "Upstream vs Downstream",
+        "long": ["ONGC", "OIL"],
+        "short": ["IOC", "BPCL", "HPCL"],
+        "triggers": ["oil_up", "escalation", "hormuz", "sanctions", "trump_threat"],
+    },
+    {
+        "name": "Defence vs IT",
+        "long": ["HAL", "BEL", "BDL"],
+        "short": ["TCS", "INFY", "WIPRO"],
+        "triggers": ["escalation", "defense_spend", "sanctions", "trump_threat", "hormuz", "oil_positive"],
+    },
+    {
+        "name": "Reliance Pivot",
+        "long": ["RELIANCE"],
+        "short": ["HPCL", "IOC"],
+        "triggers": ["oil_up", "refining_margin", "escalation"],
+    },
+    {
+        "name": "Coal vs OMCs",
+        "long": ["COALINDIA"],
+        "short": ["BPCL", "HPCL"],
+        "triggers": ["energy_crisis", "oil_up", "escalation", "hormuz", "oil_positive"],
+    },
+]
+
+# === EVENT TAXONOMY (political event → expected market direction) ===
+EVENT_TAXONOMY = {
+    "escalation":    {"oil": "up",   "defense": "up",   "it": "down",  "downstream": "down"},
+    "de_escalation": {"oil": "down", "defense": "down", "it": "up",    "downstream": "up"},
+    "ceasefire":     {"oil": "down", "defense": "down", "it": "up",    "downstream": "up"},
+    "oil_positive":  {"oil": "up",   "defense": "flat", "it": "down",  "downstream": "down"},
+    "oil_negative":  {"oil": "down", "defense": "flat", "it": "up",    "downstream": "up"},
+    "sanctions":     {"oil": "up",   "defense": "up",   "it": "down",  "downstream": "down"},
+    "hormuz":        {"oil": "up",   "defense": "flat", "it": "down",  "downstream": "down"},
+    "defense_spend": {"oil": "flat", "defense": "up",   "it": "flat",  "downstream": "flat"},
+    "trump_threat":  {"oil": "up",   "defense": "up",   "it": "down",  "downstream": "down"},
+    "diplomacy":     {"oil": "down", "defense": "down", "it": "up",    "downstream": "up"},
+}
+
+# === ASIAN MARKET CASCADE (pre-market signals for India) ===
+ASIA_INDICES = {
+    "Nikkei 225": {"yf": "^N225",     "currency": "JPY", "opens_ist": "05:30"},
+    "KOSPI":      {"yf": "^KS11",     "currency": "KRW", "opens_ist": "05:30"},
+    "ASX 200":    {"yf": "^AXJO",     "currency": "AUD", "opens_ist": "05:30"},
+    "STI":        {"yf": "^STI",      "currency": "SGD", "opens_ist": "06:30"},
+    "S&P Futures":{"yf": "ES=F",      "currency": "USD", "opens_ist": "overnight"},
+}
+
+ASIA_DEFENCE_STOCKS = {
+    "7012.T":    {"name": "Kawasaki Heavy",    "market": "Japan"},
+    "7011.T":    {"name": "MHI",               "market": "Japan"},
+    "012450.KS": {"name": "Hanwha Aerospace",  "market": "Korea"},
+    "S63.SI":    {"name": "ST Engineering",    "market": "Singapore"},
+}
+
+ASIA_INDIA_CASCADE = {
+    "nikkei_defence_up":   {"india_long": ["HAL", "BEL"],          "india_short": ["TCS", "INFY"]},
+    "kospi_defence_up":    {"india_long": ["HAL", "BEL", "BDL"],   "india_short": ["WIPRO"]},
+    "asian_energy_up":     {"india_long": ["ONGC", "OIL", "RELIANCE"], "india_short": ["IOC", "BPCL"]},
+    "asian_broad_selloff": {"india_long": ["COALINDIA", "SUNPHARMA"], "india_short": ["HPCL", "BPCL"]},
+    "oil_above_100":       {"india_long": ["ONGC", "OIL"],         "india_short": ["IOC", "BPCL", "HPCL"]},
+    "usd_inr_spike":       {"india_long": ["TCS", "INFY"],         "india_short": ["IOC"]},
+}
+
+# === NEWS RSS FEEDS ===
+NEWS_RSS_FEEDS = [
+    # Major wire services
+    "https://feeds.reuters.com/reuters/worldNews",
+    "http://feeds.bbci.co.uk/news/world/rss.xml",
+    # Middle East focused
+    "https://www.aljazeera.com/xml/rss/all.xml",
+    "https://www.middleeasteye.net/rss",
+    # Financial / markets
+    "https://www.cnbctv18.com/commonfeeds/v1/cne/rss/world.xml",
+    # India focused
+    "https://www.livemint.com/rss/news",
+    # Energy / oil
+    "https://oilprice.com/rss/main",
+]
+
+NEWS_KEYWORDS = [
+    # Countries & regions
+    "iran", "israel", "middle east", "persian gulf", "red sea",
+    "yemen", "lebanon", "syria", "iraq",
+    # Key leaders (all voices that move markets)
+    "trump", "netanyahu", "khamenei", "putin", "xi jinping",
+    "erdogan", "mbs", "houthi", "hezbollah", "nasrallah",
+    "gallant", "katz", "irgc", "modi", "guterres",
+    # Military / conflict
+    "hormuz", "ceasefire", "sanctions", "military strike",
+    "missile", "drone strike", "naval", "blockade",
+    "escalat", "retaliat", "war", "invasion",
+    # Oil / energy
+    "oil price", "crude oil", "brent", "opec",
+    "oil surge", "oil crash", "energy crisis",
+    "tanker", "shipping", "pipeline",
+    # Defense
+    "defense budget", "defence budget", "arms deal", "rearm",
+    # Diplomacy
+    "nuclear deal", "peace talk", "ceasefire", "truce",
+    "diplomatic", "negotiat", "summit",
+]
+
+# === SIGNAL ENGINE CONFIG ===
+SIGNAL_STOP_LOSS_PCT = 10.0
+SIGNAL_CONFIDENCE_THRESHOLD = 0.6
+SIGNAL_HIT_RATE_THRESHOLD = 0.65
+SIGNAL_MIN_PRECEDENTS = 3
+POLL_INTERVAL_MINUTES = 30
+MARKET_HOURS_IST = {"open": "09:15", "close": "15:30"}
+PREMARKET_SCAN_IST = "08:30"
+
+# === TELEGRAM CONFIG (set in .env) ===
+TELEGRAM_BOT_TOKEN = None  # Override from .env
+TELEGRAM_CHAT_ID = None    # Override from .env
+
 # === REFERENCE DATE (war start) ===
 WAR_START_DATE = "2026-02-28"
