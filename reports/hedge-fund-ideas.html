@@ -703,8 +703,72 @@
         </div>
     </div>
 
-    <div class="disclaimer">
-        <strong>DISCLAIMER:</strong> These trade ideas are for educational purposes only. Spread trading, short selling, and leverage involve substantial risk of loss. Past performance (including the returns shown above) is not indicative of future results. Never risk more than you can afford to lose. These are not recommendations — they are frameworks for thinking about market dislocation. Consult a qualified financial advisor. The authors have no positions in the specific trades described unless otherwise noted.
+    <!-- METHODOLOGY & SOURCES -->
+    <h2 class="section-title" style="margin-top:48px;">Methodology & Sources</h2>
+    <div class="card card-full" style="font-size:0.85rem; color:var(--text2);">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Spread Construction</h3>
+                <ul style="padding-left:18px;">
+                    <li>All spreads initiated at pre-war baseline (Feb 27, 2026 close)</li>
+                    <li>Spread P&L = Long leg return &minus; Short leg return</li>
+                    <li>ETF-based where possible for retail executability</li>
+                    <li>Index-level spreads use local-currency returns (no FX conversion needed for relative performance)</li>
+                    <li>FX trades use spot rates from Federal Reserve H.10 and ECB reference rates</li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Data Sources</h3>
+                <ul style="padding-left:18px;">
+                    <li><strong>Prices:</strong> EODHD API (primary), yfinance (fallback) &mdash; daily close</li>
+                    <li><strong>ETF data:</strong> Yahoo Finance, ETF.com, SPDR, iShares</li>
+                    <li><strong>FX rates:</strong> Federal Reserve H.10, ECB reference rates, xe.com</li>
+                    <li><strong>Index levels:</strong> Bloomberg, Reuters, exchange data (LSE, Euronext)</li>
+                    <li><strong>Fundamentals:</strong> Reuters, CNBC, Financial Times, Bloomberg</li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Limitations & Caveats</h3>
+                <ul style="padding-left:18px;">
+                    <li>Spread returns are theoretical &mdash; actual execution may differ due to bid-ask spreads, slippage, and borrow costs for short legs</li>
+                    <li>Short selling carries unlimited loss potential and may not be available in all jurisdictions</li>
+                    <li>Index-level spreads (FTSE vs CAC) cannot be directly traded without futures or ETF pairs</li>
+                    <li>FX basket is a conceptual trade; actual execution requires forex accounts with appropriate margin</li>
+                    <li>Post-war recovery trade is conditional and has no current P&L &mdash; entry trigger has not yet fired</li>
+                    <li>One-month track record is insufficient to validate any strategy</li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color:var(--text); margin-bottom:8px; font-size:0.95rem;">Update Schedule</h3>
+                <ul style="padding-left:18px;">
+                    <li>Spread P&L updated weekly (Saturday after US Friday close)</li>
+                    <li>New trade ideas added as war dynamics evolve</li>
+                    <li>Stopped-out or closed spreads archived with final P&L</li>
+                    <li>Daily price capture: Mon-Sat 6:30 AM IST via automated pipeline</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 style="color:var(--text); margin-top:24px; margin-bottom:8px; font-size:0.95rem;">Key Source URLs</h3>
+        <table style="width:100%; font-size:0.8rem; border-collapse:collapse;">
+            <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left; padding:6px; color:var(--gold);">Topic</th><th style="text-align:left; padding:6px; color:var(--gold);">Source</th></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">ETF Performance</td><td style="padding:6px;"><a href="https://finance.yahoo.com" style="color:var(--blue);">Yahoo Finance</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Oil & Energy Markets</td><td style="padding:6px;"><a href="https://www.cnbc.com/2026/03/08/oil-prices-war-iran-trump" style="color:var(--blue);">CNBC</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Defense Sector</td><td style="padding:6px;"><a href="https://primaryignition.com/2026/03/03/defense-stocks-defy-market-downturn-as-geopolitical-tensions-rise/" style="color:var(--blue);">Primary Ignition</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">Tanker Rates</td><td style="padding:6px;"><a href="https://247wallst.com/investing/2026/03/09/tankers-surge-on-rising-oil-prices-fro-nat-dht-add-to-massive-2026-returns/" style="color:var(--blue);">24/7 Wall St</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">European Defense</td><td style="padding:6px;"><a href="https://www.cnbc.com/2026/03/12/defense-stocks-leonardo-rheinmetall-stock-rhm-ldo-iran-war-ukraine.html" style="color:var(--blue);">CNBC</a></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">FX Data</td><td style="padding:6px;"><a href="https://www.federalreserve.gov/releases/h10/default.htm" style="color:var(--blue);">Federal Reserve H.10</a></td></tr>
+            <tr><td style="padding:6px;">Economic Impact</td><td style="padding:6px;"><a href="https://en.wikipedia.org/wiki/Economic_impact_of_the_2026_Iran_war" style="color:var(--blue);">Wikipedia</a></td></tr>
+        </table>
+    </div>
+
+    <div style="margin-top:24px; padding:20px; background:var(--card); border-radius:8px; border:1px solid var(--gold); font-size:0.75rem; color:var(--text2);">
+        <strong style="color:var(--text);">Anka Research</strong> | AI-Augmented Market Intelligence<br>
+        <strong>Author:</strong> Bharat Ankaraju | <strong>Report:</strong> Hedge Fund Trade Ideas<br>
+        <strong>Methodology:</strong> This report was produced using AI-assisted research and analysis tools, with human editorial oversight and source verification. All data is sourced from publicly available information and is believed to be reliable but not guaranteed for accuracy or completeness.<br><br>
+        <strong style="color:var(--red);">DISCLAIMER:</strong> These trade ideas are for educational purposes only. Spread trading, short selling, and leverage involve substantial risk of loss. Past performance (including the returns shown above) is not indicative of future results. Never risk more than you can afford to lose. These are not recommendations &mdash; they are frameworks for thinking about market dislocation. Consult a qualified financial advisor. The authors have no positions in the specific trades described unless otherwise noted.<br><br>
+        <strong>Report compiled:</strong> March 29, 2026 | <strong>Data sources:</strong> As cited throughout | <strong>Currency base:</strong> USD<br>
+        <strong>Contact:</strong> Anka Research | &copy; 2026 All rights reserved
     </div>
 </div>
 
