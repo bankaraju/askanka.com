@@ -11,7 +11,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import yfinance as yf
 
-from config import INDIA_SIGNAL_STOCKS, SIGNAL_STOP_LOSS_PCT
+from config import (
+    INDIA_SIGNAL_STOCKS, SIGNAL_STOP_LOSS_PCT,
+    SIGNAL_TRAILING_STOP_ACTIVATE_PCT, SIGNAL_TRAILING_STOP_DISTANCE_PCT,
+)
+from spread_statistics import get_levels_for_spread
 
 log = logging.getLogger("anka.signal_tracker")
 
@@ -95,39 +99,109 @@ def save_signal(signal: Dict[str, Any]) -> None:
     log.info(f"Saved new signal {signal.get('signal_id', '?')}")
 
 
+def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
+    """Update entry prices to today's open for signals generated outside
+    market hours (overnight, weekends, holidays).
+
+    This ensures P&L reflects executable prices, not stale closes from
+    a prior session. Only runs once per signal — sets 'entry_snapped'
+    flag to prevent re-snapping.
+
+    Returns True if any signals were updated.
+    """
+    from eodhd_client import fetch_realtime
+    updated = False
+    for sig in signals:
+        if sig.get("entry_snapped"):
+            continue
+
+        # Fetch today's open prices for all tickers in this signal
+        all_tickers = (
+            [l["ticker"] for l in sig.get("long_legs", [])]
+            + [s["ticker"] for s in sig.get("short_legs", [])]
+        )
+        try:
+            for leg in sig.get("long_legs", []) + sig.get("short_legs", []):
+                ticker   = leg["ticker"]
+                stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
+                eodhd_sym  = stock_info.get("eodhd", "")
+                yf_sym     = stock_info.get("yf", f"{ticker}.NS")
+
+                open_price = None
+
+                # 1. EODHD real-time open field
+                if eodhd_sym:
+                    rt = fetch_realtime(eodhd_sym)
+                    if rt and rt.get("open"):
+                        open_price = float(rt["open"])
+
+                # 2. Fallback: yfinance
+                if open_price is None:
+                    try:
+                        hist = yf.Ticker(yf_sym).history(period="1d")
+                        if not hist.empty:
+                            open_price = float(hist["Open"].iloc[-1])
+                    except Exception as e:
+                        log.error("yfinance snap error for %s: %s", yf_sym, e)
+
+                if open_price is not None:
+                    old = leg["price"]
+                    leg["price"] = open_price
+                    log.info("Snapped %s entry: ₹%.2f → ₹%.2f (today's open)", ticker, old, open_price)
+
+            sig["entry_snapped"] = True
+            sig["open_timestamp"] = datetime.utcnow().isoformat()
+            updated = True
+            log.info(f"Signal {sig.get('signal_id')}: entry prices snapped to today's open")
+
+        except Exception as e:
+            log.error(f"Failed to snap entry for {sig.get('signal_id')}: {e}")
+
+    return updated
+
+
 # ---------------------------------------------------------------------------
 # Price fetching
 # ---------------------------------------------------------------------------
 
 def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
-    """Fetch current prices for Indian stock tickers via *yfinance*.
+    """Fetch current prices for Indian stock tickers.
 
-    Each plain ticker (e.g. ``"HAL"``) is mapped to its ``.NS`` Yahoo
-    Finance symbol using :data:`INDIA_SIGNAL_STOCKS`.  If the ticker
-    already contains a dot it is used as-is.
+    Primary: EODHD real-time API (eodhd_client.fetch_realtime).
+    Fallback: yfinance .history(period="1d").
 
-    Returns ``{ticker: current_price}`` (price is ``None`` on failure).
+    Tickers are plain names like "HAL", "BPCL" — resolved via INDIA_SIGNAL_STOCKS.
     """
+    from eodhd_client import fetch_realtime
+
     prices: Dict[str, Optional[float]] = {}
     for ticker in tickers:
-        # Resolve Yahoo Finance symbol
-        if "." in ticker:
-            yf_symbol = ticker
-        else:
-            stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
-            yf_symbol = stock_info.get("yf", f"{ticker}.NS")
+        stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
+        eodhd_sym  = stock_info.get("eodhd", "")
+        yf_sym     = stock_info.get("yf", f"{ticker}.NS")
 
-        try:
-            data = yf.Ticker(yf_symbol)
-            hist = data.history(period="1d")
-            if hist.empty:
-                log.warning(f"No price data for {yf_symbol}")
-                prices[ticker] = None
-            else:
-                prices[ticker] = float(hist["Close"].iloc[-1])
-        except Exception as e:
-            log.error(f"yfinance error for {yf_symbol}: {e}")
-            prices[ticker] = None
+        price = None
+
+        # 1. Try EODHD real-time
+        if eodhd_sym:
+            rt = fetch_realtime(eodhd_sym)
+            if rt and rt.get("close"):
+                price = float(rt["close"])
+                log.debug("Price %s = %.2f (EODHD RT)", ticker, price)
+
+        # 2. Fallback: yfinance
+        if price is None:
+            try:
+                hist = yf.Ticker(yf_sym).history(period="1d")
+                if not hist.empty:
+                    price = float(hist["Close"].iloc[-1])
+                    log.debug("Price %s = %.2f (yfinance fallback)", ticker, price)
+                else:
+                    log.warning("No price data for %s (yfinance also empty)", ticker)
+            except Exception as e:
+                log.error("yfinance error for %s: %s", yf_sym, e)
+
+        prices[ticker] = price
 
     return prices
 
@@ -197,19 +271,100 @@ def compute_signal_pnl(
 # ---------------------------------------------------------------------------
 
 def _trading_days_elapsed(open_date_str: str) -> int:
-    """Rough count of trading days since the signal opened (Mon-Fri only)."""
+    """Count of trading days since the signal opened (Mon-Fri only).
+
+    Inclusive of the open day itself — a signal opened today is "day 1".
+    """
     try:
         open_date = datetime.fromisoformat(open_date_str).date()
     except (ValueError, TypeError):
-        return 0
+        return 1  # default to 1 if we can't parse
     today = datetime.utcnow().date()
+    if open_date > today:
+        return 1
+    # Count trading days from open_date to today inclusive
     count = 0
     current = open_date
-    while current < today:
-        current += timedelta(days=1)
+    while current <= today:
         if current.weekday() < 5:  # Mon-Fri
             count += 1
-    return count
+        current += timedelta(days=1)
+    return max(count, 1)
+
+
+def _compute_todays_spread_move(
+    signal: Dict[str, Any],
+    current_prices: Dict[str, Optional[float]],
+) -> float:
+    """Compute TODAY's spread move only (not cumulative from entry).
+
+    Uses the previous close snapshot stored on the signal as reference.
+    If no previous close exists (day 1), uses entry prices.
+    Returns today's spread move in % (positive = favorable).
+    """
+    prev_long = signal.get("_prev_close_long", {})
+    prev_short = signal.get("_prev_close_short", {})
+
+    # Day 1: no prev close yet, use entry prices
+    use_entry = not prev_long
+
+    long_moves = []
+    for leg in signal.get("long_legs", []):
+        ticker = leg["ticker"]
+        ref_price = prev_long.get(ticker, leg["price"]) if not use_entry else leg["price"]
+        curr = current_prices.get(ticker)
+        if curr and ref_price and ref_price > 0:
+            long_moves.append((curr / ref_price - 1) * 100)
+
+    short_moves = []
+    for leg in signal.get("short_legs", []):
+        ticker = leg["ticker"]
+        ref_price = prev_short.get(ticker, leg["price"]) if not use_entry else leg["price"]
+        curr = current_prices.get(ticker)
+        if curr and ref_price and ref_price > 0:
+            # Short P&L: profit when price falls
+            short_moves.append((1 - curr / ref_price) * 100)
+
+    avg_long = sum(long_moves) / len(long_moves) if long_moves else 0.0
+    avg_short = sum(short_moves) / len(short_moves) if short_moves else 0.0
+
+    return round(avg_long + avg_short, 4)
+
+
+def snapshot_eod_prices(
+    signals: List[Dict[str, Any]],
+    current_prices: Dict[str, Optional[float]],
+) -> None:
+    """Snapshot current prices as 'previous close' for next day's daily move calc.
+
+    Called at EOD (15:45 IST). Stores:
+    1. Closing prices per leg → tomorrow's daily stop compares vs these
+    2. Today's spread move → tomorrow's 2-day running stop needs it
+
+    The 2-day running stop checks: was yesterday a loss AND is today a loss?
+    So we store today's move as ``_prev_day_move`` for tomorrow's check.
+    """
+    for sig in signals:
+        # 1. Store today's spread move for 2-day running stop
+        todays_move = _compute_todays_spread_move(sig, current_prices)
+        sig["_prev_day_move"] = round(todays_move, 4)
+
+        # 2. Store closing prices for tomorrow's daily move calc
+        prev_long = {}
+        for leg in sig.get("long_legs", []):
+            ticker = leg["ticker"]
+            price = current_prices.get(ticker)
+            if price:
+                prev_long[ticker] = price
+        sig["_prev_close_long"] = prev_long
+
+        prev_short = {}
+        for leg in sig.get("short_legs", []):
+            ticker = leg["ticker"]
+            price = current_prices.get(ticker)
+            if price:
+                prev_short[ticker] = price
+        sig["_prev_close_short"] = prev_short
 
 
 def check_signal_status(
@@ -218,49 +373,91 @@ def check_signal_status(
 ) -> Tuple[str, Optional[Dict[str, Any]]]:
     """Determine whether an open signal should be closed.
 
-    Close conditions (checked in order):
-      1. Any long leg down > ``SIGNAL_STOP_LOSS_PCT`` from entry -> STOPPED_OUT
-      2. Any short leg up  > ``SIGNAL_STOP_LOSS_PCT`` from entry -> STOPPED_OUT
-      3. Signal age > 5 trading days -> EXPIRED
-      4. Spread P&L > +15% -> TARGET_HIT (optional early exit)
+    STOPS-ONLY PHILOSOPHY: Winners run until stopped. We never voluntarily
+    take profits — the only exits are stops. This keeps winning positions
+    compounding. Losses are cut short by data-driven daily thresholds.
+
+    Two exit conditions (both data-driven from 1-month spread statistics):
+
+      1. DAILY STOP: Today's spread move breaches -(avg_favorable × 50%).
+         Fires on any single bad day, regardless of cumulative P&L.
+         A trader up +10% cumulative who has a -1% day gets stopped out
+         at +9% — the daily stop protects accumulated gains.
+
+      2. 2-DAY RUNNING STOP: Two consecutive losing days AND combined
+         2-day loss exceeds 2 × daily_stop. Catches persistent
+         deterioration that individual daily stops might miss (each day
+         loses less than the daily stop but the trend is clearly broken).
+
+    No target exit. No trailing stop. No expiry. No correlation break.
+    Entry = 1-month average spread (fair value).
 
     Returns ``("OPEN", None)`` or ``(reason, pnl_dict)``.
     """
+    # Cumulative P&L from entry (what the trader has made overall)
     pnl = compute_signal_pnl(signal, current_prices)
+    cumulative_spread = pnl["spread_pnl_pct"]
 
-    # 1. Stop-loss on long legs (price fell too much)
-    for leg in pnl["long_legs"]:
-        if leg["pnl_pct"] <= -SIGNAL_STOP_LOSS_PCT:
-            log.info(
-                f"Signal {signal.get('signal_id')}: long leg {leg['ticker']} "
-                f"hit stop ({leg['pnl_pct']:.1f}%)"
-            )
-            return ("STOPPED_OUT", pnl)
+    # Today's spread move only (vs previous close or entry on day 1)
+    todays_move = _compute_todays_spread_move(signal, current_prices)
 
-    # 2. Stop-loss on short legs (price rose too much)
-    for leg in pnl["short_legs"]:
-        if leg["pnl_pct"] <= -SIGNAL_STOP_LOSS_PCT:
-            log.info(
-                f"Signal {signal.get('signal_id')}: short leg {leg['ticker']} "
-                f"hit stop ({leg['pnl_pct']:.1f}%)"
-            )
-            return ("STOPPED_OUT", pnl)
+    spread_name = signal.get("spread_name", "")
 
-    # 3. Expiry (5 trading days)
-    days = _trading_days_elapsed(signal.get("open_timestamp", ""))
-    if days > 5:
+    # Get data-driven levels for this specific spread
+    levels = get_levels_for_spread(spread_name)
+    daily_std = levels["daily_std"]
+    avg_favorable = levels["avg_favorable_move"]
+
+    # Data-driven stop levels
+    daily_stop = -(avg_favorable * 0.50)           # single-day stop
+    two_day_stop = daily_stop * 2                  # 2-day stop = 2 × daily stop
+
+    # Track consecutive losing days
+    prev_day_move = signal.get("_prev_day_move")   # yesterday's spread move
+    is_today_loss = todays_move < 0
+    was_yesterday_loss = (prev_day_move is not None and prev_day_move < 0)
+    two_day_combined = (todays_move + prev_day_move) if prev_day_move is not None else None
+
+    # Update peak cumulative (for reporting, not exit logic)
+    peak_pnl = signal.get("peak_spread_pnl_pct", 0.0)
+    if cumulative_spread > peak_pnl:
+        signal["peak_spread_pnl_pct"] = cumulative_spread
+
+    # Store levels on the signal for Telegram display
+    signal["_data_levels"] = {
+        "daily_stop": round(daily_stop, 2),
+        "two_day_stop": round(two_day_stop, 2),
+        "todays_move": round(todays_move, 2),
+        "cumulative": round(cumulative_spread, 2),
+        "daily_std": round(daily_std, 2),
+        "avg_favorable": round(avg_favorable, 2),
+        "consecutive_losses": 2 if (is_today_loss and was_yesterday_loss) else (1 if is_today_loss else 0),
+        "two_day_combined": round(two_day_combined, 2) if two_day_combined is not None else None,
+    }
+
+    # ── EXIT 1: DAILY STOP ──────────────────────────────────
+    # Today's spread move breaches 50% of avg daily favorable move.
+    # Fires regardless of cumulative P&L — protects gains + cuts losses.
+    if todays_move <= daily_stop:
         log.info(
-            f"Signal {signal.get('signal_id')}: expired after {days} trading days"
+            f"Signal {signal.get('signal_id')}: DAILY STOP "
+            f"(today {todays_move:+.2f}% <= stop {daily_stop:+.2f}%, "
+            f"cumulative {cumulative_spread:+.2f}%)"
         )
-        return ("EXPIRED", pnl)
+        return ("STOPPED_OUT", pnl)
 
-    # 4. Target hit (spread P&L > +15%)
-    if pnl["spread_pnl_pct"] >= 15.0:
-        log.info(
-            f"Signal {signal.get('signal_id')}: target hit "
-            f"(spread +{pnl['spread_pnl_pct']:.1f}%)"
-        )
-        return ("TARGET_HIT", pnl)
+    # ── EXIT 2: 2-DAY RUNNING STOP ──────────────────────────
+    # Two consecutive losing days AND combined loss exceeds threshold.
+    # daily_std² × 50% catches persistent deterioration.
+    if is_today_loss and was_yesterday_loss and two_day_combined is not None:
+        if two_day_combined <= two_day_stop:
+            log.info(
+                f"Signal {signal.get('signal_id')}: 2-DAY RUNNING STOP "
+                f"(day1 {prev_day_move:+.2f}% + day2 {todays_move:+.2f}% "
+                f"= {two_day_combined:+.2f}% <= stop {two_day_stop:+.2f}%, "
+                f"cumulative {cumulative_spread:+.2f}%)"
+            )
+            return ("STOPPED_OUT_2DAY", pnl)
 
     return ("OPEN", None)
 
@@ -424,6 +621,12 @@ def run_signal_monitor() -> List[Tuple[Dict[str, Any], str, Dict[str, Any]]]:
         log.info("No open signals to monitor")
         return []
 
+    # Snap entry prices to today's open for signals generated outside
+    # market hours (only runs once per signal, idempotent)
+    if snap_entry_to_market_open(open_sigs):
+        save_open_signals(open_sigs)
+        log.info("Entry prices snapped to today's open")
+
     # Collect all tickers across open signals
     all_tickers: List[str] = []
     for sig in open_sigs:
@@ -441,15 +644,26 @@ def run_signal_monitor() -> List[Tuple[Dict[str, Any], str, Dict[str, Any]]]:
         return []
 
     closed_results: List[Tuple[Dict[str, Any], str, Dict[str, Any]]] = []
+    peaks_updated = False
 
     for sig in open_sigs:
         try:
+            old_peak = sig.get("peak_spread_pnl_pct", 0.0)
             status, pnl = check_signal_status(sig, current_prices)
             if status != "OPEN" and pnl is not None:
                 closed = close_signal(sig, status, pnl)
                 closed_results.append((closed, status, pnl))
+            elif sig.get("peak_spread_pnl_pct", 0.0) != old_peak:
+                peaks_updated = True
         except Exception as e:
             log.error(f"Error checking signal {sig.get('signal_id')}: {e}")
+
+    # Persist peak P&L updates for still-open signals
+    if peaks_updated:
+        remaining = [s for s in open_sigs
+                     if s.get("signal_id") not in
+                     {c[0].get("signal_id") for c in closed_results}]
+        save_open_signals(remaining)
 
     log.info(
         f"Monitor complete: {len(closed_results)} signal(s) closed, "
@@ -462,12 +676,29 @@ def run_eod_review() -> Dict[str, Any]:
     """End-of-day review at 3:45 PM IST.
 
     1. Runs the signal monitor one final time.
-    2. Computes and returns the dashboard dict for Telegram delivery.
+    2. Snapshots closing prices + today's move for next day's stops.
+    3. Computes and returns the dashboard dict for Telegram delivery.
     """
     log.info("Running EOD review")
     closed = run_signal_monitor()
     if closed:
         log.info(f"EOD monitor closed {len(closed)} signal(s)")
+
+    # Snapshot EOD prices for next day's daily stop / 2-day running stop
+    remaining = load_open_signals()
+    if remaining:
+        all_tickers = []
+        for sig in remaining:
+            all_tickers += [l["ticker"] for l in sig.get("long_legs", [])]
+            all_tickers += [s["ticker"] for s in sig.get("short_legs", [])]
+        all_tickers = list(set(all_tickers))
+        try:
+            eod_prices = fetch_current_prices(all_tickers)
+            snapshot_eod_prices(remaining, eod_prices)
+            save_open_signals(remaining)
+            log.info("EOD price snapshot saved for %d signal(s)", len(remaining))
+        except Exception as e:
+            log.error(f"EOD snapshot failed: {e}")
 
     dashboard = get_signal_dashboard()
     log.info(
@@ -476,3 +707,253 @@ def run_eod_review() -> Dict[str, Any]:
         f"win rate {dashboard.get('win_rate_pct')}%"
     )
     return dashboard
+
+
+# ---------------------------------------------------------------------------
+# V2: Portfolio snapshot & cumulative P&L
+# ---------------------------------------------------------------------------
+
+def get_portfolio_snapshot() -> Dict[str, Any]:
+    """Compute aggregate P&L across all open positions.
+
+    Returns dict with:
+        - open_positions: list of {signal_id, spread_name, tier, spread_pnl_pct, days_open}
+        - portfolio_pnl_pct: weighted average P&L across open positions
+        - signal_tier_pnl: avg P&L for SIGNAL tier trades
+        - exploring_tier_pnl: avg P&L for EXPLORING tier trades
+    """
+    open_sigs = load_open_signals()
+    if not open_sigs:
+        return {
+            "open_positions": [],
+            "portfolio_pnl_pct": 0.0,
+            "signal_tier_pnl": 0.0,
+            "exploring_tier_pnl": 0.0,
+        }
+
+    # Collect all tickers
+    all_tickers: List[str] = []
+    for sig in open_sigs:
+        # V2 signal cards have "spreads" list
+        if "spreads" in sig:
+            for spread in sig.get("spreads", []):
+                for leg in spread.get("long_leg", []):
+                    all_tickers.append(leg["ticker"])
+                for leg in spread.get("short_leg", []):
+                    all_tickers.append(leg["ticker"])
+        else:
+            # V1 signal format
+            for leg in sig.get("long_legs", []):
+                all_tickers.append(leg["ticker"])
+            for leg in sig.get("short_legs", []):
+                all_tickers.append(leg["ticker"])
+
+    all_tickers = list(set(all_tickers))
+    try:
+        current_prices = fetch_current_prices(all_tickers)
+    except Exception as e:
+        log.error(f"Price fetch failed for portfolio snapshot: {e}")
+        return {"open_positions": [], "portfolio_pnl_pct": 0.0}
+
+    positions: List[Dict[str, Any]] = []
+    signal_pnls: List[float] = []
+    exploring_pnls: List[float] = []
+
+    for sig in open_sigs:
+        days_open = _trading_days_elapsed(sig.get("timestamp", sig.get("open_timestamp", "")))
+
+        if "spreads" in sig:
+            # V2: iterate over all spreads in the card
+            for spread in sig.get("spreads", []):
+                tier = spread.get("tier", "EXPLORING")
+                pnl = _compute_spread_pnl_from_legs(
+                    spread.get("long_leg", []),
+                    spread.get("short_leg", []),
+                    current_prices,
+                )
+                positions.append({
+                    "signal_id": sig.get("signal_id", "?"),
+                    "spread_name": spread.get("spread_name", "?"),
+                    "tier": tier,
+                    "spread_pnl_pct": pnl,
+                    "days_open": days_open,
+                })
+                if tier == "SIGNAL":
+                    signal_pnls.append(pnl)
+                elif tier == "EXPLORING":
+                    exploring_pnls.append(pnl)
+        else:
+            # V1: single spread
+            pnl_dict = compute_signal_pnl(sig, current_prices)
+            pnl_val = pnl_dict.get("spread_pnl_pct", 0.0)
+            tier = sig.get("tier", "SIGNAL" if sig.get("trade", {}).get("backtest_validated") else "EXPLORING")
+            spread_name = sig.get("trade", {}).get("spread_name", sig.get("spread_name", "?"))
+            positions.append({
+                "signal_id": sig.get("signal_id", "?"),
+                "spread_name": spread_name,
+                "tier": tier,
+                "spread_pnl_pct": pnl_val,
+                "days_open": days_open,
+            })
+            if tier == "SIGNAL":
+                signal_pnls.append(pnl_val)
+            else:
+                exploring_pnls.append(pnl_val)
+
+    all_pnls = [p["spread_pnl_pct"] for p in positions]
+    portfolio_pnl = round(sum(all_pnls) / len(all_pnls), 2) if all_pnls else 0.0
+
+    return {
+        "open_positions": positions,
+        "portfolio_pnl_pct": portfolio_pnl,
+        "signal_tier_pnl": round(sum(signal_pnls) / len(signal_pnls), 2) if signal_pnls else 0.0,
+        "exploring_tier_pnl": round(sum(exploring_pnls) / len(exploring_pnls), 2) if exploring_pnls else 0.0,
+    }
+
+
+def _compute_spread_pnl_from_legs(
+    long_legs: List[Dict],
+    short_legs: List[Dict],
+    current_prices: Dict[str, Optional[float]],
+) -> float:
+    """Quick P&L computation from leg dicts (for V2 signal cards)."""
+    long_pnls = []
+    for leg in long_legs:
+        entry = leg.get("price", 0)
+        current = current_prices.get(leg.get("ticker"), entry)
+        if entry and current:
+            long_pnls.append((current / entry - 1) * 100)
+
+    short_pnls = []
+    for leg in short_legs:
+        entry = leg.get("price", 0)
+        current = current_prices.get(leg.get("ticker"), entry)
+        if entry and current:
+            short_pnls.append((1 - current / entry) * 100)
+
+    avg_long = sum(long_pnls) / len(long_pnls) if long_pnls else 0.0
+    avg_short = sum(short_pnls) / len(short_pnls) if short_pnls else 0.0
+    return round(avg_long + avg_short, 2)
+
+
+def get_cumulative_pnl() -> Dict[str, Any]:
+    """Compute running total P&L from all closed signals.
+
+    Returns dict with:
+        - cumulative_pnl_pct: sum of all closed spread P&Ls
+        - total_closed: number of closed signals
+        - wins/losses count
+        - signal_stats: {wins, losses, avg_pnl} for SIGNAL tier
+        - exploring_stats: {wins, losses, avg_pnl} for EXPLORING tier
+        - days_active: trading days since first signal
+        - weekly_pnls: list of {week, pnl} for trending
+    """
+    closed = load_closed_signals()
+
+    if not closed:
+        return {
+            "cumulative_pnl_pct": 0.0,
+            "total_closed": 0,
+            "wins": 0,
+            "losses": 0,
+            "signal_stats": {"wins": 0, "losses": 0, "avg_pnl": 0.0},
+            "exploring_stats": {"wins": 0, "losses": 0, "avg_pnl": 0.0},
+            "days_active": 0,
+        }
+
+    all_pnls = []
+    signal_pnls = []
+    exploring_pnls = []
+    sig_wins = sig_losses = exp_wins = exp_losses = 0
+
+    for sig in closed:
+        fp = sig.get("final_pnl", {})
+        pnl = fp.get("spread_pnl_pct", 0.0)
+        all_pnls.append(pnl)
+        tier = sig.get("tier", "SIGNAL")
+        is_win = pnl > 0
+
+        if tier == "SIGNAL":
+            signal_pnls.append(pnl)
+            if is_win:
+                sig_wins += 1
+            else:
+                sig_losses += 1
+        else:
+            exploring_pnls.append(pnl)
+            if is_win:
+                exp_wins += 1
+            else:
+                exp_losses += 1
+
+    cumulative = sum(all_pnls)
+    wins = sum(1 for p in all_pnls if p > 0)
+    losses = sum(1 for p in all_pnls if p <= 0)
+
+    # Days active since first signal
+    first_ts = closed[0].get("timestamp", closed[0].get("open_timestamp", ""))
+    days_active = _trading_days_elapsed(first_ts) if first_ts else 0
+
+    return {
+        "cumulative_pnl_pct": round(cumulative, 2),
+        "total_closed": len(closed),
+        "wins": wins,
+        "losses": losses,
+        "signal_stats": {
+            "wins": sig_wins,
+            "losses": sig_losses,
+            "avg_pnl": round(sum(signal_pnls) / len(signal_pnls), 2) if signal_pnls else 0.0,
+        },
+        "exploring_stats": {
+            "wins": exp_wins,
+            "losses": exp_losses,
+            "avg_pnl": round(sum(exploring_pnls) / len(exploring_pnls), 2) if exploring_pnls else 0.0,
+        },
+        "days_active": days_active,
+    }
+
+
+def check_tier_promotions() -> List[Dict[str, Any]]:
+    """Check if any EXPLORING category/spread combos should be promoted to SIGNAL.
+
+    Promotion criteria: 20+ closed EXPLORING signals AND win_rate >= 65%.
+    Returns list of {category, spread_name, win_rate, n_closed} dicts.
+    """
+    from config import TIER_PROMOTION_MIN_SIGNALS, TIER_PROMOTION_WIN_RATE
+
+    closed = load_closed_signals()
+    # Group by (category, spread_name) for EXPLORING tier only
+    combos: Dict[str, Dict[str, Any]] = {}
+    for sig in closed:
+        tier = sig.get("tier", "SIGNAL")
+        if tier != "EXPLORING":
+            continue
+        cat = sig.get("category", sig.get("event", {}).get("category", ""))
+        spread = sig.get("spread_name", sig.get("trade", {}).get("spread_name", ""))
+        key = f"{cat}|{spread}"
+        if key not in combos:
+            combos[key] = {"wins": 0, "total": 0}
+        combos[key]["total"] += 1
+        pnl = sig.get("final_pnl", {}).get("spread_pnl_pct", 0)
+        if pnl > 0:
+            combos[key]["wins"] += 1
+
+    promotions = []
+    for key, stats in combos.items():
+        if stats["total"] < TIER_PROMOTION_MIN_SIGNALS:
+            continue
+        win_rate = stats["wins"] / stats["total"]
+        if win_rate >= TIER_PROMOTION_WIN_RATE:
+            cat, spread = key.split("|", 1)
+            promotions.append({
+                "category": cat,
+                "spread_name": spread,
+                "win_rate": round(win_rate, 3),
+                "n_closed": stats["total"],
+            })
+            log.info(
+                f"PROMOTION candidate: {spread} for {cat} "
+                f"({win_rate:.0%} win rate, {stats['total']} trades)"
+            )
+
+    return promotions

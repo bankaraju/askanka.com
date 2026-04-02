@@ -19,6 +19,15 @@ from config import (
     ASIA_INDIA_CASCADE,
     ASIA_INDICES,
     INDIA_SIGNAL_STOCKS,
+    REGIME_RISK_ON,
+    REGIME_RISK_OFF,
+    REGIME_MIXED,
+    REGIME_WEIGHT_POLITICAL,
+    REGIME_WEIGHT_OIL,
+    REGIME_WEIGHT_ASIAN,
+    REGIME_THRESHOLD,
+    REGIME_SPREADS,
+    EVENT_TAXONOMY,
 )
 
 # ---------------------------------------------------------------------------
@@ -269,6 +278,145 @@ def detect_cascade_signals(
 
 
 # ---------------------------------------------------------------------------
+# Regime detection (V2)
+# ---------------------------------------------------------------------------
+
+REGIME_FILE = DATA_DIR / "today_regime.json"
+
+
+def detect_regime(
+    asian_data: dict[str, Any],
+    overnight_events: Optional[list[dict[str, Any]]] = None,
+) -> dict[str, Any]:
+    """Classify today as RISK_ON, RISK_OFF, or MIXED.
+
+    Scoring:
+      regime_score = 0.4 * political_score + 0.3 * oil_score + 0.3 * asian_score
+      score > +0.3  → RISK_ON
+      score < -0.3  → RISK_OFF
+      else           → MIXED
+
+    Political score: count escalation/de-escalation events in overnight_events
+    Oil score: Brent direction (+1 if up, -1 if down)
+    Asian score: avg Asian defence stock direction
+
+    Saves result to data/today_regime.json and returns regime dict.
+    """
+    # -- Political score (from overnight events) --
+    political_score = 0.0
+    if overnight_events:
+        risk_on_cats = {"escalation", "oil_positive", "sanctions", "hormuz", "trump_threat", "defense_spend"}
+        risk_off_cats = {"de_escalation", "ceasefire", "diplomacy", "oil_negative"}
+        on_count = sum(1 for e in overnight_events if e.get("category") in risk_on_cats)
+        off_count = sum(1 for e in overnight_events if e.get("category") in risk_off_cats)
+        total = on_count + off_count
+        if total > 0:
+            political_score = (on_count - off_count) / total  # normalized to [-1, +1]
+
+    # -- Oil score --
+    oil_score = 0.0
+    commodities = asian_data.get("commodities", {})
+    brent = commodities.get("brent", {})
+    brent_chg = brent.get("change_pct")
+    if brent_chg is not None:
+        if brent_chg > 0.5:
+            oil_score = 1.0
+        elif brent_chg < -0.5:
+            oil_score = -1.0
+        else:
+            oil_score = brent_chg / 0.5  # linear scale within ±0.5%
+
+    # -- Asian score (defence stocks + indices direction) --
+    asian_score = 0.0
+    defence = asian_data.get("defence_stocks", {})
+    if defence:
+        changes = [
+            float(d.get("change_pct", 0) or 0)
+            for d in defence.values()
+        ]
+        if changes:
+            avg_def = sum(changes) / len(changes)
+            if avg_def > 1.0:
+                asian_score = 1.0
+            elif avg_def < -1.0:
+                asian_score = -1.0
+            else:
+                asian_score = avg_def  # linear within ±1%
+
+    # Composite
+    regime_score = (
+        REGIME_WEIGHT_POLITICAL * political_score
+        + REGIME_WEIGHT_OIL * oil_score
+        + REGIME_WEIGHT_ASIAN * asian_score
+    )
+
+    if regime_score > REGIME_THRESHOLD:
+        regime = REGIME_RISK_ON
+    elif regime_score < -REGIME_THRESHOLD:
+        regime = REGIME_RISK_OFF
+    else:
+        regime = REGIME_MIXED
+
+    logger.info(
+        "Regime: %s (score=%.3f, political=%.2f, oil=%.2f, asian=%.2f)",
+        regime, regime_score, political_score, oil_score, asian_score,
+    )
+
+    # Check for regime flip
+    yesterday_regime = _load_yesterday_regime()
+    flip_from = ""
+    if yesterday_regime and yesterday_regime != regime and regime != REGIME_MIXED:
+        flip_from = yesterday_regime
+        logger.info("REGIME FLIP: %s → %s", flip_from, regime)
+
+    result = {
+        "regime": regime,
+        "regime_score": round(regime_score, 4),
+        "components": {
+            "political_score": round(political_score, 4),
+            "oil_score": round(oil_score, 4),
+            "asian_score": round(asian_score, 4),
+        },
+        "flip_from": flip_from,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+    }
+
+    # Persist
+    try:
+        REGIME_FILE.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    except Exception as exc:
+        logger.warning("Failed to save regime file: %s", exc)
+
+    return result
+
+
+def _load_yesterday_regime() -> Optional[str]:
+    """Load yesterday's regime classification."""
+    if not REGIME_FILE.exists():
+        return None
+    try:
+        data = json.loads(REGIME_FILE.read_text(encoding="utf-8"))
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        if data.get("date") != today:
+            return data.get("regime")
+        return None  # same day, no comparison
+    except Exception:
+        return None
+
+
+def load_current_regime() -> str:
+    """Load the current regime from today_regime.json."""
+    if not REGIME_FILE.exists():
+        return REGIME_MIXED
+    try:
+        data = json.loads(REGIME_FILE.read_text(encoding="utf-8"))
+        return data.get("regime", REGIME_MIXED)
+    except Exception:
+        return REGIME_MIXED
+
+
+# ---------------------------------------------------------------------------
 # Pre-market briefing formatter
 # ---------------------------------------------------------------------------
 
@@ -276,9 +424,12 @@ def generate_premarket_briefing(
     asian_data: dict[str, Any],
     cascade_signals: list[dict[str, Any]],
     overnight_events: Optional[list[dict[str, Any]]] = None,
+    regime_info: Optional[dict[str, Any]] = None,
+    correlation_briefing: Optional[str] = None,
 ) -> str:
     """Generate the morning briefing text for Telegram.
 
+    V2: Now includes regime classification and correlation section.
     Returns a formatted string ready for sending.
     """
     indices = asian_data.get("indices", {})
@@ -302,6 +453,29 @@ def generate_premarket_briefing(
     lines: list[str] = []
     lines.append(f"\u2600 ANKA PRE-MARKET BRIEFING \u2014 {today}")
     lines.append("\u2501" * 36)
+
+    # Regime classification (V2)
+    if regime_info:
+        regime = regime_info.get("regime", "MIXED")
+        regime_emoji = {
+            "RISK_ON": "\U0001f534", "RISK_OFF": "\U0001f7e2", "MIXED": "\U0001f7e1"
+        }
+        r_emoji = regime_emoji.get(regime, "\U0001f7e1")
+        score = regime_info.get("regime_score", 0)
+        lines.append(f"{r_emoji} REGIME: {regime.replace('_', ' ')} (score: {score:+.2f})")
+
+        flip_from = regime_info.get("flip_from", "")
+        if flip_from:
+            lines.append(f"\u26a0\ufe0f REGIME FLIP: {flip_from.replace('_', ' ')} \u2192 {regime.replace('_', ' ')}")
+
+        # Show regime-appropriate spreads
+        regime_spreads = REGIME_SPREADS.get(regime, {})
+        if regime_spreads.get("primary"):
+            lines.append(f"  Primary spreads: {', '.join(regime_spreads['primary'])}")
+        if regime_spreads.get("secondary"):
+            lines.append(f"  Secondary: {', '.join(regime_spreads['secondary'])}")
+
+        lines.append("")
 
     # Asian session
     lines.append("\U0001F30F Asian Session (Live):")
@@ -350,6 +524,31 @@ def generate_premarket_briefing(
     )
 
     lines.append("")
+
+    # Asian → India correlation section (V2)
+    if correlation_briefing:
+        # Add a condensed version of the correlation briefing
+        lines.append("\U0001f4c8 ASIAN \u2192 INDIA CORRELATION (data-driven):")
+        # Take the key lines from the full correlation briefing
+        corr_lines = correlation_briefing.split("\n")
+        for cl in corr_lines:
+            if cl.startswith("BREACH:") or cl.startswith("  ") and any(
+                c in cl for c in ["HAL", "BEL", "ONGC", "TCS", "INFY", "OIL", "RELIANCE"]
+            ):
+                lines.append(f"  {cl.strip()}")
+        lines.append("")
+
+    # Stock-level probability ranking (V2)
+    try:
+        from asian_correlation import get_stock_ranking_briefing
+        stock_ranking = get_stock_ranking_briefing()
+        if stock_ranking:
+            lines.append("\U0001f52c " + stock_ranking)
+            lines.append("")
+    except ImportError:
+        pass
+    except Exception as exc:
+        logger.warning("Stock ranking failed: %s", exc)
 
     # India expected
     lines.append("\U0001F1EE\U0001F1F3 India Expected:")
@@ -400,8 +599,10 @@ def run_premarket_scan(
 
     1. Fetch Asian session data
     2. Detect cascade signals
-    3. Optionally incorporate overnight political events
-    4. Generate briefing text
+    3. Detect regime (RISK_ON / RISK_OFF / MIXED)
+    4. Generate correlation briefing (data-driven)
+    5. Optionally incorporate overnight political events
+    6. Generate briefing text with all sections
 
     Returns (briefing_text, cascade_signals, asian_data).
     """
@@ -417,7 +618,6 @@ def run_premarket_scan(
     if overnight_events is None:
         seen_file = DATA_DIR / "seen_events.json"
         if seen_file.exists():
-            # Try to load recent classified events from signals directory
             signals_dir = DATA_DIR / "signals"
             overnight_events = []
             if signals_dir.exists():
@@ -430,9 +630,43 @@ def run_premarket_scan(
                     except (json.JSONDecodeError, IOError):
                         continue
 
-    # 4. Generate briefing
+    # 4. Detect regime (V2)
+    regime_info = detect_regime(asian_data, overnight_events)
+
+    # 5. Generate correlation briefing (V2)
+    correlation_briefing = None
+    try:
+        from asian_correlation import generate_correlation_briefing
+        # Build today's Asian moves from our fetched data
+        today_moves = {}
+        for idx_name, idx_data in asian_data.get("indices", {}).items():
+            chg = idx_data.get("change_pct")
+            if chg is not None:
+                today_moves[idx_name.split()[0]] = float(chg)  # "Nikkei 225" → "Nikkei"
+        for ticker, d_data in asian_data.get("defence_stocks", {}).items():
+            name = d_data.get("name", ticker)
+            chg = d_data.get("change_pct")
+            if chg is not None:
+                today_moves[name] = float(chg)
+        brent_chg = asian_data.get("commodities", {}).get("brent", {}).get("change_pct")
+        if brent_chg is not None:
+            today_moves["Brent"] = float(brent_chg)
+        gold_chg = asian_data.get("commodities", {}).get("gold", {}).get("change_pct")
+        if gold_chg is not None:
+            today_moves["Gold"] = float(gold_chg)
+
+        correlation_briefing = generate_correlation_briefing(today_moves)
+        logger.info("Correlation briefing generated")
+    except ImportError:
+        logger.warning("asian_correlation module not available -- skipping correlation section")
+    except Exception as exc:
+        logger.warning("Correlation briefing failed: %s", exc)
+
+    # 6. Generate briefing with all sections
     briefing_text = generate_premarket_briefing(
-        asian_data, cascade_signals, overnight_events
+        asian_data, cascade_signals, overnight_events,
+        regime_info=regime_info,
+        correlation_briefing=correlation_briefing,
     )
 
     # Persist briefing

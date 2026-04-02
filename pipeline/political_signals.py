@@ -25,6 +25,9 @@ from config import (
     SIGNAL_HIT_RATE_THRESHOLD,
     SIGNAL_MIN_PRECEDENTS,
     SIGNAL_STOP_LOSS_PCT,
+    TIER_SIGNAL,
+    TIER_EXPLORING,
+    TIER_NO_DATA,
 )
 
 # ---------------------------------------------------------------------------
@@ -865,18 +868,20 @@ def generate_signal(
                 best_pair = pair
                 best_stats = stats
 
-    # If no pair passes backtest gates, use the first match but flag it
+    # If no pair passes backtest gates, use the first match and flag it unvalidated.
+    # The subscriber sees "EXPLORING" tier — signal is sent but clearly labelled.
     backtest_validated = best_pair is not None
     if not best_pair:
         best_pair = matching_pairs[0]
         pair_name = best_pair["name"]
         best_stats = pattern_lookup.get(pair_name, {}).get(category, {})
-        if best_stats.get("hit_rate", 0) < SIGNAL_HIT_RATE_THRESHOLD:
-            logger.info(
-                "Signal for '%s' -- pair '%s' below hit-rate gate (%.2f < %.2f)",
-                category, pair_name, best_stats.get("hit_rate", 0), SIGNAL_HIT_RATE_THRESHOLD,
-            )
-            return None
+        logger.info(
+            "No validated pair for '%s' — using '%s' as EXPLORING (hit_rate=%.2f, n=%d)",
+            category, pair_name,
+            best_stats.get("hit_rate", 0),
+            best_stats.get("n", best_stats.get("n_events", 0)),
+        )
+        # backtest_validated remains False — signal will be tagged EXPLORING
 
     # Gather tickers for price fetch
     long_names = best_pair["long"]
@@ -962,13 +967,162 @@ def generate_signal(
 
 
 # ---------------------------------------------------------------------------
+# Multi-spread signal card (V2)
+# ---------------------------------------------------------------------------
+
+def generate_signal_card(
+    event: dict[str, Any],
+    pattern_lookup: dict[str, Any],
+    current_prices: Optional[dict[str, float]] = None,
+) -> Optional[dict[str, Any]]:
+    """Generate a multi-spread signal card from a classified event.
+
+    Instead of picking only the best spread, this returns ALL matching
+    spreads with tier labels:
+      - SIGNAL (🟢): hit_rate >= 0.65 AND n >= 3 → trade-worthy
+      - EXPLORING (🟡): has backtest data but below gates → tracked for promotion
+      - NO_DATA (⚪): no backtest for this category/spread combo
+
+    Returns a signal card dict with all spreads, or None if confidence too low.
+    """
+    global _signal_counter
+
+    category = event.get("category")
+    confidence = event.get("confidence", 0.0)
+
+    if confidence < SIGNAL_CONFIDENCE_THRESHOLD:
+        logger.debug("Signal card gated: confidence %.2f < %.2f", confidence, SIGNAL_CONFIDENCE_THRESHOLD)
+        return None
+
+    # Find ALL matching spread pairs for this category
+    matching_pairs = [
+        pair for pair in INDIA_SPREAD_PAIRS
+        if category in pair.get("triggers", [])
+    ]
+    if not matching_pairs:
+        logger.debug("No spread pairs triggered by category '%s'", category)
+        return None
+
+    # Build legs helper
+    def _build_leg(names: list[str], prices: dict[str, float]) -> list[dict[str, Any]]:
+        leg = []
+        weight = round(1.0 / max(len(names), 1), 4)
+        for name in names:
+            stock_info = INDIA_SIGNAL_STOCKS.get(name, {})
+            yf_ticker = stock_info.get("yf", "")
+            price = prices.get(yf_ticker, 0.0)
+            leg.append({
+                "ticker": name,
+                "yf": yf_ticker,
+                "price": price,
+                "weight": weight,
+            })
+        return leg
+
+    # Fetch prices if not provided
+    if current_prices is None:
+        all_tickers = []
+        for pair in matching_pairs:
+            for name in pair["long"] + pair["short"]:
+                yf_ticker = INDIA_SIGNAL_STOCKS.get(name, {}).get("yf", "")
+                if yf_ticker:
+                    all_tickers.append(yf_ticker)
+        current_prices = _fetch_current_prices(list(set(all_tickers)))
+
+    # Build spread entries with tiers
+    spread_entries: list[dict[str, Any]] = []
+    has_any_signal_tier = False
+
+    for pair in matching_pairs:
+        pair_name = pair["name"]
+        stats = pattern_lookup.get(pair_name, {}).get(category, {})
+        hit_rate = stats.get("hit_rate", 0.0)
+        n_events = stats.get("n", stats.get("n_events", 0))
+        expected_spread = stats.get("1d_spread_median", stats.get("avg_1d_return", 0.0))
+
+        # Determine tier
+        if not stats:
+            tier = TIER_NO_DATA
+        elif hit_rate >= SIGNAL_HIT_RATE_THRESHOLD and n_events >= SIGNAL_MIN_PRECEDENTS:
+            tier = TIER_SIGNAL
+            has_any_signal_tier = True
+        else:
+            tier = TIER_EXPLORING
+
+        long_leg = _build_leg(pair["long"], current_prices)
+        short_leg = _build_leg(pair["short"], current_prices)
+
+        # Stop-loss levels
+        stop_pct = SIGNAL_STOP_LOSS_PCT / 100.0
+        stop_prices: dict[str, float] = {}
+        for entry in long_leg:
+            if entry["price"] > 0:
+                stop_prices[entry["ticker"]] = round(entry["price"] * (1 - stop_pct), 2)
+        for entry in short_leg:
+            if entry["price"] > 0:
+                stop_prices[entry["ticker"]] = round(entry["price"] * (1 + stop_pct), 2)
+
+        spread_entries.append({
+            "spread_name": pair_name,
+            "tier": tier,
+            "long_leg": long_leg,
+            "short_leg": short_leg,
+            "hit_rate": hit_rate,
+            "n_precedents": n_events,
+            "expected_1d_spread": expected_spread,
+            "stop_prices": stop_prices,
+        })
+
+    # Sort by tier priority (SIGNAL first, then EXPLORING, then NO_DATA),
+    # then by hit_rate descending
+    tier_order = {TIER_SIGNAL: 0, TIER_EXPLORING: 1, TIER_NO_DATA: 2}
+    spread_entries.sort(key=lambda s: (tier_order.get(s["tier"], 3), -s["hit_rate"]))
+
+    # Signal ID
+    _signal_counter += 1
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    signal_id = f"SIG-{today}-{_signal_counter:03d}"
+
+    signal_card = {
+        "signal_id": signal_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "event": {
+            "headline": event.get("headline", ""),
+            "category": category,
+            "confidence": confidence,
+            "source": event.get("source", ""),
+            "url": event.get("url", ""),
+        },
+        "spreads": spread_entries,
+        "has_signal_tier": has_any_signal_tier,
+        "risk": {
+            "stop_loss_pct": SIGNAL_STOP_LOSS_PCT,
+        },
+        "status": "OPEN",
+    }
+
+    # Persist signal card to disk
+    signal_file = SIGNALS_DIR / f"{signal_id}.json"
+    signal_file.write_text(json.dumps(signal_card, indent=2), encoding="utf-8")
+    logger.info(
+        "Signal card generated: %s (%s) -> %d spreads (%d SIGNAL, %d EXPLORING)",
+        signal_id, category, len(spread_entries),
+        sum(1 for s in spread_entries if s["tier"] == TIER_SIGNAL),
+        sum(1 for s in spread_entries if s["tier"] == TIER_EXPLORING),
+    )
+
+    return signal_card
+
+
+# ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
 
 def run_signal_check() -> list[dict[str, Any]]:
-    """Main entry: detect events -> generate signals -> return new signals.
+    """Main entry: detect events -> generate multi-spread signal cards.
 
     Intended to be called every 30 minutes during market hours.
+    Returns list of signal cards, each containing ALL matching spreads with tiers.
     """
     logger.info("=== Signal check started ===")
 
@@ -991,12 +1145,13 @@ def run_signal_check() -> list[dict[str, Any]]:
 
     signals: list[dict[str, Any]] = []
     for event in events:
-        signal = generate_signal(event, pattern_lookup, current_prices)
-        if signal:
-            signals.append(signal)
+        # V2: generate multi-spread signal card instead of single signal
+        signal_card = generate_signal_card(event, pattern_lookup, current_prices)
+        if signal_card:
+            signals.append(signal_card)
 
     logger.info(
-        "=== Signal check complete: %d events -> %d signals ===",
+        "=== Signal check complete: %d events -> %d signal cards ===",
         len(events), len(signals),
     )
     return signals

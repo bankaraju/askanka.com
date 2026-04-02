@@ -16,12 +16,18 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from premarket_scanner import fetch_asian_session_data, detect_cascade_signals, generate_premarket_briefing
 from telegram_bot import format_premarket_briefing, send_message
+from trading_calendar import is_trading_day, get_holiday_name
 
 
 def main():
     parser = argparse.ArgumentParser(description="Anka Pre-Market Scanner")
     parser.add_argument("--telegram", action="store_true", help="Send briefing to Telegram")
     args = parser.parse_args()
+
+    holiday = get_holiday_name()
+    if holiday:
+        print(f"Market closed today — {holiday}. No pre-market briefing.")
+        return
 
     print("Scanning Asian markets...")
     data = fetch_asian_session_data()

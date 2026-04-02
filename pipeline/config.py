@@ -86,27 +86,36 @@ VOLATILITY = {
 # === INDIA SIGNAL STOCKS (for political sentiment engine) ===
 INDIA_SIGNAL_STOCKS = {
     # Winners (defense + upstream energy + defensives)
-    "HAL":        {"yf": "HAL.NS",        "sector": "Defense/Aerospace",    "group": "winner"},
-    "BEL":        {"yf": "BEL.NS",        "sector": "Defense Electronics",  "group": "winner"},
-    "BDL":        {"yf": "BDL.NS",        "sector": "Defense/Missiles",     "group": "winner"},
-    "MTAR":       {"yf": "MTARTECH.NS",   "sector": "Defense/Precision",    "group": "winner"},
-    "ONGC":       {"yf": "ONGC.NS",       "sector": "Energy/Upstream",      "group": "winner"},
-    "OIL":        {"yf": "OIL.NS",        "sector": "Energy/Upstream",      "group": "winner"},
-    "RELIANCE":   {"yf": "RELIANCE.NS",   "sector": "Energy/Conglomerate",  "group": "winner"},
-    "COALINDIA":  {"yf": "COALINDIA.NS",  "sector": "Energy/Coal",          "group": "winner"},
-    "SUNPHARMA":  {"yf": "SUNPHARMA.NS",  "sector": "Pharma",              "group": "winner"},
-    "BHARATFORG": {"yf": "BHARATFORG.NS", "sector": "Defense/Forging",      "group": "winner"},
+    "HAL":        {"yf": "HAL.NS",        "eodhd": "HAL.NSE",        "sector": "Defense/Aerospace",    "group": "winner"},
+    "BEL":        {"yf": "BEL.NS",        "eodhd": "BEL.NSE",        "sector": "Defense Electronics",  "group": "winner"},
+    "BDL":        {"yf": "BDL.NS",        "eodhd": "BDL.NSE",        "sector": "Defense/Missiles",     "group": "winner"},
+    "MTAR":       {"yf": "MTARTECH.NS",   "eodhd": "MTARTECH.NSE",   "sector": "Defense/Precision",    "group": "winner"},
+    "ONGC":       {"yf": "ONGC.NS",       "eodhd": "ONGC.NSE",       "sector": "Energy/Upstream",      "group": "winner"},
+    "OIL":        {"yf": "OIL.NS",        "eodhd": "OIL.NSE",        "sector": "Energy/Upstream",      "group": "winner"},
+    "RELIANCE":   {"yf": "RELIANCE.NS",   "eodhd": "RELIANCE.NSE",   "sector": "Energy/Conglomerate",  "group": "winner"},
+    "COALINDIA":  {"yf": "COALINDIA.NS",  "eodhd": "COALINDIA.NSE",  "sector": "Energy/Coal",          "group": "winner"},
+    "SUNPHARMA":  {"yf": "SUNPHARMA.NS",  "eodhd": "SUNPHARMA.NSE",  "sector": "Pharma",               "group": "winner"},
+    "DRREDDY":    {"yf": "DRREDDY.NS",    "eodhd": "DRREDDY.NSE",    "sector": "Pharma",               "group": "winner"},
+    "BHARATFORG": {"yf": "BHARATFORG.NS", "eodhd": "BHARATFORG.NSE", "sector": "Defense/Forging",      "group": "winner"},
+    # Neutral / multi-factor
+    "HDFCBANK":   {"yf": "HDFCBANK.NS",   "eodhd": "HDFCBANK.NSE",   "sector": "Banking/Private",      "group": "neutral"},
+    "ICICIBANK":  {"yf": "ICICIBANK.NS",  "eodhd": "ICICIBANK.NSE",  "sector": "Banking/Private",      "group": "neutral"},
+    "TATAMOTORS": {"yf": "TMPV.NS",       "eodhd": "TATAMOTORS.NSE", "sector": "Auto",                 "group": "loser"},  # Tata Motors demerged Oct 2025 → TMPV (passenger vehicles)
+    "M&M":        {"yf": "M&M.NS",        "eodhd": "M&M.NSE",        "sector": "Auto/Farm",            "group": "neutral"},
+    "MARUTI":     {"yf": "MARUTI.NS",     "eodhd": "MARUTI.NSE",     "sector": "Auto/Passenger",       "group": "loser"},
+    "ADANIENT":   {"yf": "ADANIENT.NS",   "eodhd": "ADANIENT.NSE",   "sector": "Conglomerate",         "group": "neutral"},
     # Losers (downstream OMCs + IT)
-    "IOC":        {"yf": "IOC.NS",        "sector": "Energy/Downstream",    "group": "loser"},
-    "BPCL":       {"yf": "BPCL.NS",       "sector": "Energy/Downstream",    "group": "loser"},
-    "HPCL":       {"yf": "HINDPETRO.NS",  "sector": "Energy/Downstream",    "group": "loser"},
-    "TCS":        {"yf": "TCS.NS",        "sector": "IT Services",          "group": "loser"},
-    "INFY":       {"yf": "INFY.NS",       "sector": "IT Services",          "group": "loser"},
-    "WIPRO":      {"yf": "WIPRO.NS",      "sector": "IT Services",          "group": "loser"},
+    "IOC":        {"yf": "IOC.NS",        "eodhd": "IOC.NSE",        "sector": "Energy/Downstream",    "group": "loser"},
+    "BPCL":       {"yf": "BPCL.NS",       "eodhd": "BPCL.NSE",       "sector": "Energy/Downstream",    "group": "loser"},
+    "HPCL":       {"yf": "HINDPETRO.NS",  "eodhd": "HINDPETRO.NSE",  "sector": "Energy/Downstream",    "group": "loser"},
+    "TCS":        {"yf": "TCS.NS",        "eodhd": "TCS.NSE",        "sector": "IT Services",          "group": "loser"},
+    "INFY":       {"yf": "INFY.NS",       "eodhd": "INFY.NSE",       "sector": "IT Services",          "group": "loser"},
+    "WIPRO":      {"yf": "WIPRO.NS",      "eodhd": "WIPRO.NSE",      "sector": "IT Services",          "group": "loser"},
 }
 
 # === INDIA SPREAD PAIRS ===
 INDIA_SPREAD_PAIRS = [
+    # ── Active spread universe ──────────────────────────────────────────
     {
         "name": "Upstream vs Downstream",
         "long": ["ONGC", "OIL"],
@@ -130,6 +139,31 @@ INDIA_SPREAD_PAIRS = [
         "long": ["COALINDIA"],
         "short": ["BPCL", "HPCL"],
         "triggers": ["energy_crisis", "oil_up", "escalation", "hormuz", "oil_positive"],
+    },
+    # ── Phase 2 spreads (expanding universe) ────────────────────────────
+    {
+        "name": "Pharma vs Cyclicals",
+        "long": ["SUNPHARMA", "DRREDDY"],
+        "short": ["TATAMOTORS", "M&M"],
+        "triggers": ["escalation", "de_escalation", "diplomacy"],
+    },
+    {
+        "name": "PSU Commodity vs Banks",
+        "long": ["ONGC", "COALINDIA"],      # proxy for commodity/haven
+        "short": ["HDFCBANK", "ICICIBANK"],
+        "triggers": ["escalation", "sanctions", "hormuz"],
+    },
+    {
+        "name": "Defence vs Auto",
+        "long": ["HAL", "BEL"],
+        "short": ["TATAMOTORS", "MARUTI"],
+        "triggers": ["escalation", "defense_spend", "trump_threat"],
+    },
+    {
+        "name": "PSU Energy vs Private",
+        "long": ["ONGC", "COALINDIA", "OIL"],
+        "short": ["RELIANCE", "ADANIENT"],
+        "triggers": ["oil_up", "escalation", "hormuz"],
     },
 ]
 
@@ -213,12 +247,71 @@ NEWS_KEYWORDS = [
 
 # === SIGNAL ENGINE CONFIG ===
 SIGNAL_STOP_LOSS_PCT = 10.0
+SIGNAL_TRAILING_STOP_ACTIVATE_PCT = 3.0   # Trailing stop activates when spread P&L >= 3%
+SIGNAL_TRAILING_STOP_DISTANCE_PCT = 2.0   # Once active, exit if P&L drops 2% from peak
 SIGNAL_CONFIDENCE_THRESHOLD = 0.6
 SIGNAL_HIT_RATE_THRESHOLD = 0.65
 SIGNAL_MIN_PRECEDENTS = 3
 POLL_INTERVAL_MINUTES = 30
 MARKET_HOURS_IST = {"open": "09:15", "close": "15:30"}
 PREMARKET_SCAN_IST = "08:30"
+MIDDAY_WINDOW_IST = {"start": "12:10", "end": "12:50"}
+OPEN_CAPTURE_IST = "09:22"
+EOD_REVIEW_IST = "15:45"
+
+# === POSITION SIZING ===
+# Reference unit: ₹10,000 per side (long ₹10K + short ₹10K = ₹20K total exposure)
+# Subscribers scale to their own book. We report P&L in both % and ₹ terms.
+UNIT_SIZE_INR = 10_000            # ₹10,000 per side per spread
+SIGNAL_UNITS = 1.0                # SIGNAL tier → 1 full unit (₹10K per side)
+EXPLORING_UNITS = 0.5             # EXPLORING tier → half unit (₹5K per side)
+NO_DATA_UNITS = 0.0               # NO_DATA tier → not traded, tracked only
+
+# === SIGNAL TIERS ===
+# SIGNAL (🟢): passes all backtest gates → trade-worthy, 1 unit
+# EXPLORING (🟡): has data but below gates → half unit, tracked for promotion
+# NO_DATA (⚪): no backtest data → not traded, paper-tracked only
+TIER_SIGNAL = "SIGNAL"
+TIER_EXPLORING = "EXPLORING"
+TIER_NO_DATA = "NO_DATA"
+TIER_PROMOTION_MIN_SIGNALS = 20   # need 20+ closed EXPLORING trades to consider promotion
+TIER_PROMOTION_WIN_RATE = 0.65    # EXPLORING → SIGNAL if win rate >= 65%
+
+# === REGIME DETECTION ===
+REGIME_RISK_ON = "RISK_ON"
+REGIME_RISK_OFF = "RISK_OFF"
+REGIME_MIXED = "MIXED"
+
+# Risk ON regime: escalation day → long defence/upstream, short IT/downstream
+# Risk OFF regime: de-escalation day → reverse all spreads
+REGIME_SPREADS = {
+    "RISK_ON": {
+        "primary": ["Upstream vs Downstream", "Defence vs IT"],
+        "secondary": ["Coal vs OMCs"],
+        "description": "Escalation day — long defence+upstream, short IT+downstream",
+    },
+    "RISK_OFF": {
+        "primary": ["Upstream vs Downstream (REVERSED)", "Defence vs IT (REVERSED)"],
+        "secondary": ["Reliance Pivot"],
+        "description": "De-escalation day — reverse spreads, long IT+downstream",
+    },
+    "MIXED": {
+        "primary": [],
+        "secondary": [],
+        "description": "Conflicting signals — hold existing positions, trailing stops active",
+    },
+}
+
+# Regime scoring weights
+REGIME_WEIGHT_POLITICAL = 0.4
+REGIME_WEIGHT_OIL = 0.3
+REGIME_WEIGHT_ASIAN = 0.3
+REGIME_THRESHOLD = 0.3  # score > +0.3 → RISK_ON, < -0.3 → RISK_OFF
+
+# === CORRELATION ENGINE CONFIG ===
+CORRELATION_CACHE_HOURS = 24
+CORRELATION_MIN_EVENTS = 5
+CORRELATION_THRESHOLDS = [-5.0, -3.0, -2.0, 2.0, 3.0, 5.0]
 
 # === TELEGRAM CONFIG (set in .env) ===
 TELEGRAM_BOT_TOKEN = None  # Override from .env
