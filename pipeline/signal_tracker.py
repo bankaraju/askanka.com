@@ -150,7 +150,7 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
                     log.info("Snapped %s entry: ₹%.2f → ₹%.2f (today's open)", ticker, old, open_price)
 
             sig["entry_snapped"] = True
-            sig["open_timestamp"] = datetime.utcnow().isoformat()
+            sig["open_timestamp"] = datetime.now(timezone.utc).isoformat()
             updated = True
             log.info(f"Signal {sig.get('signal_id')}: entry prices snapped to today's open")
 

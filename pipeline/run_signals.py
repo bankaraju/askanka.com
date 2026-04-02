@@ -433,7 +433,6 @@ def _run_once_inner(send_telegram=False):
             for sig in open_sigs:
                 lvl = get_levels_for_spread(sig['spread_name'])
                 daily_stop = -(lvl['avg_favorable_move'] * 0.50)
-                daily_stop = -(lvl['avg_favorable_move'] * 0.50)
                 two_day_stop = daily_stop * 2
                 dl = sig.get("_data_levels", {})
                 consec = dl.get("consecutive_losses", 0)

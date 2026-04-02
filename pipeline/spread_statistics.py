@@ -9,7 +9,7 @@ Winners run until stopped — no target exit, no trailing stop, no expiry.
 Framework:
   - Entry level:  Weekly-weighted 1-month average cumulative spread = "fair value"
   - Daily stop:   50% of weighted avg daily favorable move, on the wrong side
-  - 2-day stop:   daily_std² × 50% — fires on 2 consecutive losing days
+  - 2-day stop:   2 × daily_stop — fires on 2 consecutive losing days
   - Percentile zone: warns late entrants if spread is in top 20% of 1-month range
 """
 
@@ -498,4 +498,5 @@ if __name__ == "__main__":
         print(f"  --- LEVELS (weekly-weighted) ---")
         print(f"  Entry (weighted 1mo mean):  {s['entry_level']:+.2f}%")
         print(f"  Daily stop (50% fav move):  {s['stop_level']:+.2f}%")
-        print(f"  2-day stop (std^2 x 50%):   {-(s['daily_std']**2 * 0.50):+.2f}%")
+        two_day_stop_disp = -(s.get("avg_favorable_move", s["daily_std"]) * 0.50) * 2
+        print(f"  2-day stop (2 × daily stop): {two_day_stop_disp:+.2f}%")

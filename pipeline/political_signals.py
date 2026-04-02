@@ -792,9 +792,11 @@ def load_pattern_lookup() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 def _fetch_current_prices(tickers: list[str]) -> dict[str, float]:
-    """Fetch current prices for a list of yfinance tickers.
+    """Fetch current prices for signal generation using yfinance.
 
-    Returns {ticker: price}. Missing tickers are omitted.
+    NOTE: This is yfinance-only (used at signal generation time for entry prices).
+    For live P&L monitoring, signal_tracker.fetch_current_prices() is used,
+    which has EODHD as primary source with yfinance fallback.
     """
     try:
         import yfinance as yf
