@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anka Research | AI-Augmented Market Intelligence</title>
-    <meta name="description" content="Weekly wartime stock market research by Bharat Ankaraju. AI-augmented analysis across 8 global indices.">
-    <meta property="og:title" content="Anka Research | AI-Augmented Market Intelligence">
-    <meta property="og:description" content="Weekly stock market intelligence during geopolitical conflict. Data-driven analysis across S&P 500, Nifty 50, KOSPI, Nikkei 225, CSI 300, FTSE 100, CAC 40, DAX.">
+    <title>Anka Research | Data-Driven Spread Trading Signals</title>
+    <meta name="description" content="Live market intelligence dashboard for Indian equity spread trading. AI-powered geopolitical signal detection across 25 spread pairs.">
+    <meta property="og:title" content="Anka Research | Data-Driven Spread Trading Signals">
+    <meta property="og:description" content="Live spread trading signals for Indian equities. 25 pairs, 18 event categories, fully automated pipeline.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://askanka.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -26,6 +27,10 @@
             --accent-blue: #3b82f6;
             --accent-green: #10b981;
             --accent-red: #ef4444;
+            --accent-gold-dim: rgba(245, 158, 11, 0.15);
+            --accent-green-dim: rgba(16, 185, 129, 0.15);
+            --accent-red-dim: rgba(239, 68, 68, 0.15);
+            --accent-blue-dim: rgba(59, 130, 246, 0.15);
         }
 
         body {
@@ -36,12 +41,17 @@
             min-height: 100vh;
         }
 
-        /* Hero */
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── Container ── */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+        /* ── Hero ── */
         .hero {
             position: relative;
-            padding: 80px 20px 60px;
+            padding: 64px 20px 48px;
             text-align: center;
-            background: linear-gradient(135deg, #0a0e1a 0%, #1a1a3e 50%, #0a0e1a 100%);
+            background: linear-gradient(135deg, #0a0e1a 0%, #141428 40%, #1a1a3e 60%, #0a0e1a 100%);
             border-bottom: 1px solid var(--border);
             overflow: hidden;
         }
@@ -50,630 +60,1337 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+            background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 60%);
             pointer-events: none;
         }
 
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
         .logo-badge {
-            display: inline-flex;
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 16px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, var(--accent-gold), #d97706);
-            border-radius: 16px;
-            font-size: 32px;
+            font-family: 'Inter', sans-serif;
             font-weight: 800;
+            font-size: 32px;
             color: #0a0e1a;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 40px rgba(245, 158, 11, 0.25);
         }
 
-        .hero h1 {
-            font-size: 2.8rem;
+        .hero-title {
+            font-size: 40px;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #f1f5f9, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero .tagline {
-            font-size: 1.1rem;
-            color: var(--accent-gold);
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        .hero .subtitle {
-            font-size: 1rem;
+        .hero-subtitle {
+            font-size: 18px;
             color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 32px;
+            font-weight: 400;
+            margin-top: -12px;
         }
 
-        .author-line {
-            font-size: 0.9rem;
+        .hero-row {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        /* ── MSI Gauge ── */
+        .msi-gauge-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .msi-gauge {
+            position: relative;
+            width: 180px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .msi-gauge svg { width: 180px; height: 100px; }
+
+        .msi-gauge-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             color: var(--text-muted);
         }
 
-        .author-line strong {
-            color: var(--text-secondary);
+        .msi-score-display {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
         }
 
-        /* Reports Section */
+        .msi-score-display .score {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .regime-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .regime-MACRO_EASY { background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.3); }
+        .regime-MACRO_NEUTRAL { background: rgba(245,158,11,0.12); color: var(--accent-gold); border: 1px solid rgba(245,158,11,0.3); }
+        .regime-MACRO_STRESS { background: var(--accent-red-dim); color: var(--accent-red); border: 1px solid rgba(239,68,68,0.3); }
+
+        .live-dot {
+            width: 8px; height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+            50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+        }
+
+        .updated-time {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .telegram-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0a0e1a;
+            font-weight: 700;
+            font-size: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .telegram-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+        }
+
+        .telegram-cta svg { width: 20px; height: 20px; fill: #0a0e1a; }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 20px 16px;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .stat-card:hover { background: var(--bg-card-hover); }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-value.positive { color: var(--accent-green); }
+        .stat-value.negative { color: var(--accent-red); }
+
+        /* ── Section Headers ── */
         .section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 60px 20px;
+            padding: 48px 0;
         }
 
         .section-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .section-header h2 {
-            font-size: 1.5rem;
+            font-size: 22px;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .section-header .line {
-            flex: 1;
-            height: 1px;
-            background: var(--border);
+        .section-header .badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .report-card {
-            display: block;
+        .badge-live { background: var(--accent-green-dim); color: var(--accent-green); }
+        .badge-count { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+        /* ── Position Cards ── */
+        .positions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+            gap: 16px;
+        }
+
+        .position-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 28px 32px;
-            margin-bottom: 16px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
+            padding: 24px;
+            transition: border-color 0.2s;
         }
 
-        .report-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-gold);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
+        .position-card:hover { border-color: rgba(245, 158, 11, 0.3); }
 
-        .report-card .card-top {
+        .position-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            margin-bottom: 16px;
         }
 
-        .report-card .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .report-card .badge.latest::before {
-            content: '';
-            width: 6px; height: 6px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .report-card .date {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .report-card h3 {
-            font-size: 1.25rem;
+        .position-name {
+            font-size: 18px;
             font-weight: 700;
+        }
+
+        .position-badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .tier-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .tier-SIGNAL { background: var(--accent-green-dim); color: var(--accent-green); }
+        .tier-EXPLORING { background: rgba(245,158,11,0.12); color: var(--accent-gold); }
+
+        .category-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            background: var(--accent-blue-dim);
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .position-pnl {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .position-pnl.positive { color: var(--accent-green); }
+        .position-pnl.negative { color: var(--accent-red); }
+
+        .legs-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .leg-group h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
             margin-bottom: 8px;
         }
 
-        .report-card .description {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
+        .leg-group.long h4 { color: var(--accent-green); }
+        .leg-group.short h4 { color: var(--accent-red); }
 
-        .report-card .metrics {
+        .leg-item {
             display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
         }
 
-        .report-card .metric {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .report-card .metric-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .report-card .metric-value {
-            font-size: 0.95rem;
-            font-weight: 600;
+        .leg-ticker {
             font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 13px;
         }
 
-        .metric-value.up { color: var(--accent-green); }
-        .metric-value.down { color: var(--accent-red); }
-        .metric-value.neutral { color: var(--accent-blue); }
-
-        /* Telegram Section */
-        .telegram-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px 60px;
+        .leg-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
-        .telegram-card {
-            background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2a 50%, #1a1a3e 100%);
-            border: 1px solid rgba(0, 136, 204, 0.3);
-            border-radius: 16px;
-            padding: 40px;
+        .position-meta {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .meta-item {
             text-align: center;
-            position: relative;
+        }
+
+        .meta-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .meta-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .no-positions {
+            text-align: center;
+            padding: 48px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .no-positions .icon { font-size: 32px; margin-bottom: 12px; }
+
+        /* ── MSI Chart ── */
+        .msi-chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        #msi-chart { width: 100%; height: 300px; }
+
+        /* ── Track Record ── */
+        .track-record-table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             overflow: hidden;
         }
 
-        .telegram-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(0, 136, 204, 0.08) 0%, transparent 70%);
-            pointer-events: none;
+        .track-record-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .telegram-icon {
-            display: inline-flex;
+        .track-record-table th {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .track-record-table th:hover { color: var(--text-secondary); }
+
+        .track-record-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .track-record-table tr:last-child td { border-bottom: none; }
+
+        .result-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .result-win { background: var(--accent-green-dim); color: var(--accent-green); }
+        .result-loss { background: var(--accent-red-dim); color: var(--accent-red); }
+
+        .track-empty {
+            text-align: center;
+            padding: 48px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-row td {
+            font-weight: 700;
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        /* ── Heatmap ── */
+        .heatmap-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        .heatmap-table {
+            border-collapse: collapse;
+            min-width: 100%;
+        }
+
+        .heatmap-table th {
+            padding: 6px 4px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .heatmap-table th.row-header {
+            text-align: right;
+            padding-right: 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            min-width: 180px;
+            position: sticky;
+            left: 0;
+            background: var(--bg-card);
+            z-index: 2;
+        }
+
+        .heatmap-table thead th {
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 1;
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+            text-align: left;
+            padding: 8px 4px;
+            height: 100px;
+        }
+
+        .heatmap-table thead th:first-child {
+            writing-mode: horizontal-tb;
+            transform: none;
+            text-align: right;
+        }
+
+        .heatmap-cell {
+            width: 44px;
+            height: 32px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: default;
+            transition: transform 0.15s;
+            padding: 0 2px;
+        }
+
+        .heatmap-cell:hover { transform: scale(1.15); }
+
+        .heatmap-cell.no-data { color: transparent; }
+        .heatmap-cell.low { background: rgba(239, 68, 68, 0.15); color: rgba(239, 68, 68, 0.7); }
+        .heatmap-cell.mid { background: rgba(16, 185, 129, 0.15); color: rgba(16, 185, 129, 0.8); }
+        .heatmap-cell.high { background: rgba(16, 185, 129, 0.3); color: #10b981; }
+        .heatmap-cell.elite { background: rgba(245, 158, 11, 0.25); color: var(--accent-gold); }
+
+        .heatmap-note {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .heatmap-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* ── Reports ── */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .report-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .report-card:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .report-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .report-card p { font-size: 13px; color: var(--text-secondary); }
+        .report-card .report-date { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+
+        /* ── How It Works ── */
+        .pipeline-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+        }
+
+        .pipeline-step {
+            text-align: center;
+            padding: 32px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            position: relative;
+            margin: 0 8px;
+        }
+
+        .pipeline-step-num {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-gold-dim);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, #0088cc, #0077b5);
-            border-radius: 14px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(0, 136, 204, 0.3);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--accent-gold);
+            margin: 0 auto 16px;
         }
 
-        .telegram-icon svg {
-            width: 28px; height: 28px;
-            fill: white;
-        }
-
-        .telegram-card h2 {
-            font-size: 1.5rem;
+        .pipeline-step h3 {
+            font-size: 14px;
             font-weight: 700;
             margin-bottom: 8px;
         }
 
-        .telegram-card .tg-tagline {
-            color: #0088cc;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 16px;
-        }
-
-        .telegram-card .tg-description {
+        .pipeline-step p {
+            font-size: 13px;
             color: var(--text-secondary);
-            font-size: 0.95rem;
-            max-width: 520px;
-            margin: 0 auto 24px;
-            line-height: 1.7;
-        }
-
-        .telegram-features {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-        }
-
-        .tg-feature {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .tg-feature .dot {
-            width: 6px; height: 6px;
-            background: #0088cc;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .telegram-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #0088cc, #0077b5);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(0, 136, 204, 0.3);
-        }
-
-        .telegram-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 136, 204, 0.4);
-        }
-
-        .telegram-btn svg {
-            width: 20px; height: 20px;
-            fill: white;
-        }
-
-        .tg-handle {
-            margin-top: 12px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        .footer a {
-            color: var(--text-secondary);
-            text-decoration: none;
-        }
-
-        .disclaimer {
-            max-width: 600px;
-            margin: 12px auto 0;
-            font-size: 0.7rem;
-            color: var(--text-muted);
             line-height: 1.5;
         }
 
-        /* Pipeline Section */
-        .pipeline-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px 20px;
+        .pipeline-arrow {
+            position: absolute;
+            top: 50%;
+            right: -16px;
+            transform: translateY(-50%);
+            color: var(--accent-gold);
+            font-size: 18px;
+            z-index: 2;
         }
 
-        .pipeline-flow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
-
-        .pipeline-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 16px 14px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            min-width: 110px;
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 24px;
             text-align: center;
         }
 
-        .pipeline-step .step-icon {
-            font-size: 1.4rem;
+        .footer-cta { margin-bottom: 24px; }
+        .footer-disclaimer {
+            font-size: 12px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 16px;
+            line-height: 1.6;
+        }
+        .footer-powered {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .footer-copy {
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
-        .pipeline-step .step-label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            line-height: 1.3;
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .stats-bar { grid-template-columns: repeat(3, 1fr); }
+            .pipeline-steps { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .pipeline-step { margin: 0; }
+            .pipeline-arrow { display: none; }
+            .positions-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 30px; }
+            .heatmap-table thead th { height: 70px; }
         }
 
-        .pipeline-arrow {
-            color: var(--accent-gold);
-            font-size: 1.2rem;
-            font-weight: 700;
+        @media (max-width: 600px) {
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .pipeline-steps { grid-template-columns: 1fr; }
+            .hero { padding: 40px 16px 32px; }
+            .hero-title { font-size: 26px; }
+            .stat-value { font-size: 22px; }
+            .position-meta { grid-template-columns: repeat(2, 1fr); }
+            .legs-section { grid-template-columns: 1fr; }
+            .position-pnl { font-size: 24px; }
+            .section { padding: 32px 0; }
         }
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            .hero h1 { font-size: 2rem; }
-            .report-card { padding: 20px; }
-            .report-card .metrics { gap: 16px; }
-            .pipeline-step { min-width: 80px; padding: 12px 8px; }
-            .pipeline-step .step-icon { font-size: 1.1rem; }
-            .pipeline-step .step-label { font-size: 0.6rem; }
-            .pipeline-arrow { font-size: 0.9rem; }
+        /* ── Tooltip ── */
+        .tooltip {
+            position: fixed;
+            background: #1e293b;
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid rgba(245,158,11,0.2);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .tooltip.visible { opacity: 1; }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+
+        /* ── Scanlines effect ── */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.03) 2px,
+                rgba(0,0,0,0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        /* ── Divider ── */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="hero">
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+    <div class="hero-content">
         <div class="logo-badge">A</div>
-        <h1>Anka Research</h1>
-        <p class="tagline">AI-Augmented Market Intelligence</p>
-        <p class="subtitle">Agentic pipeline turning geopolitical events into backtested spread-trade signals. Political sentiment analysis across 12+ world leaders, automated delivery via Telegram, daily P&L tracking. 8 global indices. Built with Claude, Python, and real market data.</p>
-        <p class="author-line">By <strong>Bharat Ankaraju</strong> &nbsp;|&nbsp; <a href="https://t.me/ANKASIGNALS" target="_blank" rel="noopener" style="color: var(--accent-gold); text-decoration: none;">Join @ANKASIGNALS</a></p>
-    </div>
+        <h1 class="hero-title">Anka Research</h1>
+        <p class="hero-subtitle">Data-Driven Spread Trading Signals</p>
 
-    <div class="pipeline-section">
-        <div class="pipeline-flow">
-            <div class="pipeline-step">
-                <span class="step-icon">📰</span>
-                <span class="step-label">RSS News<br>7 Feeds</span>
+        <div class="hero-row">
+            <div class="msi-gauge-wrap">
+                <div class="msi-gauge-label">Market Stress Index</div>
+                <div class="msi-gauge" id="msi-gauge">
+                    <svg viewBox="0 0 180 100">
+                        <!-- Background arc segments -->
+                        <path d="M 15 90 A 75 75 0 0 1 69 22" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" opacity="0.3"/>
+                        <path d="M 69 22 A 75 75 0 0 1 111 22" fill="none" stroke="#f59e0b" stroke-width="10" opacity="0.3"/>
+                        <path d="M 111 22 A 75 75 0 0 1 165 90" fill="none" stroke="#ef4444" stroke-width="10" stroke-linecap="round" opacity="0.3"/>
+                        <!-- Needle -->
+                        <line id="msi-needle" x1="90" y1="90" x2="90" y2="22" stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90, 90, 90)"/>
+                        <circle cx="90" cy="90" r="5" fill="#f1f5f9"/>
+                    </svg>
+                    <div class="msi-score-display">
+                        <div class="score" id="msi-score">--</div>
+                    </div>
+                </div>
             </div>
-            <span class="pipeline-arrow">→</span>
-            <div class="pipeline-step">
-                <span class="step-icon">🧠</span>
-                <span class="step-label">Event<br>Classify</span>
-            </div>
-            <span class="pipeline-arrow">→</span>
-            <div class="pipeline-step">
-                <span class="step-icon">📊</span>
-                <span class="step-label">Backtest<br>Validate</span>
-            </div>
-            <span class="pipeline-arrow">→</span>
-            <div class="pipeline-step">
-                <span class="step-icon">🎯</span>
-                <span class="step-label">Signal<br>Generate</span>
-            </div>
-            <span class="pipeline-arrow">→</span>
-            <div class="pipeline-step">
-                <span class="step-icon">📡</span>
-                <span class="step-label">Telegram<br>Deliver</span>
-            </div>
-            <span class="pipeline-arrow">→</span>
-            <div class="pipeline-step">
-                <span class="step-icon">📈</span>
-                <span class="step-label">P&L<br>Track</span>
+
+            <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+                <div id="regime-badge" class="regime-badge regime-MACRO_NEUTRAL">
+                    <span class="live-dot"></span>
+                    <span id="regime-text">LOADING</span>
+                </div>
+                <div class="updated-time">
+                    <span class="live-dot"></span>
+                    <span>Last updated: <span id="updated-time" class="mono">--:--</span> IST</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="section">
+        <a href="https://t.me/ANKASIGNALS" target="_blank" class="telegram-cta">
+            <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 1 0 24 12.056A12.014 12.014 0 0 0 11.944 0Zm5.654 8.22l-1.7 8.01c-.128.6-.462.746-.937.464l-2.588-1.908l-1.248 1.2a.65.65 0 0 1-.52.254l.186-2.636 4.8-4.338c.209-.186-.045-.29-.324-.104l-5.936 3.738l-2.556-.8c-.556-.174-.568-.556.116-.824l9.992-3.852c.462-.168.868.112.716.796Z"/></svg>
+            Join @ANKASIGNALS
+        </a>
+    </div>
+</section>
+
+<!-- ══════════════ STATS BAR ══════════════ -->
+<div class="stats-bar" id="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Open Positions</div>
+        <div class="stat-value mono" id="stat-open">--</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Signals</div>
+        <div class="stat-value mono" id="stat-signals">--</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Win Rate</div>
+        <div class="stat-value mono" id="stat-winrate">--%</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Cumulative P&L</div>
+        <div class="stat-value mono" id="stat-pnl">--</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Days Active</div>
+        <div class="stat-value mono" id="stat-days">--</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Spreads Tracked</div>
+        <div class="stat-value mono" id="stat-spreads">25</div>
+    </div>
+</div>
+
+<!-- ══════════════ ACTIVE POSITIONS ══════════════ -->
+<div class="container">
+    <section class="section">
         <div class="section-header">
-            <h2>Weekly Research Briefs</h2>
-            <div class="line"></div>
+            <h2>Active Positions</h2>
+            <span class="badge badge-live"><span class="live-dot" style="width:6px;height:6px;margin-right:2px;"></span> LIVE</span>
         </div>
+        <div id="positions-container" class="positions-grid">
+            <div class="no-positions">Loading positions...</div>
+        </div>
+    </section>
 
-        <a href="reports/week-001.html" class="report-card">
-            <div class="card-top">
-                <span class="badge latest">Latest</span>
-                <span class="date">2026-03-28</span>
-            </div>
-            <h3>Weekly Brief #001 — Iran-Israel-US Conflict: Four Weeks That Rewired Global Markets</h3>
-            <p class="description">Operation Epic Fury reshaped risk premia across all 8 major indices. Defense and energy are the clear structural winners. Strait of Hormuz closure disrupted 20% of global oil and LNG.</p>
-            <div class="metrics">
-                <div class="metric">
-                    <span class="metric-label">Brent Crude</span>
-                    <span class="metric-value up">+51% $112.57</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">S&P 500</span>
-                    <span class="metric-value down">-5.0% MTD</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">DXY</span>
-                    <span class="metric-value neutral">~100.0 -1.3%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">VIX</span>
-                    <span class="metric-value neutral">24.3 avg</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Indices Covered</span>
-                    <span class="metric-value neutral">8</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Stocks Analyzed</span>
-                    <span class="metric-value neutral">40</span>
-                </div>
-            </div>
-        </a>
+    <hr class="section-divider">
 
-        <a href="reports/model-portfolio.html" class="report-card">
-            <div class="card-top">
-                <span class="badge latest">Live Tracker</span>
-                <span class="date">2026-03-29</span>
-            </div>
-            <h3>Model Portfolio — 15-Stock Wartime Portfolio with Trailing Stops</h3>
-            <p class="description">Pre-war baseline Feb 27. Tracked in USD with 10% trailing stops, technical signals (20d MA, RSI), analyst targets, and forward earnings. Interactive charts and ETF alternatives.</p>
-            <div class="metrics">
-                <div class="metric">
-                    <span class="metric-label">Portfolio Return</span>
-                    <span class="metric-value up">+8.4% USD</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Alpha vs S&P</span>
-                    <span class="metric-value up">+15.8pp</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Active</span>
-                    <span class="metric-value neutral">14 / 15</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Stopped Out</span>
-                    <span class="metric-value down">2</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Sectors</span>
-                    <span class="metric-value neutral">6</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Regions</span>
-                    <span class="metric-value neutral">7</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="reports/hedge-fund-ideas.html" class="report-card">
-            <div class="card-top">
-                <span class="badge latest">New</span>
-                <span class="date">2026-03-29</span>
-            </div>
-            <h3>Hedge Fund Trade Ideas — Long/Short Spreads, FX Pairs & Thematic Baskets</h3>
-            <p class="description">12 institutional-grade spread trades with real P&L tracking. Trade the divergence between war winners and war losers. Interactive charts showing daily spread evolution.</p>
-            <div class="metrics">
-                <div class="metric">
-                    <span class="metric-label">Best Spread</span>
-                    <span class="metric-value up">+36.1%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Avg Spread</span>
-                    <span class="metric-value up">+5.3%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Win Rate</span>
-                    <span class="metric-value neutral">5W / 3L</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Trade Ideas</span>
-                    <span class="metric-value neutral">12</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="reports/singapore-market.html" class="report-card">
-            <div class="card-top">
-                <span class="badge latest">New</span>
-                <span class="date">2026-03-29</span>
-            </div>
-            <h3>Singapore Market Report — STI Analysis & Local Portfolio Candidates</h3>
-            <p class="description">Straits Times Index wartime performance. Top 10 SGX stocks, sector breakdown (defence, shipping, energy, banks), 5 watchlist candidates for Singapore-based investors.</p>
-            <div class="metrics">
-                <div class="metric">
-                    <span class="metric-label">STI MTD</span>
-                    <span class="metric-value down">-2.5%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Top Gainer</span>
-                    <span class="metric-value up">ST Eng +13%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Stocks Covered</span>
-                    <span class="metric-value neutral">10</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Watchlist</span>
-                    <span class="metric-value neutral">5</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="reports/india-deep-dive.html" class="report-card">
-            <div class="card-top">
-                <span class="badge latest">New</span>
-                <span class="date">2026-03-29</span>
-            </div>
-            <h3>India Deep-Dive — Nifty 50 Sector Analysis, Defence Stars & Energy Divergence</h3>
-            <p class="description">Comprehensive India market analysis. Defence stocks defy the rout (+6% vs Nifty -9.4%). Upstream vs downstream energy divergence (+15% vs -25%). IT sector structural decline. 5 watchlist candidates.</p>
-            <div class="metrics">
-                <div class="metric">
-                    <span class="metric-label">Nifty MTD</span>
-                    <span class="metric-value down">-9.4%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Defence Index</span>
-                    <span class="metric-value up">+6% MTD</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">INR/USD</span>
-                    <span class="metric-value down">-4.2%</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Sectors</span>
-                    <span class="metric-value neutral">8</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Watchlist</span>
-                    <span class="metric-value neutral">5</span>
-                </div>
-            </div>
-        </a>
-
-        <!-- Future weeks will be added here as new report-card blocks -->
-
-    </div>
-
-    <div class="section" id="ask">
+    <!-- ══════════════ MSI HISTORY CHART ══════════════ -->
+    <section class="section">
         <div class="section-header">
-            <h2>Ask Anka</h2>
-            <div class="line"></div>
+            <h2>MSI History</h2>
+            <span class="badge badge-count">Time Series</span>
         </div>
-        <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">What do you want researched next? Your requests shape our weekly coverage. We analyze stocks, sectors, and macro themes across 8 global indices.</p>
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe3c3_S93hQYStWt5I0fh89GmOGYCqxzzZUW6W2z_bor2wSFQ/viewform?embedded=true" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0" style="background: transparent;">Loading...</iframe>
+        <div class="msi-chart-container">
+            <div id="msi-chart"></div>
         </div>
-    </div>
+    </section>
 
-    <div class="telegram-section">
-        <div class="telegram-card">
-            <div class="telegram-icon">
-                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            </div>
-            <div class="tg-tagline">Real-Time Signal Channel</div>
-            <h2>Live Political Event Signals</h2>
-            <p class="tg-description">Get automated trading signals when geopolitical events hit the wire. Pre-market Asian cascade briefings, intraday spread ideas, and end-of-day P&L dashboards — delivered to your Telegram.</p>
-            <div class="telegram-features">
-                <div class="tg-feature"><span class="dot"></span> Pre-market briefing (8:30 AM IST)</div>
-                <div class="tg-feature"><span class="dot"></span> Intraday event signals</div>
-                <div class="tg-feature"><span class="dot"></span> EOD dashboard + P&L</div>
-            </div>
-            <a href="https://t.me/ANKASIGNALS" target="_blank" rel="noopener" class="telegram-btn">
-                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                Join @ANKASIGNALS
+    <hr class="section-divider">
+
+    <!-- ══════════════ TRACK RECORD ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Track Record</h2>
+            <span class="badge badge-count" id="track-count">0 trades</span>
+        </div>
+        <div id="track-record-container"></div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ══════════════ HEATMAP ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Signal Universe</h2>
+            <span class="badge badge-count">Hit Rate Heatmap</span>
+        </div>
+        <div class="heatmap-container" id="heatmap-container">
+            <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading heatmap...</div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ══════════════ REPORTS ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Weekly Reports</h2>
+        </div>
+        <div class="reports-grid">
+            <a href="reports/week-005.html" class="report-card">
+                <h3>Week 005: Live Signal Tracking</h3>
+                <p>First live signals deployed. Defence vs IT and Coal vs OMCs active.</p>
+                <div class="report-date mono">April 2026</div>
             </a>
-            <p class="tg-handle">t.me/ANKASIGNALS</p>
+            <a href="reports/week-001.html" class="report-card">
+                <h3>Week 001: Wartime Market Analysis</h3>
+                <p>Inaugural analysis of geopolitical stress transmission to Indian equities.</p>
+                <div class="report-date mono">March 2026</div>
+            </a>
+            <a href="reports/india-deep-dive.html" class="report-card">
+                <h3>India Deep Dive</h3>
+                <p>Sector-by-sector analysis of Indian equity response to macro events.</p>
+                <div class="report-date mono">Research</div>
+            </a>
         </div>
-    </div>
+    </section>
 
-    <div class="footer">
-        <p>&copy; 2026 Anka Research. All rights reserved.</p>
-        <p class="disclaimer">This site is for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. All data is sourced from public markets and verified against multiple sources.</p>
-    </div>
+    <hr class="section-divider">
 
+    <!-- ══════════════ HOW IT WORKS ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2>How It Works</h2>
+        </div>
+        <div class="pipeline-steps">
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">1</div>
+                <h3>Scan</h3>
+                <p>RSS + news feeds scanned every 30 minutes for geopolitical and macro events</p>
+                <span class="pipeline-arrow">&#9654;</span>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">2</div>
+                <h3>Classify</h3>
+                <p>Events classified into 18 categories: escalation, sanctions, oil shocks, rate decisions, and more</p>
+                <span class="pipeline-arrow">&#9654;</span>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">3</div>
+                <h3>Match</h3>
+                <p>Matched to 25 spread pairs with backtest-validated hit rates across 90+ historical events</p>
+                <span class="pipeline-arrow">&#9654;</span>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">4</div>
+                <h3>Signal</h3>
+                <p>Signals delivered via Telegram with data-driven stop levels and P&L tracking</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+    <div class="footer-cta">
+        <a href="https://t.me/ANKASIGNALS" target="_blank" class="telegram-cta">
+            <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 1 0 24 12.056A12.014 12.014 0 0 0 11.944 0Zm5.654 8.22l-1.7 8.01c-.128.6-.462.746-.937.464l-2.588-1.908l-1.248 1.2a.65.65 0 0 1-.52.254l.186-2.636 4.8-4.338c.209-.186-.045-.29-.324-.104l-5.936 3.738l-2.556-.8c-.556-.174-.568-.556.116-.824l9.992-3.852c.462-.168.868.112.716.796Z"/></svg>
+            Join @ANKASIGNALS on Telegram
+        </a>
+    </div>
+    <p class="footer-disclaimer">
+        Anka Research provides data-driven market analysis for educational and informational purposes only.
+        This is not financial advice. Spread trading involves significant risk. Past backtest performance does not guarantee future results.
+        Always do your own research and consult a qualified financial advisor before making investment decisions.
+    </p>
+    <p class="footer-powered">Powered by Anka Research Pipeline &mdash; fully automated</p>
+    <p class="footer-copy">&copy; 2026 Anka Research. All rights reserved.</p>
+</footer>
+
+<!-- ══════════════ TOOLTIP ══════════════ -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+(function() {
+    'use strict';
+
+    // ── Helpers ──
+    function formatPnl(val) {
+        const sign = val >= 0 ? '+' : '';
+        return sign + val.toFixed(2) + '%';
+    }
+
+    function pnlClass(val) {
+        return val >= 0 ? 'positive' : 'negative';
+    }
+
+    function formatPrice(val) {
+        return val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function daysBetween(dateStr) {
+        const d = new Date(dateStr);
+        const now = new Date();
+        return Math.max(1, Math.floor((now - d) / (1000 * 60 * 60 * 24)));
+    }
+
+    function formatCategory(cat) {
+        return cat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function formatTime(isoStr) {
+        try {
+            const d = new Date(isoStr);
+            const h = d.getHours().toString().padStart(2, '0');
+            const m = d.getMinutes().toString().padStart(2, '0');
+            return h + ':' + m;
+        } catch(e) { return '--:--'; }
+    }
+
+    // ── Animated counter ──
+    function animateValue(el, target, suffix, duration) {
+        suffix = suffix || '';
+        duration = duration || 800;
+        const start = 0;
+        const startTime = performance.now();
+        const isFloat = target % 1 !== 0;
+
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = start + (target - start) * eased;
+            el.textContent = (isFloat ? current.toFixed(1) : Math.round(current)) + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    }
+
+    // ── MSI Gauge Needle ──
+    function setGaugeNeedle(score) {
+        const needle = document.getElementById('msi-needle');
+        if (!needle) return;
+        // Map 0-100 to -90deg to +90deg rotation around (90, 90)
+        const angle = -90 + (score / 100) * 180;
+        needle.setAttribute('transform', 'rotate(' + angle + ', 90, 90)');
+
+        const scoreEl = document.getElementById('msi-score');
+        if (scoreEl) {
+            const color = score < 35 ? '#10b981' : score < 65 ? '#f59e0b' : '#ef4444';
+            scoreEl.style.color = color;
+            animateValue(scoreEl, score, '', 1200);
+        }
+    }
+
+    // ── Tooltip ──
+    const tooltip = document.getElementById('tooltip');
+    function showTooltip(e, text) {
+        tooltip.textContent = text;
+        tooltip.classList.add('visible');
+        tooltip.style.left = (e.clientX + 12) + 'px';
+        tooltip.style.top = (e.clientY - 10) + 'px';
+    }
+    function hideTooltip() { tooltip.classList.remove('visible'); }
+
+    // ── Load Live Status ──
+    fetch('/data/live_status.json')
+        .then(r => r.json())
+        .then(data => {
+            // MSI
+            setGaugeNeedle(data.msi.score);
+
+            // Regime
+            const regimeBadge = document.getElementById('regime-badge');
+            const regimeText = document.getElementById('regime-text');
+            regimeBadge.className = 'regime-badge regime-' + data.msi.regime;
+            regimeText.textContent = data.msi.regime.replace('_', ' ');
+
+            // Updated time
+            document.getElementById('updated-time').textContent = formatTime(data.updated_at);
+
+            // Stats
+            const s = data.stats;
+            animateValue(document.getElementById('stat-open'), s.open_positions, '');
+            animateValue(document.getElementById('stat-signals'), s.total_signals, '');
+            const wrEl = document.getElementById('stat-winrate');
+            if (s.total_signals === 0 || (s.wins === 0 && s.losses === 0)) {
+                wrEl.textContent = '--';
+            } else {
+                animateValue(wrEl, s.win_rate_pct, '%');
+            }
+
+            const pnlEl = document.getElementById('stat-pnl');
+            if (s.cumulative_pnl_pct === 0 && s.wins === 0 && s.losses === 0) {
+                pnlEl.textContent = '--';
+            } else {
+                pnlEl.className = 'stat-value mono ' + pnlClass(s.cumulative_pnl_pct);
+                pnlEl.textContent = formatPnl(s.cumulative_pnl_pct);
+            }
+
+            animateValue(document.getElementById('stat-days'), s.days_active, '');
+
+            // Positions
+            renderPositions(data.positions);
+        })
+        .catch(err => {
+            console.error('Failed to load live_status.json:', err);
+            document.getElementById('positions-container').innerHTML =
+                '<div class="no-positions">Unable to load live data. Please refresh.</div>';
+        });
+
+    function renderPositions(positions) {
+        const container = document.getElementById('positions-container');
+        if (!positions || positions.length === 0) {
+            container.innerHTML = '<div class="no-positions"><div class="icon">&#x1F50D;</div>No open positions &mdash; system is scanning</div>';
+            return;
+        }
+
+        container.innerHTML = positions.map((pos, idx) => {
+            const daysHeld = daysBetween(pos.open_date);
+            return `
+            <div class="position-card animate-in animate-delay-${idx + 1}">
+                <div class="position-header">
+                    <div>
+                        <div class="position-name">${pos.spread_name}</div>
+                        <div class="position-badges">
+                            <span class="tier-badge tier-${pos.tier}">${pos.tier}</span>
+                            <span class="category-badge">${formatCategory(pos.category)}</span>
+                        </div>
+                    </div>
+                    <div class="position-pnl ${pnlClass(pos.spread_pnl_pct)}">${formatPnl(pos.spread_pnl_pct)}</div>
+                </div>
+                <div class="legs-section">
+                    <div class="leg-group long">
+                        <h4>&#9650; Long</h4>
+                        ${pos.long_legs.map(l => `
+                            <div class="leg-item">
+                                <span class="leg-ticker">${l.ticker}</span>
+                                <span class="leg-price">${formatPrice(l.entry)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="leg-group short">
+                        <h4>&#9660; Short</h4>
+                        ${pos.short_legs.map(l => `
+                            <div class="leg-item">
+                                <span class="leg-ticker">${l.ticker}</span>
+                                <span class="leg-price">${formatPrice(l.entry)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="position-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Today</div>
+                        <div class="meta-value ${pnlClass(pos.todays_move)}">${formatPnl(pos.todays_move)}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Peak</div>
+                        <div class="meta-value positive">${formatPnl(pos.peak_pnl)}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Daily Stop</div>
+                        <div class="meta-value negative">${pos.daily_stop.toFixed(2)}%</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Days Held</div>
+                        <div class="meta-value">${daysHeld}d <span style="font-size:10px;color:var(--text-muted);">(${pos.open_date})</span></div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // ── Load Track Record ──
+    fetch('/data/track_record.json')
+        .then(r => r.json())
+        .then(data => {
+            const container = document.getElementById('track-record-container');
+            const countBadge = document.getElementById('track-count');
+
+            if (!data.trades || data.trades.length === 0) {
+                countBadge.textContent = '0 trades';
+                container.innerHTML = `
+                    <div class="track-empty">
+                        <p style="font-size:16px; margin-bottom:8px;">Track record builds as trades close</p>
+                        <p style="font-size:13px; color:var(--text-muted);">First signals are live &mdash; results will appear here when positions are closed.</p>
+                    </div>`;
+                return;
+            }
+
+            countBadge.textContent = data.trades.length + ' trades';
+
+            const rows = data.trades.map(t => {
+                const resultClass = t.pnl_pct >= 0 ? 'result-win' : 'result-loss';
+                const resultText = t.pnl_pct >= 0 ? 'WIN' : 'LOSS';
+                return `<tr>
+                    <td class="mono" style="font-size:13px;">${t.close_date || t.date || '--'}</td>
+                    <td style="font-weight:600;">${t.spread_name}</td>
+                    <td><span class="category-badge">${formatCategory(t.category)}</span></td>
+                    <td class="mono ${pnlClass(t.pnl_pct)}" style="font-weight:600;">${formatPnl(t.pnl_pct)}</td>
+                    <td class="mono">${t.days_held || '--'}</td>
+                    <td><span class="result-badge ${resultClass}">${resultText}</span></td>
+                </tr>`;
+            }).join('');
+
+            const sum = data.summary;
+            container.innerHTML = `
+                <div class="track-record-table-wrap">
+                    <table class="track-record-table">
+                        <thead><tr>
+                            <th>Date</th><th>Spread</th><th>Category</th><th>P&L %</th><th>Days</th><th>Result</th>
+                        </tr></thead>
+                        <tbody>
+                            ${rows}
+                            <tr class="summary-row">
+                                <td colspan="2" style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">
+                                    ${sum.total} trades &middot; ${sum.wins}W / ${sum.losses}L
+                                </td>
+                                <td class="mono" style="font-size:12px; color:var(--text-secondary);">${sum.win_rate_pct}% WR</td>
+                                <td class="mono ${pnlClass(sum.cumulative_pnl_pct)}" style="font-weight:700;">${formatPnl(sum.cumulative_pnl_pct)}</td>
+                                <td colspan="2" style="font-size:12px; color:var(--text-muted);">cumulative</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>`;
+        })
+        .catch(err => {
+            console.error('Failed to load track_record.json:', err);
+        });
+
+    // ── Load Spread Universe Heatmap ──
+    fetch('/data/spread_universe.json')
+        .then(r => r.json())
+        .then(data => {
+            const container = document.getElementById('heatmap-container');
+            const spreads = data.spreads;
+
+            // Collect all categories from first spread
+            const categories = Object.keys(spreads[0].categories).sort();
+
+            // Build table
+            let html = '<table class="heatmap-table"><thead><tr><th class="row-header" style="writing-mode:horizontal-tb;transform:none;">Spread</th>';
+            categories.forEach(cat => {
+                html += '<th>' + formatCategory(cat) + '</th>';
+            });
+            html += '</tr></thead><tbody>';
+
+            spreads.forEach(spread => {
+                html += '<tr><th class="row-header">' + spread.name + '</th>';
+                categories.forEach(cat => {
+                    const entry = spread.categories[cat];
+                    if (!entry || entry.n < 3) {
+                        html += '<td class="heatmap-cell no-data">&mdash;</td>';
+                    } else {
+                        const hr = entry.hit_rate;
+                        const pct = (hr * 100).toFixed(0);
+                        let cls = 'low';
+                        if (hr >= 0.8) cls = 'elite';
+                        else if (hr >= 0.65) cls = 'high';
+                        else if (hr >= 0.5) cls = 'mid';
+
+                        html += '<td class="heatmap-cell ' + cls + '" data-tip="' +
+                            spread.name + ' / ' + formatCategory(cat) + ': ' + pct + '% hit rate (n=' + entry.n + ')">' +
+                            pct + '</td>';
+                    }
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+
+            // Legend
+            html += '<div class="heatmap-legend">';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(239,68,68,0.15);"></span> &lt;50%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.15);"></span> 50-64%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.3);"></span> 65-79%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(245,158,11,0.25);"></span> 80%+</div>';
+            html += '<div class="legend-item"><span style="color:var(--text-muted); font-size:11px;">&#8212; n&lt;3</span></div>';
+            html += '</div>';
+
+            html += '<p class="heatmap-note">Based on 90+ historical events across 4 years of market data. Only cells with n&ge;3 events shown.</p>';
+
+            container.innerHTML = html;
+
+            // Attach tooltip events
+            container.querySelectorAll('.heatmap-cell[data-tip]').forEach(cell => {
+                cell.addEventListener('mouseenter', function(e) {
+                    showTooltip(e, this.getAttribute('data-tip'));
+                });
+                cell.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = (e.clientX + 12) + 'px';
+                    tooltip.style.top = (e.clientY - 10) + 'px';
+                });
+                cell.addEventListener('mouseleave', hideTooltip);
+            });
+
+            // Update spreads tracked count
+            document.getElementById('stat-spreads').textContent = spreads.length;
+        })
+        .catch(err => {
+            console.error('Failed to load spread_universe.json:', err);
+        });
+
+    // ── Load MSI History Chart ──
+    fetch('/data/msi_history.json')
+        .then(r => r.json())
+        .then(data => {
+            if (!data || data.length === 0) {
+                document.getElementById('msi-chart').innerHTML =
+                    '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">MSI chart will populate as more data points accumulate.</div>';
+                return;
+            }
+
+            const dates = data.map(d => d.date);
+            const scores = data.map(d => d.msi_score);
+
+            const trace = {
+                x: dates,
+                y: scores,
+                type: 'scatter',
+                mode: 'lines+markers',
+                line: { color: '#f59e0b', width: 2.5, shape: 'spline' },
+                marker: { size: 6, color: '#f59e0b' },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(245, 158, 11, 0.05)',
+                hovertemplate: 'MSI: %{y:.1f}<br>%{x}<extra></extra>'
+            };
+
+            // Colored background bands
+            const shapes = [
+                { type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 0, y1: 35,
+                  fillcolor: 'rgba(16, 185, 129, 0.06)', line: { width: 0 } },
+                { type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 35, y1: 65,
+                  fillcolor: 'rgba(245, 158, 11, 0.06)', line: { width: 0 } },
+                { type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 65, y1: 100,
+                  fillcolor: 'rgba(239, 68, 68, 0.06)', line: { width: 0 } }
+            ];
+
+            const annotations = [
+                { xref: 'paper', yref: 'y', x: 1.02, y: 17, text: 'EASY', showarrow: false,
+                  font: { color: '#10b981', size: 9, family: 'JetBrains Mono' } },
+                { xref: 'paper', yref: 'y', x: 1.02, y: 50, text: 'NEUTRAL', showarrow: false,
+                  font: { color: '#f59e0b', size: 9, family: 'JetBrains Mono' } },
+                { xref: 'paper', yref: 'y', x: 1.02, y: 82, text: 'STRESS', showarrow: false,
+                  font: { color: '#ef4444', size: 9, family: 'JetBrains Mono' } }
+            ];
+
+            const layout = {
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                margin: { t: 10, r: 60, b: 40, l: 50 },
+                xaxis: {
+                    gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
+                    tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
+                    linecolor: '#1e293b'
+                },
+                yaxis: {
+                    range: [0, 100],
+                    gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
+                    tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
+                    linecolor: '#1e293b',
+                    dtick: 20
+                },
+                shapes: shapes,
+                annotations: annotations,
+                hoverlabel: {
+                    bgcolor: '#1e293b', bordercolor: '#f59e0b',
+                    font: { color: '#f1f5f9', family: 'JetBrains Mono', size: 13 }
+                },
+                font: { family: 'Inter, sans-serif' }
+            };
+
+            Plotly.newPlot('msi-chart', [trace], layout, {
+                responsive: true,
+                displayModeBar: false
+            });
+        })
+        .catch(err => {
+            console.error('Failed to load msi_history.json:', err);
+            document.getElementById('msi-chart').innerHTML =
+                '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">Unable to load MSI history.</div>';
+        });
+
+})();
+</script>
 </body>
 </html>

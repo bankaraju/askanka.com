@@ -1,0 +1,96 @@
+{
+  "updated_at": "2026-04-03T10:15:55.651387+05:30",
+  "msi": {
+    "score": 60.1,
+    "regime": "MACRO_NEUTRAL",
+    "date": "2026-04-02"
+  },
+  "stats": {
+    "open_positions": 2,
+    "total_signals": 2,
+    "wins": 0,
+    "losses": 0,
+    "win_rate_pct": 0,
+    "cumulative_pnl_pct": 0,
+    "days_active": 2
+  },
+  "positions": [
+    {
+      "signal_id": "SIG-2026-03-31-003-Defence_vs_IT",
+      "spread_name": "Defence vs IT",
+      "category": "hormuz",
+      "tier": "SIGNAL",
+      "open_date": "2026-04-01",
+      "long_legs": [
+        {
+          "ticker": "HAL",
+          "entry": 3581.39990234375,
+          "current": 3581.39990234375
+        },
+        {
+          "ticker": "BEL",
+          "entry": 415.0,
+          "current": 415.0
+        },
+        {
+          "ticker": "BDL",
+          "entry": 1132.199951171875,
+          "current": 1132.199951171875
+        }
+      ],
+      "short_legs": [
+        {
+          "ticker": "TCS",
+          "entry": 2429.0,
+          "current": 2429.0
+        },
+        {
+          "ticker": "INFY",
+          "entry": 1290.0,
+          "current": 1290.0
+        },
+        {
+          "ticker": "WIPRO",
+          "entry": 191.50999450683594,
+          "current": 191.50999450683594
+        }
+      ],
+      "spread_pnl_pct": 2.56,
+      "todays_move": 2.56,
+      "daily_stop": -0.99,
+      "two_day_stop": -2.72,
+      "peak_pnl": 3.99
+    },
+    {
+      "signal_id": "SIG-2026-03-31-020-Coal_vs_OMCs",
+      "spread_name": "Coal vs OMCs",
+      "category": "oil_positive",
+      "tier": "SIGNAL",
+      "open_date": "2026-04-01",
+      "long_legs": [
+        {
+          "ticker": "COALINDIA",
+          "entry": 464.0,
+          "current": 464.0
+        }
+      ],
+      "short_legs": [
+        {
+          "ticker": "BPCL",
+          "entry": 292.0,
+          "current": 292.0
+        },
+        {
+          "ticker": "HPCL",
+          "entry": 350.0,
+          "current": 350.0
+        }
+      ],
+      "spread_pnl_pct": 4.36,
+      "todays_move": 4.36,
+      "daily_stop": -1.37,
+      "two_day_stop": -5.03,
+      "peak_pnl": 4.36
+    }
+  ]
+}
