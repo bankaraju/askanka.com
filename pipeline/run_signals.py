@@ -189,11 +189,16 @@ def _check_macro_triggers(send_telegram: bool) -> None:
         crossing = detect_regime_crossing(msi_result["regime"])
         if crossing == "NEUTRAL_TO_STRESS":
             top_spreads = get_top_stress_spreads(n=2)
+            inst_data = {
+                "fii_net": msi_result.get("fii_net"),
+                "dii_net": msi_result.get("dii_net"),
+            }
             card = format_macro_signal_card(
                 msi=msi_result,
                 regime=msi_result["regime"],
                 top_spreads=top_spreads,
                 crossing=crossing,
+                institutional_data=inst_data if inst_data.get("fii_net") is not None else None,
             )
             print(card)
             if send_telegram:
@@ -202,6 +207,29 @@ def _check_macro_triggers(send_telegram: bool) -> None:
                     print(f"  Sent MACRO SIGNAL card (MSI {msi_result['msi_score']:.0f} -> STRESS)")
                 except Exception as exc:
                     print(f"  Failed to send macro signal card: {exc}")
+
+            # Log to drift tracker
+            try:
+                from model_drift import log_prediction
+                for sp in top_spreads:
+                    log_prediction({
+                        "date": datetime.now(IST).strftime("%Y-%m-%d"),
+                        "signal_id": f"MSI-{datetime.now(IST).strftime('%Y-%m-%d')}-{sp.get('spread_name', 'unknown')}",
+                        "source": "msi",
+                        "msi_score": msi_result["msi_score"],
+                        "regime": msi_result["regime"],
+                        "spread_name": sp.get("spread_name"),
+                        "predicted_direction": "stress_spread",
+                        "fii_net": msi_result.get("fii_net"),
+                        "dii_net": msi_result.get("dii_net"),
+                        "combined_flow": msi_result.get("combined_flow"),
+                        "vix": msi_result.get("components", {}).get("india_vix", {}).get("raw"),
+                        "usdinr_change": msi_result.get("components", {}).get("usdinr", {}).get("raw"),
+                        "nifty_return": msi_result.get("components", {}).get("nifty_30d", {}).get("raw"),
+                        "crude_change": msi_result.get("components", {}).get("crude_5d", {}).get("raw"),
+                    })
+            except Exception:
+                pass
 
         # 2. INR weakness
         inr_trigger = detect_inr_weakness()
@@ -253,6 +281,82 @@ def _check_macro_triggers(send_telegram: bool) -> None:
         print(f"  Macro trigger check failed (non-fatal): {exc}")
 
 
+def _arbitrate_signals(geo_signals: list, msi_result: dict) -> list:
+    """Resolve conflicts between geopolitical signals and current MSI regime.
+
+    Rules:
+      - MSI >= 75 (deep stress) + geo de-escalation confidence < 70% → downgrade to EXPLORING
+      - Any MSI stress + geo confidence >= 80% → both fire, add conflict warning
+      - Otherwise → both fire normally
+
+    Returns modified geo_signals list.
+    """
+    if not msi_result or not geo_signals:
+        return geo_signals
+
+    regime = msi_result.get("regime", "MACRO_NEUTRAL")
+    msi_score = msi_result.get("msi_score", 50)
+
+    # Define which geo categories conflict with which regimes
+    stress_conflicts = {"de_escalation", "diplomacy", "ceasefire"}
+    easy_conflicts = {"escalation", "sanctions", "military"}
+
+    for sig in geo_signals:
+        category = sig.get("category", "").lower()
+        confidence = sig.get("confidence", sig.get("confidence_pct", 50))
+        if isinstance(confidence, float) and confidence < 1:
+            confidence = confidence * 100  # normalise decimal to %
+
+        conflict = False
+        if regime == "MACRO_STRESS" and category in stress_conflicts:
+            conflict = True
+        elif regime == "MACRO_EASY" and category in easy_conflicts:
+            conflict = True
+
+        if not conflict:
+            continue
+
+        # Apply arbitration rules
+        if msi_score >= 75 and confidence < 70:
+            sig["_original_tier"] = sig.get("tier", "SIGNAL")
+            sig["tier"] = "EXPLORING"
+            sig["_arbitration"] = "downgraded"
+            print(
+                f"  Arbitration: {sig.get('signal_id', '?')} downgraded to EXPLORING "
+                f"(MSI {msi_score:.0f}, confidence {confidence:.0f}%)"
+            )
+        elif confidence >= 80:
+            sig["_conflict_warning"] = (
+                f"⚠️ Note: macro regime ({regime.replace('MACRO_', '')}) "
+                f"conflicts with this {category} signal"
+            )
+            sig["_arbitration"] = "both_fire_warned"
+            print(
+                f"  Arbitration: {sig.get('signal_id', '?')} fires with warning "
+                f"(MSI {msi_score:.0f}, confidence {confidence:.0f}%)"
+            )
+        else:
+            sig["_arbitration"] = "both_fire_normal"
+
+        # Log to drift tracker
+        try:
+            from model_drift import log_prediction
+            log_prediction({
+                "date": datetime.now(IST).strftime("%Y-%m-%d"),
+                "signal_id": sig.get("signal_id", "unknown"),
+                "source": "arbitration",
+                "msi_score": msi_score,
+                "regime": regime,
+                "spread_name": sig.get("spread_name", ""),
+                "predicted_direction": category,
+                "arbitration_result": sig.get("_arbitration"),
+            })
+        except Exception:
+            pass
+
+    return geo_signals
+
+
 def _run_once_inner(send_telegram=False):
     """Inner body of run_once — called only when lock is held."""
     print(f"\n[{_ist_now().strftime('%H:%M IST')}] Running signal check...")
@@ -274,6 +378,15 @@ def _run_once_inner(send_telegram=False):
         # 1. Detect events and generate new signals (V2: multi-spread cards)
         raw_signals = run_signal_check()
         new_signals = _dedup_signals(raw_signals) if raw_signals else []
+
+        # Arbitrate: check if geo signals conflict with MSI regime
+        if new_signals:
+            try:
+                from macro_stress import compute_msi
+                msi_for_arb = compute_msi()
+                new_signals = _arbitrate_signals(new_signals, msi_for_arb)
+            except Exception as exc:
+                print(f"  Arbitration skipped (MSI unavailable): {exc}")
 
     if new_signals:
         print(f"  New signals: {len(new_signals)} (deduped from {len(raw_signals)})")
@@ -366,6 +479,12 @@ def _run_once_inner(send_telegram=False):
                     existing_spreads.add(spread_name)
                     print(f"  ✅ Registered {spread_name} for P&L tracking")
                 # Only send the main overview card if new spreads were registered
+                # Append conflict warning if present from arbitration
+                for sig_item in new_signals:
+                    warning = sig_item.get("_conflict_warning")
+                    if warning:
+                        card += f"\n\n{warning}"
+                        break  # one warning per card is enough
                 print(card)
                 sent_count += 1
                 if send_telegram:

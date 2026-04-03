@@ -239,24 +239,38 @@ def _run_eod_report() -> None:
 
     # ── Macro context (MSI if available) ─────────────────────────────────
     macro_line = ""
+    institutional_data = None
     try:
-        from macro_stress import compute_msi, msi_bar, regime_emoji, append_msi_history
+        from macro_stress import compute_msi, msi_bar, append_msi_history
         msi = compute_msi()
         append_msi_history(msi)
         macro_line = msi_bar(msi["msi_score"], msi["regime"])
+        # Extract institutional data for display
+        fii_net = msi.get("fii_net")
+        dii_net = msi.get("dii_net")
+        if fii_net is not None:
+            institutional_data = {
+                "fii_net": fii_net,
+                "dii_net": dii_net or 0.0,
+            }
     except Exception as exc:
         log.warning("MSI computation failed (omitting from report): %s", exc)
 
-    # FII flow line
+    # FII flow line (legacy, kept as fallback if institutional_data is None)
     fii_line = ""
+    if institutional_data:
+        fii = institutional_data["fii_net"]
+        emoji = "🟢" if fii > 0 else "🔴"
+        fii_line = f"FII today: {emoji} ₹{abs(fii):,.0f} cr {'net buy' if fii > 0 else 'net sell'}"
+
+    # ── Update drift tracker with outcomes ────────────────────────────────
     try:
-        from macro_stress import _fetch_fii_net_flow
-        fii = _fetch_fii_net_flow()
-        if fii is not None:
-            emoji = "🟢" if fii > 0 else "🔴"
-            fii_line = f"FII today: {emoji} Rs{abs(fii):,.0f} cr {'net buy' if fii > 0 else 'net sell'}"
-    except Exception:
-        pass
+        from model_drift import update_outcome
+        for sig in open_sigs:
+            pnl = compute_signal_pnl(sig, current_prices)
+            update_outcome(today_str, sig.get("signal_id", ""), pnl["spread_pnl_pct"])
+    except Exception as exc:
+        log.debug("Drift tracker outcome update failed (non-fatal): %s", exc)
 
     # ── Format and send ───────────────────────────────────────────────────
     message = format_eod_track_record(
@@ -266,6 +280,7 @@ def _run_eod_report() -> None:
         scorecard=scorecard,
         macro_line=macro_line,
         fii_line=fii_line,
+        institutional_data=institutional_data,
     )
 
     try:
