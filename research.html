@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How We Detect Market Regime Breaks Before They Happen | Anka Research</title>
+<meta name="description" content="ML-driven correlation framework for detecting market regime breaks. Backtested across 90 historical events and 42 Indian equities.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --bg: #10141f;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --card-radius: 20px;
+  --card-shadow: 0 4px 40px rgba(0,0,0,0.25);
+  --card-max: 900px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* --- Navigation --- */
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 24px;
+  background: rgba(16,20,31,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.top-nav a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.top-nav a:hover { color: var(--gold); }
+.top-nav .sep { color: rgba(255,255,255,0.2); }
+.top-nav .current { color: rgba(255,255,255,0.9); }
+
+/* --- Card Stack --- */
+.card-stack {
+  max-width: var(--card-max);
+  margin: 0 auto;
+  padding: 80px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 56px 52px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Card 1: Hero --- */
+.card--hero {
+  background: linear-gradient(145deg, #0a0e1a 0%, #1a1a3e 100%);
+  color: #fff;
+  padding: 72px 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.card--hero::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.card--hero h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  position: relative;
+}
+.card--hero h1 .gold { color: var(--gold); }
+.card--hero .subtitle {
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 40px;
+  max-width: 540px;
+  margin-left: auto; margin-right: auto;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  position: relative;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+}
+.hero-stat .label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+.hero-meta {
+  margin-top: 48px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.5px;
+}
+.hero-meta .author { color: rgba(255,255,255,0.55); font-weight: 600; }
+
+/* --- Section headlines --- */
+.card h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+.card h2 .accent { color: var(--gold); }
+.card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.card p { color: var(--muted); margin-bottom: 16px; }
+.card p:last-child { margin-bottom: 0; }
+
+/* --- Bullet list --- */
+.bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.bullet-list li {
+  padding-left: 28px;
+  position: relative;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 10px;
+  width: 10px; height: 10px;
+  background: var(--gold);
+  border-radius: 3px;
+}
+
+/* --- Correlation visual --- */
+.corr-visual {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.corr-box {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 28px 32px;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+  max-width: 340px;
+}
+.corr-box .title {
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.corr-box.normal .title { color: var(--green); }
+.corr-box.broken .title { color: var(--red); }
+.corr-arrows {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  align-items: center;
+}
+.corr-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.corr-arrow .leg {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.arrow-up { font-size: 28px; color: var(--green); }
+.arrow-down { font-size: 28px; color: var(--red); }
+.corr-box .result {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.corr-box.normal .result { color: var(--green); }
+.corr-box.broken .result { color: var(--red); }
+
+/* --- Big number row --- */
+.big-numbers {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.big-num-box {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 24px 28px;
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+}
+.big-num-box .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  display: block;
+}
+.big-num-box .label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* --- Theme badges --- */
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+.badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.badge--geo { background: #fef3c7; color: #92400e; }
+.badge--usd { background: #dbeafe; color: #1e40af; }
+.badge--india { background: #fce7f3; color: #9d174d; }
+.badge--rbi { background: #d1fae5; color: #065f46; }
+.badge--fii { background: #ede9fe; color: #5b21b6; }
+
+/* --- Horizontal bar chart --- */
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 24px 0;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bar-label {
+  width: 140px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: right;
+  color: var(--text);
+}
+.bar-track {
+  flex: 1;
+  height: 26px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold), #fbbf24);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+.bar-fill.animated { /* JS sets width */ }
+.bar-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  white-space: nowrap;
+}
+.bar-chart .bar-fill--blue { background: linear-gradient(90deg, var(--blue), #60a5fa); }
+.bar-chart .bar-fill--blue .bar-count { color: #1e3a8a; }
+
+/* --- Pipeline steps --- */
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 28px 0;
+}
+.pipeline-step {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 28px 20px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.pipeline-step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.pipeline-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.pipeline-step h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.pipeline-step p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* --- Performance card --- */
+.perf-hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.perf-hero .big {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--green);
+}
+.perf-hero .big-label {
+  font-size: 16px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.perf-stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.perf-stat {
+  text-align: center;
+}
+.perf-stat .val {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--text);
+}
+.perf-stat .lbl {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.feature-chart .bar-label { width: 180px; }
+
+/* --- Fragility table --- */
+.fragility-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+.fragility-table th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 12px 12px;
+}
+.fragility-table td {
+  padding: 12px;
+  background: #f8fafc;
+  font-size: 14px;
+}
+.fragility-table tr td:first-child { border-radius: 10px 0 0 10px; }
+.fragility-table tr td:last-child { border-radius: 0 10px 10px 0; }
+.fragility-pair {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+.frag-bar-track {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 100px;
+}
+.frag-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.frag-corr {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 13px;
+}
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.status-badge--stable { background: #d1fae5; color: #065f46; }
+.status-badge--moderate { background: #fef3c7; color: #92400e; }
+.status-badge--elevated { background: #fed7aa; color: #9a3412; }
+.status-badge--high { background: #fecaca; color: #991b1b; }
+
+/* --- Setup cards --- */
+.setup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.setup-card {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s;
+}
+.setup-card:hover {
+  transform: translateX(4px);
+}
+.setup-rank {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: #cbd5e1;
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 4px;
+}
+.setup-body { flex: 1; }
+.setup-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.setup-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+}
+.trigger-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #ede9fe;
+  color: #5b21b6;
+}
+.setup-rate {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green);
+  flex-shrink: 0;
+}
+.setup-why {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* --- Flow steps --- */
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 28px 0;
+  position: relative;
+}
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 0;
+  position: relative;
+}
+.flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 56px;
+  bottom: -4px;
+  width: 2px;
+  background: #e2e8f0;
+}
+.flow-num {
+  width: 40px; height: 40px;
+  background: var(--gold);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.flow-text h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.flow-text p {
+  font-size: 14px;
+  color: var(--muted);
+}
+.flow-rule {
+  margin: 24px 0;
+  padding: 16px 20px;
+  background: #fef3c7;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400e;
+  text-align: center;
+}
+.cta-btn {
+  display: inline-block;
+  background: var(--gold);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 16px 40px;
+  border-radius: 12px;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 12px;
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(245,158,11,0.35);
+}
+
+/* --- Disclaimer card --- */
+.card--disclaimer {
+  background: #f1f5f9;
+}
+.card--disclaimer h2 { font-size: 22px; }
+.disc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.disc-section h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.disc-section p, .disc-section li {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.disc-section ul {
+  list-style: disc;
+  padding-left: 18px;
+}
+.disc-divider {
+  border: none;
+  height: 1px;
+  background: #cbd5e1;
+  margin: 24px 0;
+}
+.disc-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+.disc-footer a {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+}
+.disc-footer a:hover { text-decoration: underline; }
+
+/* --- Empty state --- */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .card { padding: 36px 24px; }
+  .card--hero { padding: 48px 24px; }
+  .hero-stats { gap: 28px; }
+  .hero-stat .num { font-size: 28px; }
+  .pipeline-grid { grid-template-columns: repeat(2, 1fr); }
+  .bar-label { width: 100px; font-size: 12px; }
+  .setup-card { flex-direction: column; gap: 12px; }
+  .setup-rate { font-size: 20px; }
+  .disc-grid { grid-template-columns: 1fr; }
+  .perf-hero .big { font-size: 42px; }
+  .feature-chart .bar-label { width: 140px; }
+  .fragility-table { font-size: 13px; }
+  .fragility-table th, .fragility-table td { padding: 8px 6px; }
+}
+@media (max-width: 480px) {
+  .card { padding: 28px 18px; }
+  .pipeline-grid { grid-template-columns: 1fr; }
+  .big-numbers { flex-direction: column; }
+  .corr-visual { flex-direction: column; align-items: center; }
+  .fragility-table { display: block; overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="/">askanka.com</a>
+  <span class="sep">/</span>
+  <span class="current">Research</span>
+</nav>
+
+<!-- Card Stack -->
+<main class="card-stack">
+
+  <!-- Card 1: Hero -->
+  <section class="card card--hero">
+    <h1>Correlations <span class="gold">Break.</span><br>Your Hedge Stops Working.</h1>
+    <p class="subtitle">We built an ML system to detect it before it happens.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num">42</span>
+        <span class="label">Stocks Tracked</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">90</span>
+        <span class="label">Historical Events</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">4+</span>
+        <span class="label">Years of Data</span>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <div>Anka Research &middot; ML-Driven Correlation Framework &middot; April 2026</div>
+      <div style="margin-top:6px">By <span class="author">Bharat Ankaraju</span></div>
+    </div>
+  </section>
+
+  <!-- Card 2: Why Correlations Matter -->
+  <section class="card">
+    <h2>Why <span class="accent">Correlations</span> Matter</h2>
+    <ul class="bullet-list">
+      <li>Spread trading relies on two baskets moving in opposite directions. You buy one sector, short another, and profit from the divergence.</li>
+      <li>When correlation breaks, your long and short legs start moving together &mdash; your hedge fails, and both sides lose.</li>
+      <li>Example: Defence vs IT had a <strong>73% hit rate</strong> on Hormuz-related events. But if that correlation regime shifts, the spread stops working entirely.</li>
+    </ul>
+    <div class="corr-visual">
+      <div class="corr-box normal">
+        <div class="title">Normal Regime</div>
+        <div class="corr-arrows">
+          <div class="corr-arrow">
+            <span class="leg">Long</span>
+            <span class="arrow-up">&uarr;</span>
+          </div>
+          <div class="corr-arrow">
+            <span class="leg">Short</span>
+            <span class="arrow-down">&darr;</span>
+          </div>
+        </div>
+        <div class="result">Hedge works &mdash; spread widens</div>
+      </div>
+      <div class="corr-box broken">
+        <div class="title">Broken Regime</div>
+        <div class="corr-arrows">
+          <div class="corr-arrow">
+            <span class="leg">Long</span>
+            <span class="arrow-down">&darr;</span>
+          </div>
+          <div class="corr-arrow">
+            <span class="leg">Short</span>
+            <span class="arrow-down">&darr;</span>
+          </div>
+        </div>
+        <div class="result">Hedge fails &mdash; both legs bleed</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 3: Signal Universe -->
+  <section class="card">
+    <h2>Our <span class="accent">Signal</span> Universe</h2>
+    <div class="big-numbers">
+      <div class="big-num-box">
+        <span class="num mono">450</span>
+        <span class="label">Testable Setups<br><small>25 Pairs &times; 18 Event Categories</small></span>
+      </div>
+      <div class="big-num-box">
+        <span class="num mono" style="color: var(--green);">35</span>
+        <span class="label">Pass Quality Gate<br><small>&ge;65% hit rate, n&ge;5</small></span>
+      </div>
+    </div>
+    <p style="font-weight:600; color: var(--text); margin-bottom: 12px;">Five core themes drive every signal:</p>
+    <div class="badge-row">
+      <span class="badge badge--geo">Geopolitical</span>
+      <span class="badge badge--usd">USD / INR</span>
+      <span class="badge badge--india">India Stress</span>
+      <span class="badge badge--rbi">RBI Policy</span>
+      <span class="badge badge--fii">FII Flows</span>
+    </div>
+    <p>Every signal is backtested against real historical events &mdash; not hypothetical scenarios.</p>
+  </section>
+
+  <!-- Card 4: 90 Events -->
+  <section class="card">
+    <h2>The <span class="accent">90 Events</span> That Train Our Model</h2>
+    <p>Spanning Feb 2022 to April 2026 &mdash; COVID recovery through the Iran conflict.</p>
+    <div class="bar-chart" id="event-chart">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- Card 5: ML Framework -->
+  <section class="card">
+    <h2>The ML <span class="accent">Framework</span></h2>
+    <p>Four stages transform raw price data into actionable correlation-break alerts.</p>
+    <div class="pipeline-grid">
+      <div class="pipeline-step">
+        <div class="pipeline-num">01</div>
+        <h4>Rolling Correlation</h4>
+        <p>Compute 21-day and 63-day rolling Pearson correlation across 10 asset pairs</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">02</div>
+        <h4>Change-Point Detection</h4>
+        <p>Z-score on correlation shifts detects when relationships break from baseline</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">03</div>
+        <h4>Feature Engineering</h4>
+        <p>24 features: volatility ratios, beta instability, dispersion, correlation dynamics, volume shocks, momentum</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">04</div>
+        <h4>XGBoost Classifier</h4>
+        <p>Predicts probability of correlation breakdown in the next 5 trading days</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 6: Performance -->
+  <section class="card">
+    <h2>Model <span class="accent">Performance</span></h2>
+    <div class="perf-hero">
+      <div class="big mono">89.8%</div>
+      <div class="big-label">Walk-Forward Accuracy</div>
+    </div>
+    <div class="perf-stats">
+      <div class="perf-stat">
+        <div class="val mono">7,502</div>
+        <div class="lbl">Training Samples</div>
+      </div>
+      <div class="perf-stat">
+        <div class="val mono">10</div>
+        <div class="lbl">Asset Pairs Pooled</div>
+      </div>
+      <div class="perf-stat">
+        <div class="val mono">80/20</div>
+        <div class="lbl">Train / Test Split</div>
+      </div>
+    </div>
+    <h3>Top 5 Features by Importance</h3>
+    <div class="bar-chart feature-chart" id="feature-chart">
+      <!-- Rendered by JS -->
+    </div>
+    <p style="font-size:13px; margin-top:16px; background:#f8fafc; padding:14px 18px; border-radius:10px;"><strong>Note:</strong> Low precision/recall is expected &mdash; break events are rare (3.9% of samples). The model is deliberately conservative: false positives cost more than missed alerts.</p>
+  </section>
+
+  <!-- Card 7: Live Fragility -->
+  <section class="card" id="fragility-card">
+    <h2>What the Model Says <span class="accent">Today</span></h2>
+    <p>Updated daily at 08:00 IST</p>
+    <div id="fragility-container">
+      <div class="empty-state">Loading fragility scores...</div>
+    </div>
+  </section>
+
+  <!-- Card 8: Best Setups -->
+  <section class="card">
+    <h2>Best Setups From Our <span class="accent">Backtest</span></h2>
+    <div class="setup-list">
+      <div class="setup-card">
+        <div class="setup-rank">01</div>
+        <div class="setup-body">
+          <div class="setup-header">
+            <span class="setup-name">Private Finance vs PSU Energy</span>
+            <span class="trigger-badge">Weak Dollar</span>
+          </div>
+          <p class="setup-why">When the dollar weakens, FII money rotates into private financials while state-run energy companies lag on subsidy uncertainty.</p>
+        </div>
+        <div class="setup-rate mono">92%<br><small style="font-size:12px;color:var(--muted)">n=6</small></div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-rank">02</div>
+        <div class="setup-body">
+          <div class="setup-header">
+            <span class="setup-name">PSU Commodity vs Banks</span>
+            <span class="trigger-badge">Weak Dollar</span>
+          </div>
+          <p class="setup-why">Commodity exporters benefit directly from dollar weakness via higher realization, while banks face NIM compression from anticipated rate cuts.</p>
+        </div>
+        <div class="setup-rate mono">83%<br><small style="font-size:12px;color:var(--muted)">n=6</small></div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-rank">03</div>
+        <div class="setup-body">
+          <div class="setup-header">
+            <span class="setup-name">Upstream vs Rate Sensitives</span>
+            <span class="trigger-badge">Strong Dollar</span>
+          </div>
+          <p class="setup-why">Strong dollar lifts crude and upstream earnings; rate-sensitive sectors (auto, real estate) suffer as RBI holds or hikes.</p>
+        </div>
+        <div class="setup-rate mono">80%<br><small style="font-size:12px;color:var(--muted)">n=10</small></div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-rank">04</div>
+        <div class="setup-body">
+          <div class="setup-header">
+            <span class="setup-name">Defence vs IT</span>
+            <span class="trigger-badge">Hormuz</span>
+          </div>
+          <p class="setup-why">Hormuz escalation drives defence order expectations while IT faces demand risk from global uncertainty. Average +3.4% in 5 days.</p>
+        </div>
+        <div class="setup-rate mono">73%<br><small style="font-size:12px;color:var(--muted)">n=5</small></div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-rank">05</div>
+        <div class="setup-body">
+          <div class="setup-header">
+            <span class="setup-name">Pharma Exporters vs Domestic Consumer</span>
+            <span class="trigger-badge">India Stress</span>
+          </div>
+          <p class="setup-why">During domestic stress, rupee-denominated revenue shrinks for consumer names while pharma exporters benefit from dollar-linked earnings.</p>
+        </div>
+        <div class="setup-rate mono">66%<br><small style="font-size:12px;color:var(--muted)">n=10</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 9: How Signals Reach You -->
+  <section class="card">
+    <h2>How Signals <span class="accent">Reach You</span></h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-text">
+          <h4>RSS + News Scanned</h4>
+          <p>Automated scanners check 40+ sources every 30 minutes for relevant macro events.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-text">
+          <h4>Event Classified</h4>
+          <p>Each event is mapped to one of 18 categories using keyword + NLP classification.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-text">
+          <h4>Matched to Spreads</h4>
+          <p>Only spreads with &ge;65% backtest hit rate and sufficient sample size are triggered.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-text">
+          <h4>Signal Sent to Telegram</h4>
+          <p>Complete signal with entry prices, constituent weights, stop levels, and live P&L tracking.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flow-rule">Winners run until stopped. No target exits. All stops are data-driven.</div>
+    <div style="text-align:center">
+      <a href="https://t.me/ANKASIGNALS" class="cta-btn" target="_blank" rel="noopener">Join @ANKASIGNALS on Telegram</a>
+    </div>
+  </section>
+
+  <!-- Card 10: Disclaimer -->
+  <section class="card card--disclaimer">
+    <h2>Methodology & Disclaimer</h2>
+    <div class="disc-grid">
+      <div class="disc-section">
+        <h4>Data Sources</h4>
+        <ul>
+          <li>Kite Connect (Zerodha)</li>
+          <li>EODHD Historical Data</li>
+          <li>NSE India</li>
+          <li>yfinance</li>
+        </ul>
+      </div>
+      <div class="disc-section">
+        <h4>ML Stack</h4>
+        <ul>
+          <li>XGBoost 3.2.0</li>
+          <li>scikit-learn 1.8.0</li>
+          <li>scipy 1.17.1</li>
+          <li>Python 3.12</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:13px; color: var(--text); font-weight:600;">All analysis is automated. No human cherry-picking of results.</p>
+    <hr class="disc-divider">
+    <p style="font-size:12px;">This report is for informational and educational purposes only. It does not constitute investment advice, a recommendation, or an offer to buy or sell any securities. Past performance and backtest results do not guarantee future returns. Trading in equities and derivatives involves substantial risk of loss. The authors and Anka Research accept no liability for any losses incurred from acting on the information presented here. Always consult a qualified financial advisor before making investment decisions.</p>
+    <hr class="disc-divider">
+    <div class="disc-footer">
+      <p>&copy; 2026 Anka Research. All rights reserved.</p>
+      <p style="margin-top:8px"><a href="/">Back to askanka.com</a></p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// --- Intersection Observer for card animations ---
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Animate bars inside this card
+      entry.target.querySelectorAll('.bar-fill[data-width]').forEach((bar, i) => {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.width;
+        }, i * 60);
+      });
+      // Animate fragility bars
+      entry.target.querySelectorAll('.frag-bar-fill[data-width]').forEach((bar, i) => {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.width;
+        }, i * 80);
+      });
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card').forEach(card => observer.observe(card));
+
+// --- Render Event bar chart ---
+(function() {
+  const events = [
+    ['Escalation', 14],
+    ['India Stress', 10],
+    ['Strong Dollar', 10],
+    ['RBI Rate Hike', 6],
+    ['Weak Dollar', 6],
+    ['FII Selling', 5],
+    ['FII Buying', 5],
+    ['Hormuz', 5],
+    ['Oil Positive', 4],
+    ['US Recession', 4],
+    ['De-escalation', 4],
+    ['Sanctions', 3],
+    ['Trump Threat', 3],
+    ['Defense Spend', 3],
+    ['Ceasefire', 3],
+    ['Diplomacy', 2],
+    ['RBI Rate Cut', 2],
+    ['Oil Negative', 1]
+  ];
+  const max = events[0][1];
+  const container = document.getElementById('event-chart');
+  container.innerHTML = events.map(([name, count]) => {
+    const pct = (count / max * 100).toFixed(1);
+    return `<div class="bar-row">
+      <div class="bar-label">${name}</div>
+      <div class="bar-track">
+        <div class="bar-fill" data-width="${pct}%">
+          <span class="bar-count">${count}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+})();
+
+// --- Render Feature importance chart ---
+(function() {
+  const features = [
+    ['corr_21', 0.065],
+    ['beta_21', 0.060],
+    ['spread_momentum_21d', 0.058],
+    ['corr_change_21d', 0.054],
+    ['ret_b_5d', 0.053]
+  ];
+  const max = features[0][1];
+  const container = document.getElementById('feature-chart');
+  container.innerHTML = features.map(([name, val]) => {
+    const pct = (val / max * 100).toFixed(1);
+    return `<div class="bar-row">
+      <div class="bar-label"><code style="font-family:'JetBrains Mono',monospace;font-size:12px">${name}</code></div>
+      <div class="bar-track">
+        <div class="bar-fill bar-fill--blue" data-width="${pct}%">
+          <span class="bar-count">${val.toFixed(3)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+})();
+
+// --- Load Fragility Scores ---
+(async function() {
+  const container = document.getElementById('fragility-container');
+  try {
+    const resp = await fetch('/data/live_status.json');
+    if (!resp.ok) throw new Error('Not found');
+    const data = await resp.json();
+    const fragility = data.fragility;
+    if (!fragility || Object.keys(fragility).length === 0) {
+      container.innerHTML = '<div class="empty-state">Fragility scores will appear after the next model run.</div>';
+      return;
+    }
+
+    // Sort by score descending
+    const pairs = Object.entries(fragility)
+      .map(([name, d]) => ({ name: name.replace(/_/g, ' '), ...d }))
+      .sort((a, b) => b.fragility_score - a.fragility_score);
+
+    function getStatus(score) {
+      if (score >= 50) return ['HIGH RISK', 'high'];
+      if (score >= 25) return ['ELEVATED', 'elevated'];
+      if (score >= 15) return ['MODERATE', 'moderate'];
+      return ['STABLE', 'stable'];
+    }
+    function getColor(score) {
+      if (score >= 50) return 'var(--red)';
+      if (score >= 25) return '#f97316';
+      if (score >= 15) return 'var(--gold)';
+      return 'var(--green)';
+    }
+
+    const scored = pairs[0].scored_date || '';
+    let html = scored ? `<p style="font-size:13px;margin-bottom:16px;color:var(--muted)">Scored on: <strong class="mono">${scored}</strong></p>` : '';
+    html += `<table class="fragility-table">
+      <thead><tr>
+        <th>Pair</th>
+        <th>Score</th>
+        <th style="min-width:120px">Fragility</th>
+        <th>Status</th>
+        <th>Corr (21d)</th>
+      </tr></thead><tbody>`;
+
+    pairs.forEach(p => {
+      const [label, cls] = getStatus(p.fragility_score);
+      const color = getColor(p.fragility_score);
+      const corrVal = p.current_corr_21 !== undefined ? p.current_corr_21.toFixed(3) : '—';
+      html += `<tr>
+        <td class="fragility-pair">${p.name}</td>
+        <td class="mono" style="font-weight:600;font-size:15px">${p.fragility_score.toFixed(1)}</td>
+        <td><div class="frag-bar-track"><div class="frag-bar-fill" data-width="${Math.min(p.fragility_score, 100)}%" style="background:${color}"></div></div></td>
+        <td><span class="status-badge status-badge--${cls}">${label}</span></td>
+        <td class="frag-corr">${corrVal}</td>
+      </tr>`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+
+    // Re-observe for animation
+    const card = document.getElementById('fragility-card');
+    if (card.classList.contains('visible')) {
+      card.querySelectorAll('.frag-bar-fill[data-width]').forEach((bar, i) => {
+        setTimeout(() => { bar.style.width = bar.dataset.width; }, i * 80);
+      });
+    }
+  } catch (e) {
+    container.innerHTML = '<div class="empty-state">Fragility scores will appear after the next model run.</div>';
+  }
+})();
+</script>
+</body>
+</html>
