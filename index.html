@@ -913,8 +913,16 @@
     <!-- ══════════════ MSI HISTORY CHART ══════════════ -->
     <section class="section">
         <div class="section-header">
-            <h2>MSI History</h2>
-            <span class="badge badge-count">Time Series</span>
+            <h2>Macro Sentiment Index (MSI)</h2>
+            <span class="badge badge-count">Daily Score 0-100</span>
+        </div>
+        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">
+            MSI measures India's macro stress on a 0-100 scale using 5 real-time inputs: FII net flows (30%), India VIX vs 90-day average (25%), USD/INR 5-day change (20%), Nifty 50 30-day return (15%), and crude oil 5-day change (10%).
+        </p>
+        <div style="display:flex; gap:16px; margin-bottom:16px; font-size:12px; flex-wrap:wrap;">
+            <span style="color:#10b981;"><span style="font-weight:700;">Below 35 = EASY</span> — risk appetite healthy, spreads behave normally</span>
+            <span style="color:#f59e0b;"><span style="font-weight:700;">35-64 = NEUTRAL</span> — mixed signals, standard stops apply</span>
+            <span style="color:#ef4444;"><span style="font-weight:700;">65+ = STRESS</span> — all stops widen 1.5x automatically, high vigilance</span>
         </div>
         <div class="msi-chart-container">
             <div id="msi-chart"></div>
@@ -951,27 +959,27 @@
     <!-- ══════════════ REPORTS ══════════════ -->
     <section class="section">
         <div class="section-header">
-            <h2>Weekly Reports</h2>
+            <h2>Reports & Research</h2>
         </div>
         <div class="reports-grid">
             <a href="/research.html" class="report-card" style="border-left:3px solid #f59e0b;">
-                <h3>Research: ML Correlation Regime Breaks</h3>
-                <p>How we detect when market relationships break — XGBoost, 24 features, live fragility scores.</p>
+                <h3>ML Correlation Regime Break Detection</h3>
+                <p>How we detect when market relationships break — XGBoost on 24 features, live fragility scoring, data-driven stop adjustment.</p>
                 <div class="report-date mono" style="color:#f59e0b;">Featured Research</div>
             </a>
-            <a href="reports/week-005.html" class="report-card">
-                <h3>Week 005: Live Signal Tracking</h3>
-                <p>First live signals deployed. Defence vs IT and Coal vs OMCs active.</p>
-                <div class="report-date mono">April 2026</div>
-            </a>
+            <div class="report-card" style="border-left:3px solid #3b82f6; opacity:0.7; cursor:default;">
+                <h3>Live Signal Performance Report</h3>
+                <p>Auto-generated weekly by our agentic pipeline. First edition publishes Monday 7 April at 09:00 IST.</p>
+                <div class="report-date mono" style="color:#3b82f6;">Coming Monday</div>
+            </div>
             <a href="reports/week-001.html" class="report-card">
-                <h3>Week 001: Wartime Market Analysis</h3>
-                <p>Inaugural analysis of geopolitical stress transmission to Indian equities.</p>
-                <div class="report-date mono">March 2026</div>
+                <h3>Iran War: Global Market Impact Analysis</h3>
+                <p>8 global indices, top outperformers per market, sector heatmap, currency impact. The report that started Anka Research.</p>
+                <div class="report-date mono">28 March 2026</div>
             </a>
             <a href="reports/india-deep-dive.html" class="report-card">
-                <h3>India Deep Dive</h3>
-                <p>Sector-by-sector analysis of Indian equity response to macro events.</p>
+                <h3>India Sector Deep Dive</h3>
+                <p>Defence, energy, IT, pharma — sector-by-sector analysis of how Indian equities respond to geopolitical stress.</p>
                 <div class="report-date mono">Research</div>
             </a>
         </div>
