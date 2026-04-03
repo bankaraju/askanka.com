@@ -873,6 +873,22 @@
 
     <hr class="section-divider">
 
+    <!-- ══════════════ FRAGILITY DASHBOARD ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Correlation Fragility</h2>
+            <span class="badge badge-live">ML-Powered</span>
+        </div>
+        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">
+            XGBoost model predicts the probability of correlation breakdown in the next 5 trading days across 10 key asset pairs. Higher score = higher risk of relationship shift.
+        </p>
+        <div id="fragility-dashboard" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
+            <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading fragility scores...</div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
     <!-- ══════════════ MSI HISTORY CHART ══════════════ -->
     <section class="section">
         <div class="section-header">
@@ -1112,6 +1128,9 @@
 
             // Positions
             renderPositions(data.positions);
+
+            // Fragility dashboard
+            renderFragility(data.fragility || {});
         })
         .catch(err => {
             console.error('Failed to load live_status.json:', err);
@@ -1238,6 +1257,66 @@
         .catch(err => {
             console.error('Failed to load track_record.json:', err);
         });
+
+    // ── Render Fragility Dashboard ──
+    function renderFragility(scores) {
+        const container = document.getElementById('fragility-dashboard');
+        if (!scores || Object.keys(scores).length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); grid-column:1/-1;">Fragility model not yet scored. Runs daily at 08:00 IST.</div>';
+            return;
+        }
+
+        // Sort by fragility score descending
+        const sorted = Object.entries(scores).sort((a, b) => b[1].fragility_score - a[1].fragility_score);
+
+        container.innerHTML = sorted.map(([name, s]) => {
+            const score = s.fragility_score || 0;
+            const corr = s.current_corr_21 || 0;
+            const prob = s.probability || 0;
+            const drivers = (s.top_drivers || []).slice(0, 3);
+
+            // Color based on score
+            let barColor, badgeBg, badgeColor, label;
+            if (score >= 70) {
+                barColor = '#ef4444'; badgeBg = 'rgba(239,68,68,0.15)'; badgeColor = '#ef4444'; label = 'HIGH RISK';
+            } else if (score >= 40) {
+                barColor = '#f59e0b'; badgeBg = 'rgba(245,158,11,0.15)'; badgeColor = '#f59e0b'; label = 'ELEVATED';
+            } else if (score >= 20) {
+                barColor = '#3b82f6'; badgeBg = 'rgba(59,130,246,0.12)'; badgeColor = '#3b82f6'; label = 'MODERATE';
+            } else {
+                barColor = '#10b981'; badgeBg = 'rgba(16,185,129,0.12)'; badgeColor = '#10b981'; label = 'STABLE';
+            }
+
+            const pairLabel = name.replace(/_/g, ' ');
+            const corrColor = corr >= 0 ? '#10b981' : '#ef4444';
+
+            const driverHtml = drivers.map(d =>
+                '<span style="font-size:10px; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:3px;">' +
+                d.feature.replace(/_/g, ' ') + '</span>'
+            ).join(' ');
+
+            return '<div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px; transition:border-color 0.2s;">' +
+                '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">' +
+                    '<span style="font-weight:600; font-size:13px;">' + pairLabel + '</span>' +
+                    '<span style="font-size:10px; padding:2px 8px; border-radius:4px; font-weight:700; letter-spacing:0.5px; background:' + badgeBg + '; color:' + badgeColor + ';">' + label + '</span>' +
+                '</div>' +
+
+                // Score bar
+                '<div style="position:relative; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; margin-bottom:8px; overflow:hidden;">' +
+                    '<div style="position:absolute; left:0; top:0; height:100%; width:' + score + '%; background:' + barColor + '; border-radius:4px; transition:width 0.6s;"></div>' +
+                '</div>' +
+
+                // Score + correlation
+                '<div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">' +
+                    '<span class="mono" style="font-size:20px; font-weight:700; color:' + barColor + ';">' + score + '<span style="font-size:12px; color:var(--text-muted);">/100</span></span>' +
+                    '<span style="font-size:11px; color:var(--text-secondary);">corr <span class="mono" style="color:' + corrColor + ';">' + corr.toFixed(3) + '</span></span>' +
+                '</div>' +
+
+                // Top drivers
+                '<div style="display:flex; gap:4px; flex-wrap:wrap;">' + driverHtml + '</div>' +
+            '</div>';
+        }).join('');
+    }
 
     // ── Load Spread Universe Heatmap ──
     fetch('/data/spread_universe.json')

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-03T10:15:55.651387+05:30",
+  "updated_at": "2026-04-03T12:57:27.093152+05:30",
   "msi": {
     "score": 60.1,
     "regime": "MACRO_NEUTRAL",
@@ -92,5 +92,287 @@
       "two_day_stop": -5.03,
       "peak_pnl": 4.36
     }
-  ]
+  ],
+  "fragility": {
+    "Nifty_vs_BankNifty": {
+      "fragility_score": 9.7,
+      "probability": 0.097,
+      "top_drivers": [
+        {
+          "feature": "beta_21",
+          "contribution": 0.0679
+        },
+        {
+          "feature": "corr_21",
+          "contribution": 0.0525
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.0439
+        },
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0431
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0385
+        }
+      ],
+      "current_corr_21": 0.8141,
+      "scored_date": "2026-04-02"
+    },
+    "Defence_vs_IT": {
+      "fragility_score": 9.5,
+      "probability": 0.0951,
+      "top_drivers": [
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.056
+        },
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0552
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0475
+        },
+        {
+          "feature": "beta_21",
+          "contribution": 0.0458
+        },
+        {
+          "feature": "dispersion_ratio",
+          "contribution": 0.0389
+        }
+      ],
+      "current_corr_21": 0.4707,
+      "scored_date": "2026-04-02"
+    },
+    "Defence_vs_Auto": {
+      "fragility_score": 18.1,
+      "probability": 0.1814,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0513
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0475
+        },
+        {
+          "feature": "corr_21",
+          "contribution": 0.0392
+        },
+        {
+          "feature": "corr_change_21d",
+          "contribution": 0.0321
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.032
+        }
+      ],
+      "current_corr_21": 0.6086,
+      "scored_date": "2026-04-02"
+    },
+    "Upstream_vs_Downstream": {
+      "fragility_score": 8.3,
+      "probability": 0.083,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0359
+        },
+        {
+          "feature": "corr_change_21d",
+          "contribution": 0.0348
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.0335
+        },
+        {
+          "feature": "dispersion_ratio",
+          "contribution": 0.0235
+        },
+        {
+          "feature": "volume_shock_a",
+          "contribution": 0.0227
+        }
+      ],
+      "current_corr_21": 0.323,
+      "scored_date": "2026-04-02"
+    },
+    "Metals_vs_IT": {
+      "fragility_score": 39.5,
+      "probability": 0.3949,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0478
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.0444
+        },
+        {
+          "feature": "volume_shock_a",
+          "contribution": 0.0314
+        },
+        {
+          "feature": "dispersion_ratio",
+          "contribution": 0.0188
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0133
+        }
+      ],
+      "current_corr_21": 0.1322,
+      "scored_date": "2026-04-02"
+    },
+    "FMCG_vs_Cyclicals": {
+      "fragility_score": 3.0,
+      "probability": 0.0301,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0513
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0463
+        },
+        {
+          "feature": "corr_21",
+          "contribution": 0.0438
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.032
+        },
+        {
+          "feature": "corr_change_21d",
+          "contribution": 0.0239
+        }
+      ],
+      "current_corr_21": 0.6789,
+      "scored_date": "2026-04-02"
+    },
+    "Pharma_vs_Banks": {
+      "fragility_score": 22.3,
+      "probability": 0.2232,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0581
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0475
+        },
+        {
+          "feature": "volume_shock_a",
+          "contribution": 0.0393
+        },
+        {
+          "feature": "dispersion_ratio",
+          "contribution": 0.037
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.0331
+        }
+      ],
+      "current_corr_21": 0.2189,
+      "scored_date": "2026-04-02"
+    },
+    "PSU_vs_Private": {
+      "fragility_score": 3.1,
+      "probability": 0.0313,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0581
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.055
+        },
+        {
+          "feature": "corr_21",
+          "contribution": 0.0479
+        },
+        {
+          "feature": "beta_21",
+          "contribution": 0.0421
+        },
+        {
+          "feature": "volume_shock_a",
+          "contribution": 0.0358
+        }
+      ],
+      "current_corr_21": 0.7434,
+      "scored_date": "2026-04-02"
+    },
+    "Coal_vs_OMC": {
+      "fragility_score": 7.2,
+      "probability": 0.0724,
+      "top_drivers": [
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.0335
+        },
+        {
+          "feature": "spread_momentum_21d",
+          "contribution": 0.0187
+        },
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0139
+        },
+        {
+          "feature": "corr_21",
+          "contribution": 0.0137
+        },
+        {
+          "feature": "volume_shock_a",
+          "contribution": 0.0134
+        }
+      ],
+      "current_corr_21": 0.2128,
+      "scored_date": "2026-04-02"
+    },
+    "Finance_vs_Energy": {
+      "fragility_score": 14.9,
+      "probability": 0.1495,
+      "top_drivers": [
+        {
+          "feature": "vol_ratio_b",
+          "contribution": 0.0542
+        },
+        {
+          "feature": "dispersion_ratio",
+          "contribution": 0.046
+        },
+        {
+          "feature": "vol_ratio_a",
+          "contribution": 0.0451
+        },
+        {
+          "feature": "volume_shock_b",
+          "contribution": 0.0301
+        },
+        {
+          "feature": "volume_shock_a",
+          "contribution": 0.0237
+        }
+      ],
+      "current_corr_21": -0.2026,
+      "scored_date": "2026-04-02"
+    }
+  }
 }
