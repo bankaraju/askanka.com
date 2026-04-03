@@ -16,13 +16,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg-primary: #0d1117;
-            --bg-card: #151d2e;
-            --bg-card-hover: #1e2a3d;
-            --border: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --bg-primary: #10141f;
+            --bg-card: #1a2235;
+            --bg-card-hover: #243047;
+            --border: #2d3d54;
+            --text-primary: #f8fafc;
+            --text-secondary: #b0bfd0;
+            --text-muted: #7d8fa8;
             --accent-gold: #f59e0b;
             --accent-blue: #3b82f6;
             --accent-green: #10b981;
@@ -220,13 +220,14 @@
         }
 
         .stat-card {
-            background: var(--bg-card);
+            background: #1a2540;
             padding: 20px 16px;
             text-align: center;
             transition: background 0.2s;
+            border-bottom: 1px solid #2d3d54;
         }
 
-        .stat-card:hover { background: var(--bg-card-hover); }
+        .stat-card:hover { background: #243050; }
 
         .stat-label {
             font-size: 11px;
@@ -284,8 +285,8 @@
         }
 
         .position-card {
-            background: #151d2e;
-            border: 1px solid #2a3548;
+            background: #1e2940;
+            border: 1px solid #374b6a;
             border-radius: 12px;
             padding: 24px;
             transition: border-color 0.2s;
@@ -524,14 +525,14 @@
             min-width: 180px;
             position: sticky;
             left: 0;
-            background: var(--bg-card);
+            background: #1a2235;
             z-index: 2;
         }
 
         .heatmap-table thead th {
             position: sticky;
             top: 0;
-            background: var(--bg-card);
+            background: #1a2235;
             z-index: 1;
             writing-mode: vertical-lr;
             transform: rotate(180deg);
@@ -561,11 +562,11 @@
 
         .heatmap-cell:hover { transform: scale(1.15); }
 
-        .heatmap-cell.no-data { color: #334155; background: #1a2332; }
-        .heatmap-cell.low { background: #3b1c1c; color: #fca5a5; }
-        .heatmap-cell.mid { background: #14392e; color: #6ee7b7; }
-        .heatmap-cell.high { background: #065f46; color: #a7f3d0; font-weight: 700; }
-        .heatmap-cell.elite { background: #78350f; color: #fde68a; font-weight: 700; }
+        .heatmap-cell.no-data { color: #475569; background: #1e2535; }
+        .heatmap-cell.low { background: #4a2020; color: #fca5a5; }
+        .heatmap-cell.mid { background: #1a4d3e; color: #6ee7b7; }
+        .heatmap-cell.high { background: #0a7558; color: #bbf7d0; font-weight: 700; }
+        .heatmap-cell.elite { background: #92400e; color: #fef08a; font-weight: 700; }
 
         .heatmap-note {
             margin-top: 16px;
