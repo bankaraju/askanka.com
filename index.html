@@ -16,21 +16,21 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg-primary: #10141f;
-            --bg-card: #1a2235;
-            --bg-card-hover: #243047;
-            --border: #2d3d54;
-            --text-primary: #f8fafc;
-            --text-secondary: #b0bfd0;
-            --text-muted: #7d8fa8;
+            --bg-primary: #f5f7fa;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8f9fb;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
             --accent-gold: #f59e0b;
             --accent-blue: #3b82f6;
             --accent-green: #10b981;
             --accent-red: #ef4444;
-            --accent-gold-dim: rgba(245, 158, 11, 0.15);
-            --accent-green-dim: rgba(16, 185, 129, 0.15);
-            --accent-red-dim: rgba(239, 68, 68, 0.15);
-            --accent-blue-dim: rgba(59, 130, 246, 0.15);
+            --accent-gold-dim: rgba(245, 158, 11, 0.12);
+            --accent-green-dim: rgba(16, 185, 129, 0.12);
+            --accent-red-dim: rgba(239, 68, 68, 0.10);
+            --accent-blue-dim: rgba(59, 130, 246, 0.10);
         }
 
         body {
@@ -52,15 +52,16 @@
             padding: 64px 20px 48px;
             text-align: center;
             background: linear-gradient(135deg, #0a0e1a 0%, #141428 40%, #1a1a3e 60%, #0a0e1a 100%);
-            border-bottom: 1px solid var(--border);
+            border-bottom: none;
             overflow: hidden;
+            color: #f1f5f9;
         }
 
         .hero::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 60%);
+            background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 60%);
             pointer-events: none;
         }
 
@@ -220,14 +221,14 @@
         }
 
         .stat-card {
-            background: #1a2540;
+            background: #ffffff;
             padding: 20px 16px;
             text-align: center;
             transition: background 0.2s;
-            border-bottom: 1px solid #2d3d54;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .stat-card:hover { background: #243050; }
+        .stat-card:hover { background: #f8f9fb; }
 
         .stat-label {
             font-size: 11px;
@@ -285,14 +286,15 @@
         }
 
         .position-card {
-            background: #1e2940;
-            border: 1px solid #374b6a;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 12px;
             padding: 24px;
-            transition: border-color 0.2s;
+            transition: box-shadow 0.2s, border-color 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
-        .position-card:hover { border-color: rgba(245, 158, 11, 0.3); }
+        .position-card:hover { border-color: #f59e0b; box-shadow: 0 4px 12px rgba(245,158,11,0.1); }
 
         .position-header {
             display: flex;
@@ -512,7 +514,7 @@
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #cbd5e1;
+            color: #64748b;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -521,18 +523,18 @@
             text-align: right;
             padding-right: 12px;
             font-size: 11px;
-            color: #e2e8f0;
+            color: #1e293b;
             min-width: 180px;
             position: sticky;
             left: 0;
-            background: #1a2235;
+            background: #ffffff;
             z-index: 2;
         }
 
         .heatmap-table thead th {
             position: sticky;
             top: 0;
-            background: #1a2235;
+            background: #ffffff;
             z-index: 1;
             writing-mode: vertical-lr;
             transform: rotate(180deg);
@@ -562,11 +564,11 @@
 
         .heatmap-cell:hover { transform: scale(1.15); }
 
-        .heatmap-cell.no-data { color: #475569; background: #1e2535; }
-        .heatmap-cell.low { background: #4a2020; color: #fca5a5; }
-        .heatmap-cell.mid { background: #1a4d3e; color: #6ee7b7; }
-        .heatmap-cell.high { background: #0a7558; color: #bbf7d0; font-weight: 700; }
-        .heatmap-cell.elite { background: #92400e; color: #fef08a; font-weight: 700; }
+        .heatmap-cell.no-data { color: #cbd5e1; background: #f1f5f9; }
+        .heatmap-cell.low { background: #fee2e2; color: #b91c1c; }
+        .heatmap-cell.mid { background: #d1fae5; color: #065f46; }
+        .heatmap-cell.high { background: #6ee7b7; color: #064e3b; font-weight: 700; }
+        .heatmap-cell.elite { background: #fbbf24; color: #78350f; font-weight: 700; }
 
         .heatmap-note {
             margin-top: 16px;
@@ -730,16 +732,16 @@
         /* ── Tooltip ── */
         .tooltip {
             position: fixed;
-            background: #1e293b;
-            color: var(--text-primary);
+            background: #0f172a;
+            color: #f1f5f9;
             padding: 8px 14px;
             border-radius: 8px;
             font-size: 12px;
             font-family: 'JetBrains Mono', monospace;
             pointer-events: none;
             z-index: 100;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            border: 1px solid rgba(245,158,11,0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border: 1px solid rgba(245,158,11,0.3);
             opacity: 0;
             transition: opacity 0.15s;
         }
@@ -1281,10 +1283,10 @@
 
             // Legend
             html += '<div class="heatmap-legend">';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#4a2020;"></span> &lt;50%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#1a4d3e;"></span> 50-64%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#0a7558;"></span> 65-79%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#92400e;"></span> 80%+</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#fee2e2;"></span> &lt;50%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#d1fae5;"></span> 50-64%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#6ee7b7;"></span> 65-79%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#fbbf24;"></span> 80%+</div>';
             html += '<div class="legend-item"><span style="color:var(--text-muted); font-size:11px;">&#8212; n&lt;3</span></div>';
             html += '</div>';
 
@@ -1293,19 +1295,19 @@
             // ── Key Insights from the Heatmap ──
             html += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:16px; margin-top:24px;">';
 
-            html += '<div style="background:#1a2235; border:1px solid #2d3d54; border-left:3px solid #f59e0b; border-radius:8px; padding:16px;">';
-            html += '<div style="font-weight:700; color:#fde68a; margin-bottom:6px;">&#9733; Private Finance vs PSU Energy on Weak Dollar — 92% hit rate</div>';
-            html += '<div style="font-size:13px; color:#b0bfd0;">When the dollar weakens (Fed pivot, soft CPI), private banks and NBFCs like BAJFINANCE and HDFCBANK outperform PSU energy names. This is the single most reliable setup in our universe — fired on 6 events, won 92% of the time.</div>';
+            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #f59e0b; border-radius:8px; padding:16px;">';
+            html += '<div style="font-weight:700; color:#92400e; margin-bottom:6px;">&#9733; Private Finance vs PSU Energy on Weak Dollar — 92% hit rate</div>';
+            html += '<div style="font-size:13px; color:#475569;">When the dollar weakens (Fed pivot, soft CPI), private banks and NBFCs like BAJFINANCE and HDFCBANK outperform PSU energy names. This is the single most reliable setup in our universe — fired on 6 events, won 92% of the time.</div>';
             html += '</div>';
 
-            html += '<div style="background:#1a2235; border:1px solid #2d3d54; border-left:3px solid #10b981; border-radius:8px; padding:16px;">';
-            html += '<div style="font-weight:700; color:#a7f3d0; margin-bottom:6px;">&#9733; Defence vs IT on Hormuz — 73% hit rate, +3.4% in 5 days</div>';
-            html += '<div style="font-size:13px; color:#b0bfd0;">Strait of Hormuz disruption is the strongest geopolitical trigger for Indian spreads. Defence stocks (HAL, BEL, BDL) rally while IT (TCS, INFY, WIPRO) sells off on global risk aversion. The 5-day spread return of +3.4% is the highest in the entire matrix.</div>';
+            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #10b981; border-radius:8px; padding:16px;">';
+            html += '<div style="font-weight:700; color:#065f46; margin-bottom:6px;">&#9733; Defence vs IT on Hormuz — 73% hit rate, +3.4% in 5 days</div>';
+            html += '<div style="font-size:13px; color:#475569;">Strait of Hormuz disruption is the strongest geopolitical trigger for Indian spreads. Defence stocks (HAL, BEL, BDL) rally while IT (TCS, INFY, WIPRO) sells off on global risk aversion. The 5-day spread return of +3.4% is the highest in the entire matrix.</div>';
             html += '</div>';
 
-            html += '<div style="background:#1a2235; border:1px solid #2d3d54; border-left:3px solid #3b82f6; border-radius:8px; padding:16px;">';
-            html += '<div style="font-weight:700; color:#93c5fd; margin-bottom:6px;">&#9733; Pharma Exporters vs Domestic Consumer on India Stress — 66% hit rate</div>';
-            html += '<div style="font-size:13px; color:#b0bfd0;">When India VIX spikes and Nifty sells off, export pharma (Sun Pharma, Dr Reddy\'s, Cipla) holds while domestic consumer names (HUL, ITC, Asian Paints) get hit. Pharma earns in USD and is defensive — a natural hedge during India market stress events.</div>';
+            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #3b82f6; border-radius:8px; padding:16px;">';
+            html += '<div style="font-weight:700; color:#1e40af; margin-bottom:6px;">&#9733; Pharma Exporters vs Domestic Consumer on India Stress — 66% hit rate</div>';
+            html += '<div style="font-size:13px; color:#475569;">When India VIX spikes and Nifty sells off, export pharma (Sun Pharma, Dr Reddy\'s, Cipla) holds while domestic consumer names (HUL, ITC, Asian Paints) get hit. Pharma earns in USD and is defensive — a natural hedge during India market stress events.</div>';
             html += '</div>';
 
             html += '</div>';
@@ -1387,22 +1389,22 @@
                 plot_bgcolor: 'transparent',
                 margin: { t: 10, r: 60, b: 40, l: 50 },
                 xaxis: {
-                    gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
+                    gridcolor: 'rgba(226,232,240,0.8)', gridwidth: 1,
                     tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
-                    linecolor: '#1e293b'
+                    linecolor: '#e2e8f0'
                 },
                 yaxis: {
                     range: [0, 100],
-                    gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
+                    gridcolor: 'rgba(226,232,240,0.8)', gridwidth: 1,
                     tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
-                    linecolor: '#1e293b',
+                    linecolor: '#e2e8f0',
                     dtick: 20
                 },
                 shapes: shapes,
                 annotations: annotations,
                 hoverlabel: {
-                    bgcolor: '#1e293b', bordercolor: '#f59e0b',
-                    font: { color: '#f1f5f9', family: 'JetBrains Mono', size: 13 }
+                    bgcolor: '#ffffff', bordercolor: '#f59e0b',
+                    font: { color: '#0f172a', family: 'JetBrains Mono', size: 13 }
                 },
                 font: { family: 'Inter, sans-serif' }
             };
