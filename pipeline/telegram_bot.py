@@ -1085,7 +1085,7 @@ def format_macro_signal_card(
 
     comps = msi.get("components", {})
     comp_labels = {
-        "fii_flow":   "FII flows",
+        "inst_flow":  "Institutional flows",
         "india_vix":  "India VIX",
         "usdinr":     "USD/INR",
         "nifty_30d":  "Nifty 30d",

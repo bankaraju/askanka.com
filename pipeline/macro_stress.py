@@ -51,9 +51,14 @@ EASY_THRESHOLD   = 35
 # Data fetchers
 # ---------------------------------------------------------------------------
 
-def _fetch_fii_net_flow() -> Optional[float]:
-    """Fetch today's FII net buy/sell from NSE API (₹ crore).
-    Negative = net sellers (stress). Returns 3-day average if available.
+def _fetch_institutional_flow() -> dict:
+    """Fetch FII + DII net flows from NSE API (₹ crore).
+
+    Returns dict:
+        fii_net: float (3-day avg, negative = net sellers)
+        dii_net: float (3-day avg, positive = net buyers typically)
+        combined: float (fii_net + dii_net)
+    Returns empty dict on failure.
     """
     url = "https://www.nseindia.com/api/fiidiiTradeReact"
     headers = {
@@ -62,29 +67,46 @@ def _fetch_fii_net_flow() -> Optional[float]:
         "Referer": "https://www.nseindia.com",
     }
     try:
-        # NSE requires a session cookie — get the homepage first
         session = requests.Session()
         session.headers.update(headers)
         session.get("https://www.nseindia.com", timeout=10)
         resp = session.get(url, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-        # data is a list of records; each has "fiiNetDii" field
-        # Most recent 3 days
+
         fii_flows = []
+        dii_flows = []
         for row in data[:3]:
-            net = row.get("fiiNetDii") or row.get("netVal")
-            if net is not None:
+            # FII net
+            fii_val = row.get("fiiNetDii") or row.get("fii_net") or row.get("netVal")
+            if fii_val is not None:
                 try:
-                    fii_flows.append(float(str(net).replace(",", "")))
+                    fii_flows.append(float(str(fii_val).replace(",", "")))
                 except ValueError:
                     pass
-        if fii_flows:
-            return sum(fii_flows) / len(fii_flows)
-        return None
+            # DII net
+            dii_val = row.get("diiNetDii") or row.get("dii_net")
+            if dii_val is not None:
+                try:
+                    dii_flows.append(float(str(dii_val).replace(",", "")))
+                except ValueError:
+                    pass
+
+        fii_avg = sum(fii_flows) / len(fii_flows) if fii_flows else None
+        dii_avg = sum(dii_flows) / len(dii_flows) if dii_flows else None
+
+        if fii_avg is None:
+            return {}
+
+        combined = (fii_avg or 0) + (dii_avg or 0)
+        return {
+            "fii_net": round(fii_avg, 2),
+            "dii_net": round(dii_avg, 2) if dii_avg is not None else 0.0,
+            "combined": round(combined, 2),
+        }
     except Exception as exc:
-        log.warning("FII flow fetch failed: %s", exc)
-        return None
+        log.warning("Institutional flow fetch failed: %s", exc)
+        return {}
 
 
 def _fetch_india_vix() -> Optional[float]:
@@ -164,17 +186,57 @@ def _fetch_crude_change_5d() -> Optional[float]:
 # Normalisation helpers
 # ---------------------------------------------------------------------------
 
-def _norm_fii(fii_3d_avg: Optional[float]) -> float:
-    """Normalise FII flow to 0-1 stress score.
-    0 = massive inflow (benign), 1 = massive outflow (max stress).
-    Scale: -8000 cr (max stress outflow) to +4000 cr (benign inflow).
+def _norm_institutional(combined_flow: Optional[float], vix: Optional[float] = None, vix_avg: Optional[float] = None) -> float:
+    """Normalise combined institutional flow (FII+DII) to 0-1 stress score.
+
+    Uses percentile-based lookup from last 90 days of MSI history.
+    Special case: combined flow in bottom 10th percentile AND VIX > 90d avg → stress = 1.0.
+    Fallback: linear scale with hardcoded range if < 10 days of history.
     """
-    if fii_3d_avg is None:
+    if combined_flow is None:
         return 0.5  # unknown → neutral
-    # Clamp and normalise: outflow is negative
-    clamped = max(-8000, min(4000, fii_3d_avg))
-    # Invert: -8000 → 1.0, +4000 → 0.0
+
+    # Try percentile-based normalisation from history
+    try:
+        history = _load_msi_history_flows(days=90)
+        if len(history) >= 10:
+            sorted_flows = sorted(history)
+            n = len(sorted_flows)
+            # Find percentile of current combined_flow
+            rank = sum(1 for f in sorted_flows if f <= combined_flow)
+            percentile = rank / n
+
+            # Special case: bottom 10th percentile + high VIX = max stress
+            if percentile <= 0.10 and vix is not None and vix_avg is not None and vix > vix_avg:
+                return 1.0
+
+            # Map percentile to stress: 0th percentile = 1.0 (max stress), 100th = 0.0
+            return max(0.0, min(1.0, 1.0 - percentile))
+    except Exception as exc:
+        log.debug("Percentile normalisation failed, using linear fallback: %s", exc)
+
+    # Fallback: linear scale (same range as old _norm_fii but on combined flow)
+    # -8000 (max stress) to +4000 (benign)
+    clamped = max(-8000, min(4000, combined_flow))
     return (4000 - clamped) / 12000
+
+
+def _load_msi_history_flows(days: int = 90) -> list[float]:
+    """Load combined_flow values from last N days of msi_history.json."""
+    if not MSI_HISTORY_FILE.exists():
+        return []
+    try:
+        history = json.loads(MSI_HISTORY_FILE.read_text(encoding="utf-8"))
+        cutoff = (datetime.now(IST) - timedelta(days=days)).strftime("%Y-%m-%d")
+        flows = []
+        for entry in history:
+            if entry.get("date", "") >= cutoff:
+                cf = entry.get("combined_flow")
+                if cf is not None:
+                    flows.append(float(cf))
+        return flows
+    except Exception:
+        return []
 
 
 def _norm_vix(vix: Optional[float], vix_avg: Optional[float]) -> float:
@@ -232,7 +294,10 @@ def compute_msi() -> dict:
       components: {input: {raw_value, normalised, weight, contribution}}
       timestamp: ISO string (IST)
     """
-    fii       = _fetch_fii_net_flow()
+    inst      = _fetch_institutional_flow()
+    fii_net   = inst.get("fii_net")
+    dii_net   = inst.get("dii_net", 0.0)
+    combined  = inst.get("combined")
     vix       = _fetch_india_vix()
     vix_avg   = _fetch_india_vix_90d_avg()
     usdinr    = _fetch_usdinr_change_5d()
@@ -240,7 +305,7 @@ def compute_msi() -> dict:
     crude     = _fetch_crude_change_5d()
 
     components = {
-        "fii_flow":    {"raw": fii,       "norm": _norm_fii(fii),         "weight": 0.30},
+        "inst_flow":   {"raw": combined,  "norm": _norm_institutional(combined, vix, vix_avg), "weight": 0.30},
         "india_vix":   {"raw": vix,       "norm": _norm_vix(vix, vix_avg), "weight": 0.25},
         "usdinr":      {"raw": usdinr,    "norm": _norm_usdinr(usdinr),    "weight": 0.20},
         "nifty_30d":   {"raw": nifty_ret, "norm": _norm_nifty(nifty_ret),  "weight": 0.15},
@@ -269,6 +334,9 @@ def compute_msi() -> dict:
         "regime":     regime,
         "components": components,
         "vix_90d_avg": round(vix_avg, 2) if vix_avg else None,
+        "fii_net":    fii_net,
+        "dii_net":    dii_net,
+        "combined_flow": combined,
         "timestamp":  datetime.now(IST).isoformat(),
     }
 
@@ -297,6 +365,7 @@ def append_msi_history(msi_result: dict) -> None:
         "date":      today,
         "msi_score": msi_result["msi_score"],
         "regime":    msi_result["regime"],
+        "combined_flow": msi_result.get("combined_flow"),
     })
     # Keep last 365 days
     history = history[-365:]
@@ -384,9 +453,11 @@ def detect_fii_outflow() -> Optional[str]:
     if state.get("fii_outflow_date") == today:
         return None  # already fired today
 
-    fii_avg = _fetch_fii_net_flow()
-    if fii_avg is None:
+    inst = _fetch_institutional_flow()
+    fii = inst.get("fii_net")
+    if fii is None:
         return None
+    fii_avg = fii
     log.info("FII 3-day avg: Rs%.0f cr", fii_avg)
     if fii_avg <= FII_OUTFLOW_THRESHOLD:
         state["fii_outflow_date"] = today
@@ -404,9 +475,9 @@ def get_inr_change() -> Optional[float]:
 
 
 def get_fii_outflow_avg() -> Optional[float]:
-    """Return current FII 3-day avg ₹ cr (for card display)."""
-    state = _load_trigger_state()
-    return state.get("fii_outflow_avg")
+    """Return current FII 3-day average flow (for display in trigger cards)."""
+    result = _fetch_institutional_flow()
+    return result.get("fii_net")
 
 
 def compute_spread_backtest() -> dict:
