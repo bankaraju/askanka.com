@@ -1281,10 +1281,10 @@
 
             // Legend
             html += '<div class="heatmap-legend">';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(239,68,68,0.15);"></span> &lt;50%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.15);"></span> 50-64%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.3);"></span> 65-79%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(245,158,11,0.25);"></span> 80%+</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#4a2020;"></span> &lt;50%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#1a4d3e;"></span> 50-64%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#0a7558;"></span> 65-79%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:#92400e;"></span> 80%+</div>';
             html += '<div class="legend-item"><span style="color:var(--text-muted); font-size:11px;">&#8212; n&lt;3</span></div>';
             html += '</div>';
 
@@ -1315,9 +1315,16 @@
     fetch('/data/msi_history.json')
         .then(r => r.json())
         .then(data => {
-            if (!data || data.length === 0) {
+            if (!data || data.length < 3) {
+                const score = (data && data.length > 0) ? data[data.length-1].msi_score : '—';
+                const regime = (data && data.length > 0) ? data[data.length-1].regime : '';
+                const regimeLabel = regime.replace('MACRO_', '');
                 document.getElementById('msi-chart').innerHTML =
-                    '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">MSI chart will populate as more data points accumulate.</div>';
+                    '<div style="text-align:center; padding:48px 0;">' +
+                    '<div style="font-size:48px; font-weight:800; font-family:JetBrains Mono; color:#f59e0b;">' + score + '<span style="font-size:20px; color:var(--text-muted);">/100</span></div>' +
+                    '<div style="font-size:14px; color:var(--text-secondary); margin-top:8px;">' + regimeLabel + '</div>' +
+                    '<div style="font-size:12px; color:var(--text-muted); margin-top:16px;">Chart will render once 3+ daily readings accumulate</div>' +
+                    '</div>';
                 return;
             }
 
