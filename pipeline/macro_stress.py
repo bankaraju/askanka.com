@@ -110,13 +110,27 @@ def _fetch_institutional_flow() -> dict:
 
 
 def _fetch_india_vix() -> Optional[float]:
-    """Fetch India VIX current level from Kite Connect."""
+    """Fetch India VIX as 3-day average of closing values from Kite Connect.
+    Smooths out single-day expiry spikes.
+    Fallback: single LTP if historical data unavailable.
+    """
+    try:
+        from kite_client import fetch_historical
+        candles = fetch_historical("INDIA VIX", interval="day", days=7)
+        if len(candles) >= 3:
+            last_3 = [c["close"] for c in candles[-3:] if c.get("close")]
+            if last_3:
+                return sum(last_3) / len(last_3)
+    except Exception as exc:
+        log.debug("VIX historical failed, falling back to LTP: %s", exc)
+
+    # Fallback: single point LTP
     try:
         from kite_client import fetch_ltp
         prices = fetch_ltp(["INDIA VIX"])
         return prices.get("INDIA VIX")
     except Exception as exc:
-        log.warning("India VIX fetch failed: %s", exc)
+        log.warning("India VIX fetch failed entirely: %s", exc)
         return None
 
 
@@ -167,19 +181,127 @@ def _fetch_nifty_30d_return() -> Optional[float]:
 
 
 def _fetch_crude_change_5d() -> Optional[float]:
-    """Fetch MCX Crude Oil 5-day change % from Kite (front-month future)."""
+    """Fetch crude oil 5-day change % with 3-day smoothed closes.
+
+    Data cascade:
+      1. Kite Connect MCX CrudeOil historical
+      2. MCX JSON endpoint scrape
+      3. EODHD BZ.COMM
+      4. yfinance BZ=F (cache disabled)
+
+    3-day smoothing: compare avg of last 3 closes vs avg of 3 closes from 5 days earlier.
+    """
+    candles = _fetch_crude_candles(days=12)
+    if len(candles) >= 8:
+        recent_3 = [c["close"] for c in candles[-3:]]
+        older_3 = [c["close"] for c in candles[-8:-5]]
+        if recent_3 and older_3:
+            avg_recent = sum(recent_3) / len(recent_3)
+            avg_older = sum(older_3) / len(older_3)
+            if avg_older > 0:
+                return (avg_recent / avg_older - 1) * 100
+    return None
+
+
+def _fetch_crude_candles(days: int = 12) -> list[dict]:
+    """Fetch crude oil daily candles from cascading sources.
+
+    Returns list of dicts with at least 'close' key, sorted oldest-first.
+    """
+    # 1. Kite Connect (primary)
     try:
         from kite_client import fetch_historical
-        candles = fetch_historical("CRUDEOIL", interval="day", days=10)
-        if len(candles) >= 6:
-            old = candles[-6]["close"]
-            new = candles[-1]["close"]
-            if old and old > 0:
-                return (new / old - 1) * 100
-        return None
+        candles = fetch_historical("CRUDEOIL", interval="day", days=days)
+        if len(candles) >= 8:
+            return candles
     except Exception as exc:
-        log.warning("Crude change fetch failed: %s", exc)
-        return None
+        log.debug("Kite crude failed: %s", exc)
+
+    # 2. MCX JSON scrape
+    try:
+        mcx_candles = _fetch_mcx_crude_history(days)
+        if len(mcx_candles) >= 8:
+            return mcx_candles
+    except Exception as exc:
+        log.debug("MCX crude failed: %s", exc)
+
+    # 3. EODHD BZ.COMM
+    try:
+        from eodhd_client import fetch_eod_series
+        series = fetch_eod_series("BZ.COMM", days=days)
+        if len(series) >= 8:
+            return series
+    except Exception as exc:
+        log.debug("EODHD crude failed: %s", exc)
+
+    # 4. yfinance (last resort, cache disabled)
+    try:
+        import os
+        os.environ["YFINANCE_CACHE_DISABLED"] = "1"
+        import yfinance as yf
+        hist = yf.Ticker("BZ=F").history(period="1mo")
+        if not hist.empty and len(hist) >= 8:
+            return [{"close": float(row["Close"])} for _, row in hist.iterrows()]
+    except Exception as exc:
+        log.debug("yfinance crude fallback failed: %s", exc)
+
+    return []
+
+
+def _fetch_mcx_crude_history(days: int = 12) -> list[dict]:
+    """Fetch MCX Crude Oil prices from MCX public API.
+
+    MCX serves JSON from their quote endpoint. We extract closing prices.
+    Since MCX only provides current quote (not history), we return single
+    data point and rely on daily dump files for history.
+    """
+    try:
+        url = "https://www.mcxindia.com/backpage.aspx/GetQuote"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+        payload = {"Ession": "CRUDEOIL"}
+        resp = requests.post(url, json=payload, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            # MCX returns current quote — supplement with daily dumps
+            close_price = None
+            if isinstance(data, dict) and "d" in data:
+                rows = json.loads(data["d"]) if isinstance(data["d"], str) else data["d"]
+                if rows and isinstance(rows, list):
+                    close_price = float(rows[0].get("PrevClose") or rows[0].get("LastTradedPrice", 0))
+
+            if close_price and close_price > 0:
+                # Read daily dumps to build history
+                candles = _read_crude_from_daily_dumps(days)
+                if candles:
+                    candles.append({"close": close_price})
+                    return candles
+                return [{"close": close_price}]
+    except Exception as exc:
+        log.debug("MCX scrape failed: %s", exc)
+    return []
+
+
+def _read_crude_from_daily_dumps(days: int = 12) -> list[dict]:
+    """Read crude close prices from saved daily dump files."""
+    from datetime import date
+    candles = []
+    today = date.today()
+    for i in range(days + 5, 0, -1):
+        d = (today - timedelta(days=i)).strftime("%Y-%m-%d")
+        dump_file = DATA_DIR / "daily" / f"{d}.json"
+        if dump_file.exists():
+            try:
+                dump = json.loads(dump_file.read_text(encoding="utf-8"))
+                crude_val = dump.get("indices", {}).get("crude") or dump.get("crude_close")
+                if crude_val:
+                    candles.append({"close": float(crude_val)})
+            except Exception:
+                pass
+    return candles
 
 
 # ---------------------------------------------------------------------------
