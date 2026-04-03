@@ -591,20 +591,21 @@ def regime_score(driver_df: pd.DataFrame) -> dict:
         else:
             inputs["india_vix"] = 0
 
-    # 4. FII 5-day net flow
+    # 4. Institutional flow (FII + DII combined)
     try:
-        from macro_stress import _fetch_fii_net_flow
-        fii = _fetch_fii_net_flow()
-        if fii is None:
-            inputs["fii_5d_flow"] = 0
-        elif fii < -2000:
-            inputs["fii_5d_flow"] = -1
-        elif fii > 2000:
-            inputs["fii_5d_flow"] = 1
+        from macro_stress import _fetch_institutional_flow
+        inst = _fetch_institutional_flow()
+        combined = inst.get("combined")
+        if combined is None:
+            inputs["inst_flow"] = 0
+        elif combined < -2000:
+            inputs["inst_flow"] = -1  # net institutional selling = risk-off
+        elif combined > 2000:
+            inputs["inst_flow"] = 1   # net institutional buying = risk-on
         else:
-            inputs["fii_5d_flow"] = 0
+            inputs["inst_flow"] = 0
     except Exception:
-        inputs["fii_5d_flow"] = 0
+        inputs["inst_flow"] = 0
 
     # 5. Nifty 20d momentum
     if "nifty" in driver_df.columns:

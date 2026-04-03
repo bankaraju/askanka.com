@@ -174,6 +174,25 @@ def run_scan() -> dict:
         entered.append(sig)
         log.info("ARCBE signal saved: %s [%s]", sig["signal_id"], sig["_arcbe"]["tier"])
 
+        # Log to drift tracker for ML training data
+        try:
+            from model_drift import log_prediction
+            arcbe = sig["_arcbe"]
+            log_prediction({
+                "date": today,
+                "signal_id": sig["signal_id"],
+                "source": "arcbe",
+                "msi_score": regime.get("score"),
+                "regime": regime.get("label"),
+                "spread_name": sig["spread_name"],
+                "predicted_direction": arcbe.get("position_note", ""),
+                "fii_net": None,
+                "dii_net": None,
+                "combined_flow": None,
+            })
+        except Exception as exc:
+            log.debug("ARCBE drift log failed (non-fatal): %s", exc)
+
         # Send Telegram entry notification
         try:
             from telegram_bot import send_message
