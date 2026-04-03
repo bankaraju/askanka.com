@@ -825,6 +825,7 @@ def format_eod_track_record(
     scorecard: dict,
     macro_line: str = "",
     fii_line: str = "",
+    institutional_data: dict = None,
 ) -> str:
     """Format the daily client track record.
 
@@ -949,11 +950,27 @@ def format_eod_track_record(
     lines.append("")
 
     # ── Section 4: Macro Context ──────────────────────────────────────
-    if macro_line or fii_line:
+    if macro_line or fii_line or institutional_data:
         lines.append("*MACRO CONTEXT*")
         if macro_line:
             lines.append(f"  {macro_line}")
-        if fii_line:
+        if institutional_data:
+            fii = institutional_data.get("fii_net", 0)
+            dii = institutional_data.get("dii_net", 0)
+            lines.append(f"  📊 Inst. Flow: FII ₹{fii:+,.0f} cr | DII ₹{dii:+,.0f} cr")
+            if fii < 0 and abs(fii) > 0:
+                ratio = abs(dii) / abs(fii)
+                if ratio > 1.0:
+                    ratio_emoji = "🟢"
+                    ratio_label = "DII offsetting"
+                elif ratio >= 0.5:
+                    ratio_emoji = "🟡"
+                    ratio_label = "partial support"
+                else:
+                    ratio_emoji = "🔴"
+                    ratio_label = "no domestic support"
+                lines.append(f"  Ratio: {ratio:.2f}x {ratio_emoji} ({ratio_label})")
+        elif fii_line:
             lines.append(f"  {fii_line}")
         lines.append("")
 
@@ -1065,6 +1082,7 @@ def format_macro_signal_card(
     regime: str,
     top_spreads: list,
     crossing: str = "NEUTRAL_TO_STRESS",
+    institutional_data: dict = None,
 ) -> str:
     """Format a macro regime crossing signal card.
 
@@ -1079,9 +1097,19 @@ def format_macro_signal_card(
         f"_{timestamp} IST_",
         "",
         msi_bar(score, regime),
-        "",
-        "*Why stress is elevated:*",
     ]
+
+    if institutional_data:
+        fii = institutional_data.get("fii_net", 0)
+        dii = institutional_data.get("dii_net", 0)
+        ratio_str = ""
+        if fii < 0 and abs(fii) > 0:
+            ratio = abs(dii) / abs(fii)
+            ratio_emoji = "🟢" if ratio > 1.0 else ("🟡" if ratio >= 0.5 else "🔴")
+            ratio_str = f" | Ratio: {ratio:.2f}x {ratio_emoji}"
+        lines.append(f"    📊 Inst. Flow: FII ₹{fii:+,.0f} cr | DII ₹{dii:+,.0f} cr{ratio_str}")
+
+    lines.extend(["", "*Why stress is elevated:*"])
 
     comps = msi.get("components", {})
     comp_labels = {
