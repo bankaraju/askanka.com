@@ -1124,7 +1124,7 @@
     function hideTooltip() { tooltip.classList.remove('visible'); }
 
     // ── Load Live Status ──
-    fetch('/data/live_status.json')
+    fetch('/data/live_status.json?v=' + Date.now())
         .then(r => r.json())
         .then(data => {
             // MSI
@@ -1236,7 +1236,7 @@
     }
 
     // ── Load Track Record ──
-    fetch('/data/track_record.json')
+    fetch('/data/track_record.json?v=' + Date.now())
         .then(r => r.json())
         .then(data => {
             const container = document.getElementById('track-record-container');
@@ -1353,7 +1353,7 @@
     }
 
     // ── Load Spread Universe Heatmap ──
-    fetch('/data/spread_universe.json')
+    fetch('/data/spread_universe.json?v=' + Date.now())
         .then(r => r.json())
         .then(data => {
             const container = document.getElementById('heatmap-container');
@@ -1446,7 +1446,7 @@
         });
 
     // ── Load MSI History Chart ──
-    fetch('/data/msi_history.json')
+    fetch('/data/msi_history.json?v=' + Date.now())
         .then(r => r.json())
         .then(data => {
             if (!data || data.length < 3) {
