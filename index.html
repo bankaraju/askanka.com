@@ -879,8 +879,29 @@
             <h2>Correlation Fragility</h2>
             <span class="badge badge-live">ML-Powered</span>
         </div>
-        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">
-            XGBoost model predicts the probability of correlation breakdown in the next 5 trading days across 10 key asset pairs. Higher score = higher risk of relationship shift.
+        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:12px;">
+            Our XGBoost model analyses 24 market features (volatility, beta stability, correlation dynamics, volume shocks) to predict the probability of a correlation breakdown in the next 5 trading days.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px; margin-bottom:20px; font-size:12px;">
+            <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:6px; padding:10px 12px;">
+                <span style="color:#10b981; font-weight:700;">0-30 STABLE</span>
+                <span style="color:var(--text-secondary);"> — Correlation holding. Existing spread positions behave as expected. No action needed.</span>
+            </div>
+            <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:6px; padding:10px 12px;">
+                <span style="color:#3b82f6; font-weight:700;">30-50 MODERATE</span>
+                <span style="color:var(--text-secondary);"> — Early stress signs. We monitor more closely. Spread ideas for this pair stay active but we tighten watch.</span>
+            </div>
+            <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:10px 12px;">
+                <span style="color:#f59e0b; font-weight:700;">50-70 ELEVATED</span>
+                <span style="color:var(--text-secondary);"> — Relationship under pressure. New entries in related spreads use half position size. Stops widen automatically.</span>
+            </div>
+            <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:6px; padding:10px 12px;">
+                <span style="color:#ef4444; font-weight:700;">70-100 HIGH RISK</span>
+                <span style="color:var(--text-secondary);"> — Correlation likely breaking. Stops on related spreads widen up to 1.4x. No new entries until score drops below 50.</span>
+            </div>
+        </div>
+        <p style="color:var(--text-muted); font-size:12px; margin-bottom:16px; border-left:2px solid var(--accent-gold); padding-left:10px;">
+            These scores feed directly into our Telegram signals. When fragility rises, you'll see wider stops on P&L updates and a pause on new entries for affected spreads. When a HIGH RISK pair stabilises, it often creates the best entry opportunity — we alert that too.
         </p>
         <div id="fragility-dashboard" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
             <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading fragility scores...</div>
