@@ -1,0 +1,593 @@
+"""
+Anka Research Pipeline — Macro Sentiment Index (MSI)
+Scores India's macro stress daily on a 0-100 index.
+
+MSI Inputs and Weights:
+  FII net flow (₹ cr, 3-day rolling)  — 30%  (negative outflow = stress)
+  India VIX vs 90-day average          — 25%  (VIX > avg = stress)
+  USD/INR 5-day change %               — 20%  (INR weakening = stress)
+  Nifty 50 30-day return %             — 15%  (declining = stress)
+  Brent/MCX crude 5-day change %       — 10%  (rising = stress)
+
+Regime thresholds:
+  MSI >= 65  →  MACRO_STRESS   🔴
+  MSI 35-64  →  MACRO_NEUTRAL  🟡
+  MSI < 35   →  MACRO_EASY     🟢
+"""
+
+import json
+import logging
+import os
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Optional
+
+_lib = str(Path(__file__).parent / "lib")
+if _lib not in sys.path:
+    sys.path.insert(0, _lib)
+
+import requests
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent / ".env")
+
+log = logging.getLogger("anka.macro_stress")
+
+IST = timezone(timedelta(hours=5, minutes=30))
+DATA_DIR = Path(__file__).parent / "data"
+MSI_HISTORY_FILE = DATA_DIR / "msi_history.json"
+MSI_BACKTEST_FILE = DATA_DIR / "msi_spread_backtest.json"
+
+REGIME_STRESS   = "MACRO_STRESS"
+REGIME_NEUTRAL  = "MACRO_NEUTRAL"
+REGIME_EASY     = "MACRO_EASY"
+
+STRESS_THRESHOLD = 65
+EASY_THRESHOLD   = 35
+
+
+# ---------------------------------------------------------------------------
+# Data fetchers
+# ---------------------------------------------------------------------------
+
+def _fetch_fii_net_flow() -> Optional[float]:
+    """Fetch today's FII net buy/sell from NSE API (₹ crore).
+    Negative = net sellers (stress). Returns 3-day average if available.
+    """
+    url = "https://www.nseindia.com/api/fiidiiTradeReact"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Accept": "application/json",
+        "Referer": "https://www.nseindia.com",
+    }
+    try:
+        # NSE requires a session cookie — get the homepage first
+        session = requests.Session()
+        session.headers.update(headers)
+        session.get("https://www.nseindia.com", timeout=10)
+        resp = session.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        # data is a list of records; each has "fiiNetDii" field
+        # Most recent 3 days
+        fii_flows = []
+        for row in data[:3]:
+            net = row.get("fiiNetDii") or row.get("netVal")
+            if net is not None:
+                try:
+                    fii_flows.append(float(str(net).replace(",", "")))
+                except ValueError:
+                    pass
+        if fii_flows:
+            return sum(fii_flows) / len(fii_flows)
+        return None
+    except Exception as exc:
+        log.warning("FII flow fetch failed: %s", exc)
+        return None
+
+
+def _fetch_india_vix() -> Optional[float]:
+    """Fetch India VIX current level from Kite Connect."""
+    try:
+        from kite_client import fetch_ltp
+        prices = fetch_ltp(["INDIA VIX"])
+        return prices.get("INDIA VIX")
+    except Exception as exc:
+        log.warning("India VIX fetch failed: %s", exc)
+        return None
+
+
+def _fetch_india_vix_90d_avg() -> Optional[float]:
+    """Fetch 90-day average of India VIX from Kite historical candles."""
+    try:
+        from kite_client import fetch_historical
+        candles = fetch_historical("INDIA VIX", interval="day", days=100)
+        if len(candles) >= 20:
+            closes = [c["close"] for c in candles[-90:]]
+            return sum(closes) / len(closes)
+        return None
+    except Exception as exc:
+        log.warning("India VIX history fetch failed: %s", exc)
+        return None
+
+
+def _fetch_usdinr_change_5d() -> Optional[float]:
+    """Fetch USD/INR 5-day percentage change from EODHD."""
+    try:
+        from eodhd_client import fetch_eod_series
+        rows = fetch_eod_series("USDINR.FOREX", days=10)
+        if len(rows) >= 6:
+            old = rows[-6]["close"]
+            new = rows[-1]["close"]
+            if old and old > 0:
+                return (new / old - 1) * 100
+        return None
+    except Exception as exc:
+        log.warning("USD/INR change fetch failed: %s", exc)
+        return None
+
+
+def _fetch_nifty_30d_return() -> Optional[float]:
+    """Fetch Nifty 50 30-day return % from Kite historical candles."""
+    try:
+        from kite_client import fetch_historical
+        candles = fetch_historical("NIFTY 50", interval="day", days=35)
+        if len(candles) >= 20:
+            old = candles[-21]["close"]
+            new = candles[-1]["close"]
+            if old and old > 0:
+                return (new / old - 1) * 100
+        return None
+    except Exception as exc:
+        log.warning("Nifty 30d return fetch failed: %s", exc)
+        return None
+
+
+def _fetch_crude_change_5d() -> Optional[float]:
+    """Fetch MCX Crude Oil 5-day change % from Kite (front-month future)."""
+    try:
+        from kite_client import fetch_historical
+        candles = fetch_historical("CRUDEOIL", interval="day", days=10)
+        if len(candles) >= 6:
+            old = candles[-6]["close"]
+            new = candles[-1]["close"]
+            if old and old > 0:
+                return (new / old - 1) * 100
+        return None
+    except Exception as exc:
+        log.warning("Crude change fetch failed: %s", exc)
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Normalisation helpers
+# ---------------------------------------------------------------------------
+
+def _norm_fii(fii_3d_avg: Optional[float]) -> float:
+    """Normalise FII flow to 0-1 stress score.
+    0 = massive inflow (benign), 1 = massive outflow (max stress).
+    Scale: -8000 cr (max stress outflow) to +4000 cr (benign inflow).
+    """
+    if fii_3d_avg is None:
+        return 0.5  # unknown → neutral
+    # Clamp and normalise: outflow is negative
+    clamped = max(-8000, min(4000, fii_3d_avg))
+    # Invert: -8000 → 1.0, +4000 → 0.0
+    return (4000 - clamped) / 12000
+
+
+def _norm_vix(vix: Optional[float], vix_avg: Optional[float]) -> float:
+    """Normalise VIX vs 90-day avg.
+    0 = VIX 50% below avg (very calm), 1 = VIX 100% above avg (extreme fear).
+    """
+    if vix is None:
+        return 0.5
+    if vix_avg is None or vix_avg == 0:
+        # No history: use absolute level (VIX 12 = benign, 40 = extreme)
+        return max(0.0, min(1.0, (vix - 12) / 28))
+    ratio = (vix / vix_avg - 1)  # positive = VIX above avg
+    # -0.5 (50% below) → 0, +1.0 (100% above) → 1
+    return max(0.0, min(1.0, (ratio + 0.5) / 1.5))
+
+
+def _norm_usdinr(change_5d: Optional[float]) -> float:
+    """Normalise USD/INR 5-day change.
+    INR weakening (positive change) = stress.
+    Scale: -2% (strong INR) → 0, +3% (weak INR) → 1.
+    """
+    if change_5d is None:
+        return 0.5
+    return max(0.0, min(1.0, (change_5d + 2) / 5))
+
+
+def _norm_nifty(return_30d: Optional[float]) -> float:
+    """Normalise Nifty 30-day return.
+    Declining = stress. Scale: +15% → 0, -15% → 1.
+    """
+    if return_30d is None:
+        return 0.5
+    return max(0.0, min(1.0, (-return_30d + 15) / 30))
+
+
+def _norm_crude(change_5d: Optional[float]) -> float:
+    """Normalise crude 5-day change.
+    Rising = stress. Scale: -10% → 0, +10% → 1.
+    """
+    if change_5d is None:
+        return 0.5
+    return max(0.0, min(1.0, (change_5d + 10) / 20))
+
+
+# ---------------------------------------------------------------------------
+# MSI computation
+# ---------------------------------------------------------------------------
+
+def compute_msi() -> dict:
+    """Compute today's Macro Sentiment Index.
+
+    Returns dict:
+      msi_score: float 0-100
+      regime: MACRO_STRESS | MACRO_NEUTRAL | MACRO_EASY
+      components: {input: {raw_value, normalised, weight, contribution}}
+      timestamp: ISO string (IST)
+    """
+    fii       = _fetch_fii_net_flow()
+    vix       = _fetch_india_vix()
+    vix_avg   = _fetch_india_vix_90d_avg()
+    usdinr    = _fetch_usdinr_change_5d()
+    nifty_ret = _fetch_nifty_30d_return()
+    crude     = _fetch_crude_change_5d()
+
+    components = {
+        "fii_flow":    {"raw": fii,       "norm": _norm_fii(fii),         "weight": 0.30},
+        "india_vix":   {"raw": vix,       "norm": _norm_vix(vix, vix_avg), "weight": 0.25},
+        "usdinr":      {"raw": usdinr,    "norm": _norm_usdinr(usdinr),    "weight": 0.20},
+        "nifty_30d":   {"raw": nifty_ret, "norm": _norm_nifty(nifty_ret),  "weight": 0.15},
+        "crude_5d":    {"raw": crude,     "norm": _norm_crude(crude),      "weight": 0.10},
+    }
+
+    msi_score = sum(
+        c["norm"] * c["weight"] for c in components.values()
+    ) * 100
+
+    for name, c in components.items():
+        c["contribution"] = round(c["norm"] * c["weight"] * 100, 1)
+        if c["raw"] is not None:
+            c["raw"] = round(c["raw"], 2)
+        c["norm"] = round(c["norm"], 3)
+
+    if msi_score >= STRESS_THRESHOLD:
+        regime = REGIME_STRESS
+    elif msi_score < EASY_THRESHOLD:
+        regime = REGIME_EASY
+    else:
+        regime = REGIME_NEUTRAL
+
+    result = {
+        "msi_score":  round(msi_score, 1),
+        "regime":     regime,
+        "components": components,
+        "vix_90d_avg": round(vix_avg, 2) if vix_avg else None,
+        "timestamp":  datetime.now(IST).isoformat(),
+    }
+
+    log.info("MSI: %.1f -> %s", msi_score, regime)
+    return result
+
+
+# ---------------------------------------------------------------------------
+# History & backtest
+# ---------------------------------------------------------------------------
+
+def append_msi_history(msi_result: dict) -> None:
+    """Append today's MSI result to msi_history.json."""
+    DATA_DIR.mkdir(exist_ok=True)
+    history = []
+    if MSI_HISTORY_FILE.exists():
+        try:
+            history = json.loads(MSI_HISTORY_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    # Replace today's entry if already exists
+    history = [h for h in history if h.get("date") != today]
+    history.append({
+        "date":      today,
+        "msi_score": msi_result["msi_score"],
+        "regime":    msi_result["regime"],
+    })
+    # Keep last 365 days
+    history = history[-365:]
+    MSI_HISTORY_FILE.write_text(
+        json.dumps(history, indent=2), encoding="utf-8"
+    )
+
+
+def get_previous_regime() -> Optional[str]:
+    """Return yesterday's MSI regime from history, or None."""
+    if not MSI_HISTORY_FILE.exists():
+        return None
+    try:
+        history = json.loads(MSI_HISTORY_FILE.read_text(encoding="utf-8"))
+        today = datetime.now(IST).strftime("%Y-%m-%d")
+        past = [h for h in history if h.get("date") != today]
+        if past:
+            return past[-1].get("regime")
+    except Exception:
+        pass
+    return None
+
+
+def detect_regime_crossing(current_regime: str) -> Optional[str]:
+    """Detect if the regime just crossed into MACRO_STRESS.
+
+    Returns 'NEUTRAL_TO_STRESS' if crossing occurred, else None.
+    """
+    prev = get_previous_regime()
+    if prev and prev != REGIME_STRESS and current_regime == REGIME_STRESS:
+        log.info("Regime crossing: %s → %s", prev, current_regime)
+        return "NEUTRAL_TO_STRESS"
+    return None
+
+
+# ---------------------------------------------------------------------------
+# INR weakness and FII outflow triggers
+# ---------------------------------------------------------------------------
+
+INR_WEAKNESS_THRESHOLD = 1.5   # USD/INR 5-day change % above this = INR_WEAKNESS signal
+FII_OUTFLOW_THRESHOLD  = -5000  # 3-day avg FII flow below this (₹ cr) = fii_outflow signal
+
+# File to track whether we've already fired these triggers today (avoid repeats)
+_TRIGGER_STATE_FILE = DATA_DIR / "macro_trigger_state.json"
+
+
+def _load_trigger_state() -> dict:
+    if _TRIGGER_STATE_FILE.exists():
+        try:
+            return json.loads(_TRIGGER_STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def _save_trigger_state(state: dict) -> None:
+    DATA_DIR.mkdir(exist_ok=True)
+    _TRIGGER_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+
+def detect_inr_weakness() -> Optional[str]:
+    """Return 'INR_WEAKNESS' if USD/INR 5-day change exceeds threshold and hasn't fired today."""
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    state = _load_trigger_state()
+    if state.get("inr_weakness_date") == today:
+        return None  # already fired today
+
+    change = _fetch_usdinr_change_5d()
+    if change is None:
+        return None
+    log.info("USD/INR 5d change: %.2f%%", change)
+    if change >= INR_WEAKNESS_THRESHOLD:
+        state["inr_weakness_date"] = today
+        state["inr_weakness_change"] = round(change, 2)
+        _save_trigger_state(state)
+        log.info("INR_WEAKNESS trigger fired: USD/INR +%.2f%% over 5 days", change)
+        return "INR_WEAKNESS"
+    return None
+
+
+def detect_fii_outflow() -> Optional[str]:
+    """Return 'fii_outflow' if 3-day avg FII flow is below threshold and hasn't fired today."""
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    state = _load_trigger_state()
+    if state.get("fii_outflow_date") == today:
+        return None  # already fired today
+
+    fii_avg = _fetch_fii_net_flow()
+    if fii_avg is None:
+        return None
+    log.info("FII 3-day avg: Rs%.0f cr", fii_avg)
+    if fii_avg <= FII_OUTFLOW_THRESHOLD:
+        state["fii_outflow_date"] = today
+        state["fii_outflow_avg"] = round(fii_avg, 0)
+        _save_trigger_state(state)
+        log.info("fii_outflow trigger fired: Rs%.0f cr 3-day avg", fii_avg)
+        return "fii_outflow"
+    return None
+
+
+def get_inr_change() -> Optional[float]:
+    """Return current USD/INR 5-day change % (for card display)."""
+    state = _load_trigger_state()
+    return state.get("inr_weakness_change")
+
+
+def get_fii_outflow_avg() -> Optional[float]:
+    """Return current FII 3-day avg ₹ cr (for card display)."""
+    state = _load_trigger_state()
+    return state.get("fii_outflow_avg")
+
+
+def compute_spread_backtest() -> dict:
+    """Compute average spread return by MSI regime from daily dump files.
+
+    For each spread pair in INDIA_SPREAD_PAIRS:
+      - Looks at each day in msi_history.json
+      - Computes next-day spread move in the long direction
+      - Aggregates by regime
+
+    Returns {spread_name: {MACRO_STRESS: {avg_return, win_rate, n}, ...}}
+    """
+    from config import INDIA_SPREAD_PAIRS
+    DATA_DIR.mkdir(exist_ok=True)
+
+    if not MSI_HISTORY_FILE.exists():
+        return {}
+
+    try:
+        history = json.loads(MSI_HISTORY_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    daily_dir = DATA_DIR / "daily"
+    backtest: dict = {}
+
+    for pair in INDIA_SPREAD_PAIRS:
+        name = pair["name"]
+        backtest[name] = {
+            REGIME_STRESS:  {"returns": [], "wins": 0, "n": 0},
+            REGIME_NEUTRAL: {"returns": [], "wins": 0, "n": 0},
+            REGIME_EASY:    {"returns": [], "wins": 0, "n": 0},
+        }
+
+        for i, day in enumerate(history[:-1]):
+            regime = day.get("regime")
+            next_date = history[i + 1].get("date")
+            curr_date = day.get("date")
+            if not regime or not next_date:
+                continue
+
+            # Load closes for curr_date and next_date from daily dump files
+            curr_file = daily_dir / f"{curr_date}.json"
+            next_file = daily_dir / f"{next_date}.json"
+            if not curr_file.exists() or not next_file.exists():
+                continue
+
+            try:
+                curr_dump = json.loads(curr_file.read_text(encoding="utf-8"))
+                next_dump = json.loads(next_file.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+
+            all_tickers = pair["long"] + pair["short"]
+            curr_prices = {}
+            next_prices = {}
+            for t in all_tickers:
+                c = curr_dump.get("stocks", {}).get(t, {})
+                n = next_dump.get("stocks", {}).get(t, {})
+                cp = c.get("close") or c.get("adjusted_close")
+                np_ = n.get("close") or n.get("adjusted_close")
+                if cp and np_:
+                    curr_prices[t] = float(cp)
+                    next_prices[t] = float(np_)
+
+            if len(curr_prices) < len(all_tickers):
+                continue
+
+            long_ret = sum(
+                (next_prices[t] / curr_prices[t] - 1) * 100
+                for t in pair["long"] if t in curr_prices and t in next_prices
+            ) / len(pair["long"])
+
+            short_ret = sum(
+                (1 - next_prices[t] / curr_prices[t]) * 100
+                for t in pair["short"] if t in curr_prices and t in next_prices
+            ) / len(pair["short"])
+
+            spread_ret = long_ret + short_ret
+            reg_data = backtest[name][regime]
+            reg_data["returns"].append(spread_ret)
+            reg_data["n"] += 1
+            if spread_ret > 0:
+                reg_data["wins"] += 1
+
+    # Summarise
+    summary: dict = {}
+    for pair_name, reg_data in backtest.items():
+        summary[pair_name] = {}
+        for regime, data in reg_data.items():
+            n = data["n"]
+            returns = data["returns"]
+            summary[pair_name][regime] = {
+                "n":         n,
+                "avg_return": round(sum(returns) / n, 2) if n else 0.0,
+                "win_rate":  round(data["wins"] / n, 3) if n else 0.0,
+            }
+
+    MSI_BACKTEST_FILE.write_text(
+        json.dumps(summary, indent=2), encoding="utf-8"
+    )
+    return summary
+
+
+def get_top_stress_spreads(n: int = 2) -> list[dict]:
+    """Return top N spreads by historical STRESS-regime win rate (min 5 data points).
+
+    Used to select spreads for macro signal cards.
+    """
+    if not MSI_BACKTEST_FILE.exists():
+        return []
+    try:
+        backtest = json.loads(MSI_BACKTEST_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    candidates = []
+    for spread_name, regimes in backtest.items():
+        stress_data = regimes.get(REGIME_STRESS, {})
+        if stress_data.get("n", 0) >= 5:
+            candidates.append({
+                "spread_name": spread_name,
+                "win_rate":    stress_data["win_rate"],
+                "avg_return":  stress_data["avg_return"],
+                "n":           stress_data["n"],
+            })
+
+    candidates.sort(key=lambda x: x["win_rate"], reverse=True)
+    return candidates[:n]
+
+
+# ---------------------------------------------------------------------------
+# Telegram visual helpers
+# ---------------------------------------------------------------------------
+
+def msi_bar(score: float, regime: str) -> str:
+    """Generate 10-block MSI visual bar for Telegram.
+
+    Example: MSI: 73/100  🟥🟥🟥🟥🟥🟥🟥🟨⬜⬜  STRESS
+    """
+    filled = min(10, int(score / 10))
+    if regime == REGIME_STRESS:
+        filled_block = "🟥"
+        caution_block = "🟨"
+    elif regime == REGIME_NEUTRAL:
+        filled_block = "🟨"
+        caution_block = "🟧"
+    else:
+        filled_block = "🟩"
+        caution_block = "🟨"
+
+    # Last filled block is caution, rest are filled_block
+    blocks = []
+    for i in range(10):
+        if i < filled - 1:
+            blocks.append(filled_block)
+        elif i == filled - 1 and filled > 0:
+            blocks.append(caution_block)
+        else:
+            blocks.append("⬜")
+
+    regime_label = {"MACRO_STRESS": "STRESS", "MACRO_NEUTRAL": "NEUTRAL", "MACRO_EASY": "EASY"}[regime]
+    return f"MSI: {score:.0f}/100  {''.join(blocks)}  {regime_label}"
+
+
+def regime_emoji(regime: str) -> str:
+    return {"MACRO_STRESS": "🔴", "MACRO_NEUTRAL": "🟡", "MACRO_EASY": "🟢"}.get(regime, "⚪")
+
+
+# ---------------------------------------------------------------------------
+# Smoke test
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    result = compute_msi()
+    print(f"\n{msi_bar(result['msi_score'], result['regime'])}")
+    print(f"\nComponents:")
+    for name, c in result["components"].items():
+        print(f"  {name:15s}  raw={c['raw']}  norm={c['norm']}  contrib={c['contribution']}")
+    print(f"\nRegime: {regime_emoji(result['regime'])} {result['regime']}")
+    print(f"Timestamp: {result['timestamp']}")

@@ -696,6 +696,12 @@ def _send_to_chat_http(chat_id: str, text: str, parse_mode: Optional[str] = None
         resp = _requests.post(url, json=payload, timeout=_SEND_TIMEOUT)
         if resp.ok:
             log.info(f"Sent to {chat_id} ({len(text)} chars)")
+            try:
+                msg_id = resp.json().get("result", {}).get("message_id")
+                if msg_id:
+                    _log_sent_message(chat_id, msg_id)
+            except Exception:
+                pass
             return True
         else:
             # If parse_mode failed, retry without it
@@ -705,6 +711,12 @@ def _send_to_chat_http(chat_id: str, text: str, parse_mode: Optional[str] = None
                 resp2 = _requests.post(url, json=payload, timeout=_SEND_TIMEOUT)
                 if resp2.ok:
                     log.info(f"Sent to {chat_id} (no parse_mode, {len(text)} chars)")
+                    try:
+                        msg_id = resp2.json().get("result", {}).get("message_id")
+                        if msg_id:
+                            _log_sent_message(chat_id, msg_id)
+                    except Exception:
+                        pass
                     return True
             log.error(f"Send to {chat_id} failed: {resp.status_code} {resp.text[:200]}")
             return False
@@ -799,4 +811,318 @@ def send_alert(**kwargs) -> bool:
 def send_position_update(**kwargs) -> bool:
     """Format and send a position UPDATE."""
     text = format_position_update(**kwargs)
+    return send_message(text)
+
+
+# ---------------------------------------------------------------------------
+# Component A — Daily EOD Track Record (Signal Universe v2)
+# ---------------------------------------------------------------------------
+
+def format_eod_track_record(
+    date_str: str,
+    open_positions: list,
+    closed_this_week: list,
+    scorecard: dict,
+    macro_line: str = "",
+    fii_line: str = "",
+) -> str:
+    """Format the daily client track record.
+
+    Section 1 — Open Positions
+    Section 2 — Closed This Week
+    Section 3 — Running Scorecard
+    Section 4 — Macro Context
+    """
+    from datetime import datetime
+    try:
+        dt = datetime.strptime(date_str, "%Y-%m-%d")
+        date_display = dt.strftime("%d %b %Y")
+    except Exception:
+        date_display = date_str
+
+    lines = [f"📋 *ANKA DAILY RECORD — {date_display}*", ""]
+
+    # ── Section 1: Open Positions ──────────────────────────────────────
+    if open_positions:
+        lines.append("*OPEN POSITIONS*")
+        for pos in open_positions:
+            badge = pos.get("tier_badge", "🔵")
+            name = pos.get("spread_name", "?")
+            days = pos.get("days_held", 1)
+            sp = pos.get("spread_pnl_pct", 0.0)
+            em = pos.get("pnl_emoji", "⚪")
+            stop = pos.get("daily_stop")
+            entry = pos.get("entry_date", "?")
+
+            lines.append(f"{badge} *{name}*  (Day {days}, entry {entry})")
+            lines.append(f"  Spread P&L: {em} {sp:+.2f}%")
+            if stop:
+                lines.append(f"  Daily stop: {stop:+.2f}%")
+            if pos.get("corr_break"):
+                lines.append("  ⚠️ CORR BREAK: both baskets falling — market selloff, not spread")
+
+            # Leg detail
+            longs = pos.get("long_legs", [])
+            shorts = pos.get("short_legs", [])
+            if longs:
+                long_str = "  📈 Long: " + " | ".join(
+                    f"{l['ticker']} Rs{l['current']:,.0f}" for l in longs
+                )
+                lines.append(long_str)
+            if shorts:
+                short_str = "  📉 Short: " + " | ".join(
+                    f"{s['ticker']} Rs{s['current']:,.0f}" for s in shorts
+                )
+                lines.append(short_str)
+            lines.append("")
+    else:
+        lines.append("*OPEN POSITIONS*")
+        lines.append("  No open positions today")
+        lines.append("")
+
+    # ── Section 2: Closed This Week ───────────────────────────────────
+    if closed_this_week:
+        lines.append("*CLOSED THIS WEEK*")
+        for c in closed_this_week:
+            sp = c.get("spread_pnl_pct", 0.0)
+            lines.append(
+                f"{c['result_badge']}  {c['spread_name']}  {sp:+.2f}%  "
+                f"({c['days_held']}d, {c['exit_label']})"
+            )
+        lines.append("")
+
+    # ── Section 3: Running Scorecard ──────────────────────────────────
+    lines.append("*RUNNING SCORECARD*")
+    strip = scorecard.get("strip", "")
+    if strip:
+        lines.append(f"  {strip}  (🔷 open  🟩 win  🟥 loss)")
+    else:
+        lines.append("  No completed signals yet")
+
+    sig_s = scorecard.get("signal_stats", {})
+    exp_s = scorecard.get("exploring_stats", {})
+    total_open   = scorecard.get("total_open", 0)
+    total_closed = scorecard.get("total_closed", 0)
+    wr = scorecard.get("win_rate_pct", 0.0)
+
+    # Open position P&L by tier (passed in via scorecard)
+    open_signal_pnls    = scorecard.get("open_signal_pnls", [])
+    open_exploring_pnls = scorecard.get("open_exploring_pnls", [])
+
+    sig_open_n   = len(open_signal_pnls)
+    exp_open_n   = len(open_exploring_pnls)
+    sig_closed_n = sig_s.get("wins", 0) + sig_s.get("losses", 0)
+    exp_closed_n = exp_s.get("wins", 0) + exp_s.get("losses", 0)
+
+    # SIGNAL row
+    sig_open_str = ""
+    if sig_open_n > 0:
+        avg_open = sum(open_signal_pnls) / sig_open_n
+        sig_open_str = f"  {sig_open_n} open (avg {avg_open:+.1f}%)"
+    if sig_closed_n > 0:
+        lines.append(
+            f"  🔵 SIGNAL:{sig_open_str}  |  "
+            f"{sig_s.get('wins', 0)}W / {sig_s.get('losses', 0)}L closed  "
+            f"avg {sig_s.get('avg_pnl', 0):+.1f}%"
+        )
+    else:
+        lines.append(f"  🔵 SIGNAL:{sig_open_str if sig_open_str else '  none yet'}")
+
+    # EXPLORING row
+    exp_open_str = ""
+    if exp_open_n > 0:
+        avg_open = sum(open_exploring_pnls) / exp_open_n
+        exp_open_str = f"  {exp_open_n} open (avg {avg_open:+.1f}%)"
+    if exp_closed_n > 0:
+        lines.append(
+            f"  🟡 EXPLORING:{exp_open_str}  |  "
+            f"{exp_s.get('wins', 0)}W / {exp_s.get('losses', 0)}L closed  "
+            f"avg {exp_s.get('avg_pnl', 0):+.1f}%"
+        )
+    else:
+        lines.append(f"  🟡 EXPLORING:{exp_open_str if exp_open_str else '  none yet'}")
+
+    if total_closed > 0:
+        lines.append(f"  Overall: {wr:.0f}% win rate | {total_closed} closed | {total_open} open")
+    else:
+        lines.append(f"  Win rate tracked once positions close")
+    lines.append("")
+
+    # ── Section 4: Macro Context ──────────────────────────────────────
+    if macro_line or fii_line:
+        lines.append("*MACRO CONTEXT*")
+        if macro_line:
+            lines.append(f"  {macro_line}")
+        if fii_line:
+            lines.append(f"  {fii_line}")
+        lines.append("")
+
+    lines.append(
+        "_Anka Research · Spread signals for Indian equities_\n"
+        "_Not investment advice. For information only._"
+    )
+    return "\n".join(lines)
+
+
+def send_eod_track_record(**kwargs) -> bool:
+    """Format and send the daily EOD track record."""
+    text = format_eod_track_record(**kwargs)
+    return send_message(text)
+
+
+# ---------------------------------------------------------------------------
+# Channel management
+# ---------------------------------------------------------------------------
+
+def _log_sent_message(chat_id: str, message_id: int) -> None:
+    """Persist a sent message ID to data/sent_messages.jsonl for later deletion."""
+    from pathlib import Path as _Path
+    log_file = _Path(__file__).parent / "data" / "sent_messages.jsonl"
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+    import json as _json
+    with log_file.open("a", encoding="utf-8") as f:
+        f.write(_json.dumps({"chat_id": chat_id, "message_id": message_id}) + "\n")
+
+
+def clear_channel_messages(dry_run: bool = False) -> int:
+    """Delete all bot messages logged in data/sent_messages.jsonl.
+
+    Telegram bots can only delete their own messages. This function replays
+    the log of message IDs we recorded at send time and deletes each one.
+
+    Args:
+        dry_run: If True, print what would be deleted without actually deleting.
+
+    Returns:
+        Number of messages successfully deleted (or would-delete in dry_run).
+    """
+    import json as _json
+    from pathlib import Path as _Path
+
+    if not BOT_TOKEN:
+        log.warning("TELEGRAM_BOT_TOKEN not set — cannot clear messages")
+        return 0
+
+    log_file = _Path(__file__).parent / "data" / "sent_messages.jsonl"
+    if not log_file.exists():
+        log.info("No sent_messages.jsonl found — nothing to clear")
+        return 0
+
+    records = []
+    with log_file.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    records.append(_json.loads(line))
+                except Exception:
+                    pass
+
+    if not records:
+        log.info("sent_messages.jsonl is empty — nothing to clear")
+        return 0
+
+    deleted = 0
+    failed = []
+    for rec in records:
+        chat_id = rec.get("chat_id")
+        msg_id = rec.get("message_id")
+        if not chat_id or not msg_id:
+            continue
+        if dry_run:
+            log.info("[DRY RUN] Would delete message %d from %s", msg_id, chat_id)
+            deleted += 1
+            continue
+        try:
+            url = f"{_TELEGRAM_API}/bot{BOT_TOKEN}/deleteMessage"
+            resp = _requests.post(
+                url, json={"chat_id": chat_id, "message_id": msg_id}, timeout=10
+            )
+            if resp.ok:
+                deleted += 1
+            else:
+                # Message may already be deleted or too old — not critical
+                log.debug("Could not delete message %d from %s: %s", msg_id, chat_id, resp.text[:100])
+                failed.append(msg_id)
+        except Exception as exc:
+            log.warning("Error deleting message %d: %s", msg_id, exc)
+            failed.append(msg_id)
+
+    if not dry_run:
+        # Clear the log file — successfully deleted + silently failed (already gone)
+        log_file.write_text("", encoding="utf-8")
+        log.info("Cleared channel: %d deleted, %d already gone/failed", deleted, len(failed))
+
+    return deleted
+
+
+# ---------------------------------------------------------------------------
+# Component B — Macro Signal Card (Signal Universe v2)
+# ---------------------------------------------------------------------------
+
+def format_macro_signal_card(
+    msi: dict,
+    regime: str,
+    top_spreads: list,
+    crossing: str = "NEUTRAL_TO_STRESS",
+) -> str:
+    """Format a macro regime crossing signal card.
+
+    Fires once when MSI crosses from NEUTRAL → STRESS.
+    """
+    from macro_stress import msi_bar, regime_emoji
+    score = msi.get("msi_score", 0)
+    timestamp = msi.get("timestamp", "")[:16].replace("T", " ")
+
+    lines = [
+        f"📊 *MACRO SIGNAL — STRESS REGIME*",
+        f"_{timestamp} IST_",
+        "",
+        msi_bar(score, regime),
+        "",
+        "*Why stress is elevated:*",
+    ]
+
+    comps = msi.get("components", {})
+    comp_labels = {
+        "fii_flow":   "FII flows",
+        "india_vix":  "India VIX",
+        "usdinr":     "USD/INR",
+        "nifty_30d":  "Nifty 30d",
+        "crude_5d":   "Crude 5d",
+    }
+    for key, label in comp_labels.items():
+        c = comps.get(key, {})
+        norm = c.get("norm", 0)
+        contrib = c.get("contribution", 0)
+        raw = c.get("raw")
+        if norm >= 0.6:  # only highlight elevated components
+            raw_str = f" ({raw})" if raw is not None else ""
+            lines.append(f"  🔺 {label}{raw_str} → stress contribution {contrib:.0f}/100")
+
+    if top_spreads:
+        lines.append("")
+        lines.append("*Spreads with best STRESS-regime track record:*")
+        for sp in top_spreads:
+            wr = sp.get("win_rate", 0)
+            n = sp.get("n", 0)
+            avg = sp.get("avg_return", 0)
+            lines.append(
+                f"  📌 *{sp['spread_name']}*  "
+                f"{wr:.0%} win rate | avg {avg:+.1f}% | {n} data pts"
+            )
+
+    lines.extend([
+        "",
+        "⚠️ _Macro stress signals are EXPLORING tier — half-unit position sizing_",
+        "_We send exit alerts when stop thresholds are breached_",
+        "",
+        "_Anka Research · Not investment advice_",
+    ])
+    return "\n".join(lines)
+
+
+def send_macro_signal_card(**kwargs) -> bool:
+    """Format and send a macro signal card."""
+    text = format_macro_signal_card(**kwargs)
     return send_message(text)

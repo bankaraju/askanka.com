@@ -59,6 +59,45 @@ ANTHROPIC_API_KEY: Optional[str] = os.environ.get("ANTHROPIC_API_KEY")
 NEWSAPI_KEY: Optional[str] = os.environ.get("NEWSAPI_KEY")
 
 # ---------------------------------------------------------------------------
+# Source quality weighting
+# ---------------------------------------------------------------------------
+# Domain fragments → quality multiplier applied to confidence score.
+# Higher-credibility sources produce stronger signals.
+_SOURCE_QUALITY: dict[str, float] = {
+    # Tier 1: high-credibility primary sources
+    "reuters.com":       1.0,
+    "bloomberg.com":     1.0,
+    "pib.gov.in":        1.0,   # Press Information Bureau (GOI official)
+    "mea.gov.in":        1.0,   # Ministry of External Affairs
+    "rbi.org.in":        1.0,   # Reserve Bank of India
+    "sebi.gov.in":       1.0,   # SEBI official
+    "apnews.com":        1.0,
+    "ft.com":            1.0,
+    # Tier 2: reliable Indian financial media
+    "livemint.com":      0.85,
+    "economictimes.com": 0.85,
+    "cnbctv18.com":      0.8,
+    "business-standard.com": 0.85,
+    "moneycontrol.com":  0.75,
+    "ndtv.com":          0.8,
+    "thehindu.com":      0.85,
+    "hindustantimes.com": 0.75,
+    # Tier 3: aggregators / generic feeds
+    "google.com":        0.5,
+    "feedburner.com":    0.5,
+}
+_DEFAULT_SOURCE_QUALITY = 0.5  # for unknown sources
+
+
+def _source_quality_multiplier(source_url: str) -> float:
+    """Return a quality multiplier [0.5, 1.0] based on the news source domain."""
+    source_lower = source_url.lower()
+    for domain, weight in _SOURCE_QUALITY.items():
+        if domain in source_lower:
+            return weight
+    return _DEFAULT_SOURCE_QUALITY
+
+# ---------------------------------------------------------------------------
 # Keyword classification rules
 # ---------------------------------------------------------------------------
 KEYWORD_RULES: dict[str, dict[str, Any]] = {
@@ -344,6 +383,148 @@ KEYWORD_RULES: dict[str, dict[str, Any]] = {
             "visit", "handshake", "constructive",
         ],
         "exclude": ["talks fail", "collapse", "walk out", "stalled", "reject"],
+    },
+
+    # ── WEAK DOLLAR / DXY DECLINE ─────────────────────────────
+    "weak_dollar": {
+        "must_contain": [
+            "dollar weaken", "dollar falls", "dollar drop", "dollar slide",
+            "dxy falls", "dxy drop", "dxy below", "dollar index drop",
+            "fed rate cut", "fed cuts", "fed dovish", "fed pivot",
+            "fed easing", "rate cut", "rate reduction",
+            "us cpi below", "us inflation below", "cpi miss",
+            "soft landing", "goldilocks", "em rally", "em inflow",
+            "emerging market rally", "capital flows",
+        ],
+        "boost_words": [
+            "dollar", "dxy", "fed", "treasury", "powell",
+            "emerging market", "rupee strength", "inr appreciat",
+            "fii inflow", "capital flow", "risk-on",
+        ],
+        "exclude": ["dollar surge", "dollar strength", "dxy above", "rate hike"],
+    },
+
+    # ── STRONG DOLLAR / DXY RISE ──────────────────────────────
+    "strong_dollar": {
+        "must_contain": [
+            "dollar surge", "dollar strength", "dollar rally",
+            "dxy above", "dxy surge", "dollar index rise",
+            "fed hawkish", "higher for longer", "rate hike",
+            "us cpi above", "us inflation above", "cpi hot",
+            "us jobs beat", "nonfarm beat", "payroll strong",
+            "rupee weaken", "rupee hit", "rupee fall", "rupee low",
+            "usd/inr hit", "usd inr above", "inr pressure",
+        ],
+        "boost_words": [
+            "dollar", "dxy", "fed", "treasury yield",
+            "rupee", "inr", "fii sell", "em outflow",
+            "record low", "all-time low", "weakest since",
+        ],
+        "exclude": ["dollar weaken", "dollar falls", "fed cut", "fed dovish"],
+    },
+
+    # ── INDIA MARKET STRESS ───────────────────────────────────
+    "india_stress": {
+        "must_contain": [
+            "nifty fall", "nifty crash", "nifty drop", "nifty correct",
+            "sensex fall", "sensex crash", "sensex drop",
+            "india vix spike", "india vix surge", "india vix above",
+            "circuit breaker", "lower circuit", "market rout",
+            "nifty below", "sensex below", "market selloff india",
+            "broad market selloff", "market panic india",
+            "india stock crash", "bse selloff",
+        ],
+        "boost_words": [
+            "nifty", "sensex", "india vix", "fii sell",
+            "circuit", "crash", "rout", "blood", "carnage",
+            "worst since", "biggest fall", "record drop",
+        ],
+        "exclude": ["nifty record high", "nifty rally", "sensex surge"],
+    },
+
+    # ── RBI RATE CUT ──────────────────────────────────────────
+    "rbi_rate_cut": {
+        "must_contain": [
+            "rbi rate cut", "rbi cuts", "repo rate cut",
+            "rbi reduces", "rbi slash", "rbi lower",
+            "rbi easing", "rbi accommodat", "rbi dovish",
+            "monetary easing india", "reverse repo cut",
+        ],
+        "boost_words": [
+            "rbi", "repo rate", "das", "patra", "mpc",
+            "accommodative", "growth support", "liquidity",
+            "transmission", "basis point",
+        ],
+        "exclude": ["rbi hike", "rbi raise", "rbi tighten", "rbi hawkish"],
+    },
+
+    # ── RBI RATE HIKE ─────────────────────────────────────────
+    "rbi_rate_hike": {
+        "must_contain": [
+            "rbi rate hike", "rbi hike", "repo rate hike",
+            "rbi raise", "rbi tighten", "rbi hawkish",
+            "rbi increase", "monetary tighten india",
+            "rbi inflation fight", "rbi surprise hike",
+        ],
+        "boost_words": [
+            "rbi", "repo rate", "das", "patra", "mpc",
+            "inflation", "tightening", "withdrawal",
+            "basis point", "unexpected",
+        ],
+        "exclude": ["rbi cut", "rbi ease", "rbi reduce", "rbi dovish"],
+    },
+
+    # ── US RECESSION FEAR ─────────────────────────────────────
+    "us_recession": {
+        "must_contain": [
+            "us recession", "recession fear", "recession risk",
+            "recession signal", "recession indicator",
+            "yield curve invert", "sahm rule", "us gdp contract",
+            "us jobs miss", "nonfarm miss", "payroll weak",
+            "us unemployment rise", "us consumer weak",
+            "bank failure", "banking crisis", "svb collapse",
+            "credit crunch", "hard landing",
+        ],
+        "boost_words": [
+            "recession", "fed", "treasury", "yield curve",
+            "unemployment", "gdp", "contraction",
+            "layoff", "hiring freeze", "downturn",
+        ],
+        "exclude": ["recession avoided", "soft landing confirmed", "no recession"],
+    },
+
+    # ── FII HEAVY SELLING ─────────────────────────────────────
+    "fii_selling": {
+        "must_contain": [
+            "fii sell", "fii outflow", "fii exit",
+            "foreign investor sell", "fpi sell", "fpi outflow",
+            "fii net sell", "foreign fund sell",
+            "fii pull out", "fii withdraw", "fii dump",
+            "fii selling streak", "fii record sell",
+        ],
+        "boost_words": [
+            "fii", "fpi", "foreign", "outflow",
+            "billion", "crore", "record", "consecutive",
+            "sustained", "heaviest", "biggest",
+        ],
+        "exclude": ["fii buy", "fii inflow", "fii return", "fii positive"],
+    },
+
+    # ── FII HEAVY BUYING ──────────────────────────────────────
+    "fii_buying": {
+        "must_contain": [
+            "fii buy", "fii inflow", "fii return",
+            "foreign investor buy", "fpi buy", "fpi inflow",
+            "fii net buy", "foreign fund buy",
+            "fii positive", "fii pump", "fii allocation",
+            "fii buying streak", "fii record buy",
+        ],
+        "boost_words": [
+            "fii", "fpi", "foreign", "inflow",
+            "billion", "crore", "record", "consecutive",
+            "sustained", "largest", "biggest", "confidence",
+        ],
+        "exclude": ["fii sell", "fii outflow", "fii exit", "fii negative"],
     },
 }
 
@@ -736,16 +917,25 @@ def detect_new_events() -> list[dict[str, Any]]:
             logger.debug("Unclassifiable event: %s", headline[:80])
             continue
 
+        # Apply source quality multiplier — Reuters/Bloomberg 1.0×, generic 0.5×
+        source = item.get("source", "")
+        sq = _source_quality_multiplier(source)
+        if sq < 1.0:
+            raw_conf = confidence
+            confidence = round(confidence * sq, 3)
+            logger.debug("Source quality %.2f× for %s: %.2f -> %.2f", sq, source[:40], raw_conf, confidence)
+
         classified_events.append({
             "headline": headline,
             "summary": summary,
-            "source": item.get("source", ""),
+            "source": source,
             "url": url,
             "published_at": item.get("published_at", datetime.now(timezone.utc)).isoformat()
             if isinstance(item.get("published_at"), datetime)
             else str(item.get("published_at", "")),
             "category": category,
             "confidence": round(confidence, 3),
+            "source_quality": sq,
         })
         logger.info(
             "New event: [%s] (%.2f) %s", category, confidence, headline[:60]
@@ -1046,8 +1236,18 @@ def generate_signal_card(
         if not stats:
             tier = TIER_NO_DATA
         elif hit_rate >= SIGNAL_HIT_RATE_THRESHOLD and n_events >= SIGNAL_MIN_PRECEDENTS:
-            tier = TIER_SIGNAL
-            has_any_signal_tier = True
+            # Downgrade to EXPLORING if basket recently changed (recalibrating)
+            try:
+                from spread_statistics import is_recalibrating
+                if is_recalibrating(pair_name):
+                    tier = TIER_EXPLORING
+                    logger.info("'%s' RECALIBRATING after basket change — forced EXPLORING", pair_name)
+                else:
+                    tier = TIER_SIGNAL
+                    has_any_signal_tier = True
+            except Exception:
+                tier = TIER_SIGNAL
+                has_any_signal_tier = True
         else:
             tier = TIER_EXPLORING
 

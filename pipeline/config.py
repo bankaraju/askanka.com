@@ -111,6 +111,54 @@ INDIA_SIGNAL_STOCKS = {
     "TCS":        {"yf": "TCS.NS",        "eodhd": "TCS.NSE",        "sector": "IT Services",          "group": "loser"},
     "INFY":       {"yf": "INFY.NS",       "eodhd": "INFY.NSE",       "sector": "IT Services",          "group": "loser"},
     "WIPRO":      {"yf": "WIPRO.NS",      "eodhd": "WIPRO.NSE",      "sector": "IT Services",          "group": "loser"},
+    # Component C — Macro universe (PSU banks, metals, FMCG, NBFC)
+    "SBI":        {"yf": "SBIN.NS",       "eodhd": "SBIN.NSE",       "sector": "Banking/PSU",          "group": "neutral"},
+    "BANKBARODA": {"yf": "BANKBARODA.NS", "eodhd": "BANKBARODA.NSE", "sector": "Banking/PSU",          "group": "neutral"},
+    "AXISBANK":   {"yf": "AXISBANK.NS",   "eodhd": "AXISBANK.NSE",   "sector": "Banking/Private",      "group": "neutral"},
+    "HINDALCO":   {"yf": "HINDALCO.NS",   "eodhd": "HINDALCO.NSE",   "sector": "Metals/Aluminium",     "group": "winner"},
+    "TATASTEEL":  {"yf": "TATASTEEL.NS",  "eodhd": "TATASTEEL.NSE",  "sector": "Metals/Steel",         "group": "winner"},
+    "JSPL":       {"yf": "JINDALSTEL.NS", "eodhd": "JSPL.NSE",       "sector": "Metals/Steel PSU",     "group": "winner"},
+    "HUL":        {"yf": "HINDUNILVR.NS", "eodhd": "HINDUNILVR.NSE", "sector": "FMCG/Defensive",       "group": "neutral"},
+    "ITC":        {"yf": "ITC.NS",        "eodhd": "ITC.NSE",        "sector": "FMCG/Conglomerate",    "group": "neutral"},
+    "BAJFINANCE": {"yf": "BAJFINANCE.NS", "eodhd": "BAJFINANCE.NSE", "sector": "NBFC/Private",         "group": "loser"},
+    # INR/FII macro universe — broader IT exporters, pharma exporters, FII-sensitive
+    "HCLTECH":    {"yf": "HCLTECH.NS",    "eodhd": "HCLTECH.NSE",    "sector": "IT Services",          "group": "loser"},
+    "TECHM":      {"yf": "TECHM.NS",      "eodhd": "TECHM.NSE",      "sector": "IT Services",          "group": "loser"},
+    "LTIM":       {"yf": "LTIM.NS",       "eodhd": "LTIM.NSE",       "sector": "IT Services/Mid",      "group": "loser"},
+    "PERSISTENT": {"yf": "PERSISTENT.NS", "eodhd": "PERSISTENT.NSE", "sector": "IT Services/Mid",      "group": "loser"},
+    "CIPLA":      {"yf": "CIPLA.NS",      "eodhd": "CIPLA.NSE",      "sector": "Pharma/Export",        "group": "winner"},
+    "DIVISLAB":   {"yf": "DIVISLAB.NS",   "eodhd": "DIVISLAB.NSE",   "sector": "Pharma/Export",        "group": "winner"},
+    "KOTAKBANK":  {"yf": "KOTAKBANK.NS",  "eodhd": "KOTAKBANK.NSE",  "sector": "Banking/Private",      "group": "neutral"},
+    "DLF":        {"yf": "DLF.NS",        "eodhd": "DLF.NSE",        "sector": "Real Estate",          "group": "loser"},
+    "TITAN":      {"yf": "TITAN.NS",      "eodhd": "TITAN.NSE",      "sector": "Consumer/Discretionary","group": "loser"},
+    "ASIANPAINT": {"yf": "ASIANPAINT.NS", "eodhd": "ASIANPAINT.NSE", "sector": "Consumer/Domestic",    "group": "loser"},
+    # ── ARCBE expansion — Gulf/ME exposed (hypothesis: underperform in ME stress)
+    "SOBHA":       {"yf": "SOBHA.NS",       "eodhd": "SOBHA.NSE",       "sector": "Real Estate/Gulf",     "group": "loser",   "gulf_exposed": True},
+    "ASTERDM":     {"yf": "ASTERDM.NS",     "eodhd": "ASTERDM.NSE",     "sector": "Healthcare/Gulf",      "group": "loser",   "gulf_exposed": True},
+    "LT":          {"yf": "LT.NS",          "eodhd": "LT.NSE",          "sector": "EPC/Gulf",             "group": "loser",   "gulf_exposed": True},
+    "KECINTL":     {"yf": "KECINTL.NS",     "eodhd": "KECINTL.NSE",     "sector": "EPC/Transmission",     "group": "loser",   "gulf_exposed": True},
+    "INTERGLOBE":  {"yf": "INDIGO.NS",      "eodhd": "INDIGO.NSE",      "sector": "Aviation",             "group": "loser",   "gulf_exposed": True},
+    "FEDERALBNK":  {"yf": "FEDERALBNK.NS",  "eodhd": "FEDERALBNK.NSE",  "sector": "Banking/NRI",          "group": "neutral", "gulf_exposed": True},
+    # ── ARCBE expansion — Domestic-pure (hypothesis: outperform, insulated from ME)
+    "GODREJPROP":  {"yf": "GODREJPROP.NS",  "eodhd": "GODREJPROP.NSE",  "sector": "Real Estate/Domestic", "group": "neutral", "gulf_exposed": False},
+    "OBEROIRLTY":  {"yf": "OBEROIRLTY.NS",  "eodhd": "OBEROIRLTY.NSE",  "sector": "Real Estate/Premium",  "group": "neutral", "gulf_exposed": False},
+    "LICHSGFIN":   {"yf": "LICHSGFIN.NS",   "eodhd": "LICHSGFIN.NSE",   "sector": "Housing Finance",      "group": "neutral", "gulf_exposed": False},
+    "NBCC":        {"yf": "NBCC.NS",        "eodhd": "NBCC.NSE",        "sector": "Construction/PSU",     "group": "winner",  "gulf_exposed": False},
+    "SIEMENS":     {"yf": "SIEMENS.NS",     "eodhd": "SIEMENS.NSE",     "sector": "Capital Goods",        "group": "neutral", "gulf_exposed": False},
+    "BHARTIARTL":  {"yf": "BHARTIARTL.NS",  "eodhd": "BHARTIARTL.NSE",  "sector": "Telecom",              "group": "neutral", "gulf_exposed": False},
+    "NTPC":        {"yf": "NTPC.NS",        "eodhd": "NTPC.NSE",        "sector": "Power/PSU",            "group": "winner",  "gulf_exposed": False},
+    "POWERGRID":   {"yf": "POWERGRID.NS",   "eodhd": "POWERGRID.NSE",   "sector": "Power/Transmission",   "group": "winner",  "gulf_exposed": False},
+    "BRITANNIA":   {"yf": "BRITANNIA.NS",   "eodhd": "BRITANNIA.NSE",   "sector": "FMCG/Staples",         "group": "neutral", "gulf_exposed": False},
+    "DABUR":       {"yf": "DABUR.NS",       "eodhd": "DABUR.NSE",       "sector": "FMCG/Health",          "group": "neutral", "gulf_exposed": False},
+    "NMDC":        {"yf": "NMDC.NS",        "eodhd": "NMDC.NSE",        "sector": "Mining/IronOre",        "group": "winner",  "gulf_exposed": False},
+    "SAIL":        {"yf": "SAIL.NS",        "eodhd": "SAIL.NSE",        "sector": "Metals/Steel PSU",     "group": "neutral", "gulf_exposed": False},
+    "VEDL":        {"yf": "VEDL.NS",        "eodhd": "VEDL.NSE",        "sector": "Metals/Diversified",   "group": "neutral", "gulf_exposed": False},
+    "HAVELLS":     {"yf": "HAVELLS.NS",     "eodhd": "HAVELLS.NSE",     "sector": "Consumer Durables",    "group": "neutral", "gulf_exposed": False},
+    "ULTRACEMCO":  {"yf": "ULTRACEMCO.NS",  "eodhd": "ULTRACEMCO.NSE",  "sector": "Cement",               "group": "neutral", "gulf_exposed": False},
+    "AMBUJACEM":   {"yf": "AMBUJACEM.NS",   "eodhd": "AMBUJACEM.NSE",   "sector": "Cement",               "group": "neutral", "gulf_exposed": False},
+    "APOLLOHOSP":  {"yf": "APOLLOHOSP.NS",  "eodhd": "APOLLOHOSP.NSE",  "sector": "Healthcare/Domestic",  "group": "neutral", "gulf_exposed": False},
+    "TATAPOWER":   {"yf": "TATAPOWER.NS",   "eodhd": "TATAPOWER.NSE",   "sector": "Power/Renewable",      "group": "neutral", "gulf_exposed": False},
+    "MAXHEALTH":   {"yf": "MAXHEALTH.NS",   "eodhd": "MAXHEALTH.NSE",   "sector": "Healthcare/Domestic",  "group": "neutral", "gulf_exposed": False},
 }
 
 # === INDIA SPREAD PAIRS ===
@@ -165,6 +213,173 @@ INDIA_SPREAD_PAIRS = [
         "short": ["RELIANCE", "ADANIENT"],
         "triggers": ["oil_up", "escalation", "hormuz"],
     },
+    # ── Component C — Macro regime spreads ──────────────────────────────
+    {
+        "name": "PSU Banks vs Private Banks",
+        "long": ["SBI", "BANKBARODA"],
+        "short": ["HDFCBANK", "ICICIBANK", "AXISBANK"],
+        "triggers": ["MACRO_STRESS", "escalation", "sanctions", "rbi_rate_hike", "india_stress"],
+    },
+    {
+        "name": "Metals vs IT",
+        "long": ["HINDALCO", "TATASTEEL"],
+        "short": ["TCS", "INFY"],
+        "triggers": ["MACRO_STRESS", "escalation", "sanctions", "weak_dollar"],
+    },
+    {
+        "name": "FMCG vs Cyclicals",
+        "long": ["HUL", "ITC"],
+        "short": ["TATAMOTORS", "M&M"],
+        "triggers": ["MACRO_STRESS", "india_stress", "us_recession"],
+    },
+    {
+        "name": "Metals vs Auto",
+        "long": ["HINDALCO", "JSPL"],
+        "short": ["TATAMOTORS", "MARUTI"],
+        "triggers": ["MACRO_STRESS", "oil_positive", "weak_dollar"],
+    },
+    {
+        "name": "Private Finance vs PSU Energy",
+        "long": ["BAJFINANCE", "HDFCBANK"],
+        "short": ["ONGC", "COALINDIA"],
+        "triggers": ["de_escalation", "diplomacy", "MACRO_EASY", "rbi_rate_cut", "fii_buying"],
+    },
+    # ── INR / FII macro themes (broader universe) ────────────────────────
+    {
+        "name": "IT Exporters vs Private Banks",
+        "long": ["TCS", "INFY", "WIPRO", "HCLTECH", "TECHM"],
+        "short": ["HDFCBANK", "ICICIBANK", "KOTAKBANK"],
+        "triggers": ["INR_WEAKNESS", "fii_outflow", "usd_inr_spike", "strong_dollar", "fii_selling"],
+        "notes": "INR weakening favours dollar earners over domestic rate-sensitives",
+    },
+    {
+        "name": "Pharma Exporters vs Domestic Consumer",
+        "long": ["SUNPHARMA", "DRREDDY", "CIPLA", "DIVISLAB"],
+        "short": ["HUL", "ITC", "ASIANPAINT"],
+        "triggers": ["INR_WEAKNESS", "fii_outflow", "MACRO_STRESS", "strong_dollar", "india_stress"],
+        "notes": "INR weakness + global risk-off: export pharma defensive vs domestic consumption",
+    },
+    {
+        "name": "FII Exit Canary",
+        "long": ["TCS", "INFY", "SUNPHARMA"],
+        "short": ["DLF", "TITAN", "TATAMOTORS"],
+        "triggers": ["fii_outflow", "MACRO_STRESS", "fii_selling"],
+        "notes": "FII sustained outflow: dollar earners + defensives vs FII-darling domestic cyclicals",
+    },
+    # ── Weak/Strong Dollar spreads ─────────────────────────────────────
+    {
+        "name": "Domestic Finance vs Export IT",
+        "long": ["HDFCBANK", "ICICIBANK", "KOTAKBANK"],
+        "short": ["TCS", "INFY", "WIPRO"],
+        "triggers": ["weak_dollar", "fii_buying", "rbi_rate_cut"],
+        "notes": "Weak dollar = EM inflows, banks rally; IT loses USD translation benefit",
+    },
+    {
+        "name": "Real Assets vs Dollar Earners",
+        "long": ["HINDALCO", "TATASTEEL", "ONGC"],
+        "short": ["TCS", "INFY", "HCLTECH"],
+        "triggers": ["weak_dollar", "fii_buying"],
+        "notes": "Weak dollar lifts commodity prices in USD; IT exporters lose FX tailwind",
+    },
+    {
+        "name": "IT Exporters vs Auto",
+        "long": ["TCS", "INFY", "WIPRO", "HCLTECH"],
+        "short": ["TATAMOTORS", "MARUTI", "M&M"],
+        "triggers": ["strong_dollar", "us_recession"],
+        "notes": "Strong dollar = IT earns more in INR terms; auto hit by input cost + demand",
+    },
+    # ── RBI rate action spreads ────────────────────────────────────────
+    {
+        "name": "Rate Beneficiaries vs Upstream",
+        "long": ["BAJFINANCE", "HDFCBANK", "DLF"],
+        "short": ["ONGC", "COALINDIA"],
+        "triggers": ["rbi_rate_cut", "fii_buying"],
+        "notes": "Rate cuts boost lending margins, real estate demand; commodity plays unrelated",
+    },
+    {
+        "name": "Upstream vs Rate Sensitives",
+        "long": ["ONGC", "OIL", "COALINDIA"],
+        "short": ["BAJFINANCE", "DLF"],
+        "triggers": ["rbi_rate_hike", "india_stress"],
+        "notes": "Rate hikes crush leveraged sectors; commodity/upstream defensive",
+    },
+    # ── India market stress / safety spreads ───────────────────────────
+    {
+        "name": "Defensive Core vs High Beta",
+        "long": ["HUL", "SUNPHARMA", "COALINDIA"],
+        "short": ["BAJFINANCE", "DLF", "TITAN"],
+        "triggers": ["india_stress", "fii_selling", "MACRO_STRESS"],
+        "notes": "Flight to safety: FMCG + pharma + commodity vs leveraged high-beta names",
+    },
+    {
+        "name": "Domestic India vs Export IT",
+        "long": ["HUL", "ITC", "HDFCBANK"],
+        "short": ["TCS", "INFY", "WIPRO"],
+        "triggers": ["us_recession"],
+        "notes": "US recession = IT budget cuts; domestic consumption resilient",
+    },
+    # ── FII flow reversal spreads ──────────────────────────────────────
+    {
+        "name": "FII Return Play",
+        "long": ["HDFCBANK", "ICICIBANK", "BAJFINANCE"],
+        "short": ["COALINDIA", "SUNPHARMA", "ITC"],
+        "triggers": ["fii_buying", "weak_dollar", "rbi_rate_cut"],
+        "notes": "FII return flow: buy underowned private banks/NBFC, sell defensives they never owned",
+    },
+    {
+        "name": "Gold Proxy vs Cyclicals",
+        "long": ["SUNPHARMA", "HUL", "ITC"],
+        "short": ["HINDALCO", "TATASTEEL", "JSPL"],
+        "triggers": ["india_stress", "us_recession", "fii_selling"],
+        "notes": "Domestic defensives as gold proxy; metals crash on global demand fear",
+    },
+]
+
+# === ARCBE — Sector groupings for intra-sector dispersion monitor ===
+ARCBE_SECTOR_GROUPS: dict[str, list[str]] = {
+    "IT":            ["TCS", "INFY", "WIPRO", "HCLTECH", "TECHM", "LTIM", "PERSISTENT"],
+    "Real Estate":   ["DLF", "SOBHA", "GODREJPROP", "OBEROIRLTY"],
+    "Banks Private": ["HDFCBANK", "ICICIBANK", "AXISBANK", "KOTAKBANK"],
+    "Banks PSU":     ["SBI", "BANKBARODA", "FEDERALBNK"],
+    "Metals":        ["HINDALCO", "TATASTEEL", "JSPL", "NMDC", "SAIL", "VEDL"],
+    "FMCG":          ["HUL", "ITC", "BRITANNIA", "DABUR"],
+    "Energy Upstream": ["ONGC", "OIL", "COALINDIA"],
+    "Defence":       ["HAL", "BEL", "BDL", "MTAR", "BHARATFORG"],
+    "Power":         ["NTPC", "POWERGRID", "TATAPOWER"],
+    "Cement":        ["ULTRACEMCO", "AMBUJACEM"],
+    "Healthcare":    ["SUNPHARMA", "DRREDDY", "CIPLA", "DIVISLAB", "APOLLOHOSP", "MAXHEALTH", "ASTERDM"],
+}
+
+# === ARCBE — Hypothesis spreads (data must confirm before publishing) ===
+ARCBE_HYPOTHESIS_SPREADS: list[dict] = [
+    {
+        "name": "Domestic vs Gulf Real Estate",
+        "long": ["GODREJPROP", "OBEROIRLTY"],
+        "short": ["SOBHA"],
+        "theme": "Gulf NRI demand risk — domestic RE insulated, SOBHA exposed",
+        "expected_driver": "brent",
+    },
+    {
+        "name": "Domestic vs ME-Exposed IT",
+        "long": ["TCS", "INFY"],
+        "short": ["WIPRO", "HCLTECH", "LTIM"],
+        "theme": "ME project revenue risk — US-heavy IT vs ME-project-heavy IT",
+        "expected_driver": "brent",
+    },
+    {
+        "name": "Domestic Infra vs Gulf EPC",
+        "long": ["NBCC", "SIEMENS"],
+        "short": ["LT", "KECINTL"],
+        "theme": "ME construction exposure — domestic govt contracts vs Gulf infra",
+        "expected_driver": "brent",
+    },
+    {
+        "name": "Domestic Banking vs NRI Corridor",
+        "long": ["HDFCBANK", "ICICIBANK"],
+        "short": ["FEDERALBNK"],
+        "theme": "Gulf remittance risk — Kerala-Gulf NRI deposit base",
+        "expected_driver": "brent",
+    },
 ]
 
 # === EVENT TAXONOMY (political event → expected market direction) ===
@@ -179,6 +394,15 @@ EVENT_TAXONOMY = {
     "defense_spend": {"oil": "flat", "defense": "up",   "it": "flat",  "downstream": "flat"},
     "trump_threat":  {"oil": "up",   "defense": "up",   "it": "down",  "downstream": "down"},
     "diplomacy":     {"oil": "down", "defense": "down", "it": "up",    "downstream": "up"},
+    # ── Macro / FX / Rate categories ──────────────────────────────────────
+    "weak_dollar":   {"banking": "up",  "metals": "up",  "it": "down",  "pharma": "down", "auto": "up",  "fmcg": "flat", "nbfc": "up",  "real_estate": "up"},
+    "strong_dollar": {"banking": "down","metals": "down","it": "up",    "pharma": "up",   "auto": "down","fmcg": "flat", "nbfc": "down","real_estate": "down"},
+    "india_stress":  {"banking": "down","metals": "down","it": "down",  "pharma": "up",   "auto": "down","fmcg": "up",   "nbfc": "down","real_estate": "down", "oil": "up", "defense": "flat"},
+    "rbi_rate_cut":  {"banking": "up",  "metals": "flat","it": "flat",  "pharma": "flat", "auto": "up",  "fmcg": "flat", "nbfc": "up",  "real_estate": "up"},
+    "rbi_rate_hike": {"banking": "down","metals": "flat","it": "flat",  "pharma": "flat", "auto": "down","fmcg": "flat", "nbfc": "down","real_estate": "down"},
+    "us_recession":  {"banking": "flat","metals": "down","it": "down",  "pharma": "up",   "auto": "down","fmcg": "up",   "nbfc": "down","real_estate": "down"},
+    "fii_selling":   {"banking": "down","metals": "down","it": "up",    "pharma": "up",   "auto": "down","fmcg": "up",   "nbfc": "down","real_estate": "down"},
+    "fii_buying":    {"banking": "up",  "metals": "up",  "it": "down",  "pharma": "flat", "auto": "up",  "fmcg": "flat", "nbfc": "up",  "real_estate": "up"},
 }
 
 # === ASIAN MARKET CASCADE (pre-market signals for India) ===
@@ -251,7 +475,8 @@ SIGNAL_TRAILING_STOP_ACTIVATE_PCT = 3.0   # Trailing stop activates when spread 
 SIGNAL_TRAILING_STOP_DISTANCE_PCT = 2.0   # Once active, exit if P&L drops 2% from peak
 SIGNAL_CONFIDENCE_THRESHOLD = 0.6
 SIGNAL_HIT_RATE_THRESHOLD = 0.65
-SIGNAL_MIN_PRECEDENTS = 3
+SIGNAL_MIN_PRECEDENTS = 15          # min historical trades before SIGNAL tier
+SIGNAL_MIN_PRECEDENTS_RECAL = 10   # trades needed after basket change to exit RECALIBRATING
 POLL_INTERVAL_MINUTES = 30
 MARKET_HOURS_IST = {"open": "09:15", "close": "15:30"}
 PREMARKET_SCAN_IST = "08:30"

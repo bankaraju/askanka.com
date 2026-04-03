@@ -23,13 +23,14 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
-from config import INDIA_SIGNAL_STOCKS, INDIA_SPREAD_PAIRS
+from config import INDIA_SIGNAL_STOCKS, INDIA_SPREAD_PAIRS, SIGNAL_MIN_PRECEDENTS_RECAL
 
 log = logging.getLogger("anka.spread_stats")
 
 IST = timezone(timedelta(hours=5, minutes=30))
 DATA_DIR = Path(__file__).parent / "data"
 STATS_FILE = DATA_DIR / "spread_stats.json"
+RECAL_STATE_FILE = DATA_DIR / "recal_state.json"
 
 # Cache duration: recompute once per trading day
 _CACHE_TTL_HOURS = 12
@@ -81,14 +82,33 @@ def _fetch_spread_history(pair: dict, period: str = "1mo") -> Optional[pd.Series
         except Exception as e:
             log.warning("Failed to read dump %s: %s", date_str, e)
 
-    # ── 2. Gap-fill from EODHD EOD API for tickers with missing days ──────
-    # Gap-fill if any ticker has fewer than 10 trading-day records in the dumps
+    # ── 2. Gap-fill from Kite historical candles (best quality) ──────────────
     ticker_counts = {t: sum(1 for d in closes.values() if t in d) for t in all_tickers}
     if any(cnt < 10 for cnt in ticker_counts.values()):
-        log.info("Insufficient dump data for %s (%d days), supplementing from EODHD", pair["name"], len(closes))
+        log.info("Insufficient dump data for %s (%d days), supplementing from Kite", pair["name"], len(closes))
+        try:
+            from kite_client import fetch_historical
+            for ticker in all_tickers:
+                if ticker_counts.get(ticker, 0) >= 10:
+                    continue  # already enough data for this ticker
+                candles = fetch_historical(ticker, interval="day", days=days + 15)
+                for row in candles:
+                    d = row["date"]
+                    if d not in closes:
+                        closes[d] = {}
+                    closes[d][ticker] = row["close"]
+        except Exception as exc:
+            log.warning("Kite historical gap-fill failed: %s", exc)
+
+    # ── 3. Gap-fill from EODHD EOD API if still thin ─────────────────────────
+    ticker_counts = {t: sum(1 for d in closes.values() if t in d) for t in all_tickers}
+    if any(cnt < 10 for cnt in ticker_counts.values()):
+        log.info("Kite data thin for %s, supplementing from EODHD", pair["name"])
         from eodhd_client import fetch_eod_series
         from config import INDIA_SIGNAL_STOCKS
         for ticker in all_tickers:
+            if ticker_counts.get(ticker, 0) >= 10:
+                continue
             info = INDIA_SIGNAL_STOCKS.get(ticker, {})
             eodhd_sym = info.get("eodhd", "")
             if not eodhd_sym:
@@ -100,7 +120,7 @@ def _fetch_spread_history(pair: dict, period: str = "1mo") -> Optional[pd.Series
                     closes[d] = {}
                 closes[d][ticker] = row["close"]
 
-    # ── 3. Last resort: yfinance (parquet disabled via environment variable) ──
+    # ── 4. Last resort: yfinance (parquet disabled via environment variable) ──
     ticker_counts = {t: sum(1 for d in closes.values() if t in d) for t in all_tickers}
     if any(cnt < 10 for cnt in ticker_counts.values()):
         log.warning("EODHD data thin for %s, falling back to yfinance", pair["name"])
@@ -247,6 +267,7 @@ def compute_spread_stats(pair: dict, period: str = "1mo") -> Dict[str, Any]:
         "name": pair["name"],
         "n_days": len(spread_daily),
         "computed_at": now_ist.isoformat(),
+        "basket_fingerprint": sorted(pair["long"] + pair["short"]),
         # Daily distribution
         "daily_mean": round(daily_mean, 4),
         "daily_std": round(daily_std, 4),
@@ -276,6 +297,7 @@ def _empty_stats(name: str) -> Dict[str, Any]:
     """Return a safe empty stats dict when data is unavailable."""
     return {
         "name": name, "n_days": 0, "computed_at": None,
+        "basket_fingerprint": [],
         "daily_mean": 0, "daily_std": 0, "daily_min": 0, "daily_max": 0,
         "daily_p10": 0, "daily_p25": 0, "daily_p75": 0, "daily_p90": 0,
         "cum_current": 0, "cum_peak": 0, "cum_trough": 0, "cum_mean": 0,
@@ -283,6 +305,96 @@ def _empty_stats(name: str) -> Dict[str, Any]:
         "entry_level": 0, "stop_level": -1.0,
         "avg_favorable_move": 0, "worst_day": 0, "best_day": 0,
     }
+
+
+# ---------------------------------------------------------------------------
+# Basket change recalibration
+# ---------------------------------------------------------------------------
+
+def _load_recal_state() -> Dict[str, Any]:
+    """Load recalibration state. Returns {} if missing or corrupt."""
+    if not RECAL_STATE_FILE.exists():
+        return {}
+    try:
+        return json.loads(RECAL_STATE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_recal_state(state: Dict[str, Any]) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    RECAL_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+
+def _business_days_since(date_str: str) -> int:
+    """Count approximate trading days between date_str (YYYY-MM-DD) and today."""
+    try:
+        start = datetime.strptime(date_str, "%Y-%m-%d").date()
+        end = datetime.now(IST).date()
+        days = 0
+        cur = start
+        while cur < end:
+            cur += timedelta(days=1)
+            if cur.weekday() < 5:  # Mon–Fri
+                days += 1
+        return days
+    except Exception:
+        return 0
+
+
+def _check_basket_changes(new_stats: Dict[str, Dict[str, Any]]) -> None:
+    """Compare new stats basket fingerprints vs previously stored ones.
+
+    When a basket composition change is detected (tickers added/removed),
+    write an entry to recal_state.json with the changed date so the spread
+    is held in RECALIBRATING mode until SIGNAL_MIN_PRECEDENTS_RECAL new
+    trading days have elapsed.
+    """
+    old_stats = {}
+    if STATS_FILE.exists():
+        try:
+            old_stats = json.loads(STATS_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    state = _load_recal_state()
+    today_str = datetime.now(IST).strftime("%Y-%m-%d")
+    changed = False
+
+    for name, new_s in new_stats.items():
+        new_fp = sorted(new_s.get("basket_fingerprint", []))
+        old_fp = sorted(old_stats.get(name, {}).get("basket_fingerprint", []))
+        if old_fp and new_fp != old_fp:
+            if name not in state:  # don't reset the clock if already recalibrating
+                log.info("Basket changed for '%s' — entering RECALIBRATING", name)
+                state[name] = {"changed_date": today_str}
+                changed = True
+
+    # Expire entries that have completed the recalibration window
+    completed = [
+        name for name, entry in state.items()
+        if _business_days_since(entry.get("changed_date", today_str)) >= SIGNAL_MIN_PRECEDENTS_RECAL
+    ]
+    for name in completed:
+        log.info("Recalibration complete for '%s' — removing from recal state", name)
+        del state[name]
+        changed = True
+
+    if changed:
+        _save_recal_state(state)
+
+
+def is_recalibrating(spread_name: str) -> bool:
+    """Return True if spread is in recalibration window (basket recently changed).
+
+    Callers should treat a recalibrating spread as EXPLORING regardless of
+    its historical hit rate, until SIGNAL_MIN_PRECEDENTS_RECAL days have passed.
+    """
+    state = _load_recal_state()
+    if spread_name not in state:
+        return False
+    days = _business_days_since(state[spread_name].get("changed_date", ""))
+    return days < SIGNAL_MIN_PRECEDENTS_RECAL
 
 
 # ---------------------------------------------------------------------------
@@ -303,8 +415,9 @@ def compute_all_spread_stats(period: str = "1mo") -> Dict[str, Dict[str, Any]]:
 
 
 def save_stats(stats: Dict[str, Dict[str, Any]]) -> None:
-    """Cache computed stats to JSON."""
+    """Cache computed stats to JSON. Detects basket changes before overwriting."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    _check_basket_changes(stats)  # compare new vs stored before overwriting
     STATS_FILE.write_text(
         json.dumps(stats, indent=2, default=str), encoding="utf-8"
     )
