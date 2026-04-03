@@ -474,17 +474,46 @@ def check_signal_status(
     daily_stop = -(avg_favorable * 0.50)           # single-day stop
     two_day_stop = daily_stop * 2                  # 2-day stop = 2 × daily stop
 
-    # Volatility-adjusted stops: widen by 1.5× during MACRO_STRESS to avoid
-    # noise-triggered exits in high-volatility regimes
+    # Volatility-adjusted stops: widen based on MSI regime + fragility score
+    stop_multiplier = 1.0
+
+    # 1. MSI regime widening
     try:
         from macro_stress import compute_msi
         _msi = compute_msi()
         if _msi.get("regime") == "MACRO_STRESS":
-            daily_stop = daily_stop * 1.5
-            two_day_stop = two_day_stop * 1.5
-            log.debug("MACRO_STRESS active — stops widened 1.5× for %s", spread_name)
+            stop_multiplier = 1.5
+            log.debug("MACRO_STRESS active — base multiplier 1.5× for %s", spread_name)
     except Exception:
-        pass  # MSI unavailable — use unmodified stops
+        pass
+
+    # 2. Fragility score widening (additive on top of MSI)
+    try:
+        import json as _json
+        _frag_file = Path(__file__).parent / "data" / "fragility_scores.json"
+        if _frag_file.exists():
+            _frag_data = _json.loads(_frag_file.read_text(encoding="utf-8"))
+            _spread_tickers = set(
+                l["ticker"] for l in signal.get("long_legs", [])
+            ) | set(
+                s["ticker"] for s in signal.get("short_legs", [])
+            )
+            for _pair_name, _score in _frag_data.get("scores", {}).items():
+                if _score.get("fragility_score", 0) >= 70:
+                    from config import CORRELATION_PAIRS
+                    _pair_cfg = next((p for p in CORRELATION_PAIRS if p["name"] == _pair_name), None)
+                    if _pair_cfg and (
+                        _pair_cfg["a"] in _spread_tickers or _pair_cfg["b"] in _spread_tickers
+                    ):
+                        frag_mult = 1.0 + (_score["fragility_score"] - 50) / 100
+                        stop_multiplier = max(stop_multiplier, frag_mult)
+                        log.debug("Fragility %d for %s — multiplier %.2f for %s",
+                                  _score["fragility_score"], _pair_name, frag_mult, spread_name)
+    except Exception as _exc:
+        log.debug("Fragility score unavailable: %s", _exc)
+
+    daily_stop = daily_stop * stop_multiplier
+    two_day_stop = two_day_stop * stop_multiplier
 
     # Track consecutive losing days
     prev_day_move = signal.get("_prev_day_move")   # yesterday's spread move

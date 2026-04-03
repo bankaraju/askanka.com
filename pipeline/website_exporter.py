@@ -92,6 +92,16 @@ def export_live_status() -> dict:
     first_date = min(all_dates) if all_dates else datetime.now(IST).strftime("%Y-%m-%d")
     days_active = (datetime.now(IST).date() - datetime.strptime(first_date, "%Y-%m-%d").date()).days
 
+    # Fragility scores
+    fragility = {}
+    frag_file = DATA_DIR / "fragility_scores.json"
+    if frag_file.exists():
+        try:
+            frag_data = json.loads(frag_file.read_text(encoding="utf-8"))
+            fragility = frag_data.get("scores", {})
+        except Exception:
+            pass
+
     return {
         "updated_at": datetime.now(IST).isoformat(),
         "msi": {
@@ -109,6 +119,7 @@ def export_live_status() -> dict:
             "days_active": days_active,
         },
         "positions": positions,
+        "fragility": fragility,
     }
 
 

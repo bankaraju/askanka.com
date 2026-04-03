@@ -538,6 +538,33 @@ CORRELATION_CACHE_HOURS = 24
 CORRELATION_MIN_EVENTS = 5
 CORRELATION_THRESHOLDS = [-5.0, -3.0, -2.0, 2.0, 3.0, 5.0]
 
+# === ML CORRELATION REGIME CONFIG ===
+# Pairs to track for rolling correlation and regime break detection
+CORRELATION_PAIRS = [
+    {"name": "Nifty_vs_BankNifty",  "a": "HDFCBANK",  "b": "ICICIBANK", "a_label": "Nifty proxy", "b_label": "Bank proxy"},
+    {"name": "Defence_vs_IT",       "a": "HAL",        "b": "TCS",       "a_label": "Defence",     "b_label": "IT"},
+    {"name": "Defence_vs_Auto",     "a": "HAL",        "b": "TATAMOTORS","a_label": "Defence",     "b_label": "Auto"},
+    {"name": "Upstream_vs_Downstream","a": "ONGC",      "b": "BPCL",     "a_label": "Upstream",    "b_label": "Downstream"},
+    {"name": "Metals_vs_IT",        "a": "HINDALCO",   "b": "INFY",     "a_label": "Metals",      "b_label": "IT"},
+    {"name": "FMCG_vs_Cyclicals",   "a": "HUL",        "b": "TATAMOTORS","a_label": "FMCG",       "b_label": "Cyclicals"},
+    {"name": "Pharma_vs_Banks",     "a": "SUNPHARMA",  "b": "HDFCBANK", "a_label": "Pharma",      "b_label": "Banks"},
+    {"name": "PSU_vs_Private",      "a": "SBI",        "b": "HDFCBANK", "a_label": "PSU Bank",    "b_label": "Pvt Bank"},
+    {"name": "Coal_vs_OMC",         "a": "COALINDIA",  "b": "BPCL",     "a_label": "Coal",        "b_label": "OMC"},
+    {"name": "Finance_vs_Energy",   "a": "BAJFINANCE", "b": "ONGC",     "a_label": "NBFC",        "b_label": "Energy"},
+]
+
+# Rolling windows for correlation computation
+CORR_WINDOW_SHORT = 21   # ~1 month trading days
+CORR_WINDOW_LONG = 63    # ~3 months trading days
+
+# Change-point detection
+CORR_BREAK_ZSCORE = 2.0        # Z-score threshold for break detection
+CORR_BREAK_MIN_SHIFT = 0.3     # minimum absolute correlation change to flag
+
+# Fragility model
+FRAGILITY_FORWARD_WINDOW = 5   # predict break in next N trading days
+FRAGILITY_RETRAIN_DAYS = 30    # retrain model every N days
+
 # === TELEGRAM CONFIG (set in .env) ===
 TELEGRAM_BOT_TOKEN = None  # Override from .env
 TELEGRAM_CHAT_ID = None    # Override from .env
