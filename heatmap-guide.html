@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding the Signal Universe | Anka Research</title>
+    <meta name="description" content="Learn how to read the Anka Research 25x18 signal heatmap. Understand spread trading, hit rates, event categories, and how automated signals get delivered.">
+    <meta property="og:title" content="Understanding the Signal Universe | Anka Research">
+    <meta property="og:description" content="Deep dive into the Anka Research heatmap: 25 spread pairs, 18 event categories, 90+ events over 4 years of Indian equity data.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://askanka.com/heatmap-guide.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8f9fb;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-gold-dim: rgba(245, 158, 11, 0.12);
+            --accent-green-dim: rgba(16, 185, 129, 0.12);
+            --accent-red-dim: rgba(239, 68, 68, 0.10);
+            --accent-blue-dim: rgba(59, 130, 246, 0.10);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── Back Link ── */
+        .back-bar {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            z-index: 10;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: #f1f5f9; }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            position: relative;
+            padding: 80px 20px 56px;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0e1a 0%, #141428 40%, #1a1a3e 60%, #0a0e1a 100%);
+            border-bottom: none;
+            overflow: hidden;
+            color: #f1f5f9;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: var(--accent-gold-dim);
+            color: var(--accent-gold);
+            border: 1px solid rgba(245,158,11,0.3);
+        }
+
+        .hero-title {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 400;
+            max-width: 600px;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── Sections ── */
+        .section {
+            padding: 64px 0;
+        }
+
+        .section + .section {
+            border-top: 1px solid var(--border);
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .section-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .card-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ── Spread Diagram ── */
+        .spread-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 28px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .spread-leg {
+            text-align: center;
+            padding: 20px 24px;
+            border-radius: 10px;
+            min-width: 180px;
+        }
+
+        .spread-leg.long-leg {
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(16,185,129,0.25);
+        }
+
+        .spread-leg.short-leg {
+            background: var(--accent-red-dim);
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+
+        .spread-leg.profit-leg {
+            background: var(--accent-gold-dim);
+            border: 1px solid rgba(245,158,11,0.25);
+        }
+
+        .leg-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .long-leg .leg-label { color: var(--accent-green); }
+        .short-leg .leg-label { color: var(--accent-red); }
+        .profit-leg .leg-label { color: var(--accent-gold); }
+
+        .leg-stocks {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .leg-arrow {
+            font-size: 24px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .spread-arrow {
+            font-size: 28px;
+            color: var(--text-muted);
+        }
+
+        /* ── Color Tiers ── */
+        .color-tiers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 28px 0;
+        }
+
+        .color-tier {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .color-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .swatch-red { background: #fca5a5; color: #991b1b; }
+        .swatch-mint { background: #a7f3d0; color: #065f46; }
+        .swatch-green { background: #34d399; color: #064e3b; }
+        .swatch-gold { background: #fcd34d; color: #78350f; }
+
+        .color-tier-info h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .color-tier-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .dash-cell {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 16px 0 28px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .dash-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            border: 1px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        /* ── Event Groups ── */
+        .event-group {
+            margin-bottom: 32px;
+        }
+
+        .event-group-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .event-group-title .tag {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .tag-geo { background: var(--accent-red-dim); color: var(--accent-red); }
+        .tag-macro { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+        .event-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .event-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 12px;
+            align-items: baseline;
+        }
+
+        .event-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .event-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ── Deep Dive Cards ── */
+        .deep-dive {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .deep-dive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .deep-dive-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .deep-dive-stats {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .stat-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 16px;
+        }
+
+        .pill-gold { background: var(--accent-gold-dim); color: #b45309; }
+        .pill-green { background: var(--accent-green-dim); color: #047857; }
+        .pill-blue { background: var(--accent-blue-dim); color: #1d4ed8; }
+
+        .deep-dive-legs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dd-leg {
+            padding: 14px 16px;
+            border-radius: 8px;
+        }
+
+        .dd-leg.dd-long {
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+
+        .dd-leg.dd-short {
+            background: var(--accent-red-dim);
+            border: 1px solid rgba(239,68,68,0.2);
+        }
+
+        .dd-leg-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .dd-long .dd-leg-label { color: var(--accent-green); }
+        .dd-short .dd-leg-label { color: var(--accent-red); }
+
+        .dd-leg-stocks {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .deep-dive-body h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            margin-top: 16px;
+        }
+
+        .deep-dive-body h4:first-child { margin-top: 0; }
+
+        .deep-dive-body p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ── Pipeline Flow ── */
+        .pipeline-flow {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            margin: 28px 0;
+            flex-wrap: wrap;
+        }
+
+        .pipeline-step {
+            flex: 1;
+            min-width: 140px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 20px 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .pipeline-step:first-child { border-radius: 10px 0 0 10px; }
+        .pipeline-step:last-child { border-radius: 0 10px 10px 0; }
+
+        .pipeline-step + .pipeline-step { border-left: none; }
+
+        .pipeline-step-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-step-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .pipeline-step-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .pipeline-arrow {
+            display: flex;
+            align-items: center;
+            color: var(--accent-gold);
+            font-size: 20px;
+            padding: 0 2px;
+        }
+
+        /* ── Tier Comparison ── */
+        .tier-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .tier-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 24px;
+        }
+
+        .tier-card.tier-signal {
+            border: 2px solid var(--accent-green);
+        }
+
+        .tier-card.tier-exploring {
+            border: 2px solid var(--accent-gold);
+        }
+
+        .tier-card-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .tier-signal .tier-card-label { color: var(--accent-green); }
+        .tier-exploring .tier-card-label { color: var(--accent-gold); }
+
+        .tier-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tier-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tier-card .mono-stat {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .tier-signal .mono-stat { color: var(--accent-green); }
+        .tier-exploring .mono-stat { color: var(--accent-gold); }
+
+        /* ── CTA Section ── */
+        .cta-section {
+            text-align: center;
+            padding: 64px 0;
+        }
+
+        .cta-section .section-title {
+            margin-bottom: 12px;
+        }
+
+        .cta-section .section-text {
+            margin-bottom: 32px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .cta-btn-gold {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0a0e1a;
+        }
+
+        .cta-btn-outline {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .cta-btn-outline:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .cta-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 24px;
+            text-align: center;
+        }
+
+        .footer-disclaimer {
+            font-size: 12px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 16px;
+            line-height: 1.6;
+        }
+
+        .footer-powered {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ── Callout ── */
+        .callout {
+            background: var(--accent-gold-dim);
+            border: 1px solid rgba(245,158,11,0.25);
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.6;
+        }
+
+        .callout strong {
+            font-weight: 700;
+        }
+
+        /* ── Stops box ── */
+        .stop-rule {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .stop-rule-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stop-rule p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .stop-rule .mono {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .hero { padding: 72px 16px 40px; }
+            .hero-title { font-size: 30px; }
+            .hero-subtitle { font-size: 16px; }
+            .section { padding: 40px 0; }
+            .section-title { font-size: 24px; }
+            .color-tiers { grid-template-columns: 1fr; }
+            .event-item { grid-template-columns: 1fr; gap: 4px; }
+            .deep-dive-header { flex-direction: column; }
+            .deep-dive-legs { grid-template-columns: 1fr; }
+            .tier-comparison { grid-template-columns: 1fr; }
+            .pipeline-flow { flex-direction: column; }
+            .pipeline-step { border-radius: 0 !important; }
+            .pipeline-step:first-child { border-radius: 10px 10px 0 0 !important; }
+            .pipeline-step:last-child { border-radius: 0 0 10px 10px !important; }
+            .pipeline-step + .pipeline-step { border-left: 1px solid var(--border); border-top: none; }
+            .pipeline-arrow { transform: rotate(90deg); justify-content: center; }
+            .spread-diagram { flex-direction: column; }
+            .spread-arrow { transform: rotate(90deg); }
+            .back-bar { top: 12px; left: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+    <div class="back-bar">
+        <a href="https://askanka.com" class="back-link">
+            <svg viewBox="0 0 20 20"><path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/></svg>
+            Back to Dashboard
+        </a>
+    </div>
+    <div class="hero-content">
+        <div class="hero-badge">EDUCATIONAL GUIDE</div>
+        <h1 class="hero-title">Understanding the Signal Universe</h1>
+        <p class="hero-subtitle">How to read our 25x18 hit rate heatmap and find your edge in Indian equity spread trading</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- ══════════════ SECTION 1: SPREAD TRADES ══════════════ -->
+    <section class="section" id="spreads">
+        <div class="section-number">01</div>
+        <h2 class="section-title">What is a Spread Trade?</h2>
+        <p class="section-text">
+            A spread trade is a market-neutral strategy: you simultaneously <strong>buy one basket of stocks</strong> (the long leg) and <strong>sell another basket</strong> (the short leg). Your profit comes from the <em>difference</em> between how the two baskets move, not from the overall market direction. This means you can profit whether the market goes up, down, or sideways &mdash; as long as your long leg outperforms your short leg.
+        </p>
+        <p class="section-text">
+            For example, the spread <strong>"Defence vs IT"</strong> means you go long defence stocks (HAL, BEL, BDL) and short IT stocks (TCS, INFY, WIPRO). If a geopolitical escalation causes defence stocks to rally while IT stocks lag, the spread widens in your favor.
+        </p>
+
+        <div class="spread-diagram">
+            <div class="spread-leg long-leg">
+                <div class="leg-label">Long Leg (Buy)</div>
+                <div class="leg-stocks">HAL<br>BEL<br>BDL</div>
+            </div>
+            <div class="spread-arrow">&minus;</div>
+            <div class="spread-leg short-leg">
+                <div class="leg-label">Short Leg (Sell)</div>
+                <div class="leg-stocks">TCS<br>INFY<br>WIPRO</div>
+            </div>
+            <div class="spread-arrow">=</div>
+            <div class="spread-leg profit-leg">
+                <div class="leg-label">Spread P&amp;L</div>
+                <div class="leg-stocks">Your Edge</div>
+            </div>
+        </div>
+
+        <p class="section-text">
+            Anka Research tracks <strong>25 unique spread pairs</strong>, each constructed from thematic baskets of Indian equities &mdash; defence, IT, PSU energy, private financials, pharma exporters, and more. The key question is: <em>which events historically cause which spreads to move?</em>
+        </p>
+    </section>
+
+    <!-- ══════════════ SECTION 2: COLOR TIERS ══════════════ -->
+    <section class="section" id="colors">
+        <div class="section-number">02</div>
+        <h2 class="section-title">What do the Colors Mean?</h2>
+        <p class="section-text">
+            Each cell in the heatmap shows the <strong>historical hit rate</strong> &mdash; the percentage of times a given event caused the spread to move in the expected direction within the lookback window. The color tells you at a glance how reliable that pattern has been.
+        </p>
+
+        <div class="color-tiers">
+            <div class="color-tier">
+                <div class="color-swatch swatch-red">42%</div>
+                <div class="color-tier-info">
+                    <h4>Red Cells (&lt;50%)</h4>
+                    <p>The spread went <strong>against</strong> the expected direction more than half the time. This is a contrarian signal &mdash; the intuitive trade actually loses money historically.</p>
+                </div>
+            </div>
+            <div class="color-tier">
+                <div class="color-swatch swatch-mint">57%</div>
+                <div class="color-tier-info">
+                    <h4>Mint Green (50&ndash;64%)</h4>
+                    <p>A slight edge exists, but not reliable enough for SIGNAL tier. Tracked as EXPLORING &mdash; worth watching with reduced position size.</p>
+                </div>
+            </div>
+            <div class="color-tier">
+                <div class="color-swatch swatch-green">71%</div>
+                <div class="color-tier-info">
+                    <h4>Bright Green (65&ndash;79%)</h4>
+                    <p>Strong historical edge. These fire as <strong>SIGNAL tier</strong> on our Telegram channel &mdash; the bread and butter of the system.</p>
+                </div>
+            </div>
+            <div class="color-tier">
+                <div class="color-swatch swatch-gold">88%</div>
+                <div class="color-tier-info">
+                    <h4>Gold (80%+)</h4>
+                    <p>Elite setups. Historically the most reliable patterns in the entire universe. Rare but powerful when they fire.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-cell">
+            <div class="dash-swatch">&mdash;</div>
+            <div>
+                <h4 style="font-size:14px; font-weight:700; margin-bottom:4px;">Dash Cell (&mdash;)</h4>
+                <p style="font-size:13px; color:var(--text-secondary);">Not enough data to compute a reliable hit rate. Fewer than 3 historical events in that category. No signal is generated.</p>
+            </div>
+        </div>
+
+        <div class="callout">
+            <strong>Key insight:</strong> A 65% hit rate over 10+ events is statistically meaningful. Combined with favorable risk-reward from the stop system, even a 65% win rate can produce strong compounded returns over dozens of trades.
+        </div>
+    </section>
+
+    <!-- ══════════════ SECTION 3: EVENT CATEGORIES ══════════════ -->
+    <section class="section" id="events">
+        <div class="section-number">03</div>
+        <h2 class="section-title">The 18 Event Categories</h2>
+        <p class="section-text">
+            Every event detected by the Anka pipeline is classified into one of 18 categories. These span geopolitical shocks and macro/FX regime shifts &mdash; the two forces that drive relative sector performance in Indian equities.
+        </p>
+
+        <div class="event-group">
+            <div class="event-group-title">
+                <span class="tag tag-geo">Geopolitical</span>
+                <span style="color:var(--text-muted); font-size:13px;">10 categories</span>
+            </div>
+            <div class="event-list">
+                <div class="event-item">
+                    <div class="event-name">escalation</div>
+                    <div class="event-desc">Military conflict escalation involving India's borders or key trade partners. Triggers defence outperformance, risk-off in rate sensitives.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">de_escalation</div>
+                    <div class="event-desc">Tension drawdown or peace talks. Reverses escalation trades &mdash; defence names pull back, risk-on sectors recover.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">ceasefire</div>
+                    <div class="event-desc">Formal ceasefire or truce agreements. Sharper version of de-escalation &mdash; markets re-price the risk premium quickly.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">oil_positive</div>
+                    <div class="event-desc">Events that push crude oil prices higher (supply cuts, OPEC decisions, supply disruptions). Benefits upstream producers, hurts oil importers.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">oil_negative</div>
+                    <div class="event-desc">Events that push crude lower (demand destruction, supply increases). Benefits India's current account and oil-importing industries.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">sanctions</div>
+                    <div class="event-desc">Trade sanctions on countries in India's supply chain (Russia, Iran, China). Disrupts commodity flows, benefits domestic substitution plays.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">hormuz</div>
+                    <div class="event-desc">Strait of Hormuz threat or disruption. India imports ~60% of its oil through this chokepoint. Acute impact on energy and defence sectors.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">defense_spend</div>
+                    <div class="event-desc">Government defence budget announcements or major procurement orders. Directly benefits HAL, BEL, BDL and the broader defence basket.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">trump_threat</div>
+                    <div class="event-desc">US trade threats, tariff announcements, or policy hostility toward India. Hits export-oriented IT and pharma, benefits domestics.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">diplomacy</div>
+                    <div class="event-desc">Major diplomatic breakthroughs or bilateral trade agreements. Generally risk-on for Indian equities, benefits FII-heavy sectors.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-group">
+            <div class="event-group-title">
+                <span class="tag tag-macro">Macro / FX</span>
+                <span style="color:var(--text-muted); font-size:13px;">8 categories</span>
+            </div>
+            <div class="event-list">
+                <div class="event-item">
+                    <div class="event-name">weak_dollar</div>
+                    <div class="event-desc">DXY declining or broad USD weakness. Supports emerging markets, commodity prices, and INR stability. Broad positive for Indian equities.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">strong_dollar</div>
+                    <div class="event-desc">DXY rallying or broad USD strength. Pressures EM currencies, triggers FII outflows, hurts rate-sensitive and import-heavy sectors.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">india_stress</div>
+                    <div class="event-desc">India-specific macro stress: INR depreciation, fiscal deficit widening, or domestic policy shock. Benefits exporters (pharma, IT), hurts domestics.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">rbi_rate_cut</div>
+                    <div class="event-desc">RBI repo rate cut or dovish policy surprise. Benefits banks, NBFCs, real estate &mdash; all rate-sensitive sectors.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">rbi_rate_hike</div>
+                    <div class="event-desc">RBI repo rate hike or hawkish stance. Pressures rate-sensitive lending, benefits depositors and defensive names.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">us_recession</div>
+                    <div class="event-desc">US recession signals (yield curve inversion, jobs data, PMI contraction). Hits Indian IT services (US revenue exposure), benefits domestic consumption.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">fii_selling</div>
+                    <div class="event-desc">Sustained foreign institutional investor outflows from Indian equities. Pressures large-cap FII-heavy names (HDFC, Infosys), benefits DII-backed PSUs.</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">fii_buying</div>
+                    <div class="event-desc">FII inflows into Indian equities. Lifts large-cap quality names and financials, compresses valuation gaps.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ SECTION 4: TOP 5 PATTERNS ══════════════ -->
+    <section class="section" id="patterns">
+        <div class="section-number">04</div>
+        <h2 class="section-title">Top 5 Patterns &mdash; Deep Dive</h2>
+        <p class="section-text">
+            These are the five strongest patterns from the 4-year backtest. Each one has a clear economic logic and enough sample size to be statistically meaningful.
+        </p>
+
+        <!-- Pattern 1 -->
+        <div class="deep-dive">
+            <div class="deep-dive-header">
+                <div class="deep-dive-title">1. Private Finance vs PSU Energy</div>
+                <div class="deep-dive-stats">
+                    <span class="stat-pill pill-gold mono">92%</span>
+                    <span class="stat-pill pill-blue mono">n=6</span>
+                </div>
+            </div>
+            <div class="deep-dive-legs">
+                <div class="dd-leg dd-long">
+                    <div class="dd-leg-label">Long</div>
+                    <div class="dd-leg-stocks">HDFCBANK, ICICIBANK, KOTAKBANK, BAJFINANCE</div>
+                </div>
+                <div class="dd-leg dd-short">
+                    <div class="dd-leg-label">Short</div>
+                    <div class="dd-leg-stocks">ONGC, BPCL, IOC, GAIL</div>
+                </div>
+            </div>
+            <div class="deep-dive-body">
+                <h4>Event trigger: <span class="mono" style="color:var(--accent-blue)">weak_dollar</span></h4>
+                <p>When the dollar weakens, two things happen simultaneously: (1) FII flows return to India, disproportionately buying high-quality private financials, and (2) crude oil prices rise in dollar terms but INR strengthens, compressing the energy margin expansion that PSU refiners had been enjoying. The result is a powerful rotation from PSU energy into private finance.</p>
+                <h4>Why it works</h4>
+                <p>Private banks are the largest FII holding in India &mdash; when flows return, they are the first to re-rate. PSU energy names are government-controlled with capped upside and lose their tailwind when crude-INR dynamics shift. This creates a structural divergence that the spread captures cleanly.</p>
+                <h4>Historical performance</h4>
+                <p>Over 6 weak-dollar events since 2022, this spread moved favorably in 5.5 out of 6 (partial credit on one ambiguous case). Average favorable move in the first 5 trading days: <span class="mono" style="color:var(--accent-green)">+4.1%</span>.</p>
+            </div>
+        </div>
+
+        <!-- Pattern 2 -->
+        <div class="deep-dive">
+            <div class="deep-dive-header">
+                <div class="deep-dive-title">2. Defence vs IT</div>
+                <div class="deep-dive-stats">
+                    <span class="stat-pill pill-green mono">73%</span>
+                    <span class="stat-pill pill-blue mono">n=5</span>
+                </div>
+            </div>
+            <div class="deep-dive-legs">
+                <div class="dd-leg dd-long">
+                    <div class="dd-leg-label">Long</div>
+                    <div class="dd-leg-stocks">HAL, BEL, BDL</div>
+                </div>
+                <div class="dd-leg dd-short">
+                    <div class="dd-leg-label">Short</div>
+                    <div class="dd-leg-stocks">TCS, INFY, WIPRO</div>
+                </div>
+            </div>
+            <div class="deep-dive-body">
+                <h4>Event trigger: <span class="mono" style="color:var(--accent-red)">hormuz</span></h4>
+                <p>Strait of Hormuz threats create a dual effect: defence stocks rally on increased geopolitical risk premium and potential order acceleration, while IT stocks (which are dollar-earning but risk-off sensitive) underperform as global clients pull back on discretionary spending amid uncertainty.</p>
+                <h4>Why it works</h4>
+                <p>Hormuz disruption risk is existential for India's energy security. The government response is always to accelerate defence modernization and self-reliance (Atmanirbhar Bharat). Meanwhile, IT companies with US/European clients face deal delays when geopolitical risk spikes. The spread captures this divergence.</p>
+                <h4>Historical performance</h4>
+                <p>Average 5-day favorable spread move: <span class="mono" style="color:var(--accent-green)">+3.4%</span>. The pattern has been particularly clean when Hormuz headlines coincide with oil price spikes above $85/bbl.</p>
+            </div>
+        </div>
+
+        <!-- Pattern 3 -->
+        <div class="deep-dive">
+            <div class="deep-dive-header">
+                <div class="deep-dive-title">3. PSU Commodity vs Banks</div>
+                <div class="deep-dive-stats">
+                    <span class="stat-pill pill-gold mono">83%</span>
+                    <span class="stat-pill pill-blue mono">n=6</span>
+                </div>
+            </div>
+            <div class="deep-dive-legs">
+                <div class="dd-leg dd-long">
+                    <div class="dd-leg-label">Long</div>
+                    <div class="dd-leg-stocks">COALINDIA, NMDC, HINDALCO, VEDL</div>
+                </div>
+                <div class="dd-leg dd-short">
+                    <div class="dd-leg-label">Short</div>
+                    <div class="dd-leg-stocks">SBIN, PNB, BANKBARODA, CANBK</div>
+                </div>
+            </div>
+            <div class="deep-dive-body">
+                <h4>Event trigger: <span class="mono" style="color:var(--accent-blue)">weak_dollar</span></h4>
+                <p>A weakening dollar lifts commodity prices globally &mdash; metals, coal, and mining stocks benefit directly from higher realizations. Meanwhile, PSU banks are largely domestic-focused and do not benefit from the commodity reflation. The spread captures this divergence in earnings sensitivity.</p>
+                <h4>Why it works</h4>
+                <p>India's PSU commodity producers (Coal India, NMDC) have revenues directly linked to global commodity benchmarks priced in USD. When the dollar weakens, these benchmarks rise. PSU banks have no such linkage &mdash; their earnings are driven by domestic credit growth and NIM, which are unaffected by dollar moves.</p>
+                <h4>Historical performance</h4>
+                <p>5 out of 6 events saw the spread move favorably within 5 trading days. Average move: <span class="mono" style="color:var(--accent-green)">+3.8%</span>.</p>
+            </div>
+        </div>
+
+        <!-- Pattern 4 -->
+        <div class="deep-dive">
+            <div class="deep-dive-header">
+                <div class="deep-dive-title">4. Upstream vs Rate Sensitives</div>
+                <div class="deep-dive-stats">
+                    <span class="stat-pill pill-gold mono">80%</span>
+                    <span class="stat-pill pill-blue mono">n=10</span>
+                </div>
+            </div>
+            <div class="deep-dive-legs">
+                <div class="dd-leg dd-long">
+                    <div class="dd-leg-label">Long</div>
+                    <div class="dd-leg-stocks">ONGC, OIL, RELIANCE (upstream)</div>
+                </div>
+                <div class="dd-leg dd-short">
+                    <div class="dd-leg-label">Short</div>
+                    <div class="dd-leg-stocks">HDFC, LIC Housing, ICICI Lombard</div>
+                </div>
+            </div>
+            <div class="deep-dive-body">
+                <h4>Event trigger: <span class="mono" style="color:var(--accent-blue)">strong_dollar</span></h4>
+                <p>A strong dollar typically accompanies higher oil prices (oil is dollar-denominated). Upstream oil producers benefit from higher realizations. Rate-sensitive financials suffer because a strong dollar pressures INR, forcing RBI to tighten, which compresses lending margins and housing demand.</p>
+                <h4>Why it works</h4>
+                <p>This is one of the highest-conviction patterns because the cause-and-effect chain is direct and mechanical: strong dollar leads to INR weakness leads to imported inflation leads to RBI hawkishness leads to rate-sensitive pain. Upstream producers are naturally hedged as their product is priced in USD. With n=10, this is also the most statistically robust pattern in the top 5.</p>
+                <h4>Historical performance</h4>
+                <p>8 out of 10 strong-dollar events saw the spread move favorably. Average 5-day move: <span class="mono" style="color:var(--accent-green)">+2.9%</span>. Smaller per-event but the high frequency and reliability make it a workhorse trade.</p>
+            </div>
+        </div>
+
+        <!-- Pattern 5 -->
+        <div class="deep-dive">
+            <div class="deep-dive-header">
+                <div class="deep-dive-title">5. Pharma Exporters vs Domestic Consumer</div>
+                <div class="deep-dive-stats">
+                    <span class="stat-pill pill-green mono">66%</span>
+                    <span class="stat-pill pill-blue mono">n=10</span>
+                </div>
+            </div>
+            <div class="deep-dive-legs">
+                <div class="dd-leg dd-long">
+                    <div class="dd-leg-label">Long</div>
+                    <div class="dd-leg-stocks">SUNPHARMA, DRREDDY, CIPLA, AUROBINDO</div>
+                </div>
+                <div class="dd-leg dd-short">
+                    <div class="dd-leg-label">Short</div>
+                    <div class="dd-leg-stocks">HINDUNILVR, DABUR, MARICO, BRITANNIA</div>
+                </div>
+            </div>
+            <div class="deep-dive-body">
+                <h4>Event trigger: <span class="mono" style="color:var(--accent-blue)">india_stress</span></h4>
+                <p>When India-specific macro stress hits (INR depreciation, fiscal concerns, domestic slowdown), pharma exporters benefit from currency translation gains (60%+ revenue in USD) while domestic FMCG companies suffer from compressed rural demand and input cost inflation.</p>
+                <h4>Why it works</h4>
+                <p>This is the classic "domestic stress hedge." Pharma exporters are natural beneficiaries of INR weakness &mdash; every rupee of depreciation flows directly to their bottom line. Domestic consumer companies face the opposite: their costs rise (imported palm oil, crude-linked packaging) while their customers (rural India) cut spending. The 66% hit rate over 10 events makes this a reliable SIGNAL-tier pattern.</p>
+                <h4>Historical performance</h4>
+                <p>Average 5-day favorable move: <span class="mono" style="color:var(--accent-green)">+2.2%</span>. The pattern is most pronounced when INR weakens beyond 84/USD and RBI signals limited intervention capacity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ SECTION 5: SIGNAL DELIVERY ══════════════ -->
+    <section class="section" id="delivery">
+        <div class="section-number">05</div>
+        <h2 class="section-title">How Signals Get Delivered</h2>
+        <p class="section-text">
+            The entire process is automated end-to-end. No human discretion, no "gut feel" &mdash; just data flowing through a pipeline that runs every 30 minutes.
+        </p>
+
+        <div class="pipeline-flow">
+            <div class="pipeline-step">
+                <div class="pipeline-step-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+                </div>
+                <div class="pipeline-step-title">RSS Scan</div>
+                <div class="pipeline-step-desc">Every 30 min, scans 40+ news sources</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="pipeline-step-title">Classify</div>
+                <div class="pipeline-step-desc">LLM assigns event to 1 of 18 categories</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <div class="pipeline-step-title">Match</div>
+                <div class="pipeline-step-desc">Looks up all 25 spreads for that event</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="pipeline-step-title">Filter</div>
+                <div class="pipeline-step-desc">Only passes spreads with hit rate &ge;50%</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </div>
+                <div class="pipeline-step-title">Telegram</div>
+                <div class="pipeline-step-desc">Sends SIGNAL or EXPLORING alert</div>
+            </div>
+        </div>
+
+        <div class="tier-comparison">
+            <div class="tier-card tier-signal">
+                <div class="tier-card-label">Signal Tier</div>
+                <div class="mono-stat">65%+</div>
+                <h4>Full conviction</h4>
+                <p>Hit rate of 65% or above. These are the high-confidence setups where the backtest shows a clear, repeatable edge. Full position size.</p>
+            </div>
+            <div class="tier-card tier-exploring">
+                <div class="tier-card-label">Exploring Tier</div>
+                <div class="mono-stat">50&ndash;64%</div>
+                <h4>Tracked, half position</h4>
+                <p>The edge exists but is not yet strong enough for full conviction. These are tracked with reduced position size &mdash; useful for building intuition.</p>
+            </div>
+        </div>
+
+        <div class="stop-rule">
+            <div class="stop-rule-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                Daily Stop Loss
+            </div>
+            <p>Set at <span class="mono">50%</span> of the average favorable 1-day move for that spread-event pair. Tight enough to cut losers early, wide enough to avoid noise.</p>
+        </div>
+
+        <div class="stop-rule">
+            <div class="stop-rule-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                2-Day Running Stop
+            </div>
+            <p>Set at <span class="mono">2x</span> the daily stop. If the spread has been open for 2+ days and hits this level, the trade is closed. This catches slow bleed-outs.</p>
+        </div>
+
+        <div class="callout">
+            <strong>No target exits.</strong> Winners run until they are stopped out. This asymmetry &mdash; cutting losers at a fixed level while letting winners compound &mdash; is a core design principle of the Anka system.
+        </div>
+    </section>
+
+    <!-- ══════════════ SECTION 6: CTA ══════════════ -->
+    <section class="section cta-section" id="cta">
+        <h2 class="section-title">Ready to explore the data?</h2>
+        <p class="section-text">
+            See the full 25x18 heatmap live on the dashboard, or join the Telegram channel to receive automated signals as events unfold.
+        </p>
+        <div class="cta-buttons">
+            <a href="https://askanka.com" class="cta-btn cta-btn-outline">
+                <svg viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zM3 14h7v7H3v-7z"/></svg>
+                See the Live Heatmap
+            </a>
+            <a href="https://t.me/ANKASIGNALS" target="_blank" class="cta-btn cta-btn-gold">
+                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 1 0 24 12.056A12.014 12.014 0 0 0 11.944 0Zm5.654 8.22l-1.7 8.01c-.128.6-.462.746-.937.464l-2.588-1.908l-1.248 1.2a.65.65 0 0 1-.52.254l.186-2.636 4.8-4.338c.209-.186-.045-.29-.324-.104l-5.936 3.738l-2.556-.8c-.556-.174-.568-.556.116-.824l9.992-3.852c.462-.168.868.112.716.796Z"/></svg>
+                Get Signals on Telegram
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+    <p class="footer-disclaimer">
+        Anka Research provides data-driven market analysis for educational and informational purposes only.
+        This is not financial advice. Spread trading involves significant risk. Past backtest performance does not guarantee future results.
+        Always do your own research and consult a qualified financial advisor before making investment decisions.
+    </p>
+    <p class="footer-powered">Powered by Anka Research Pipeline &mdash; fully automated</p>
+    <p class="footer-copy">&copy; 2026 Anka Research. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
