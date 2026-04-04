@@ -244,19 +244,31 @@
             align-items: center;
             gap: 10px;
             padding: 14px 32px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #d4a855, #b8860b);
             color: #0a0e1a;
             font-weight: 700;
             font-size: 15px;
             border-radius: 12px;
             text-decoration: none;
-            transition: all 0.2s;
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(212, 168, 85, 0.3);
+            position: relative;
+            overflow: hidden;
         }
+
+        .telegram-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .telegram-cta:hover::before { left: 100%; }
 
         .telegram-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 8px 30px rgba(212, 168, 85, 0.4);
         }
 
         .telegram-cta svg { width: 20px; height: 20px; fill: #0a0e1a; }
@@ -266,18 +278,26 @@
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 1px;
-            background: var(--border);
-            border-bottom: 1px solid var(--border);
+            background: rgba(212,168,85,0.08);
+            border-bottom: 1px solid rgba(212,168,85,0.12);
         }
 
         .stat-card {
-            background: var(--bg-card);
-            padding: 20px 16px;
+            background: rgba(17,24,39,0.95);
+            backdrop-filter: blur(10px);
+            padding: 22px 16px;
             text-align: center;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            position: relative;
         }
 
-        .stat-card:hover { background: var(--bg-card-hover); }
+        .stat-card:hover {
+            background: rgba(26,35,50,0.95);
+        }
+
+        .stat-card:hover .stat-value {
+            color: #d4a855;
+        }
 
         .stat-label {
             font-size: 11px;
@@ -292,6 +312,7 @@
             font-size: 28px;
             font-weight: 700;
             color: var(--text-primary);
+            transition: color 0.3s;
         }
 
         .stat-value.positive { color: var(--accent-green); }
@@ -299,25 +320,41 @@
 
         /* ── Section Headers ── */
         .section {
-            padding: 48px 0;
+            padding: 52px 0;
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 14px;
+            margin-bottom: 28px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: linear-gradient(180deg, #d4a855, rgba(212,168,85,0.2));
+            border-radius: 2px;
         }
 
         .section-header h2 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f1f5f9, #c9cdd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .section-header .badge {
             font-size: 11px;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 6px;
             font-weight: 600;
             text-transform: uppercase;
@@ -326,6 +363,14 @@
 
         .badge-live { background: var(--accent-green-dim); color: var(--accent-green); }
         .badge-count { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+        /* ── Section Dividers ── */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.2), transparent);
+            margin: 0;
+        }
 
         /* ── Position Cards ── */
         .positions-grid {
@@ -339,7 +384,14 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .position-card:hover {
+            border-color: rgba(212,168,85,0.25);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
         }
 
         .position-card:hover { border-color: rgba(245, 158, 11, 0.3); }
@@ -661,18 +713,20 @@
             padding: 24px;
             text-decoration: none;
             color: var(--text-primary);
-            transition: all 0.2s;
+            transition: all 0.3s;
             position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .report-card:hover {
-            border-color: rgba(245, 158, 11, 0.3);
-            transform: translateY(-2px);
+            border-color: rgba(212, 168, 85, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
-        .report-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .report-card p { font-size: 13px; color: var(--text-secondary); }
-        .report-card .report-date { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+        .report-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #f1f5f9; }
+        .report-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+        .report-card .report-date { font-size: 12px; color: #d4a855; margin-top: 12px; font-weight: 500; }
 
         /* ── Latest Report Hero Card ── */
         .report-hero {
@@ -742,13 +796,20 @@
             border-radius: 12px;
             position: relative;
             margin: 0 8px;
+            transition: all 0.3s;
+        }
+
+        .pipeline-step:hover {
+            border-color: rgba(212,168,85,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         }
 
         .pipeline-step-num {
             width: 36px;
             height: 36px;
-            background: var(--accent-gold-dim);
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: rgba(212,168,85,0.12);
+            border: 1px solid rgba(212, 168, 85, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -784,9 +845,10 @@
 
         /* ── Footer ── */
         .footer {
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(212,168,85,0.15);
             padding: 48px 24px;
             text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(212,168,85,0.03));
         }
 
         .footer-cta { margin-bottom: 24px; }
