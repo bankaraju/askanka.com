@@ -16,13 +16,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg-primary: #10141f;
-            --bg-card: #1a2235;
-            --bg-card-hover: #243047;
-            --border: #2d3d54;
-            --text-primary: #f8fafc;
-            --text-secondary: #b0bfd0;
-            --text-muted: #7d8fa8;
+            --bg-primary: #0a0e1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --border: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
             --accent-gold: #f59e0b;
             --accent-blue: #3b82f6;
             --accent-green: #10b981;
@@ -220,14 +220,13 @@
         }
 
         .stat-card {
-            background: #1a2540;
+            background: var(--bg-card);
             padding: 20px 16px;
             text-align: center;
             transition: background 0.2s;
-            border-bottom: 1px solid #2d3d54;
         }
 
-        .stat-card:hover { background: #243050; }
+        .stat-card:hover { background: var(--bg-card-hover); }
 
         .stat-label {
             font-size: 11px;
@@ -285,8 +284,8 @@
         }
 
         .position-card {
-            background: #1e2940;
-            border: 1px solid #374b6a;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
             transition: border-color 0.2s;
@@ -379,7 +378,7 @@
         .leg-price {
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
         }
 
         .position-meta {
@@ -512,7 +511,7 @@
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #cbd5e1;
+            color: var(--text-muted);
             font-weight: 600;
             white-space: nowrap;
         }
@@ -521,18 +520,18 @@
             text-align: right;
             padding-right: 12px;
             font-size: 11px;
-            color: #e2e8f0;
+            color: var(--text-secondary);
             min-width: 180px;
             position: sticky;
             left: 0;
-            background: #1a2235;
+            background: var(--bg-card);
             z-index: 2;
         }
 
         .heatmap-table thead th {
             position: sticky;
             top: 0;
-            background: #1a2235;
+            background: var(--bg-card);
             z-index: 1;
             writing-mode: vertical-lr;
             transform: rotate(180deg);
@@ -548,11 +547,11 @@
         }
 
         .heatmap-cell {
-            width: 48px;
-            height: 34px;
+            width: 44px;
+            height: 32px;
             text-align: center;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             border-radius: 3px;
             cursor: default;
@@ -562,11 +561,11 @@
 
         .heatmap-cell:hover { transform: scale(1.15); }
 
-        .heatmap-cell.no-data { color: #475569; background: #1e2535; }
-        .heatmap-cell.low { background: #4a2020; color: #fca5a5; }
-        .heatmap-cell.mid { background: #1a4d3e; color: #6ee7b7; }
-        .heatmap-cell.high { background: #0a7558; color: #bbf7d0; font-weight: 700; }
-        .heatmap-cell.elite { background: #92400e; color: #fef08a; font-weight: 700; }
+        .heatmap-cell.no-data { color: transparent; }
+        .heatmap-cell.low { background: rgba(239, 68, 68, 0.15); color: rgba(239, 68, 68, 0.7); }
+        .heatmap-cell.mid { background: rgba(16, 185, 129, 0.15); color: rgba(16, 185, 129, 0.8); }
+        .heatmap-cell.high { background: rgba(16, 185, 129, 0.3); color: #10b981; }
+        .heatmap-cell.elite { background: rgba(245, 158, 11, 0.25); color: var(--accent-gold); }
 
         .heatmap-note {
             margin-top: 16px;
@@ -873,56 +872,11 @@
 
     <hr class="section-divider">
 
-    <!-- ══════════════ FRAGILITY DASHBOARD ══════════════ -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Correlation Fragility</h2>
-            <span class="badge badge-live">ML-Powered</span>
-        </div>
-        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:12px;">
-            Our XGBoost model analyses 24 market features (volatility, beta stability, correlation dynamics, volume shocks) to predict the probability of a correlation breakdown in the next 5 trading days.
-        </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px; margin-bottom:20px; font-size:12px;">
-            <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:6px; padding:10px 12px;">
-                <span style="color:#10b981; font-weight:700;">0-30 STABLE</span>
-                <span style="color:var(--text-secondary);"> — Correlation holding. Existing spread positions behave as expected. No action needed.</span>
-            </div>
-            <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:6px; padding:10px 12px;">
-                <span style="color:#3b82f6; font-weight:700;">30-50 MODERATE</span>
-                <span style="color:var(--text-secondary);"> — Early stress signs. We monitor more closely. Spread ideas for this pair stay active but we tighten watch.</span>
-            </div>
-            <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:10px 12px;">
-                <span style="color:#f59e0b; font-weight:700;">50-70 ELEVATED</span>
-                <span style="color:var(--text-secondary);"> — Relationship under pressure. New entries in related spreads use half position size. Stops widen automatically.</span>
-            </div>
-            <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:6px; padding:10px 12px;">
-                <span style="color:#ef4444; font-weight:700;">70-100 HIGH RISK</span>
-                <span style="color:var(--text-secondary);"> — Correlation likely breaking. Stops on related spreads widen up to 1.4x. No new entries until score drops below 50.</span>
-            </div>
-        </div>
-        <p style="color:var(--text-muted); font-size:12px; margin-bottom:16px; border-left:2px solid var(--accent-gold); padding-left:10px;">
-            These scores feed directly into our Telegram signals. When fragility rises, you'll see wider stops on P&L updates and a pause on new entries for affected spreads. When a HIGH RISK pair stabilises, it often creates the best entry opportunity — we alert that too.
-        </p>
-        <div id="fragility-dashboard" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
-            <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading fragility scores...</div>
-        </div>
-    </section>
-
-    <hr class="section-divider">
-
     <!-- ══════════════ MSI HISTORY CHART ══════════════ -->
     <section class="section">
         <div class="section-header">
-            <h2>Macro Sentiment Index (MSI)</h2>
-            <span class="badge badge-count">Daily Score 0-100</span>
-        </div>
-        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">
-            MSI measures India's macro stress on a 0-100 scale using 5 real-time inputs: FII net flows (30%), India VIX vs 90-day average (25%), USD/INR 5-day change (20%), Nifty 50 30-day return (15%), and crude oil 5-day change (10%).
-        </p>
-        <div style="display:flex; gap:16px; margin-bottom:16px; font-size:12px; flex-wrap:wrap;">
-            <span style="color:#10b981;"><span style="font-weight:700;">Below 35 = EASY</span> — risk appetite healthy, spreads behave normally</span>
-            <span style="color:#f59e0b;"><span style="font-weight:700;">35-64 = NEUTRAL</span> — mixed signals, standard stops apply</span>
-            <span style="color:#ef4444;"><span style="font-weight:700;">65+ = STRESS</span> — all stops widen 1.5x automatically, high vigilance</span>
+            <h2>MSI History</h2>
+            <span class="badge badge-count">Time Series</span>
         </div>
         <div class="msi-chart-container">
             <div id="msi-chart"></div>
@@ -947,7 +901,6 @@
         <div class="section-header">
             <h2>Signal Universe</h2>
             <span class="badge badge-count">Hit Rate Heatmap</span>
-            <a href="/heatmap-guide.html" style="margin-left:auto; font-size:13px; color:#f59e0b; text-decoration:none; font-weight:600; border:1px solid #f59e0b; padding:6px 14px; border-radius:6px; transition:all 0.2s;">&#9432; Understand the Heatmap &rarr;</a>
         </div>
         <div class="heatmap-container" id="heatmap-container">
             <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading heatmap...</div>
@@ -959,27 +912,22 @@
     <!-- ══════════════ REPORTS ══════════════ -->
     <section class="section">
         <div class="section-header">
-            <h2>Reports & Research</h2>
+            <h2>Weekly Reports</h2>
         </div>
         <div class="reports-grid">
-            <a href="/research.html" class="report-card" style="border-left:3px solid #f59e0b;">
-                <h3>ML Correlation Regime Break Detection</h3>
-                <p>How we detect when market relationships break — XGBoost on 24 features, live fragility scoring, data-driven stop adjustment.</p>
-                <div class="report-date mono" style="color:#f59e0b;">Featured Research</div>
+            <a href="reports/week-006.html" class="report-card">
+                <h3>Week 005: Live Signal Tracking</h3>
+                <p>First live signals deployed. Defence vs IT and Coal vs OMCs active.</p>
+                <div class="report-date mono">April 2026</div>
             </a>
-            <div class="report-card" style="border-left:3px solid #3b82f6; opacity:0.7; cursor:default;">
-                <h3>Live Signal Performance Report</h3>
-                <p>Auto-generated weekly by our agentic pipeline. First edition publishes Monday 7 April at 09:00 IST.</p>
-                <div class="report-date mono" style="color:#3b82f6;">Coming Monday</div>
-            </div>
             <a href="reports/week-001.html" class="report-card">
-                <h3>Iran War: Global Market Impact Analysis</h3>
-                <p>8 global indices, top outperformers per market, sector heatmap, currency impact. The report that started Anka Research.</p>
-                <div class="report-date mono">28 March 2026</div>
+                <h3>Week 001: Wartime Market Analysis</h3>
+                <p>Inaugural analysis of geopolitical stress transmission to Indian equities.</p>
+                <div class="report-date mono">March 2026</div>
             </a>
             <a href="reports/india-deep-dive.html" class="report-card">
-                <h3>India Sector Deep Dive</h3>
-                <p>Defence, energy, IT, pharma — sector-by-sector analysis of how Indian equities respond to geopolitical stress.</p>
+                <h3>India Deep Dive</h3>
+                <p>Sector-by-sector analysis of Indian equity response to macro events.</p>
                 <div class="report-date mono">Research</div>
             </a>
         </div>
@@ -1124,7 +1072,7 @@
     function hideTooltip() { tooltip.classList.remove('visible'); }
 
     // ── Load Live Status ──
-    fetch('/data/live_status.json?v=' + Date.now())
+    fetch('/data/live_status.json')
         .then(r => r.json())
         .then(data => {
             // MSI
@@ -1162,9 +1110,6 @@
 
             // Positions
             renderPositions(data.positions);
-
-            // Fragility dashboard
-            renderFragility(data.fragility || {});
         })
         .catch(err => {
             console.error('Failed to load live_status.json:', err);
@@ -1236,7 +1181,7 @@
     }
 
     // ── Load Track Record ──
-    fetch('/data/track_record.json?v=' + Date.now())
+    fetch('/data/track_record.json')
         .then(r => r.json())
         .then(data => {
             const container = document.getElementById('track-record-container');
@@ -1292,68 +1237,8 @@
             console.error('Failed to load track_record.json:', err);
         });
 
-    // ── Render Fragility Dashboard ──
-    function renderFragility(scores) {
-        const container = document.getElementById('fragility-dashboard');
-        if (!scores || Object.keys(scores).length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); grid-column:1/-1;">Fragility model not yet scored. Runs daily at 08:00 IST.</div>';
-            return;
-        }
-
-        // Sort by fragility score descending
-        const sorted = Object.entries(scores).sort((a, b) => b[1].fragility_score - a[1].fragility_score);
-
-        container.innerHTML = sorted.map(([name, s]) => {
-            const score = s.fragility_score || 0;
-            const corr = s.current_corr_21 || 0;
-            const prob = s.probability || 0;
-            const drivers = (s.top_drivers || []).slice(0, 3);
-
-            // Color based on score
-            let barColor, badgeBg, badgeColor, label;
-            if (score >= 70) {
-                barColor = '#ef4444'; badgeBg = 'rgba(239,68,68,0.15)'; badgeColor = '#ef4444'; label = 'HIGH RISK';
-            } else if (score >= 40) {
-                barColor = '#f59e0b'; badgeBg = 'rgba(245,158,11,0.15)'; badgeColor = '#f59e0b'; label = 'ELEVATED';
-            } else if (score >= 20) {
-                barColor = '#3b82f6'; badgeBg = 'rgba(59,130,246,0.12)'; badgeColor = '#3b82f6'; label = 'MODERATE';
-            } else {
-                barColor = '#10b981'; badgeBg = 'rgba(16,185,129,0.12)'; badgeColor = '#10b981'; label = 'STABLE';
-            }
-
-            const pairLabel = name.replace(/_/g, ' ');
-            const corrColor = corr >= 0 ? '#10b981' : '#ef4444';
-
-            const driverHtml = drivers.map(d =>
-                '<span style="font-size:10px; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:3px;">' +
-                d.feature.replace(/_/g, ' ') + '</span>'
-            ).join(' ');
-
-            return '<div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px; transition:border-color 0.2s;">' +
-                '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">' +
-                    '<span style="font-weight:600; font-size:13px;">' + pairLabel + '</span>' +
-                    '<span style="font-size:10px; padding:2px 8px; border-radius:4px; font-weight:700; letter-spacing:0.5px; background:' + badgeBg + '; color:' + badgeColor + ';">' + label + '</span>' +
-                '</div>' +
-
-                // Score bar
-                '<div style="position:relative; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; margin-bottom:8px; overflow:hidden;">' +
-                    '<div style="position:absolute; left:0; top:0; height:100%; width:' + score + '%; background:' + barColor + '; border-radius:4px; transition:width 0.6s;"></div>' +
-                '</div>' +
-
-                // Score + correlation
-                '<div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">' +
-                    '<span class="mono" style="font-size:20px; font-weight:700; color:' + barColor + ';">' + score + '<span style="font-size:12px; color:var(--text-muted);">/100</span></span>' +
-                    '<span style="font-size:11px; color:var(--text-secondary);">corr <span class="mono" style="color:' + corrColor + ';">' + corr.toFixed(3) + '</span></span>' +
-                '</div>' +
-
-                // Top drivers
-                '<div style="display:flex; gap:4px; flex-wrap:wrap;">' + driverHtml + '</div>' +
-            '</div>';
-        }).join('');
-    }
-
     // ── Load Spread Universe Heatmap ──
-    fetch('/data/spread_universe.json?v=' + Date.now())
+    fetch('/data/spread_universe.json')
         .then(r => r.json())
         .then(data => {
             const container = document.getElementById('heatmap-container');
@@ -1395,34 +1280,14 @@
 
             // Legend
             html += '<div class="heatmap-legend">';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#4a2020;"></span> &lt;50%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#1a4d3e;"></span> 50-64%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#0a7558;"></span> 65-79%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:#92400e;"></span> 80%+</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(239,68,68,0.15);"></span> &lt;50%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.15);"></span> 50-64%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.3);"></span> 65-79%</div>';
+            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(245,158,11,0.25);"></span> 80%+</div>';
             html += '<div class="legend-item"><span style="color:var(--text-muted); font-size:11px;">&#8212; n&lt;3</span></div>';
             html += '</div>';
 
             html += '<p class="heatmap-note">Based on 90+ historical events across 4 years of market data. Only cells with n&ge;3 events shown.</p>';
-
-            // ── Key Insights from the Heatmap ──
-            html += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:16px; margin-top:24px;">';
-
-            html += '<div style="background:#1a2235; border:1px solid #2d3d54; border-left:3px solid #f59e0b; border-radius:8px; padding:16px;">';
-            html += '<div style="font-weight:700; color:#fde68a; margin-bottom:6px;">&#9733; Private Finance vs PSU Energy on Weak Dollar — 92% hit rate</div>';
-            html += '<div style="font-size:13px; color:#b0bfd0;">When the dollar weakens (Fed pivot, soft CPI), private banks and NBFCs like BAJFINANCE and HDFCBANK outperform PSU energy names. This is the single most reliable setup in our universe — fired on 6 events, won 92% of the time.</div>';
-            html += '</div>';
-
-            html += '<div style="background:#1a2235; border:1px solid #2d3d54; border-left:3px solid #10b981; border-radius:8px; padding:16px;">';
-            html += '<div style="font-weight:700; color:#a7f3d0; margin-bottom:6px;">&#9733; Defence vs IT on Hormuz — 73% hit rate, +3.4% in 5 days</div>';
-            html += '<div style="font-size:13px; color:#b0bfd0;">Strait of Hormuz disruption is the strongest geopolitical trigger for Indian spreads. Defence stocks (HAL, BEL, BDL) rally while IT (TCS, INFY, WIPRO) sells off on global risk aversion. The 5-day spread return of +3.4% is the highest in the entire matrix.</div>';
-            html += '</div>';
-
-            html += '<div style="background:#1a2235; border:1px solid #2d3d54; border-left:3px solid #3b82f6; border-radius:8px; padding:16px;">';
-            html += '<div style="font-weight:700; color:#93c5fd; margin-bottom:6px;">&#9733; Pharma Exporters vs Domestic Consumer on India Stress — 66% hit rate</div>';
-            html += '<div style="font-size:13px; color:#b0bfd0;">When India VIX spikes and Nifty sells off, export pharma (Sun Pharma, Dr Reddy\'s, Cipla) holds while domestic consumer names (HUL, ITC, Asian Paints) get hit. Pharma earns in USD and is defensive — a natural hedge during India market stress events.</div>';
-            html += '</div>';
-
-            html += '</div>';
 
             container.innerHTML = html;
 
@@ -1446,19 +1311,12 @@
         });
 
     // ── Load MSI History Chart ──
-    fetch('/data/msi_history.json?v=' + Date.now())
+    fetch('/data/msi_history.json')
         .then(r => r.json())
         .then(data => {
-            if (!data || data.length < 3) {
-                const score = (data && data.length > 0) ? data[data.length-1].msi_score : '—';
-                const regime = (data && data.length > 0) ? data[data.length-1].regime : '';
-                const regimeLabel = regime.replace('MACRO_', '');
+            if (!data || data.length === 0) {
                 document.getElementById('msi-chart').innerHTML =
-                    '<div style="text-align:center; padding:48px 0;">' +
-                    '<div style="font-size:48px; font-weight:800; font-family:JetBrains Mono; color:#f59e0b;">' + score + '<span style="font-size:20px; color:var(--text-muted);">/100</span></div>' +
-                    '<div style="font-size:14px; color:var(--text-secondary); margin-top:8px;">' + regimeLabel + '</div>' +
-                    '<div style="font-size:12px; color:var(--text-muted); margin-top:16px;">Chart will render once 3+ daily readings accumulate</div>' +
-                    '</div>';
+                    '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">MSI chart will populate as more data points accumulate.</div>';
                 return;
             }
 

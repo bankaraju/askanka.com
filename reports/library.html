@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Library | Anka Research</title>
+    <meta name="description" content="Archive of all Anka Research reports. Weekly wartime market analysis, hedge fund ideas, country deep-dives.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --border: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .header {
+            padding: 40px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .header a.back {
+            display: inline-block;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        .header a.back:hover { text-decoration: underline; }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 8px;
+        }
+        .section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .report-card {
+            display: block;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+        .report-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-gold);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        .report-card .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .report-card .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .report-card .date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .report-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .report-card .description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.5rem; }
+            .report-card { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="/" class="back">&larr; Back to Anka Research</a>
+        <h1>Report Library</h1>
+        <p>All published research reports and analysis</p>
+    </div>
+
+    <div class="section">
+        <div class="section-label">Weekly Briefs</div>
+        <a href="week-006.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Week 006</span>
+                <span class="date">2026-04-03</span>
+            </div>
+            <h3>Weekly Brief #006 — 2026-03-28 to 2026-04-03</h3>
+            <p class="description">Automated weekly market analysis across 8 global indices, 20 stocks, commodities, and FX.</p>
+        </a>
+
+        <a href="week-005.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Week 005</span>
+                <span class="date">2026-03-31</span>
+            </div>
+            <h3>Weekly Brief #005 — 2026-03-24 to 2026-03-31</h3>
+            <p class="description">Automated weekly market analysis across 8 global indices, 20 stocks, commodities, and FX.</p>
+        </a>
+
+
+        <a href="week-001.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Week 001</span>
+                <span class="date">2026-03-28</span>
+            </div>
+            <h3>Iran-Israel-US Conflict: Four Weeks That Rewired Global Markets</h3>
+            <p class="description">Operation Epic Fury reshaped risk premia. Defence and energy are structural winners. Hormuz closure disrupted 20% of global oil.</p>
+        </a>
+    </div>
+
+    <div class="section" style="padding-top: 0;">
+        <div class="section-label">Special Reports</div>
+
+        <a href="model-portfolio.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Portfolio</span>
+                <span class="date">2026-03-29</span>
+            </div>
+            <h3>Model Portfolio: 15-Stock Wartime Portfolio with Trailing Stops</h3>
+            <p class="description">Pre-war baseline Feb 27. Tracked in USD with 10% trailing stops, technical signals, analyst targets, and forward earnings.</p>
+        </a>
+
+        <a href="hedge-fund-ideas.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Trade Ideas</span>
+                <span class="date">2026-03-29</span>
+            </div>
+            <h3>Hedge Fund Trade Ideas: Long/Short Spreads, FX Pairs & Thematic Baskets</h3>
+            <p class="description">12 institutional-grade spread trades with real P&L tracking. Trade the divergence between war winners and losers.</p>
+        </a>
+
+        <a href="singapore-market.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Country</span>
+                <span class="date">2026-03-29</span>
+            </div>
+            <h3>Singapore Market: STI Analysis & Local Portfolio Candidates</h3>
+            <p class="description">Straits Times Index wartime performance. Top 10 SGX stocks, sector breakdown, 5 watchlist candidates.</p>
+        </a>
+
+        <a href="india-deep-dive.html" class="report-card">
+            <div class="card-top">
+                <span class="badge">Country</span>
+                <span class="date">2026-03-29</span>
+            </div>
+            <h3>India Deep-Dive: Nifty 50 Sector Analysis, Defence Stars & Energy Divergence</h3>
+            <p class="description">Defence stocks defy the rout. Upstream vs downstream energy divergence. IT sector structural decline.</p>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 Anka Research. All rights reserved.</p>
+    </div>
+
+</body>
+</html>
