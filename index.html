@@ -49,10 +49,10 @@
         /* ── Hero ── */
         .hero {
             position: relative;
-            padding: 64px 20px 48px;
+            padding: 72px 20px 56px;
             text-align: center;
-            background: linear-gradient(135deg, #0a0e1a 0%, #141428 40%, #1a1a3e 60%, #0a0e1a 100%);
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(160deg, #0a0e1a 0%, #12162a 35%, #1a1530 55%, #0f0d1a 100%);
+            border-bottom: 1px solid rgba(212,168,85,0.15);
             overflow: hidden;
         }
 
@@ -60,8 +60,17 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 60%);
+            background:
+                radial-gradient(ellipse at 50% -10%, rgba(212,168,85,0.10) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.04) 0%, transparent 40%);
             pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.3), transparent);
         }
 
         .hero-content {
@@ -70,38 +79,80 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
         }
 
         .logo-badge {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-radius: 16px;
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #d4a855, #b8860b);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 32px;
-            color: #0a0e1a;
-            box-shadow: 0 0 40px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 0 50px rgba(212,168,85,0.3), 0 4px 20px rgba(0,0,0,0.3);
+            animation: badge-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes badge-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(212,168,85,0.2), 0 4px 20px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 0 50px rgba(212,168,85,0.35), 0 4px 20px rgba(0,0,0,0.3); }
         }
 
         .hero-title {
-            font-size: 40px;
+            font-size: 46px;
             font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #f5f0e8, #d4a855);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        .hero-tagline {
+            font-size: 20px;
+            color: #d4a855;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: -8px;
+        }
+
         .hero-subtitle {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-secondary);
             font-weight: 400;
-            margin-top: -12px;
+            max-width: 640px;
+            line-height: 1.7;
+        }
+
+        /* Track record stats */
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4a855, #f5c563);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
         }
 
         .hero-row {
@@ -841,9 +892,25 @@
 <!-- ══════════════ HERO ══════════════ -->
 <section class="hero">
     <div class="hero-content">
-        <div class="logo-badge">A</div>
+        <div class="logo-badge">
+            <svg width="42" height="42" viewBox="0 0 100 100" fill="none">
+                <!-- Phoenix / Anka bird mark -->
+                <path d="M50 8 C35 8, 20 20, 18 38 C16 52, 22 62, 30 70 L25 88 C25 88, 38 78, 50 78 C62 78, 75 88, 75 88 L70 70 C78 62, 84 52, 82 38 C80 20, 65 8, 50 8Z" fill="url(#phoenix-grad)" opacity="0.9"/>
+                <path d="M50 18 C42 18, 34 26, 33 36 C32 44, 36 50, 42 56 L50 68 L58 56 C64 50, 68 44, 67 36 C66 26, 58 18, 50 18Z" fill="#0a0e1a" opacity="0.6"/>
+                <path d="M44 36 C44 33, 47 30, 50 30 C53 30, 56 33, 56 36 C56 40, 53 42, 50 42 C47 42, 44 40, 44 36Z" fill="#d4a855"/>
+                <defs><linearGradient id="phoenix-grad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#f5c563"/><stop offset="100%" stop-color="#b8860b"/></linearGradient></defs>
+            </svg>
+        </div>
         <h1 class="hero-title">Anka Research</h1>
-        <p class="hero-subtitle">Data-Driven Spread Trading Signals</p>
+        <p class="hero-tagline">Where Geopolitics Meets Indian Equities</p>
+        <p class="hero-subtitle">AI-powered spread trading signals. Real-time event detection, backtest-validated setups, and institutional flow intelligence across global markets.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-value">90+</div><div class="hero-stat-label">Events Backtested</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">35</div><div class="hero-stat-label">High-Conviction Setups</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">89.8%</div><div class="hero-stat-label">ML Accuracy</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">25</div><div class="hero-stat-label">Spread Pairs</div></div>
+        </div>
 
         <div class="hero-row">
             <div class="msi-gauge-wrap">
