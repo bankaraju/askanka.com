@@ -596,127 +596,108 @@
         }
 
         /* ── Heatmap ── */
-        .heatmap-container {
+        /* ── Signal Explorer ── */
+        .signal-container {
             background: linear-gradient(160deg, #0f1629, #111827);
             border: 1px solid rgba(212,168,85,0.12);
             border-radius: 16px;
-            padding: 32px;
-            overflow-x: auto;
+            overflow: hidden;
             position: relative;
         }
-
-        .heatmap-container::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
+        .signal-container::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
             background: linear-gradient(90deg, transparent, rgba(212,168,85,0.4), transparent);
-            border-radius: 16px 16px 0 0;
         }
+        .signal-intro { text-align: center; padding: 28px 32px 0; }
+        .signal-intro h3 { font-size: 20px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+        .signal-intro p { font-size: 13px; color: #6b7280; max-width: 600px; margin: 0 auto; }
+        .signal-tab-toggle { display: flex; justify-content: center; margin: 20px 0; }
+        .signal-tab-group { display: flex; gap: 2px; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 4px; }
+        .signal-tab-btn { padding: 8px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; background: transparent; color: #6b7280; font-family: inherit; }
+        .signal-tab-btn.active { background: #d4a855; color: #0a0e1a; box-shadow: 0 2px 8px rgba(212,168,85,0.3); }
+        .signal-tab-btn:hover:not(.active) { color: #9ca3af; }
 
-        .heatmap-intro {
-            text-align: center;
-            margin-bottom: 28px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .heatmap-intro h3 {
-            font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;
-        }
-        .heatmap-intro p {
-            font-size: 13px; color: #6b7280; max-width: 600px; margin: 0 auto;
-        }
+        .signal-explorer { display: flex; gap: 0; padding: 0 0 20px; min-height: 480px; }
+        .event-sidebar { flex: 0 0 220px; padding: 0 20px 0 28px; border-right: 1px solid rgba(255,255,255,0.05); }
+        .event-sidebar-label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+        .event-item { padding: 9px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; color: #9ca3af; cursor: pointer; transition: all 0.2s; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; border: 1px solid transparent; }
+        .event-item:hover { background: rgba(255,255,255,0.04); color: #f1f5f9; }
+        .event-item.active { background: rgba(212,168,85,0.12); border-color: rgba(212,168,85,0.25); color: #d4a855; font-weight: 700; }
+        .event-item .ev-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4b5563; margin-left: auto; }
+        .event-item.active .ev-count { color: #d4a855; opacity: 0.7; }
+        .ev-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .event-item.active .ev-dot { box-shadow: 0 0 6px rgba(212,168,85,0.4); }
 
-        .heatmap-table {
-            border-collapse: separate;
-            border-spacing: 3px;
-            min-width: 100%;
-        }
+        .results-panel { flex: 1; padding: 0 28px 0 24px; }
+        .results-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .results-title { font-size: 14px; color: #d4a855; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .results-subtitle { font-size: 12px; color: #6b7280; }
 
-        .heatmap-table th {
-            padding: 6px 5px;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6b7280;
-            font-weight: 600;
-            white-space: nowrap;
-        }
+        .result-row { display: flex; align-items: center; padding: 12px 16px; border-radius: 10px; margin-bottom: 6px; transition: all 0.25s; cursor: default; }
+        .result-row:hover { transform: translateX(4px); }
+        .result-rank { width: 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4b5563; font-weight: 600; flex-shrink: 0; }
+        .result-hit { width: 64px; font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800; flex-shrink: 0; }
+        .result-info { flex: 1; padding: 0 16px; }
+        .result-name { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 2px; }
+        .result-meta { font-size: 11px; color: #6b7280; font-family: 'JetBrains Mono', monospace; }
+        .result-bar-wrap { width: 120px; flex-shrink: 0; }
+        .result-bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.06); overflow: hidden; }
+        .result-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease-out; }
+        .result-tickers { font-size: 10px; color: #4b5563; margin-top: 4px; text-align: right; }
 
-        .heatmap-table th.row-header {
-            text-align: right;
-            padding-right: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #9ca3af;
-            min-width: 220px;
-            position: sticky;
-            left: 0;
-            background: #111827;
-            z-index: 2;
-            letter-spacing: 0.3px;
-        }
+        .tier-elite .result-hit { color: #f5c563; }
+        .tier-elite { background: rgba(212,168,85,0.06); }
+        .tier-elite:hover { background: rgba(212,168,85,0.1); }
+        .tier-elite .result-bar-fill { background: linear-gradient(90deg, #d4a855, rgba(212,168,85,0.4)); }
+        .tier-high .result-hit { color: #34d399; }
+        .tier-high { background: rgba(16,185,129,0.04); }
+        .tier-high:hover { background: rgba(16,185,129,0.08); }
+        .tier-high .result-bar-fill { background: linear-gradient(90deg, #10b981, rgba(16,185,129,0.3)); }
+        .tier-mid .result-hit { color: #d1d5db; }
+        .tier-mid { background: rgba(255,255,255,0.02); }
+        .tier-mid .result-bar-fill { background: rgba(255,255,255,0.2); }
+        .tier-low .result-hit { color: #f87171; opacity: 0.8; }
+        .tier-low { background: rgba(239,68,68,0.03); }
+        .tier-low .result-bar-fill { background: rgba(239,68,68,0.3); }
 
+        .signal-footer { padding: 16px 28px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .signal-footer-note { font-size: 11px; color: #4b5563; }
+        .signal-footer-stats { display: flex; gap: 20px; }
+        .signal-footer-stat { text-align: center; }
+        .signal-footer-val { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: #d4a855; }
+        .signal-footer-label { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .signal-legend { display: flex; gap: 16px; justify-content: center; padding: 12px; font-size: 11px; color: #6b7280; flex-wrap: wrap; }
+        .signal-legend-item { display: flex; align-items: center; gap: 6px; }
+        .signal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+        .signal-no-results { text-align: center; padding: 80px 20px; color: #6b7280; font-size: 14px; }
+
+        /* Grid view (inside signal container) */
+        .signal-grid-view { display: none; padding: 24px; overflow-x: auto; }
+
+        /* Brighter grid cell colors */
+        .heatmap-container { padding: 0; background: transparent; border: none; border-radius: 0; overflow-x: auto; }
+        .heatmap-table { border-collapse: separate; border-spacing: 3px; min-width: 100%; }
+        .heatmap-table th { padding: 6px 5px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; font-weight: 600; white-space: nowrap; }
+        .heatmap-table th.row-header { text-align: right; padding-right: 16px; font-size: 12px; font-weight: 600; color: #9ca3af; min-width: 220px; position: sticky; left: 0; background: #111827; z-index: 2; }
         .heatmap-table tbody tr { transition: all 0.2s; }
         .heatmap-table tbody tr:hover { background: rgba(212,168,85,0.03); }
         .heatmap-table tbody tr:hover th.row-header { color: #d4a855; }
-
-        .heatmap-table thead th {
-            position: sticky;
-            top: 0;
-            background: #111827;
-            z-index: 1;
-            writing-mode: vertical-lr;
-            transform: rotate(180deg);
-            text-align: left;
-            padding: 12px 6px;
-            height: 120px;
-            font-size: 10px;
-            color: #6b7280;
-        }
-
-        .heatmap-table thead th:first-child {
-            writing-mode: horizontal-tb;
-            transform: none;
-            text-align: right;
-        }
-
-        .heatmap-cell {
-            width: 50px;
-            height: 36px;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: default;
-            transition: all 0.25s;
-            padding: 0 2px;
-        }
-
-        .heatmap-cell:hover {
-            transform: scale(1.25);
-            z-index: 5;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-        }
-
+        .heatmap-table thead th { position: sticky; top: 0; background: #111827; z-index: 1; writing-mode: vertical-lr; transform: rotate(180deg); text-align: left; padding: 12px 6px; height: 120px; font-size: 10px; color: #6b7280; }
+        .heatmap-table thead th:first-child { writing-mode: horizontal-tb; transform: none; text-align: right; }
+        .heatmap-cell { width: 50px; height: 36px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: default; transition: all 0.25s; padding: 0 2px; }
+        .heatmap-cell:hover { transform: scale(1.25); z-index: 5; box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
         .heatmap-cell.no-data { background: transparent; color: transparent; }
         .heatmap-cell.zero { background: rgba(255,255,255,0.02); color: transparent; }
-        .heatmap-cell.low { background: rgba(239, 68, 68, 0.2); color: rgba(239, 68, 68, 0.85); }
-        .heatmap-cell.mid { background: rgba(16, 185, 129, 0.15); color: rgba(16, 185, 129, 0.85); }
-        .heatmap-cell.high {
-            background: rgba(16, 185, 129, 0.3); color: #10b981; font-weight: 700;
-            box-shadow: inset 0 0 0 1px rgba(16,185,129,0.2);
-        }
-        .heatmap-cell.elite {
-            background: linear-gradient(135deg, rgba(212,168,85,0.3), rgba(212,168,85,0.15));
-            color: #d4a855; font-weight: 700;
-            box-shadow: inset 0 0 0 1px rgba(212,168,85,0.4), 0 0 8px rgba(212,168,85,0.15);
-            animation: elite-pulse 3s ease-in-out infinite;
-        }
+        .heatmap-cell.low { background: rgba(239,68,68,0.25); color: #f87171; }
+        .heatmap-cell.mid { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .heatmap-cell.high { background: rgba(16,185,129,0.35); color: #34d399; box-shadow: inset 0 0 0 1px rgba(16,185,129,0.2); }
+        .heatmap-cell.elite { background: linear-gradient(135deg, rgba(212,168,85,0.35), rgba(212,168,85,0.2)); color: #f5c563; box-shadow: inset 0 0 0 1px rgba(212,168,85,0.4), 0 0 8px rgba(212,168,85,0.15); }
 
-        @keyframes elite-pulse {
-            0%, 100% { box-shadow: inset 0 0 0 1px rgba(212,168,85,0.4), 0 0 6px rgba(212,168,85,0.1); }
-            50% { box-shadow: inset 0 0 0 1px rgba(212,168,85,0.5), 0 0 12px rgba(212,168,85,0.2); }
+        @media (max-width: 768px) {
+            .signal-explorer { flex-direction: column; }
+            .event-sidebar { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 20px 16px; }
+            .result-bar-wrap { display: none; }
         }
 
         .heatmap-note {
@@ -1133,8 +1114,40 @@
             <h2>Signal Universe</h2>
             <span class="badge badge-count">Hit Rate Heatmap</span>
         </div>
-        <div class="heatmap-container" id="heatmap-container">
-            <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading heatmap...</div>
+        <div class="signal-container" id="signal-container">
+            <div class="signal-intro">
+                <h3>Explore the Edge</h3>
+                <p>Select an event scenario to see which spread trades have historically outperformed. Ranked by hit rate from 4 years of backtesting.</p>
+            </div>
+            <div class="signal-tab-toggle">
+                <div class="signal-tab-group">
+                    <button class="signal-tab-btn active" onclick="showSignalTab('explorer')">Explorer</button>
+                    <button class="signal-tab-btn" onclick="showSignalTab('grid')">Full Grid</button>
+                </div>
+            </div>
+            <div class="signal-explorer" id="explorer-view">
+                <div class="event-sidebar"><div class="event-sidebar-label">Event Scenarios</div><div id="event-list"></div></div>
+                <div class="results-panel" id="results-panel"><div class="signal-no-results">Loading...</div></div>
+            </div>
+            <div class="signal-grid-view" id="grid-view">
+                <div class="heatmap-container" id="heatmap-container">
+                    <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading grid...</div>
+                </div>
+            </div>
+            <div class="signal-footer">
+                <div class="signal-footer-note">Backtested across 90+ events over 4 years. Only setups with 3+ precedents shown.</div>
+                <div class="signal-footer-stats">
+                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-tested">--</div><div class="signal-footer-label">Tested</div></div>
+                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-elite">--</div><div class="signal-footer-label">Elite 80%+</div></div>
+                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-high">--</div><div class="signal-footer-label">High 65%+</div></div>
+                </div>
+            </div>
+            <div class="signal-legend">
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(212,168,85,0.4);"></div> 80%+ Elite</div>
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(16,185,129,0.4);"></div> 65-79% High</div>
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(255,255,255,0.15);"></div> 50-64%</div>
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(239,68,68,0.3);"></div> Below 50%</div>
+            </div>
         </div>
     </section>
 
@@ -1503,102 +1516,154 @@
             console.error('Failed to load track_record.json:', err);
         });
 
-    // ── Load Spread Universe Heatmap ──
+    // ── Signal Universe Explorer + Grid ──
+    const EVENT_COLORS = {
+        ceasefire:'#10b981', de_escalation:'#10b981', diplomacy:'#10b981', fii_buying:'#10b981',
+        rbi_rate_cut:'#10b981', oil_positive:'#10b981', weak_dollar:'#3b82f6',
+        escalation:'#ef4444', hormuz:'#ef4444', oil_negative:'#ef4444', sanctions:'#ef4444',
+        trump_threat:'#ef4444', us_recession:'#ef4444',
+        fii_selling:'#3b82f6', india_stress:'#3b82f6', rbi_rate_hike:'#3b82f6', strong_dollar:'#3b82f6',
+        defense_spend:'#d4a855'
+    };
+
+    window.showSignalTab = function(tab) {
+        document.querySelectorAll('.signal-tab-btn').forEach(b => b.classList.remove('active'));
+        if (tab === 'explorer') {
+            document.getElementById('explorer-view').style.display = 'flex';
+            document.getElementById('grid-view').style.display = 'none';
+            document.querySelectorAll('.signal-tab-btn')[0].classList.add('active');
+        } else {
+            document.getElementById('explorer-view').style.display = 'none';
+            document.getElementById('grid-view').style.display = 'block';
+            document.querySelectorAll('.signal-tab-btn')[1].classList.add('active');
+        }
+    };
+
     fetch('/data/spread_universe.json')
         .then(r => r.json())
         .then(data => {
-            const container = document.getElementById('heatmap-container');
             const spreads = data.spreads;
-
-            // Collect all categories from first spread
             const categories = Object.keys(spreads[0].categories).sort();
 
-            // Count elite cells for intro
-            let eliteCount = 0, highCount = 0, totalCells = 0;
+            // Count stats
+            let totalTested = 0, eliteCount = 0, highCount = 0;
             spreads.forEach(s => {
                 categories.forEach(c => {
                     const e = s.categories[c];
-                    if (e && e.n >= 3) {
-                        totalCells++;
-                        if (e.hit_rate >= 0.8) eliteCount++;
-                        else if (e.hit_rate >= 0.65) highCount++;
-                    }
+                    if (e && e.n >= 3 && e.hit_rate > 0) { totalTested++; if (e.hit_rate >= 0.8) eliteCount++; else if (e.hit_rate >= 0.65) highCount++; }
                 });
             });
+            document.getElementById('stat-tested').textContent = totalTested;
+            document.getElementById('stat-elite').textContent = eliteCount;
+            document.getElementById('stat-high').textContent = highCount;
+            document.getElementById('stat-spreads').textContent = spreads.length;
 
-            // Build intro + table
-            let html = '<div class="heatmap-intro">';
-            html += '<h3>' + spreads.length + ' Spreads &times; ' + categories.length + ' Events &mdash; ' + totalCells + ' Tested Scenarios</h3>';
-            html += '<p>' + eliteCount + ' elite setups (80%+ hit rate) and ' + highCount + ' high-conviction plays (65-79%) identified from 4 years of backtesting</p>';
-            html += '</div>';
+            // ── Build Explorer ──
+            const eventList = document.getElementById('event-list');
+            categories.forEach((cat, i) => {
+                // Count results for this event
+                let count = 0;
+                spreads.forEach(s => { const e = s.categories[cat]; if (e && e.n >= 3 && e.hit_rate > 0) count++; });
 
-            html += '<table class="heatmap-table"><thead><tr><th class="row-header" style="writing-mode:horizontal-tb;transform:none;">Spread</th>';
-            categories.forEach(cat => {
-                html += '<th>' + formatCategory(cat) + '</th>';
+                const div = document.createElement('div');
+                div.className = 'event-item' + (i === 0 ? ' active' : '');
+                div.innerHTML = '<div class="ev-dot" style="background:' + (EVENT_COLORS[cat] || '#6b7280') + '"></div>' +
+                    '<span>' + formatCategory(cat) + '</span>' +
+                    '<span class="ev-count">' + count + '</span>';
+                div.addEventListener('click', function() {
+                    document.querySelectorAll('.event-item').forEach(e => e.classList.remove('active'));
+                    div.classList.add('active');
+                    showExplorerResults(cat, spreads);
+                });
+                eventList.appendChild(div);
             });
-            html += '</tr></thead><tbody>';
 
+            // Auto-select first event
+            showExplorerResults(categories[0], spreads);
+
+            // ── Build Grid Tab ──
+            const container = document.getElementById('heatmap-container');
+            let html = '<table class="heatmap-table"><thead><tr><th class="row-header" style="writing-mode:horizontal-tb;transform:none;">Spread</th>';
+            categories.forEach(cat => { html += '<th>' + formatCategory(cat) + '</th>'; });
+            html += '</tr></thead><tbody>';
             spreads.forEach(spread => {
                 html += '<tr><th class="row-header">' + spread.name + '</th>';
                 categories.forEach(cat => {
                     const entry = spread.categories[cat];
-                    if (!entry || entry.n < 3) {
+                    if (!entry || entry.n < 3 || entry.hit_rate === 0) {
                         html += '<td class="heatmap-cell no-data"></td>';
                     } else {
-                        const hr = entry.hit_rate;
-                        const pct = (hr * 100).toFixed(0);
-
-                        if (hr === 0) {
-                            // Hide zero hit rate — just noise
-                            html += '<td class="heatmap-cell zero"></td>';
-                        } else {
-                            let cls = 'low';
-                            if (hr >= 0.8) cls = 'elite';
-                            else if (hr >= 0.65) cls = 'high';
-                            else if (hr >= 0.5) cls = 'mid';
-
-                            html += '<td class="heatmap-cell ' + cls + '" data-tip="' +
-                                spread.name + ' / ' + formatCategory(cat) + ': ' + pct + '% hit rate (n=' + entry.n + ')">' +
-                                pct + '</td>';
-                        }
+                        const pct = (entry.hit_rate * 100).toFixed(0);
+                        let cls = 'low';
+                        if (entry.hit_rate >= 0.8) cls = 'elite';
+                        else if (entry.hit_rate >= 0.65) cls = 'high';
+                        else if (entry.hit_rate >= 0.5) cls = 'mid';
+                        html += '<td class="heatmap-cell ' + cls + '" data-tip="' + spread.name + ' / ' + formatCategory(cat) + ': ' + pct + '% (n=' + entry.n + ')">' + pct + '</td>';
                     }
                 });
                 html += '</tr>';
             });
-
             html += '</tbody></table>';
-
-            // Legend
-            html += '<div class="heatmap-legend">';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(239,68,68,0.2);"></span> Below 50%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.15);"></span> 50-64%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.3); box-shadow: inset 0 0 0 1px rgba(16,185,129,0.2);"></span> 65-79% High</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:linear-gradient(135deg, rgba(212,168,85,0.3), rgba(212,168,85,0.15)); box-shadow: 0 0 6px rgba(212,168,85,0.2);"></span> 80%+ Elite</div>';
-            html += '<div class="legend-item"><span style="color:#4b5563; font-size:11px;">Empty = insufficient data</span></div>';
-            html += '</div>';
-
-            html += '<p class="heatmap-note">Backtested across 90+ historical events over 4 years of market data. Only setups with 3+ precedents shown. Hit rate = % of times the spread moved in the expected direction.</p>';
-
             container.innerHTML = html;
 
-            // Attach tooltip events
+            // Grid tooltips
             container.querySelectorAll('.heatmap-cell[data-tip]').forEach(cell => {
-                cell.addEventListener('mouseenter', function(e) {
-                    showTooltip(e, this.getAttribute('data-tip'));
-                });
-                cell.addEventListener('mousemove', function(e) {
-                    tooltip.style.left = (e.clientX + 12) + 'px';
-                    tooltip.style.top = (e.clientY - 10) + 'px';
-                });
+                cell.addEventListener('mouseenter', function(e) { showTooltip(e, this.getAttribute('data-tip')); });
+                cell.addEventListener('mousemove', function(e) { tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-10)+'px'; });
                 cell.addEventListener('mouseleave', hideTooltip);
             });
-
-            // Update spreads tracked count
-            document.getElementById('stat-spreads').textContent = spreads.length;
         })
-        .catch(err => {
-            console.error('Failed to load spread_universe.json:', err);
+        .catch(err => { console.error('Failed to load spread_universe.json:', err); });
+
+    function showExplorerResults(cat, spreads) {
+        const panel = document.getElementById('results-panel');
+        // Build results for this category
+        const results = [];
+        spreads.forEach(s => {
+            const e = s.categories[cat];
+            if (e && e.n >= 3 && e.hit_rate > 0) {
+                results.push({ name: s.name, hit: Math.round(e.hit_rate * 100), n: e.n,
+                    spread5d: e.spread_5d ? e.spread_5d.toFixed(1) : '0.0',
+                    long: s.long || [], short: s.short || [] });
+            }
         });
+        results.sort((a, b) => b.hit - a.hit);
+
+        if (results.length === 0) {
+            panel.innerHTML = '<div class="signal-no-results">No tested setups for this scenario</div>';
+            return;
+        }
+
+        let html = '<div class="results-header"><div class="results-title">When ' + formatCategory(cat) + ' fires</div>' +
+            '<div class="results-subtitle">' + results.length + ' spreads tested</div></div>';
+
+        results.forEach((r, i) => {
+            let tier = 'tier-low';
+            if (r.hit >= 80) tier = 'tier-elite';
+            else if (r.hit >= 65) tier = 'tier-high';
+            else if (r.hit >= 50) tier = 'tier-mid';
+            const sign = parseFloat(r.spread5d) >= 0 ? '+' : '';
+
+            html += '<div class="result-row ' + tier + '">' +
+                '<div class="result-rank">#' + (i+1) + '</div>' +
+                '<div class="result-hit">' + r.hit + '%</div>' +
+                '<div class="result-info"><div class="result-name">' + r.name + '</div>' +
+                '<div class="result-meta">n=' + r.n + ' | ' + sign + r.spread5d + '% avg 5d</div></div>' +
+                '<div class="result-bar-wrap"><div class="result-bar"><div class="result-bar-fill" style="width:' + r.hit + '%"></div></div>' +
+                '<div class="result-tickers"><span style="color:' + (r.hit>=65?'#10b981':'#6b7280') + '">L:</span> ' + r.long.join(', ') +
+                ' <span style="color:' + (r.hit<50?'#ef4444':'#6b7280') + '; margin-left:6px;">S:</span> ' + r.short.join(', ') + '</div></div></div>';
+        });
+
+        panel.innerHTML = html;
+
+        // Animate bars
+        setTimeout(() => {
+            panel.querySelectorAll('.result-bar-fill').forEach(bar => {
+                const w = bar.style.width; bar.style.width = '0%';
+                requestAnimationFrame(() => { requestAnimationFrame(() => { bar.style.width = w; }); });
+            });
+        }, 50);
+    }
 
     // ── Load MSI History Chart ──
     fetch('/data/msi_history.json')
