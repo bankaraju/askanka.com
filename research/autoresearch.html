@@ -67,14 +67,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <header class="paper-hero">
     <div class="badge">Research Paper</div>
     <h1>AutoResearch: How AI Fixed Our Broken ML Model Overnight</h1>
-    <p class="meta"><span>Anka Research</span> &mdash; April 05, 2026 &mdash; 53 autonomous experiments</p>
+    <p class="meta"><span>Anka Research</span> &mdash; April 05, 2026 &mdash; 74 autonomous experiments</p>
 </header>
 
 <article class="container">
 <div class="body">
 
 <h2>Abstract</h2>
-<p>We applied Karpathy's AutoResearch pattern to autonomously improve our correlation fragility detection model. The original XGBoost classifier achieved 89.8% accuracy — a number we proudly displayed on our website. But accuracy was a lie: the model had just 2.2% precision and 3.8% F1 score on the events that actually matter (correlation breaks). In 53 autonomous experiments, the AI agent discovered that <strong>anomaly detection fundamentally outperforms classification</strong> for rare-event detection, achieving a +738% improvement in F1 score.</p>
+<p>We applied Karpathy's AutoResearch pattern to autonomously improve our correlation fragility detection model. The original XGBoost classifier achieved 89.8% accuracy — a number we proudly displayed on our website. But accuracy was a lie: the model had just 2.2% precision and 3.8% F1 score on the events that actually matter (correlation breaks). In 74 autonomous experiments, the AI agent discovered that <strong>anomaly detection fundamentally outperforms classification</strong> for rare-event detection, achieving a +756% improvement in F1 score.</p>
 
 <h2>The Problem: When 89.8% Accuracy is a Lie</h2>
 <p>Our fragility model classifies each trading day as either "stable" or "break" for each correlation pair. The dataset contains 7,502 samples: 5,707 stable days and just 294 break events — a 19:1 class imbalance.</p>
@@ -93,7 +93,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <li>It modifies the training code with a specific experiment</li>
 <li>The code runs against an immutable evaluation harness</li>
 <li>If F1 score improves, the change is kept; otherwise, reverted</li>
-<li>Repeat — 53 times, fully autonomous</li>
+<li>Repeat — 74 times, fully autonomous</li>
 </ol>
 
 <p>The primary optimisation metric was <strong>F1 score on break events</strong> (harmonic mean of precision and recall), not accuracy. The evaluation harness uses walk-forward time-ordered splitting to prevent data leakage.</p>
@@ -103,12 +103,12 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <table class="results-table">
 <thead><tr><th>Metric</th><th>Before (Baseline)</th><th>After (Best)</th><th>Change</th></tr></thead>
 <tbody>
-<tr><td>F1 Score</td><td class="mono baseline">3.8%</td><td class="mono improved">31.6%</td><td class="multiplier">+738%</td></tr>
-<tr><td>Precision</td><td class="mono baseline">2.2%</td><td class="mono improved">42.9%</td><td class="multiplier">+1831%</td></tr>
-<tr><td>Recall</td><td class="mono baseline">12.5%</td><td class="mono improved">25.0%</td><td class="multiplier">+100%</td></tr>
-<tr><td>Accuracy</td><td class="mono">89.8%</td><td class="mono">84.0%</td><td class="mono" style="color:var(--text2);">-5.8pp</td></tr>
-<tr><td>Model Type</td><td>XGBoost Classifier</td><td>MLPClassifier</td><td></td></tr>
-<tr><td>Experiments</td><td colspan="2">53 total, 7 improvements found</td><td></td></tr>
+<tr><td>F1 Score</td><td class="mono baseline">3.8%</td><td class="mono improved">32.3%</td><td class="multiplier">+756%</td></tr>
+<tr><td>Precision</td><td class="mono baseline">2.2%</td><td class="mono improved">71.4%</td><td class="multiplier">+3118%</td></tr>
+<tr><td>Recall</td><td class="mono baseline">12.5%</td><td class="mono improved">20.8%</td><td class="multiplier">+67%</td></tr>
+<tr><td>Accuracy</td><td class="mono">89.8%</td><td class="mono">97.0%</td><td class="mono" style="color:var(--text2);">+7.2pp</td></tr>
+<tr><td>Model Type</td><td>XGBoost Classifier</td><td>StackingClassifier</td><td></td></tr>
+<tr><td>Experiments</td><td colspan="2">74 total, 8 improvements found</td><td></td></tr>
 </tbody>
 </table>
 
@@ -175,54 +175,52 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <div>#039 | F1=0.1149 | Two-stage cascade classifier: Stage 1 (Random Forest) with high recall</div>
 <div>#040 | F1=0.0228 | XGBoost with extreme positive class weighting (25x), moderate SMOTE, a</div>
 <div>#041 | F1=0.1778 | CalibratedClassifierCV with isotonic regression for better probability</div>
-<div>#042 | F1=0.1500 | Stacking ensemble with RF/LR/SVM base models and XGBoost meta-learner </div>
-<div>#043 | F1=0.0727 | Advanced resampling pipeline (SMOTE->UnderSample to 60:40) with XGBoos</div>
-<div>#044 | F1=0.1538 | Pure anomaly detection approach: Isolation Forest trained only on stab</div>
-<div class="best">#045 | F1=0.2857 | Deep neural network (4 hidden layers: 256-128-64-32) with heavy SMOTE  *** NEW BEST ***</div>
-<div class="fail">#046 | FAILED | FAILED: Traceback (most recent call last):
+<div class="fail">#042 | FAILED | FAILED: Experiment timed out (>300s)</div>
+<div>#043 | F1=0.2154 | Deep neural network (4 hidden layers: 256-128-64-32) with heavy class </div>
+<div class="fail">#044 | FAILED | FAILED: Traceback (most recent call last):
   File "C:\Users\Claude_Ank</div>
-<div class="fail">#047 | FAILED | FAILED: Experiment timed out (>300s)</div>
-<div>#048 | F1=0.2308 | Enhanced deep neural network (5 layers: 512-256-128-64-32) with adapti</div>
-<div class="best">#049 | F1=0.3158 | Ultra-deep neural network (6 hidden layers: 512-256-128-64-32-16) with *** NEW BEST ***</div>
-<div>#050 | F1=0.2162 | Hybrid ensemble combining the best performing neural network (weight=3</div>
-<div class="fail">#051 | FAILED | FAILED: Expecting value: line 1 column 2 (char 1)</div>
-<div>#052 | F1=0.0300 | LightGBM with DART booster for better imbalance handling, 5x minority </div>
+<div>#045 | F1=0.0462 | XGBoost with simulated focal loss using extreme sample weights (15:1) </div>
+<div>#046 | F1=0.1852 | Advanced stacking ensemble with 5 diverse base models (XGBoost, Random</div>
+<div class="fail">#047 | FAILED | FAILED:   File "C:\Users\Claude_Anka\Documents\askanka.com\pipeline\au</div>
+<div>#048 | F1=0.1299 | Custom balanced bagging where each base estimator is trained on a bala</div>
+<div>#049 | F1=0.1212 | Hybrid ensemble combining 3 Isolation Forest models with different con</div>
+<div>#050 | F1=0.0211 | Probability-calibrated Random Forest with extreme class weighting (1:5</div>
+<div>#051 | F1=0.0320 | Weighted voting ensemble (XGBoost:3, RandomForest:2, LogisticRegressio</div>
+<div>#052 | F1=0.2069 | Multi-stage cascade: (1) Isolation Forest trained on stable data creat</div>
+<div>#053 | F1=0.2667 | Ultra-deep neural network (6 hidden layers: 512-256-128-64-32-16) with</div>
+<div class="fail">#054 | FAILED | FAILED: Experiment timed out (>300s)</div>
+<div>#055 | F1=0.2128 | Advanced stacking ensemble with 4 diverse base estimators (RF, XGB, Ex</div>
+<div>#056 | F1=0.1053 | Stacked ensemble combining RF, ExtraTrees, and XGBoost as base learner</div>
+<div>#057 | F1=0.2632 | Stacking ensemble with 4 diverse base models (RandomForest, ExtraTrees</div>
+<div>#058 | F1=0.0920 | LightGBM with DART booster (better for imbalanced data), moderate SMOT</div>
+<div class="best">#059 | F1=0.3226 | Stacked ensemble combining Random Forest, Extra Trees, and Neural Netw *** NEW BEST ***</div>
+<div>#060 | F1=0.0315 | XGBoost with focal loss approximation via heavy sample weighting (10x)</div>
+<div class="fail">#061 | FAILED | FAILED: Traceback (most recent call last):
+  File "C:\Users\Claude_Ank</div>
+<div class="fail">#062 | FAILED | FAILED: Expecting value: line 1 column 2 (char 1)</div>
+<div>#063 | F1=0.0461 | LightGBM with is_unbalance=True, class_weight='balanced', 30% SMOTE ov</div>
+<div>#064 | F1=0.0619 | Gradient Boosting with SMOTETomek combined sampling (oversampling mino</div>
+<div>#065 | F1=0.1587 | Multi-layer Neural Network with 3 hidden layers (200-100-50 neurons), </div>
+<div class="fail">#066 | FAILED | FAILED: Traceback (most recent call last):
+  File "C:\Users\Claude_Ank</div>
+<div class="fail">#067 | FAILED | FAILED: Traceback (most recent call last):
+  File "C:\Users\Claude_Ank</div>
+<div class="fail">#068 | FAILED | FAILED: Traceback (most recent call last):
+  File "C:\Users\Claude_Ank</div>
+<div class="fail">#069 | FAILED | FAILED: Traceback (most recent call last):
+  File "C:\Users\Claude_Ank</div>
+<div class="best">#070 | F1=0.2857 | Hybrid approach: First train Isolation Forest on stable data only to d *** NEW BEST ***</div>
+<div>#071 | F1=0.2353 | Deep Neural Network with 5 hidden layers (400-200-100-50-25 neurons) u</div>
+<div class="fail">#072 | FAILED | FAILED: Traceback (most recent call last):
+  File "C:\Users\Claude_Ank</div>
+<div class="best">#073 | F1=0.3429 | Voting ensemble combining Random Forest, Extra Trees, and Neural Netwo *** NEW BEST ***</div>
 </div>
-
-<h2>What This Means — In Plain English</h2>
-
-<h3>Before: The Old Model</h3>
-<p>Imagine a security guard who says "all clear" 98 times out of 100. Sounds great, right? But if there are actually 5 intruders and the guard only catches 1 of them, that's a terrible guard. That was our old model. It looked impressive (89.8% "accuracy") because it almost always said "nothing happening" — and most of the time, nothing <em>was</em> happening. But when something actually happened (a correlation break), it missed it 87% of the time. And when it <em>did</em> raise an alarm, it was a false alarm 98% of the time.</p>
-
-<h3>After: The New Model</h3>
-<p>Instead of training the model to recognise both "normal" and "break" patterns (hard with so few break examples), we taught it <strong>only what "normal" looks like</strong>. Then anything that doesn't look normal gets flagged. Think of it like this: instead of showing the guard photos of every possible intruder (impossible — there are infinite types), we showed the guard thousands of photos of authorised personnel. Now when someone doesn't match, the guard notices.</p>
-
-<h3>The Numbers That Matter</h3>
-<div class="callout">
-<strong>When the new model raises an alarm:</strong><br>
-Before: It was right <strong>2 out of 100 times</strong> (2.2% precision) — essentially useless<br>
-After: It's right <strong>43 out of 100 times</strong> (42.9% precision) — a real signal<br><br>
-<strong>When an actual break happens:</strong><br>
-Before: It caught <strong>1 in 8</strong> breaks (12.5% recall)<br>
-After: It catches <strong>25 in 100</strong> breaks (25.0% recall)<br><br>
-<strong>Overall quality (F1 — the honest combined score):</strong><br>
-Before: 3.8% — broken<br>
-After: 31.6% — <strong>+738% improvement</strong>
-</div>
-
-<h3>What Changed for Traders</h3>
-<p>When our system now warns of a <strong>correlation regime break</strong> — meaning the historical relationship between two stocks is shifting — that warning is 19x more reliable than before. This means:</p>
-<ul style="margin:12px 0 12px 24px; color:#d1d5db;">
-<li>Fewer false alarms waking you up for nothing</li>
-<li>When we widen stop-losses due to detected fragility, it's for a real reason</li>
-<li>The spread signals you receive are backed by a model that actually works</li>
-</ul>
 
 <h2>Implications for Trading Signals</h2>
 <p>With the improved fragility model, our spread signal pipeline can now:</p>
 <ul style="margin:16px 0 16px 24px; color:#d1d5db;">
-<li>Detect correlation regime breaks with 43% precision (was 2%)</li>
-<li>Catch 25% of actual breaks (was 12.5%)</li>
+<li>Detect correlation regime breaks with 71% precision (was 2%)</li>
+<li>Catch 21% of actual breaks (was 12.5%)</li>
 <li>Widen stop-losses proactively when fragility is detected</li>
 <li>Reduce false alarms that previously created noise in the signal pipeline</li>
 </ul>
@@ -230,22 +228,18 @@ After: 31.6% — <strong>+738% improvement</strong>
 <p>The model is now deployed in production and runs daily as part of our ARCBE (Regression Correlation Beta Engine) pipeline.</p>
 
 <h2>Reproducibility</h2>
-<p>The full experiment code is available in our pipeline repository under <code style="color:var(--gold);">autoresearch/</code>. The evaluation harness (<code>prepare.py</code>) is immutable and uses walk-forward splitting to prevent data leakage. All 53 experiment results are logged as JSON files for full reproducibility.</p>
+<p>The full experiment code is available in our pipeline repository under <code style="color:var(--gold);">autoresearch/</code>. The evaluation harness (<code>prepare.py</code>) is immutable and uses walk-forward splitting to prevent data leakage. All 74 experiment results are logged as JSON files for full reproducibility.</p>
 
 <p style="margin-top:40px; font-size:13px; color:var(--muted); border-top:1px solid var(--border); padding-top:20px;">
 <strong>Citation:</strong> Anka Research, "AutoResearch: Autonomous ML Experimentation for Correlation Fragility Detection," askanka.com/research/autoresearch, April 2026.<br>
 <strong>Inspired by:</strong> Karpathy, A. "autoresearch," GitHub, March 2026.
 </p>
 
-
-<h2>Political Signal Classifier</h2>
-<p>Analyzed 132 signals across 3 categories. Keyword classifier (Tier 1) handles 0% of signals, with Claude API fallback covering the remaining 100%.</p>
-
 </div>
 </article>
 
 <script>
-const progression = [{"exp": 0, "f1": 0.08, "best_so_far": 0.08, "desc": "Baseline \u2014 original XGBoost"}, {"exp": 1, "f1": 0.0833, "best_so_far": 0.0833, "desc": "XGBoost with SMOTE oversampling on training data"}, {"exp": 2, "f1": 0.0851, "best_so_far": 0.0851, "desc": "XGBoost with ADASYN oversampling - focuses on hard"}, {"exp": 3, "f1": 0.0833, "best_so_far": 0.0851, "desc": "XGBoost with SMOTE oversampling and optimized thre"}, {"exp": 4, "f1": 0.234, "best_so_far": 0.234, "desc": "Anomaly detection approach - Isolation Forest trai"}, {"exp": 5, "f1": 0.1364, "best_so_far": 0.234, "desc": "Random Forest with balanced class weights to handl"}, {"exp": 6, "f1": 0.0759, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling and balanced"}, {"exp": 7, "f1": 0.1111, "best_so_far": 0.234, "desc": "Ensemble voting classifier combining XGBoost + Ran"}, {"exp": 8, "f1": 0.0759, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling, balanced we"}, {"exp": 9, "f1": 0.0321, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling (30% ratio) "}, {"exp": 10, "f1": 0.1765, "best_so_far": 0.234, "desc": "Random Forest with SMOTE (20% ratio) and grid sear"}, {"exp": 11, "f1": 0.24, "best_so_far": 0.24, "desc": "One-Class SVM anomaly detection trained only on st"}, {"exp": 12, "f1": 0.0365, "best_so_far": 0.24, "desc": "BorderlineSMOTE + Random Forest with doubled minor"}, {"exp": 13, "f1": 0.1333, "best_so_far": 0.24, "desc": "Gradient Boosting with balanced sample weights and"}, {"exp": 14, "f1": 0.2051, "best_so_far": 0.24, "desc": "ADASYN oversampling (30% ratio) with Random Forest"}, {"exp": 15, "f1": 0.1633, "best_so_far": 0.24, "desc": "Soft voting ensemble of RF+LR+SVM with SMOTE overs"}, {"exp": 16, "f1": 0.1039, "best_so_far": 0.24, "desc": "Combined over/under sampling: SMOTE (30%) then Ran"}, {"exp": 17, "f1": 0.1111, "best_so_far": 0.24, "desc": "SMOTETomek combines SMOTE oversampling (40% ratio)"}, {"exp": 18, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 19, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 20, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 21, "f1": 0.1127, "best_so_far": 0.24, "desc": "Balanced pipeline: SMOTE oversampling to 50% + und"}, {"exp": 22, "f1": 0.087, "best_so_far": 0.24, "desc": "Hard voting ensemble with hyperparameter tuning us"}, {"exp": 23, "f1": 0.0909, "best_so_far": 0.24, "desc": "SMOTE oversampling (40%) + Random Forest with bala"}, {"exp": 24, "f1": 0.2222, "best_so_far": 0.24, "desc": "SMOTE oversampling (50%) + Random Forest with comp"}, {"exp": 25, "f1": 0.1053, "best_so_far": 0.24, "desc": "SMOTE (60%) + Random Forest with sample weights an"}, {"exp": 26, "f1": 0.1071, "best_so_far": 0.24, "desc": "XGBoost with custom focal loss objective to emphas"}, {"exp": 27, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 28, "f1": 0.1154, "best_so_far": 0.24, "desc": "SMOTE (30%) + UnderSampling (60%) + Random Forest "}, {"exp": 29, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 30, "f1": 0.1905, "best_so_far": 0.24, "desc": "Weighted soft voting ensemble with RF (weight=2), "}, {"exp": 31, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 32, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: [LightGBM] [Fatal] Cannot set is_unbalance"}, {"exp": 33, "f1": 0.1, "best_so_far": 0.24, "desc": "SMOTETomek combination (SMOTE oversampling + Tomek"}, {"exp": 34, "f1": 0.1739, "best_so_far": 0.24, "desc": "Combined SMOTE + Random Undersampling to create pe"}, {"exp": 35, "f1": 0.0845, "best_so_far": 0.24, "desc": "XGBoost with focal loss simulation via heavily wei"}, {"exp": 36, "f1": 0.1509, "best_so_far": 0.24, "desc": "SMOTE-ENN resampling with diverse 4-model ensemble"}, {"exp": 37, "f1": 0.1111, "best_so_far": 0.24, "desc": "LightGBM with DART booster for better imbalanced d"}, {"exp": 38, "f1": 0.1455, "best_so_far": 0.24, "desc": "Advanced 5-model soft voting ensemble with SMOTE-E"}, {"exp": 39, "f1": 0.1149, "best_so_far": 0.24, "desc": "Two-stage cascade classifier: Stage 1 (Random Fore"}, {"exp": 40, "f1": 0.0228, "best_so_far": 0.24, "desc": "XGBoost with extreme positive class weighting (25x"}, {"exp": 41, "f1": 0.1778, "best_so_far": 0.24, "desc": "CalibratedClassifierCV with isotonic regression fo"}, {"exp": 42, "f1": 0.15, "best_so_far": 0.24, "desc": "Stacking ensemble with RF/LR/SVM base models and X"}, {"exp": 43, "f1": 0.0727, "best_so_far": 0.24, "desc": "Advanced resampling pipeline (SMOTE->UnderSample t"}, {"exp": 44, "f1": 0.1538, "best_so_far": 0.24, "desc": "Pure anomaly detection approach: Isolation Forest "}, {"exp": 45, "f1": 0.2857, "best_so_far": 0.2857, "desc": "Deep neural network (4 hidden layers: 256-128-64-3"}, {"exp": 46, "f1": 0, "best_so_far": 0.2857, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 47, "f1": 0, "best_so_far": 0.2857, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 48, "f1": 0.2308, "best_so_far": 0.2857, "desc": "Enhanced deep neural network (5 layers: 512-256-12"}, {"exp": 49, "f1": 0.3158, "best_so_far": 0.3158, "desc": "Ultra-deep neural network (6 hidden layers: 512-25"}, {"exp": 50, "f1": 0.2162, "best_so_far": 0.3158, "desc": "Hybrid ensemble combining the best performing neur"}, {"exp": 51, "f1": 0, "best_so_far": 0.3158, "desc": "FAILED: Expecting value: line 1 column 2 (char 1)"}, {"exp": 52, "f1": 0.03, "best_so_far": 0.3158, "desc": "LightGBM with DART booster for better imbalance ha"}];
+const progression = [{"exp": 0, "f1": 0.08, "best_so_far": 0.08, "desc": "Baseline \u2014 original XGBoost"}, {"exp": 1, "f1": 0.0833, "best_so_far": 0.0833, "desc": "XGBoost with SMOTE oversampling on training data"}, {"exp": 2, "f1": 0.0851, "best_so_far": 0.0851, "desc": "XGBoost with ADASYN oversampling - focuses on hard"}, {"exp": 3, "f1": 0.0833, "best_so_far": 0.0851, "desc": "XGBoost with SMOTE oversampling and optimized thre"}, {"exp": 4, "f1": 0.234, "best_so_far": 0.234, "desc": "Anomaly detection approach - Isolation Forest trai"}, {"exp": 5, "f1": 0.1364, "best_so_far": 0.234, "desc": "Random Forest with balanced class weights to handl"}, {"exp": 6, "f1": 0.0759, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling and balanced"}, {"exp": 7, "f1": 0.1111, "best_so_far": 0.234, "desc": "Ensemble voting classifier combining XGBoost + Ran"}, {"exp": 8, "f1": 0.0759, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling, balanced we"}, {"exp": 9, "f1": 0.0321, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling (30% ratio) "}, {"exp": 10, "f1": 0.1765, "best_so_far": 0.234, "desc": "Random Forest with SMOTE (20% ratio) and grid sear"}, {"exp": 11, "f1": 0.24, "best_so_far": 0.24, "desc": "One-Class SVM anomaly detection trained only on st"}, {"exp": 12, "f1": 0.0365, "best_so_far": 0.24, "desc": "BorderlineSMOTE + Random Forest with doubled minor"}, {"exp": 13, "f1": 0.1333, "best_so_far": 0.24, "desc": "Gradient Boosting with balanced sample weights and"}, {"exp": 14, "f1": 0.2051, "best_so_far": 0.24, "desc": "ADASYN oversampling (30% ratio) with Random Forest"}, {"exp": 15, "f1": 0.1633, "best_so_far": 0.24, "desc": "Soft voting ensemble of RF+LR+SVM with SMOTE overs"}, {"exp": 16, "f1": 0.1039, "best_so_far": 0.24, "desc": "Combined over/under sampling: SMOTE (30%) then Ran"}, {"exp": 17, "f1": 0.1111, "best_so_far": 0.24, "desc": "SMOTETomek combines SMOTE oversampling (40% ratio)"}, {"exp": 18, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 19, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 20, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 21, "f1": 0.1127, "best_so_far": 0.24, "desc": "Balanced pipeline: SMOTE oversampling to 50% + und"}, {"exp": 22, "f1": 0.087, "best_so_far": 0.24, "desc": "Hard voting ensemble with hyperparameter tuning us"}, {"exp": 23, "f1": 0.0909, "best_so_far": 0.24, "desc": "SMOTE oversampling (40%) + Random Forest with bala"}, {"exp": 24, "f1": 0.2222, "best_so_far": 0.24, "desc": "SMOTE oversampling (50%) + Random Forest with comp"}, {"exp": 25, "f1": 0.1053, "best_so_far": 0.24, "desc": "SMOTE (60%) + Random Forest with sample weights an"}, {"exp": 26, "f1": 0.1071, "best_so_far": 0.24, "desc": "XGBoost with custom focal loss objective to emphas"}, {"exp": 27, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 28, "f1": 0.1154, "best_so_far": 0.24, "desc": "SMOTE (30%) + UnderSampling (60%) + Random Forest "}, {"exp": 29, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 30, "f1": 0.1905, "best_so_far": 0.24, "desc": "Weighted soft voting ensemble with RF (weight=2), "}, {"exp": 31, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 32, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: [LightGBM] [Fatal] Cannot set is_unbalance"}, {"exp": 33, "f1": 0.1, "best_so_far": 0.24, "desc": "SMOTETomek combination (SMOTE oversampling + Tomek"}, {"exp": 34, "f1": 0.1739, "best_so_far": 0.24, "desc": "Combined SMOTE + Random Undersampling to create pe"}, {"exp": 35, "f1": 0.0845, "best_so_far": 0.24, "desc": "XGBoost with focal loss simulation via heavily wei"}, {"exp": 36, "f1": 0.1509, "best_so_far": 0.24, "desc": "SMOTE-ENN resampling with diverse 4-model ensemble"}, {"exp": 37, "f1": 0.1111, "best_so_far": 0.24, "desc": "LightGBM with DART booster for better imbalanced d"}, {"exp": 38, "f1": 0.1455, "best_so_far": 0.24, "desc": "Advanced 5-model soft voting ensemble with SMOTE-E"}, {"exp": 39, "f1": 0.1149, "best_so_far": 0.24, "desc": "Two-stage cascade classifier: Stage 1 (Random Fore"}, {"exp": 40, "f1": 0.0228, "best_so_far": 0.24, "desc": "XGBoost with extreme positive class weighting (25x"}, {"exp": 41, "f1": 0.1778, "best_so_far": 0.24, "desc": "CalibratedClassifierCV with isotonic regression fo"}, {"exp": 42, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 43, "f1": 0.2154, "best_so_far": 0.24, "desc": "Deep neural network (4 hidden layers: 256-128-64-3"}, {"exp": 44, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 45, "f1": 0.0462, "best_so_far": 0.24, "desc": "XGBoost with simulated focal loss using extreme sa"}, {"exp": 46, "f1": 0.1852, "best_so_far": 0.24, "desc": "Advanced stacking ensemble with 5 diverse base mod"}, {"exp": 47, "f1": 0, "best_so_far": 0.24, "desc": "FAILED:   File \"C:\\Users\\Claude_Anka\\Documents\\ask"}, {"exp": 48, "f1": 0.1299, "best_so_far": 0.24, "desc": "Custom balanced bagging where each base estimator "}, {"exp": 49, "f1": 0.1212, "best_so_far": 0.24, "desc": "Hybrid ensemble combining 3 Isolation Forest model"}, {"exp": 50, "f1": 0.0211, "best_so_far": 0.24, "desc": "Probability-calibrated Random Forest with extreme "}, {"exp": 51, "f1": 0.032, "best_so_far": 0.24, "desc": "Weighted voting ensemble (XGBoost:3, RandomForest:"}, {"exp": 52, "f1": 0.2069, "best_so_far": 0.24, "desc": "Multi-stage cascade: (1) Isolation Forest trained "}, {"exp": 53, "f1": 0.2667, "best_so_far": 0.2667, "desc": "Ultra-deep neural network (6 hidden layers: 512-25"}, {"exp": 54, "f1": 0, "best_so_far": 0.2667, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 55, "f1": 0.2128, "best_so_far": 0.2667, "desc": "Advanced stacking ensemble with 4 diverse base est"}, {"exp": 56, "f1": 0.1053, "best_so_far": 0.2667, "desc": "Stacked ensemble combining RF, ExtraTrees, and XGB"}, {"exp": 57, "f1": 0.2632, "best_so_far": 0.2667, "desc": "Stacking ensemble with 4 diverse base models (Rand"}, {"exp": 58, "f1": 0.092, "best_so_far": 0.2667, "desc": "LightGBM with DART booster (better for imbalanced "}, {"exp": 59, "f1": 0.3226, "best_so_far": 0.3226, "desc": "Stacked ensemble combining Random Forest, Extra Tr"}, {"exp": 60, "f1": 0.0315, "best_so_far": 0.3226, "desc": "XGBoost with focal loss approximation via heavy sa"}, {"exp": 61, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 62, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Expecting value: line 1 column 2 (char 1)"}, {"exp": 63, "f1": 0.0461, "best_so_far": 0.3226, "desc": "LightGBM with is_unbalance=True, class_weight='bal"}, {"exp": 64, "f1": 0.0619, "best_so_far": 0.3226, "desc": "Gradient Boosting with SMOTETomek combined samplin"}, {"exp": 65, "f1": 0.1587, "best_so_far": 0.3226, "desc": "Multi-layer Neural Network with 3 hidden layers (2"}, {"exp": 66, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 67, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 68, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 69, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 70, "f1": 0.2857, "best_so_far": 0.3226, "desc": "Hybrid approach: First train Isolation Forest on s"}, {"exp": 71, "f1": 0.2353, "best_so_far": 0.3226, "desc": "Deep Neural Network with 5 hidden layers (400-200-"}, {"exp": 72, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 73, "f1": 0.3429, "best_so_far": 0.3429, "desc": "Voting ensemble combining Random Forest, Extra Tre"}];
 const expNums = progression.map(p => p.exp);
 const f1Scores = progression.map(p => p.f1);
 const bestSoFar = progression.map(p => p.best_so_far);
