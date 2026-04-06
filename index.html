@@ -531,7 +531,11 @@
             border-radius: 12px;
             padding: 24px;
             margin-top: 24px;
+            overflow: hidden;
+            max-width: 100%;
         }
+        .msi-chart-container .js-plotly-plot { max-width: 100% !important; }
+        .msi-chart-container .plotly { max-width: 100% !important; }
 
         #msi-chart { width: 100%; height: 300px; }
 
@@ -911,7 +915,11 @@
             .pipeline-arrow { display: none; }
             .positions-grid { grid-template-columns: 1fr; }
             .hero-title { font-size: 30px; }
-            .heatmap-table thead th { height: 70px; }
+            .hero-stats { gap: 20px; }
+            .hero-stat-value { font-size: 22px; }
+            .reports-grid { grid-template-columns: 1fr; }
+            .report-hero { flex-direction: column; padding: 24px; }
+            .report-hero-cta { align-self: flex-start; }
         }
 
         @media (max-width: 600px) {
@@ -919,11 +927,50 @@
             .pipeline-steps { grid-template-columns: 1fr; }
             .hero { padding: 40px 16px 32px; }
             .hero-title { font-size: 26px; }
+            .hero-tagline { font-size: 14px; letter-spacing: 1.5px; }
+            .hero-subtitle { font-size: 14px; }
+            .hero-stats { gap: 16px; }
+            .hero-stat-value { font-size: 20px; }
+            .hero-stat-label { font-size: 9px; }
             .stat-value { font-size: 22px; }
             .position-meta { grid-template-columns: repeat(2, 1fr); }
             .legs-section { grid-template-columns: 1fr; }
             .position-pnl { font-size: 24px; }
             .section { padding: 32px 0; }
+            .section-header h2 { font-size: 20px; }
+            .container { padding: 0 16px; }
+            /* Charts: force responsive width */
+            .msi-chart-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .msi-chart-container > div { min-width: 100% !important; }
+            /* Signal Explorer mobile */
+            .signal-explorer { flex-direction: column; min-height: auto; }
+            .event-sidebar { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 4px; }
+            .event-sidebar-label { width: 100%; }
+            .event-item { padding: 6px 10px; font-size: 11px; }
+            .ev-count { display: none; }
+            .results-panel { padding: 12px 16px 0; }
+            .result-row { padding: 10px 8px; }
+            .result-hit { font-size: 18px; width: 50px; }
+            .result-info { padding: 0 8px; }
+            .result-name { font-size: 12px; }
+            .result-bar-wrap { display: none; }
+            .result-rank { width: 22px; font-size: 11px; }
+            .signal-footer { flex-direction: column; text-align: center; gap: 8px; }
+            /* Heatmap grid mobile */
+            .signal-grid-view { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .heatmap-cell { width: 40px; height: 30px; font-size: 11px; }
+            .heatmap-table th.row-header { min-width: 160px; font-size: 10px; }
+            /* Report cards */
+            .report-hero h3 { font-size: 22px; }
+            .report-hero p { font-size: 13px; }
+        }
+
+        @media (max-width: 400px) {
+            .hero-title { font-size: 22px; }
+            .hero-stats { gap: 12px; }
+            .hero-stat-value { font-size: 18px; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .event-item { padding: 5px 8px; font-size: 10px; }
         }
 
         /* ── Tooltip ── */
@@ -1720,7 +1767,8 @@
             const layout = {
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
-                margin: { t: 10, r: 60, b: 40, l: 50 },
+                margin: { t: 10, r: window.innerWidth < 600 ? 10 : 60, b: 40, l: window.innerWidth < 600 ? 35 : 50 },
+                autosize: true,
                 xaxis: {
                     gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
                     tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
