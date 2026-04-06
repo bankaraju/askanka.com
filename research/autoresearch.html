@@ -227,6 +227,35 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 
 <p>The model is now deployed in production and runs daily as part of our ARCBE (Regression Correlation Beta Engine) pipeline.</p>
 
+<h2>How It Works in Practice — FAQ</h2>
+
+<h3>On a flagged day, what changes?</h3>
+<p>The fragility model is a <strong>risk overlay, not a signal blocker</strong>. Your usual signals still fire. What changes is how aggressively you trade them:</p>
+<table class="results-table">
+<thead><tr><th>Fragility Level</th><th>Score</th><th>Position Size</th><th>Stops</th><th>CI Scaling</th></tr></thead>
+<tbody>
+<tr><td style="color:#10b981;">STABLE</td><td class="mono">0-40</td><td>Full (100%)</td><td>Normal</td><td>Full confidence</td></tr>
+<tr><td style="color:#f59e0b;">CAUTION</td><td class="mono">40-70</td><td>0.75x</td><td>1.25x wider</td><td>Reduced</td></tr>
+<tr><td style="color:#ef4444;">FRAGILE</td><td class="mono">70+</td><td>0.5x</td><td>1.5x wider</td><td>Capped low</td></tr>
+</tbody>
+</table>
+<p>Think of it as a seatbelt, not a handbrake — you still drive, but with more protection on rare dangerous days.</p>
+
+<h3>How often does it flag?</h3>
+<p>The new model flags about <strong>0.5 days per month</strong> (2.2% of trading days). The old model flagged 2 days/month but was wrong 98% of the time. Fewer, more reliable alerts.</p>
+
+<h3>If fragility says "break" but the signal says "strong buy"?</h3>
+<p>Both fire. The signal generates the trade idea; fragility adjusts the risk parameters. Specifically: <code style="color:#d4a855;">effective_CI = base_CI × (1 − fragility_score / 100)</code>. A strong signal with high fragility = trade it, but smaller and with wider stops.</p>
+
+<h3>Does it explain why a day was flagged?</h3>
+<p>Yes — the model reports which feature triggered it (e.g., "vol_ratio spiked 2.3x" or "correlation divergence hit -0.4") and which specific pair is breaking. This is surfaced on Telegram with each signal.</p>
+
+<h3>What about normal days?</h3>
+<p>On stable days (fragility below 40), signals explicitly show: <strong>"Regime: STABLE — correlations normal, full confidence."</strong> This tells you it's safe to lean harder into high-conviction trades. Most days are normal days.</p>
+
+<h3>Do you have backtest P&L numbers?</h3>
+<p>Not yet — this is next on our roadmap. We plan to run Backtest A (signals without fragility overlay) vs Backtest B (same signals + fragility risk adjustments) and publish the drawdown, Sharpe ratio, and win-rate comparison. Watch this space.</p>
+
 <h2>Reproducibility</h2>
 <p>The full experiment code is available in our pipeline repository under <code style="color:var(--gold);">autoresearch/</code>. The evaluation harness (<code>prepare.py</code>) is immutable and uses walk-forward splitting to prevent data leakage. All 74 experiment results are logged as JSON files for full reproducibility.</p>
 
