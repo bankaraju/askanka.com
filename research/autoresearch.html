@@ -66,7 +66,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 
 <header class="paper-hero">
     <div class="badge">Research Paper</div>
-    <h1>AutoResearch: How AI Fixed Our Broken ML Model Overnight</h1>
+    <h1>AutoResearch: How AI Reframed Our Correlation Fragility Model Overnight</h1>
     <p class="meta"><span>Anka Research</span> &mdash; April 05, 2026 &mdash; 74 autonomous experiments</p>
 </header>
 
@@ -74,29 +74,33 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <div class="body">
 
 <h2>Abstract</h2>
-<p>We applied Karpathy's AutoResearch pattern to autonomously improve our correlation fragility detection model. The original XGBoost classifier achieved 89.8% accuracy — a number we proudly displayed on our website. But accuracy was a lie: the model had just 2.2% precision and 3.8% F1 score on the events that actually matter (correlation breaks). In 74 autonomous experiments, the AI agent discovered that <strong>anomaly detection fundamentally outperforms classification</strong> for rare-event detection, achieving a +756% improvement in F1 score.</p>
+<p>We applied Karpathy's AutoResearch pattern to autonomously improve our correlation fragility detection model. The original XGBoost classifier achieved 89.8% accuracy &mdash; a number we proudly displayed on our website &mdash; but this metric was misleading for our use case, because it masked extremely weak performance on the rare events that actually matter: correlation breaks. On break events, the model delivered just 2.2% precision and a 3.8% F1 score.</p>
 
-<h2>The Problem: When 89.8% Accuracy is a Lie</h2>
-<p>Our fragility model classifies each trading day as either "stable" or "break" for each correlation pair. The dataset contains 7,502 samples: 5,707 stable days and just 294 break events — a 19:1 class imbalance.</p>
+<p>Across 74 autonomous experiments, an AI agent discovered that anomaly detection fundamentally outperforms direct classification for this rare-event problem, delivering a <strong>+756% improvement in F1 score</strong> on break events. The final model combines anomaly-style thinking with a stacking ensemble and is now deployed as a risk overlay in our live spread signal pipeline, where it halves average losses on fragile days while leaving normal-day performance unchanged.</p>
 
-<p>A model that simply predicts "stable" for every single day would achieve 76% accuracy. Our XGBoost model, with its impressive-sounding 89.8% accuracy, was barely better than this naive baseline. The metrics that actually matter told the real story:</p>
+<h2>The Problem: When 89.8% Accuracy Hides the Real Risk</h2>
+<p>Our fragility model classifies each trading day as either &ldquo;stable&rdquo; or &ldquo;break&rdquo; for each correlation pair. The dataset contains 7,502 samples: 5,707 stable days and just 294 break events &mdash; roughly a 19:1 class imbalance.</p>
+
+<p>A model that simply predicts &ldquo;stable&rdquo; every day already achieves 76% accuracy, because stable days dominate the data. Our XGBoost model, with its impressive-sounding 89.8% accuracy, was only marginally better than this naive baseline once you look at the rare break days.</p>
+
+<p>The metrics that matter for risk management told a very different story:</p>
 
 <div class="callout">
-<strong>The uncomfortable truth:</strong> When our model flagged a "break", it was right only 2.2% of the time. It caught only 12.5% of actual breaks. We were showing subscribers a metric (89.8% accuracy) that made us look good while the model was essentially useless for its intended purpose.
+<strong>The accuracy&ndash;imbalance trap:</strong> When the model flagged a &ldquo;break&rdquo;, it was correct only 2.2% of the time. It detected just 12.5% of actual breaks. We were highlighting an aggregate accuracy figure that looked strong on paper, while the model&rsquo;s performance on the events we actually care about &mdash; correlation regime breaks &mdash; was unacceptably weak. A model can be numerically accurate overall and still fail the objective it was built for.
 </div>
 
 <h2>Methodology: AutoResearch</h2>
-<p>Inspired by Andrej Karpathy's <a href="https://github.com/karpathy/autoresearch" style="color:var(--gold);">AutoResearch</a> (March 2026), we built an autonomous experiment loop:</p>
+<p>Inspired by Andrej Karpathy&rsquo;s <a href="https://github.com/karpathy/autoresearch" style="color:var(--gold);">AutoResearch</a> (March 2026), we built an autonomous experiment loop:</p>
 
 <ol style="margin:16px 0 16px 24px; color:#d1d5db;">
 <li>An AI agent reads a research program (7 prioritised directions)</li>
 <li>It modifies the training code with a specific experiment</li>
 <li>The code runs against an immutable evaluation harness</li>
-<li>If F1 score improves, the change is kept; otherwise, reverted</li>
-<li>Repeat — 74 times, fully autonomous</li>
+<li>If F1 score on break events improves, the change is kept; otherwise, it is reverted</li>
+<li>Repeat &mdash; 74 times, fully autonomous</li>
 </ol>
 
-<p>The primary optimisation metric was <strong>F1 score on break events</strong> (harmonic mean of precision and recall), not accuracy. The evaluation harness uses walk-forward time-ordered splitting to prevent data leakage.</p>
+<p>We optimise for <strong>F1 score on break events</strong> (the harmonic mean of precision and recall), not accuracy. The evaluation harness uses walk-forward, time-ordered splitting to prevent data leakage and mimic live trading conditions.</p>
 
 <h2>Results</h2>
 
@@ -118,14 +122,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 </div>
 
 <h2>Key Insight: Classification vs Anomaly Detection</h2>
-<p>The most significant finding was not a hyperparameter tweak or a sampling technique — it was a <strong>fundamental reframing of the problem</strong>.</p>
+<p>The most significant finding was not a hyperparameter tweak or a sampling trick &mdash; it was a <strong>fundamental reframing of the problem</strong>.</p>
 
-<p>The original approach treated break detection as binary classification: train on both stable and break data, learn the decision boundary. But with a 19:1 class imbalance, the model learned to predict "stable" almost always — the safest bet for minimising loss.</p>
+<p>Our original approach treated break detection as a binary classification task: train on both stable and break days and learn a decision boundary. Under a 19:1 imbalance, the loss is dominated by stable days, so the model learns to predict &ldquo;stable&rdquo; almost always &mdash; the safest way to minimise error, but not the best way to manage risk.</p>
 
-<p>The winning approach was <strong>anomaly detection</strong>: train exclusively on stable data, then flag anything that doesn't look "normal" as a potential break. This is conceptually correct — breaks are, by definition, anomalies. The model doesn't need to learn what a break looks like; it only needs to learn what stability looks like, and then notice when something is different.</p>
+<p>The winning approach was <strong>anomaly detection</strong>: train exclusively on stable data, then flag anything that does not look &ldquo;normal&rdquo; as a potential break. This is conceptually aligned with the problem &mdash; breaks are, by definition, anomalies. The model does not need to learn what every kind of break looks like; it needs to learn what stability looks like, and then recognise when behaviour departs from that regime.</p>
 
 <div class="callout">
-<strong>The paradigm shift:</strong> Don't ask "is this a break?" — ask "does this look normal?" The answer to the second question is far more reliable with imbalanced data.
+<strong>The paradigm shift:</strong> Instead of asking &ldquo;Is this a break?&rdquo;, we ask &ldquo;Does this look normal?&rdquo; &mdash; a question that the data can answer far more reliably under heavy class imbalance.
 </div>
 
 <h2>Experiment Log</h2>
@@ -225,7 +229,31 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <li>Reduce false alarms that previously created noise in the signal pipeline</li>
 </ul>
 
-<p>The model is now deployed in production and runs daily as part of our ARCBE (Regression Correlation Beta Engine) pipeline.</p>
+<p>The model is deployed in production and runs daily as part of our ARCBE (Regression Correlation Beta Engine) pipeline as a risk overlay.</p>
+
+<h2>Backtest A vs B: Does the Overlay Help in P&amp;L?</h2>
+<p>We validated the fragility overlay at the portfolio level by comparing two historical simulations over 869 trades across 90 events and 4 years:</p>
+
+<p><strong>Backtest A &mdash; Without Fragility:</strong> Signals trade at full size with standard stops.<br>
+<strong>Backtest B &mdash; With Fragility Overlay:</strong> Same signals, but on fragile days we trade at 0.5x size with 1.5x wider stops. On normal days, trades are unchanged.</p>
+
+<table class="results-table">
+<thead><tr><th>Metric</th><th>A: Without Fragility</th><th>B: With Fragility</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Cumulative P&amp;L</td><td class="mono">+199.8%</td><td class="mono improved">+212.8%</td><td>B wins (+13%)</td></tr>
+<tr><td>Max Drawdown</td><td class="mono" style="color:#ef4444;">-142.4%</td><td class="mono improved">-130.7%</td><td>B protects (shallower by 8%)</td></tr>
+<tr><td>Sharpe Ratio</td><td class="mono">0.44</td><td class="mono improved">0.47</td><td>B better risk-adjusted</td></tr>
+<tr><td>Win Rate</td><td class="mono">53.6%</td><td class="mono">53.6%</td><td>Identical (overlay doesn&rsquo;t change signals)</td></tr>
+<tr><td>Fragile-day avg P&amp;L</td><td class="mono" style="color:#ef4444;">-0.975%</td><td class="mono improved">-0.495%</td><td>B cuts fragile-day losses ~50%</td></tr>
+<tr><td>Normal-day avg P&amp;L</td><td class="mono">+0.269%</td><td class="mono">+0.269%</td><td>Identical (no impact on good days)</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<strong>The key finding:</strong> On normal days (97% of trades), performance is identical &mdash; the overlay does not dilute alpha when correlations behave normally. On the 27 fragile-day trades, the overlay cuts average losses from &minus;0.98% to &minus;0.49% &mdash; almost exactly half, as you would expect from 0.5x sizing &mdash; while improving total return, drawdown, and Sharpe. This is exactly what we want: leave high-conviction trades untouched on normal days, and systematically reduce risk when the correlation regime becomes unstable.
+</div>
+
+<p><a href="/research/backtest-ab.html" style="color:#d4a855;">View full backtest with equity curve chart &rarr;</a></p>
 
 <h2>How It Works in Practice — FAQ</h2>
 
