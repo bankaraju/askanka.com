@@ -39,7 +39,50 @@
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
+            transition: background 1s ease;
         }
+
+        /* ── Scroll fade-in animations ── */
+        .section { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .section.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── Live signal ticker ── */
+        .signal-ticker {
+            overflow: hidden;
+            background: rgba(212,168,85,0.06);
+            border-top: 1px solid rgba(212,168,85,0.1);
+            border-bottom: 1px solid rgba(212,168,85,0.1);
+            padding: 8px 0;
+            white-space: nowrap;
+        }
+        .signal-ticker-inner {
+            display: inline-block;
+            animation: ticker-scroll 30s linear infinite;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .signal-ticker-inner .up { color: #10b981; }
+        .signal-ticker-inner .down { color: #ef4444; }
+        .signal-ticker-inner .gold { color: #d4a855; }
+        .signal-ticker-inner .sep { color: #2a2a2a; margin: 0 20px; }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── MSI background glow (scroll-triggered) ── */
+        .msi-bg-glow {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
+            transition: background 2s ease;
+        }
+        .msi-bg-glow.calm { background: radial-gradient(ellipse at 50% 0%, #10b981, transparent 70%); }
+        .msi-bg-glow.neutral { background: radial-gradient(ellipse at 50% 0%, #f59e0b, transparent 70%); }
+        .msi-bg-glow.stress { background: radial-gradient(ellipse at 50% 0%, #ef4444, transparent 70%); }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -1126,6 +1169,29 @@
     </div>
 </section>
 
+<!-- ══════════════ MSI BACKGROUND GLOW ══════════════ -->
+<div class="msi-bg-glow neutral" id="msi-bg-glow"></div>
+
+<!-- ══════════════ SIGNAL TICKER ══════════════ -->
+<div class="signal-ticker">
+    <div class="signal-ticker-inner" id="signal-ticker">
+        <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
+        <span>MSI: <span id="ticker-msi">--</span>/100</span><span class="sep">|</span>
+        <span>Defence vs IT: <span class="up" id="ticker-dit">+3.3%</span></span><span class="sep">|</span>
+        <span>Coal vs OMCs: <span class="up" id="ticker-coal">+3.8%</span></span><span class="sep">|</span>
+        <span>PCR: <span id="ticker-pcr">1.32</span></span><span class="sep">|</span>
+        <span>VIX: <span id="ticker-vix">25.5</span></span><span class="sep">|</span>
+        <span>Nifty Pin: <span class="gold" id="ticker-pin">22,800</span></span><span class="sep">|</span>
+        <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
+        <span>MSI: <span>--</span>/100</span><span class="sep">|</span>
+        <span>Defence vs IT: <span class="up">+3.3%</span></span><span class="sep">|</span>
+        <span>Coal vs OMCs: <span class="up">+3.8%</span></span><span class="sep">|</span>
+        <span>PCR: <span>1.32</span></span><span class="sep">|</span>
+        <span>VIX: <span>25.5</span></span><span class="sep">|</span>
+        <span>Nifty Pin: <span class="gold">22,800</span></span><span class="sep">|</span>
+    </div>
+</div>
+
 <!-- ══════════════ STATS BAR ══════════════ -->
 <div class="stats-bar" id="stats-bar">
     <div class="stat-card">
@@ -1848,6 +1914,51 @@
             document.getElementById('msi-chart').innerHTML =
                 '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">Unable to load MSI history.</div>';
         });
+
+    // ── Scroll fade-in animations ──
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+
+    // ── MSI background glow (updates with live data) ──
+    function updateMSIGlow(score) {
+        const glow = document.getElementById('msi-bg-glow');
+        if (!glow) return;
+        if (score < 35) {
+            glow.className = 'msi-bg-glow calm';
+        } else if (score < 65) {
+            glow.className = 'msi-bg-glow neutral';
+        } else {
+            glow.className = 'msi-bg-glow stress';
+        }
+    }
+
+    // ── Update ticker from live data ──
+    function updateTicker(data) {
+        const msiEl = document.getElementById('ticker-msi');
+        if (msiEl && data.msi) {
+            msiEl.textContent = data.msi.score;
+            updateMSIGlow(data.msi.score);
+        }
+    }
+
+    // Hook into existing live data fetch
+    fetch('/data/live_status.json')
+        .then(r => r.json())
+        .then(data => {
+            if (data.msi) {
+                updateMSIGlow(data.msi.score);
+                const msiEls = document.querySelectorAll('#ticker-msi');
+                msiEls.forEach(el => { el.textContent = data.msi.score; });
+            }
+        })
+        .catch(() => {});
 
 })();
 </script>
