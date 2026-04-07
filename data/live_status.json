@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-07T13:48:09.500792+05:30",
+  "updated_at": "2026-04-07T14:18:48.094174+05:30",
   "msi": {
-    "score": 55.8,
+    "score": 55.9,
     "regime": "MACRO_NEUTRAL",
     "date": "2026-04-07"
   },
@@ -25,49 +25,49 @@
         {
           "ticker": "HAL",
           "entry": 3581.4,
-          "current": 3808.0,
-          "pnl_pct": 6.33
+          "current": 3806.0,
+          "pnl_pct": 6.27
         },
         {
           "ticker": "BEL",
           "entry": 415.0,
-          "current": 427.6,
-          "pnl_pct": 3.04
+          "current": 426.6,
+          "pnl_pct": 2.8
         },
         {
           "ticker": "BDL",
           "entry": 1132.2,
-          "current": 1239.0,
-          "pnl_pct": 9.43
+          "current": 1237.9,
+          "pnl_pct": 9.34
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2429.0,
-          "current": 2541,
-          "pnl_pct": -4.61,
+          "current": 2533.5,
+          "pnl_pct": -4.3,
           "price_type": "futures",
-          "basis_pct": 0.221
+          "basis_pct": 0.229
         },
         {
           "ticker": "INFY",
           "entry": 1290.0,
-          "current": 1328,
-          "pnl_pct": -2.95,
+          "current": 1325.8,
+          "pnl_pct": -2.78,
           "price_type": "futures",
-          "basis_pct": -0.45
+          "basis_pct": -0.166
         },
         {
           "ticker": "WIPRO",
           "entry": 191.51,
-          "current": 203.02,
-          "pnl_pct": -6.01,
+          "current": 202.69,
+          "pnl_pct": -5.84,
           "price_type": "futures",
-          "basis_pct": -0.539
+          "basis_pct": -0.618
         }
       ],
-      "spread_pnl_pct": 1.74,
+      "spread_pnl_pct": 1.83,
       "todays_move": 0.91,
       "daily_stop": -0.94,
       "two_day_stop": -1.88,
@@ -83,29 +83,29 @@
         {
           "ticker": "COALINDIA",
           "entry": 464.0,
-          "current": 462.3,
-          "pnl_pct": -0.37
+          "current": 462.35,
+          "pnl_pct": -0.36
         }
       ],
       "short_legs": [
         {
           "ticker": "BPCL",
           "entry": 292.0,
-          "current": 275.7,
-          "pnl_pct": 5.58,
+          "current": 277.85,
+          "pnl_pct": 4.85,
           "price_type": "futures",
-          "basis_pct": 0.291
+          "basis_pct": 0.488
         },
         {
           "ticker": "HPCL",
           "entry": 350.0,
-          "current": 325.6,
-          "pnl_pct": 6.97,
+          "current": 331.75,
+          "pnl_pct": 5.21,
           "price_type": "futures",
-          "basis_pct": 0.571
+          "basis_pct": 0.683
         }
       ],
-      "spread_pnl_pct": 5.91,
+      "spread_pnl_pct": 4.67,
       "todays_move": 7.07,
       "daily_stop": -1.24,
       "two_day_stop": -2.48,
