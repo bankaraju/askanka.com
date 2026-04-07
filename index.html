@@ -1158,8 +1158,8 @@
 <div class="container">
     <section class="section">
         <div class="section-header">
-            <h2>This Week's Analysis</h2>
-            <span class="badge badge-live">New</span>
+            <h2>Today's Intelligence</h2>
+            <span class="badge badge-live">Daily</span>
         </div>
         <div class="reports-grid">
             <a href="articles/week-006-war.html" class="report-card" style="border-top: 2px solid #ef4444;">
@@ -1188,17 +1188,16 @@
     <!-- ══════════════ REPORTS ══════════════ -->
     <section class="section">
         <div class="section-header">
-            <h2>Weekly Intelligence Briefings</h2>
+            <h2 style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';">Library &amp; Archive</h2>
+            <span class="badge badge-count" style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';this.textContent=g.style.display==='none'?'Show':'Hide';">Show</span>
+            <!-- Remove the original badge below -->
         </div>
-        <div class="reports-grid">
-            <a href="reports/week-006.html" class="report-hero">
-                <div class="report-hero-content">
-                    <span class="badge-latest">Latest Update</span>
+        <div class="reports-grid" id="library-grid" style="display:none;">
+            <a href="reports/week-006.html" class="report-card">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week 006</div>
                     <h3>Global Markets in Crisis: War, Oil & Institutional Flight</h3>
                     <p>Iran-US conflict enters Week 6. Defence stocks surge, OMCs crushed. FII outflows accelerate as crude breaches $95. Full analysis with AI-generated commentary on 12 key movers.</p>
-                    <div class="report-date mono">Week 006 &mdash; April 4, 2026</div>
-                </div>
-                <div class="report-hero-cta">Read Briefing &#8594;</div>
+                    <div class="report-date mono">April 4, 2026</div>
             </a>
             <a href="reports/week-005.html" class="report-card">
                 <h3>Signals Go Live: First Automated Trades</h3>
