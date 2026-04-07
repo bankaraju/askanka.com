@@ -94,7 +94,8 @@
             position: relative;
             padding: 72px 20px 56px;
             text-align: center;
-            background: linear-gradient(160deg, #0a0e1a 0%, #12162a 35%, #1a1530 55%, #0f0d1a 100%);
+            background: linear-gradient(160deg, rgba(10,14,26,0.85) 0%, rgba(18,22,42,0.8) 35%, rgba(26,21,48,0.85) 55%, rgba(15,13,26,0.9) 100%),
+                        url('/hero-bg.jpg') center/cover no-repeat;
             border-bottom: 1px solid rgba(212,168,85,0.15);
             overflow: hidden;
         }
@@ -114,6 +115,36 @@
             position: absolute;
             bottom: 0; left: 0; right: 0; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(212,168,85,0.3), transparent);
+        }
+
+        /* Floating particles */
+        .hero-particles {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .hero-particles span {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: rgba(212,168,85,0.4);
+            border-radius: 50%;
+            animation: particle-float linear infinite;
+        }
+        .hero-particles span:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+        .hero-particles span:nth-child(2) { left: 25%; animation-duration: 15s; animation-delay: 2s; width: 2px; height: 2px; }
+        .hero-particles span:nth-child(3) { left: 40%; animation-duration: 10s; animation-delay: 4s; }
+        .hero-particles span:nth-child(4) { left: 55%; animation-duration: 14s; animation-delay: 1s; width: 4px; height: 4px; opacity: 0.3; }
+        .hero-particles span:nth-child(5) { left: 70%; animation-duration: 11s; animation-delay: 3s; width: 2px; height: 2px; }
+        .hero-particles span:nth-child(6) { left: 85%; animation-duration: 13s; animation-delay: 5s; }
+        .hero-particles span:nth-child(7) { left: 15%; animation-duration: 16s; animation-delay: 6s; width: 2px; height: 2px; opacity: 0.2; }
+        .hero-particles span:nth-child(8) { left: 60%; animation-duration: 9s; animation-delay: 2s; width: 3px; height: 3px; }
+
+        @keyframes particle-float {
+            0% { bottom: -10px; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { bottom: 100%; opacity: 0; }
         }
 
         .hero-content {
@@ -1100,6 +1131,10 @@
 
 <!-- ══════════════ HERO ══════════════ -->
 <section class="hero">
+    <div class="hero-particles">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+    </div>
     <div class="hero-content">
         <div class="logo-badge">
             <svg width="42" height="42" viewBox="0 0 100 100" fill="none">
