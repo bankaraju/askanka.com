@@ -129,14 +129,67 @@ The final output is a single number: **Pattern Premium %**
 - **FAIR** (-2% to +2%): Management delivers roughly what they promise.
 - **DISCOUNT** (<-2%): Management under-delivers. Stock deserves lower multiple.
 
+## Anti-Hallucination Guardrails (v1.1)
+
+### 1. Source-to-Line Traceability
+Every number in the report MUST have a `page_reference` field tracing it to:
+- Specific page and section in the BSE/NSE annual report PDF
+- Or "Screener P&L Mar 2024" for verified financial data
+
+If a number cannot be traced, it must be flagged as `"source": "UNVERIFIED"` and excluded from Pattern Premium scoring. The agent must never present an unverified number as fact.
+
+### 2. Divergence Logic
+When our conclusion contradicts street consensus, the agent MUST produce an explicit `divergence_from_street` block:
+```json
+{
+  "street_view": "what consensus believes",
+  "our_view": "what forensics show",
+  "evidence_supporting_street": ["point 1 with numbers"],
+  "evidence_supporting_us": ["point 1 with numbers and page refs"],
+  "why_our_evidence_is_stronger": "explanation"
+}
+```
+The agent cannot silently override street consensus. It must prosecute the disagreement with evidence.
+
+### 3. Materiality Weighting
+Not all guidance is equal. The scoring engine weights items:
+
+| Materiality | Examples | Weight Multiplier |
+|------------|---------|-------------------|
+| **critical** | Revenue target, profit guidance, production capacity | 3.0x |
+| **significant** | Capex plans, order book, capacity expansion | 2.0x |
+| **routine** | CSR spend, R&D corpus %, compliance policy | 1.0x |
+
+A 100% delivery rate on CSR and a 0% delivery rate on production targets should NOT produce a positive Pattern Premium. The `critical_delivery_rate` drives 70% of the execution score.
+
+### 4. Temporal Decay
+Recent guidance failures are more material than historical ones:
+
+| Recency | Weight |
+|---------|--------|
+| Last 2 years (FY24-FY25) | 1.0x |
+| 3-4 years ago (FY22-FY23) | 0.7x |
+| 5+ years ago (FY18-FY21) | 0.4x |
+
+A production MISS in FY23 at 0.7x weight counts more than a CSR delivery in FY19 at 0.4x weight × 1.0x materiality.
+
 ## Quality Gates
 
-1. Every number traces to a named, dated filing or Screener.in
+1. Every number traces to a named, dated filing page or Screener.in
 2. Source hierarchy: XBRL > PDF > Screener > Aggregators
 3. Divergent sources flagged as "High-Interest Intelligence"
 4. DCF aborted when DSO > 200 days or negative OCF
 5. Minimum 3 years of annual reports for any scoring
 6. Minimum 10 guidance items for Pattern Premium calculation
+7. Critical delivery rate must be separately reported from routine
+8. Street divergence must be explicitly justified when present
+
+## Output Persistence
+
+Reports save to:
+1. `artifacts/<SYMBOL>/FINAL_REPORT.json` — complete structured data
+2. `artifacts/<SYMBOL>/guidance_scorecard.json` — every guidance item with status
+3. `ObsidianVault/markets/pattern-premium/<SYMBOL>-pattern-premium.md` — searchable note with frontmatter tags for cross-company comparison
 
 ## What This Does NOT Do
 
@@ -160,6 +213,4 @@ The final output is a single number: **Pattern Premium %**
 
 6. **Sector Libraries**: Need to build for Real Estate (pre-sales vs completions), IT (TCV vs executable pipeline, attrition impact), Infra (order book vs WC bleeding), Pharma (R&D pipeline vs approvals), FMCG (distribution reach vs volume growth).
 
-7. **Temporal Decay**: A guidance item from 5 years ago is less relevant than one from last year. Should older items decay in the scoring?
-
-8. **Management Skin-in-Game**: Promoter holding, insider buying/selling, ESOP grants — these signal whether management believes their own guidance.
+7. **Management Skin-in-Game**: Promoter holding, insider buying/selling, ESOP grants — these signal whether management believes their own guidance.

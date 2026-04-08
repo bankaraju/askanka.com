@@ -250,7 +250,9 @@ ONLY extract guidance that is SPECIFIC and MEASURABLE. Ignore vague aspirational
 4. **target_value**: The specific number (e.g., "Rs 35,000 Cr", "25%", "16 aircraft/year")
 5. **target_year**: When (e.g., "FY26", "by March 2027", "next 3 years")
 6. **section_found**: Where in the report (MD&A, Chairman Letter, Directors Report, Financial Highlights)
-7. **confidence**: How firm is this commitment? "hard_commitment" (board approved), "guidance" (management expects), "aspiration" (would like to)
+7. **page_reference**: Approximate page number or section heading where this appears (e.g., "Page 45, MD&A Section 3.2" or "Directors Report, para under 'Future Outlook'")
+8. **confidence**: How firm is this commitment? "hard_commitment" (board approved), "guidance" (management expects), "aspiration" (would like to)
+9. **materiality**: How important is this to the business? "critical" (revenue/profit/production targets), "significant" (capex/capacity/order book), "routine" (CSR/policy/compliance targets)
 
 ## Also extract:
 - **risks_disclosed**: Specific risks management acknowledges (not boilerplate)
@@ -266,7 +268,9 @@ Return ONLY valid JSON, no markdown fences:
       "target_value": "...",
       "target_year": "...",
       "section_found": "...",
-      "confidence": "hard_commitment|guidance|aspiration"
+      "page_reference": "Page X, Section Y",
+      "confidence": "hard_commitment|guidance|aspiration",
+      "materiality": "critical|significant|routine"
     }
   ],
   "actuals_reported": {
@@ -375,24 +379,52 @@ For EVERY guidance item, find the ACTUAL result and score it:
 - If FY22 and FY23 both mention "export target of 15%" but FY24 and FY25 stop mentioning exports entirely → QUIETLY_DROPPED
 - If a major program or initiative is mentioned in 2+ years then vanishes → flag it
 
+### MATERIALITY WEIGHTING (critical for Pattern Premium):
+When scoring, weight items by materiality:
+- **critical** items (revenue, profit, production targets): These DEFINE the investment thesis. A MISS here is 3x more damaging than a routine MISS.
+- **significant** items (capex, capacity, order book): Important but secondary.
+- **routine** items (CSR, compliance, policy): Delivery on these is expected and proves little. Missing on these is concerning only if systematic.
+
+### TEMPORAL WEIGHTING:
+Recent guidance matters more. Apply these weights:
+- Last 2 years (FY24-FY25): Full weight (1.0x)
+- 3-4 years ago (FY22-FY23): 0.7x weight
+- 5+ years ago (FY18-FY21): 0.4x weight
+A production target MISS in FY23 should matter MORE than a CSR delivery in FY19.
+
+### DIVERGENCE LOGIC:
+If your scoring leads to a conclusion that CONTRADICTS street consensus (e.g., street says 12-15% growth, our analysis suggests 8%), you MUST explicitly explain:
+1. What specific evidence supports the street view
+2. What specific evidence supports our view
+3. Why our evidence is stronger (with page references and numbers)
+
 Return ONLY valid JSON, no markdown fences:
 {{
   "scorecard": [
     {{
       "guidance_year": "FY23",
       "category": "revenue_guidance",
+      "materiality": "critical",
       "guidance_quote": "exact management quote",
+      "page_reference": "Page X, MD&A Section Y",
       "target_metric": "total revenue",
       "target_value": "Rs 30,000 Cr",
       "target_year": "FY24",
       "actual_value": "Rs 30,381 Cr (from Screener Mar 2024)",
       "variance_pct": 1.3,
       "status": "DELIVERED",
-      "source_of_actual": "Screener P&L Mar 2024 / FY24 Annual Report"
+      "source_of_actual": "Screener P&L Mar 2024 / FY24 Annual Report",
+      "temporal_weight": 0.7
     }}
   ],
   "summary": {{
     "total_guidance_items": 0,
+    "critical_items": 0,
+    "critical_delivery_rate_pct": 0.0,
+    "significant_items": 0,
+    "significant_delivery_rate_pct": 0.0,
+    "routine_items": 0,
+    "routine_delivery_rate_pct": 0.0,
     "delivered": 0,
     "exceeded": 0,
     "partially_delivered": 0,
@@ -401,26 +433,37 @@ Return ONLY valid JSON, no markdown fences:
     "too_early": 0,
     "unverifiable": 0,
     "delivery_rate_pct": 0.0,
+    "weighted_delivery_rate_pct": 0.0,
     "beat_rate_pct": 0.0
   }},
   "dropped_themes": [
     {{
       "theme": "description of what was dropped",
       "last_mentioned_year": "FY23",
-      "significance": "high|medium|low"
+      "significance": "high|medium|low",
+      "page_last_seen": "Page X of FY23 AR"
     }}
   ],
   "guidance_accuracy_by_category": {{
     "revenue_guidance": {{"total": 0, "delivered": 0, "rate_pct": 0}},
+    "capacity_production": {{"total": 0, "delivered": 0, "rate_pct": 0}},
     "order_book": {{"total": 0, "delivered": 0, "rate_pct": 0}},
     "capex": {{"total": 0, "delivered": 0, "rate_pct": 0}},
-    "other": {{"total": 0, "delivered": 0, "rate_pct": 0}}
+    "export": {{"total": 0, "delivered": 0, "rate_pct": 0}},
+    "routine": {{"total": 0, "delivered": 0, "rate_pct": 0}}
+  }},
+  "divergence_from_street": {{
+    "street_view": "what consensus analysts believe (e.g., 12-15% revenue CAGR)",
+    "our_view": "what our forensic cross-referencing shows (e.g., 8% capped by production)",
+    "evidence_supporting_street": ["specific point with numbers"],
+    "evidence_supporting_us": ["specific point with numbers and page references"],
+    "why_our_evidence_is_stronger": "1-2 sentences explaining why forensic cross-referencing trumps forward guidance"
   }},
   "credibility_trajectory": "improving|stable|deteriorating",
-  "management_pattern": "2-3 sentences on management's overall credibility pattern — do they sandbag (guide low, beat high), guide accurately, or over-promise?",
-  "biggest_red_flag": "the single most concerning finding with specific numbers",
-  "biggest_strength": "the single most impressive delivery with specific numbers",
-  "what_street_is_missing": "what this cross-referencing reveals that consensus analyst reports don't capture"
+  "management_pattern": "2-3 sentences — do they sandbag, guide accurately, or over-promise? Distinguish between CRITICAL and ROUTINE delivery patterns.",
+  "biggest_red_flag": "most concerning finding with specific numbers and page reference",
+  "biggest_strength": "most impressive delivery with specific numbers and page reference",
+  "what_street_is_missing": "the key insight consensus doesn't capture"
 }}"""
 
 
@@ -483,15 +526,14 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
 def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
     """Calculate the final Pattern Premium from the guidance scorecard.
 
-    Components:
-    - Execution Score (50%): delivery + beat rate from cross-referenced guidance
-    - Guidance Accuracy (15%): how close actuals are to targets (sandbagging vs accurate vs over-promising)
-    - Dropped Theme Penalty (25%): -3% per quietly dropped narrative (high significance)
-    - Credibility Trajectory (10%): improving gets bonus, deteriorating gets penalty
+    Uses materiality weighting and temporal decay:
+    - Critical guidance (revenue/profit/production) counts 3x vs routine (CSR/policy)
+    - Recent failures (FY24-25) count 1.0x, old ones (FY18-21) count 0.4x
+    - Dropped themes penalised by significance level
+    - Explicit divergence from street captured
     """
     summary = scoring.get("summary", scoring.get("delivery_summary", {}))
     total = summary.get("total_guidance_items", summary.get("total_scoreable", 0))
-    delivered = summary.get("delivered", 0) + summary.get("exceeded", 0)
     scoreable = total - summary.get("too_early", 0) - summary.get("unverifiable", 0)
 
     if scoreable == 0:
@@ -501,20 +543,34 @@ def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
             "detail": "Not enough scoreable guidance items to calculate premium",
         }
 
-    delivery_rate = summary.get("delivery_rate_pct", (delivered / scoreable * 100) if scoreable > 0 else 0)
+    # Use weighted delivery rate if available, else fall back to simple
+    weighted_rate = summary.get("weighted_delivery_rate_pct")
+    simple_rate = summary.get("delivery_rate_pct", 0)
+    critical_rate = summary.get("critical_delivery_rate_pct", simple_rate)
+
+    # The execution score is driven primarily by CRITICAL delivery rate
+    # Critical items define the investment thesis — CSR delivery is noise
+    if critical_rate is not None and summary.get("critical_items", 0) > 0:
+        # 70% weight on critical, 30% on overall
+        effective_rate = critical_rate * 0.70 + simple_rate * 0.30
+    else:
+        effective_rate = weighted_rate if weighted_rate else simple_rate
+
+    delivery_rate = round(effective_rate, 1)
     beat_rate = summary.get("beat_rate_pct", 0)
 
     # Execution score: -10 to +10
     execution = (delivery_rate / 100 * 20) - 10
 
-    # Guidance accuracy bonus: companies that beat guidance get extra credit
+    # Beat bonus: companies that exceed guidance get extra credit
     accuracy_bonus = min(beat_rate / 100 * 5, 5.0) if beat_rate else 0.0
 
-    # Dropped theme penalty: -3% for high significance, -1.5% for medium
+    # Dropped theme penalty: -4% for high significance, -2% for medium, -0.5% for low
     dropped_themes = scoring.get("dropped_themes", [])
     if isinstance(dropped_themes, list) and dropped_themes and isinstance(dropped_themes[0], dict):
         drop_penalty = sum(
-            -3.0 if d.get("significance") == "high" else -1.5
+            -4.0 if d.get("significance") == "high" else
+            -2.0 if d.get("significance") == "medium" else -0.5
             for d in dropped_themes
         )
     else:
@@ -537,6 +593,9 @@ def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
 
     verdict = "PREMIUM" if premium > 2 else "DISCOUNT" if premium < -2 else "FAIR"
 
+    # Divergence from street
+    divergence = scoring.get("divergence_from_street", {})
+
     return {
         "pattern_premium_pct": round(premium, 1),
         "components": {
@@ -545,16 +604,23 @@ def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
             "dropped_penalty": round(drop_penalty, 1),
             "trajectory_bonus": round(traj_score, 1),
         },
+        "scoring_methodology": {
+            "effective_delivery_rate": delivery_rate,
+            "critical_delivery_rate": critical_rate,
+            "overall_delivery_rate": simple_rate,
+            "note": "Effective rate = 70% critical items + 30% overall. Production MISSes weigh more than CSR deliveries.",
+        },
         "verdict": verdict,
-        "delivery_rate": round(delivery_rate, 1),
+        "delivery_rate": delivery_rate,
         "beat_rate": round(beat_rate, 1),
         "guidance_scored": scoreable,
-        "guidance_delivered": delivered,
+        "guidance_delivered": summary.get("delivered", 0) + summary.get("exceeded", 0),
         "guidance_missed": summary.get("missed", 0),
         "themes_dropped": len(dropped_themes),
         "dropped_theme_details": dropped_themes,
         "category_breakdown": cat_analysis,
         "credibility_trajectory": trajectory,
+        "divergence_from_street": divergence,
         "management_pattern": scoring.get("management_pattern", ""),
         "biggest_red_flag": scoring.get("biggest_red_flag", ""),
         "biggest_strength": scoring.get("biggest_strength", ""),
@@ -724,7 +790,86 @@ def run(symbol: str):
     print(f"{'='*70}")
     print(f"\n  Full report: {out_dir / 'FINAL_REPORT.json'}")
 
+    # ── Save to Obsidian vault for sector comparisons ────────────
+    obsidian_dir = Path("C:/Users/Claude_Anka/ObsidianVault/markets/pattern-premium")
+    try:
+        obsidian_dir.mkdir(parents=True, exist_ok=True)
+        obsidian_path = obsidian_dir / f"{symbol}-pattern-premium.md"
+        _save_obsidian_note(symbol, report, premium, scoring, obsidian_path)
+        print(f"  Obsidian: {obsidian_path}")
+    except Exception as e:
+        print(f"  Obsidian save failed: {e}")
+
     return report
+
+
+def _save_obsidian_note(symbol: str, report: dict, premium: dict, scoring: dict, path: Path):
+    """Save structured research note to Obsidian vault."""
+    snap = report.get("financial_snapshot", {})
+    div = premium.get("divergence_from_street", {})
+    scorecard = scoring.get("scorecard", [])
+
+    # Build scorecard table
+    sc_lines = []
+    for item in scorecard:
+        status = item.get("status", "?")
+        yr = item.get("guidance_year", "?")
+        cat = item.get("category", "?")
+        target = item.get("target_value", "?")
+        actual = item.get("actual_value", "?")
+        mat = item.get("materiality", "?")
+        sc_lines.append(f"| {yr} | {cat} | {mat} | {target} | {actual} | {status} |")
+
+    sc_table = "\n".join(sc_lines) if sc_lines else "No scorecard data"
+
+    md = f"""---
+company: {symbol}
+pattern_premium: {premium.get('pattern_premium_pct', 0)}%
+verdict: {premium.get('verdict', '?')}
+delivery_rate: {premium.get('delivery_rate', '?')}%
+generated: {report.get('generated_at', '')}
+tags: [pattern-premium, equity-research, {symbol.lower()}]
+---
+
+# {symbol} — Pattern Premium Analysis
+
+**Pattern Premium: {premium.get('pattern_premium_pct', 0):+.1f}% ({premium.get('verdict', '?')})**
+
+## Financial Snapshot
+- Market Cap: {snap.get('market_cap', '?')} Cr
+- P/E: {snap.get('pe', '?')}x | ROCE: {snap.get('roce', '?')}% | ROE: {snap.get('roe', '?')}%
+- Revenue Growth: {snap.get('revenue_growth', '?')}%
+
+## Management Pattern
+{premium.get('management_pattern', 'N/A')}
+
+## Guidance Scorecard
+| Year | Category | Materiality | Target | Actual | Status |
+|------|----------|-------------|--------|--------|--------|
+{sc_table}
+
+## Key Findings
+- **Red Flag**: {premium.get('biggest_red_flag', 'None')}
+- **Strength**: {premium.get('biggest_strength', 'None')}
+- **Trajectory**: {premium.get('credibility_trajectory', '?')}
+
+## Divergence from Street
+- **Street View**: {div.get('street_view', 'N/A')}
+- **Our View**: {div.get('our_view', 'N/A')}
+- **Why Our Evidence Is Stronger**: {div.get('why_our_evidence_is_stronger', 'N/A')}
+
+## What Street Is Missing
+{premium.get('what_street_is_missing', 'N/A')}
+
+## Scoring Methodology
+- Effective Rate: {premium.get('scoring_methodology', {}).get('effective_delivery_rate', '?')}%
+- Critical Delivery Rate: {premium.get('scoring_methodology', {}).get('critical_delivery_rate', '?')}%
+- Note: {premium.get('scoring_methodology', {}).get('note', '')}
+
+---
+*Generated by OPUS ANKA Pattern Premium Engine*
+"""
+    path.write_text(md, encoding="utf-8")
 
 
 if __name__ == "__main__":
