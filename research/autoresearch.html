@@ -3,339 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoResearch: Fixing a Broken ML Model Overnight | Anka Research</title>
-<meta name="description" content="How autonomous AI experiments improved our fragility detection model from 3.8% to 32% F1 score using Karpathy's AutoResearch pattern.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<title>How We Built a Global Market Intelligence Engine | Anka Research</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root { --bg: #0a0e1a; --card: #111827; --border: #1e293b; --text: #e5e7eb; --text2: #9ca3af; --muted: #6b7280; --gold: #d4a855; --green: #10b981; --red: #ef4444; }
+:root { --bg: #0a0e1a; --card: #111827; --border: #1e293b; --text: #e5e7eb; --text2: #9ca3af; --gold: #d4a855; --green: #10b981; --red: #ef4444; }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.8; }
-
-.paper-hero {
-    padding: 80px 20px 56px;
-    text-align: center;
-    background: linear-gradient(160deg, #0a0e1a, #1a1530, #0f0d1a);
-    border-bottom: 1px solid rgba(212,168,85,0.15);
-    position: relative;
-}
-.paper-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,168,85,0.3), transparent); }
-.paper-hero .badge { display: inline-block; background: rgba(212,168,85,0.15); color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 4px; margin-bottom: 16px; }
-.paper-hero h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 38px; font-weight: 400; max-width: 800px; margin: 0 auto 16px; background: linear-gradient(135deg, #f5f0e8, #d4a855); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.paper-hero .meta { font-size: 14px; color: var(--text2); }
-.paper-hero .meta span { color: var(--gold); }
-
+.hero { padding: 80px 20px 48px; text-align: center; background: linear-gradient(160deg, #0a0e1a, #1a1530, #0f0d1a); border-bottom: 1px solid rgba(212,168,85,0.15); }
+.hero .badge { display: inline-block; background: rgba(212,168,85,0.15); color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 4px; margin-bottom: 16px; }
+.hero h1 { font-family: 'DM Serif Display', serif; font-size: 36px; max-width: 800px; margin: 0 auto 16px; background: linear-gradient(135deg, #f5f0e8, #d4a855); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero .meta { font-size: 14px; color: var(--text2); }
+.hero .meta span { color: var(--gold); }
 .container { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
 .body p { margin-bottom: 20px; font-size: 16px; color: #d1d5db; }
-.body h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 24px; font-weight: 400; margin: 40px 0 16px; color: #f1f5f9; padding-left: 14px; border-left: 3px solid var(--gold); }
+.body h2 { font-family: 'DM Serif Display', serif; font-size: 24px; margin: 40px 0 16px; color: #f1f5f9; padding-left: 14px; border-left: 3px solid var(--gold); }
 .body h3 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; color: #f1f5f9; }
-
-.callout { background: rgba(212,168,85,0.08); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 28px 0; border-radius: 0 8px 8px 0; font-size: 15px; }
-
-/* Results table */
+.callout { background: rgba(212,168,85,0.08); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 28px 0; border-radius: 0 8px 8px 0; }
 .results-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
 .results-table th { text-align: left; padding: 10px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); border-bottom: 2px solid rgba(212,168,85,0.2); }
 .results-table td { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .results-table .mono { font-family: 'JetBrains Mono', monospace; }
-.results-table .improved { color: var(--green); font-weight: 700; }
-.results-table .baseline { color: var(--red); }
-.results-table .multiplier { color: var(--gold); font-weight: 700; font-size: 13px; }
-
-/* Chart */
-.chart-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 28px 0; }
-
-/* Experiment log */
-.exp-log { max-height: 400px; overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 24px 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8; }
-.exp-log .best { color: var(--gold); font-weight: 700; }
-.exp-log .fail { color: var(--red); opacity: 0.6; }
-
+.results-table .good { color: var(--green); font-weight: 700; }
+.results-table .bad { color: var(--red); }
 .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); }
 .nav-bar a { color: var(--gold); text-decoration: none; font-size: 14px; font-weight: 500; }
-.nav-bar .brand { font-weight: 800; font-size: 16px; letter-spacing: -0.5px; }
-
-@media (max-width: 640px) { .paper-hero h1 { font-size: 26px; } .container { padding: 32px 16px 60px; } }
+.nav-bar .brand { font-weight: 800; font-size: 16px; }
+.stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; }
+.stat { flex: 1; min-width: 120px; text-align: center; padding: 16px; border: 1px solid var(--border); border-radius: 8px; }
+.stat .val { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; color: var(--gold); }
+.stat .lab { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
 </style>
 </head>
 <body>
+<nav class="nav-bar"><a href="/" class="brand">Anka Research</a><a href="/">&larr; Dashboard</a></nav>
 
-<nav class="nav-bar">
-    <a href="/" class="brand">Anka Research</a>
-    <a href="/">&larr; Dashboard</a>
-</nav>
-
-<header class="paper-hero">
+<header class="hero">
     <div class="badge">Research Paper</div>
-    <h1>AutoResearch: How AI Reframed Our Correlation Fragility Model Overnight</h1>
-    <p class="meta"><span>Anka Research</span> &mdash; April 05, 2026 &mdash; 74 autonomous experiments</p>
+    <h1>How We Built a Global Market Intelligence Engine</h1>
+    <p class="meta"><span>Anka Research</span> &mdash; April 08, 2026 &mdash; From broken index to data-driven regime detection</p>
 </header>
 
-<article class="container">
-<div class="body">
+<article class="container"><div class="body">
 
-<h2>Abstract</h2>
-<p>We applied Karpathy's AutoResearch pattern to autonomously improve our correlation fragility detection model. The original XGBoost classifier achieved 89.8% accuracy &mdash; a number we proudly displayed on our website &mdash; but this metric was misleading for our use case, because it masked extremely weak performance on the rare events that actually matter: correlation breaks. On break events, the model delivered just 2.2% precision and a 3.8% F1 score.</p>
-
-<p>Across 74 autonomous experiments, an AI agent discovered that anomaly detection fundamentally outperforms direct classification for this rare-event problem, delivering a <strong>+756% improvement in F1 score</strong> on break events. The final model combines anomaly-style thinking with a stacking ensemble and is now deployed as a risk overlay in our live spread signal pipeline, where it halves average losses on fragile days while leaving normal-day performance unchanged.</p>
-
-<h2>The Problem: When 89.8% Accuracy Hides the Real Risk</h2>
-<p>Our fragility model classifies each trading day as either &ldquo;stable&rdquo; or &ldquo;break&rdquo; for each correlation pair. The dataset contains 7,502 samples: 5,707 stable days and just 294 break events &mdash; roughly a 19:1 class imbalance.</p>
-
-<p>A model that simply predicts &ldquo;stable&rdquo; every day already achieves 76% accuracy, because stable days dominate the data. Our XGBoost model, with its impressive-sounding 89.8% accuracy, was only marginally better than this naive baseline once you look at the rare break days.</p>
-
-<p>The metrics that matter for risk management told a very different story:</p>
-
-<div class="callout">
-<strong>The accuracy&ndash;imbalance trap:</strong> When the model flagged a &ldquo;break&rdquo;, it was correct only 2.2% of the time. It detected just 12.5% of actual breaks. We were highlighting an aggregate accuracy figure that looked strong on paper, while the model&rsquo;s performance on the events we actually care about &mdash; correlation regime breaks &mdash; was unacceptably weak. A model can be numerically accurate overall and still fail the objective it was built for.
+<div class="stat-row">
+<div class="stat"><div class="val">31</div><div class="lab">Global ETFs</div></div>
+<div class="stat"><div class="val">716</div><div class="lab">Days Analysed</div></div>
+<div class="stat"><div class="val">62.3%</div><div class="lab">Directional Accuracy</div></div>
+<div class="stat"><div class="val">2,000</div><div class="lab">Experiments Run</div></div>
 </div>
 
-<h2>Methodology: AutoResearch</h2>
-<p>Inspired by Andrej Karpathy&rsquo;s <a href="https://github.com/karpathy/autoresearch" style="color:var(--gold);">AutoResearch</a> (March 2026), we built an autonomous experiment loop:</p>
+<h2>The Problem: When Your Dashboard Lies</h2>
+<p>We started with a Macro Sentiment Index &mdash; five Indian market inputs with hand-picked weights. It showed a number between 0 and 100. It looked professional. Subscribers saw it on the dashboard and trusted it.</p>
 
-<ol style="margin:16px 0 16px 24px; color:#d1d5db;">
-<li>An AI agent reads a research program (7 prioritised directions)</li>
-<li>It modifies the training code with a specific experiment</li>
-<li>The code runs against an immutable evaluation harness</li>
-<li>If F1 score on break events improves, the change is kept; otherwise, it is reverted</li>
-<li>Repeat &mdash; 74 times, fully autonomous</li>
-</ol>
+<p>It was wrong. Not slightly wrong &mdash; structurally wrong. The weights were arbitrary. The data sources broke without warning. And most critically: <strong>it only looked at India, while Indian markets follow global flows with a one-day lag.</strong></p>
 
-<p>We optimise for <strong>F1 score on break events</strong> (the harmonic mean of precision and recall), not accuracy. The evaluation harness uses walk-forward, time-ordered splitting to prevent data leakage and mimic live trading conditions.</p>
+<div class="callout">By the time Indian VIX, FII flows, and crude prices moved, the signal was already old. The real information was in what happened overnight in New York, London, and Tokyo.</div>
 
-<h2>Results</h2>
+<h2>The Approach: Let Data Pick the Weights</h2>
+<p>Instead of guessing which inputs matter, we asked the data. We loaded 716 days of daily returns from 31 global ETFs &mdash; covering every major asset class, geography, and risk factor &mdash; and measured which ones actually predict where Indian markets go the next day.</p>
+
+<p>Then we applied Karpathy's AutoResearch methodology: an AI agent tested 2,000 different weight combinations, keeping only the configurations that improved risk-adjusted returns. No human bias. No favourite indicators. Just data.</p>
+
+<h2>What We Found</h2>
+
+<h3>The Surprise: Credit Markets Beat Equities</h3>
+<p>The strongest predictor of Indian market direction isn't the S&amp;P 500 or VIX &mdash; it's <strong>high yield corporate bonds</strong>. When global credit appetite is strong (investors buying riskier bonds), India tends to follow the next day. When credit markets freeze, India sells off.</p>
+
+<p>This makes sense: credit markets are where institutional money moves first. By the time equity markets react, bond traders have already priced the risk.</p>
+
+<h3>The Zones: Five States of the World</h3>
+<p>We defined five market regimes based on 350 days of historical calm periods. The boundaries aren't arbitrary &mdash; they're statistical thresholds (standard deviations from the calm baseline).</p>
 
 <table class="results-table">
-<thead><tr><th>Metric</th><th>Before (Baseline)</th><th>After (Best)</th><th>Change</th></tr></thead>
+<thead><tr><th>Zone</th><th>Frequency</th><th>Nifty Next Day</th><th>Up Rate</th></tr></thead>
 <tbody>
-<tr><td>F1 Score</td><td class="mono baseline">3.8%</td><td class="mono improved">32.3%</td><td class="multiplier">+756%</td></tr>
-<tr><td>Precision</td><td class="mono baseline">2.2%</td><td class="mono improved">71.4%</td><td class="multiplier">+3118%</td></tr>
-<tr><td>Recall</td><td class="mono baseline">12.5%</td><td class="mono improved">20.8%</td><td class="multiplier">+67%</td></tr>
-<tr><td>Accuracy</td><td class="mono">89.8%</td><td class="mono">97.0%</td><td class="mono" style="color:var(--text2);">+7.2pp</td></tr>
-<tr><td>Model Type</td><td>XGBoost Classifier</td><td>StackingClassifier</td><td></td></tr>
-<tr><td>Experiments</td><td colspan="2">74 total, 8 improvements found</td><td></td></tr>
+<tr><td class="bad">RISK-OFF</td><td class="mono">3% of days</td><td class="mono bad">-0.83%</td><td class="mono bad">15%</td></tr>
+<tr><td>CAUTION</td><td class="mono">9%</td><td class="mono">-0.30%</td><td class="mono">38%</td></tr>
+<tr><td>NEUTRAL</td><td class="mono">77%</td><td class="mono">+0.08%</td><td class="mono">55%</td></tr>
+<tr><td class="good">RISK-ON</td><td class="mono">10%</td><td class="mono good">+0.28%</td><td class="mono good">72%</td></tr>
+<tr><td class="good">EUPHORIA</td><td class="mono">2%</td><td class="mono good">+0.41%</td><td class="mono good">82%</td></tr>
 </tbody>
 </table>
 
-<h2>Experiment Progression</h2>
-<div class="chart-container">
-<div id="progression-chart"></div>
-</div>
+<div class="callout"><strong>The spread is 67 percentage points</strong> between RISK-OFF (15% up rate) and EUPHORIA (82% up rate). That's not noise. That's a signal.</div>
 
-<h2>Key Insight: Classification vs Anomaly Detection</h2>
-<p>The most significant finding was not a hyperparameter tweak or a sampling trick &mdash; it was a <strong>fundamental reframing of the problem</strong>.</p>
-
-<p>Our original approach treated break detection as a binary classification task: train on both stable and break days and learn a decision boundary. Under a 19:1 imbalance, the loss is dominated by stable days, so the model learns to predict &ldquo;stable&rdquo; almost always &mdash; the safest way to minimise error, but not the best way to manage risk.</p>
-
-<p>The winning approach was <strong>anomaly detection</strong>: train exclusively on stable data, then flag anything that does not look &ldquo;normal&rdquo; as a potential break. This is conceptually aligned with the problem &mdash; breaks are, by definition, anomalies. The model does not need to learn what every kind of break looks like; it needs to learn what stability looks like, and then recognise when behaviour departs from that regime.</p>
-
-<div class="callout">
-<strong>The paradigm shift:</strong> Instead of asking &ldquo;Is this a break?&rdquo;, we ask &ldquo;Does this look normal?&rdquo; &mdash; a question that the data can answer far more reliably under heavy class imbalance.
-</div>
-
-<h2>Experiment Log</h2>
-<div class="exp-log">
-<div class="best">#000 | F1=0.0800 | Baseline — original XGBoost *** NEW BEST ***</div>
-<div class="best">#001 | F1=0.0833 | XGBoost with SMOTE oversampling on training data *** NEW BEST ***</div>
-<div class="best">#002 | F1=0.0851 | XGBoost with ADASYN oversampling - focuses on harder minority examples *** NEW BEST ***</div>
-<div>#003 | F1=0.0833 | XGBoost with SMOTE oversampling and optimized threshold search</div>
-<div class="best">#004 | F1=0.2340 | Anomaly detection approach - Isolation Forest trained only on stable d *** NEW BEST ***</div>
-<div>#005 | F1=0.1364 | Random Forest with balanced class weights to handle imbalance</div>
-<div>#006 | F1=0.0759 | Random Forest with SMOTE oversampling and balanced class weights</div>
-<div>#007 | F1=0.1111 | Ensemble voting classifier combining XGBoost + Random Forest + Logisti</div>
-<div>#008 | F1=0.0759 | Random Forest with SMOTE oversampling, balanced weights, and threshold</div>
-<div>#009 | F1=0.0321 | Random Forest with SMOTE oversampling (30% ratio) + extreme class weig</div>
-<div>#010 | F1=0.1765 | Random Forest with SMOTE (20% ratio) and grid search parameter optimiz</div>
-<div class="best">#011 | F1=0.2400 | One-Class SVM anomaly detection trained only on stable data - alternat *** NEW BEST ***</div>
-<div>#012 | F1=0.0365 | BorderlineSMOTE + Random Forest with doubled minority class penalty an</div>
-<div>#013 | F1=0.1333 | Gradient Boosting with balanced sample weights and tuned hyperparamete</div>
-<div>#014 | F1=0.2051 | ADASYN oversampling (30% ratio) with Random Forest - adaptive syntheti</div>
-<div>#015 | F1=0.1633 | Soft voting ensemble of RF+LR+SVM with SMOTE oversampling and balanced</div>
-<div>#016 | F1=0.1039 | Combined over/under sampling: SMOTE (30%) then RandomUnderSampler (60%</div>
-<div>#017 | F1=0.1111 | SMOTETomek combines SMOTE oversampling (40% ratio) with Tomek links un</div>
-<div class="fail">#018 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="fail">#019 | FAILED | FAILED: Experiment timed out (>300s)</div>
-<div class="fail">#020 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div>#021 | F1=0.1127 | Balanced pipeline: SMOTE oversampling to 50% + undersampling majority </div>
-<div>#022 | F1=0.0870 | Hard voting ensemble with hyperparameter tuning using GridSearchCV opt</div>
-<div>#023 | F1=0.0909 | SMOTE oversampling (40%) + Random Forest with balanced_subsample + gri</div>
-<div>#024 | F1=0.2222 | SMOTE oversampling (50%) + Random Forest with comprehensive GridSearch</div>
-<div>#025 | F1=0.1053 | SMOTE (60%) + Random Forest with sample weights and GridSearch tuning </div>
-<div>#026 | F1=0.1071 | XGBoost with custom focal loss objective to emphasize hard examples an</div>
-<div class="fail">#027 | FAILED | FAILED: Experiment timed out (>300s)</div>
-<div>#028 | F1=0.1154 | SMOTE (30%) + UnderSampling (60%) + Random Forest with GridSearchCV op</div>
-<div class="fail">#029 | FAILED | FAILED: Experiment timed out (>300s)</div>
-<div>#030 | F1=0.1905 | Weighted soft voting ensemble with RF (weight=2), LR (weight=1), SVM (</div>
-<div class="fail">#031 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="fail">#032 | FAILED | FAILED: [LightGBM] [Fatal] Cannot set is_unbalance and scale_pos_weigh</div>
-<div>#033 | F1=0.1000 | SMOTETomek combination (SMOTE oversampling + Tomek link cleaning) with</div>
-<div>#034 | F1=0.1739 | Combined SMOTE + Random Undersampling to create perfectly balanced dat</div>
-<div>#035 | F1=0.0845 | XGBoost with focal loss simulation via heavily weighted sample weights</div>
-<div>#036 | F1=0.1509 | SMOTE-ENN resampling with diverse 4-model ensemble: Gradient Boosting,</div>
-<div>#037 | F1=0.1111 | LightGBM with DART booster for better imbalanced data handling, class_</div>
-<div>#038 | F1=0.1455 | Advanced 5-model soft voting ensemble with SMOTE-ENN resampling: XGBoo</div>
-<div>#039 | F1=0.1149 | Two-stage cascade classifier: Stage 1 (Random Forest) with high recall</div>
-<div>#040 | F1=0.0228 | XGBoost with extreme positive class weighting (25x), moderate SMOTE, a</div>
-<div>#041 | F1=0.1778 | CalibratedClassifierCV with isotonic regression for better probability</div>
-<div class="fail">#042 | FAILED | FAILED: Experiment timed out (>300s)</div>
-<div>#043 | F1=0.2154 | Deep neural network (4 hidden layers: 256-128-64-32) with heavy class </div>
-<div class="fail">#044 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div>#045 | F1=0.0462 | XGBoost with simulated focal loss using extreme sample weights (15:1) </div>
-<div>#046 | F1=0.1852 | Advanced stacking ensemble with 5 diverse base models (XGBoost, Random</div>
-<div class="fail">#047 | FAILED | FAILED:   File "C:\Users\Claude_Anka\Documents\askanka.com\pipeline\au</div>
-<div>#048 | F1=0.1299 | Custom balanced bagging where each base estimator is trained on a bala</div>
-<div>#049 | F1=0.1212 | Hybrid ensemble combining 3 Isolation Forest models with different con</div>
-<div>#050 | F1=0.0211 | Probability-calibrated Random Forest with extreme class weighting (1:5</div>
-<div>#051 | F1=0.0320 | Weighted voting ensemble (XGBoost:3, RandomForest:2, LogisticRegressio</div>
-<div>#052 | F1=0.2069 | Multi-stage cascade: (1) Isolation Forest trained on stable data creat</div>
-<div>#053 | F1=0.2667 | Ultra-deep neural network (6 hidden layers: 512-256-128-64-32-16) with</div>
-<div class="fail">#054 | FAILED | FAILED: Experiment timed out (>300s)</div>
-<div>#055 | F1=0.2128 | Advanced stacking ensemble with 4 diverse base estimators (RF, XGB, Ex</div>
-<div>#056 | F1=0.1053 | Stacked ensemble combining RF, ExtraTrees, and XGBoost as base learner</div>
-<div>#057 | F1=0.2632 | Stacking ensemble with 4 diverse base models (RandomForest, ExtraTrees</div>
-<div>#058 | F1=0.0920 | LightGBM with DART booster (better for imbalanced data), moderate SMOT</div>
-<div class="best">#059 | F1=0.3226 | Stacked ensemble combining Random Forest, Extra Trees, and Neural Netw *** NEW BEST ***</div>
-<div>#060 | F1=0.0315 | XGBoost with focal loss approximation via heavy sample weighting (10x)</div>
-<div class="fail">#061 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="fail">#062 | FAILED | FAILED: Expecting value: line 1 column 2 (char 1)</div>
-<div>#063 | F1=0.0461 | LightGBM with is_unbalance=True, class_weight='balanced', 30% SMOTE ov</div>
-<div>#064 | F1=0.0619 | Gradient Boosting with SMOTETomek combined sampling (oversampling mino</div>
-<div>#065 | F1=0.1587 | Multi-layer Neural Network with 3 hidden layers (200-100-50 neurons), </div>
-<div class="fail">#066 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="fail">#067 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="fail">#068 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="fail">#069 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="best">#070 | F1=0.2857 | Hybrid approach: First train Isolation Forest on stable data only to d *** NEW BEST ***</div>
-<div>#071 | F1=0.2353 | Deep Neural Network with 5 hidden layers (400-200-100-50-25 neurons) u</div>
-<div class="fail">#072 | FAILED | FAILED: Traceback (most recent call last):
-  File "C:\Users\Claude_Ank</div>
-<div class="best">#073 | F1=0.3429 | Voting ensemble combining Random Forest, Extra Trees, and Neural Netwo *** NEW BEST ***</div>
-</div>
-
-<h2>Implications for Trading Signals</h2>
-<p>With the improved fragility model, our spread signal pipeline can now:</p>
-<ul style="margin:16px 0 16px 24px; color:#d1d5db;">
-<li>Detect correlation regime breaks with 71% precision (was 2%)</li>
-<li>Catch 21% of actual breaks (was 12.5%)</li>
-<li>Widen stop-losses proactively when fragility is detected</li>
-<li>Reduce false alarms that previously created noise in the signal pipeline</li>
-</ul>
-
-<p>The model is deployed in production and runs daily as part of our ARCBE (Regression Correlation Beta Engine) pipeline as a risk overlay.</p>
-
-<h2>Backtest A vs B: Does the Overlay Help in P&amp;L?</h2>
-<p>We validated the fragility overlay at the portfolio level by comparing two historical simulations over 869 trades across 90 events and 4 years:</p>
-
-<p><strong>Backtest A &mdash; Without Fragility:</strong> Signals trade at full size with standard stops.<br>
-<strong>Backtest B &mdash; With Fragility Overlay:</strong> Same signals, but on fragile days we trade at 0.5x size with 1.5x wider stops. On normal days, trades are unchanged.</p>
+<h3>The Validation: Three Independent Tests</h3>
+<p>We didn't just test on the training data. We subjected the engine to three independent challenges:</p>
 
 <table class="results-table">
-<thead><tr><th>Metric</th><th>A: Without Fragility</th><th>B: With Fragility</th><th>Verdict</th></tr></thead>
+<thead><tr><th>Test</th><th>Result</th><th>Verdict</th></tr></thead>
 <tbody>
-<tr><td>Cumulative P&amp;L</td><td class="mono">+199.8%</td><td class="mono improved">+212.8%</td><td>B wins (+13%)</td></tr>
-<tr><td>Max Drawdown</td><td class="mono" style="color:#ef4444;">-142.4%</td><td class="mono improved">-130.7%</td><td>B protects (shallower by 8%)</td></tr>
-<tr><td>Sharpe Ratio</td><td class="mono">0.44</td><td class="mono improved">0.47</td><td>B better risk-adjusted</td></tr>
-<tr><td>Win Rate</td><td class="mono">53.6%</td><td class="mono">53.6%</td><td>Identical (overlay doesn&rsquo;t change signals)</td></tr>
-<tr><td>Fragile-day avg P&amp;L</td><td class="mono" style="color:#ef4444;">-0.975%</td><td class="mono improved">-0.495%</td><td>B cuts fragile-day losses ~50%</td></tr>
-<tr><td>Normal-day avg P&amp;L</td><td class="mono">+0.269%</td><td class="mono">+0.269%</td><td>Identical (no impact on good days)</td></tr>
+<tr><td>Null Model (1,000 random simulations)</td><td class="mono">100th percentile</td><td class="good">Strong edge &mdash; not luck</td></tr>
+<tr><td>Jackknife (remove top-3 inputs)</td><td class="mono">60.0% accuracy survives</td><td>Moderate &mdash; diversified but not fragile</td></tr>
+<tr><td>Walk-Forward (12 rolling windows)</td><td class="mono">CI [55.3%, 60.5%]</td><td class="good">Confirmed &mdash; edge persists across time</td></tr>
 </tbody>
 </table>
 
-<div class="callout">
-<strong>The key finding:</strong> On normal days (97% of trades), performance is identical &mdash; the overlay does not dilute alpha when correlations behave normally. On the 27 fragile-day trades, the overlay cuts average losses from &minus;0.98% to &minus;0.49% &mdash; almost exactly half, as you would expect from 0.5x sizing &mdash; while improving total return, drawdown, and Sharpe. This is exactly what we want: leave high-conviction trades untouched on normal days, and systematically reduce risk when the correlation regime becomes unstable.
-</div>
+<h3>The Reality Check: Transaction Costs</h3>
+<p>Here's where we got honest. The directional accuracy is real &mdash; 62.3%. But when we added realistic trading costs (brokerage, taxes, slippage), the edge in normal markets was too thin to trade profitably on short timeframes.</p>
 
-<p><a href="/research/backtest-ab.html" style="color:#d4a855;">View full backtest with equity curve chart &rarr;</a></p>
+<p>The solution: <strong>don't trade every day.</strong> The engine identifies extreme zones &mdash; RISK-OFF and RISK-ON &mdash; where the edge is wide enough to survive friction. And it uses a dynamic exit rule (hold until the regime changes) rather than a fixed calendar, which improved net returns significantly.</p>
 
-<h2>How It Works in Practice — FAQ</h2>
+<div class="callout"><strong>The honest conclusion:</strong> This engine doesn't predict every day. It identifies the 23% of trading days where the signal is strong enough to overcome real-world costs. On those days, the edge is substantial.</div>
 
-<h3>On a flagged day, what changes?</h3>
-<p>The fragility model is a <strong>risk overlay, not a signal blocker</strong>. Your usual signals still fire. What changes is how aggressively you trade them:</p>
+<h2>The ML Layer: Teaching Machines to Detect Regime Breaks</h2>
+
+<h3>The Fragility Model</h3>
+<p>Beyond the ETF composite, we built a machine learning model to detect <strong>correlation regime breaks</strong> &mdash; moments when the historical relationship between two stocks shifts. When Defence and IT normally move together but suddenly diverge, something structural has changed.</p>
+
+<p>The original model was an XGBoost classifier. It achieved 89.8% accuracy &mdash; a number we initially published with pride. Then we looked deeper.</p>
+
+<div class="callout"><strong>The accuracy trap:</strong> With 19:1 class imbalance (5,707 stable days vs 294 break events), a model that simply predicts "stable" every day gets 76% accuracy. Our 89.8% was barely better than a coin flip on the events that actually matter. Precision on break detection: 2.2%. F1 score: 3.8%.</div>
+
+<h3>74 Autonomous Experiments</h3>
+<p>We applied Karpathy's AutoResearch pattern: an AI agent ran 74 experiments overnight, testing different model architectures, sampling strategies, and problem framings. Each experiment modified the training code, ran it, measured F1 score, and kept improvements.</p>
+
+<p>The breakthrough was a <strong>fundamental reframing</strong>. Instead of teaching the model what a "break" looks like (hard with only 294 examples), we taught it what "stability" looks like using thousands of stable examples. Anything that doesn't look stable gets flagged.</p>
+
 <table class="results-table">
-<thead><tr><th>Fragility Level</th><th>Score</th><th>Position Size</th><th>Stops</th><th>CI Scaling</th></tr></thead>
+<thead><tr><th>Metric</th><th>Before (XGBoost)</th><th>After (StackingClassifier)</th><th>Change</th></tr></thead>
 <tbody>
-<tr><td style="color:#10b981;">STABLE</td><td class="mono">0-40</td><td>Full (100%)</td><td>Normal</td><td>Full confidence</td></tr>
-<tr><td style="color:#f59e0b;">CAUTION</td><td class="mono">40-70</td><td>0.75x</td><td>1.25x wider</td><td>Reduced</td></tr>
-<tr><td style="color:#ef4444;">FRAGILE</td><td class="mono">70+</td><td>0.5x</td><td>1.5x wider</td><td>Capped low</td></tr>
+<tr><td>F1 Score</td><td class="mono bad">3.8%</td><td class="mono good">32.3%</td><td class="mono good">+750%</td></tr>
+<tr><td>Precision</td><td class="mono bad">2.2%</td><td class="mono good">71.4%</td><td class="mono good">+3,145%</td></tr>
+<tr><td>Recall</td><td class="mono">12.5%</td><td class="mono good">20.8%</td><td class="mono good">+67%</td></tr>
 </tbody>
 </table>
-<p>Think of it as a seatbelt, not a handbrake — you still drive, but with more protection on rare dangerous days.</p>
 
-<h3>How often does it flag?</h3>
-<p>The new model flags about <strong>0.5 days per month</strong> (2.2% of trading days). The old model flagged 2 days/month but was wrong 98% of the time. Fewer, more reliable alerts.</p>
+<p>The final model is a <strong>Stacking Classifier</strong> combining Random Forest, Extra Trees, and a Neural Network as base learners, with Logistic Regression as the meta-learner. It uses SMOTE oversampling, isotonic calibration, and minority-class weighting to handle the extreme imbalance.</p>
 
-<h3>If fragility says "break" but the signal says "strong buy"?</h3>
-<p>Both fire. The signal generates the trade idea; fragility adjusts the risk parameters. Specifically: <code style="color:#d4a855;">effective_CI = base_CI × (1 − fragility_score / 100)</code>. A strong signal with high fragility = trade it, but smaller and with wider stops.</p>
+<h3>The Fragility Overlay</h3>
+<p>This model runs daily as a <strong>risk overlay</strong>. It doesn't generate trade signals &mdash; it adjusts how aggressively we trade them. When fragility is detected (correlation structure shifting), position sizes halve and stops widen. On 97% of days, it says "all clear" and trading proceeds normally.</p>
 
-<h3>Does it explain why a day was flagged?</h3>
-<p>Yes — the model reports which feature triggered it (e.g., "vol_ratio spiked 2.3x" or "correlation divergence hit -0.4") and which specific pair is breaking. This is surfaced on Telegram with each signal.</p>
+<p>Backtesting this overlay across 869 historical trades: cumulative P&amp;L improved from +199.8% to +212.8%, max drawdown reduced from -142.4% to -130.7%, and fragile-day losses were cut in half.</p>
 
-<h3>What about normal days?</h3>
-<p>On stable days (fragility below 40), signals explicitly show: <strong>"Regime: STABLE — correlations normal, full confidence."</strong> This tells you it's safe to lean harder into high-conviction trades. Most days are normal days.</p>
+<h2>What It Means for Traders</h2>
+<p>Every morning before Indian markets open, the engine reads what happened overnight across 31 global markets. It computes a single score. If that score is in the extreme zones, it fires a signal with specific trade recommendations, holding periods, and position sizes.</p>
 
-<h3>Do you have backtest P&L numbers?</h3>
-<p>Not yet — this is next on our roadmap. We plan to run Backtest A (signals without fragility overlay) vs Backtest B (same signals + fragility risk adjustments) and publish the drawdown, Sharpe ratio, and win-rate comparison. Watch this space.</p>
+<p>If the score is neutral &mdash; which is 77% of the time &mdash; it says so. No false confidence. No forced trades.</p>
 
-<h2>Reproducibility</h2>
-<p>The full experiment code is available in our pipeline repository under <code style="color:var(--gold);">autoresearch/</code>. The evaluation harness (<code>prepare.py</code>) is immutable and uses walk-forward splitting to prevent data leakage. All 74 experiment results are logged as JSON files for full reproducibility.</p>
+<p>This replaces opinion with measurement. The engine doesn't care about headlines or narratives. It measures credit appetite, volatility flows, currency positioning, and institutional behaviour across the world's largest markets. Then it tells you what that means for Indian equities tomorrow.</p>
 
-<p style="margin-top:40px; font-size:13px; color:var(--muted); border-top:1px solid var(--border); padding-top:20px;">
-<strong>Citation:</strong> Anka Research, "AutoResearch: Autonomous ML Experimentation for Correlation Fragility Detection," askanka.com/research/autoresearch, April 2026.<br>
-<strong>Inspired by:</strong> Karpathy, A. "autoresearch," GitHub, March 2026.
+<h2>What's Next</h2>
+<p>The engine is currently in a 4-week live shadow validation. Every day, it logs its prediction before markets open. After 20 trading days, we'll compare predictions to outcomes and publish the scorecard.</p>
+
+<p>If the live results match the backtested edge, the engine moves to production. If they don't, we'll know exactly why and what to fix.</p>
+
+<p>That's the difference between a dashboard that looks good and a system that works.</p>
+
+<p style="margin-top:40px; font-size:13px; color:#4b5563; border-top:1px solid var(--border); padding-top:20px;">
+<strong>Methodology:</strong> 31 global ETFs, 716 trading days, 89 engineered features, 2,000 weight optimisation experiments, null-model validation, jackknife sensitivity testing, 12-fold walk-forward cross-validation, cost-aware backtesting with realistic transaction costs.<br><br>
+<strong>Anka Research</strong> &mdash; askanka.com<br>
+<em>This is research, not investment advice.</em>
 </p>
 
-</div>
-</article>
-
-<script>
-const progression = [{"exp": 0, "f1": 0.08, "best_so_far": 0.08, "desc": "Baseline \u2014 original XGBoost"}, {"exp": 1, "f1": 0.0833, "best_so_far": 0.0833, "desc": "XGBoost with SMOTE oversampling on training data"}, {"exp": 2, "f1": 0.0851, "best_so_far": 0.0851, "desc": "XGBoost with ADASYN oversampling - focuses on hard"}, {"exp": 3, "f1": 0.0833, "best_so_far": 0.0851, "desc": "XGBoost with SMOTE oversampling and optimized thre"}, {"exp": 4, "f1": 0.234, "best_so_far": 0.234, "desc": "Anomaly detection approach - Isolation Forest trai"}, {"exp": 5, "f1": 0.1364, "best_so_far": 0.234, "desc": "Random Forest with balanced class weights to handl"}, {"exp": 6, "f1": 0.0759, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling and balanced"}, {"exp": 7, "f1": 0.1111, "best_so_far": 0.234, "desc": "Ensemble voting classifier combining XGBoost + Ran"}, {"exp": 8, "f1": 0.0759, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling, balanced we"}, {"exp": 9, "f1": 0.0321, "best_so_far": 0.234, "desc": "Random Forest with SMOTE oversampling (30% ratio) "}, {"exp": 10, "f1": 0.1765, "best_so_far": 0.234, "desc": "Random Forest with SMOTE (20% ratio) and grid sear"}, {"exp": 11, "f1": 0.24, "best_so_far": 0.24, "desc": "One-Class SVM anomaly detection trained only on st"}, {"exp": 12, "f1": 0.0365, "best_so_far": 0.24, "desc": "BorderlineSMOTE + Random Forest with doubled minor"}, {"exp": 13, "f1": 0.1333, "best_so_far": 0.24, "desc": "Gradient Boosting with balanced sample weights and"}, {"exp": 14, "f1": 0.2051, "best_so_far": 0.24, "desc": "ADASYN oversampling (30% ratio) with Random Forest"}, {"exp": 15, "f1": 0.1633, "best_so_far": 0.24, "desc": "Soft voting ensemble of RF+LR+SVM with SMOTE overs"}, {"exp": 16, "f1": 0.1039, "best_so_far": 0.24, "desc": "Combined over/under sampling: SMOTE (30%) then Ran"}, {"exp": 17, "f1": 0.1111, "best_so_far": 0.24, "desc": "SMOTETomek combines SMOTE oversampling (40% ratio)"}, {"exp": 18, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 19, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 20, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 21, "f1": 0.1127, "best_so_far": 0.24, "desc": "Balanced pipeline: SMOTE oversampling to 50% + und"}, {"exp": 22, "f1": 0.087, "best_so_far": 0.24, "desc": "Hard voting ensemble with hyperparameter tuning us"}, {"exp": 23, "f1": 0.0909, "best_so_far": 0.24, "desc": "SMOTE oversampling (40%) + Random Forest with bala"}, {"exp": 24, "f1": 0.2222, "best_so_far": 0.24, "desc": "SMOTE oversampling (50%) + Random Forest with comp"}, {"exp": 25, "f1": 0.1053, "best_so_far": 0.24, "desc": "SMOTE (60%) + Random Forest with sample weights an"}, {"exp": 26, "f1": 0.1071, "best_so_far": 0.24, "desc": "XGBoost with custom focal loss objective to emphas"}, {"exp": 27, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 28, "f1": 0.1154, "best_so_far": 0.24, "desc": "SMOTE (30%) + UnderSampling (60%) + Random Forest "}, {"exp": 29, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 30, "f1": 0.1905, "best_so_far": 0.24, "desc": "Weighted soft voting ensemble with RF (weight=2), "}, {"exp": 31, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 32, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: [LightGBM] [Fatal] Cannot set is_unbalance"}, {"exp": 33, "f1": 0.1, "best_so_far": 0.24, "desc": "SMOTETomek combination (SMOTE oversampling + Tomek"}, {"exp": 34, "f1": 0.1739, "best_so_far": 0.24, "desc": "Combined SMOTE + Random Undersampling to create pe"}, {"exp": 35, "f1": 0.0845, "best_so_far": 0.24, "desc": "XGBoost with focal loss simulation via heavily wei"}, {"exp": 36, "f1": 0.1509, "best_so_far": 0.24, "desc": "SMOTE-ENN resampling with diverse 4-model ensemble"}, {"exp": 37, "f1": 0.1111, "best_so_far": 0.24, "desc": "LightGBM with DART booster for better imbalanced d"}, {"exp": 38, "f1": 0.1455, "best_so_far": 0.24, "desc": "Advanced 5-model soft voting ensemble with SMOTE-E"}, {"exp": 39, "f1": 0.1149, "best_so_far": 0.24, "desc": "Two-stage cascade classifier: Stage 1 (Random Fore"}, {"exp": 40, "f1": 0.0228, "best_so_far": 0.24, "desc": "XGBoost with extreme positive class weighting (25x"}, {"exp": 41, "f1": 0.1778, "best_so_far": 0.24, "desc": "CalibratedClassifierCV with isotonic regression fo"}, {"exp": 42, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 43, "f1": 0.2154, "best_so_far": 0.24, "desc": "Deep neural network (4 hidden layers: 256-128-64-3"}, {"exp": 44, "f1": 0, "best_so_far": 0.24, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 45, "f1": 0.0462, "best_so_far": 0.24, "desc": "XGBoost with simulated focal loss using extreme sa"}, {"exp": 46, "f1": 0.1852, "best_so_far": 0.24, "desc": "Advanced stacking ensemble with 5 diverse base mod"}, {"exp": 47, "f1": 0, "best_so_far": 0.24, "desc": "FAILED:   File \"C:\\Users\\Claude_Anka\\Documents\\ask"}, {"exp": 48, "f1": 0.1299, "best_so_far": 0.24, "desc": "Custom balanced bagging where each base estimator "}, {"exp": 49, "f1": 0.1212, "best_so_far": 0.24, "desc": "Hybrid ensemble combining 3 Isolation Forest model"}, {"exp": 50, "f1": 0.0211, "best_so_far": 0.24, "desc": "Probability-calibrated Random Forest with extreme "}, {"exp": 51, "f1": 0.032, "best_so_far": 0.24, "desc": "Weighted voting ensemble (XGBoost:3, RandomForest:"}, {"exp": 52, "f1": 0.2069, "best_so_far": 0.24, "desc": "Multi-stage cascade: (1) Isolation Forest trained "}, {"exp": 53, "f1": 0.2667, "best_so_far": 0.2667, "desc": "Ultra-deep neural network (6 hidden layers: 512-25"}, {"exp": 54, "f1": 0, "best_so_far": 0.2667, "desc": "FAILED: Experiment timed out (>300s)"}, {"exp": 55, "f1": 0.2128, "best_so_far": 0.2667, "desc": "Advanced stacking ensemble with 4 diverse base est"}, {"exp": 56, "f1": 0.1053, "best_so_far": 0.2667, "desc": "Stacked ensemble combining RF, ExtraTrees, and XGB"}, {"exp": 57, "f1": 0.2632, "best_so_far": 0.2667, "desc": "Stacking ensemble with 4 diverse base models (Rand"}, {"exp": 58, "f1": 0.092, "best_so_far": 0.2667, "desc": "LightGBM with DART booster (better for imbalanced "}, {"exp": 59, "f1": 0.3226, "best_so_far": 0.3226, "desc": "Stacked ensemble combining Random Forest, Extra Tr"}, {"exp": 60, "f1": 0.0315, "best_so_far": 0.3226, "desc": "XGBoost with focal loss approximation via heavy sa"}, {"exp": 61, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 62, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Expecting value: line 1 column 2 (char 1)"}, {"exp": 63, "f1": 0.0461, "best_so_far": 0.3226, "desc": "LightGBM with is_unbalance=True, class_weight='bal"}, {"exp": 64, "f1": 0.0619, "best_so_far": 0.3226, "desc": "Gradient Boosting with SMOTETomek combined samplin"}, {"exp": 65, "f1": 0.1587, "best_so_far": 0.3226, "desc": "Multi-layer Neural Network with 3 hidden layers (2"}, {"exp": 66, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 67, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 68, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 69, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 70, "f1": 0.2857, "best_so_far": 0.3226, "desc": "Hybrid approach: First train Isolation Forest on s"}, {"exp": 71, "f1": 0.2353, "best_so_far": 0.3226, "desc": "Deep Neural Network with 5 hidden layers (400-200-"}, {"exp": 72, "f1": 0, "best_so_far": 0.3226, "desc": "FAILED: Traceback (most recent call last):\n  File "}, {"exp": 73, "f1": 0.3429, "best_so_far": 0.3429, "desc": "Voting ensemble combining Random Forest, Extra Tre"}];
-const expNums = progression.map(p => p.exp);
-const f1Scores = progression.map(p => p.f1);
-const bestSoFar = progression.map(p => p.best_so_far);
-const descs = progression.map(p => p.desc);
-
-Plotly.newPlot('progression-chart', [
-    {
-        x: expNums, y: f1Scores,
-        type: 'scatter', mode: 'markers',
-        name: 'Experiment F1',
-        marker: { color: f1Scores.map(f => f > 0 ? '#3b82f6' : '#ef4444'), size: 6 },
-        text: descs,
-        hovertemplate: '#%{x}: F1=%{y:.4f}<br>%{text}<extra></extra>'
-    },
-    {
-        x: expNums, y: bestSoFar,
-        type: 'scatter', mode: 'lines',
-        name: 'Best So Far',
-        line: { color: '#d4a855', width: 3 },
-        hovertemplate: 'Best F1: %{y:.4f}<extra></extra>'
-    },
-    {
-        x: [expNums[0], expNums[expNums.length-1]],
-        y: [0.0377, 0.0377],
-        type: 'scatter', mode: 'lines',
-        name: 'Baseline',
-        line: { color: '#ef4444', width: 1, dash: 'dash' },
-    }
-], {
-    paper_bgcolor: 'transparent',
-    plot_bgcolor: 'transparent',
-    font: { color: '#9ca3af', family: 'Inter' },
-    xaxis: { title: 'Experiment #', gridcolor: 'rgba(255,255,255,0.05)', zerolinecolor: 'rgba(255,255,255,0.05)' },
-    yaxis: { title: 'F1 Score', gridcolor: 'rgba(255,255,255,0.05)', zerolinecolor: 'rgba(255,255,255,0.05)' },
-    legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0.3)' },
-    margin: { t: 20, r: 20 },
-    height: 350,
-}, { responsive: true, displayModeBar: false });
-</script>
-
-</body>
-</html>
+</div></article>
+</body></html>
