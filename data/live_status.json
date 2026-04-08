@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-08T13:43:37.292036+05:30",
+  "updated_at": "2026-04-08T14:13:39.594527+05:30",
   "msi": {
-    "score": 49.5,
+    "score": 49.4,
     "regime": "MACRO_NEUTRAL",
     "date": "2026-04-08"
   },
@@ -25,49 +25,49 @@
         {
           "ticker": "HAL",
           "entry": 3581.4,
-          "current": 3899.9,
-          "pnl_pct": 8.89
+          "current": 3895.4,
+          "pnl_pct": 8.77
         },
         {
           "ticker": "BEL",
           "entry": 415.0,
-          "current": 431.2,
-          "pnl_pct": 3.9
+          "current": 430.15,
+          "pnl_pct": 3.65
         },
         {
           "ticker": "BDL",
           "entry": 1132.2,
-          "current": 1281.0,
-          "pnl_pct": 13.14
+          "current": 1280.0,
+          "pnl_pct": 13.05
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2429.0,
-          "current": 2564.9,
-          "pnl_pct": -5.59,
+          "current": 2555.6,
+          "pnl_pct": -5.21,
           "price_type": "futures",
-          "basis_pct": 0.125
+          "basis_pct": 0.098
         },
         {
           "ticker": "INFY",
           "entry": 1290.0,
-          "current": 1339.3,
-          "pnl_pct": -3.82,
+          "current": 1336.2,
+          "pnl_pct": -3.58,
           "price_type": "futures",
-          "basis_pct": -0.416
+          "basis_pct": -0.477
         },
         {
           "ticker": "WIPRO",
           "entry": 191.51,
-          "current": 202.39,
-          "pnl_pct": -5.68,
+          "current": 201.56,
+          "pnl_pct": -5.25,
           "price_type": "futures",
-          "basis_pct": -0.687
+          "basis_pct": -0.758
         }
       ],
-      "spread_pnl_pct": 3.61,
+      "spread_pnl_pct": 3.81,
       "todays_move": 0.91,
       "daily_stop": -0.94,
       "two_day_stop": -1.88,
