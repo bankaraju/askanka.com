@@ -209,53 +209,82 @@ def analyse_financials(symbol: str) -> dict:
 
 # ── Step 2: Extract Management Narratives from Annual Reports ────────
 
-NARRATIVE_EXTRACTION_PROMPT = """You are a forensic equity research analyst. Analyse this annual report and extract management's forward-looking claims and strategic narratives.
+NARRATIVE_EXTRACTION_PROMPT = """You are a forensic equity research analyst. Your job is to extract MATERIAL FINANCIAL GUIDANCE from this annual report — the specific numbers and targets management committed to.
 
-For EACH claim, provide:
-1. **Exact quote** (the specific management statement)
-2. **Category**: One of: revenue_target, margin_guidance, capex_plan, order_book, capacity_expansion, export_target, new_program, technology_development, cost_reduction, dividend_policy, market_share, strategic_partnership, digital_transformation
-3. **Target metric**: What specific metric they're promising (e.g., "revenue", "order book value", "export revenue")
-4. **Target value**: The specific number or range (e.g., "Rs 50,000 Cr", "20% growth", "double by FY27")
-5. **Target timeline**: When they expect to achieve this (e.g., "FY26", "next 3 years", "by 2030")
-6. **Specificity score**: 1-5 (1=vague aspiration, 5=specific measurable commitment)
+ONLY extract guidance that is SPECIFIC and MEASURABLE. Ignore vague aspirational language like "we aim to grow" or "we are optimistic." We need hard numbers.
 
-Focus on:
-- Order book size and growth targets
-- Revenue and profit guidance
-- New aircraft/helicopter program timelines
-- Export targets and international partnerships
-- Capacity expansion plans (new facilities, production rates)
-- R&D and technology development milestones
-- Dividend and shareholder return policies
-- Any "quietly dropped" themes from prior years that are no longer mentioned
+## What to extract (MATERIAL GUIDANCE ONLY):
 
-Also identify:
-- Key risks management acknowledges
-- Any defensive or evasive language about underperformance
-- Themes that appear NEW this year vs recurring from prior years
+### Financial Guidance
+- Revenue target/guidance (e.g., "Revenue expected to reach Rs 35,000 Cr in FY26")
+- Profit margin guidance (e.g., "Operating margin to be maintained at 25%+")
+- EPS or PAT guidance
+- Dividend policy (e.g., "Minimum 30% payout ratio")
+- Revenue/profit CAGR targets
 
-Return your analysis as a JSON object with this structure:
+### Order Book & Pipeline
+- Order book size targets (e.g., "Order book of Rs 1.5 lakh Cr by FY26")
+- New orders expected (specific contracts, programs)
+- Order execution timelines
+
+### Capex & Capacity
+- Capital expenditure plans with amounts (e.g., "Rs 3,000 Cr capex in FY25")
+- New facility timelines (e.g., "Helicopter factory operational by Q2 FY26")
+- Production rate targets (e.g., "16 LCA per year by FY27")
+- Capacity utilization targets
+
+### Export & Diversification
+- Export revenue targets (e.g., "Exports to reach 15% of revenue")
+- New market entry plans with timelines
+- New product/program delivery dates
+
+### Operational KPIs
+- Employee productivity targets
+- R&D spend as % of revenue
+- Working capital / cash conversion targets
+
+## For each guidance item, provide:
+1. **exact_quote**: The verbatim text from the report
+2. **category**: revenue_guidance | profit_guidance | order_book | capex | capacity | export | new_program | dividend | working_capital | other
+3. **metric**: What specifically (e.g., "total revenue", "EBITDA margin", "order book value")
+4. **target_value**: The specific number (e.g., "Rs 35,000 Cr", "25%", "16 aircraft/year")
+5. **target_year**: When (e.g., "FY26", "by March 2027", "next 3 years")
+6. **section_found**: Where in the report (MD&A, Chairman Letter, Directors Report, Financial Highlights)
+7. **confidence**: How firm is this commitment? "hard_commitment" (board approved), "guidance" (management expects), "aspiration" (would like to)
+
+## Also extract:
+- **risks_disclosed**: Specific risks management acknowledges (not boilerplate)
+- **actual_numbers_this_year**: Key actuals reported (revenue, profit, order book, capex spent, exports) — these are needed to cross-reference LAST year's guidance
+
+Return ONLY valid JSON, no markdown fences:
 {
-  "claims": [
+  "guidance": [
     {
-      "quote": "exact text",
+      "exact_quote": "...",
       "category": "...",
-      "target_metric": "...",
+      "metric": "...",
       "target_value": "...",
-      "target_timeline": "...",
-      "specificity": 3,
-      "new_or_recurring": "new|recurring",
-      "section": "MD&A|Chairman's Letter|Directors Report"
+      "target_year": "...",
+      "section_found": "...",
+      "confidence": "hard_commitment|guidance|aspiration"
     }
   ],
-  "key_themes": ["theme1", "theme2"],
-  "risks_acknowledged": ["risk1", "risk2"],
-  "defensive_language": ["quote1", "quote2"],
+  "actuals_reported": {
+    "revenue": "Rs X Cr",
+    "operating_profit": "Rs X Cr",
+    "net_profit": "Rs X Cr",
+    "order_book": "Rs X Cr",
+    "capex_spent": "Rs X Cr",
+    "export_revenue": "Rs X Cr",
+    "dividend_per_share": "Rs X",
+    "employees": "X",
+    "other_key_numbers": {}
+  },
+  "risks_disclosed": ["specific risk 1", "specific risk 2"],
   "overall_tone": "confident|cautious|defensive|promotional"
 }
 
-Extract EVERY forward-looking claim. Be thorough — minimum 10 claims expected from an annual report.
-Return ONLY valid JSON, no markdown fences."""
+Be EXHAUSTIVE. Every number that represents a forward-looking target or guidance must be captured. Minimum 15 guidance items expected from a defence company annual report."""
 
 
 def extract_narratives(symbol: str) -> list[dict]:
@@ -316,60 +345,82 @@ def extract_narratives(symbol: str) -> list[dict]:
 
 # ── Step 3: Promise vs Delivery Scoring ──────────────────────────────
 
-SCORING_PROMPT_TEMPLATE = """You are a forensic equity research analyst scoring management credibility.
+SCORING_PROMPT_TEMPLATE = """You are a forensic equity research analyst. Your job is to CROSS-REFERENCE management guidance against actual results.
 
-Here are the FINANCIAL FACTS for {symbol} (from Screener.in, verified data):
+## VERIFIED FINANCIAL DATA (from Screener.in):
 {financials_json}
 
-Here are MANAGEMENT CLAIMS extracted from annual reports across multiple years:
+## MANAGEMENT GUIDANCE EXTRACTED FROM ANNUAL REPORTS (multiple years):
 {claims_json}
 
-For EACH claim, score whether management DELIVERED on their promise:
+## YOUR TASK: Build a GUIDANCE vs ACTUAL scorecard
 
-Scoring criteria:
-- **DELIVERED**: Target met or exceeded within the stated timeline
-- **PARTIALLY_DELIVERED**: Within 20% of target, or delivered late but eventually met
-- **MISSED**: More than 20% below target, or timeline passed without achievement
-- **QUIETLY_DROPPED**: Theme/commitment disappeared from subsequent reports without explanation
-- **TOO_EARLY**: Timeline hasn't arrived yet — cannot score
+For EVERY guidance item, find the ACTUAL result and score it:
 
-For each claim, check the actual financial data to verify. For example:
-- If they said "revenue will reach Rs 30,000 Cr by FY24" — check actual FY24 revenue
-- If they said "order book will cross Rs 1 lakh Cr" — check if it did
-- If they promised "20% export revenue share" — check actual export numbers
+### Scoring Rules:
+- **DELIVERED**: Actual meets or exceeds the target (within 5% tolerance)
+- **PARTIALLY_DELIVERED**: Actual is within 5-20% of target
+- **MISSED**: Actual is more than 20% below target
+- **EXCEEDED**: Actual significantly exceeds target (>10% above)
+- **QUIETLY_DROPPED**: This guidance/theme disappeared from subsequent annual reports without explanation or update
+- **TOO_EARLY**: Target year hasn't arrived yet — cannot score
+- **UNVERIFIABLE**: Cannot find actual data to verify
 
-Also identify:
-1. **Pattern of behavior**: Does management consistently over-promise and under-deliver?
-2. **Theme consistency**: Are they focused or scattered across too many initiatives?
-3. **Dropped narratives**: What did they STOP talking about? This is the most important signal.
-4. **Credibility trajectory**: Is credibility improving or deteriorating over time?
+### Cross-referencing method:
+1. Take guidance from FY(N) annual report
+2. Check actuals reported in FY(N+1) annual report AND Screener financial data
+3. Example: FY23 AR says "Revenue target Rs 30,000 Cr by FY24" → Check FY24 actual revenue from Screener data
 
-Return ONLY valid JSON:
+### For QUIETLY DROPPED detection:
+- If FY22 and FY23 both mention "export target of 15%" but FY24 and FY25 stop mentioning exports entirely → QUIETLY_DROPPED
+- If a major program or initiative is mentioned in 2+ years then vanishes → flag it
+
+Return ONLY valid JSON, no markdown fences:
 {{
-  "scored_claims": [
+  "scorecard": [
     {{
-      "claim_quote": "...",
-      "category": "...",
-      "target": "...",
-      "actual": "what actually happened (with specific numbers)",
-      "status": "DELIVERED|PARTIALLY_DELIVERED|MISSED|QUIETLY_DROPPED|TOO_EARLY",
-      "evidence": "specific data point from financials"
+      "guidance_year": "FY23",
+      "category": "revenue_guidance",
+      "guidance_quote": "exact management quote",
+      "target_metric": "total revenue",
+      "target_value": "Rs 30,000 Cr",
+      "target_year": "FY24",
+      "actual_value": "Rs 30,381 Cr (from Screener Mar 2024)",
+      "variance_pct": 1.3,
+      "status": "DELIVERED",
+      "source_of_actual": "Screener P&L Mar 2024 / FY24 Annual Report"
     }}
   ],
-  "delivery_summary": {{
-    "total_scoreable": 0,
+  "summary": {{
+    "total_guidance_items": 0,
     "delivered": 0,
+    "exceeded": 0,
     "partially_delivered": 0,
     "missed": 0,
     "quietly_dropped": 0,
     "too_early": 0,
-    "delivery_rate_pct": 0.0
+    "unverifiable": 0,
+    "delivery_rate_pct": 0.0,
+    "beat_rate_pct": 0.0
   }},
-  "dropped_themes": ["theme that disappeared without explanation"],
+  "dropped_themes": [
+    {{
+      "theme": "description of what was dropped",
+      "last_mentioned_year": "FY23",
+      "significance": "high|medium|low"
+    }}
+  ],
+  "guidance_accuracy_by_category": {{
+    "revenue_guidance": {{"total": 0, "delivered": 0, "rate_pct": 0}},
+    "order_book": {{"total": 0, "delivered": 0, "rate_pct": 0}},
+    "capex": {{"total": 0, "delivered": 0, "rate_pct": 0}},
+    "other": {{"total": 0, "delivered": 0, "rate_pct": 0}}
+  }},
   "credibility_trajectory": "improving|stable|deteriorating",
-  "management_pattern": "one paragraph describing overall management credibility pattern",
-  "biggest_red_flag": "the single most concerning finding",
-  "biggest_strength": "the single most impressive delivery"
+  "management_pattern": "2-3 sentences on management's overall credibility pattern — do they sandbag (guide low, beat high), guide accurately, or over-promise?",
+  "biggest_red_flag": "the single most concerning finding with specific numbers",
+  "biggest_strength": "the single most impressive delivery with specific numbers",
+  "what_street_is_missing": "what this cross-referencing reveals that consensus analyst reports don't capture"
 }}"""
 
 
@@ -378,16 +429,20 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
     if not narratives:
         return {"error": "No narratives to score"}
 
-    # Flatten all claims across years
+    # Flatten all guidance + actuals across years
     all_claims = []
     for narr in narratives:
         year = narr.get("source_year", "")
-        for claim in narr.get("claims", []):
+        # Support both old format (claims) and new format (guidance)
+        items = narr.get("guidance", narr.get("claims", []))
+        actuals = narr.get("actuals_reported", {})
+        for claim in items:
             claim["source_year"] = year
+            claim["actuals_this_year"] = actuals
             all_claims.append(claim)
 
     if not all_claims:
-        return {"error": "No claims extracted"}
+        return {"error": "No guidance items extracted"}
 
     # Prepare financial data for scoring
     fin_summary = {
@@ -426,85 +481,84 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
 # ── Step 4: Pattern Premium Calculation ──────────────────────────────
 
 def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
-    """Calculate the final Pattern Premium from scored claims.
+    """Calculate the final Pattern Premium from the guidance scorecard.
 
     Components:
-    - Execution Score (50%): delivery rate weighted by claim specificity
-    - Theme Consistency (15%): focused vs scattered strategy
-    - Dropped Theme Penalty (25%): -3% per quietly dropped narrative
+    - Execution Score (50%): delivery + beat rate from cross-referenced guidance
+    - Guidance Accuracy (15%): how close actuals are to targets (sandbagging vs accurate vs over-promising)
+    - Dropped Theme Penalty (25%): -3% per quietly dropped narrative (high significance)
     - Credibility Trajectory (10%): improving gets bonus, deteriorating gets penalty
     """
-    summary = scoring.get("delivery_summary", {})
-    total = summary.get("total_scoreable", 0)
+    summary = scoring.get("summary", scoring.get("delivery_summary", {}))
+    total = summary.get("total_guidance_items", summary.get("total_scoreable", 0))
+    delivered = summary.get("delivered", 0) + summary.get("exceeded", 0)
+    scoreable = total - summary.get("too_early", 0) - summary.get("unverifiable", 0)
 
-    if total == 0:
+    if scoreable == 0:
         return {
             "pattern_premium_pct": 0.0,
             "verdict": "INSUFFICIENT_DATA",
-            "detail": "Not enough scoreable claims to calculate premium",
+            "detail": "Not enough scoreable guidance items to calculate premium",
         }
 
-    # Execution score: -10 to +10
-    delivery_rate = summary.get("delivery_rate_pct", 50.0)
-    execution = (delivery_rate / 100 * 20) - 10  # 0%→-10, 50%→0, 100%→+10
+    delivery_rate = summary.get("delivery_rate_pct", (delivered / scoreable * 100) if scoreable > 0 else 0)
+    beat_rate = summary.get("beat_rate_pct", 0)
 
-    # Dropped theme penalty: -3% each
-    dropped = len(scoring.get("dropped_themes", []))
-    drop_penalty = -3.0 * dropped
+    # Execution score: -10 to +10
+    execution = (delivery_rate / 100 * 20) - 10
+
+    # Guidance accuracy bonus: companies that beat guidance get extra credit
+    accuracy_bonus = min(beat_rate / 100 * 5, 5.0) if beat_rate else 0.0
+
+    # Dropped theme penalty: -3% for high significance, -1.5% for medium
+    dropped_themes = scoring.get("dropped_themes", [])
+    if isinstance(dropped_themes, list) and dropped_themes and isinstance(dropped_themes[0], dict):
+        drop_penalty = sum(
+            -3.0 if d.get("significance") == "high" else -1.5
+            for d in dropped_themes
+        )
+    else:
+        drop_penalty = -3.0 * len(dropped_themes)
 
     # Credibility trajectory
     trajectory = scoring.get("credibility_trajectory", "stable")
     traj_score = {"improving": 3.0, "stable": 0.0, "deteriorating": -5.0}.get(trajectory, 0.0)
 
-    # Theme consistency (from claim categories)
-    categories = set()
-    for claim in scoring.get("scored_claims", []):
-        categories.add(claim.get("category", ""))
-    n_themes = len(categories)
-    if n_themes <= 2:
-        theme_score = -2.0  # Too concentrated
-    elif n_themes <= 5:
-        theme_score = 3.0   # Focused
-    else:
-        theme_score = 0.0   # Scattered
+    # Category-level analysis
+    cat_analysis = scoring.get("guidance_accuracy_by_category", {})
 
     # Weighted composite
     premium = (
         execution * 0.50 +
-        theme_score * 0.15 +
+        accuracy_bonus * 0.15 +
         drop_penalty * 0.25 +
         traj_score * 0.10
     )
 
-    # Forensic abort check
-    forensic = financials.get("forensic", {})
-    abort = False
-    abort_reason = ""
-
-    # Check for negative OCF pattern (if we have data)
-    roe = forensic.get("current_roe")
-    roce = forensic.get("current_roce")
-
-    verdict = "PREMIUM" if premium > 0 else "DISCOUNT" if premium < 0 else "FAIR"
+    verdict = "PREMIUM" if premium > 2 else "DISCOUNT" if premium < -2 else "FAIR"
 
     return {
         "pattern_premium_pct": round(premium, 1),
         "components": {
             "execution_score": round(execution, 1),
-            "theme_consistency": round(theme_score, 1),
+            "accuracy_bonus": round(accuracy_bonus, 1),
             "dropped_penalty": round(drop_penalty, 1),
             "trajectory_bonus": round(traj_score, 1),
         },
         "verdict": verdict,
-        "delivery_rate": delivery_rate,
-        "claims_scored": total,
-        "themes_dropped": dropped,
+        "delivery_rate": round(delivery_rate, 1),
+        "beat_rate": round(beat_rate, 1),
+        "guidance_scored": scoreable,
+        "guidance_delivered": delivered,
+        "guidance_missed": summary.get("missed", 0),
+        "themes_dropped": len(dropped_themes),
+        "dropped_theme_details": dropped_themes,
+        "category_breakdown": cat_analysis,
         "credibility_trajectory": trajectory,
         "management_pattern": scoring.get("management_pattern", ""),
         "biggest_red_flag": scoring.get("biggest_red_flag", ""),
         "biggest_strength": scoring.get("biggest_strength", ""),
-        "abort_dcf": abort,
-        "abort_reason": abort_reason,
+        "what_street_is_missing": scoring.get("what_street_is_missing", ""),
     }
 
 
@@ -592,13 +646,14 @@ def run(symbol: str):
     total_claims = sum(len(n.get("claims", [])) for n in narratives)
     print(f"         {len(narratives)} reports processed, {total_claims} claims extracted")
 
-    # Step 3: Promise vs Delivery scoring
-    print(f"\n  [3/5] Scoring promises vs delivery...")
+    # Step 3: Guidance vs Actual cross-referencing
+    print(f"\n  [3/5] Cross-referencing guidance vs actuals...")
     scoring = score_promises(symbol, financials, narratives)
-    (out_dir / "promise_scoring.json").write_text(
+    (out_dir / "guidance_scorecard.json").write_text(
         json.dumps(scoring, indent=2, ensure_ascii=False), encoding="utf-8")
-    ds = scoring.get("delivery_summary", {})
+    ds = scoring.get("summary", scoring.get("delivery_summary", {}))
     print(f"         Delivery rate: {ds.get('delivery_rate_pct', '?')}% | Dropped themes: {len(scoring.get('dropped_themes', []))}")
+    print(f"         Delivered: {ds.get('delivered', 0)} | Exceeded: {ds.get('exceeded', 0)} | Missed: {ds.get('missed', 0)} | Too Early: {ds.get('too_early', 0)}")
 
     # Step 4: Pattern Premium calculation
     print(f"\n  [4/5] Calculating Pattern Premium...")
@@ -626,23 +681,46 @@ def run(symbol: str):
             "revenue_growth": financials.get("forensic", {}).get("revenue_growth_latest"),
         },
         "pattern_premium": premium,
-        "delivery_summary": scoring.get("delivery_summary", {}),
+        "guidance_scorecard": scoring.get("scorecard", []),
+        "guidance_summary": scoring.get("summary", {}),
+        "guidance_by_category": scoring.get("guidance_accuracy_by_category", {}),
+        "dropped_themes": scoring.get("dropped_themes", []),
         "management_pattern": scoring.get("management_pattern", ""),
         "biggest_red_flag": scoring.get("biggest_red_flag", ""),
         "biggest_strength": scoring.get("biggest_strength", ""),
+        "what_street_is_missing": scoring.get("what_street_is_missing", ""),
         "street_consensus": consensus.get("street_consensus", {}),
         "differentiated_view": consensus.get("our_differentiated_view", {}),
     }
     (out_dir / "FINAL_REPORT.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    # Print scorecard summary
+    scorecard = scoring.get("scorecard", [])
+    if scorecard:
+        print(f"\n  {'─'*70}")
+        print(f"  GUIDANCE vs ACTUAL SCORECARD")
+        print(f"  {'─'*70}")
+        for item in scorecard:
+            status = item.get("status", "?")
+            icon = {"DELIVERED": "OK", "EXCEEDED": "++", "PARTIALLY_DELIVERED": "~", "MISSED": "XX", "QUIETLY_DROPPED": "!!", "TOO_EARLY": ".."}
+            s = icon.get(status, "??")
+            cat = item.get("category", "")[:15]
+            target = item.get("target_value", "?")[:25]
+            actual = item.get("actual_value", "?")[:30]
+            yr = item.get("guidance_year", "?")
+            print(f"  [{s:>2}] {yr} {cat:<16} Target: {target:<26} Actual: {actual}")
+
     print(f"\n{'='*70}")
     print(f"  PATTERN PREMIUM: {premium.get('pattern_premium_pct', 0):+.1f}% ({premium.get('verdict')})")
-    print(f"  Delivery Rate:   {ds.get('delivery_rate_pct', '?')}%")
-    print(f"  Claims Scored:   {ds.get('total_scoreable', 0)}")
+    print(f"  Delivery Rate:   {premium.get('delivery_rate', '?')}%")
+    print(f"  Beat Rate:       {premium.get('beat_rate', '?')}%")
+    print(f"  Guidance Scored: {premium.get('guidance_scored', 0)}")
+    print(f"  Dropped Themes:  {premium.get('themes_dropped', 0)}")
     print(f"  Red Flag:        {premium.get('biggest_red_flag', 'None')}")
     print(f"  Strength:        {premium.get('biggest_strength', 'None')}")
     print(f"  Trajectory:      {premium.get('credibility_trajectory', '?')}")
+    print(f"  Street Missing:  {premium.get('what_street_is_missing', 'N/A')}")
     print(f"{'='*70}")
     print(f"\n  Full report: {out_dir / 'FINAL_REPORT.json'}")
 

@@ -134,12 +134,50 @@ class NSEClient:
         return data
 
     def download_pdf(self, url: str, save_path: Path) -> bool:
-        """Download a PDF file from NSE archives."""
+        """Download a PDF file from NSE archives.
+
+        Auto-detects and extracts ZIP archives (NSE wraps some PDFs in ZIPs).
+        Validates the PDF is readable before returning success.
+        """
         try:
-            resp = self.session.get(url, timeout=30)
+            resp = self.session.get(url, timeout=60)
             resp.raise_for_status()
             save_path.parent.mkdir(parents=True, exist_ok=True)
-            save_path.write_bytes(resp.content)
+
+            content = resp.content
+
+            # Check if it's a ZIP (starts with PK magic bytes)
+            if content[:2] == b'PK':
+                import zipfile
+                import io
+                with zipfile.ZipFile(io.BytesIO(content)) as zf:
+                    pdf_files = [f for f in zf.namelist() if f.lower().endswith('.pdf')]
+                    if pdf_files:
+                        largest = max(pdf_files, key=lambda f: zf.getinfo(f).file_size)
+                        content = zf.read(largest)
+                        print(f"    Extracted from ZIP: {largest}")
+                    else:
+                        print(f"    ZIP contains no PDFs: {zf.namelist()}")
+                        return False
+
+            save_path.write_bytes(content)
+
+            # Validate PDF is readable
+            try:
+                import pymupdf
+                doc = pymupdf.open(str(save_path))
+                pages = doc.page_count
+                doc.close()
+                if pages == 0:
+                    print(f"    WARNING: PDF has 0 pages")
+                    return False
+            except ImportError:
+                pass  # No pymupdf — skip validation
+            except Exception as e:
+                print(f"    WARNING: PDF validation failed: {e}")
+                save_path.unlink(missing_ok=True)
+                return False
+
             return True
         except Exception as e:
             print(f"  Download failed: {url} — {e}")
