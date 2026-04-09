@@ -1,0 +1,64 @@
+======================================================================
+  OPUS ANKA — ANKA Trust Score Analysis: GAIL
+======================================================================
+
+  [1/5] Analysing financials...
+         12 years | ROCE: 14.0% | ROE: 13.1%
+
+  [2/5] Extracting management narratives from annual reports...
+    Extracting narratives from 2022-2023...
+      46 key pages from 378 total | Sections: ['risk', 'mda', 'directors', 'outlook', 'financial_highlights', 'overview']
+      Text length: 99,110 chars
+    → 0 claims, tone: confident
+    Extracting narratives from 2023-2024...
+      44 key pages from 393 total | Sections: ['mda', 'directors', 'outlook', 'risk', 'financial_highlights', 'overview']
+      Text length: 97,270 chars
+    → 0 claims, tone: confident
+    Extracting narratives from 2024-2025...
+      55 key pages from 426 total | Sections: ['outlook', 'directors', 'risk', 'financial_highlights', 'overview', 'mda']
+      Text length: 125,345 chars
+    → 0 claims, tone: confident
+         3 reports processed, 0 claims extracted
+
+  [3/5] Cross-referencing guidance vs actuals...
+    Scoring 51 claims against financials...
+         Delivery rate: 11.1% | Dropped themes: 1
+         Delivered: 1 | Exceeded: 0 | Missed: 6 | Too Early: 2
+
+  [4/5] Calculating ANKA Trust Score...
+         Premium: +3.3% | Verdict: F (3%)
+
+  [5/5] Getting street consensus view...
+         Done
+
+  ──────────────────────────────────────────────────────────────────────
+  GUIDANCE vs ACTUAL SCORECARD
+  ──────────────────────────────────────────────────────────────────────
+  [XX] FY23 capacity         Target: over 20,000 km             Actual: 16,421 km (Mar 2025)
+  [??] FY23 revenue_guidanc  Target: ₹ 33,000 crore             Actual: ₹ 141,903 crore total sales (M
+  [XX] FY23 capacity         Target: 500 KTA                    Actual: Under construction, expected F
+  [XX] FY24 capacity         Target: 500 KTA                    Actual: Commissioning target FY 2025-2
+  [XX] FY24 capacity         Target: 1.25 KTA capacity          Actual: February 2026 target
+  [!!] FY24 new_program      Target: 14-year charter period     Actual: Not mentioned in FY25 report
+  [..] FY25 new_program      Target: 1,702 km pipeline          Actual: In progress
+  [OK] FY25 dividend         Target: Rs 1 per equity share      Actual: Rs 1.00 final dividend recomme
+  [..] FY25 capacity         Target: 60 KTA capacity            Actual: Near mechanical completion
+  [XX] Multiple Years revenue_guidanc  Target: Implied double-digit grow  Actual: ₹141,903 crore vs ₹133,228 cro
+  [XX] FY23-24 capacity         Target: 4,200 km                   Actual: 3,300 km under execution in FY
+
+======================================================================
+  ANKA TRUST SCORE: F (3%)
+  Premium Adjustment: -5.7%
+  Delivery Rate:   3.3%
+  Beat Rate:       0.0%
+  Guidance Scored: 8
+  Dropped Themes:  1
+  Red Flag:        20,000 km pipeline network target missed by 3,579 km (17.9% shortfall) with actual at 16,421 km as of Mar 2025, directly constraining gas transmission capacity and revenue potential (Page 38, FY25 Board's Report vs Page 5, FY23 Strategy 2030).
+  Strength:        Consistent dividend delivery and financial discipline with ₹11,312 crore net profit in FY25 and recommended final dividend of ₹1 per share as guided (Page 40, FY25 Board's Report).
+  Trajectory:      deteriorating
+  Street Missing:  The street is pricing in capacity expansion that GAIL has systematically failed to deliver on time - every major infrastructure project (pipelines, petrochemical plants) is delayed by 1-2 years, creating a compounding effect on revenue growth potential that consensus estimates don't adequately reflect.
+======================================================================
+
+  Full report: C:\Users\Claude_Anka\opus-anka\artifacts\GAIL\FINAL_REPORT.json
+  Obsidian: C:\Users\Claude_Anka\ObsidianVault\markets\trust-score\GAIL-trust-score.md
+a\ObsidianVault\markets\trust-score\TCS-trust-score.md

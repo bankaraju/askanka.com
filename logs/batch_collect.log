@@ -1,43 +1,44 @@
 ======================================================================
   OPUS ANKA — ANKA Trust Score Research
-  Company: HCLTECH → NSE:HCLTECH BSE:532281
-  Output:  C:\Users\Claude_Anka\opus-anka\artifacts\HCLTECH
+  Company: MARUTI → NSE:MARUTI BSE:532500
+  Output:  C:\Users\Claude_Anka\opus-anka\artifacts\MARUTI
 ======================================================================
 
   [1/6] Fetching Screener financials...
-         P&L: 12 rows | BS: 10 rows | Docs: 74
+         P&L: 12 rows | BS: 10 rows | Docs: 65
 
   [2/6] Fetching NSE annual reports...
          16 annual reports found
          Downloading 2024-2025...
          Downloading 2023-2024...
          Downloading 2022-2023...
-    Extracted from ZIP: AR_22535_HCLTECH_2022_2023_28072023152543.pdf
+    Extracted from ZIP: AR_22663_MARUTI_2022_2023_05082023185748.pdf
 
   [3/6] Fetching NSE XBRL financials...
-         Annual: 39 | Quarterly: 119
+         Annual: 41 | Quarterly: 108
 
   [4/6] Fetching BSE annual reports...
          No reports from BSE
 
   [5/6] Collecting transcript links...
-         43 transcripts found
+         36 transcripts found
          Downloading: Transcript...
 
   [6/6] Fetching shareholding & corporate actions...
-  NSE API failed: /api/corporate-shareholding?index=equities&symbol=HCLTECH — 404 Client Error: Not Found for url: https://www.nseindia.com/api/corporate-shareholding?index=equities&symbol=HCLTECH
+  NSE API failed: /api/corporate-shareholding?index=equities&symbol=MARUTI — 404 Client Error: Not Found for url: https://www.nseindia.com/api/corporate-shareholding?index=equities&symbol=MARUTI
          Shareholding: 0 records
          Corp actions: 20 records
          Board meetings: 20 records
 
 ======================================================================
   DATA COLLECTION COMPLETE
-  Output: C:\Users\Claude_Anka\opus-anka\artifacts\HCLTECH
+  Output: C:\Users\Claude_Anka\opus-anka\artifacts\MARUTI
   Files:  11
 ======================================================================
 
   Next: Run narrative extraction on downloaded PDFs
-        python -m pipeline.narrative.extract_from_pdfs HCLTECH
+        python -m pipeline.narrative.extract_from_pdfs MARUTI
+CLTECH
 act_from_pdfs BAJAJ-AUTO
 dfs TCS
 ===========================================================
