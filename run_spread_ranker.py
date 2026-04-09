@@ -119,7 +119,7 @@ def _extract_snapshot(symbol: str, data: dict) -> dict:
 
     # Revenue growth (3-year CAGR)
     sales_row = get_row("Sales") or get_row("Sales+")
-    years = sorted([k for k in sales_row if k.startswith("Mar ")], key=lambda x: int(x.split()[-1]))
+    years = sorted([k for k in sales_row if k.startswith("Mar ") and k.split()[-1].isdigit()], key=lambda x: int(x.split()[-1]))
     rev_3yr_cagr = None
     if len(years) >= 4:
         recent = parse_num(sales_row.get(years[-1]))
