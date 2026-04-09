@@ -166,32 +166,64 @@ def _construct_portfolio(scores: dict, regime: str, universe: dict) -> dict:
     max_shorts = config["max_positions"] // 2
     shorts = unique_shorts[:max_shorts]
 
-    # Size by conviction
+    # Gate: only allow stocks with deep Trust Score into final portfolio
+    from pipeline.risk_manager import has_deep_trust_score, get_stop_loss, get_position_size
+
+    longs_verified = [s for s in longs if has_deep_trust_score(s["symbol"])]
+    longs_unverified = [s for s in longs if not has_deep_trust_score(s["symbol"])]
+    shorts_verified = [s for s in shorts if has_deep_trust_score(s["symbol"])]
+    shorts_unverified = [s for s in shorts if not has_deep_trust_score(s["symbol"])]
+
+    if longs_unverified:
+        print(f"\n  [!] BLOCKED from portfolio (no deep Trust Score):")
+        for s in longs_unverified:
+            print(f"      {s['symbol']} — run: python run_research.py {s['symbol']} && python run_trust_score.py {s['symbol']}")
+
+    longs = longs_verified
+    shorts = shorts_verified
+
+    # Size by conviction (now uses risk manager)
     total_long_conviction = sum(s.get("score", 50) for s in longs) or 1
     total_short_conviction = sum(100 - s.get("score", 50) for s in shorts) or 1
 
     positions = []
     for s in longs:
-        weight = round(s.get("score", 50) / total_long_conviction * config["long_pct"], 1)
+        grade = s.get("grade", "B")
+        price = s.get("price", 0)
+        weight = min(
+            round(s.get("score", 50) / total_long_conviction * config["long_pct"], 1),
+            get_position_size(grade, regime),
+        )
+        stop = get_stop_loss(grade, "LONG", price) if price else {}
         positions.append({
             "symbol": s["symbol"], "side": "LONG", "sector": s["sector"],
-            "trust_grade": s.get("grade", "?"), "trust_score": s.get("score", 0),
-            "price": s.get("price"), "pe": s.get("pe"), "roe": s.get("roe"),
+            "trust_grade": grade, "trust_score": s.get("score", 0),
+            "price": price, "pe": s.get("pe"), "roe": s.get("roe"),
             "weight_pct": weight,
+            "stop_pct": stop.get("stop_pct", 5),
+            "stop_price": stop.get("stop_price", 0),
+            "entry_price": price,
             "thesis": s.get("thesis", ""),
-            "factors": s.get("factors", {}),
         })
 
     for s in shorts:
+        grade = s.get("grade", "B")
+        price = s.get("price", 0)
         inverse_score = 100 - s.get("score", 50)
-        weight = round(inverse_score / total_short_conviction * config["short_pct"], 1)
+        weight = min(
+            round(inverse_score / total_short_conviction * config["short_pct"], 1),
+            get_position_size(grade, regime),
+        )
+        stop = get_stop_loss(grade, "SHORT", price) if price else {}
         positions.append({
             "symbol": s["symbol"], "side": "SHORT", "sector": s["sector"],
-            "trust_grade": s.get("grade", "?"), "trust_score": s.get("score", 0),
-            "price": s.get("price"), "pe": s.get("pe"), "roe": s.get("roe"),
+            "trust_grade": grade, "trust_score": s.get("score", 0),
+            "price": price, "pe": s.get("pe"), "roe": s.get("roe"),
             "weight_pct": weight,
+            "stop_pct": stop.get("stop_pct", 5),
+            "stop_price": stop.get("stop_price", 0),
+            "entry_price": price,
             "thesis": s.get("thesis", ""),
-            "factors": s.get("factors", {}),
         })
 
     return {
@@ -254,11 +286,19 @@ def intraday_monitor():
         alerts.append({"type": "REGIME_SHIFT", "message": alert, "severity": "HIGH"})
         print(f"  [!] {alert}")
 
-    # 2. Check OI shifts for portfolio stocks
+    # 2. Check stop-losses
+    stop_alerts = _check_stops(portfolio)
+    alerts.extend(stop_alerts)
+
+    # 3. Check re-entry opportunities for stopped-out positions
+    reentry_alerts = _check_reentries(portfolio, current_regime)
+    alerts.extend(reentry_alerts)
+
+    # 4. Check OI shifts for portfolio stocks
     oi_alerts = _check_oi_shifts(portfolio)
     alerts.extend(oi_alerts)
 
-    # 3. Check for major price moves in portfolio stocks
+    # 5. Check for major price moves in portfolio stocks
     price_alerts = _check_price_moves(portfolio)
     alerts.extend(price_alerts)
 
@@ -276,6 +316,65 @@ def intraday_monitor():
         save_portfolio(portfolio)
     else:
         print("  No alerts. Positions holding.")
+
+    return alerts
+
+
+def _check_stops(portfolio: dict) -> list:
+    """Check if any position has hit its stop-loss."""
+    from pipeline.risk_manager import check_stop_hit
+    alerts = []
+    screener = ScreenerClient()
+
+    for pos in portfolio.get("positions", []):
+        if pos.get("status") == "stopped_out":
+            continue
+        sym = pos["symbol"]
+        snap = fetch_stock_snapshot(sym, screener)
+        if not snap or not snap.get("price"):
+            continue
+
+        result = check_stop_hit(pos, snap["price"])
+        if result:
+            alerts.append(result)
+            pos["status"] = "stopped_out"
+            pos["stopped_at"] = datetime.now(IST).isoformat()
+            pos["stopped_price"] = snap["price"]
+            print(f"  [STOP] {result['action']}")
+
+    return alerts
+
+
+def _check_reentries(portfolio: dict, current_regime: str) -> list:
+    """Check if any stopped-out positions are eligible for re-entry."""
+    from pipeline.risk_manager import check_reentry_eligible
+    alerts = []
+    screener = ScreenerClient()
+
+    for pos in portfolio.get("positions", []):
+        if pos.get("status") != "stopped_out":
+            continue
+
+        sym = pos["symbol"]
+        stopped_at = pos.get("stopped_at", "")
+        if not stopped_at:
+            continue
+
+        # Calculate days since stop
+        try:
+            stop_date = datetime.fromisoformat(stopped_at).date()
+            days_since = (datetime.now(IST).date() - stop_date).days
+        except Exception:
+            continue
+
+        snap = fetch_stock_snapshot(sym, screener)
+        if not snap or not snap.get("price"):
+            continue
+
+        result = check_reentry_eligible(pos, snap["price"], current_regime, days_since)
+        if result:
+            alerts.append(result)
+            print(f"  [RE-ENTRY] {result['action']}")
 
     return alerts
 
