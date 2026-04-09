@@ -65,7 +65,7 @@ Return ONLY valid JSON, no markdown:
   "export_credibility": "credible or recycled aspiration",
   "hoodwinking_indicators": ["indicator1", "indicator2"],
   "what_management_doesnt_want_you_to_know": "biggest thing buried in the numbers",
-  "revised_pattern_premium_recommendation": "premium/discount given findings",
+  "revised_trust_score_recommendation": "premium/discount given findings",
   "investment_implication": "what this means for buying HAL"
 }"""
 

@@ -2,7 +2,7 @@
 Step 10: Promise-vs-Delivery Scoring
 Match historical management claims against subsequent financial results.
 
-This is the core of the Pattern Premium — did management deliver on promises?
+This is the core of the ANKA Trust Score — did management deliver on promises?
 Boolean verification: 'Delivered' vs 'Dropped' for every target.
 
 Key forensic signal: "Quietly Dropped" narratives — when a strategic theme

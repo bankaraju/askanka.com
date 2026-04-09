@@ -1,5 +1,5 @@
 """
-OPUS ANKA — Run Pattern Premium Research for any Indian listed company.
+OPUS ANKA — Run ANKA Trust Score Research for any Indian listed company.
 
 Usage:
     python run_research.py HAL
@@ -75,13 +75,13 @@ def resolve_symbol(name: str) -> tuple[str, str]:
 
 
 def run(company_input: str):
-    """Run full Pattern Premium research pipeline."""
+    """Run full ANKA Trust Score research pipeline."""
     nse_symbol, bse_scrip = resolve_symbol(company_input)
     out_dir = ARTIFACTS / nse_symbol
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"{'='*70}")
-    print(f"  OPUS ANKA — Pattern Premium Research")
+    print(f"  OPUS ANKA — ANKA Trust Score Research")
     print(f"  Company: {company_input} → NSE:{nse_symbol} BSE:{bse_scrip}")
     print(f"  Output:  {out_dir}")
     print(f"{'='*70}")

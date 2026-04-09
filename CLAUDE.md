@@ -1,7 +1,7 @@
-# OPUS ANKA — Automated Equity Research & Pattern Premium Engine
+# OPUS ANKA — Automated Equity Research & ANKA Trust Score Engine
 
 ## What This Is
-Agentic equity research system for Indian markets. Takes a company name, runs a 12-step forensic pipeline, outputs a research report with a proprietary "Pattern Premium" score based on management credibility over multi-year cycles.
+Agentic equity research system for Indian markets. Takes a company name, runs a 12-step forensic pipeline, outputs a research report with a proprietary "ANKA Trust Score" score based on management credibility over multi-year cycles.
 
 ## Architecture (Three Pillars)
 - **PostgreSQL V2** (Port 5000): Forensics — XBRL data, working capital, unified financials
@@ -20,7 +20,7 @@ Agentic equity research system for Indian markets. Takes a company name, runs a 
 8. Ratio Calculation (Goldman-style framework)
 9. Management Claim Extraction (min 5 claims/filing)
 10. Promise-vs-Delivery Scoring (boolean verification)
-11. Pattern Premium Calculation (credibility → valuation adjustment)
+11. ANKA Trust Score Calculation (credibility → valuation adjustment)
 12. Report Generation (zero-hallucination sign-off)
 
 ## Quality Rules

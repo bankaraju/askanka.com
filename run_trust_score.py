@@ -1,15 +1,15 @@
 """
-OPUS ANKA — Pattern Premium Scorer
+OPUS ANKA — ANKA Trust Score Scorer
 
 Takes collected data from run_research.py and produces:
 1. Structured financials analysis (from Screener data)
 2. Management narrative extraction (from annual report PDFs via Claude)
 3. Promise-vs-Delivery scoring
-4. Final Pattern Premium score
+4. Final ANKA Trust Score score
 
 Usage:
-    python run_pattern_premium.py HAL
-    python run_pattern_premium.py HDFCBANK
+    python run_trust_score.py HAL
+    python run_trust_score.py HDFCBANK
 
 Requires: ANTHROPIC_API_KEY in environment or config/.env
 """
@@ -379,7 +379,7 @@ For EVERY guidance item, find the ACTUAL result and score it:
 - If FY22 and FY23 both mention "export target of 15%" but FY24 and FY25 stop mentioning exports entirely → QUIETLY_DROPPED
 - If a major program or initiative is mentioned in 2+ years then vanishes → flag it
 
-### MATERIALITY WEIGHTING (critical for Pattern Premium):
+### MATERIALITY WEIGHTING (critical for ANKA Trust Score):
 When scoring, weight items by materiality:
 - **critical** items (revenue, profit, production targets): These DEFINE the investment thesis. A MISS here is 3x more damaging than a routine MISS.
 - **significant** items (capex, capacity, order book): Important but secondary.
@@ -521,10 +521,10 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
         return {"error": str(e)}
 
 
-# ── Step 4: Pattern Premium Calculation ──────────────────────────────
+# ── Step 4: ANKA Trust Score Calculation ──────────────────────────────
 
-def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
-    """Calculate the final Pattern Premium from the guidance scorecard.
+def calculate_trust_score(scoring: dict, financials: dict) -> dict:
+    """Calculate the final ANKA Trust Score from the guidance scorecard.
 
     Uses materiality weighting and temporal decay:
     - Critical guidance (revenue/profit/production) counts 3x vs routine (CSR/policy)
@@ -538,7 +538,7 @@ def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
 
     if scoreable == 0:
         return {
-            "pattern_premium_pct": 0.0,
+            "trust_score_pct": 0.0,
             "verdict": "INSUFFICIENT_DATA",
             "detail": "Not enough scoreable guidance items to calculate premium",
         }
@@ -591,13 +591,26 @@ def calculate_pattern_premium(scoring: dict, financials: dict) -> dict:
         traj_score * 0.10
     )
 
-    verdict = "PREMIUM" if premium > 2 else "DISCOUNT" if premium < -2 else "FAIR"
+    # Letter grade based on effective delivery rate
+    def _grade(rate):
+        if rate >= 90: return "A+"
+        if rate >= 80: return "A"
+        if rate >= 70: return "B+"
+        if rate >= 60: return "B"
+        if rate >= 40: return "C"
+        if rate >= 20: return "D"
+        return "F"
+
+    grade = _grade(delivery_rate)
+    verdict = f"{grade} ({delivery_rate:.0f}%)"
 
     # Divergence from street
     divergence = scoring.get("divergence_from_street", {})
 
     return {
-        "pattern_premium_pct": round(premium, 1),
+        "trust_score_pct": round(delivery_rate, 1),
+        "trust_score_grade": grade,
+        "premium_adjustment_pct": round(premium, 1),
         "components": {
             "execution_score": round(execution, 1),
             "accuracy_bonus": round(accuracy_bonus, 1),
@@ -652,7 +665,7 @@ Return ONLY valid JSON:
   "our_differentiated_view": {{
     "agrees_with_street": ["point1", "point2"],
     "disagrees_with_street": ["point1", "point2"],
-    "what_street_is_missing": "the key insight from Pattern Premium analysis that street doesn't capture"
+    "what_street_is_missing": "the key insight from ANKA Trust Score analysis that street doesn't capture"
   }}
 }}"""
 
@@ -687,14 +700,14 @@ def get_street_consensus(symbol: str, financials: dict) -> dict:
 # ── Orchestrator ─────────────────────────────────────────────────────
 
 def run(symbol: str):
-    """Run full Pattern Premium analysis."""
+    """Run full ANKA Trust Score analysis."""
     out_dir = ARTIFACTS / symbol
     if not out_dir.exists():
         print(f"ERROR: No data found for {symbol}. Run 'python run_research.py {symbol}' first.")
         return
 
     print(f"{'='*70}")
-    print(f"  OPUS ANKA — Pattern Premium Analysis: {symbol}")
+    print(f"  OPUS ANKA — ANKA Trust Score Analysis: {symbol}")
     print(f"{'='*70}")
 
     # Step 1: Financial analysis
@@ -721,12 +734,12 @@ def run(symbol: str):
     print(f"         Delivery rate: {ds.get('delivery_rate_pct', '?')}% | Dropped themes: {len(scoring.get('dropped_themes', []))}")
     print(f"         Delivered: {ds.get('delivered', 0)} | Exceeded: {ds.get('exceeded', 0)} | Missed: {ds.get('missed', 0)} | Too Early: {ds.get('too_early', 0)}")
 
-    # Step 4: Pattern Premium calculation
-    print(f"\n  [4/5] Calculating Pattern Premium...")
-    premium = calculate_pattern_premium(scoring, financials)
-    (out_dir / "pattern_premium.json").write_text(
+    # Step 4: ANKA Trust Score calculation
+    print(f"\n  [4/5] Calculating ANKA Trust Score...")
+    premium = calculate_trust_score(scoring, financials)
+    (out_dir / "trust_score.json").write_text(
         json.dumps(premium, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"         Premium: {premium.get('pattern_premium_pct', 0):+.1f}% | Verdict: {premium.get('verdict')}")
+    print(f"         Premium: {premium.get('trust_score_pct', 0):+.1f}% | Verdict: {premium.get('verdict')}")
 
     # Step 5: Street consensus
     print(f"\n  [5/5] Getting street consensus view...")
@@ -746,7 +759,7 @@ def run(symbol: str):
             "roe": financials.get("forensic", {}).get("current_roe"),
             "revenue_growth": financials.get("forensic", {}).get("revenue_growth_latest"),
         },
-        "pattern_premium": premium,
+        "trust_score": premium,
         "guidance_scorecard": scoring.get("scorecard", []),
         "guidance_summary": scoring.get("summary", {}),
         "guidance_by_category": scoring.get("guidance_accuracy_by_category", {}),
@@ -778,7 +791,8 @@ def run(symbol: str):
             print(f"  [{s:>2}] {yr} {cat:<16} Target: {target:<26} Actual: {actual}")
 
     print(f"\n{'='*70}")
-    print(f"  PATTERN PREMIUM: {premium.get('pattern_premium_pct', 0):+.1f}% ({premium.get('verdict')})")
+    print(f"  ANKA TRUST SCORE: {premium.get('trust_score_grade', '?')} ({premium.get('trust_score_pct', 0):.0f}%)")
+    print(f"  Premium Adjustment: {premium.get('premium_adjustment_pct', 0):+.1f}%")
     print(f"  Delivery Rate:   {premium.get('delivery_rate', '?')}%")
     print(f"  Beat Rate:       {premium.get('beat_rate', '?')}%")
     print(f"  Guidance Scored: {premium.get('guidance_scored', 0)}")
@@ -791,10 +805,10 @@ def run(symbol: str):
     print(f"\n  Full report: {out_dir / 'FINAL_REPORT.json'}")
 
     # ── Save to Obsidian vault for sector comparisons ────────────
-    obsidian_dir = Path("C:/Users/Claude_Anka/ObsidianVault/markets/pattern-premium")
+    obsidian_dir = Path("C:/Users/Claude_Anka/ObsidianVault/markets/trust-score")
     try:
         obsidian_dir.mkdir(parents=True, exist_ok=True)
-        obsidian_path = obsidian_dir / f"{symbol}-pattern-premium.md"
+        obsidian_path = obsidian_dir / f"{symbol}-trust-score.md"
         _save_obsidian_note(symbol, report, premium, scoring, obsidian_path)
         print(f"  Obsidian: {obsidian_path}")
     except Exception as e:
@@ -824,16 +838,16 @@ def _save_obsidian_note(symbol: str, report: dict, premium: dict, scoring: dict,
 
     md = f"""---
 company: {symbol}
-pattern_premium: {premium.get('pattern_premium_pct', 0)}%
+trust_score: {premium.get('trust_score_pct', 0)}%
 verdict: {premium.get('verdict', '?')}
 delivery_rate: {premium.get('delivery_rate', '?')}%
 generated: {report.get('generated_at', '')}
-tags: [pattern-premium, equity-research, {symbol.lower()}]
+tags: [trust-score, equity-research, {symbol.lower()}]
 ---
 
-# {symbol} — Pattern Premium Analysis
+# {symbol} — ANKA Trust Score Analysis
 
-**Pattern Premium: {premium.get('pattern_premium_pct', 0):+.1f}% ({premium.get('verdict', '?')})**
+**ANKA Trust Score: {premium.get('trust_score_pct', 0):+.1f}% ({premium.get('verdict', '?')})**
 
 ## Financial Snapshot
 - Market Cap: {snap.get('market_cap', '?')} Cr
@@ -867,7 +881,7 @@ tags: [pattern-premium, equity-research, {symbol.lower()}]
 - Note: {premium.get('scoring_methodology', {}).get('note', '')}
 
 ---
-*Generated by OPUS ANKA Pattern Premium Engine*
+*Generated by OPUS ANKA ANKA Trust Score Engine*
 """
     path.write_text(md, encoding="utf-8")
 

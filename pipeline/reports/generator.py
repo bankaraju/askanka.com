@@ -44,8 +44,8 @@ def generate_report(ctx) -> str:
             "delivery_rate": _delivery_rate(ctx.promise_delivery),
             "dropped_themes": [r.claim_text for r in ctx.promise_delivery if r.status == "quietly_dropped"],
         },
-        "pattern_premium": ctx.pattern_premium,
-        "valuation_applicable": ctx.pattern_premium != float("-inf"),
+        "trust_score": ctx.trust_score,
+        "valuation_applicable": ctx.trust_score != float("-inf"),
         "quality_gates": ctx.quality_gates,
         "errors": ctx.errors,
     }

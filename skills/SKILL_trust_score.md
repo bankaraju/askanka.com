@@ -1,10 +1,10 @@
 ---
-name: Pattern Premium Equity Research
+name: ANKA Trust Score Equity Research
 version: 1.0
 scope: Any Indian listed equity
 ---
 
-# Pattern Premium — Forensic Equity Research Skill
+# ANKA Trust Score — Forensic Equity Research Skill
 
 ## What This Does
 
@@ -19,7 +19,7 @@ Three layers:
 
 ```
 python run_research.py <SYMBOL>          # Collects all data (30-60 seconds)
-python run_pattern_premium.py <SYMBOL>   # Analyses and scores (3-5 minutes)
+python run_trust_score.py <SYMBOL>   # Analyses and scores (3-5 minutes)
 ```
 
 Output: `artifacts/<SYMBOL>/FINAL_REPORT.json`
@@ -113,9 +113,9 @@ HAL Example:
 - Overvaluation: 225%
 ```
 
-## Pattern Premium Score
+## ANKA Trust Score Score
 
-The final output is a single number: **Pattern Premium %**
+The final output is a single number: **ANKA Trust Score %**
 
 | Component | Weight | What It Measures |
 |-----------|--------|-----------------|
@@ -136,7 +136,7 @@ Every number in the report MUST have a `page_reference` field tracing it to:
 - Specific page and section in the BSE/NSE annual report PDF
 - Or "Screener P&L Mar 2024" for verified financial data
 
-If a number cannot be traced, it must be flagged as `"source": "UNVERIFIED"` and excluded from Pattern Premium scoring. The agent must never present an unverified number as fact.
+If a number cannot be traced, it must be flagged as `"source": "UNVERIFIED"` and excluded from ANKA Trust Score scoring. The agent must never present an unverified number as fact.
 
 ### 2. Divergence Logic
 When our conclusion contradicts street consensus, the agent MUST produce an explicit `divergence_from_street` block:
@@ -160,7 +160,7 @@ Not all guidance is equal. The scoring engine weights items:
 | **significant** | Capex plans, order book, capacity expansion | 2.0x |
 | **routine** | CSR spend, R&D corpus %, compliance policy | 1.0x |
 
-A 100% delivery rate on CSR and a 0% delivery rate on production targets should NOT produce a positive Pattern Premium. The `critical_delivery_rate` drives 70% of the execution score.
+A 100% delivery rate on CSR and a 0% delivery rate on production targets should NOT produce a positive ANKA Trust Score. The `critical_delivery_rate` drives 70% of the execution score.
 
 ### 4. Temporal Decay
 Recent guidance failures are more material than historical ones:
@@ -180,7 +180,7 @@ A production MISS in FY23 at 0.7x weight counts more than a CSR delivery in FY19
 3. Divergent sources flagged as "High-Interest Intelligence"
 4. DCF aborted when DSO > 200 days or negative OCF
 5. Minimum 3 years of annual reports for any scoring
-6. Minimum 10 guidance items for Pattern Premium calculation
+6. Minimum 10 guidance items for ANKA Trust Score calculation
 7. Critical delivery rate must be separately reported from routine
 8. Street divergence must be explicitly justified when present
 
@@ -189,7 +189,7 @@ A production MISS in FY23 at 0.7x weight counts more than a CSR delivery in FY19
 Reports save to:
 1. `artifacts/<SYMBOL>/FINAL_REPORT.json` — complete structured data
 2. `artifacts/<SYMBOL>/guidance_scorecard.json` — every guidance item with status
-3. `ObsidianVault/markets/pattern-premium/<SYMBOL>-pattern-premium.md` — searchable note with frontmatter tags for cross-company comparison
+3. `ObsidianVault/markets/trust-score/<SYMBOL>-trust-score.md` — searchable note with frontmatter tags for cross-company comparison
 
 ## What This Does NOT Do
 
@@ -205,11 +205,11 @@ Reports save to:
 
 2. **Catalyst Identification**: When does the gap between forensic value and market price close? What triggers re-rating (earnings miss, order cancellation, management change)?
 
-3. **Portfolio Construction**: Should we only recommend stocks where Pattern Premium is positive AND market price is below fair value? Or can we recommend overvalued stocks with improving trajectories?
+3. **Portfolio Construction**: Should we only recommend stocks where ANKA Trust Score is positive AND market price is below fair value? Or can we recommend overvalued stocks with improving trajectories?
 
-4. **Short Candidates**: Stocks with negative Pattern Premium AND overvaluation are natural short candidates. But shorting in India is hard (limited F&O stocks, no easy borrowing).
+4. **Short Candidates**: Stocks with negative ANKA Trust Score AND overvaluation are natural short candidates. But shorting in India is hard (limited F&O stocks, no easy borrowing).
 
-5. **Regime Integration**: How does the askanka.com regime engine (RISK-OFF / RISK-ON) interact with Pattern Premium? In RISK-OFF, even fundamentally strong stocks fall. In RISK-ON, even weak stocks rally.
+5. **Regime Integration**: How does the askanka.com regime engine (RISK-OFF / RISK-ON) interact with ANKA Trust Score? In RISK-OFF, even fundamentally strong stocks fall. In RISK-ON, even weak stocks rally.
 
 6. **Sector Libraries**: Need to build for Real Estate (pre-sales vs completions), IT (TCV vs executable pipeline, attrition impact), Infra (order book vs WC bleeding), Pharma (R&D pipeline vs approvals), FMCG (distribution reach vs volume growth).
 

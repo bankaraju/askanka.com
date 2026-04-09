@@ -66,8 +66,8 @@ def check_gate_6_convergence(ctx) -> GateResult:
 
 def check_gate_7_actionable(ctx) -> GateResult:
     """Final insight follows logically from identified constraints."""
-    has_premium = ctx.pattern_premium != 0.0
-    detail = f"Pattern Premium: {ctx.pattern_premium:+.1f}%" if has_premium else "No premium calculated"
+    has_premium = ctx.trust_score != 0.0
+    detail = f"ANKA Trust Score: {ctx.trust_score:+.1f}%" if has_premium else "No premium calculated"
     return GateResult(7, "Actionable Recommendation", has_premium, detail)
 
 

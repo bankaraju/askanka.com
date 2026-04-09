@@ -27,7 +27,7 @@ The most important forensic signal. When management stops talking
 about a strategy without explaining why:
 1. Track theme presence across consecutive filings
 2. If theme appears 2+ times then vanishes for 2+ quarters → FLAG
-3. Automatic -3% Pattern Premium deduction per dropped theme
+3. Automatic -3% ANKA Trust Score deduction per dropped theme
 
 ## Categories
 - revenue_target, margin_guidance, capex_plan

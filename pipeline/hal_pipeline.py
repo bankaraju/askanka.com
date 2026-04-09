@@ -31,7 +31,7 @@ class ResearchContext:
     ratios: dict = field(default_factory=dict)
     management_claims: list = field(default_factory=list)
     promise_delivery: list = field(default_factory=list)
-    pattern_premium: float = 0.0
+    trust_score: float = 0.0
     quality_gates: dict = field(default_factory=dict)
     errors: list = field(default_factory=list)
     started_at: str = field(default_factory=lambda: datetime.now(IST).isoformat())
@@ -158,13 +158,13 @@ def step_10_promise_delivery(ctx: ResearchContext) -> ResearchContext:
     return ctx
 
 
-# ── Step 11: Pattern Premium Calculation ─────────────────────────────
+# ── Step 11: ANKA Trust Score Calculation ─────────────────────────────
 
-def step_11_pattern_premium(ctx: ResearchContext) -> ResearchContext:
+def step_11_trust_score(ctx: ResearchContext) -> ResearchContext:
     """Apply credibility scores to adjust valuation.
     Success: Quantitative premium adjustment from execution track record."""
-    from pipeline.premium.calculator import calculate_pattern_premium
-    ctx.pattern_premium = calculate_pattern_premium(ctx.promise_delivery, ctx.ratios)
+    from pipeline.premium.calculator import calculate_trust_score
+    ctx.trust_score = calculate_trust_score(ctx.promise_delivery, ctx.ratios)
     return ctx
 
 
@@ -192,7 +192,7 @@ STEPS = [
     ("Ratio Calculation", step_08_ratios),
     ("Claim Extraction", step_09_claims),
     ("Promise vs Delivery", step_10_promise_delivery),
-    ("Pattern Premium", step_11_pattern_premium),
+    ("ANKA Trust Score", step_11_trust_score),
     ("Report Generation", step_12_report),
 ]
 
@@ -218,7 +218,7 @@ def run_pipeline(company_name: str) -> ResearchContext:
     gates_total = len(ctx.quality_gates)
     print(f"\n{'='*70}")
     print(f"Quality Gates: {gates_passed}/{gates_total} passed")
-    print(f"Pattern Premium: {ctx.pattern_premium:+.1f}%")
+    print(f"ANKA Trust Score: {ctx.trust_score:+.1f}%")
     if ctx.errors:
         print(f"Errors: {len(ctx.errors)}")
         for e in ctx.errors:

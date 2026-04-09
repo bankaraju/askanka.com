@@ -1,5 +1,5 @@
 """
-Step 11: Pattern Premium Calculation
+Step 11: ANKA Trust Score Calculation
 The proprietary signal. Adjusts valuation based on management execution credibility.
 
 Components:
@@ -8,15 +8,15 @@ Components:
 3. Dropped Theme Penalty: Deduction for quietly abandoned narratives
 4. Digital Leadership: Bonus for sustained tech/digital investment with results
 
-The Pattern Premium is a % adjustment to fair value:
+The ANKA Trust Score is a % adjustment to fair value:
 - Positive = management over-delivers → valuation premium justified
 - Negative = management under-delivers → valuation discount warranted
 - "DCF Not Applicable" if forensic triggers met (DSO > 200, negative OCF)
 """
 
 
-def calculate_pattern_premium(promise_results: list, ratios: dict) -> float:
-    """Calculate the Pattern Premium adjustment.
+def calculate_trust_score(promise_results: list, ratios: dict) -> float:
+    """Calculate the ANKA Trust Score adjustment.
 
     Returns: float percentage adjustment (e.g., +12.5 or -8.3)
     """
