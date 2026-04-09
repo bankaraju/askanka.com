@@ -1247,10 +1247,15 @@
         <div class="stat-value mono" id="stat-winrate">--%</div>
         <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
     </div>
-    <div class="stat-card" title="Net P&L across all closed + open positions. Includes transaction cost estimates.">
-        <div class="stat-label">Cumulative P&L</div>
+    <div class="stat-card" title="Realized P&L from closed positions only.">
+        <div class="stat-label">Realized P&L</div>
         <div class="stat-value mono" id="stat-pnl">--</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">All positions, net of costs</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
+    </div>
+    <div class="stat-card" title="Unrealized P&L from currently open spread positions. Updates intraday.">
+        <div class="stat-label">Unrealized P&L</div>
+        <div class="stat-value mono" id="stat-unrealized">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Open positions, live</div>
     </div>
     <div class="stat-card" title="Calendar days since first signal was fired">
         <div class="stat-label">Days Active</div>
@@ -1649,12 +1654,31 @@
                 animateValue(wrEl, s.win_rate_pct, '%');
             }
 
+            // Realized P&L (closed trades)
             const pnlEl = document.getElementById('stat-pnl');
             if (s.cumulative_pnl_pct === 0 && s.wins === 0 && s.losses === 0) {
                 pnlEl.textContent = '--';
             } else {
                 pnlEl.className = 'stat-value mono ' + pnlClass(s.cumulative_pnl_pct);
                 pnlEl.textContent = formatPnl(s.cumulative_pnl_pct);
+            }
+
+            // Unrealized P&L (open positions)
+            const unrealizedEl = document.getElementById('stat-unrealized');
+            if (data.positions && data.positions.length > 0) {
+                let totalUnrealized = 0;
+                let count = 0;
+                data.positions.forEach(p => {
+                    if (p.spread_pnl_pct !== undefined && p.spread_pnl_pct !== null) {
+                        totalUnrealized += p.spread_pnl_pct;
+                        count++;
+                    }
+                });
+                const avgUnrealized = count > 0 ? totalUnrealized / count : 0;
+                unrealizedEl.className = 'stat-value mono ' + pnlClass(avgUnrealized);
+                unrealizedEl.textContent = formatPnl(avgUnrealized);
+            } else {
+                unrealizedEl.textContent = '--';
             }
 
             animateValue(document.getElementById('stat-days'), s.days_active, '');
