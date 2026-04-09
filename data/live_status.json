@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-09T14:43:44.278265+05:30",
+  "updated_at": "2026-04-09T15:13:39.842653+05:30",
   "msi": {
-    "score": 41.1,
+    "score": 40.8,
     "regime": "MACRO_NEUTRAL",
     "date": "2026-04-09"
   },
@@ -12,8 +12,8 @@
     "losses": 1,
     "win_rate_pct": 0.0,
     "cumulative_pnl_pct": -4.04,
-    "unrealized_pnl_pct": 6.91,
-    "total_pnl_pct": 2.87,
+    "unrealized_pnl_pct": 6.7,
+    "total_pnl_pct": 2.66,
     "days_active": 8
   },
   "positions": [
@@ -27,49 +27,49 @@
         {
           "ticker": "HAL",
           "entry": 3581.4,
-          "current": 4028.8,
-          "pnl_pct": 12.49
+          "current": 4031.9,
+          "pnl_pct": 12.58
         },
         {
           "ticker": "BEL",
           "entry": 415.0,
-          "current": 439.95,
-          "pnl_pct": 6.01
+          "current": 439.75,
+          "pnl_pct": 5.96
         },
         {
           "ticker": "BDL",
           "entry": 1132.2,
-          "current": 1324.9,
-          "pnl_pct": 17.02
+          "current": 1326.7,
+          "pnl_pct": 17.18
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2429.0,
-          "current": 2580,
-          "pnl_pct": -6.22,
+          "current": 2590,
+          "pnl_pct": -6.63,
           "price_type": "futures",
-          "basis_pct": -0.016
+          "basis_pct": 0.039
         },
         {
           "ticker": "INFY",
           "entry": 1290.0,
-          "current": 1330.8,
-          "pnl_pct": -3.16,
+          "current": 1334,
+          "pnl_pct": -3.41,
           "price_type": "futures",
-          "basis_pct": 0.023
+          "basis_pct": 0.053
         },
         {
           "ticker": "WIPRO",
           "entry": 191.51,
-          "current": 201.9,
-          "pnl_pct": -5.43,
+          "current": 202.22,
+          "pnl_pct": -5.59,
           "price_type": "futures",
-          "basis_pct": -0.262
+          "basis_pct": -0.301
         }
       ],
-      "spread_pnl_pct": 6.91,
+      "spread_pnl_pct": 6.7,
       "todays_move": 7.71,
       "daily_stop": -1.06,
       "two_day_stop": -2.11,
