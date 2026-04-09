@@ -1147,18 +1147,18 @@
         </div>
         <h1 class="hero-title">Anka Research</h1>
         <p class="hero-tagline">Where Geopolitics Meets Indian Equities</p>
-        <p class="hero-subtitle">AI-powered spread trading signals. Real-time event detection, backtest-validated setups, and institutional flow intelligence across global markets.</p>
+        <p class="hero-subtitle">AI-powered global regime detection and spread trading signals. 31 ETFs across 8 asset classes feed a single regime score every morning before Indian markets open.</p>
 
         <div class="hero-stats">
-            <div class="hero-stat"><div class="hero-stat-value">90+</div><div class="hero-stat-label">Events Backtested</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">35</div><div class="hero-stat-label">High-Conviction Setups</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">4 Yrs</div><div class="hero-stat-label">Backtested Data</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">25</div><div class="hero-stat-label">Spread Pairs</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">31</div><div class="hero-stat-label">Global ETFs Tracked</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">716</div><div class="hero-stat-label">Days Backtested</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">62.3%</div><div class="hero-stat-label">Directional Accuracy</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">Regime Zones</div></div>
         </div>
 
         <div class="hero-row">
             <div class="msi-gauge-wrap">
-                <div class="msi-gauge-label">Market Stress Index</div>
+                <div class="msi-gauge-label">Global Regime Score</div>
                 <div class="msi-gauge" id="msi-gauge">
                     <svg viewBox="0 0 240 130">
                         <!-- Background arc segments — thicker, brighter -->
@@ -1178,11 +1178,11 @@
                     </div>
                 </div>
                 <div class="msi-scale-labels">
-                    <span class="calm">Calm</span>
+                    <span class="calm">Risk-On</span>
                     <span class="neutral">Neutral</span>
-                    <span class="stress">Stress</span>
+                    <span class="stress">Risk-Off</span>
                 </div>
-                <div class="msi-context" id="msi-context">Composite of FII/DII flows, VIX, USD/INR, Nifty, and Crude Oil</div>
+                <div class="msi-context" id="msi-context">31 global ETFs: credit, equity, commodity, currency, and volatility flows</div>
             </div>
 
             <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
@@ -1193,6 +1193,9 @@
                 <div class="updated-time">
                     <span class="live-dot"></span>
                     <span>Last updated: <span id="updated-time" class="mono">--:--</span> IST</span>
+                </div>
+                <div style="margin-top:8px; font-size:11px; color:#6b7280; max-width:220px; text-align:center; line-height:1.4;">
+                    Unified Regime Engine v2 &mdash; shadow validated daily until May 5. <a href="research/autoresearch.html" style="color:#d4a855; text-decoration:none;">Read methodology &rarr;</a>
                 </div>
             </div>
         </div>
@@ -1211,14 +1214,14 @@
 <div class="signal-ticker">
     <div class="signal-ticker-inner" id="signal-ticker">
         <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
-        <span>MSI: <span id="ticker-msi">--</span>/100</span><span class="sep">|</span>
+        <span>Regime: <span id="ticker-msi">--</span>/100</span><span class="sep">|</span>
         <span>Defence vs IT: <span class="up" id="ticker-dit">+3.3%</span></span><span class="sep">|</span>
         <span>Coal vs OMCs: <span class="up" id="ticker-coal">+3.8%</span></span><span class="sep">|</span>
         <span>PCR: <span id="ticker-pcr">1.32</span></span><span class="sep">|</span>
         <span>VIX: <span id="ticker-vix">25.5</span></span><span class="sep">|</span>
         <span>Nifty Pin: <span class="gold" id="ticker-pin">22,800</span></span><span class="sep">|</span>
         <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
-        <span>MSI: <span>--</span>/100</span><span class="sep">|</span>
+        <span>Regime: <span>--</span>/100</span><span class="sep">|</span>
         <span>Defence vs IT: <span class="up">+3.3%</span></span><span class="sep">|</span>
         <span>Coal vs OMCs: <span class="up">+3.8%</span></span><span class="sep">|</span>
         <span>PCR: <span>1.32</span></span><span class="sep">|</span>
@@ -1229,30 +1232,63 @@
 
 <!-- ══════════════ STATS BAR ══════════════ -->
 <div class="stats-bar" id="stats-bar">
-    <div class="stat-card">
+    <div class="stat-card" title="Spread positions currently open and being tracked in real-time">
         <div class="stat-label">Open Positions</div>
         <div class="stat-value mono" id="stat-open">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Live spread trades</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" title="Total signals fired since launch — each signal is a regime-driven spread entry">
         <div class="stat-label">Total Signals</div>
         <div class="stat-value mono" id="stat-signals">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Since April 1</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" title="Percentage of closed positions that were profitable. Early stage — small sample.">
         <div class="stat-label">Win Rate</div>
         <div class="stat-value mono" id="stat-winrate">--%</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" title="Net P&L across all closed + open positions. Includes transaction cost estimates.">
         <div class="stat-label">Cumulative P&L</div>
         <div class="stat-value mono" id="stat-pnl">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">All positions, net of costs</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" title="Calendar days since first signal was fired">
         <div class="stat-label">Days Active</div>
         <div class="stat-value mono" id="stat-days">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Since first signal</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" title="Total sector spread pairs being monitored for entry/exit signals">
         <div class="stat-label">Spreads Tracked</div>
         <div class="stat-value mono" id="stat-spreads">25</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Across 8 sectors</div>
     </div>
+</div>
+
+<!-- ══════════════ HOW THIS WORKS ══════════════ -->
+<div class="container">
+    <section class="section" style="padding-bottom:0;">
+        <div style="background: rgba(212,168,85,0.06); border: 1px solid rgba(212,168,85,0.12); border-radius: 12px; padding: 24px 28px; margin-bottom: 0;">
+            <h3 style="font-family:'DM Serif Display',serif; font-size:18px; color:#d4a855; margin-bottom:12px;">How the Global Regime Score Works</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; font-size:14px; color:#9ca3af; line-height:1.6;">
+                <div>
+                    <strong style="color:#e5e7eb;">1. Overnight Global Scan</strong><br>
+                    Every morning at 4:30 AM IST, before Indian markets open, the engine reads what happened overnight across 31 global ETFs &mdash; credit appetite (HYG), equity flows (SPY, EEM), volatility (VIX), currencies (UUP, FXY), and commodities (USO, GLD).
+                </div>
+                <div>
+                    <strong style="color:#e5e7eb;">2. Data-Driven Weights</strong><br>
+                    Each ETF's weight was determined by 2,000 automated experiments (not hand-picked). The strongest predictor of Indian markets isn't the S&amp;P 500 &mdash; it's <span style="color:#d4a855;">high-yield corporate bonds</span>. When global credit appetite is strong, India follows the next day.
+                </div>
+                <div>
+                    <strong style="color:#e5e7eb;">3. Five Regime Zones</strong><br>
+                    The composite score maps to five zones: <span style="color:#ef4444;">RISK-OFF</span> (15% up rate), CAUTION (38%), <span style="color:#f59e0b;">NEUTRAL</span> (55%), <span style="color:#10b981;">RISK-ON</span> (72%), and <span style="color:#10b981;">EUPHORIA</span> (82% up rate). We only trade when the signal is in the extremes.
+                </div>
+                <div>
+                    <strong style="color:#e5e7eb;">4. Validation</strong><br>
+                    62.3% directional accuracy across 716 days. Outperforms 100% of random weight simulations. Confirmed by 12-fold walk-forward cross-validation. Currently in live shadow validation through May 5, 2026. <a href="research/autoresearch.html" style="color:#d4a855; text-decoration:none;">Full research paper &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <!-- ══════════════ ARTICLES ══════════════ -->
@@ -1554,17 +1590,23 @@
             animateValue(scoreEl, score, '', 1200);
         }
 
-        // Update context text based on score
+        // Update context text based on score — URE zones
         const ctx = document.getElementById('msi-context');
         if (ctx) {
-            if (score < 35) {
-                ctx.textContent = 'Low stress — correlations stable, full confidence in spread trades';
+            if (score < 20) {
+                ctx.textContent = 'RISK-ON — Global credit strong, equity flows positive. Full conviction on long spreads.';
+                ctx.style.color = '#10b981';
+            } else if (score < 35) {
+                ctx.textContent = 'LEANING RISK-ON — Overnight markets supportive. Nifty likely positive tomorrow.';
                 ctx.style.color = '#10b981';
             } else if (score < 65) {
-                ctx.textContent = 'Moderate stress — VIX elevated, crude rising. Spreads behaving normally.';
+                ctx.textContent = 'NEUTRAL — 77% of days fall here. No strong directional signal. Existing positions hold.';
                 ctx.style.color = '#f59e0b';
+            } else if (score < 80) {
+                ctx.textContent = 'CAUTION — Global risk appetite weakening. Tighten stops, reduce position sizes to 75%.';
+                ctx.style.color = '#ef4444';
             } else {
-                ctx.textContent = 'High stress — FII outflows heavy, correlations may break. Reduced sizing active.';
+                ctx.textContent = 'RISK-OFF — Credit markets freezing, VIX spiking. Exit long-biased spreads immediately.';
                 ctx.style.color = '#ef4444';
             }
         }
