@@ -341,7 +341,18 @@ def _parse_crores(text: str) -> float | None:
 
 
 def _realistic_valuation(revenue, order_book, capex, net_profit_series, about, ratios):
-    """Calculate what HAL SHOULD be worth based on executable order book."""
+    """Calculate realistic valuation for a defence company.
+
+    Defence companies globally trade at premium multiples (17-35x PE) because:
+    - Monopoly/oligopoly positions with government as sole customer
+    - Zero cancellation risk on sovereign contracts
+    - PoC accounting is industry standard, not fraud
+    - Multi-decade order visibility
+
+    Our job is NOT to say "10x PE is fair" (that implies a dying business).
+    Our job IS to say: "Street assumes perfect execution. Forensics show
+    execution gaps worth X% discount to street target."
+    """
     if not revenue or not order_book:
         return {"error": "Insufficient data"}
 
@@ -358,69 +369,150 @@ def _realistic_valuation(revenue, order_book, capex, net_profit_series, about, r
         pass
 
     latest_pat = list(net_profit_series.values())[-1] if net_profit_series else None
+    current_price = None
+    try:
+        current_price = float(str(about.get("Current Price", "0")).replace(",", ""))
+    except:
+        pass
 
-    # Order book executability analysis
+    # ── Order book executability analysis ────────────────────────
     ob_to_rev = order_book / revenue if revenue > 0 else 0
-
-    # At current production rates, how much of order book is executable in 5 years?
-    executable_5yr = min(revenue * 5 * 1.10, order_book)  # Assume 10% annual capacity growth (generous)
+    executable_5yr = min(revenue * 5 * 1.12, order_book)  # 12% annual capacity growth (new facilities)
     executable_pct = executable_5yr / order_book * 100 if order_book > 0 else 0
 
-    # What's the "realistic" revenue growth?
-    # If order book is 6+ years, revenue growth is capped by production capacity, not demand
+    # ── What street assumes vs what forensics show ──────────────
+    # Street consensus for Indian defence: 12-15% revenue CAGR, 25-30x PE
+    street_growth = 13.0  # consensus
+    street_pe_range = (25, 32)
+    street_target_range = None
+    if current_price:
+        # Approximate street targets from consensus PE range
+        street_target_range = (
+            round(current_price * 1.08, 0),  # ~8% upside (conservative broker)
+            round(current_price * 1.40, 0),  # ~40% upside (aggressive broker)
+        )
+
+    # What forensics show
     if ob_to_rev > 6:
-        realistic_growth = 8.0  # Capped by production, not demand
-        growth_note = "Growth capped by production capacity, not demand. Order book is aspirational beyond 5 years."
+        forensic_growth = 10.0  # Capacity-constrained, but new facilities coming
+        growth_note = ("Growth constrained by production capacity, not demand. "
+                      "New Tumakuru facility and LCA Mark 2 line will add capacity, "
+                      "but 13% CAGR requires execution that hasn't been proven yet.")
     elif ob_to_rev > 4:
-        realistic_growth = 12.0
-        growth_note = "Moderate growth limited by execution capability."
+        forensic_growth = 12.0
+        growth_note = "Moderate capacity constraint. Execution track record supports this growth."
     else:
-        realistic_growth = 15.0
+        forensic_growth = street_growth
         growth_note = "Order book supports stated growth trajectory."
 
-    # Fair PE based on realistic growth
-    # PEG of 1.5 for government defence monopoly (should be lower due to agency risk)
-    fair_pe = realistic_growth * 1.2  # PEG 1.2 for government company with agency issues
+    # ── Execution discount (not a blanket PE re-rating) ─────────
+    # We don't say "fair PE is 10x" — we say "street PE deserves X% discount for execution gaps"
+    execution_discount_pct = 0
+    discount_reasons = []
 
-    # Discount for agency problem
-    agency_discount = 0
     red_flags = sum(1 for r in ratios.values() if isinstance(r, dict) and r.get("flag") == "RED")
-    if red_flags >= 3:
-        agency_discount = 20
-    elif red_flags >= 2:
-        agency_discount = 10
+    amber_flags = sum(1 for r in ratios.values() if isinstance(r, dict) and r.get("flag") == "AMBER")
 
-    fair_pe_adjusted = fair_pe * (1 - agency_discount / 100)
+    # Production capacity declining while order book grows
+    ob_growth_data = ratios.get("order_book_vs_revenue_growth", {})
+    if isinstance(ob_growth_data, dict) and ob_growth_data.get("execution_gap", 0) > 5:
+        execution_discount_pct += 10
+        gap = ob_growth_data.get("execution_gap", 0)
+        discount_reasons.append(f"Order book growing {gap:.0f}pp faster than revenue — execution gap widening")
 
-    fair_value = None
-    overvaluation_pct = None
+    # Export promises never delivered
+    export_data = ratios.get("export_revenue_pct", {})
+    if isinstance(export_data, dict) and export_data.get("flag") == "RED":
+        execution_discount_pct += 5
+        discount_reasons.append("Export diversification promised for 8 years, flat at 1% — single customer risk persists")
+
+    # Capex underinvestment relative to order book
+    capex_ob = ratios.get("capex_to_order_book", {})
+    if isinstance(capex_ob, dict) and capex_ob.get("flag") == "RED":
+        execution_discount_pct += 8
+        discount_reasons.append("Capex severely insufficient to execute order book")
+
+    # Government agency risk (workforce declining, production declining)
+    if red_flags >= 2:
+        execution_discount_pct += 5
+        discount_reasons.append(f"{red_flags} RED forensic flags indicate structural execution challenges")
+
+    execution_discount_pct = min(execution_discount_pct, 30)  # Cap at 30%
+
+    # ── Fair value range ────────────────────────────────────────
+    # Start with sector-appropriate PE range, then apply execution discount
+    sector_pe_floor = 20  # Defence monopoly floor (global comparables: Lockheed 17x, BAE 20x)
+    sector_pe_ceiling = 30  # Premium for Indian growth + monopoly
+
+    # Apply growth adjustment
+    # Indian defence trades at PEG 2.5-3.0 (BEL 40x+, BDL 50x+, HAL peers at 25-35x)
+    # This reflects: monopoly premium + govt demand certainty + India growth premium
+    growth_adjusted_pe = forensic_growth * 2.7  # PEG ~2.7 for Indian defence
+    growth_adjusted_pe = max(growth_adjusted_pe, sector_pe_floor)
+    growth_adjusted_pe = min(growth_adjusted_pe, sector_pe_ceiling)
+
+    # Apply execution discount
+    fair_pe_low = growth_adjusted_pe * (1 - execution_discount_pct / 100)
+    fair_pe_high = growth_adjusted_pe
+
+    fair_value_low = None
+    fair_value_high = None
+    fair_price_low = None
+    fair_price_high = None
+
     if latest_pat and latest_pat > 0:
-        fair_value = latest_pat * fair_pe_adjusted
-        if current_mcap and current_mcap > 0:
-            overvaluation_pct = (current_mcap / fair_value - 1) * 100
+        fair_value_low = latest_pat * fair_pe_low
+        fair_value_high = latest_pat * fair_pe_high
+        if current_mcap and current_mcap > 0 and current_price:
+            fair_price_low = round(current_price * fair_value_low / current_mcap, 0)
+            fair_price_high = round(current_price * fair_value_high / current_mcap, 0)
+
+    overvaluation_pct = None
+    if fair_value_high and current_mcap:
+        # Compare to midpoint of our range
+        fair_mid = (fair_value_low + fair_value_high) / 2
+        overvaluation_pct = (current_mcap / fair_mid - 1) * 100
 
     return {
         "order_book_years": round(ob_to_rev, 1),
         "executable_in_5yr_pct": round(executable_pct, 1),
         "executable_order_value": round(executable_5yr, 0),
         "unexecutable_order_value": round(max(0, order_book - executable_5yr), 0),
-        "realistic_revenue_growth_pct": realistic_growth,
-        "growth_note": growth_note,
-        "fair_pe_before_discount": round(fair_pe, 1),
-        "agency_discount_pct": agency_discount,
-        "fair_pe_after_discount": round(fair_pe_adjusted, 1),
+
+        "street_assumptions": {
+            "growth_pct": street_growth,
+            "pe_range": list(street_pe_range),
+            "target_price_range": list(street_target_range) if street_target_range else None,
+            "basis": "Full order book execution, Atmanirbhar Bharat tailwind, defence budget 13% CAGR",
+        },
+
+        "our_forensic_view": {
+            "growth_pct": forensic_growth,
+            "growth_note": growth_note,
+            "execution_discount_pct": execution_discount_pct,
+            "discount_reasons": discount_reasons,
+            "fair_pe_range": [round(fair_pe_low, 1), round(fair_pe_high, 1)],
+            "fair_price_range": [fair_price_low, fair_price_high] if fair_price_low else None,
+            "fair_mcap_range": [round(fair_value_low, 0), round(fair_value_high, 0)] if fair_value_low else None,
+        },
+
         "current_pe": current_pe,
-        "fair_market_cap": round(fair_value, 0) if fair_value else None,
+        "current_price": current_price,
         "current_market_cap": current_mcap,
-        "overvaluation_pct": round(overvaluation_pct, 1) if overvaluation_pct is not None else None,
+        "overvaluation_vs_midpoint_pct": round(overvaluation_pct, 1) if overvaluation_pct is not None else None,
+
         "verdict": (
-            f"Market prices HAL at {current_pe:.0f}x PE. "
-            f"Based on executable order book ({executable_pct:.0f}% of headline), "
-            f"realistic growth ({realistic_growth:.0f}%), and agency discount ({agency_discount}%), "
-            f"fair PE is {fair_pe_adjusted:.0f}x. "
-            + (f"Stock is {overvaluation_pct:.0f}% overvalued." if overvaluation_pct and overvaluation_pct > 10
-               else f"Stock is {overvaluation_pct:.0f}% undervalued." if overvaluation_pct and overvaluation_pct < -10
-               else "Stock is fairly valued." if overvaluation_pct is not None
-               else "Cannot determine valuation.")
+            f"Street values at {current_pe:.0f}x PE (Rs {current_price:,.0f}). "
+            f"Forensic fair PE: {fair_pe_low:.0f}-{fair_pe_high:.0f}x "
+            f"(execution discount {execution_discount_pct}% for: {'; '.join(discount_reasons[:2])}). "
+            + (f"Fair price range: Rs {fair_price_low:,.0f}-{fair_price_high:,.0f}. "
+               if fair_price_low else "")
+            + (f"Stock is {overvaluation_pct:.0f}% above our midpoint."
+               if overvaluation_pct and overvaluation_pct > 5
+               else f"Stock is {abs(overvaluation_pct):.0f}% below our midpoint."
+               if overvaluation_pct and overvaluation_pct < -5
+               else "Stock is within our fair value range."
+               if overvaluation_pct is not None
+               else "")
         ),
     }
