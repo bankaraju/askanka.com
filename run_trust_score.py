@@ -337,28 +337,39 @@ Extract ONLY management's forward-looking financial and operational commitments 
 3. **Quantifiable** — has a specific number or measurable target
 4. **Verifiable next year** — something you can check in next year's annual report
 
-## EXAMPLES OF WHAT TO EXTRACT (good guidance):
-- "Revenue to grow 15% in FY26"
-- "Operating margin will stay above 20%"
-- "Loan book to grow 17-18% in FY26"
-- "Commissioning 500MW solar plant by Q3 FY26"
-- "Capex of Rs 3,000 Cr in FY26"
-- "30 new stores to open by end of FY26"
-- "Order book to cross Rs 1.5 lakh Cr by FY27"
-- "R&D spend will be 8% of revenue in FY26"
-- "Net debt to reduce by Rs 2,000 Cr in FY26"
-- "Maintain CASA above 40%"
-- "Keep GNPA below 2% in FY26"
+## THE TEST: Could you check next year whether this was delivered?
+If the answer isn't "yes with a specific number", DO NOT extract it.
 
-## EXAMPLES OF WHAT NOT TO EXTRACT (skip these):
-- Macroeconomic forecasts: "India GDP will grow at 6.5%" (that's RBI's view, not company guidance)
-- Industry forecasts: "Global pharma market will reach $X by 2030" (not company commitment)
-- Historical statements: "PAT grew 10.7% in FY25" (past, not forward-looking)
-- Audit fees or compliance numbers: these are routine and not strategic
-- Vague aspirations: "we aim to be world-class" (no number, not measurable)
-- ESG aspirations without specific company action: "carbon neutral by 2032" can be listed as ONE routine item but not multiple variations
-- Dividend declared (past event, not future commitment)
-- Employee count descriptions
+## EXAMPLES OF WHAT TO EXTRACT (specific + measurable + testable):
+- "Revenue to grow 15% in FY26" (specific number, specific year)
+- "Operating margin will stay above 20%" (specific threshold)
+- "Loan book to grow 17-18% in FY26" (specific range)
+- "Commissioning 500MW solar plant by Q3 FY26" (specific capacity, specific date)
+- "Capex of Rs 3,000 Cr in FY26" (specific amount)
+- "30 new stores to open by end of FY26" (specific count)
+- "Order book to cross Rs 1.5 lakh Cr by FY27" (specific target)
+- "R&D spend will be 8% of revenue in FY26" (specific ratio)
+- "Net debt to reduce by Rs 2,000 Cr in FY26" (specific reduction)
+- "Maintain CASA above 40%" (specific threshold)
+- "Keep GNPA below 2% in FY26" (specific ceiling)
+
+## EXAMPLES OF WHAT NOT TO EXTRACT — these are FILLER, not guidance:
+
+BAD: "higher growth rate" — Higher than what? No number. SKIP.
+BAD: "faster than industry average" — What industry rate? SKIP.
+BAD: "well placed to deliver" — Generic confidence, no target. SKIP.
+BAD: "strive to achieve leadership" — No metric, no date. SKIP.
+BAD: "continue to focus on growth" — That's just saying "we will keep trying". SKIP.
+BAD: "aims to utilise digital assets" — No measurable outcome. SKIP.
+BAD: "create value for stakeholders" — Pure corporate-speak. SKIP.
+BAD: "positive outlook for FY26" — Not a target. SKIP.
+BAD: "India GDP will grow at 6.5%" — RBI forecast, not company guidance. SKIP.
+BAD: "Global pharma market will reach $500B by 2030" — Industry forecast. SKIP.
+BAD: "PAT grew 10.7% in FY25" — Past result, not forward-looking. SKIP.
+BAD: "Audit fees of Rs 9.9 Cr" — Not strategic guidance. SKIP.
+BAD: "carbon neutral by 2032" — Keep only if stated as a specific measurable milestone with progress tracking. Single entry, not multiple variations.
+
+If management doesn't give specific numerical guidance, EXTRACT FEWER ITEMS. An empty list of 0 items is better than 20 items of filler. The absence of hard guidance is itself a data point about management credibility — we capture that by extracting NOTHING rather than making up items.
 
 ## SECTOR HINTS (types of guidance to look for):
 - Banks: Loan growth %, NIM target, GNPA target, CASA %, ROA target, credit cost target, capital adequacy target
@@ -428,7 +439,7 @@ Here is the exact format and quality level expected:
 ## YOUR OUTPUT
 
 Return the same JSON structure. Required fields:
-- `guidance`: array of guidance items (minimum 10 — if the company doesn't give that many specific targets, that's itself a signal)
+- `guidance`: array of guidance items. QUALITY > QUANTITY. Extract 0-5 items if that's all the company specifically committed to. Do NOT pad with vague items to reach a quota. An empty list is fine if management gives no measurable forward-looking targets.
 - `actuals_reported`: actual numbers for the current year
 - `risks_disclosed`: specific risks acknowledged
 - `overall_tone`: confident | cautious | defensive | promotional
@@ -489,15 +500,22 @@ def extract_narratives(symbol: str) -> list[dict]:
             parsed["sections_analysed"] = found
             parsed["pages_extracted"] = int(key_pages) if str(key_pages).isdigit() else 0
 
-            # Count items (supports both old 'claims' and new 'guidance' keys)
-            item_count = len(parsed.get("guidance", parsed.get("claims", [])))
+            # POST-EXTRACTION QUALITY FILTER
+            # Drop items where target_value is clearly vague (no number, no measurable outcome)
+            items = parsed.get("guidance", parsed.get("claims", []))
+            filtered = _filter_vague_guidance(items)
+            parsed["guidance"] = filtered
+            if len(filtered) < len(items):
+                print(f"    → Filtered {len(items) - len(filtered)} vague items")
+
+            item_count = len(filtered)
             if item_count == 0:
-                print(f"    → WARNING: 0 items extracted from {year}")
+                print(f"    → WARNING: 0 specific items extracted from {year}")
                 (ARTIFACTS / symbol / f"narrative_raw_{year}.txt").write_text(
                     response[:2000], encoding="utf-8")
             else:
                 all_narratives.append(parsed)
-                print(f"    → {item_count} items, tone: {parsed.get('overall_tone', '?')}")
+                print(f"    → {item_count} specific items, tone: {parsed.get('overall_tone', '?')}")
 
         except json.JSONDecodeError as e:
             print(f"    → JSON parse error: {e}")
@@ -507,6 +525,86 @@ def extract_narratives(symbol: str) -> list[dict]:
             print(f"    → Error: {e}")
 
     return all_narratives
+
+
+def _filter_vague_guidance(items: list) -> list:
+    """Drop guidance items that are vague, unmeasurable, or backward-looking.
+
+    Rules:
+    - target_value must contain a number OR a specific deliverable (e.g., "App live")
+    - Reject pure hedging language: "higher", "faster", "continue", "focus on", "at scale"
+    - Reject ESG aspirations longer than one entry per category
+    - Reject macro/industry forecasts (not company guidance)
+    """
+    import re
+
+    # Vague phrases that indicate non-specific guidance
+    VAGUE_PATTERNS = [
+        r"^higher\b",
+        r"^faster\b",
+        r"^continue\b",
+        r"^focus\b",
+        r"^strive\b",
+        r"^aim\b",
+        r"^hope\b",
+        r"^well placed\b",
+        r"^positive\b",
+        r"^at scale\b",
+        r"^drive\b",
+        r"^create\b",
+        r"^enhance\b",
+        r"^strengthen\b",
+        r"^leverage\b",
+        r"industry average",
+        r"stakeholders",
+        r"value.accretive",
+    ]
+
+    # Macro/industry forecast keywords
+    MACRO_WORDS = {"gdp", "inflation", "industry outlook", "market outlook",
+                   "global economy", "rbi", "fed ", "geopolitical", "commodity prices",
+                   "sector outlook", "market will reach", "industry will grow"}
+
+    filtered = []
+    seen_esg_carbon = False
+
+    for item in items:
+        target = str(item.get("target_value", "")).lower().strip()
+        quote = str(item.get("exact_quote", "")).lower()
+        category = str(item.get("category", "")).lower()
+        metric = str(item.get("metric", "")).lower()
+
+        # Reject empty targets
+        if not target or target in ("?", "n/a", "none", "null"):
+            continue
+
+        # Reject macro/industry forecasts
+        if any(word in quote for word in MACRO_WORDS):
+            continue
+
+        # Reject vague targets (no number and no specific deliverable)
+        has_number = bool(re.search(r'\d', target))
+        is_specific_deliverable = any(kw in target for kw in
+                                      ["live", "launch", "operational", "complete", "commission",
+                                       "integrat", "rollout", "deploy", "open", "build"])
+
+        if not has_number and not is_specific_deliverable:
+            # Check if target starts with vague phrase
+            if any(re.match(pattern, target) for pattern in VAGUE_PATTERNS):
+                continue
+            # Short targets without numbers are usually vague
+            if len(target) < 30:
+                continue
+
+        # Dedupe carbon-neutral aspirations
+        if "carbon" in quote or "net zero" in quote or "net-zero" in quote:
+            if seen_esg_carbon:
+                continue
+            seen_esg_carbon = True
+
+        filtered.append(item)
+
+    return filtered
 
 
 # ── Step 3: Promise vs Delivery Scoring ──────────────────────────────
