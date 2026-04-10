@@ -442,5 +442,11 @@
     "msi_score": 40.8,
     "regime": "MACRO_NEUTRAL",
     "combined_flow": 1356.2
+  },
+  {
+    "date": "2026-04-10",
+    "msi_score": 41.0,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": -755.29
   }
 ]

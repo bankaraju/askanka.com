@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-04-09T15:13:39.842653+05:30",
+  "updated_at": "2026-04-10T09:45:51.606918+05:30",
   "msi": {
-    "score": 40.8,
+    "score": 41.0,
     "regime": "MACRO_NEUTRAL",
-    "date": "2026-04-09"
+    "date": "2026-04-10"
   },
   "stats": {
     "open_positions": 1,
@@ -12,9 +12,9 @@
     "losses": 1,
     "win_rate_pct": 0.0,
     "cumulative_pnl_pct": -4.04,
-    "unrealized_pnl_pct": 6.7,
-    "total_pnl_pct": 2.66,
-    "days_active": 8
+    "unrealized_pnl_pct": 11.14,
+    "total_pnl_pct": 7.1,
+    "days_active": 9
   },
   "positions": [
     {
@@ -27,53 +27,53 @@
         {
           "ticker": "HAL",
           "entry": 3581.4,
-          "current": 4031.9,
-          "pnl_pct": 12.58
+          "current": 4104.4,
+          "pnl_pct": 14.6
         },
         {
           "ticker": "BEL",
           "entry": 415.0,
-          "current": 439.75,
-          "pnl_pct": 5.96
+          "current": 443.5,
+          "pnl_pct": 6.87
         },
         {
           "ticker": "BDL",
           "entry": 1132.2,
-          "current": 1326.7,
-          "pnl_pct": 17.18
+          "current": 1348.6,
+          "pnl_pct": 19.11
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2429.0,
-          "current": 2590,
-          "pnl_pct": -6.63,
+          "current": 2495.9,
+          "pnl_pct": -2.75,
           "price_type": "futures",
-          "basis_pct": 0.039
+          "basis_pct": -0.443
         },
         {
           "ticker": "INFY",
           "entry": 1290.0,
-          "current": 1334,
-          "pnl_pct": -3.41,
+          "current": 1283.5,
+          "pnl_pct": 0.5,
           "price_type": "futures",
-          "basis_pct": 0.053
+          "basis_pct": -0.318
         },
         {
           "ticker": "WIPRO",
           "entry": 191.51,
-          "current": 202.22,
-          "pnl_pct": -5.59,
+          "current": 200.94,
+          "pnl_pct": -4.92,
           "price_type": "futures",
-          "basis_pct": -0.301
+          "basis_pct": -1.418
         }
       ],
-      "spread_pnl_pct": 6.7,
-      "todays_move": 7.71,
-      "daily_stop": -1.06,
-      "two_day_stop": -2.11,
-      "peak_pnl": 7.71
+      "spread_pnl_pct": 11.14,
+      "todays_move": 10.42,
+      "daily_stop": -1.14,
+      "two_day_stop": -2.27,
+      "peak_pnl": 10.42
     }
   ],
   "fragility": {
