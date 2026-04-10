@@ -560,6 +560,24 @@ def _filter_vague_guidance(items: list) -> list:
         r"value.accretive",
     ]
 
+    # Vague quote patterns (the exact_quote itself is aspirational)
+    VAGUE_QUOTE_PATTERNS = [
+        r"our mission is",
+        r"our vision is",
+        r"our aspiration",
+        r"our commitment is to",
+        r"we are committed to",
+        r"we believe",
+        r"we remain confident",
+        r"we are well positioned",
+        r"our goal is to",
+        r"we will continue to",
+        r"we will focus",
+        r"consent of the",  # board resolution language
+        r"remuneration of",  # compensation details
+        r"as part of our",
+    ]
+
     # Macro/industry forecast keywords
     MACRO_WORDS = {"gdp", "inflation", "industry outlook", "market outlook",
                    "global economy", "rbi", "fed ", "geopolitical", "commodity prices",
@@ -580,6 +598,10 @@ def _filter_vague_guidance(items: list) -> list:
 
         # Reject macro/industry forecasts
         if any(word in quote for word in MACRO_WORDS):
+            continue
+
+        # Reject vague quote patterns (aspirational language)
+        if any(re.search(p, quote) for p in VAGUE_QUOTE_PATTERNS):
             continue
 
         # Reject vague targets (no number and no specific deliverable)

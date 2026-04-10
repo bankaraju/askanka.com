@@ -163,24 +163,34 @@ def run_score(symbols: list[str]):
             )
 
             if result.returncode == 0:
-                # Verify the Trust Score actually has guidance items scored
-                ts_file = ARTIFACTS / sym / "trust_score.json"
-                valid = False
-                if ts_file.exists():
-                    t = json.loads(ts_file.read_text(encoding="utf-8"))
-                    items = t.get("guidance_scored", 0)
-                    if items > 0:
-                        valid = True
+                # Stock is considered "done" if narrative extraction produced items
+                # (even if scoring yields INSUFFICIENT_DATA — that's an honest result)
+                narr_file = ARTIFACTS / sym / "narratives.json"
+                has_narratives = False
+                total_items = 0
+                if narr_file.exists():
+                    try:
+                        narr = json.loads(narr_file.read_text(encoding="utf-8"))
+                        for r in narr:
+                            total_items += len(r.get("guidance", r.get("claims", [])))
+                        has_narratives = total_items > 0
+                    except Exception:
+                        pass
+
+                if has_narratives:
+                    # Log the actual grade from trust_score.json
+                    ts_file = ARTIFACTS / sym / "trust_score.json"
+                    grade_line = ""
+                    if ts_file.exists():
                         for line in result.stdout.split("\n"):
                             if "ANKA TRUST SCORE:" in line:
-                                log(f"    {line.strip()} ({items} items)")
+                                grade_line = line.strip()
                                 break
-
-                if valid:
+                    log(f"    {grade_line or 'DONE'} ({total_items} items)")
                     done.add(sym)
                     progress["scored"] = sorted(done)
                 else:
-                    log(f"    INVALID: 0 guidance items extracted — marked for retry")
+                    log(f"    INVALID: extraction produced no items — marked for retry")
                     failed.add(sym)
                     progress["failed_score"] = sorted(failed)
             else:
