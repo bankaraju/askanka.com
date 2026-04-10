@@ -169,8 +169,18 @@ def extract_pdf_text(pdf_path: Path) -> dict[str, str]:
     MD&A, Chairman's letter, Directors' report, Risk factors, Financial highlights.
     """
     import pymupdf
-    doc = pymupdf.open(str(pdf_path))
+    sections = {"_combined": "", "_total_pages": "0", "_key_pages": "0", "_sections_found": []}
+    try:
+        doc = pymupdf.open(str(pdf_path))
+    except Exception as e:
+        print(f"      PDF open failed: {e}")
+        return sections
+
     total_pages = len(doc)
+    if total_pages == 0:
+        doc.close()
+        print(f"      PDF has 0 pages (corrupted)")
+        return sections
 
     # First pass: extract all text and find section boundaries
     all_text = []
@@ -481,6 +491,11 @@ def extract_narratives(symbol: str) -> list[dict]:
                 total = sections.get("_total_pages", "?")
                 print(f"      {key_pages} key pages from {total} total | Sections: {found}")
                 print(f"      Text length: {len(combined_text):,} chars")
+
+                # Skip if PDF extraction failed (corrupted or 0 pages)
+                if len(combined_text) < 5000:
+                    print(f"      SKIP: PDF extraction produced too little text (likely corrupted)")
+                    continue
 
                 # Save extracted text for cache
                 cache_file.write_text(combined_text, encoding="utf-8")
@@ -862,11 +877,16 @@ def calculate_trust_score(scoring: dict, financials: dict) -> dict:
     total = summary.get("total_guidance_items", summary.get("total_scoreable", 0))
     scoreable = total - summary.get("too_early", 0) - summary.get("unverifiable", 0)
 
-    if scoreable == 0:
+    # Need minimum 5 scoreable items for a reliable grade
+    MIN_SCOREABLE = 5
+    if scoreable < MIN_SCOREABLE:
         return {
             "trust_score_pct": 0.0,
+            "trust_score_grade": "?",
             "verdict": "INSUFFICIENT_DATA",
-            "detail": "Not enough scoreable guidance items to calculate premium",
+            "detail": f"Only {scoreable} scoreable items ({total} total, {summary.get('too_early', 0)} too early, {summary.get('unverifiable', 0)} unverifiable). Need minimum {MIN_SCOREABLE} for reliable grade.",
+            "guidance_scored": scoreable,
+            "total_guidance_items": total,
         }
 
     # Use weighted delivery rate if available, else fall back to simple
@@ -1111,10 +1131,10 @@ def run(symbol: str):
             status = item.get("status", "?")
             icon = {"DELIVERED": "OK", "EXCEEDED": "++", "PARTIALLY_DELIVERED": "~", "MISSED": "XX", "QUIETLY_DROPPED": "!!", "TOO_EARLY": ".."}
             s = icon.get(status, "??")
-            cat = (item.get("category") or "")[:15]
-            target = (item.get("target_value") or "?")[:25]
-            actual = (item.get("actual_value") or "?")[:30]
-            yr = item.get("guidance_year", "?")
+            cat = str(item.get("category") or "")[:15]
+            target = str(item.get("target_value") or "?")[:25]
+            actual = str(item.get("actual_value") or "?")[:30]
+            yr = str(item.get("guidance_year", "?"))
             print(f"  [{s:>2}] {yr} {cat:<16} Target: {target:<26} Actual: {actual}")
 
     print(f"\n{'='*70}")
