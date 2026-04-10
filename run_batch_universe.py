@@ -17,6 +17,7 @@ Usage:
 """
 
 import json
+import os
 import sys
 import time
 import subprocess
@@ -111,22 +112,45 @@ def run_collect(symbols: list[str]):
 # ── Phase 2: Deep Trust Score ────────────────────────────────────────
 
 def run_score(symbols: list[str]):
-    """Run deep Trust Score analysis on all stocks with annual reports."""
-    progress = load_progress()
-    done = set(progress.get("scored", []))
-    failed = set(progress.get("failed_score", []))
-    collected = set(progress.get("collected", []))
+    """Run deep Trust Score analysis on stocks WITHOUT a valid score.
 
-    # Only score stocks that have been collected AND have annual report PDFs
+    A stock is considered "already scored" if its trust_score.json exists AND
+    has guidance_scored > 0. Stocks with 0 items (failed extractions from prior
+    runs) are eligible for re-scoring with the new provider.
+    """
+    progress = load_progress()
+    done_set = set(progress.get("scored", []))
+    failed = set(progress.get("failed_score", []))
+
+    # Check each stock's actual trust_score.json to determine real done status
+    real_done = set()
+    for sym in done_set:
+        ts_file = ARTIFACTS / sym / "trust_score.json"
+        if ts_file.exists():
+            try:
+                t = json.loads(ts_file.read_text(encoding="utf-8"))
+                if t.get("guidance_scored", 0) > 0:
+                    real_done.add(sym)
+            except Exception:
+                pass
+
+    # Update progress to reflect reality
+    progress["scored"] = sorted(real_done)
+    save_progress(progress)
+
+    # Build scoreable list: any stock with PDFs that isn't validly scored yet
     scoreable = []
     for sym in symbols:
-        if sym in done:
+        if sym in real_done:
             continue
         pdf_dir = ARTIFACTS / sym / "pdfs"
         if pdf_dir.exists() and list(pdf_dir.glob("annual_report_*.pdf")):
             scoreable.append(sym)
+            failed.discard(sym)  # Give failed stocks another shot with new provider
 
-    log(f"PHASE 2: DEEP TRUST SCORE — {len(scoreable)} to score ({len(done)} already done)")
+    log(f"PHASE 2: DEEP TRUST SCORE — {len(scoreable)} to score ({len(real_done)} already valid)")
+    log(f"  Provider: {os.getenv('ANKA_LLM_PROVIDER', 'gemini')}")
+    done = real_done
 
     for i, sym in enumerate(scoreable):
         log(f"  [{len(done)+1}/{len(done)+len(scoreable)}] {sym}...")
@@ -139,13 +163,26 @@ def run_score(symbols: list[str]):
             )
 
             if result.returncode == 0:
-                # Extract grade from output
-                for line in result.stdout.split("\n"):
-                    if "ANKA TRUST SCORE:" in line:
-                        log(f"    {line.strip()}")
-                        break
-                done.add(sym)
-                progress["scored"] = sorted(done)
+                # Verify the Trust Score actually has guidance items scored
+                ts_file = ARTIFACTS / sym / "trust_score.json"
+                valid = False
+                if ts_file.exists():
+                    t = json.loads(ts_file.read_text(encoding="utf-8"))
+                    items = t.get("guidance_scored", 0)
+                    if items > 0:
+                        valid = True
+                        for line in result.stdout.split("\n"):
+                            if "ANKA TRUST SCORE:" in line:
+                                log(f"    {line.strip()} ({items} items)")
+                                break
+
+                if valid:
+                    done.add(sym)
+                    progress["scored"] = sorted(done)
+                else:
+                    log(f"    INVALID: 0 guidance items extracted — marked for retry")
+                    failed.add(sym)
+                    progress["failed_score"] = sorted(failed)
             else:
                 err = result.stderr[-200:] if result.stderr else "unknown"
                 log(f"    FAILED: {err}")

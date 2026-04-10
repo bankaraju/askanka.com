@@ -26,18 +26,140 @@ load_dotenv(Path(__file__).parent / "config" / ".env")
 IST = timezone(timedelta(hours=5, minutes=30))
 ARTIFACTS = Path(__file__).parent / "artifacts"
 
-# ── Claude API ───────────────────────────────────────────────────────
+# ── LLM Provider (Gemini default, Claude optional) ──────────────────
+#
+# Cost comparison for 213 annual reports:
+#   Claude Sonnet 4: ~$230 (too expensive)
+#   Claude Haiku 4.5: ~$70
+#   Gemini 2.5 Flash (paid): ~$6
+#   Gemini 2.5 Flash (FREE TIER): $0 for up to ~50 stocks/day
+#
+# Set ANKA_LLM_PROVIDER=claude to fall back to Claude.
 
-def call_claude(prompt: str, max_tokens: int = 4096) -> str:
-    """Call Claude API and return text response."""
+# Load Gemini key from askanka.com pipeline .env as well
+_ASKANKA_ENV = Path("C:/Users/Claude_Anka/Documents/askanka.com/pipeline/.env")
+if _ASKANKA_ENV.exists():
+    load_dotenv(_ASKANKA_ENV)
+
+LLM_PROVIDER = os.getenv("ANKA_LLM_PROVIDER", "gemini")
+EXTRACTION_MODEL = os.getenv("ANKA_EXTRACTION_MODEL", "claude-haiku-4-5-20251001")
+SCORING_MODEL = os.getenv("ANKA_SCORING_MODEL", "claude-sonnet-4-20250514")
+
+
+def check_api_credit() -> bool:
+    """Pre-flight check: verify LLM API is reachable before starting batch."""
+    if LLM_PROVIDER == "gemini":
+        return _check_gemini()
+    return _check_claude_credit()
+
+
+def _check_gemini() -> bool:
+    import requests
+    key = os.getenv("GEMINI_API_KEY")
+    if not key:
+        print("ERROR: GEMINI_API_KEY not set")
+        return False
+    try:
+        resp = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}",
+            json={"contents": [{"parts": [{"text": "hi"}]}], "generationConfig": {"maxOutputTokens": 5}},
+            timeout=10,
+        )
+        return resp.status_code == 200
+    except Exception as e:
+        print(f"ERROR: Gemini check failed: {e}")
+        return False
+
+
+def _check_claude_credit() -> bool:
+    import anthropic
+    try:
+        client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=10,
+            messages=[{"role": "user", "content": "hi"}],
+        )
+        return True
+    except anthropic.BadRequestError as e:
+        if "credit balance" in str(e).lower():
+            print("ERROR: Anthropic API credit balance too low")
+            return False
+        raise
+    except Exception as e:
+        print(f"ERROR: Claude check failed: {e}")
+        return False
+
+
+def call_llm(prompt: str, max_tokens: int = 4096, role: str = "extraction") -> str:
+    """Call the configured LLM. Role: 'extraction' (Haiku/Flash) or 'scoring' (Sonnet/Flash)."""
+    if LLM_PROVIDER == "gemini":
+        return _call_gemini(prompt, max_tokens)
+    return _call_claude(prompt, max_tokens, role)
+
+
+def _call_gemini(prompt: str, max_tokens: int = 8192) -> str:
+    """Call Gemini 2.5 Flash with thinking disabled.
+
+    Gemini 2.5 Flash reserves tokens for 'thinking' by default which eats the output
+    budget. We disable it since extraction doesn't need chain-of-thought reasoning —
+    we just want it to pattern-match from the example we gave.
+    """
+    import requests
+    import time
+
+    key = os.getenv("GEMINI_API_KEY")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
+
+    for attempt in range(3):
+        try:
+            resp = requests.post(
+                url,
+                json={
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "maxOutputTokens": max_tokens,
+                        "temperature": 0,
+                        "responseMimeType": "application/json",
+                        "thinkingConfig": {"thinkingBudget": 0},
+                    },
+                },
+                timeout=180,
+            )
+            if resp.status_code == 429:
+                time.sleep(15 * (attempt + 1))
+                continue
+            resp.raise_for_status()
+            result = resp.json()
+            candidates = result.get("candidates", [])
+            if not candidates:
+                raise ValueError(f"No candidates: {result}")
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if not parts:
+                raise ValueError(f"No parts: {candidates[0]}")
+            return parts[0].get("text", "")
+        except requests.exceptions.HTTPError:
+            if attempt == 2:
+                raise
+            time.sleep(2 ** attempt)
+    raise RuntimeError("Gemini call failed after 3 attempts")
+
+
+def _call_claude(prompt: str, max_tokens: int = 4096, role: str = "extraction") -> str:
     import anthropic
     client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    model = EXTRACTION_MODEL if role == "extraction" else SCORING_MODEL
     response = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model=model,
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     )
     return response.content[0].text
+
+
+# Backwards-compatible alias for scoring calls
+def call_claude(prompt: str, max_tokens: int = 4096, model: str = None) -> str:
+    return call_llm(prompt, max_tokens, role="scoring")
 
 
 def extract_pdf_text(pdf_path: Path) -> dict[str, str]:
@@ -107,24 +229,19 @@ def extract_pdf_text(pdf_path: Path) -> dict[str, str]:
     return sections
 
 
-def call_claude_with_ar_text(text: str, prompt: str, max_tokens: int = 8192) -> str:
-    """Call Claude API with extracted annual report text."""
-    import anthropic
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+def call_claude_with_ar_text(text: str, prompt: str, max_tokens: int = 16384) -> str:
+    """Call the LLM with extracted annual report text.
 
-    # Truncate if still too long (~150K chars ≈ ~40K tokens for text)
-    if len(text) > 500000:
-        text = text[:500000] + "\n\n[TRUNCATED — remaining pages omitted]"
+    Gemini 2.5 Flash is free on free tier, so we send full text (up to 200K chars)
+    and request large output tokens. No penalty for being generous.
+    """
+    # Only truncate if truly excessive (Gemini handles 1M+ context)
+    MAX_CHARS = 200_000
+    if len(text) > MAX_CHARS:
+        text = text[:MAX_CHARS] + "\n\n[TRUNCATED]"
 
-    response = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=max_tokens,
-        messages=[{
-            "role": "user",
-            "content": f"Here is the text extracted from an annual report:\n\n{text}\n\n---\n\n{prompt}",
-        }],
-    )
-    return response.content[0].text
+    full_prompt = f"Annual report text:\n\n{text}\n\n---\n\n{prompt}"
+    return call_llm(full_prompt, max_tokens=max_tokens, role="extraction")
 
 
 # ── Step 1: Financial Analysis from Screener Data ────────────────────
@@ -168,7 +285,7 @@ def analyse_financials(symbol: str) -> dict:
 
     # Revenue growth trend
     sales = metrics.get("Sales+", metrics.get("Sales", {}))
-    years = sorted([k for k in sales if k.startswith("Mar ")], key=lambda x: int(x.split()[-1]))
+    years = sorted([k for k in sales if k.startswith("Mar ") and k.split()[-1].isdigit()], key=lambda x: int(x.split()[-1]))
     if len(years) >= 2:
         recent = sales.get(years[-1])
         prev = sales.get(years[-2])
@@ -209,86 +326,116 @@ def analyse_financials(symbol: str) -> dict:
 
 # ── Step 2: Extract Management Narratives from Annual Reports ────────
 
-NARRATIVE_EXTRACTION_PROMPT = """You are a forensic equity research analyst. Your job is to extract MATERIAL FINANCIAL GUIDANCE from this annual report — the specific numbers and targets management committed to.
+NARRATIVE_EXTRACTION_PROMPT = """You are a forensic equity research analyst extracting management guidance from an Indian listed company's annual report.
 
-ONLY extract guidance that is SPECIFIC and MEASURABLE. Ignore vague aspirational language like "we aim to grow" or "we are optimistic." We need hard numbers.
+## TASK
+Extract ONLY management's forward-looking financial and operational commitments that a future year's actuals can be checked against.
 
-## What to extract (MATERIAL GUIDANCE ONLY):
+## WHAT TO EXTRACT (must be ALL of these):
+1. **Forward-looking** — about future periods, not describing what already happened
+2. **Management-committed** — stated by the company about THEIR own plans (not macro forecasts, not industry views)
+3. **Quantifiable** — has a specific number or measurable target
+4. **Verifiable next year** — something you can check in next year's annual report
 
-### Financial Guidance
-- Revenue target/guidance (e.g., "Revenue expected to reach Rs 35,000 Cr in FY26")
-- Profit margin guidance (e.g., "Operating margin to be maintained at 25%+")
-- EPS or PAT guidance
-- Dividend policy (e.g., "Minimum 30% payout ratio")
-- Revenue/profit CAGR targets
+## EXAMPLES OF WHAT TO EXTRACT (good guidance):
+- "Revenue to grow 15% in FY26"
+- "Operating margin will stay above 20%"
+- "Loan book to grow 17-18% in FY26"
+- "Commissioning 500MW solar plant by Q3 FY26"
+- "Capex of Rs 3,000 Cr in FY26"
+- "30 new stores to open by end of FY26"
+- "Order book to cross Rs 1.5 lakh Cr by FY27"
+- "R&D spend will be 8% of revenue in FY26"
+- "Net debt to reduce by Rs 2,000 Cr in FY26"
+- "Maintain CASA above 40%"
+- "Keep GNPA below 2% in FY26"
 
-### Order Book & Pipeline
-- Order book size targets (e.g., "Order book of Rs 1.5 lakh Cr by FY26")
-- New orders expected (specific contracts, programs)
-- Order execution timelines
+## EXAMPLES OF WHAT NOT TO EXTRACT (skip these):
+- Macroeconomic forecasts: "India GDP will grow at 6.5%" (that's RBI's view, not company guidance)
+- Industry forecasts: "Global pharma market will reach $X by 2030" (not company commitment)
+- Historical statements: "PAT grew 10.7% in FY25" (past, not forward-looking)
+- Audit fees or compliance numbers: these are routine and not strategic
+- Vague aspirations: "we aim to be world-class" (no number, not measurable)
+- ESG aspirations without specific company action: "carbon neutral by 2032" can be listed as ONE routine item but not multiple variations
+- Dividend declared (past event, not future commitment)
+- Employee count descriptions
 
-### Capex & Capacity
-- Capital expenditure plans with amounts (e.g., "Rs 3,000 Cr capex in FY25")
-- New facility timelines (e.g., "Helicopter factory operational by Q2 FY26")
-- Production rate targets (e.g., "16 LCA per year by FY27")
-- Capacity utilization targets
+## SECTOR HINTS (types of guidance to look for):
+- Banks: Loan growth %, NIM target, GNPA target, CASA %, ROA target, credit cost target, capital adequacy target
+- IT: Revenue CC growth, margin band, headcount additions, deal wins guidance
+- Pharma: New product launches (number), R&D spend %, FDA filings, US market share target
+- FMCG: Volume growth %, distribution expansion, new product launches, margin target
+- Auto: Volume target, new model launches, EV mix %, export %
+- Metals/Energy: Production volume target, capex plan, debt reduction, capacity addition
+- Defence: Order book target, production units/year, export target
+- Real Estate: Pre-sales target, deliveries target, net debt target, new launches
+- Infra/Power: Order book, capacity MW additions, PLF target, capex
 
-### Export & Diversification
-- Export revenue targets (e.g., "Exports to reach 15% of revenue")
-- New market entry plans with timelines
-- New product/program delivery dates
+## EXAMPLE OUTPUT (from Dr Reddy's FY25 annual report)
 
-### Operational KPIs
-- Employee productivity targets
-- R&D spend as % of revenue
-- Working capital / cash conversion targets
+Here is the exact format and quality level expected:
 
-## For each guidance item, provide:
-1. **exact_quote**: The verbatim text from the report
-2. **category**: revenue_guidance | profit_guidance | order_book | capex | capacity | export | new_program | dividend | working_capital | other
-3. **metric**: What specifically (e.g., "total revenue", "EBITDA margin", "order book value")
-4. **target_value**: The specific number (e.g., "Rs 35,000 Cr", "25%", "16 aircraft/year")
-5. **target_year**: When (e.g., "FY26", "by March 2027", "next 3 years")
-6. **section_found**: Where in the report (MD&A, Chairman Letter, Directors Report, Financial Highlights)
-7. **page_reference**: Approximate page number or section heading where this appears (e.g., "Page 45, MD&A Section 3.2" or "Directors Report, para under 'Future Outlook'")
-8. **confidence**: How firm is this commitment? "hard_commitment" (board approved), "guidance" (management expects), "aspiration" (would like to)
-9. **materiality**: How important is this to the business? "critical" (revenue/profit/production targets), "significant" (capex/capacity/order book), "routine" (CSR/policy/compliance targets)
-
-## Also extract:
-- **risks_disclosed**: Specific risks management acknowledges (not boilerplate)
-- **actual_numbers_this_year**: Key actuals reported (revenue, profit, order book, capex spent, exports) — these are needed to cross-reference LAST year's guidance
-
-Return ONLY valid JSON, no markdown fences:
+```json
 {
   "guidance": [
     {
-      "exact_quote": "...",
-      "category": "...",
-      "metric": "...",
-      "target_value": "...",
-      "target_year": "...",
-      "section_found": "...",
-      "page_reference": "Page X, Section Y",
-      "confidence": "hard_commitment|guidance|aspiration",
-      "materiality": "critical|significant|routine"
+      "exact_quote": "By 2030, serve 1.5 billion patients",
+      "category": "other",
+      "metric": "patients reached",
+      "target_value": "1.5 billion patients",
+      "target_year": "2030",
+      "section_found": "Our ESG aspiration and progress",
+      "page_reference": "Page 30-31, ESG Goals",
+      "confidence": "hard_commitment",
+      "materiality": "critical"
+    },
+    {
+      "exact_quote": "By 2027, 25% new launches to be first to market",
+      "category": "other",
+      "metric": "first-to-market product launches",
+      "target_value": "25%",
+      "target_year": "2027",
+      "section_found": "Our ESG aspiration and progress",
+      "page_reference": "Page 30-31, ESG Goals",
+      "confidence": "hard_commitment",
+      "materiality": "significant"
     }
   ],
   "actuals_reported": {
-    "revenue": "Rs X Cr",
-    "operating_profit": "Rs X Cr",
-    "net_profit": "Rs X Cr",
-    "order_book": "Rs X Cr",
-    "capex_spent": "Rs X Cr",
-    "export_revenue": "Rs X Cr",
-    "dividend_per_share": "Rs X",
-    "employees": "X",
-    "other_key_numbers": {}
+    "revenue": "Rs 24,588 Cr",
+    "operating_profit": "Rs 7,308 Cr EBITDA",
+    "net_profit": "Rs 4,507 Cr",
+    "order_book": "Not applicable for pharma",
+    "capex_spent": "Rs 4,752 Cr in last 5 years",
+    "export_revenue": "Not separately disclosed",
+    "dividend_per_share": "Rs 40",
+    "employees": "24,832 globally",
+    "other_key_numbers": {
+      "R&D_spend": "Rs 1,938 Cr",
+      "EBITDA_margin": "29.7%",
+      "RoCE": "34.6%",
+      "manufacturing_facilities": "22"
+    }
   },
-  "risks_disclosed": ["specific risk 1", "specific risk 2"],
-  "overall_tone": "confident|cautious|defensive|promotional"
+  "risks_disclosed": [
+    "Regulatory compliance risks across multiple jurisdictions",
+    "Patent expiry and generic competition risks"
+  ],
+  "overall_tone": "confident"
 }
+```
 
-Be EXHAUSTIVE. Every number that represents a forward-looking target or guidance must be captured. Minimum 15 guidance items expected from a defence company annual report."""
+## YOUR OUTPUT
+
+Return the same JSON structure. Required fields:
+- `guidance`: array of guidance items (minimum 10 — if the company doesn't give that many specific targets, that's itself a signal)
+- `actuals_reported`: actual numbers for the current year
+- `risks_disclosed`: specific risks acknowledged
+- `overall_tone`: confident | cautious | defensive | promotional
+
+Each guidance item needs: exact_quote, category, metric, target_value, target_year, section_found, page_reference, confidence (hard_commitment/guidance/aspiration), materiality (critical/significant/routine).
+
+Return ONLY valid JSON, no markdown fences, no preamble."""
 
 
 def extract_narratives(symbol: str) -> list[dict]:
@@ -307,21 +454,28 @@ def extract_narratives(symbol: str) -> list[dict]:
         print(f"    Extracting narratives from {year}...")
 
         try:
-            # Step 1: Extract text from PDF sections
-            sections = extract_pdf_text(pdf_path)
-            combined_text = sections["_combined"]
-            found = sections.get("_sections_found", [])
-            key_pages = sections.get("_key_pages", "?")
-            total = sections.get("_total_pages", "?")
-            print(f"      {key_pages} key pages from {total} total | Sections: {found}")
-            print(f"      Text length: {len(combined_text):,} chars")
+            # Step 1: Extract text from PDF sections (with caching)
+            cache_file = ARTIFACTS / symbol / f"ar_text_{year}.txt"
+            if cache_file.exists() and cache_file.stat().st_size > 10000:
+                combined_text = cache_file.read_text(encoding="utf-8")
+                found = ["cached"]
+                key_pages = "cached"
+                total = "cached"
+                print(f"      Using cached text: {len(combined_text):,} chars")
+            else:
+                sections = extract_pdf_text(pdf_path)
+                combined_text = sections["_combined"]
+                found = sections.get("_sections_found", [])
+                key_pages = sections.get("_key_pages", "?")
+                total = sections.get("_total_pages", "?")
+                print(f"      {key_pages} key pages from {total} total | Sections: {found}")
+                print(f"      Text length: {len(combined_text):,} chars")
 
-            # Save extracted text for reference
-            (ARTIFACTS / symbol / f"ar_text_{year}.txt").write_text(
-                combined_text, encoding="utf-8")
+                # Save extracted text for cache
+                cache_file.write_text(combined_text, encoding="utf-8")
 
-            # Step 2: Send to Claude for narrative extraction
-            response = call_claude_with_ar_text(combined_text, NARRATIVE_EXTRACTION_PROMPT, max_tokens=8192)
+            # Step 2: Send to Claude (Haiku) for narrative extraction
+            response = call_claude_with_ar_text(combined_text, NARRATIVE_EXTRACTION_PROMPT, max_tokens=4096)
 
             # Parse JSON
             text = response.strip()
@@ -333,9 +487,17 @@ def extract_narratives(symbol: str) -> list[dict]:
             parsed["source_year"] = year
             parsed["source_file"] = pdf_path.name
             parsed["sections_analysed"] = found
-            parsed["pages_extracted"] = int(key_pages) if key_pages != "?" else 0
-            all_narratives.append(parsed)
-            print(f"    → {len(parsed.get('claims', []))} claims, tone: {parsed.get('overall_tone', '?')}")
+            parsed["pages_extracted"] = int(key_pages) if str(key_pages).isdigit() else 0
+
+            # Count items (supports both old 'claims' and new 'guidance' keys)
+            item_count = len(parsed.get("guidance", parsed.get("claims", [])))
+            if item_count == 0:
+                print(f"    → WARNING: 0 items extracted from {year}")
+                (ARTIFACTS / symbol / f"narrative_raw_{year}.txt").write_text(
+                    response[:2000], encoding="utf-8")
+            else:
+                all_narratives.append(parsed)
+                print(f"    → {item_count} items, tone: {parsed.get('overall_tone', '?')}")
 
         except json.JSONDecodeError as e:
             print(f"    → JSON parse error: {e}")
@@ -398,7 +560,13 @@ If your scoring leads to a conclusion that CONTRADICTS street consensus (e.g., s
 2. What specific evidence supports our view
 3. Why our evidence is stronger (with page references and numbers)
 
-Return ONLY valid JSON, no markdown fences:
+## CRITICAL JSON RULES
+- Return ONLY valid JSON, no markdown fences, no preamble
+- All numeric fields must be COMPUTED numbers (e.g., -9.67), NOT expressions like (5.51 - 6.1) / 6.1 * 100
+- Use null for unknown numeric values, never NaN or Infinity
+- variance_pct must be a single number like -9.67 or 2.13
+
+Example JSON structure:
 {{
   "scorecard": [
     {{
@@ -506,12 +674,16 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
 
     print(f"    Scoring {len(all_claims)} claims against financials...")
     try:
-        response = call_claude(prompt, max_tokens=8192)
+        response = call_llm(prompt, max_tokens=32768, role="scoring")
         text = response.strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1]
             if text.endswith("```"):
                 text = text[:-3]
+
+        # Clean up Gemini quirks: sometimes returns math expressions instead of numbers
+        text = _clean_json_expressions(text)
+
         return json.loads(text)
     except json.JSONDecodeError as e:
         print(f"    → JSON parse error: {e}")
@@ -519,6 +691,40 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
         return {"error": f"JSON parse failed: {e}", "raw": response[:500]}
     except Exception as e:
         return {"error": str(e)}
+
+
+def _clean_json_expressions(text: str) -> str:
+    """Replace math expressions in JSON values with computed results.
+
+    Gemini sometimes returns: "variance_pct": (5.51 - 6.1) / 6.1 * 100
+    This breaks JSON parsing. We compute the expression and substitute.
+    """
+    import re
+
+    # Match patterns like: "key": (expression) or "key": value / value * value
+    # Look for numeric field values that contain math operators
+    def replace_expr(match):
+        key = match.group(1)
+        expr = match.group(2).strip()
+        # Try to eval the expression safely (only numbers and basic math)
+        try:
+            # Safe eval — only allow digits, operators, parens, decimal, minus
+            allowed = set("0123456789.+-*/() ")
+            if all(c in allowed for c in expr):
+                result = eval(expr, {"__builtins__": {}}, {})
+                return f'"{key}": {round(result, 2)}'
+        except Exception:
+            pass
+        return f'"{key}": null'
+
+    # Pattern: "field_name": (expression containing math)
+    pattern = r'"(variance_pct|pct|percentage|ratio|score|value)":\s*(\([^)]+\)(?:\s*[*/+-]\s*[\d.]+)*|[\d.]+\s*[*/+-]\s*[\d.()+-/*]+)'
+    text = re.sub(pattern, replace_expr, text)
+
+    # Also catch unquoted NaN and Infinity
+    text = text.replace(": NaN,", ": null,").replace(": Infinity,", ": null,").replace(": -Infinity,", ": null,")
+
+    return text
 
 
 # ── Step 4: ANKA Trust Score Calculation ──────────────────────────────
@@ -722,8 +928,9 @@ def run(symbol: str):
     narratives = extract_narratives(symbol)
     (out_dir / "narratives.json").write_text(
         json.dumps(narratives, indent=2, ensure_ascii=False), encoding="utf-8")
-    total_claims = sum(len(n.get("claims", [])) for n in narratives)
-    print(f"         {len(narratives)} reports processed, {total_claims} claims extracted")
+    # Support both old 'claims' and new 'guidance' keys
+    total_claims = sum(len(n.get("guidance", n.get("claims", []))) for n in narratives)
+    print(f"         {len(narratives)} reports processed, {total_claims} guidance items extracted")
 
     # Step 3: Guidance vs Actual cross-referencing
     print(f"\n  [3/5] Cross-referencing guidance vs actuals...")
@@ -784,9 +991,9 @@ def run(symbol: str):
             status = item.get("status", "?")
             icon = {"DELIVERED": "OK", "EXCEEDED": "++", "PARTIALLY_DELIVERED": "~", "MISSED": "XX", "QUIETLY_DROPPED": "!!", "TOO_EARLY": ".."}
             s = icon.get(status, "??")
-            cat = item.get("category", "")[:15]
-            target = item.get("target_value", "?")[:25]
-            actual = item.get("actual_value", "?")[:30]
+            cat = (item.get("category") or "")[:15]
+            target = (item.get("target_value") or "?")[:25]
+            actual = (item.get("actual_value") or "?")[:30]
             yr = item.get("guidance_year", "?")
             print(f"  [{s:>2}] {yr} {cat:<16} Target: {target:<26} Actual: {actual}")
 

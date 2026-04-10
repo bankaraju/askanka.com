@@ -115,7 +115,18 @@ def run(company_input: str):
         # Download the PDFs (latest 3 for MD&A extraction)
         pdf_dir = out_dir / "pdfs"
         pdf_dir.mkdir(exist_ok=True)
-        for report in nse_reports[:3]:
+        # Download up to 5 years of unique annual reports
+        # (NSE sometimes has duplicates for the same year - amended vs original)
+        seen_years = set()
+        to_download = []
+        for report in nse_reports:
+            year = report.get("year", "")
+            if year and year not in seen_years:
+                seen_years.add(year)
+                to_download.append(report)
+            if len(to_download) >= 5:
+                break
+        for report in to_download:
             url = report.get("url", "")
             if url:
                 year = report.get("year", "unknown")
