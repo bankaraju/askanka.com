@@ -183,52 +183,112 @@ def extract_pdf_text(pdf_path: Path) -> dict[str, str]:
         return sections
 
     # First pass: extract all text and find section boundaries
+    # Uses multiple detection strategies — explicit section titles AND content keywords
     all_text = []
     section_markers = {}
     keywords = {
-        "mda": ["management discussion", "management's discussion", "md&a"],
-        "chairman": ["chairman's message", "chairman's letter", "chairman's statement", "message from chairman"],
-        "directors": ["directors' report", "directors report", "board's report"],
-        "risk": ["risk management", "risk factors", "enterprise risk"],
-        "overview": ["strategic overview", "business overview", "operational review", "company overview"],
-        "financial_highlights": ["financial highlights", "financial performance", "performance highlights"],
-        "outlook": ["outlook", "way forward", "future outlook", "looking ahead"],
-        "order_book": ["order book", "order position", "orders received"],
+        "mda": [
+            "management discussion", "management's discussion", "md&a",
+            "management discussion and analysis",
+        ],
+        "chairman": [
+            "chairman's message", "chairman's letter", "chairman's statement",
+            "message from chairman", "chairman's statement to", "chairman & managing director",
+            "dear shareholders", "dear members",  # Common opening
+        ],
+        "directors": [
+            "directors' report", "directors report", "board's report",
+            "report of the directors", "to the members of",
+        ],
+        "risk": [
+            "risk management", "risk factors", "enterprise risk",
+            "key risks", "risk assessment", "principal risks",
+        ],
+        "overview": [
+            "strategic overview", "business overview", "operational review",
+            "company overview", "business segments", "business performance",
+            "segment performance", "review of operations",
+        ],
+        "financial_highlights": [
+            "financial highlights", "financial performance", "performance highlights",
+            "financial review", "key financial indicators", "summary of financials",
+        ],
+        "outlook": [
+            "outlook", "way forward", "future outlook", "looking ahead",
+            "future prospects", "forward looking", "strategic priorities",
+        ],
+        "order_book": [
+            "order book", "order position", "orders received",
+            "order inflow", "order intake", "contract pipeline",
+        ],
+        "guidance": [
+            "we expect", "we target", "we aim", "we plan to",
+            "our guidance", "targeted growth", "will deliver",
+            "will achieve", "to achieve by",
+        ],
+        "strategy": [
+            "strategic initiatives", "key initiatives", "growth strategy",
+            "strategic focus", "strategic pillars", "growth pillars",
+        ],
     }
 
+    # Track ALL pages where each section appears (not just first hit)
+    section_hits = {k: [] for k in keywords.keys()}
     for i, page in enumerate(doc):
         text = page.get_text()
         all_text.append(text)
         text_lower = text.lower()
         for section, kws in keywords.items():
-            if section not in section_markers:
-                if any(kw in text_lower for kw in kws):
-                    section_markers[section] = i
+            if any(kw in text_lower for kw in kws):
+                section_hits[section].append(i)
+
+    # section_markers: first hit for each section (for backwards compat)
+    section_markers = {k: v[0] for k, v in section_hits.items() if v}
 
     doc.close()
 
-    # Second pass: extract sections with generous context (20 pages each)
+    # Second pass: extract sections with generous context
     sections = {}
     for section, start_page in section_markers.items():
         end_page = min(start_page + 20, total_pages)
         section_text = "\n".join(all_text[start_page:end_page])
         sections[section] = section_text
 
-    # Also provide a combined text of ALL key sections
+    # Collect ALL pages where any section keyword was found, plus N pages of context
     all_key_pages = set()
-    for start_page in section_markers.values():
-        for p in range(start_page, min(start_page + 15, total_pages)):
-            all_key_pages.add(p)
+    CONTEXT_RADIUS = 5  # Pages of context after each hit
+    for hits in section_hits.values():
+        for hit_page in hits:
+            for p in range(hit_page, min(hit_page + CONTEXT_RADIUS, total_pages)):
+                all_key_pages.add(p)
 
-    # If we found sections, combine them
+    # Build the page set smartly:
+    # 1. Always include pages 1-15 (chairman letter, highlights — start of AR)
+    # 2. Include FIRST hit of each section + 3 pages context (not all hits)
+    # 3. Cap at 80 pages to keep context window manageable
+    priority_pages = set(range(0, min(15, total_pages)))  # Early sections
+
+    # For each section, use first hit + next 3 pages (not all recurrences)
+    for section, start_page in section_markers.items():
+        for p in range(start_page, min(start_page + 4, total_pages)):
+            priority_pages.add(p)
+
+    # If still low, add some fallback coverage
+    if len(priority_pages) < 40:
+        fallback = set(range(min(15, total_pages), min(60, total_pages)))
+        priority_pages.update(fallback)
+
+    # Cap at 80 pages to prevent massive inputs
+    priority_pages = set(sorted(priority_pages)[:80])
+    all_key_pages = priority_pages
+
     if all_key_pages:
         combined = "\n\n--- PAGE BREAK ---\n\n".join(
-            all_text[p] for p in sorted(all_key_pages)
+            all_text[p] for p in sorted(all_key_pages) if p < len(all_text)
         )
     else:
-        # Fallback: pages 30-120 (typical Indian AR structure)
         combined = "\n\n--- PAGE BREAK ---\n\n".join(
-            all_text[p] for p in range(min(30, total_pages), min(120, total_pages))
+            all_text[p] for p in range(min(15, total_pages), min(60, total_pages))
         )
 
     sections["_combined"] = combined
