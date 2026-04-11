@@ -47,9 +47,9 @@ _ASKANKA_ENV = Path("C:/Users/Claude_Anka/Documents/askanka.com/pipeline/.env")
 if _ASKANKA_ENV.exists():
     load_dotenv(_ASKANKA_ENV)
 
-LLM_PROVIDER = os.getenv("ANKA_LLM_PROVIDER", "openai")
+LLM_PROVIDER = os.getenv("ANKA_LLM_PROVIDER", "gemini")
 EXTRACTION_MODEL = os.getenv("ANKA_EXTRACTION_MODEL", "claude-haiku-4-5-20251001")
-SCORING_MODEL = os.getenv("ANKA_SCORING_MODEL", "claude-sonnet-4-20250514")
+SCORING_MODEL = os.getenv("ANKA_SCORING_MODEL", "claude-haiku-4-5-20251001")
 OPENROUTER_MODEL = os.getenv("ANKA_OPENROUTER_MODEL", "mistralai/mistral-small-2603")
 OPENROUTER_FALLBACK_MODEL = os.getenv("ANKA_OPENROUTER_FALLBACK_MODEL", "openrouter/free")
 OPENAI_MODEL = os.getenv("ANKA_OPENAI_MODEL", "gpt-5.4-mini")
@@ -311,6 +311,19 @@ def _call_claude(prompt: str, max_tokens: int = 4096, role: str = "extraction") 
     import anthropic
     client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
     model = EXTRACTION_MODEL if role == "extraction" else SCORING_MODEL
+    # Anthropic SDK refuses non-streaming when max_tokens is high enough that the
+    # response *could* exceed the 10-minute non-stream deadline. Use streaming
+    # for any generous budget (scoring calls request 32768).
+    if max_tokens >= 16384:
+        chunks = []
+        with client.messages.stream(
+            model=model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        ) as stream:
+            for text in stream.text_stream:
+                chunks.append(text)
+        return "".join(chunks)
     response = client.messages.create(
         model=model,
         max_tokens=max_tokens,
@@ -766,12 +779,8 @@ def extract_narratives(symbol: str) -> list[dict]:
             )
             response = call_llm(extraction_prompt, max_tokens=8192, role="extraction")
 
-            # Parse JSON
-            text = response.strip()
-            if text.startswith("```"):
-                text = text.split("\n", 1)[1]
-                if text.endswith("```"):
-                    text = text[:-3]
+            # Parse JSON (robust to fences, prose, and trailing content)
+            text = _extract_json_payload(response)
             parsed = json.loads(text)
             parsed["source_year"] = year
             parsed["source_file"] = pdf_path.name
@@ -1254,11 +1263,7 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
     print(f"    Scoring {len(all_claims)} claims against financials...")
     try:
         response = call_llm(prompt, max_tokens=32768, role="scoring")
-        text = response.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1]
-            if text.endswith("```"):
-                text = text[:-3]
+        text = _extract_json_payload(response)
 
         # Clean up Gemini quirks: sometimes returns math expressions instead of numbers
         text = _clean_json_expressions(text)
@@ -1270,6 +1275,32 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
         return {"error": f"JSON parse failed: {e}", "raw": response[:500]}
     except Exception as e:
         return {"error": str(e)}
+
+
+def _extract_json_payload(response: str) -> str:
+    """Pull the first complete JSON object from an LLM response.
+
+    Handles: markdown fences (```json ... ```), leading prose, trailing prose
+    (e.g. Haiku appending an executive summary after the JSON block), and
+    bare JSON. Uses json.raw_decode which stops at end of valid JSON and
+    ignores trailing content. Returns a string guaranteed parsable by
+    json.loads on the caller side (after _clean_json_expressions)."""
+    text = response.strip()
+    if text.startswith("```"):
+        # drop the opening fence line (```json or ```)
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+    # find the first '{' — there may be leading prose before it
+    start = text.find("{")
+    if start == -1:
+        return text  # let downstream parser error meaningfully
+    text = text[start:]
+    # raw_decode returns (obj, end_index) — we want just the prefix that parses
+    try:
+        _, end = json.JSONDecoder().raw_decode(text)
+        return text[:end]
+    except json.JSONDecodeError:
+        # math expressions etc. — return as-is, _clean_json_expressions will handle
+        return text
 
 
 def _clean_json_expressions(text: str) -> str:
