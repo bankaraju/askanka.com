@@ -1,0 +1,32 @@
+{
+  "weekly_briefs": [
+    {
+      "week": 7,
+      "filename": "week-007.html",
+      "title": "Energy Infra Leads, Defense Consolidates — Portfolio +6.3%",
+      "description": "April 6-11. Top winner ENR +11.7% (DAX energy infra); top loser NOC -4.1% (defense pause). 15 active positions, 6.34% average USD return. Automated weekly brief across 8 global indices, 20 stocks, commodities, and FX.",
+      "published_at": "April 11, 2026"
+    },
+    {
+      "week": 6,
+      "filename": "week-006.html",
+      "title": "Global Markets in Crisis: War, Oil & Institutional Flight",
+      "description": "Iran-US conflict enters Week 6. Defence stocks surge, OMCs crushed. FII outflows accelerate as crude breaches $95. Full analysis with AI-generated commentary on 12 key movers.",
+      "published_at": "April 4, 2026"
+    },
+    {
+      "week": 5,
+      "filename": "week-005.html",
+      "title": "Signals Go Live: First Automated Trades",
+      "description": "Defence vs IT and Coal vs OMCs — our first spread signals fire in real-time. How the pipeline performed on day one.",
+      "published_at": "March 28, 2026"
+    },
+    {
+      "week": 1,
+      "filename": "week-001.html",
+      "title": "When the Bombs Dropped: Market Day One",
+      "description": "The inaugural analysis. How Indian equities reacted in the first 48 hours of the Iran-US conflict.",
+      "published_at": "March 3, 2026"
+    }
+  ]
+}

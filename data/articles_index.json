@@ -1,0 +1,84 @@
+{
+  "articles": [
+    {
+      "date": "2026-04-11",
+      "segment": "war",
+      "filename": "2026-04-11-war.html",
+      "headline": "Hormuz Chokehold Tightens: Trump's Retreat Fuels Oil Anarchy, India Pays The Price",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444"
+    },
+    {
+      "date": "2026-04-11",
+      "segment": "epstein",
+      "filename": "2026-04-11-epstein.html",
+      "headline": "Melania's Epstein Fumble: A High-Stakes Bet Against Disclosure, With Indian Capital at Risk",
+      "category": "INVESTIGATION",
+      "color": "#d4a855"
+    },
+    {
+      "date": "2026-04-10",
+      "segment": "war",
+      "filename": "2026-04-10-war.html",
+      "headline": "Hormuz Holds Hostage: US-Iran 'Ceasefire' a Sham as Oil War Escalates",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444"
+    },
+    {
+      "date": "2026-04-10",
+      "segment": "epstein",
+      "filename": "2026-04-10-epstein.html",
+      "headline": "Melania's Desperate Denials and the Enduring Silence on Epstein's Indian Connections",
+      "category": "INVESTIGATION",
+      "color": "#d4a855"
+    },
+    {
+      "date": "2026-04-09",
+      "segment": "war",
+      "filename": "2026-04-09-war.html",
+      "headline": "Trump's Iran Ceasefire is a Strategic Retreat — and India's Oil Markets Just Woke Up to the Risk",
+      "category": "Geopolitical Analysis",
+      "color": "#ef4444"
+    },
+    {
+      "date": "2026-04-09",
+      "segment": "epstein",
+      "filename": "2026-04-09-epstein.html",
+      "headline": "Bondi's Epstein Escape: How Trump's AG Dodges Deposition While DOJ Crumbles",
+      "category": "Investigation",
+      "color": "#d4a855"
+    },
+    {
+      "date": "2026-04-08",
+      "segment": "war-collapse-fresh",
+      "filename": "2026-04-08-war-collapse-fresh.html",
+      "headline": "Military Mutiny: 25th Amendment Demands as Bases Abandoned",
+      "category": "War Analysis",
+      "color": "#ef4444"
+    },
+    {
+      "date": "2026-04-08",
+      "segment": "war-ceasefire-fresh",
+      "filename": "2026-04-08-war-ceasefire-fresh.html",
+      "headline": "Forced Retreat: Trump's Iran War Implodes as Military Abandons Command",
+      "category": "War Analysis",
+      "color": "#ef4444"
+    },
+    {
+      "date": "2026-04-08",
+      "segment": "epstein-bondi-fired",
+      "filename": "2026-04-08-epstein-bondi-fired.html",
+      "headline": "Trump Fires AG Bondi Over Epstein Files",
+      "category": "Investigation",
+      "color": "#d4a855"
+    },
+    {
+      "date": "2026-04-08",
+      "segment": "epstein-3point5million",
+      "filename": "2026-04-08-epstein-3point5million.html",
+      "headline": "3.5 Million Pages, Zero Handcuffs",
+      "category": "Investigation",
+      "color": "#d4a855"
+    }
+  ]
+}

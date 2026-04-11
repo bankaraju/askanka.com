@@ -1385,6 +1385,12 @@
                 <h3>3.5 Million Pages, Zero Handcuffs</h3>
                 <div class="report-date mono">April 8, 2026</div>
             </a>
+            <a href="reports/week-007.html" class="report-card">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week 007</div>
+                    <h3>Energy Infra Leads, Defense Consolidates — Portfolio +6.3%</h3>
+                    <p>April 6-11. Top winner ENR +11.7% (DAX energy infra); top loser NOC -4.1% (defense pause). 15 active positions, 6.34% average USD return. Automated weekly brief across 8 global indices, 20 stocks, commodities, and FX.</p>
+                    <div class="report-date mono">April 11, 2026</div>
+            </a>
             <a href="reports/week-006.html" class="report-card">
                 <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week 006</div>
                     <h3>Global Markets in Crisis: War, Oil & Institutional Flight</h3>
@@ -2111,6 +2117,88 @@
         })
         .catch(() => {});
 
+})();
+</script>
+
+<!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
+     Single source of truth: data/articles_index.json + data/weekly_index.json
+     Pipeline scripts (daily_articles.py, weekly_report_generator.py) only
+     append to these JSON files. They never touch index.html. This ensures
+     the 2026-04-11 regression (where the generator clobbered 934 lines)
+     can NEVER recur. On fetch failure, static HTML remains as fallback. -->
+<script>
+(function() {
+    const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    function fmtDate(iso) {
+        try {
+            const d = new Date(iso + 'T00:00:00');
+            return d.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
+        } catch (e) { return iso; }
+    }
+
+    function articleCard(a) {
+        const color = a.color || '#d4a855';
+        const filename = String(a.filename || '').replace(/\\/g, '/');
+        return `<a href="articles/${esc(filename)}" class="report-card" style="border-top: 2px solid ${esc(color)};">
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:${esc(color)}; font-weight:700; margin-bottom:10px;">${esc(a.category || 'ANALYSIS')}</div>
+            <h3>${esc(a.headline)}</h3>
+            <div class="report-date mono">${esc(fmtDate(a.date))}</div>
+        </a>`;
+    }
+
+    function weeklyCard(w) {
+        const filename = String(w.filename || '').replace(/\\/g, '/');
+        return `<a href="reports/${esc(filename)}" class="report-card">
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week ${String(w.week).padStart(3,'0')}</div>
+            <h3>${esc(w.title || ('Weekly Brief #' + w.week))}</h3>
+            ${w.description ? `<p>${esc(w.description)}</p>` : ''}
+            <div class="report-date mono">${esc(w.published_at || w.period_end || '')}</div>
+        </a>`;
+    }
+
+    Promise.all([
+        fetch('data/articles_index.json').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('data/weekly_index.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([articlesData, weeklyData]) => {
+        if (!articlesData && !weeklyData) return; // fetch failed on both — leave static fallback
+
+        const articles = (articlesData && articlesData.articles) || [];
+        const weeklies = (weeklyData && weeklyData.weekly_briefs) || [];
+
+        // Split articles: most recent date = Today's Intelligence, rest = Library
+        if (articles.length > 0) {
+            const latestDate = articles[0].date;
+            const todays = articles.filter(a => a.date === latestDate);
+            const older = articles.filter(a => a.date !== latestDate);
+
+            // Find "Today's Intelligence" container: the .reports-grid that comes
+            // right after an <h2>Today's Intelligence</h2>
+            const allH2 = Array.from(document.querySelectorAll('h2'));
+            const todayHeader = allH2.find(h => /today'?s intelligence/i.test(h.textContent));
+            if (todayHeader) {
+                const section = todayHeader.closest('section');
+                const grid = section && section.querySelector('.reports-grid');
+                if (grid) grid.innerHTML = todays.map(articleCard).join('\n');
+            }
+
+            // Library & Archive grid: older articles + weeklies, newest first
+            const libGrid = document.getElementById('library-grid');
+            if (libGrid) {
+                const libCards = [
+                    ...older.map(articleCard),
+                    ...weeklies.map(weeklyCard),
+                ];
+                libGrid.innerHTML = libCards.join('\n');
+            }
+        } else if (weeklies.length > 0) {
+            // Articles missing but weeklies OK — at least render those
+            const libGrid = document.getElementById('library-grid');
+            if (libGrid) libGrid.innerHTML = weeklies.map(weeklyCard).join('\n');
+        }
+    }).catch(err => {
+        console.warn('[askanka] Dynamic render failed, static fallback in use:', err);
+    });
 })();
 </script>
 </body>

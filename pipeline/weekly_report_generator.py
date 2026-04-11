@@ -12,10 +12,15 @@ Usage:
 import argparse
 import json
 import logging
+import os
 import subprocess
 import sys
+import requests
 from datetime import datetime
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent / ".env")
 
 log = logging.getLogger("anka.weekly_report")
 
@@ -81,8 +86,87 @@ def _sector_badge(sector: str) -> str:
     return "badge-commodity"
 
 
-def _build_stock_cards(stocks: dict) -> str:
+def _generate_stock_commentary(stocks: dict) -> dict:
+    """Generate brief 3-5 line Anka Take for each stock using Gemini API.
+    Returns dict of {ticker: commentary_html}."""
+    api_key = os.getenv("GEMINI_API_KEY", "")
+    if not api_key:
+        log.warning("No GEMINI_API_KEY — skipping stock commentary")
+        return {}
+
+    # Build a batch prompt for all stocks at once (cheaper, faster)
+    stock_summaries = []
+    for ticker, s in sorted(stocks.items(), key=lambda x: abs(x[1].get("wow_change_pct", 0)), reverse=True)[:12]:
+        wow = s.get("wow_change_pct", 0)
+        price = s.get("end_price", 0)
+        sector = s.get("sector", "")
+        desc = s.get("desc", "")
+        rec = s.get("analyst", {}).get("recommendation", "")
+        n_analysts = s.get("analyst", {}).get("num_analysts", 0)
+        target = s.get("analyst", {}).get("target_mean")
+        fwd_pe = s.get("valuation", {}).get("forward_pe")
+        div_yield = s.get("valuation", {}).get("dividend_yield")
+        inst_pct = s.get("ownership", {}).get("institutional_pct")
+
+        stock_summaries.append(
+            f"TICKER: {ticker}\n"
+            f"SECTOR: {sector}\n"
+            f"DESC: {desc}\n"
+            f"PRICE: {price:.2f}, WOW CHANGE: {wow:+.2f}%\n"
+            f"ANALYST: {rec} ({n_analysts} analysts), Target: {target}\n"
+            f"FWD P/E: {fwd_pe}, DIV YIELD: {div_yield}, INST%: {inst_pct}"
+        )
+
+    prompt = f"""You are the Anka Research analyst writing brief stock commentary for a weekly report.
+For each stock below, write exactly 3-4 sentences as an "Anka Take":
+- Line 1: What this company does (use the DESC provided, make it accessible)
+- Line 2-3: Why it moved this week and what's driving sentiment (use the data: WoW change, sector trends, analyst consensus)
+- Line 4: Forward outlook — is there more upside or is it priced in? Reference P/E, target, or yield if relevant.
+
+TONE: Confident but measured. Like a Bloomberg terminal note. No hype, no disclaimers.
+FORMAT: Return a JSON object with ticker as key and commentary string as value. Nothing else.
+
+STOCKS:
+{chr(10).join(stock_summaries)}"""
+
+    try:
+        resp = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}",
+            json={
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {
+                    "maxOutputTokens": 8192,
+                    "temperature": 0.3,
+                    "responseMimeType": "application/json",
+                    "thinkingConfig": {"thinkingBudget": 0},
+                },
+            },
+            timeout=120,
+        )
+        resp.raise_for_status()
+        result = resp.json()
+        candidates = result.get("candidates", [])
+        if not candidates:
+            raise ValueError("No candidates in Gemini response")
+        parts = candidates[0].get("content", {}).get("parts", [])
+        raw = parts[0].get("text", "") if parts else ""
+        # Extract JSON from response
+        if "```" in raw:
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        commentary = json.loads(raw.strip())
+        log.info(f"Generated commentary for {len(commentary)} stocks")
+        return commentary
+    except Exception as e:
+        log.warning(f"Stock commentary generation failed: {e}")
+        return {}
+
+
+def _build_stock_cards(stocks: dict, commentary: dict = None) -> str:
     """Build detailed stock cards with metrics, analyst data, and financials."""
+    if commentary is None:
+        commentary = {}
     cards = []
     sorted_stocks = sorted(
         stocks.items(),
@@ -94,6 +178,7 @@ def _build_stock_cards(stocks: dict) -> str:
         price = s.get("end_price", 0)
         sector = s.get("sector", "")
         index_name = s.get("index", "")
+        desc = s.get("desc", "")
         badge_cls = _sector_badge(sector)
         pct_cls = "positive" if wow > 0 else "negative"
 
@@ -149,6 +234,8 @@ def _build_stock_cards(stocks: dict) -> str:
     <div><span class="ticker">{ticker}</span><span class="name">{index_name}</span></div>
     <span class="badge {badge_cls}">{sector}</span>
   </div>
+  {f'<p class="stock-desc">{desc}</p>' if desc else ''}
+  {f'<div class="anka-take">{commentary.get(ticker, "")}</div>' if commentary.get(ticker) else ''}
   <div class="metrics-grid">
     <div class="metric"><div class="metric-label">Price</div><div class="metric-value">{_fmt_price(price)}</div></div>
     <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value {pct_cls}">{_fmt_pct(wow)}</div></div>
@@ -204,7 +291,7 @@ def generate_report_html(data: dict) -> str:
     best_idx = {"name": best_idx_raw[0], "wow_pct": best_idx_raw[1]} if isinstance(best_idx_raw, list) else best_idx_raw
     worst_idx = {"name": worst_idx_raw[0], "wow_pct": worst_idx_raw[1]} if isinstance(worst_idx_raw, list) else worst_idx_raw
     vix = volatility.get("VIX", {})
-    vix_price = vix.get("end_price", 0) or 0
+    vix_price = vix.get("end_price") or vix.get("end_level") or 0
     vix_change = vix.get("wow_change_pct", 0) or 0
 
     # Brent data for dashboard
@@ -276,8 +363,9 @@ def generate_report_html(data: dict) -> str:
         for name, idx in indices.items()
     )
 
-    # Stock cards
-    stock_cards_html = _build_stock_cards(stocks)
+    # Stock cards with AI-generated commentary
+    stock_commentary = _generate_stock_commentary(stocks)
+    stock_cards_html = _build_stock_cards(stocks, commentary=stock_commentary)
 
     # Sidebar nav entries for top stocks
     stock_nav = "\n".join(
@@ -387,6 +475,8 @@ tr:hover td {{ background: var(--bg-card-hover); }}
 .stock-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }}
 .stock-header .ticker {{ font-size: 22px; font-weight: 700; color: var(--accent-gold); }}
 .stock-header .name {{ font-size: 15px; color: var(--text-primary); margin-left: 12px; }}
+.stock-desc {{ font-size: 13px; color: #9ca3af; line-height: 1.5; margin: -8px 0 12px 0; padding: 0; }}
+.anka-take {{ font-size: 13px; color: #d1d5db; line-height: 1.6; margin: 0 0 14px 0; padding: 10px 14px; background: rgba(212,168,85,0.08); border-left: 3px solid var(--accent-gold); border-radius: 4px; }}
 .badge {{
   display: inline-block; padding: 3px 10px; border-radius: 12px;
   font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
@@ -970,9 +1060,11 @@ def generate_weekly_report(week_num: int = None, deploy: bool = False) -> Path:
     report_file.write_text(html, encoding="utf-8")
     log.info(f"Report written to {report_file}")
 
-    # Update index and library
-    update_index_html(week_num, data)
-    update_library_html(week_num, data)
+    # Append the weekly brief to data/weekly_index.json (single source of truth).
+    # The homepage reads this JSON client-side via JS. This script NEVER touches
+    # index.html or library.html anymore — that was the regression source that
+    # clobbered 934 lines of homepage features on 2026-04-11 (commit 40822e4).
+    _append_to_weekly_index(week_num, data)
 
     # ── GUARDRAIL: verify HTML output before deploy ────────────────────
     html_size = report_file.stat().st_size
@@ -994,7 +1086,7 @@ def generate_weekly_report(week_num: int = None, deploy: bool = False) -> Path:
         log.info("Deploying to GitHub Pages...")
         try:
             subprocess.run(
-                ["git", "add", "reports/", "index.html"],
+                ["git", "add", "reports/", "data/weekly_index.json"],
                 cwd=str(SITE_DIR), check=True,
             )
             subprocess.run(
@@ -1011,6 +1103,69 @@ def generate_weekly_report(week_num: int = None, deploy: bool = False) -> Path:
             log.error(f"Deploy failed: {e}")
 
     return report_file
+
+
+def _append_to_weekly_index(week_num: int, data: dict) -> None:
+    """Append this week's brief to data/weekly_index.json (single source of truth).
+
+    Schema:
+    {
+      "weekly_briefs": [
+        {"week": 7, "filename": "week-007.html",
+         "period_start": "2026-04-06", "period_end": "2026-04-11",
+         "title": "...", "description": "...",
+         "top_winner": {...}, "top_loser": {...}, "published_at": "2026-04-11"}
+      ]
+    }
+    """
+    index_json = SITE_DIR / "data" / "weekly_index.json"
+    index_json.parent.mkdir(parents=True, exist_ok=True)
+
+    if index_json.exists():
+        try:
+            store = json.loads(index_json.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            store = {"weekly_briefs": []}
+    else:
+        store = {"weekly_briefs": []}
+
+    briefs = store.get("weekly_briefs", [])
+
+    period = data.get("period", {})
+    top_winner = data.get("top_winner") or {}
+    top_loser = data.get("top_loser") or {}
+
+    entry = {
+        "week": week_num,
+        "filename": f"week-{week_num:03d}.html",
+        "period_start": period.get("start", ""),
+        "period_end": period.get("end", ""),
+        "title": f"Weekly Brief #{week_num:03d} — {period.get('start','')} to {period.get('end','')}",
+        "description": (
+            f"Automated weekly market analysis. "
+            f"Top winner: {top_winner.get('ticker','?')} {top_winner.get('wow_pct','?')}%. "
+            f"Top loser: {top_loser.get('ticker','?')} {top_loser.get('wow_pct','?')}%."
+        ),
+        "top_winner": top_winner,
+        "top_loser": top_loser,
+        "published_at": datetime.now().strftime("%Y-%m-%d"),
+    }
+
+    # Dedupe on week number
+    existing_idx = next((i for i, b in enumerate(briefs) if b.get("week") == week_num), None)
+    if existing_idx is not None:
+        briefs[existing_idx] = entry
+    else:
+        briefs.append(entry)
+
+    # Sort newest first
+    briefs.sort(key=lambda b: b.get("week", 0), reverse=True)
+
+    index_json.write_text(
+        json.dumps({"weekly_briefs": briefs}, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    log.info(f"weekly_index.json updated: {len(briefs)} total briefs")
 
 
 if __name__ == "__main__":

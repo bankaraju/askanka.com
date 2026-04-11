@@ -6,6 +6,10 @@ pipeline/.env
 pipeline/data/
 pipeline/logs/
 pipeline/__pycache__/
+pipeline/lib/
+pipeline/artifacts/
+pipeline/backtests/
+pipeline/autoresearch/
 
 # Test scripts
 pipeline/test_*.py
