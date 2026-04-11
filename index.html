@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://askanka.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital,wght@0,400;1,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,7 +39,50 @@
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
+            transition: background 1s ease;
         }
+
+        /* ── Scroll fade-in animations ── */
+        .section { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .section.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── Live signal ticker ── */
+        .signal-ticker {
+            overflow: hidden;
+            background: rgba(212,168,85,0.06);
+            border-top: 1px solid rgba(212,168,85,0.1);
+            border-bottom: 1px solid rgba(212,168,85,0.1);
+            padding: 8px 0;
+            white-space: nowrap;
+        }
+        .signal-ticker-inner {
+            display: inline-block;
+            animation: ticker-scroll 30s linear infinite;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .signal-ticker-inner .up { color: #10b981; }
+        .signal-ticker-inner .down { color: #ef4444; }
+        .signal-ticker-inner .gold { color: #d4a855; }
+        .signal-ticker-inner .sep { color: #2a2a2a; margin: 0 20px; }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── MSI background glow (scroll-triggered) ── */
+        .msi-bg-glow {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
+            transition: background 2s ease;
+        }
+        .msi-bg-glow.calm { background: radial-gradient(ellipse at 50% 0%, #10b981, transparent 70%); }
+        .msi-bg-glow.neutral { background: radial-gradient(ellipse at 50% 0%, #f59e0b, transparent 70%); }
+        .msi-bg-glow.stress { background: radial-gradient(ellipse at 50% 0%, #ef4444, transparent 70%); }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -49,10 +92,11 @@
         /* ── Hero ── */
         .hero {
             position: relative;
-            padding: 64px 20px 48px;
+            padding: 72px 20px 56px;
             text-align: center;
-            background: linear-gradient(135deg, #0a0e1a 0%, #141428 40%, #1a1a3e 60%, #0a0e1a 100%);
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(160deg, rgba(10,14,26,0.85) 0%, rgba(18,22,42,0.8) 35%, rgba(26,21,48,0.85) 55%, rgba(15,13,26,0.9) 100%),
+                        url('/hero-bg.jpg') center/cover no-repeat;
+            border-bottom: 1px solid rgba(212,168,85,0.15);
             overflow: hidden;
         }
 
@@ -60,8 +104,47 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 60%);
+            background:
+                radial-gradient(ellipse at 50% -10%, rgba(212,168,85,0.10) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.04) 0%, transparent 40%);
             pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.3), transparent);
+        }
+
+        /* Floating particles */
+        .hero-particles {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .hero-particles span {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: rgba(212,168,85,0.4);
+            border-radius: 50%;
+            animation: particle-float linear infinite;
+        }
+        .hero-particles span:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+        .hero-particles span:nth-child(2) { left: 25%; animation-duration: 15s; animation-delay: 2s; width: 2px; height: 2px; }
+        .hero-particles span:nth-child(3) { left: 40%; animation-duration: 10s; animation-delay: 4s; }
+        .hero-particles span:nth-child(4) { left: 55%; animation-duration: 14s; animation-delay: 1s; width: 4px; height: 4px; opacity: 0.3; }
+        .hero-particles span:nth-child(5) { left: 70%; animation-duration: 11s; animation-delay: 3s; width: 2px; height: 2px; }
+        .hero-particles span:nth-child(6) { left: 85%; animation-duration: 13s; animation-delay: 5s; }
+        .hero-particles span:nth-child(7) { left: 15%; animation-duration: 16s; animation-delay: 6s; width: 2px; height: 2px; opacity: 0.2; }
+        .hero-particles span:nth-child(8) { left: 60%; animation-duration: 9s; animation-delay: 2s; width: 3px; height: 3px; }
+
+        @keyframes particle-float {
+            0% { bottom: -10px; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { bottom: 100%; opacity: 0; }
         }
 
         .hero-content {
@@ -70,38 +153,82 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
         }
 
         .logo-badge {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-radius: 16px;
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #d4a855, #b8860b);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 32px;
-            color: #0a0e1a;
-            box-shadow: 0 0 40px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 0 50px rgba(212,168,85,0.3), 0 4px 20px rgba(0,0,0,0.3);
+            animation: badge-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes badge-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(212,168,85,0.2), 0 4px 20px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 0 50px rgba(212,168,85,0.35), 0 4px 20px rgba(0,0,0,0.3); }
         }
 
         .hero-title {
-            font-size: 40px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 52px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f5f0e8, #d4a855);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        .hero-tagline {
+            font-family: 'DM Sans', 'Inter', sans-serif;
+            font-size: 20px;
+            color: #d4a855;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-top: -8px;
+        }
+
         .hero-subtitle {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-secondary);
             font-weight: 400;
-            margin-top: -12px;
+            max-width: 640px;
+            line-height: 1.7;
+        }
+
+        /* Track record stats */
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4a855, #f5c563);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
         }
 
         .hero-row {
@@ -118,28 +245,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .msi-gauge {
             position: relative;
-            width: 180px;
-            height: 100px;
+            width: 240px;
+            height: 130px;
             overflow: hidden;
         }
 
-        .msi-gauge svg { width: 180px; height: 100px; }
+        .msi-gauge svg { width: 240px; height: 130px; }
 
         .msi-gauge-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 16px;
+            color: #d1d5db;
+            letter-spacing: 0.5px;
         }
 
         .msi-score-display {
             position: absolute;
-            bottom: 4px;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -147,9 +274,32 @@
 
         .msi-score-display .score {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 42px;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(212,168,85,0.3);
         }
+
+        .msi-context {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+            max-width: 280px;
+            line-height: 1.5;
+        }
+
+        .msi-scale-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 240px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: -4px;
+        }
+        .msi-scale-labels .calm { color: #10b981; }
+        .msi-scale-labels .neutral { color: #f59e0b; }
+        .msi-scale-labels .stress { color: #ef4444; }
 
         .regime-badge {
             display: inline-flex;
@@ -193,19 +343,31 @@
             align-items: center;
             gap: 10px;
             padding: 14px 32px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #d4a855, #b8860b);
             color: #0a0e1a;
             font-weight: 700;
             font-size: 15px;
             border-radius: 12px;
             text-decoration: none;
-            transition: all 0.2s;
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(212, 168, 85, 0.3);
+            position: relative;
+            overflow: hidden;
         }
+
+        .telegram-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .telegram-cta:hover::before { left: 100%; }
 
         .telegram-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 8px 30px rgba(212, 168, 85, 0.4);
         }
 
         .telegram-cta svg { width: 20px; height: 20px; fill: #0a0e1a; }
@@ -215,18 +377,26 @@
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 1px;
-            background: var(--border);
-            border-bottom: 1px solid var(--border);
+            background: rgba(212,168,85,0.08);
+            border-bottom: 1px solid rgba(212,168,85,0.12);
         }
 
         .stat-card {
-            background: var(--bg-card);
-            padding: 20px 16px;
+            background: rgba(17,24,39,0.95);
+            backdrop-filter: blur(10px);
+            padding: 22px 16px;
             text-align: center;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            position: relative;
         }
 
-        .stat-card:hover { background: var(--bg-card-hover); }
+        .stat-card:hover {
+            background: rgba(26,35,50,0.95);
+        }
+
+        .stat-card:hover .stat-value {
+            color: #d4a855;
+        }
 
         .stat-label {
             font-size: 11px;
@@ -241,6 +411,7 @@
             font-size: 28px;
             font-weight: 700;
             color: var(--text-primary);
+            transition: color 0.3s;
         }
 
         .stat-value.positive { color: var(--accent-green); }
@@ -248,25 +419,42 @@
 
         /* ── Section Headers ── */
         .section {
-            padding: 48px 0;
+            padding: 52px 0;
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 14px;
+            margin-bottom: 28px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: linear-gradient(180deg, #d4a855, rgba(212,168,85,0.2));
+            border-radius: 2px;
         }
 
         .section-header h2 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 26px;
+            font-weight: 400;
+            letter-spacing: 0;
+            background: linear-gradient(135deg, #f1f5f9, #c9cdd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .section-header .badge {
             font-size: 11px;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 6px;
             font-weight: 600;
             text-transform: uppercase;
@@ -275,6 +463,14 @@
 
         .badge-live { background: var(--accent-green-dim); color: var(--accent-green); }
         .badge-count { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+        /* ── Section Dividers ── */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.2), transparent);
+            margin: 0;
+        }
 
         /* ── Position Cards ── */
         .positions-grid {
@@ -288,7 +484,14 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .position-card:hover {
+            border-color: rgba(212,168,85,0.25);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
         }
 
         .position-card:hover { border-color: rgba(245, 158, 11, 0.3); }
@@ -425,7 +628,11 @@
             border-radius: 12px;
             padding: 24px;
             margin-top: 24px;
+            overflow: hidden;
+            max-width: 100%;
         }
+        .msi-chart-container .js-plotly-plot { max-width: 100% !important; }
+        .msi-chart-container .plotly { max-width: 100% !important; }
 
         #msi-chart { width: 100%; height: 300px; }
 
@@ -493,79 +700,109 @@
         }
 
         /* ── Heatmap ── */
-        .heatmap-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            overflow-x: auto;
+        /* ── Signal Explorer ── */
+        .signal-container {
+            background: linear-gradient(160deg, #0f1629, #111827);
+            border: 1px solid rgba(212,168,85,0.12);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
         }
-
-        .heatmap-table {
-            border-collapse: collapse;
-            min-width: 100%;
+        .signal-container::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.4), transparent);
         }
+        .signal-intro { text-align: center; padding: 28px 32px 0; }
+        .signal-intro h3 { font-family: 'DM Serif Display', Georgia, serif; font-size: 24px; font-weight: 400; color: #f1f5f9; margin-bottom: 6px; }
+        .signal-intro p { font-size: 13px; color: #6b7280; max-width: 600px; margin: 0 auto; }
+        .signal-tab-toggle { display: flex; justify-content: center; margin: 20px 0; }
+        .signal-tab-group { display: flex; gap: 2px; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 4px; }
+        .signal-tab-btn { padding: 8px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; background: transparent; color: #6b7280; font-family: inherit; }
+        .signal-tab-btn.active { background: #d4a855; color: #0a0e1a; box-shadow: 0 2px 8px rgba(212,168,85,0.3); }
+        .signal-tab-btn:hover:not(.active) { color: #9ca3af; }
 
-        .heatmap-table th {
-            padding: 6px 4px;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            font-weight: 600;
-            white-space: nowrap;
+        .signal-explorer { display: flex; gap: 0; padding: 0 0 20px; min-height: 480px; }
+        .event-sidebar { flex: 0 0 220px; padding: 0 20px 0 28px; border-right: 1px solid rgba(255,255,255,0.05); }
+        .event-sidebar-label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+        .event-item { padding: 9px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; color: #9ca3af; cursor: pointer; transition: all 0.2s; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; border: 1px solid transparent; }
+        .event-item:hover { background: rgba(255,255,255,0.04); color: #f1f5f9; }
+        .event-item.active { background: rgba(212,168,85,0.12); border-color: rgba(212,168,85,0.25); color: #d4a855; font-weight: 700; }
+        .event-item .ev-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4b5563; margin-left: auto; }
+        .event-item.active .ev-count { color: #d4a855; opacity: 0.7; }
+        .ev-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .event-item.active .ev-dot { box-shadow: 0 0 6px rgba(212,168,85,0.4); }
+
+        .results-panel { flex: 1; padding: 0 28px 0 24px; }
+        .results-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .results-title { font-size: 14px; color: #d4a855; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .results-subtitle { font-size: 12px; color: #6b7280; }
+
+        .result-row { display: flex; align-items: center; padding: 12px 16px; border-radius: 10px; margin-bottom: 6px; transition: all 0.25s; cursor: default; }
+        .result-row:hover { transform: translateX(4px); }
+        .result-rank { width: 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4b5563; font-weight: 600; flex-shrink: 0; }
+        .result-hit { width: 64px; font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800; flex-shrink: 0; }
+        .result-info { flex: 1; padding: 0 16px; }
+        .result-name { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 2px; }
+        .result-meta { font-size: 11px; color: #6b7280; font-family: 'JetBrains Mono', monospace; }
+        .result-bar-wrap { width: 120px; flex-shrink: 0; }
+        .result-bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.06); overflow: hidden; }
+        .result-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease-out; }
+        .result-tickers { font-size: 11px; color: #d1d5db; margin-top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+        .tier-elite .result-hit { color: #f5c563; }
+        .tier-elite { background: rgba(212,168,85,0.06); }
+        .tier-elite:hover { background: rgba(212,168,85,0.1); }
+        .tier-elite .result-bar-fill { background: linear-gradient(90deg, #d4a855, rgba(212,168,85,0.4)); }
+        .tier-high .result-hit { color: #34d399; }
+        .tier-high { background: rgba(16,185,129,0.04); }
+        .tier-high:hover { background: rgba(16,185,129,0.08); }
+        .tier-high .result-bar-fill { background: linear-gradient(90deg, #10b981, rgba(16,185,129,0.3)); }
+        .tier-mid .result-hit { color: #d1d5db; }
+        .tier-mid { background: rgba(255,255,255,0.02); }
+        .tier-mid .result-bar-fill { background: rgba(255,255,255,0.2); }
+        .tier-low .result-hit { color: #f87171; opacity: 0.8; }
+        .tier-low { background: rgba(239,68,68,0.03); }
+        .tier-low .result-bar-fill { background: rgba(239,68,68,0.3); }
+
+        .signal-footer { padding: 16px 28px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .signal-footer-note { font-size: 11px; color: #4b5563; }
+        .signal-footer-stats { display: flex; gap: 20px; }
+        .signal-footer-stat { text-align: center; }
+        .signal-footer-val { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: #d4a855; }
+        .signal-footer-label { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .signal-legend { display: flex; gap: 16px; justify-content: center; padding: 12px; font-size: 11px; color: #6b7280; flex-wrap: wrap; }
+        .signal-legend-item { display: flex; align-items: center; gap: 6px; }
+        .signal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+        .signal-no-results { text-align: center; padding: 80px 20px; color: #6b7280; font-size: 14px; }
+
+        /* Grid view (inside signal container) */
+        .signal-grid-view { display: none; padding: 24px; overflow-x: auto; }
+
+        /* Brighter grid cell colors */
+        .heatmap-container { padding: 0; background: transparent; border: none; border-radius: 0; overflow-x: auto; }
+        .heatmap-table { border-collapse: separate; border-spacing: 3px; min-width: 100%; }
+        .heatmap-table th { padding: 6px 5px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; font-weight: 600; white-space: nowrap; }
+        .heatmap-table th.row-header { text-align: right; padding-right: 16px; font-size: 12px; font-weight: 600; color: #9ca3af; min-width: 220px; position: sticky; left: 0; background: #111827; z-index: 2; }
+        .heatmap-table tbody tr { transition: all 0.2s; }
+        .heatmap-table tbody tr:hover { background: rgba(212,168,85,0.03); }
+        .heatmap-table tbody tr:hover th.row-header { color: #d4a855; }
+        .heatmap-table thead th { position: sticky; top: 0; background: #111827; z-index: 1; writing-mode: vertical-lr; transform: rotate(180deg); text-align: left; padding: 12px 6px; height: 120px; font-size: 10px; color: #6b7280; }
+        .heatmap-table thead th:first-child { writing-mode: horizontal-tb; transform: none; text-align: right; }
+        .heatmap-cell { width: 50px; height: 36px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: default; transition: all 0.25s; padding: 0 2px; }
+        .heatmap-cell:hover { transform: scale(1.25); z-index: 5; box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
+        .heatmap-cell.no-data { background: transparent; color: transparent; }
+        .heatmap-cell.zero { background: rgba(255,255,255,0.02); color: transparent; }
+        .heatmap-cell.low { background: rgba(239,68,68,0.25); color: #f87171; }
+        .heatmap-cell.mid { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .heatmap-cell.high { background: rgba(16,185,129,0.35); color: #34d399; box-shadow: inset 0 0 0 1px rgba(16,185,129,0.2); }
+        .heatmap-cell.elite { background: linear-gradient(135deg, rgba(212,168,85,0.35), rgba(212,168,85,0.2)); color: #f5c563; box-shadow: inset 0 0 0 1px rgba(212,168,85,0.4), 0 0 8px rgba(212,168,85,0.15); }
+
+        @media (max-width: 768px) {
+            .signal-explorer { flex-direction: column; }
+            .event-sidebar { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 20px 16px; }
+            .result-bar-wrap { display: none; }
         }
-
-        .heatmap-table th.row-header {
-            text-align: right;
-            padding-right: 12px;
-            font-size: 11px;
-            color: var(--text-secondary);
-            min-width: 180px;
-            position: sticky;
-            left: 0;
-            background: var(--bg-card);
-            z-index: 2;
-        }
-
-        .heatmap-table thead th {
-            position: sticky;
-            top: 0;
-            background: var(--bg-card);
-            z-index: 1;
-            writing-mode: vertical-lr;
-            transform: rotate(180deg);
-            text-align: left;
-            padding: 8px 4px;
-            height: 100px;
-        }
-
-        .heatmap-table thead th:first-child {
-            writing-mode: horizontal-tb;
-            transform: none;
-            text-align: right;
-        }
-
-        .heatmap-cell {
-            width: 44px;
-            height: 32px;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            font-weight: 600;
-            border-radius: 3px;
-            cursor: default;
-            transition: transform 0.15s;
-            padding: 0 2px;
-        }
-
-        .heatmap-cell:hover { transform: scale(1.15); }
-
-        .heatmap-cell.no-data { color: transparent; }
-        .heatmap-cell.low { background: rgba(239, 68, 68, 0.15); color: rgba(239, 68, 68, 0.7); }
-        .heatmap-cell.mid { background: rgba(16, 185, 129, 0.15); color: rgba(16, 185, 129, 0.8); }
-        .heatmap-cell.high { background: rgba(16, 185, 129, 0.3); color: #10b981; }
-        .heatmap-cell.elite { background: rgba(245, 158, 11, 0.25); color: var(--accent-gold); }
 
         .heatmap-note {
             margin-top: 16px;
@@ -610,17 +847,73 @@
             padding: 24px;
             text-decoration: none;
             color: var(--text-primary);
-            transition: all 0.2s;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .report-card:hover {
-            border-color: rgba(245, 158, 11, 0.3);
-            transform: translateY(-2px);
+            border-color: rgba(212, 168, 85, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
-        .report-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .report-card p { font-size: 13px; color: var(--text-secondary); }
-        .report-card .report-date { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+        .report-card h3 { font-family: 'DM Serif Display', Georgia, serif; font-size: 18px; font-weight: 400; margin-bottom: 8px; color: #f1f5f9; }
+        .report-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+        .report-card .report-date { font-size: 12px; color: #d4a855; margin-top: 12px; font-weight: 500; }
+
+        /* ── Latest Report Hero Card ── */
+        .report-hero {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(212,168,85,0.12) 0%, rgba(212,168,85,0.03) 100%);
+            border: 2px solid rgba(212,168,85,0.4);
+            border-radius: 16px;
+            padding: 32px 36px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+        .report-hero:hover {
+            border-color: rgba(212,168,85,0.7);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(212,168,85,0.15);
+        }
+        .report-hero-content { flex: 1; }
+        .report-hero h3 {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 28px; font-weight: 400; margin-bottom: 10px;
+            background: linear-gradient(90deg, #d4a855, #f5c563);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .report-hero p { font-size: 15px; color: #d1d5db; line-height: 1.6; max-width: 600px; }
+        .report-hero .report-date { font-size: 13px; color: #9ca3af; margin-top: 14px; }
+        .report-hero-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(212,168,85,0.15); border: 1px solid rgba(212,168,85,0.3);
+            color: #d4a855; padding: 10px 22px; border-radius: 8px;
+            font-weight: 600; font-size: 14px; white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .report-hero:hover .report-hero-cta {
+            background: rgba(212,168,85,0.25); border-color: rgba(212,168,85,0.5);
+        }
+
+        /* Pulsing LATEST badge */
+        .badge-latest {
+            display: inline-block; background: #d4a855; color: #0a0a0a;
+            font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+            padding: 4px 12px; border-radius: 4px; margin-bottom: 10px;
+            animation: pulse-gold 2s ease-in-out infinite;
+        }
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212,168,85,0.4); }
+            50% { box-shadow: 0 0 12px 4px rgba(212,168,85,0.25); }
+        }
 
         /* ── How It Works ── */
         .pipeline-steps {
@@ -638,13 +931,20 @@
             border-radius: 12px;
             position: relative;
             margin: 0 8px;
+            transition: all 0.3s;
+        }
+
+        .pipeline-step:hover {
+            border-color: rgba(212,168,85,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         }
 
         .pipeline-step-num {
             width: 36px;
             height: 36px;
-            background: var(--accent-gold-dim);
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: rgba(212,168,85,0.12);
+            border: 1px solid rgba(212, 168, 85, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -680,9 +980,10 @@
 
         /* ── Footer ── */
         .footer {
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(212,168,85,0.15);
             padding: 48px 24px;
             text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(212,168,85,0.03));
         }
 
         .footer-cta { margin-bottom: 24px; }
@@ -711,7 +1012,11 @@
             .pipeline-arrow { display: none; }
             .positions-grid { grid-template-columns: 1fr; }
             .hero-title { font-size: 30px; }
-            .heatmap-table thead th { height: 70px; }
+            .hero-stats { gap: 20px; }
+            .hero-stat-value { font-size: 22px; }
+            .reports-grid { grid-template-columns: 1fr; }
+            .report-hero { flex-direction: column; padding: 24px; }
+            .report-hero-cta { align-self: flex-start; }
         }
 
         @media (max-width: 600px) {
@@ -719,11 +1024,50 @@
             .pipeline-steps { grid-template-columns: 1fr; }
             .hero { padding: 40px 16px 32px; }
             .hero-title { font-size: 26px; }
+            .hero-tagline { font-size: 14px; letter-spacing: 1.5px; }
+            .hero-subtitle { font-size: 14px; }
+            .hero-stats { gap: 16px; }
+            .hero-stat-value { font-size: 20px; }
+            .hero-stat-label { font-size: 9px; }
             .stat-value { font-size: 22px; }
             .position-meta { grid-template-columns: repeat(2, 1fr); }
             .legs-section { grid-template-columns: 1fr; }
             .position-pnl { font-size: 24px; }
             .section { padding: 32px 0; }
+            .section-header h2 { font-size: 20px; }
+            .container { padding: 0 16px; }
+            /* Charts: force responsive width */
+            .msi-chart-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .msi-chart-container > div { min-width: 100% !important; }
+            /* Signal Explorer mobile */
+            .signal-explorer { flex-direction: column; min-height: auto; }
+            .event-sidebar { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 4px; }
+            .event-sidebar-label { width: 100%; }
+            .event-item { padding: 6px 10px; font-size: 11px; }
+            .ev-count { display: none; }
+            .results-panel { padding: 12px 16px 0; }
+            .result-row { padding: 10px 8px; }
+            .result-hit { font-size: 18px; width: 50px; }
+            .result-info { padding: 0 8px; }
+            .result-name { font-size: 12px; }
+            .result-bar-wrap { display: none; }
+            .result-rank { width: 22px; font-size: 11px; }
+            .signal-footer { flex-direction: column; text-align: center; gap: 8px; }
+            /* Heatmap grid mobile */
+            .signal-grid-view { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .heatmap-cell { width: 40px; height: 30px; font-size: 11px; }
+            .heatmap-table th.row-header { min-width: 160px; font-size: 10px; }
+            /* Report cards */
+            .report-hero h3 { font-size: 22px; }
+            .report-hero p { font-size: 13px; }
+        }
+
+        @media (max-width: 400px) {
+            .hero-title { font-size: 22px; }
+            .hero-stats { gap: 12px; }
+            .hero-stat-value { font-size: 18px; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .event-item { padding: 5px 8px; font-size: 10px; }
         }
 
         /* ── Tooltip ── */
@@ -787,28 +1131,58 @@
 
 <!-- ══════════════ HERO ══════════════ -->
 <section class="hero">
+    <div class="hero-particles">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+    </div>
     <div class="hero-content">
-        <div class="logo-badge">A</div>
+        <div class="logo-badge">
+            <svg width="42" height="42" viewBox="0 0 100 100" fill="none">
+                <!-- Phoenix / Anka bird mark -->
+                <path d="M50 8 C35 8, 20 20, 18 38 C16 52, 22 62, 30 70 L25 88 C25 88, 38 78, 50 78 C62 78, 75 88, 75 88 L70 70 C78 62, 84 52, 82 38 C80 20, 65 8, 50 8Z" fill="url(#phoenix-grad)" opacity="0.9"/>
+                <path d="M50 18 C42 18, 34 26, 33 36 C32 44, 36 50, 42 56 L50 68 L58 56 C64 50, 68 44, 67 36 C66 26, 58 18, 50 18Z" fill="#0a0e1a" opacity="0.6"/>
+                <path d="M44 36 C44 33, 47 30, 50 30 C53 30, 56 33, 56 36 C56 40, 53 42, 50 42 C47 42, 44 40, 44 36Z" fill="#d4a855"/>
+                <defs><linearGradient id="phoenix-grad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#f5c563"/><stop offset="100%" stop-color="#b8860b"/></linearGradient></defs>
+            </svg>
+        </div>
         <h1 class="hero-title">Anka Research</h1>
-        <p class="hero-subtitle">Data-Driven Spread Trading Signals</p>
+        <p class="hero-tagline">Where Geopolitics Meets Indian Equities</p>
+        <p class="hero-subtitle">AI-powered global regime detection and spread trading signals. 31 ETFs across 8 asset classes feed a single regime score every morning before Indian markets open.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-value">31</div><div class="hero-stat-label">Global ETFs Tracked</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">716</div><div class="hero-stat-label">Days Backtested</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">62.3%</div><div class="hero-stat-label">Directional Accuracy</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">Regime Zones</div></div>
+        </div>
 
         <div class="hero-row">
             <div class="msi-gauge-wrap">
-                <div class="msi-gauge-label">Market Stress Index</div>
+                <div class="msi-gauge-label">Global Regime Score</div>
                 <div class="msi-gauge" id="msi-gauge">
-                    <svg viewBox="0 0 180 100">
-                        <!-- Background arc segments -->
-                        <path d="M 15 90 A 75 75 0 0 1 69 22" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" opacity="0.3"/>
-                        <path d="M 69 22 A 75 75 0 0 1 111 22" fill="none" stroke="#f59e0b" stroke-width="10" opacity="0.3"/>
-                        <path d="M 111 22 A 75 75 0 0 1 165 90" fill="none" stroke="#ef4444" stroke-width="10" stroke-linecap="round" opacity="0.3"/>
+                    <svg viewBox="0 0 240 130">
+                        <!-- Background arc segments — thicker, brighter -->
+                        <path d="M 20 120 A 100 100 0 0 1 92 25" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+                        <path d="M 92 25 A 100 100 0 0 1 148 25" fill="none" stroke="#f59e0b" stroke-width="14" opacity="0.5"/>
+                        <path d="M 148 25 A 100 100 0 0 1 220 120" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+                        <!-- Active arc glow layer -->
+                        <path d="M 20 120 A 100 100 0 0 1 92 25" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" opacity="0.15" filter="blur(4px)"/>
+                        <path d="M 148 25 A 100 100 0 0 1 220 120" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round" opacity="0.15" filter="blur(4px)"/>
                         <!-- Needle -->
-                        <line id="msi-needle" x1="90" y1="90" x2="90" y2="22" stroke="#f1f5f9" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90, 90, 90)"/>
-                        <circle cx="90" cy="90" r="5" fill="#f1f5f9"/>
+                        <line id="msi-needle" x1="120" y1="120" x2="120" y2="28" stroke="#f1f5f9" stroke-width="3" stroke-linecap="round" transform="rotate(-90, 120, 120)"/>
+                        <circle cx="120" cy="120" r="6" fill="#d4a855"/>
+                        <circle cx="120" cy="120" r="3" fill="#0a0e1a"/>
                     </svg>
                     <div class="msi-score-display">
                         <div class="score" id="msi-score">--</div>
                     </div>
                 </div>
+                <div class="msi-scale-labels">
+                    <span class="calm">Risk-On</span>
+                    <span class="neutral">Neutral</span>
+                    <span class="stress">Risk-Off</span>
+                </div>
+                <div class="msi-context" id="msi-context">31 global ETFs: credit, equity, commodity, currency, and volatility flows</div>
             </div>
 
             <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
@@ -820,6 +1194,9 @@
                     <span class="live-dot"></span>
                     <span>Last updated: <span id="updated-time" class="mono">--:--</span> IST</span>
                 </div>
+                <div style="margin-top:8px; font-size:11px; color:#6b7280; max-width:220px; text-align:center; line-height:1.4;">
+                    Unified Regime Engine v2 &mdash; shadow validated daily until May 5. <a href="research/autoresearch.html" style="color:#d4a855; text-decoration:none;">Read methodology &rarr;</a>
+                </div>
             </div>
         </div>
 
@@ -830,36 +1207,199 @@
     </div>
 </section>
 
-<!-- ══════════════ STATS BAR ══════════════ -->
-<div class="stats-bar" id="stats-bar">
-    <div class="stat-card">
-        <div class="stat-label">Open Positions</div>
-        <div class="stat-value mono" id="stat-open">--</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Total Signals</div>
-        <div class="stat-value mono" id="stat-signals">--</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Win Rate</div>
-        <div class="stat-value mono" id="stat-winrate">--%</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Cumulative P&L</div>
-        <div class="stat-value mono" id="stat-pnl">--</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Days Active</div>
-        <div class="stat-value mono" id="stat-days">--</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Spreads Tracked</div>
-        <div class="stat-value mono" id="stat-spreads">25</div>
+<!-- ══════════════ MSI BACKGROUND GLOW ══════════════ -->
+<div class="msi-bg-glow neutral" id="msi-bg-glow"></div>
+
+<!-- ══════════════ SIGNAL TICKER ══════════════ -->
+<div class="signal-ticker">
+    <div class="signal-ticker-inner" id="signal-ticker">
+        <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
+        <span>Regime: <span id="ticker-msi">--</span>/100</span><span class="sep">|</span>
+        <span>Defence vs IT: <span class="up" id="ticker-dit">+3.3%</span></span><span class="sep">|</span>
+        <span>Coal vs OMCs: <span class="up" id="ticker-coal">+3.8%</span></span><span class="sep">|</span>
+        <span>PCR: <span id="ticker-pcr">1.32</span></span><span class="sep">|</span>
+        <span>VIX: <span id="ticker-vix">25.5</span></span><span class="sep">|</span>
+        <span>Nifty Pin: <span class="gold" id="ticker-pin">22,800</span></span><span class="sep">|</span>
+        <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
+        <span>Regime: <span>--</span>/100</span><span class="sep">|</span>
+        <span>Defence vs IT: <span class="up">+3.3%</span></span><span class="sep">|</span>
+        <span>Coal vs OMCs: <span class="up">+3.8%</span></span><span class="sep">|</span>
+        <span>PCR: <span>1.32</span></span><span class="sep">|</span>
+        <span>VIX: <span>25.5</span></span><span class="sep">|</span>
+        <span>Nifty Pin: <span class="gold">22,800</span></span><span class="sep">|</span>
     </div>
 </div>
 
-<!-- ══════════════ ACTIVE POSITIONS ══════════════ -->
+<!-- ══════════════ STATS BAR ══════════════ -->
+<div class="stats-bar" id="stats-bar">
+    <div class="stat-card" title="Spread positions currently open and being tracked in real-time">
+        <div class="stat-label">Open Positions</div>
+        <div class="stat-value mono" id="stat-open">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Live spread trades</div>
+    </div>
+    <div class="stat-card" title="Total signals fired since launch — each signal is a regime-driven spread entry">
+        <div class="stat-label">Total Signals</div>
+        <div class="stat-value mono" id="stat-signals">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Since April 1</div>
+    </div>
+    <div class="stat-card" title="Percentage of closed positions that were profitable. Early stage — small sample.">
+        <div class="stat-label">Win Rate</div>
+        <div class="stat-value mono" id="stat-winrate">--%</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
+    </div>
+    <div class="stat-card" title="Realized P&L from closed positions only.">
+        <div class="stat-label">Realized P&L</div>
+        <div class="stat-value mono" id="stat-pnl">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
+    </div>
+    <div class="stat-card" title="Unrealized P&L from currently open spread positions. Updates intraday.">
+        <div class="stat-label">Unrealized P&L</div>
+        <div class="stat-value mono" id="stat-unrealized">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Open positions, live</div>
+    </div>
+    <div class="stat-card" title="Calendar days since first signal was fired">
+        <div class="stat-label">Days Active</div>
+        <div class="stat-value mono" id="stat-days">--</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Since first signal</div>
+    </div>
+    <div class="stat-card" title="Total sector spread pairs being monitored for entry/exit signals">
+        <div class="stat-label">Spreads Tracked</div>
+        <div class="stat-value mono" id="stat-spreads">25</div>
+        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Across 8 sectors</div>
+    </div>
+</div>
+
+<!-- ══════════════ HOW THIS WORKS ══════════════ -->
 <div class="container">
+    <section class="section" style="padding-bottom:0;">
+        <div style="background: rgba(212,168,85,0.06); border: 1px solid rgba(212,168,85,0.12); border-radius: 12px; padding: 24px 28px; margin-bottom: 0;">
+            <h3 style="font-family:'DM Serif Display',serif; font-size:18px; color:#d4a855; margin-bottom:12px;">How the Global Regime Score Works</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; font-size:14px; color:#9ca3af; line-height:1.6;">
+                <div>
+                    <strong style="color:#e5e7eb;">1. Overnight Global Scan</strong><br>
+                    Every morning at 4:30 AM IST, before Indian markets open, the engine reads what happened overnight across 31 global ETFs &mdash; credit appetite (HYG), equity flows (SPY, EEM), volatility (VIX), currencies (UUP, FXY), and commodities (USO, GLD).
+                </div>
+                <div>
+                    <strong style="color:#e5e7eb;">2. Data-Driven Weights</strong><br>
+                    Each ETF's weight was determined by 2,000 automated experiments (not hand-picked). The strongest predictor of Indian markets isn't the S&amp;P 500 &mdash; it's <span style="color:#d4a855;">high-yield corporate bonds</span>. When global credit appetite is strong, India follows the next day.
+                </div>
+                <div>
+                    <strong style="color:#e5e7eb;">3. Five Regime Zones</strong><br>
+                    The composite score maps to five zones: <span style="color:#ef4444;">RISK-OFF</span> (15% up rate), CAUTION (38%), <span style="color:#f59e0b;">NEUTRAL</span> (55%), <span style="color:#10b981;">RISK-ON</span> (72%), and <span style="color:#10b981;">EUPHORIA</span> (82% up rate). We only trade when the signal is in the extremes.
+                </div>
+                <div>
+                    <strong style="color:#e5e7eb;">4. Validation</strong><br>
+                    62.3% directional accuracy across 716 days. Outperforms 100% of random weight simulations. Confirmed by 12-fold walk-forward cross-validation. Currently in live shadow validation through May 5, 2026. <a href="research/autoresearch.html" style="color:#d4a855; text-decoration:none;">Full research paper &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ══════════════ ARTICLES ══════════════ -->
+<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h2>Today's Intelligence</h2>
+            <span class="badge badge-live">Daily</span>
+        </div>
+        <div class="reports-grid">
+            <a href="articles/2026-04-10-war.html" class="report-card" style="border-top: 2px solid #ef4444;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">GEOPOLITICAL ANALYSIS</div>
+                <h3>Hormuz Holds Hostage: US-Iran 'Ceasefire' a Sham as Oil War Escalates</h3>
+                <p>The 'ceasefire' between the US and Iran, a fragile construct championed by UK PM Keir Starmer in his Gulf tour Source: Al Jazeera English, i</p>
+                <div class="report-date mono">April 10, 2026</div>
+            </a>
+            <a href="articles/2026-04-10-epstein.html" class="report-card" style="border-top: 2px solid #d4a855;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">INVESTIGATION</div>
+                <h3>Melania's Desperate Denials and the Enduring Silence on Epstein's Indian Connections</h3>
+                <p>April 10, 2026 – The stench of panic is palpable. Melania Trump's recent public plea for 'rumours linking her to Epstein' to 'need to stop' </p>
+                <div class="report-date mono">April 10, 2026</div>
+            </a>
+            <a href="research/hal-pattern-premium.html" class="report-card" style="border-top: 2px solid #10b981;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; font-weight:700; margin-bottom:10px;">Pattern Premium</div>
+                <h3>HAL Forensic Research: Order Book Fantasy vs Production Reality</h3>
+                <p>8 annual reports. 15 forensic ratios. Order book 1.89L Cr but production dropped 46%. Street says Rs 4,500. Our forensics: Rs 3,050-3,375.</p>
+                <div class="report-date mono">April 8, 2026</div>
+            </a>
+            <a href="research/autoresearch.html" class="report-card" style="border-top: 2px solid #10b981;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; font-weight:700; margin-bottom:10px;">Research Paper</div>
+                <h3>AutoResearch: How AI Fixed Our Broken ML Model Overnight</h3>
+                <p>74 autonomous experiments. F1 score: 3.8% to 32.3%. How anomaly detection outperforms classification for rare-event detection.</p>
+                <div class="report-date mono">April 5, 2026</div>
+            </a>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ══════════════ REPORTS ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2 style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';">Library &amp; Archive</h2>
+            <span class="badge badge-count" style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';this.textContent=g.style.display==='none'?'Show':'Hide';">Show</span>
+            <!-- Remove the original badge below -->
+        </div>
+        <div class="reports-grid" id="library-grid" style="display:none;">
+            <a href="articles/2026-04-09-war.html" class="report-card" style="border-top: 2px solid #ef4444;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">Geopolitical Analysis</div>
+                <h3>Trump's Iran Ceasefire is a Strategic Retreat — and India's Oil Markets Just Woke Up to the Risk</h3>
+                <p>The Trump administration's abrupt pivot to a 14-day ceasefire with Iran marks a humbling recalibration of American power.</p>
+                <div class="report-date mono">April 9, 2026</div>
+            </a>
+            <a href="articles/2026-04-09-epstein.html" class="report-card" style="border-top: 2px solid #d4a855;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Investigation</div>
+                <h3>Bondi's Epstein Escape: How Trump's AG Dodges Deposition While DOJ Crumbles</h3>
+                <p>Attorney General Pam Bondi is running — literally refusing to appear for depositions tied to the Epstein case.</p>
+                <div class="report-date mono">April 9, 2026</div>
+            </a>
+            <a href="articles/2026-04-08-war-ceasefire-fresh.html" class="report-card" style="border-top: 2px solid #ef4444;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">War Analysis</div>
+                <h3>Forced Retreat: Trump's Iran War Implodes as Military Abandons Command</h3>
+                <div class="report-date mono">April 8, 2026</div>
+            </a>
+            <a href="articles/2026-04-08-war-collapse-fresh.html" class="report-card" style="border-top: 2px solid #ef4444;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">War Analysis</div>
+                <h3>Military Mutiny: 25th Amendment Demands as Bases Abandoned</h3>
+                <div class="report-date mono">April 8, 2026</div>
+            </a>
+            <a href="articles/2026-04-08-epstein-bondi-fired.html" class="report-card" style="border-top: 2px solid #d4a855;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Investigation</div>
+                <h3>Trump Fires AG Bondi Over Epstein Files</h3>
+                <div class="report-date mono">April 8, 2026</div>
+            </a>
+            <a href="articles/2026-04-08-epstein-3point5million.html" class="report-card" style="border-top: 2px solid #d4a855;">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Investigation</div>
+                <h3>3.5 Million Pages, Zero Handcuffs</h3>
+                <div class="report-date mono">April 8, 2026</div>
+            </a>
+            <a href="reports/week-006.html" class="report-card">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week 006</div>
+                    <h3>Global Markets in Crisis: War, Oil & Institutional Flight</h3>
+                    <p>Iran-US conflict enters Week 6. Defence stocks surge, OMCs crushed. FII outflows accelerate as crude breaches $95. Full analysis with AI-generated commentary on 12 key movers.</p>
+                    <div class="report-date mono">April 4, 2026</div>
+            </a>
+            <a href="reports/week-005.html" class="report-card">
+                <h3>Signals Go Live: First Automated Trades</h3>
+                <p>Defence vs IT and Coal vs OMCs — our first spread signals fire in real-time. How the pipeline performed on day one.</p>
+                <div class="report-date mono">March 28, 2026</div>
+            </a>
+            <a href="reports/week-001.html" class="report-card">
+                <h3>When the Bombs Dropped: Market Day One</h3>
+                <p>The inaugural analysis. How Indian equities reacted in the first 48 hours of the Iran-US conflict.</p>
+                <div class="report-date mono">March 3, 2026</div>
+            </a>
+            <a href="reports/india-deep-dive.html" class="report-card">
+                <h3>India Sector Playbook</h3>
+                <p>The foundation: sector-by-sector breakdown of how Indian equities respond to geopolitical and macro stress events.</p>
+                <div class="report-date mono">Research</div>
+            </a>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+<!-- ══════════════ ACTIVE POSITIONS ══════════════ -->
     <section class="section">
         <div class="section-header">
             <h2>Active Positions</h2>
@@ -902,34 +1442,40 @@
             <h2>Signal Universe</h2>
             <span class="badge badge-count">Hit Rate Heatmap</span>
         </div>
-        <div class="heatmap-container" id="heatmap-container">
-            <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading heatmap...</div>
-        </div>
-    </section>
-
-    <hr class="section-divider">
-
-    <!-- ══════════════ REPORTS ══════════════ -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Weekly Reports</h2>
-        </div>
-        <div class="reports-grid">
-            <a href="reports/week-007.html" class="report-card">
-                <h3>Week 005: Live Signal Tracking</h3>
-                <p>First live signals deployed. Defence vs IT and Coal vs OMCs active.</p>
-                <div class="report-date mono">April 2026</div>
-            </a>
-            <a href="reports/week-001.html" class="report-card">
-                <h3>Week 001: Wartime Market Analysis</h3>
-                <p>Inaugural analysis of geopolitical stress transmission to Indian equities.</p>
-                <div class="report-date mono">March 2026</div>
-            </a>
-            <a href="reports/india-deep-dive.html" class="report-card">
-                <h3>India Deep Dive</h3>
-                <p>Sector-by-sector analysis of Indian equity response to macro events.</p>
-                <div class="report-date mono">Research</div>
-            </a>
+        <div class="signal-container" id="signal-container">
+            <div class="signal-intro">
+                <h3>Explore the Edge</h3>
+                <p>Select an event scenario to see which spread trades have historically outperformed. Ranked by hit rate from 4 years of backtesting.</p>
+            </div>
+            <div class="signal-tab-toggle">
+                <div class="signal-tab-group">
+                    <button class="signal-tab-btn active" onclick="showSignalTab('explorer')">Explorer</button>
+                    <button class="signal-tab-btn" onclick="showSignalTab('grid')">Full Grid</button>
+                </div>
+            </div>
+            <div class="signal-explorer" id="explorer-view">
+                <div class="event-sidebar"><div class="event-sidebar-label">Event Scenarios</div><div id="event-list"></div></div>
+                <div class="results-panel" id="results-panel"><div class="signal-no-results">Loading...</div></div>
+            </div>
+            <div class="signal-grid-view" id="grid-view">
+                <div class="heatmap-container" id="heatmap-container">
+                    <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading grid...</div>
+                </div>
+            </div>
+            <div class="signal-footer">
+                <div class="signal-footer-note">Backtested across 90+ events over 4 years. Only setups with 3+ precedents shown.</div>
+                <div class="signal-footer-stats">
+                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-tested">--</div><div class="signal-footer-label">Tested</div></div>
+                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-elite">--</div><div class="signal-footer-label">Elite 80%+</div></div>
+                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-high">--</div><div class="signal-footer-label">High 65%+</div></div>
+                </div>
+            </div>
+            <div class="signal-legend">
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(212,168,85,0.4);"></div> 80%+ Elite</div>
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(16,185,129,0.4);"></div> 65-79% High</div>
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(255,255,255,0.15);"></div> 50-64%</div>
+                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(239,68,68,0.3);"></div> Below 50%</div>
+            </div>
         </div>
     </section>
 
@@ -1049,15 +1595,37 @@
     function setGaugeNeedle(score) {
         const needle = document.getElementById('msi-needle');
         if (!needle) return;
-        // Map 0-100 to -90deg to +90deg rotation around (90, 90)
+        // Map 0-100 to -90deg to +90deg rotation around (120, 120) — new larger gauge
         const angle = -90 + (score / 100) * 180;
-        needle.setAttribute('transform', 'rotate(' + angle + ', 90, 90)');
+        needle.setAttribute('transform', 'rotate(' + angle + ', 120, 120)');
 
         const scoreEl = document.getElementById('msi-score');
         if (scoreEl) {
             const color = score < 35 ? '#10b981' : score < 65 ? '#f59e0b' : '#ef4444';
             scoreEl.style.color = color;
+            scoreEl.style.textShadow = '0 0 20px ' + color + '40';
             animateValue(scoreEl, score, '', 1200);
+        }
+
+        // Update context text based on score — URE zones
+        const ctx = document.getElementById('msi-context');
+        if (ctx) {
+            if (score < 20) {
+                ctx.textContent = 'RISK-ON — Global credit strong, equity flows positive. Full conviction on long spreads.';
+                ctx.style.color = '#10b981';
+            } else if (score < 35) {
+                ctx.textContent = 'LEANING RISK-ON — Overnight markets supportive. Nifty likely positive tomorrow.';
+                ctx.style.color = '#10b981';
+            } else if (score < 65) {
+                ctx.textContent = 'NEUTRAL — 77% of days fall here. No strong directional signal. Existing positions hold.';
+                ctx.style.color = '#f59e0b';
+            } else if (score < 80) {
+                ctx.textContent = 'CAUTION — Global risk appetite weakening. Tighten stops, reduce position sizes to 75%.';
+                ctx.style.color = '#ef4444';
+            } else {
+                ctx.textContent = 'RISK-OFF — Credit markets freezing, VIX spiking. Exit long-biased spreads immediately.';
+                ctx.style.color = '#ef4444';
+            }
         }
     }
 
@@ -1098,12 +1666,31 @@
                 animateValue(wrEl, s.win_rate_pct, '%');
             }
 
+            // Realized P&L (closed trades)
             const pnlEl = document.getElementById('stat-pnl');
             if (s.cumulative_pnl_pct === 0 && s.wins === 0 && s.losses === 0) {
                 pnlEl.textContent = '--';
             } else {
                 pnlEl.className = 'stat-value mono ' + pnlClass(s.cumulative_pnl_pct);
                 pnlEl.textContent = formatPnl(s.cumulative_pnl_pct);
+            }
+
+            // Unrealized P&L (open positions)
+            const unrealizedEl = document.getElementById('stat-unrealized');
+            if (data.positions && data.positions.length > 0) {
+                let totalUnrealized = 0;
+                let count = 0;
+                data.positions.forEach(p => {
+                    if (p.spread_pnl_pct !== undefined && p.spread_pnl_pct !== null) {
+                        totalUnrealized += p.spread_pnl_pct;
+                        count++;
+                    }
+                });
+                const avgUnrealized = count > 0 ? totalUnrealized / count : 0;
+                unrealizedEl.className = 'stat-value mono ' + pnlClass(avgUnrealized);
+                unrealizedEl.textContent = formatPnl(avgUnrealized);
+            } else {
+                unrealizedEl.textContent = '--';
             }
 
             animateValue(document.getElementById('stat-days'), s.days_active, '');
@@ -1237,78 +1824,154 @@
             console.error('Failed to load track_record.json:', err);
         });
 
-    // ── Load Spread Universe Heatmap ──
+    // ── Signal Universe Explorer + Grid ──
+    const EVENT_COLORS = {
+        ceasefire:'#10b981', de_escalation:'#10b981', diplomacy:'#10b981', fii_buying:'#10b981',
+        rbi_rate_cut:'#10b981', oil_positive:'#10b981', weak_dollar:'#3b82f6',
+        escalation:'#ef4444', hormuz:'#ef4444', oil_negative:'#ef4444', sanctions:'#ef4444',
+        trump_threat:'#ef4444', us_recession:'#ef4444',
+        fii_selling:'#3b82f6', india_stress:'#3b82f6', rbi_rate_hike:'#3b82f6', strong_dollar:'#3b82f6',
+        defense_spend:'#d4a855'
+    };
+
+    window.showSignalTab = function(tab) {
+        document.querySelectorAll('.signal-tab-btn').forEach(b => b.classList.remove('active'));
+        if (tab === 'explorer') {
+            document.getElementById('explorer-view').style.display = 'flex';
+            document.getElementById('grid-view').style.display = 'none';
+            document.querySelectorAll('.signal-tab-btn')[0].classList.add('active');
+        } else {
+            document.getElementById('explorer-view').style.display = 'none';
+            document.getElementById('grid-view').style.display = 'block';
+            document.querySelectorAll('.signal-tab-btn')[1].classList.add('active');
+        }
+    };
+
     fetch('/data/spread_universe.json')
         .then(r => r.json())
         .then(data => {
-            const container = document.getElementById('heatmap-container');
             const spreads = data.spreads;
-
-            // Collect all categories from first spread
             const categories = Object.keys(spreads[0].categories).sort();
 
-            // Build table
-            let html = '<table class="heatmap-table"><thead><tr><th class="row-header" style="writing-mode:horizontal-tb;transform:none;">Spread</th>';
-            categories.forEach(cat => {
-                html += '<th>' + formatCategory(cat) + '</th>';
+            // Count stats
+            let totalTested = 0, eliteCount = 0, highCount = 0;
+            spreads.forEach(s => {
+                categories.forEach(c => {
+                    const e = s.categories[c];
+                    if (e && e.n >= 3 && e.hit_rate > 0) { totalTested++; if (e.hit_rate >= 0.8) eliteCount++; else if (e.hit_rate >= 0.65) highCount++; }
+                });
             });
-            html += '</tr></thead><tbody>';
+            document.getElementById('stat-tested').textContent = totalTested;
+            document.getElementById('stat-elite').textContent = eliteCount;
+            document.getElementById('stat-high').textContent = highCount;
+            document.getElementById('stat-spreads').textContent = spreads.length;
 
+            // ── Build Explorer ──
+            const eventList = document.getElementById('event-list');
+            categories.forEach((cat, i) => {
+                // Count results for this event
+                let count = 0;
+                spreads.forEach(s => { const e = s.categories[cat]; if (e && e.n >= 3 && e.hit_rate > 0) count++; });
+
+                const div = document.createElement('div');
+                div.className = 'event-item' + (i === 0 ? ' active' : '');
+                div.innerHTML = '<div class="ev-dot" style="background:' + (EVENT_COLORS[cat] || '#6b7280') + '"></div>' +
+                    '<span>' + formatCategory(cat) + '</span>' +
+                    '<span class="ev-count">' + count + '</span>';
+                div.addEventListener('click', function() {
+                    document.querySelectorAll('.event-item').forEach(e => e.classList.remove('active'));
+                    div.classList.add('active');
+                    showExplorerResults(cat, spreads);
+                });
+                eventList.appendChild(div);
+            });
+
+            // Auto-select first event
+            showExplorerResults(categories[0], spreads);
+
+            // ── Build Grid Tab ──
+            const container = document.getElementById('heatmap-container');
+            let html = '<table class="heatmap-table"><thead><tr><th class="row-header" style="writing-mode:horizontal-tb;transform:none;">Spread</th>';
+            categories.forEach(cat => { html += '<th>' + formatCategory(cat) + '</th>'; });
+            html += '</tr></thead><tbody>';
             spreads.forEach(spread => {
                 html += '<tr><th class="row-header">' + spread.name + '</th>';
                 categories.forEach(cat => {
                     const entry = spread.categories[cat];
-                    if (!entry || entry.n < 3) {
-                        html += '<td class="heatmap-cell no-data">&mdash;</td>';
+                    if (!entry || entry.n < 3 || entry.hit_rate === 0) {
+                        html += '<td class="heatmap-cell no-data"></td>';
                     } else {
-                        const hr = entry.hit_rate;
-                        const pct = (hr * 100).toFixed(0);
+                        const pct = (entry.hit_rate * 100).toFixed(0);
                         let cls = 'low';
-                        if (hr >= 0.8) cls = 'elite';
-                        else if (hr >= 0.65) cls = 'high';
-                        else if (hr >= 0.5) cls = 'mid';
-
-                        html += '<td class="heatmap-cell ' + cls + '" data-tip="' +
-                            spread.name + ' / ' + formatCategory(cat) + ': ' + pct + '% hit rate (n=' + entry.n + ')">' +
-                            pct + '</td>';
+                        if (entry.hit_rate >= 0.8) cls = 'elite';
+                        else if (entry.hit_rate >= 0.65) cls = 'high';
+                        else if (entry.hit_rate >= 0.5) cls = 'mid';
+                        html += '<td class="heatmap-cell ' + cls + '" data-tip="' + spread.name + ' / ' + formatCategory(cat) + ': ' + pct + '% (n=' + entry.n + ')">' + pct + '</td>';
                     }
                 });
                 html += '</tr>';
             });
-
             html += '</tbody></table>';
-
-            // Legend
-            html += '<div class="heatmap-legend">';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(239,68,68,0.15);"></span> &lt;50%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.15);"></span> 50-64%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(16,185,129,0.3);"></span> 65-79%</div>';
-            html += '<div class="legend-item"><span class="legend-swatch" style="background:rgba(245,158,11,0.25);"></span> 80%+</div>';
-            html += '<div class="legend-item"><span style="color:var(--text-muted); font-size:11px;">&#8212; n&lt;3</span></div>';
-            html += '</div>';
-
-            html += '<p class="heatmap-note">Based on 90+ historical events across 4 years of market data. Only cells with n&ge;3 events shown.</p>';
-
             container.innerHTML = html;
 
-            // Attach tooltip events
+            // Grid tooltips
             container.querySelectorAll('.heatmap-cell[data-tip]').forEach(cell => {
-                cell.addEventListener('mouseenter', function(e) {
-                    showTooltip(e, this.getAttribute('data-tip'));
-                });
-                cell.addEventListener('mousemove', function(e) {
-                    tooltip.style.left = (e.clientX + 12) + 'px';
-                    tooltip.style.top = (e.clientY - 10) + 'px';
-                });
+                cell.addEventListener('mouseenter', function(e) { showTooltip(e, this.getAttribute('data-tip')); });
+                cell.addEventListener('mousemove', function(e) { tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-10)+'px'; });
                 cell.addEventListener('mouseleave', hideTooltip);
             });
-
-            // Update spreads tracked count
-            document.getElementById('stat-spreads').textContent = spreads.length;
         })
-        .catch(err => {
-            console.error('Failed to load spread_universe.json:', err);
+        .catch(err => { console.error('Failed to load spread_universe.json:', err); });
+
+    function showExplorerResults(cat, spreads) {
+        const panel = document.getElementById('results-panel');
+        // Build results for this category
+        const results = [];
+        spreads.forEach(s => {
+            const e = s.categories[cat];
+            if (e && e.n >= 3 && e.hit_rate > 0) {
+                results.push({ name: s.name, hit: Math.round(e.hit_rate * 100), n: e.n,
+                    spread5d: e.spread_5d ? e.spread_5d.toFixed(1) : '0.0',
+                    long: s.long || [], short: s.short || [] });
+            }
         });
+        results.sort((a, b) => b.hit - a.hit);
+
+        if (results.length === 0) {
+            panel.innerHTML = '<div class="signal-no-results">No tested setups for this scenario</div>';
+            return;
+        }
+
+        let html = '<div class="results-header"><div class="results-title">When ' + formatCategory(cat) + ' fires</div>' +
+            '<div class="results-subtitle">' + results.length + ' spreads tested</div></div>';
+
+        results.forEach((r, i) => {
+            let tier = 'tier-low';
+            if (r.hit >= 80) tier = 'tier-elite';
+            else if (r.hit >= 65) tier = 'tier-high';
+            else if (r.hit >= 50) tier = 'tier-mid';
+            const sign = parseFloat(r.spread5d) >= 0 ? '+' : '';
+
+            html += '<div class="result-row ' + tier + '">' +
+                '<div class="result-rank">#' + (i+1) + '</div>' +
+                '<div class="result-hit">' + r.hit + '%</div>' +
+                '<div class="result-info"><div class="result-name">' + r.name + '</div>' +
+                '<div class="result-meta">n=' + r.n + ' | ' + sign + r.spread5d + '% avg 5d</div></div>' +
+                '<div class="result-bar-wrap"><div class="result-bar"><div class="result-bar-fill" style="width:' + r.hit + '%"></div></div>' +
+                '<div class="result-tickers"><span style="color:' + (r.hit>=65?'#10b981':'#6b7280') + '">L:</span> ' + r.long.join(', ') +
+                ' <span style="color:' + (r.hit<50?'#ef4444':'#6b7280') + '; margin-left:6px;">S:</span> ' + r.short.join(', ') + '</div></div></div>';
+        });
+
+        panel.innerHTML = html;
+
+        // Animate bars
+        setTimeout(() => {
+            panel.querySelectorAll('.result-bar-fill').forEach(bar => {
+                const w = bar.style.width; bar.style.width = '0%';
+                requestAnimationFrame(() => { requestAnimationFrame(() => { bar.style.width = w; }); });
+            });
+        }, 50);
+    }
 
     // ── Load MSI History Chart ──
     fetch('/data/msi_history.json')
@@ -1357,7 +2020,8 @@
             const layout = {
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
-                margin: { t: 10, r: 60, b: 40, l: 50 },
+                margin: { t: 10, r: window.innerWidth < 600 ? 10 : 60, b: 40, l: window.innerWidth < 600 ? 35 : 50 },
+                autosize: true,
                 xaxis: {
                     gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
                     tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
@@ -1389,6 +2053,51 @@
             document.getElementById('msi-chart').innerHTML =
                 '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">Unable to load MSI history.</div>';
         });
+
+    // ── Scroll fade-in animations ──
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+
+    // ── MSI background glow (updates with live data) ──
+    function updateMSIGlow(score) {
+        const glow = document.getElementById('msi-bg-glow');
+        if (!glow) return;
+        if (score < 35) {
+            glow.className = 'msi-bg-glow calm';
+        } else if (score < 65) {
+            glow.className = 'msi-bg-glow neutral';
+        } else {
+            glow.className = 'msi-bg-glow stress';
+        }
+    }
+
+    // ── Update ticker from live data ──
+    function updateTicker(data) {
+        const msiEl = document.getElementById('ticker-msi');
+        if (msiEl && data.msi) {
+            msiEl.textContent = data.msi.score;
+            updateMSIGlow(data.msi.score);
+        }
+    }
+
+    // Hook into existing live data fetch
+    fetch('/data/live_status.json')
+        .then(r => r.json())
+        .then(data => {
+            if (data.msi) {
+                updateMSIGlow(data.msi.score);
+                const msiEls = document.querySelectorAll('#ticker-msi');
+                msiEls.forEach(el => { el.textContent = data.msi.score; });
+            }
+        })
+        .catch(() => {});
 
 })();
 </script>
