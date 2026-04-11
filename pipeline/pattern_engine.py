@@ -34,7 +34,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
     handlers=[
-        logging.FileHandler(LOG_DIR / "pattern_engine.log"),
+        logging.FileHandler(LOG_DIR / "pattern_engine.log", delay=True, encoding="utf-8"),
         logging.StreamHandler(),
     ],
 )
@@ -62,7 +62,7 @@ def _is_cache_fresh(path: Path, max_age_hours: int = CACHE_MAX_AGE_HOURS) -> boo
     return (datetime.now() - mtime) < timedelta(hours=max_age_hours)
 
 
-def fetch_india_historical(days: int = 1460) -> dict[str, pd.DataFrame]:
+def fetch_india_historical(days: int = 365) -> dict[str, pd.DataFrame]:
     """Fetch 1-year daily OHLCV for all INDIA_SIGNAL_STOCKS via yfinance.
 
     Saves each ticker as CSV in ``india_historical/``.
@@ -221,33 +221,19 @@ def _expected_direction(ticker: str, category: str) -> str | None:
     if not taxonomy or not group:
         return None
 
-    # Map stock sector to taxonomy key (expanded for macro categories)
+    # Map stock sector to taxonomy key
     sector_lower = sector.lower()
     if "defense" in sector_lower:
         tax_key = "defense"
     elif "downstream" in sector_lower:
         tax_key = "downstream"
-    elif "it" in sector_lower or "software" in sector_lower:
+    elif "it" in sector_lower:
         tax_key = "it"
-    elif "nbfc" in sector_lower:
-        tax_key = "nbfc"
-    elif "banking" in sector_lower or "bank" in sector_lower:
-        tax_key = "banking"
-    elif "metal" in sector_lower or "steel" in sector_lower or "alumin" in sector_lower:
-        tax_key = "metals"
-    elif "fmcg" in sector_lower or ("consumer" in sector_lower and "discretionary" not in sector_lower):
-        tax_key = "fmcg"
-    elif "pharma" in sector_lower:
-        tax_key = "pharma"
-    elif "real estate" in sector_lower:
-        tax_key = "real_estate"
-    elif "auto" in sector_lower:
-        tax_key = "auto"
     else:
         tax_key = "oil"
 
     direction = taxonomy.get(tax_key)
-    if direction == "flat" or direction is None:
+    if direction == "flat":
         return None
     return direction
 

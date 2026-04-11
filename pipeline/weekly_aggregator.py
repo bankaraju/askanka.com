@@ -26,7 +26,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler(LOG_DIR / "weekly_aggregator.log"),
+        logging.FileHandler(LOG_DIR / "weekly_aggregator.log", delay=True, encoding="utf-8"),
         logging.StreamHandler()
     ]
 )

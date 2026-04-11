@@ -34,7 +34,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler(LOG_DIR / "portfolio_tracker.log"),
+        logging.FileHandler(LOG_DIR / "portfolio_tracker.log", delay=True, encoding="utf-8"),
         logging.StreamHandler()
     ]
 )

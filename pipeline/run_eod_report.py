@@ -36,6 +36,7 @@ logging.basicConfig(
         logging.FileHandler(
             Path(__file__).parent / "logs" / "eod_report.log",
             encoding="utf-8",
+            delay=True,
         ),
     ],
 )
