@@ -109,24 +109,18 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
 
     Returns True if any signals were updated.
     """
-    from kite_client import fetch_ltp
     from eodhd_client import fetch_realtime
     updated = False
     for sig in signals:
         if sig.get("entry_snapped"):
             continue
 
+        # Fetch today's open prices for all tickers in this signal
         all_tickers = (
             [l["ticker"] for l in sig.get("long_legs", [])]
             + [s["ticker"] for s in sig.get("short_legs", [])]
         )
         try:
-            # Bulk Kite LTP for all tickers in this signal (best available open proxy)
-            try:
-                kite_prices = fetch_ltp(all_tickers)
-            except Exception:
-                kite_prices = {}
-
             for leg in sig.get("long_legs", []) + sig.get("short_legs", []):
                 ticker   = leg["ticker"]
                 stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
@@ -135,17 +129,13 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
 
                 open_price = None
 
-                # 1. Kite LTP (best available real-time price)
-                if ticker in kite_prices:
-                    open_price = kite_prices[ticker]
-
-                # 2. EODHD real-time open field
-                if open_price is None and eodhd_sym:
+                # 1. EODHD real-time open field
+                if eodhd_sym:
                     rt = fetch_realtime(eodhd_sym)
                     if rt and rt.get("open"):
                         open_price = float(rt["open"])
 
-                # 3. Fallback: yfinance
+                # 2. Fallback: yfinance
                 if open_price is None:
                     try:
                         hist = yf.Ticker(yf_sym).history(period="1d")
@@ -177,44 +167,29 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
 def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     """Fetch current prices for Indian stock tickers.
 
-    Primary: Kite Connect live LTP (kite_client.fetch_ltp) — bulk, real-time.
-    Fallback: EODHD real-time API, then yfinance.
+    Primary: EODHD real-time API (eodhd_client.fetch_realtime).
+    Fallback: yfinance .history(period="1d").
 
     Tickers are plain names like "HAL", "BPCL" — resolved via INDIA_SIGNAL_STOCKS.
     """
-    from kite_client import fetch_ltp
     from eodhd_client import fetch_realtime
 
-    # 1. Try Kite bulk LTP (one call for all tickers)
-    try:
-        kite_prices = fetch_ltp(tickers)
-    except Exception as exc:
-        log.warning("Kite bulk LTP failed: %s", exc)
-        kite_prices = {}
-
     prices: Dict[str, Optional[float]] = {}
-    missing = []
-
     for ticker in tickers:
-        if ticker in kite_prices:
-            prices[ticker] = kite_prices[ticker]
-            log.debug("Price %s = %.2f (Kite)", ticker, kite_prices[ticker])
-        else:
-            missing.append(ticker)
-
-    # 2. EODHD + yfinance fallback for any missing
-    for ticker in missing:
         stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
         eodhd_sym  = stock_info.get("eodhd", "")
         yf_sym     = stock_info.get("yf", f"{ticker}.NS")
+
         price = None
 
+        # 1. Try EODHD real-time
         if eodhd_sym:
             rt = fetch_realtime(eodhd_sym)
             if rt and rt.get("close"):
                 price = float(rt["close"])
-                log.debug("Price %s = %.2f (EODHD fallback)", ticker, price)
+                log.debug("Price %s = %.2f (EODHD RT)", ticker, price)
 
+        # 2. Fallback: yfinance
         if price is None:
             try:
                 hist = yf.Ticker(yf_sym).history(period="1d")
@@ -222,7 +197,7 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                     price = float(hist["Close"].iloc[-1])
                     log.debug("Price %s = %.2f (yfinance fallback)", ticker, price)
                 else:
-                    log.warning("No price data for %s (all sources exhausted)", ticker)
+                    log.warning("No price data for %s (yfinance also empty)", ticker)
             except Exception as e:
                 log.error("yfinance error for %s: %s", yf_sym, e)
 
@@ -356,43 +331,6 @@ def _compute_todays_spread_move(
     return round(avg_long + avg_short, 4)
 
 
-def _compute_basket_raw_moves(
-    signal: Dict[str, Any],
-    current_prices: Dict[str, Optional[float]],
-) -> Tuple[Optional[float], Optional[float]]:
-    """Return (avg_long_basket_pct, avg_short_basket_pct) as RAW price moves.
-
-    Unlike _compute_todays_spread_move, the short basket is NOT inverted here.
-    Both values are the actual % change from yesterday's close (or entry on day 1).
-    Used only for correlation break detection — if both baskets fall >1.5%,
-    it's a market-wide selloff, not a spread trade.
-    Returns (None, None) if prices are unavailable.
-    """
-    prev_long = signal.get("_prev_close_long", {})
-    prev_short = signal.get("_prev_close_short", {})
-    use_entry = not prev_long
-
-    long_moves = []
-    for leg in signal.get("long_legs", []):
-        ticker = leg["ticker"]
-        ref = prev_long.get(ticker, leg["price"]) if not use_entry else leg["price"]
-        curr = current_prices.get(ticker)
-        if curr and ref and ref > 0:
-            long_moves.append((curr / ref - 1) * 100)
-
-    short_moves = []
-    for leg in signal.get("short_legs", []):
-        ticker = leg["ticker"]
-        ref = prev_short.get(ticker, leg["price"]) if not use_entry else leg["price"]
-        curr = current_prices.get(ticker)
-        if curr and ref and ref > 0:
-            short_moves.append((curr / ref - 1) * 100)  # raw, not inverted
-
-    avg_long = sum(long_moves) / len(long_moves) if long_moves else None
-    avg_short = sum(short_moves) / len(short_moves) if short_moves else None
-    return avg_long, avg_short
-
-
 def snapshot_eod_prices(
     signals: List[Dict[str, Any]],
     current_prices: Dict[str, Optional[float]],
@@ -474,47 +412,6 @@ def check_signal_status(
     daily_stop = -(avg_favorable * 0.50)           # single-day stop
     two_day_stop = daily_stop * 2                  # 2-day stop = 2 × daily stop
 
-    # Volatility-adjusted stops: widen based on MSI regime + fragility score
-    stop_multiplier = 1.0
-
-    # 1. MSI regime widening
-    try:
-        from macro_stress import compute_msi
-        _msi = compute_msi()
-        if _msi.get("regime") == "MACRO_STRESS":
-            stop_multiplier = 1.5
-            log.debug("MACRO_STRESS active — base multiplier 1.5× for %s", spread_name)
-    except Exception:
-        pass
-
-    # 2. Fragility score widening (additive on top of MSI)
-    try:
-        import json as _json
-        _frag_file = Path(__file__).parent / "data" / "fragility_scores.json"
-        if _frag_file.exists():
-            _frag_data = _json.loads(_frag_file.read_text(encoding="utf-8"))
-            _spread_tickers = set(
-                l["ticker"] for l in signal.get("long_legs", [])
-            ) | set(
-                s["ticker"] for s in signal.get("short_legs", [])
-            )
-            for _pair_name, _score in _frag_data.get("scores", {}).items():
-                if _score.get("fragility_score", 0) >= 70:
-                    from config import CORRELATION_PAIRS
-                    _pair_cfg = next((p for p in CORRELATION_PAIRS if p["name"] == _pair_name), None)
-                    if _pair_cfg and (
-                        _pair_cfg["a"] in _spread_tickers or _pair_cfg["b"] in _spread_tickers
-                    ):
-                        frag_mult = 1.0 + (_score["fragility_score"] - 50) / 100
-                        stop_multiplier = max(stop_multiplier, frag_mult)
-                        log.debug("Fragility %d for %s — multiplier %.2f for %s",
-                                  _score["fragility_score"], _pair_name, frag_mult, spread_name)
-    except Exception as _exc:
-        log.debug("Fragility score unavailable: %s", _exc)
-
-    daily_stop = daily_stop * stop_multiplier
-    two_day_stop = two_day_stop * stop_multiplier
-
     # Track consecutive losing days
     prev_day_move = signal.get("_prev_day_move")   # yesterday's spread move
     is_today_loss = todays_move < 0
@@ -526,23 +423,6 @@ def check_signal_status(
     if cumulative_spread > peak_pnl:
         signal["peak_spread_pnl_pct"] = cumulative_spread
 
-    # ── CORRELATION BREAK CHECK ─────────────────────────────
-    # If both long AND short baskets fall >1.5% on the same day, this is a
-    # broader market selloff — not a spread trade. Flag for awareness but
-    # do NOT auto-exit; the spread may still hold. Just alert.
-    _CORR_BREAK_THRESHOLD = -1.5
-    corr_break = False
-    avg_long_raw, avg_short_raw = _compute_basket_raw_moves(signal, current_prices)
-    if (avg_long_raw is not None and avg_short_raw is not None
-            and avg_long_raw < _CORR_BREAK_THRESHOLD
-            and avg_short_raw < _CORR_BREAK_THRESHOLD):
-        corr_break = True
-        log.warning(
-            "CORR_BREAK %s: both baskets falling (long avg %.2f%%, short avg %.2f%%) "
-            "— broader selloff, not a spread trade",
-            spread_name, avg_long_raw, avg_short_raw,
-        )
-
     # Store levels on the signal for Telegram display
     signal["_data_levels"] = {
         "daily_stop": round(daily_stop, 2),
@@ -553,9 +433,6 @@ def check_signal_status(
         "avg_favorable": round(avg_favorable, 2),
         "consecutive_losses": 2 if (is_today_loss and was_yesterday_loss) else (1 if is_today_loss else 0),
         "two_day_combined": round(two_day_combined, 2) if two_day_combined is not None else None,
-        "corr_break": corr_break,
-        "long_basket_move": round(avg_long_raw, 2) if avg_long_raw is not None else None,
-        "short_basket_move": round(avg_short_raw, 2) if avg_short_raw is not None else None,
     }
 
     # ── EXIT 1: DAILY STOP ──────────────────────────────────
@@ -793,28 +670,6 @@ def run_signal_monitor() -> List[Tuple[Dict[str, Any], str, Dict[str, Any]]]:
         f"{len(open_sigs) - len(closed_results)} still open"
     )
     return closed_results
-
-
-def get_weekly_closed_signals(days: int = 7) -> List[Dict[str, Any]]:
-    """Return signals closed in the last N days (default 7).
-
-    Used by the EOD track record to show 'Closed This Week' section.
-    """
-    from datetime import timezone as _tz
-    closed = load_closed_signals()
-    cutoff = datetime.now(_tz.utc) - timedelta(days=days)
-    recent = []
-    for sig in closed:
-        close_ts = sig.get("close_timestamp", "")
-        try:
-            dt = datetime.fromisoformat(close_ts.replace("Z", "+00:00"))
-            if dt.tzinfo is None:
-                dt = dt.replace(tzinfo=_tz.utc)
-            if dt >= cutoff:
-                recent.append(sig)
-        except Exception:
-            pass
-    return recent
 
 
 def run_eod_review() -> Dict[str, Any]:
