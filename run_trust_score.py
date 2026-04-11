@@ -21,6 +21,12 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 load_dotenv(Path(__file__).parent / "config" / ".env")
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -41,9 +47,13 @@ _ASKANKA_ENV = Path("C:/Users/Claude_Anka/Documents/askanka.com/pipeline/.env")
 if _ASKANKA_ENV.exists():
     load_dotenv(_ASKANKA_ENV)
 
-LLM_PROVIDER = os.getenv("ANKA_LLM_PROVIDER", "gemini")
+LLM_PROVIDER = os.getenv("ANKA_LLM_PROVIDER", "openai")
 EXTRACTION_MODEL = os.getenv("ANKA_EXTRACTION_MODEL", "claude-haiku-4-5-20251001")
 SCORING_MODEL = os.getenv("ANKA_SCORING_MODEL", "claude-sonnet-4-20250514")
+OPENROUTER_MODEL = os.getenv("ANKA_OPENROUTER_MODEL", "mistralai/mistral-small-2603")
+OPENROUTER_FALLBACK_MODEL = os.getenv("ANKA_OPENROUTER_FALLBACK_MODEL", "openrouter/free")
+OPENAI_MODEL = os.getenv("ANKA_OPENAI_MODEL", "gpt-5.4-mini")
+OPENAI_FALLBACK_MODEL = os.getenv("ANKA_OPENAI_FALLBACK_MODEL", "gpt-5.4-nano")
 
 # Golden exemplar — a vetted MARUTI scorecard injected into every scoring prompt
 # to anchor Gemini Flash's output quality and consistency. Loaded once at import.
@@ -59,9 +69,55 @@ else:
 
 def check_api_credit() -> bool:
     """Pre-flight check: verify LLM API is reachable before starting batch."""
+    if LLM_PROVIDER == "openai":
+        return _check_openai()
+    if LLM_PROVIDER == "openrouter":
+        return _check_openrouter()
     if LLM_PROVIDER == "gemini":
         return _check_gemini()
     return _check_claude_credit()
+
+
+def _check_openai() -> bool:
+    try:
+        from openai import OpenAI
+    except ImportError:
+        print("ERROR: openai package not installed (pip install openai)")
+        return False
+    key = os.getenv("OPENAI_API_KEY")
+    if not key:
+        print("ERROR: OPENAI_API_KEY not set")
+        return False
+    try:
+        client = OpenAI(api_key=key)
+        client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[{"role": "user", "content": "hi"}],
+            max_completion_tokens=5,
+        )
+        return True
+    except Exception as e:
+        print(f"ERROR: OpenAI check failed: {e}")
+        return False
+
+
+def _check_openrouter() -> bool:
+    import requests
+    key = os.getenv("OPENROUTER_API_KEY")
+    if not key:
+        print("ERROR: OPENROUTER_API_KEY not set")
+        return False
+    try:
+        resp = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": "hi"}], "max_tokens": 5},
+            timeout=15,
+        )
+        return resp.status_code == 200
+    except Exception as e:
+        print(f"ERROR: OpenRouter check failed: {e}")
+        return False
 
 
 def _check_gemini() -> bool:
@@ -104,9 +160,104 @@ def _check_claude_credit() -> bool:
 
 def call_llm(prompt: str, max_tokens: int = 4096, role: str = "extraction") -> str:
     """Call the configured LLM. Role: 'extraction' (Haiku/Flash) or 'scoring' (Sonnet/Flash)."""
+    if LLM_PROVIDER == "openai":
+        return _call_openai(prompt, max_tokens)
+    if LLM_PROVIDER == "openrouter":
+        return _call_openrouter(prompt, max_tokens)
     if LLM_PROVIDER == "gemini":
         return _call_gemini(prompt, max_tokens)
     return _call_claude(prompt, max_tokens, role)
+
+
+def _call_openai(prompt: str, max_tokens: int = 8192) -> str:
+    """Call OpenAI with JSON response format, falling back to OPENAI_FALLBACK_MODEL."""
+    from openai import OpenAI, RateLimitError, APIError
+    import time
+
+    key = os.getenv("OPENAI_API_KEY")
+    if not key:
+        raise RuntimeError("OPENAI_API_KEY not set")
+    client = OpenAI(api_key=key)
+
+    last_err = None
+    for model in (OPENAI_MODEL, OPENAI_FALLBACK_MODEL):
+        for attempt in range(3):
+            try:
+                resp = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_completion_tokens=max_tokens,
+                    response_format={"type": "json_object"},
+                )
+                content = resp.choices[0].message.content
+                if content:
+                    return content
+                last_err = f"{model} returned empty content (finish={resp.choices[0].finish_reason})"
+                break
+            except RateLimitError as e:
+                last_err = f"{model} rate-limited: {e}"
+                time.sleep(5 * (attempt + 1))
+            except APIError as e:
+                last_err = f"{model} API error: {e}"
+                if attempt < 2:
+                    time.sleep(2 ** attempt)
+        print(f"    WARN: {last_err} — trying next model")
+    raise RuntimeError(f"OpenAI call failed. Last error: {last_err}")
+
+
+def _call_openrouter(prompt: str, max_tokens: int = 8192) -> str:
+    """Call OpenRouter, falling back to OPENROUTER_FALLBACK_MODEL on rate limit or failure."""
+    import requests
+    import time
+
+    key = os.getenv("OPENROUTER_API_KEY")
+    if not key:
+        raise RuntimeError("OPENROUTER_API_KEY not set")
+
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://askanka.com",
+        "X-Title": "OPUS ANKA Trust Score",
+    }
+    body = {
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": max_tokens,
+        "temperature": 0,
+        "response_format": {"type": "json_object"},
+    }
+
+    last_err = None
+    for model in (OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODEL):
+        body["model"] = model
+        for attempt in range(3):
+            try:
+                resp = requests.post(url, headers=headers, json=body, timeout=180)
+                if resp.status_code == 429:
+                    last_err = f"rate-limited ({model})"
+                    time.sleep(5 * (attempt + 1))
+                    continue
+                if resp.status_code >= 500:
+                    last_err = f"5xx from {model}: {resp.text[:200]}"
+                    time.sleep(2 ** attempt)
+                    continue
+                resp.raise_for_status()
+                data = resp.json()
+                if "error" in data and not data.get("choices"):
+                    last_err = f"{model} error: {data['error'].get('message', data['error'])}"
+                    break
+                choices = data.get("choices") or []
+                if not choices:
+                    last_err = f"no choices from {model}: {str(data)[:200]}"
+                    break
+                return choices[0]["message"]["content"]
+            except Exception as e:
+                last_err = f"{model} exception: {e}"
+                if attempt < 2:
+                    time.sleep(2 ** attempt)
+        print(f"    WARN: {last_err} — trying next model")
+    raise RuntimeError(f"OpenRouter call failed. Last error: {last_err}")
 
 
 def _call_gemini(prompt: str, max_tokens: int = 8192) -> str:
