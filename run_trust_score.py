@@ -45,6 +45,17 @@ LLM_PROVIDER = os.getenv("ANKA_LLM_PROVIDER", "gemini")
 EXTRACTION_MODEL = os.getenv("ANKA_EXTRACTION_MODEL", "claude-haiku-4-5-20251001")
 SCORING_MODEL = os.getenv("ANKA_SCORING_MODEL", "claude-sonnet-4-20250514")
 
+# Golden exemplar — a vetted MARUTI scorecard injected into every scoring prompt
+# to anchor Gemini Flash's output quality and consistency. Loaded once at import.
+_GOLD_EXEMPLAR_PATH = Path(__file__).parent / "golden_set" / "MARUTI_exemplar_compact.json"
+if _GOLD_EXEMPLAR_PATH.exists():
+    GOLD_EXEMPLAR_JSON = json.dumps(
+        json.loads(_GOLD_EXEMPLAR_PATH.read_text(encoding="utf-8")),
+        indent=2, ensure_ascii=False,
+    )
+else:
+    GOLD_EXEMPLAR_JSON = "{}"
+
 
 def check_api_credit() -> bool:
     """Pre-flight check: verify LLM API is reachable before starting batch."""
@@ -439,7 +450,42 @@ BAD: "PAT grew 10.7% in FY25" — Past result, not forward-looking. SKIP.
 BAD: "Audit fees of Rs 9.9 Cr" — Not strategic guidance. SKIP.
 BAD: "carbon neutral by 2032" — Keep only if stated as a specific measurable milestone with progress tracking. Single entry, not multiple variations.
 
+## ABSOLUTE BAN: macro / industry / government forecasts
+
+The following SHALL NOT be extracted as guidance, regardless of how specific the number is. They are forecasts ABOUT the company's environment, not commitments BY the company. We extract management commitments only.
+
+Hard-ban subjects (drop on sight):
+- Anything attributed to "the Government", "India is expected to", "India targets", "India will have", "India's <sector>", "India's <market>", "India's economy"
+- Anything containing "the country's <X>", "global <X> market", "world <X>", "industry is expected", "sector is expected", "industry will reach", "market is projected to reach"
+- Macroeconomic indicators: GDP, inflation, RBI rates, repo rate, current account, fiscal deficit
+- Phrases like "poised to become", "poised to play", "ambitious goals", "is anticipated to", "is projected to grow"
+- "India too has ambitious goals: ..." — these are NATIONAL targets, not company targets
+
+Hard-ban categories (do not assign these category labels — if you'd be tempted to, drop the item entirely):
+- macro_economic, macro_economy
+- market_forecast, market_outlook
+- sector_outlook, sector_forecast, industry_outlook, industry_forecast
+
+The test: ask "is this the COMPANY committing, or is this the company quoting/citing someone else's forecast?" If it's a citation of an external forecast (government, industry body, research firm, McKinsey, BCG, etc.), DROP IT. We only extract first-person company commitments.
+
+If you cannot find ANY first-person company commitments after applying this rule, return an empty `guidance` array. DO NOT pad with macro forecasts to fill the response. An empty array is the correct, honest answer.
+
 If management doesn't give specific numerical guidance, EXTRACT FEWER ITEMS. An empty list of 0 items is better than 20 items of filler. The absence of hard guidance is itself a data point about management credibility — we capture that by extracting NOTHING rather than making up items.
+
+## THOROUGHNESS REQUIREMENT
+That said, when genuine company commitments DO exist, you must find ALL of them. Scan the ENTIRE annual report text systematically:
+- Chairman's letter / message: usually contains 2-5 forward statements
+- Management Discussion & Analysis (MD&A): usually contains the most concrete operational + financial guidance
+- Directors' report: capex plans, capacity additions, dividend policy
+- Strategic priorities / business segments: segment-level guidance
+- ESG / Sustainability section: quantified ESG targets (capacity, %, year) — these ARE valid if expressed as company commitments with numbers, even when long-dated
+- Risk section: occasionally has hedging-but-quantified statements
+- Capacity / Operations review: production targets, throughput targets
+- Subsidiary disclosures: company-level commitments inside subsidiaries
+
+For a typical large-cap Indian listed company (Nifty 50 / Nifty 500), you should expect to find **8-20 genuine company commitments per annual report**. If you only found 2-3, you have likely missed several. Re-scan the text. If after a thorough scan you still have very few items, that is an honest signal about management's reporting style — accept it.
+
+DO NOT pad with macro forecasts to hit a count. DO scan thoroughly enough to find all the real ones.
 
 ## SECTOR HINTS (types of guidance to look for):
 - Banks: Loan growth %, NIM target, GNPA target, CASA %, ROA target, credit cost target, capital adequacy target
@@ -560,8 +606,14 @@ def extract_narratives(symbol: str) -> list[dict]:
                 # Save extracted text for cache
                 cache_file.write_text(combined_text, encoding="utf-8")
 
-            # Step 2: Send to Claude (Haiku) for narrative extraction
-            response = call_claude_with_ar_text(combined_text, NARRATIVE_EXTRACTION_PROMPT, max_tokens=4096)
+            # Step 2: Send to LLM for narrative extraction.
+            # Routed via call_llm so it follows ANKA_LLM_PROVIDER (gemini default = free).
+            extraction_prompt = (
+                NARRATIVE_EXTRACTION_PROMPT
+                + "\n\n## ANNUAL REPORT TEXT\n\n"
+                + combined_text[:120000]  # cap to fit Gemini context budget
+            )
+            response = call_llm(extraction_prompt, max_tokens=8192, role="extraction")
 
             # Parse JSON
             text = response.strip()
@@ -653,10 +705,32 @@ def _filter_vague_guidance(items: list) -> list:
         r"as part of our",
     ]
 
+    # Categories that indicate the LLM extracted a macro/industry forecast
+    # rather than company-specific guidance. Reject outright regardless of quote.
+    MACRO_CATEGORIES = {
+        "macro_economic", "macro_economy",
+        "market_forecast", "market_outlook",
+        "sector_outlook", "sector_forecast",
+        "industry_outlook", "industry_forecast",
+    }
+
     # Macro/industry forecast keywords
-    MACRO_WORDS = {"gdp", "inflation", "industry outlook", "market outlook",
-                   "global economy", "rbi", "fed ", "geopolitical", "commodity prices",
-                   "sector outlook", "market will reach", "industry will grow"}
+    MACRO_WORDS = {
+        "gdp", "inflation", "industry outlook", "market outlook",
+        "global economy", "rbi", "fed ", "geopolitical", "commodity prices",
+        "sector outlook", "market will reach", "industry will grow",
+        # Added: country/government policy attributions that leak past the LLM
+        "government target", "government's target", "the government",
+        "india is expected", "india is projected", "india targets",
+        "india will have", "india too has ambitious", "india has ambitious",
+        "the country", "country's population", "country's target",
+        # Added: forecast framing phrases
+        "poised to become", "poised to play",
+        "projected to reach", "projected to grow", "projected to account",
+        "expected to reach", "expected to grow", "expected to witness",
+        "is anticipated to",
+        "growing at a compounded",
+    }
 
     filtered = []
     seen_esg_carbon = False
@@ -671,7 +745,13 @@ def _filter_vague_guidance(items: list) -> list:
         if not target or target in ("?", "n/a", "none", "null"):
             continue
 
-        # Reject macro/industry forecasts
+        # Reject items the LLM itself labeled as macro/industry/market forecasts.
+        # These slip past quote-based checks because the quote may be concrete but
+        # still be attributed to government/industry rather than the company.
+        if category in MACRO_CATEGORIES:
+            continue
+
+        # Reject macro/industry forecasts (substring match on quote)
         if any(word in quote for word in MACRO_WORDS):
             continue
 
@@ -708,6 +788,30 @@ def _filter_vague_guidance(items: list) -> list:
 
 SCORING_PROMPT_TEMPLATE = """You are a forensic equity research analyst. Your job is to CROSS-REFERENCE management guidance against actual results.
 
+## REFERENCE EXAMPLE — match this depth, specificity, and rigor
+
+Below is a real, vetted scorecard for MARUTI SUZUKI that the Anka research team uses as the quality bar. Read it carefully. Notice:
+1. Every PARTIALLY_DELIVERED item has a non-null `actual_value`, a computed `variance_pct`, and a specific `source_of_actual` (Screener data, AR page, etc.).
+2. UNVERIFIABLE is used ONLY when the data source is genuinely missing — not as a default for "I'm uncertain".
+3. The `management_pattern`, `biggest_red_flag`, and `biggest_strength` fields cite specific numbers, page references, and concrete evidence.
+4. The `divergence_from_street` block compares specific street claims against forensic findings.
+5. Long-dated targets (FY2030-31) are scored against interim FY2024-25 actuals with a pro-rata trajectory analysis — they are NOT marked TOO_EARLY when interim data exists.
+
+YOUR OUTPUT MUST MATCH THIS QUALITY LEVEL. Do not produce shorter, vaguer, or less-evidenced output. If the company data is thinner than MARUTI's, you must still score every item where actuals can be located in financials_json — never default to UNVERIFIABLE without first checking key_metrics, forensic, and about blocks deeply.
+
+```json
+__GOLD_EXEMPLAR__
+```
+
+## END REFERENCE EXAMPLE
+
+## CURRENT DATE CONTEXT (CRITICAL — read before classifying ANY item)
+- Today's date: {today_iso}
+- Current calendar year: {current_cy}
+- Current Indian fiscal year: {current_fy} (India FY runs April 1 — March 31)
+- Most recently completed fiscal year: {last_fy}
+- Most recently completed calendar year: {last_cy}
+
 ## VERIFIED FINANCIAL DATA (from Screener.in):
 {financials_json}
 
@@ -724,8 +828,45 @@ For EVERY guidance item, find the ACTUAL result and score it:
 - **MISSED**: Actual is more than 20% below target
 - **EXCEEDED**: Actual significantly exceeds target (>10% above)
 - **QUIETLY_DROPPED**: This guidance/theme disappeared from subsequent annual reports without explanation or update
-- **TOO_EARLY**: Target year hasn't arrived yet — cannot score
-- **UNVERIFIABLE**: Cannot find actual data to verify
+- **TOO_EARLY**: Target year is STRICTLY AFTER {current_fy} (and strictly after calendar {current_cy}) — cannot score yet
+- **UNVERIFIABLE**: Target year has passed but actual data genuinely cannot be located after checking Screener P&L, the FY(N+1) annual report actuals_reported block, and public disclosures
+
+### TEMPORAL CLASSIFICATION RULES (do the date math — do NOT default to TOO_EARLY)
+Before marking ANY item TOO_EARLY, compute whether its target_year has arrived:
+
+1. If `target_year` is a calendar year ≤ {last_cy} (e.g. "2024", "2025" when last_cy={last_cy}): target HAS arrived. You MUST attempt to score it. Only use UNVERIFIABLE if actual data cannot be located after a genuine search.
+
+2. If `target_year` is an Indian FY ≤ {last_fy} (e.g. "FY24", "FY 2023-24", "FY2024-25" when last_fy={last_fy}): target HAS arrived. You MUST attempt to score it.
+
+3. If `target_year` is the current FY ({current_fy}) and we are past H1 of that FY: attempt to score with interim/H1 data; mark PARTIALLY_DELIVERED or use best available data point.
+
+4. ONLY if `target_year` is strictly AFTER {current_fy} (e.g. "FY2027-28", "2030", "2035"): mark TOO_EARLY.
+
+5. If `target_year` is "not specified" or "ongoing": try to infer from the guidance_quote context; if the report is from FY(N), treat as FY(N+1) by default.
+
+Default bias: score-attempt is preferred over TOO_EARLY. Every TOO_EARLY must be justifiable by the strict rule above — the target year is provably in the future vs today's date ({today_iso}).
+
+## INTERIM-PROGRESS RULE (mandatory — read before you write any scorecard row)
+**If you populate `actual_value` with a non-null number, the `status` field MUST NOT be `TOO_EARLY`.**
+
+This is an inviolable rule. The two are logically incompatible — if you found an interim data point, the target is by definition trackable, even when the final target year is still in the future.
+
+Decision procedure for long-dated targets (e.g. "319 MWp solar capacity by FY2030-31") when interim actuals exist:
+1. Compute variance_pct = (interim_actual − target) / target × 100.
+2. Classify based on **whether the company is on the trajectory needed to hit the target**:
+   - On-pace or ahead → **PARTIALLY_DELIVERED** with a positive or near-zero variance note
+   - Trailing by 10–30% vs a linear pro-rata trajectory → **PARTIALLY_DELIVERED** with a negative variance note
+   - Trailing by more than 30% vs pro-rata or directionally reversing → **MISSED** (the interim evidence says the target will not be hit)
+3. Note in `actual_value` that this is interim (e.g. "78.2 MWp as of FY2024-25, pro-rata target for that year: ~185 MWp").
+4. The `source_of_actual` field should cite the interim data source.
+
+**Concrete example of correct handling:**
+- Target: "319 MWp solar capacity by FY2030-31"
+- Interim actual found: 78.2 MWp in FY2024-25
+- WRONG: status=TOO_EARLY (you have data — use it)
+- CORRECT: status=PARTIALLY_DELIVERED, actual_value="78.2 MWp (FY24-25) vs pro-rata ~130 MWp needed", variance_pct=-75.5, and a note in the entry that trajectory is well behind required pace.
+
+Use TOO_EARLY **only** when you could not find any interim data point at all AND the final target year is strictly in the future. If you found data, you must score.
 
 ### Cross-referencing method:
 1. Take guidance from FY(N) annual report
@@ -850,22 +991,114 @@ def score_promises(symbol: str, financials: dict, narratives: list) -> dict:
     if not all_claims:
         return {"error": "No guidance items extracted"}
 
-    # Prepare financial data for scoring
+    # Prepare financial data for scoring.
+    # Pass ALL metrics (not just the 7 generic P&L labels) so banks/NBFCs/insurers
+    # can be scored against their sector-specific KPIs ("Revenue+", "Financing Margin %",
+    # "Financing Profit", "Interest", etc.). Gemini Flash handles the extra context easily.
     fin_summary = {
         "about": financials.get("about", {}),
         "forensic": financials.get("forensic", {}),
-        "key_metrics": {}
+        "all_metrics": financials.get("metrics", {}),
     }
-    # Include key P&L metrics
-    for label in ["Sales+", "Sales", "Operating Profit", "Net Profit+", "Net Profit", "OPM %", "EPS in Rs"]:
-        if label in financials.get("metrics", {}):
-            fin_summary["key_metrics"][label] = financials["metrics"][label]
+
+    # Load screener_financials.json if present — richer multi-year data across
+    # profit_loss / balance_sheet / cash_flow / ratios / quarterly. This is the
+    # ACTUAL source of year-by-year data; financial_analysis.json is a subset.
+    # Without this, bank/insurance/AMC actuals are invisible to the scoring prompt.
+    def _trim_screener_rows(rows, keep_year_prefixes=("Mar 2020","Mar 2021","Mar 2022","Mar 2023","Mar 2024","Mar 2025","Sep 2025","TTM")):
+        """Drop year columns older than Mar 2020 to shrink token budget.
+        Keeps only the last 6 fiscal years + TTM + latest quarterly snapshot."""
+        if not isinstance(rows, list):
+            return rows
+        trimmed = []
+        for row in rows:
+            if not isinstance(row, dict):
+                trimmed.append(row); continue
+            keep = {}
+            for k, v in row.items():
+                if not k or k in ("", " "):
+                    keep[k] = v
+                    continue
+                if any(k.startswith(pfx) for pfx in keep_year_prefixes):
+                    keep[k] = v
+                elif not any(k.startswith(m) for m in ("Mar ","Jun ","Sep ","Dec ")):
+                    keep[k] = v  # preserve non-date keys
+            trimmed.append(keep)
+        return trimmed
+
+    try:
+        screener_path = ARTIFACTS / symbol / "screener_financials.json"
+        if screener_path.exists():
+            screener = json.loads(screener_path.read_text(encoding="utf-8"))
+            fin_summary["screener_profit_loss"] = _trim_screener_rows(screener.get("profit_loss", []))
+            fin_summary["screener_balance_sheet"] = _trim_screener_rows(screener.get("balance_sheet", []))
+            fin_summary["screener_cash_flow"] = _trim_screener_rows(screener.get("cash_flow", []))
+            fin_summary["screener_ratios"] = _trim_screener_rows(screener.get("ratios", []))
+            fin_summary["screener_quarterly"] = _trim_screener_rows(screener.get("quarterly", []))
+    except Exception as e:
+        print(f"    → warn: screener_financials load failed: {e}")
+
+    # Load concall_text.txt — a second data source for sector-specific KPIs
+    # that Screener P&L doesn't carry (bank NIM/GNPA, insurance VNB/persistency,
+    # AMC AUM, retail SSSG, real-estate pre-sales, pharma USFDA). Built from
+    # scripts/download_transcripts.py which caches BSE concall PDFs.
+    concall_text = ""
+    try:
+        concall_path = ARTIFACTS / symbol / "concall_text.txt"
+        if concall_path.exists():
+            concall_text = concall_path.read_text(encoding="utf-8", errors="replace")
+            # Cap at 80K chars (~20K tokens) to stay under TPM rate limit.
+            # The 200K original cap pushed per-call tokens to ~110K and tripped
+            # Gemini free tier's 1M TPM limit when running 23 stocks in bulk.
+            if len(concall_text) > 80000:
+                concall_text = concall_text[:80000] + "\n\n[... truncated ...]"
+    except Exception as e:
+        print(f"    → warn: concall_text load failed: {e}")
+
+    from datetime import date as _date
+    _today = _date.today()
+    # India FY runs April 1 — March 31. FY label = "FY{start_year}-{end_year_2digit}"
+    if _today.month >= 4:
+        _fy_start = _today.year
+    else:
+        _fy_start = _today.year - 1
+    _current_fy = f"FY{_fy_start}-{str(_fy_start+1)[-2:]}"
+    _last_fy = f"FY{_fy_start-1}-{str(_fy_start)[-2:]}"
 
     prompt = SCORING_PROMPT_TEMPLATE.format(
         symbol=symbol,
+        today_iso=_today.isoformat(),
+        current_cy=_today.year,
+        last_cy=_today.year - 1,
+        current_fy=_current_fy,
+        last_fy=_last_fy,
         financials_json=json.dumps(fin_summary, indent=2, default=str),
         claims_json=json.dumps(all_claims, indent=2, default=str),
     )
+    # Sentinel-replace the golden exemplar (avoids .format() brace escaping)
+    prompt = prompt.replace("__GOLD_EXEMPLAR__", GOLD_EXEMPLAR_JSON)
+
+    # Append concall transcripts as a second data source if present
+    if concall_text:
+        prompt += (
+            "\n\n## CONCALL TRANSCRIPTS (second data source for sector-specific KPIs)\n\n"
+            "These are earnings concall transcripts (most recent 3 quarters). Use them to find\n"
+            "actuals for items that the financial_json (P&L/balance sheet) doesn't carry:\n"
+            "- Banks/NBFCs: NIM %, GNPA %, NNPA %, CAR/CRAR %, credit cost, CASA %, loan book growth\n"
+            "- Insurance: VNB margin, embedded value, persistency 13M/25M/37M/49M/61M, APE, AUM\n"
+            "- AMCs: AUM (total, equity, debt, liquid), SIP book, equity mix %, yield bps\n"
+            "- Retail: SSSG %, store count additions, footfall growth, throughput per sq ft\n"
+            "- Real estate: pre-sales bookings, collections, inventory, delivery timelines\n"
+            "- Pharma: USFDA approvals count, R&D % of revenue, US generic launches, pipeline\n"
+            "- Consumer internet: GMV, DAU, MAU, orders, contribution margin, take rate\n"
+            "- Infra: order book, L1 wins, execution velocity, completion dates\n\n"
+            "When a guidance item's target metric matches one of these, SEARCH the transcripts\n"
+            "for the actual value and cite the concall quarter in source_of_actual. Use concall\n"
+            "actuals just like you would use Screener data — populate actual_value, compute\n"
+            "variance_pct, and assign DELIVERED/EXCEEDED/PARTIALLY_DELIVERED/MISSED accordingly.\n"
+            "Never mark an item UNVERIFIABLE if a matching number exists in the transcripts.\n\n"
+            "---\n\n" + concall_text
+        )
 
     print(f"    Scoring {len(all_claims)} claims against financials...")
     try:

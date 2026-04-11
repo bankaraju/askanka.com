@@ -9,3 +9,4 @@ artifacts/
 *.egg-info/
 dist/
 build/
+logs/
