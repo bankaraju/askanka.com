@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-13",
+      "segment": "war",
+      "filename": "2026-04-13-war.html",
+      "headline": "Trump's 'Peace' Offensive: US Bombs Iran's Energy, Hormuz Blockade Tightens, India's Oil Bill Explodes",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 13, 2026"
+    },
+    {
+      "date": "2026-04-13",
+      "segment": "epstein",
+      "filename": "2026-04-13-epstein.html",
+      "headline": "Trump's Epstein Nuclear Option: DOJ Complicity, Mossad's Shadow, and India's Market Meltdown",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 13, 2026"
+    },
+    {
       "date": "2026-04-12",
       "segment": "war",
       "filename": "2026-04-12-war.html",
