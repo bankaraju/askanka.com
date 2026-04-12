@@ -1,0 +1,73 @@
+{
+  "version": "2.0",
+  "updated": "2026-04-09",
+  "total_stocks": 52,
+  "sectors": {
+    "defence": {
+      "direction": "long",
+      "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book.",
+      "stocks": ["HAL", "BEL", "BDL", "BHARATFORGE", "DATAPATTNS"],
+      "bse_scrips": {"HAL": "541154", "BEL": "500049", "BDL": "541143", "BHARATFORGE": "500493", "DATAPATTNS": "543232"}
+    },
+    "it": {
+      "direction": "short_in_risk_off",
+      "thesis": "Rupee depreciation hedge. Strong management but growth decelerating. Short in RISK-OFF, neutral otherwise.",
+      "stocks": ["TCS", "INFY", "WIPRO", "HCLTECH", "LTIM", "TECHM"],
+      "bse_scrips": {"TCS": "532540", "INFY": "500209", "WIPRO": "507685", "HCLTECH": "532281", "LTIM": "540005", "TECHM": "532755"}
+    },
+    "upstream_energy": {
+      "direction": "long",
+      "thesis": "Direct oil/coal price beneficiaries. Crude above $80 = earnings tailwind.",
+      "stocks": ["ONGC", "COALINDIA", "OIL", "GAIL"],
+      "bse_scrips": {"ONGC": "500312", "COALINDIA": "533278", "OIL": "533106", "GAIL": "532155"}
+    },
+    "omcs": {
+      "direction": "short",
+      "thesis": "Government-controlled pricing = margin compression when crude rises. Classic short in war/oil scenarios.",
+      "stocks": ["BPCL", "HINDPETRO", "IOC"],
+      "bse_scrips": {"BPCL": "500547", "HINDPETRO": "500104", "IOC": "530965"}
+    },
+    "banks_private": {
+      "direction": "either",
+      "thesis": "Rate cycle play. Long in falling rate environment, short if NPA cycle turns.",
+      "stocks": ["HDFCBANK", "ICICIBANK", "KOTAKBANK", "AXISBANK", "INDUSINDBK", "BANDHANBNK"],
+      "bse_scrips": {"HDFCBANK": "500180", "ICICIBANK": "532174", "KOTAKBANK": "500247", "AXISBANK": "532215", "INDUSINDBK": "532187", "BANDHANBNK": "541153"}
+    },
+    "banks_psu": {
+      "direction": "either",
+      "thesis": "Value play. Low PE but NPA risk. Long strongest PSU bank, short weakest.",
+      "stocks": ["SBIN", "BANKBARODA", "PNB", "CANBK"],
+      "bse_scrips": {"SBIN": "500112", "BANKBARODA": "532134", "PNB": "532461", "CANBK": "532483"}
+    },
+    "pharma": {
+      "direction": "hedge",
+      "thesis": "Defensive sector. Outperforms in RISK-OFF. Strong management credibility in top names.",
+      "stocks": ["SUNPHARMA", "DRREDDY", "CIPLA", "DIVISLAB", "AUROPHARMA"],
+      "bse_scrips": {"SUNPHARMA": "524715", "DRREDDY": "500124", "CIPLA": "500087", "DIVISLAB": "532488", "AUROPHARMA": "524804"}
+    },
+    "auto": {
+      "direction": "either",
+      "thesis": "Domestic consumption + EV transition. Long M&M/Tata for EV, short legacy if disruption accelerates.",
+      "stocks": ["TATAMOTORS", "M&M", "MARUTI", "BAJAJ-AUTO", "HEROMOTOCO", "EICHERMOT"],
+      "bse_scrips": {"TATAMOTORS": "500570", "M&M": "500520", "MARUTI": "532500", "BAJAJ-AUTO": "532977", "HEROMOTOCO": "500182", "EICHERMOT": "505200"}
+    },
+    "metals": {
+      "direction": "cyclical",
+      "thesis": "China demand proxy. Long when global PMI expanding, short when contracting.",
+      "stocks": ["TATASTEEL", "JSWSTEEL", "HINDALCO", "VEDL", "NMDC"],
+      "bse_scrips": {"TATASTEEL": "500470", "JSWSTEEL": "500228", "HINDALCO": "500440", "VEDL": "500295", "NMDC": "526371"}
+    },
+    "fmcg": {
+      "direction": "defensive",
+      "thesis": "Safe haven in RISK-OFF. Volume growth tells the real rural demand story.",
+      "stocks": ["HINDUNILVR", "ITC", "NESTLEIND", "BRITANNIA", "DABUR"],
+      "bse_scrips": {"HINDUNILVR": "500696", "ITC": "500875", "NESTLEIND": "500790", "BRITANNIA": "500825", "DABUR": "500096"}
+    },
+    "infra_capital_goods": {
+      "direction": "long",
+      "thesis": "Government capex cycle. Order book matters but verify execution capacity (like defence).",
+      "stocks": ["LT", "SIEMENS", "ABB", "BHEL"],
+      "bse_scrips": {"LT": "500510", "SIEMENS": "500550", "ABB": "500002", "BHEL": "500103"}
+    }
+  }
+}

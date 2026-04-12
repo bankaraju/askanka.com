@@ -1,0 +1,296 @@
+{
+  "scorecard": [
+    {
+      "guidance_year": "FY2022-2023",
+      "category": "product_launch",
+      "materiality": "critical",
+      "guidance_quote": "The Company’s first FFV to be launched in India by 2025",
+      "page_reference": "Page 25",
+      "target_metric": "FFV launch",
+      "target_value": "1",
+      "target_year": "2025",
+      "actual_value": null,
+      "variance_pct": null,
+      "status": "UNVERIFIABLE",
+      "source_of_actual": "No public disclosure of FFV launch by end of 2025 in provided data or subsequent annual reports.",
+      "temporal_weight": 0.7
+    },
+    {
+      "guidance_year": "FY2022-2023",
+      "category": "product_launch",
+      "materiality": "critical",
+      "guidance_quote": "Company’s first BEV to be launched in India by FY 2024-25",
+      "page_reference": "Page 25",
+      "target_metric": "BEV launch",
+      "target_value": "1",
+      "target_year": "FY 2024-25",
+      "actual_value": null,
+      "variance_pct": null,
+      "status": "UNVERIFIABLE",
+      "source_of_actual": "No public disclosure of BEV launch by end of FY2024-25 in provided data or subsequent annual reports. The FY2023-2024 AR mentions 'first BEV to be launched in 2025' and FY2024-2025 AR mentions '4 BEVs... by FY 2030-31', but no actual launch by FY2024-25.",
+      "temporal_weight": 0.7
+    },
+    {
+      "guidance_year": "FY2022-2023",
+      "category": "customer_satisfaction",
+      "materiality": "routine",
+      "guidance_quote": "For FY 2023-24, the Company aims to maintain this level of customer satisfaction [CDI score of 126.8].",
+      "page_reference": "Page 107",
+      "target_metric": "Customer Delight Index (CDI)",
+      "target_value": "126.8",
+      "target_year": "FY 2023-24",
+      "actual_value": null,
+      "variance_pct": null,
+      "status": "UNVERIFIABLE",
+      "source_of_actual": "CDI score for FY2023-24 not found in provided data or subsequent annual reports.",
+      "temporal_weight": 0.7
+    },
+    {
+      "guidance_year": "FY2023-2024",
+      "category": "product_launch",
+      "materiality": "critical",
+      "guidance_quote": "The Company's first BEV to be launched in 2025",
+      "page_reference": "Page 25",
+      "target_metric": "BEV launch",
+      "target_value": "1",
+      "target_year": "2025",
+      "actual_value": null,
+      "variance_pct": null,
+      "status": "UNVERIFIABLE",
+      "source_of_actual": "No public disclosure of BEV launch by end of 2025 in provided data or subsequent annual reports. The FY2024-2025 AR mentions '4 BEVs... by FY 2030-31', but no actual launch by 2025.",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "product_launch",
+      "materiality": "critical",
+      "guidance_quote": "With the support from its parent Suzuki Motor Corporation, the Company targets to launch 4 BEVs (including e VITARA) for the Indian market by FY 2030-31.",
+      "page_reference": "Page 61",
+      "target_metric": "BEV launches",
+      "target_value": "4 BEVs",
+      "target_year": "FY 2030-31",
+      "actual_value": "0 BEVs launched as of FY2024-25",
+      "variance_pct": -100.0,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report (no mention of BEV launch yet, only future target)",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "volume_mix",
+      "materiality": "significant",
+      "guidance_quote": "By FY 2030-31, 25% of sales in the domestic market will be either through flex-fuel vehicles or ICE vehicles compatible with 20% ethanol blend (E20).",
+      "page_reference": "Page 61",
+      "target_metric": "Flex-fuel/E20 compatible vehicle sales mix",
+      "target_value": "25%",
+      "target_year": "FY 2030-31",
+      "actual_value": "48% green vehicles sales contribution in FY2024-25 (includes CNG, Hybrid, E20 compatible)",
+      "variance_pct": 92.0,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report, Page 61",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "capacity_addition",
+      "materiality": "critical",
+      "guidance_quote": "The Company has committed over I 925 crore to expand its total solar power capacity to 319 MWp by FY 2030-31, targeting an ambitious 85% share of renewables in overall electricity consumption by that time.",
+      "page_reference": "Page 47",
+      "target_metric": "solar power capacity",
+      "target_value": "319 MWp",
+      "target_year": "FY 2030-31",
+      "actual_value": "78.2 MWp as of FY2024-25. Pro-rata target for FY2024-25 (assuming linear growth from 0 in FY2024-25 to 319 in FY2030-31 over 6 years) would be ~53.17 MWp. Actual is ahead of pro-rata.",
+      "variance_pct": 47.08,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report, Page 47",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "energy_mix",
+      "materiality": "critical",
+      "guidance_quote": "The Company has committed over I 925 crore to expand its total solar power capacity to 319 MWp by FY 2030-31, targeting an ambitious 85% share of renewables in overall electricity consumption by that time.",
+      "page_reference": "Page 47",
+      "target_metric": "renewable energy share in electricity consumption",
+      "target_value": "85%",
+      "target_year": "FY 2030-31",
+      "actual_value": "16.3% in FY2024-25. Pro-rata target for FY2024-25 (assuming linear growth from 16.3% in FY2024-25 to 85% in FY2030-31 over 6 years) would be ~16.3%. Actual is on track.",
+      "variance_pct": 0.0,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report, Page 47",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "logistics",
+      "materiality": "significant",
+      "guidance_quote": "The Company aims to increase share of rail-based dispatches to 35% of total dispatches by FY 2030-31, compared to 24.3% in FY 2024-25.",
+      "page_reference": "Page 47",
+      "target_metric": "rail-based dispatches share",
+      "target_value": "35%",
+      "target_year": "FY 2030-31",
+      "actual_value": "24.3% in FY2024-25. Pro-rata target for FY2024-25 (assuming linear growth from 24.3% in FY2024-25 to 35% in FY2030-31 over 6 years) would be ~24.3%. Actual is on track.",
+      "variance_pct": 0.0,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report, Page 47",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "capacity_addition",
+      "materiality": "critical",
+      "guidance_quote": "Aiming for 4 million units annual capacity by FY 2030-31",
+      "page_reference": "Page 5",
+      "target_metric": "annual production capacity",
+      "target_value": "4 million units",
+      "target_year": "FY 2030-31",
+      "actual_value": "2.35 million units per annum as of FY2023-24. Pro-rata target for FY2024-25 (assuming linear growth from 2.35M in FY2023-24 to 4M in FY2030-31 over 7 years) would be ~2.59M units. Actual is behind pro-rata.",
+      "variance_pct": -9.27,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2023-2024 Annual Report, other_key_numbers",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "energy_mix",
+      "materiality": "critical",
+      "guidance_quote": "Target for FY 2030-31: Electricity consumption from renewable energy sources 85%",
+      "page_reference": "Page 5",
+      "target_metric": "electricity consumption from renewable energy",
+      "target_value": "85%",
+      "target_year": "FY 2030-31",
+      "actual_value": "16.3% in FY2024-25. Pro-rata target for FY2024-25 (assuming linear growth from 16.3% in FY2024-25 to 85% in FY2030-31 over 6 years) would be ~16.3%. Actual is on track.",
+      "variance_pct": 0.0,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report, Page 47",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "capacity_addition",
+      "materiality": "critical",
+      "guidance_quote": "Target of solar power capacity by FY 2030-31 319 MWp",
+      "page_reference": "Page 5",
+      "target_metric": "solar power capacity",
+      "target_value": "319 MWp",
+      "target_year": "FY 2030-31",
+      "actual_value": "78.2 MWp as of FY2024-25. Pro-rata target for FY2024-25 (assuming linear growth from 0 in FY2024-25 to 319 in FY2030-31 over 6 years) would be ~53.17 MWp. Actual is ahead of pro-rata.",
+      "variance_pct": 47.08,
+      "status": "PARTIALLY_DELIVERED",
+      "source_of_actual": "FY2024-2025 Annual Report, Page 47",
+      "temporal_weight": 1.0
+    },
+    {
+      "guidance_year": "FY2024-2025",
+      "category": "exports",
+      "materiality": "significant",
+      "guidance_quote": "The Company is planning to increase its exports to over 100 countries.",
+      "page_reference": "Page 46",
+      "target_metric": "export countries",
+      "target_value": "over 100 countries",
+      "target_year": "ongoing",
+      "actual_value": null,
+      "variance_pct": null,
+      "status": "UNVERIFIABLE",
+      "source_of_actual": "Number of export countries not disclosed in provided data.",
+      "temporal_weight": 1.0
+    }
+  ],
+  "summary": {
+    "total_guidance_items": 13,
+    "critical_items": 8,
+    "critical_delivery_rate_pct": 0.0,
+    "significant_items": 3,
+    "significant_delivery_rate_pct": 0.0,
+    "routine_items": 1,
+    "routine_delivery_rate_pct": 0.0,
+    "delivered": 0,
+    "exceeded": 0,
+    "partially_delivered": 7,
+    "missed": 0,
+    "quietly_dropped": 0,
+    "too_early": 0,
+    "unverifiable": 6,
+    "delivery_rate_pct": 53.85,
+    "weighted_delivery_rate_pct": 53.85,
+    "beat_rate_pct": 0.0
+  },
+  "dropped_themes": [],
+  "guidance_accuracy_by_category": {
+    "revenue_guidance": {
+      "total": 0,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "capacity_production": {
+      "total": 2,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "order_book": {
+      "total": 0,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "capex": {
+      "total": 0,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "export": {
+      "total": 1,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "routine": {
+      "total": 1,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "product_launch": {
+      "total": 4,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "volume_mix": {
+      "total": 1,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "energy_mix": {
+      "total": 2,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "logistics": {
+      "total": 1,
+      "delivered": 0,
+      "rate_pct": 0
+    },
+    "customer_satisfaction": {
+      "total": 1,
+      "delivered": 0,
+      "rate_pct": 0
+    }
+  },
+  "divergence_from_street": {
+    "street_view": "Street consensus likely focuses on the ambitious long-term targets for BEV launches, capacity expansion, and renewable energy adoption, potentially assuming a smooth linear progression towards these goals.",
+    "our_view": "Our forensic cross-referencing shows that while the company has set ambitious long-term targets, several critical product launch targets for 2025 and FY2024-25 have been UNVERIFIABLE or not met. For long-term targets, while some interim actuals are on track or slightly ahead (solar capacity, renewable energy share, rail dispatches), the critical annual production capacity target appears to be trailing its pro-rata trajectory.",
+    "evidence_supporting_street": [
+      "Management's explicit commitment to 4 BEVs by FY2030-31 (Page 61, FY24-25 AR)",
+      "Target of 4 million units annual capacity by FY2030-31 (Page 5, FY24-25 AR)",
+      "Commitment to 319 MWp solar power capacity and 85% renewable energy share by FY2030-31 (Page 47, FY24-25 AR)"
+    ],
+    "evidence_supporting_us": [
+      "FFV launch by 2025 (FY22-23 AR) and BEV launch by FY2024-25 (FY22-23 AR) / 2025 (FY23-24 AR) are UNVERIFIABLE, suggesting delays or non-delivery on near-term product launches.",
+      "Annual production capacity of 2.35 million units in FY2023-24 is behind the pro-rata trajectory needed to reach 4 million units by FY2030-31 (current actual is ~9.3% behind pro-rata for FY24-25).",
+      "The 'green vehicles sales contribution' of 48% in FY2024-25 (Page 61, FY24-25 AR) is a broad category including CNG, Hybrid, and E20 compatible, making it difficult to precisely track the '25% flex-fuel/E20 compatible' target, but it suggests a strong push in alternative fuels."
+    ],
+    "why_our_evidence_is_stronger": "Our evidence is stronger because it directly cross-references specific, time-bound guidance against actual reported results or the absence thereof, rather than relying solely on forward-looking statements. The inability to verify or the clear miss on near-term product launch targets raises questions about the execution pace for more ambitious long-term goals, which the street might be overlooking."
+  },
+  "credibility_trajectory": "deteriorating",
+  "management_pattern": "Management tends to set ambitious long-term targets, particularly in the environmental and capacity expansion domains, and provides interim updates that show some progress. However, there's a pattern of setting near-term, critical product launch targets (FFV, BEV by 2025/FY24-25) that are either not met or become unverifiable in subsequent reports, indicating a potential over-promise on critical product development timelines. For routine items like customer satisfaction, data is often not consistently reported, leading to unverifiable outcomes.",
+  "biggest_red_flag": "The repeated guidance for the launch of the first BEV by FY2024-25 (from FY22-23 AR) and by 2025 (from FY23-24 AR) without any verifiable launch by the end of 2025 or FY2024-25 is the biggest red flag. This suggests significant delays in a critical strategic initiative, impacting future growth and market positioning.",
+  "biggest_strength": "The company's commitment and initial progress on solar power capacity expansion (78.2 MWp in FY24-25 against a pro-rata target of ~53.17 MWp for FY24-25 for a FY2030-31 goal of 319 MWp) and renewable energy share in electricity consumption (16.3% in FY24-25, on track for 85% by FY2030-31) demonstrate a strong commitment to environmental sustainability targets.",
+  "what_street_is_missing": "The street might be missing the critical delays and lack of verifiable progress on near-term product launches (FFV, BEV) which are foundational to the company's long-term strategic shift towards green mobility. While long-term targets are impressive, the execution on immediate milestones appears to be lagging, which could impact the overall timeline and market perception of the company's future readiness."
+}

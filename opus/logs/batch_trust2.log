@@ -1,0 +1,82 @@
+======================================================================
+  OPUS ANKA — ANKA Trust Score Analysis: BAJAJ-AUTO
+======================================================================
+
+  [1/5] Analysing financials...
+         12 years | ROCE: 28.1% | ROE: 22.8%
+
+  [2/5] Extracting management narratives from annual reports...
+    Extracting narratives from 2022-2023...
+      55 key pages from 315 total | Sections: ['risk', 'mda', 'financial_highlights', 'directors', 'outlook']
+      Text length: 124,489 chars
+    → 0 claims, tone: confident
+    Extracting narratives from 2023-2024...
+      25 key pages from 340 total | Sections: ['risk', 'outlook', 'mda', 'financial_highlights']
+      Text length: 45,180 chars
+    → 0 claims, tone: confident
+    Extracting narratives from 2024-2025...
+      40 key pages from 358 total | Sections: ['mda', 'risk', 'financial_highlights', 'outlook', 'directors']
+      Text length: 84,368 chars
+    → 0 claims, tone: confident
+         3 reports processed, 0 claims ext======================================================================
+  OPUS ANKA — ANKA Trust Score Analysis: OIL
+======================================================================
+
+  [1/5] Analysing financials...
+         12 years | ROCE: 12.9% | ROE: 13.3%
+
+  [2/5] Extracting management narratives from annual reports...
+    Extracting narratives from 2022-2023...
+      49 key pages from 403 total | Sections: ['mda', 'chairman', 'financial_highlights', 'outlook', 'risk', 'directors', 'overview']
+      Text length: 187,387 chars
+    → 0 claims, tone: confident
+    Extracting narratives from 2023-2024...
+      41 key pages from 475 total | Sections: ['risk', 'financial_highlights', 'mda', 'outlook']
+      Text length: 152,825 chars
+    → 0 claims, tone: confident
+    Extracting narratives from 2024-2025...
+      0 key pages from 0 total | Sections: []
+      Text length: 0 chars
+    → JSON parse error: Expecting value: line 1 column 1 (char 0)
+         2 reports processed, 0 claims extracted
+
+  [3/5] Cross-referencing guidance vs actuals...
+    Scoring 31 claims against financials...
+         Delivery rate: 70.0% | Dropped themes: 1
+         Delivered: 6 | Exceeded: 0 | Missed: 0 | Too Early: 3
+
+  [4/5] Calculating ANKA Trust Score...
+         Premium: +67.7% | Verdict: B (68%)
+
+  [5/5] Getting street consensus view...
+         Done
+
+  ──────────────────────────────────────────────────────────────────────
+  GUIDANCE vs ACTUAL SCORECARD
+  ──────────────────────────────────────────────────────────────────────
+  [OK] FY23 dividend         Target: Rs 5.50 per share          Actual: Rs 5.50 per share (as committe
+  [OK] FY23 capacity_produc  Target: 188.1 MW                   Actual: 188.1 MW (maintained as of FY2
+  [!!] FY23 new_program      Target: 200 TPD capacity           Actual: No mention in FY24 annual repo
+  [ ~] FY24 capacity_produc  Target: 4 MMT oil and 5 BCM gas    Actual: 3.359 MMT crude oil, 3.182 MMS
+  [..] FY24 operational      Target: zero flare                 Actual: Target date pending - March 20
+  [OK] FY24 dividend         Target: Rs 2.50 per share          Actual: Rs 2.50 per share (as recommen
+  [..] FY24 capacity         Target: 2.2 KTPA                   Actual: Under construction - target Ju
+  [OK] FY24 capex            Target: Rs 14,675.72 crores        Actual: Rs 14,675.72 crores (as report
+  [OK] FY24 operational      Target: closure of bottling opera  Actual: Closed as planned from 01.04.2
+  [..] Multiple other            Target: net zero emissions         Actual: Long-term target - progress tr
+
+======================================================================
+  ANKA TRUST SCORE: B (68%)
+  Premium Adjustment: +1.3%
+  Delivery Rate:   67.7%
+  Beat Rate:       0.0%
+  Guidance Scored: 7
+  Dropped Themes:  1
+  Red Flag:        MISSION 4+ production target showing only 84% achievement (3.359 MMT vs 4 MMT oil target) indicates structural constraints in core business that management may be understating. Additionally, the Formaldehyde project promised for early 2024 has disappeared without mention.
+  Strength:        Exceptional consistency in dividend payments and capex deployment (Rs 14,675.72 crores exactly as reported), plus transparent commitment to Rs 25,000 crore energy transition investment with specific timelines for renewable capacity expansion.
+  Trajectory:      stable
+  Street Missing:  The street is likely overestimating Oil India's ability to scale core oil & gas production based on MISSION 4+ rhetoric, while the forensic analysis reveals persistent 15-20% shortfalls in production targets that suggest mature field constraints limiting growth potential.
+======================================================================
+
+  Full report: C:\Users\Claude_Anka\opus-anka\artifacts\OIL\FINAL_REPORT.json
+  Obsidian: C:\Users\Claude_Anka\ObsidianVault\markets\trust-score\OIL-trust-score.md
