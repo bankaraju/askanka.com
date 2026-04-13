@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-14",
+      "segment": "war",
+      "filename": "2026-04-14-war.html",
+      "headline": "Hormuz Endgame: Trump's Blockade Threats, India's Oil Crisis, and the Defence Stock Bonanza",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 14, 2026"
+    },
+    {
+      "date": "2026-04-14",
+      "segment": "epstein",
+      "filename": "2026-04-14-epstein.html",
+      "headline": "Trump's Epstein Lies Unravel: DOJ Complicity, Mossad's Shadow, and India's Market Reckoning",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 14, 2026"
+    },
+    {
       "date": "2026-04-13",
       "segment": "war",
       "filename": "2026-04-13-war.html",

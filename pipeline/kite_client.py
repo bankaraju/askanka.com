@@ -300,9 +300,9 @@ def fetch_historical(
         for c in candles:
             dt = c["date"]
             if hasattr(dt, "strftime"):
-                date_str = dt.strftime("%Y-%m-%d")
+                date_str = dt.strftime("%Y-%m-%d %H:%M:%S") if interval != "day" else dt.strftime("%Y-%m-%d")
             else:
-                date_str = str(dt)[:10]
+                date_str = str(dt)[:19] if interval != "day" else str(dt)[:10]
             result.append({
                 "date":   date_str,
                 "open":   float(c["open"]),
