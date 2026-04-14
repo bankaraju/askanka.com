@@ -69,6 +69,27 @@ def load_closed_signals() -> List[Dict[str, Any]]:
         return []
 
 
+def get_weekly_closed_signals(days: int = 7) -> List[Dict[str, Any]]:
+    """Return signals closed within the last N days."""
+    from datetime import datetime, timedelta, timezone
+    IST = timezone(timedelta(hours=5, minutes=30))
+    cutoff = datetime.now(IST) - timedelta(days=days)
+    result = []
+    for sig in load_closed_signals():
+        ts = sig.get("close_timestamp") or sig.get("closed_at", "")
+        if not ts:
+            continue
+        try:
+            closed_dt = datetime.fromisoformat(ts)
+            if closed_dt.tzinfo is None:
+                closed_dt = closed_dt.replace(tzinfo=IST)
+            if closed_dt >= cutoff:
+                result.append(sig)
+        except (ValueError, TypeError):
+            continue
+    return result
+
+
 def save_open_signals(signals: List[Dict[str, Any]]) -> None:
     """Persist the open signals list to JSON (pretty-printed)."""
     try:

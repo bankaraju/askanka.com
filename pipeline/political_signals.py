@@ -346,6 +346,109 @@ KEYWORD_RULES: dict[str, dict[str, Any]] = {
         ],
         "exclude": ["talks fail", "collapse", "walk out", "stalled", "reject"],
     },
+
+    # ── DOMESTIC REGULATORY / POLICY ───────────────────────────
+    "rbi_policy": {
+        "must_contain": [
+            "rbi policy", "rbi rate", "rbi norm", "rbi circular",
+            "rbi guideline", "rbi regulation", "rbi directive",
+            "repo rate", "reverse repo", "crr cut", "crr hike",
+            "slr change", "monetary policy", "mpc meeting",
+            "rbi governor", "das announce", "rbi liquidity",
+            "rbi macro-prudential", "rbi npa", "rbi capital",
+            "priority sector lending", "rbi digital",
+        ],
+        "boost_words": [
+            "rbi", "reserve bank", "monetary", "interest rate",
+            "liquidity", "credit growth", "banking sector",
+            "nbfc", "microfinance", "housing finance",
+        ],
+        "exclude": [],
+    },
+
+    "nbfc_reform": {
+        "must_contain": [
+            "nbfc regulation", "nbfc reform", "nbfc norm",
+            "nbfc guideline", "nbfc capital", "nbfc npa",
+            "housing finance regulation", "microfinance norm",
+            "psu nbfc", "nbfc lending", "nbfc liquidity",
+            "mudra loan", "nbfc license", "nbfc merger",
+            "gold loan norm", "nbfc stress test",
+        ],
+        "boost_words": [
+            "nbfc", "hudco", "pfc", "rec", "ireda", "lic housing",
+            "bajaj finance", "manappuram", "muthoot", "shriram",
+        ],
+        "exclude": [],
+    },
+
+    "ev_policy": {
+        "must_contain": [
+            "ev policy", "ev subsid", "electric vehicle norm",
+            "ev incentive", "fame scheme", "fame subsid",
+            "ev mandate", "battery swap", "charging infrastructure",
+            "ev adoption", "emission norm", "bharat stage",
+            "green hydrogen", "ev manufacturing", "pli auto",
+            "pli battery", "acc battery", "ev tax",
+        ],
+        "boost_words": [
+            "electric vehicle", "ev", "tata motors", "maruti ev",
+            "mahindra ev", "ola electric", "ather", "bajaj auto",
+            "hero electric", "lithium", "battery",
+        ],
+        "exclude": [],
+    },
+
+    "tax_reform": {
+        "must_contain": [
+            "gst change", "gst rate", "gst reform", "gst council",
+            "income tax", "corporate tax", "tax cut", "tax hike",
+            "tax relief", "tax exemption", "customs duty",
+            "import duty", "export duty", "budget announce",
+            "fiscal deficit", "disinvestment", "privatisation",
+            "windfall tax", "capital gains tax", "stt change",
+            "securities transaction tax", "stamp duty",
+        ],
+        "boost_words": [
+            "budget", "finance minister", "sitharaman", "gst",
+            "tax", "fiscal", "revenue", "deficit",
+        ],
+        "exclude": [],
+    },
+
+    "infra_capex": {
+        "must_contain": [
+            "infra spend", "capital expenditure", "capex push",
+            "highway project", "rail project", "metro project",
+            "smart city", "sagarmala", "bharatmala",
+            "national infrastructure pipeline", "nip",
+            "government capex", "public invest", "pli scheme",
+            "semiconductor fab", "defence corridor",
+            "industrial corridor", "logistics park",
+        ],
+        "boost_words": [
+            "infrastructure", "capex", "government spend",
+            "l&t", "ntpc", "nhpc", "ircon", "rvnl",
+            "cement", "steel", "construction",
+        ],
+        "exclude": [],
+    },
+
+    "sebi_regulation": {
+        "must_contain": [
+            "sebi regulation", "sebi norm", "sebi circular",
+            "sebi guideline", "sebi mandate", "sebi reform",
+            "sebi penalty", "sebi ban", "insider trading sebi",
+            "fpi regulation", "dii regulation", "mutual fund norm",
+            "market structure", "t+0 settlement", "sebi chairperson",
+            "sebi board meeting",
+        ],
+        "boost_words": [
+            "sebi", "market regulator", "capital market",
+            "mutual fund", "fpi", "promoter holding",
+        ],
+        "exclude": [],
+    },
 }
 
 # ---------------------------------------------------------------------------
@@ -584,6 +687,8 @@ def classify_event_keywords(
         "hormuz": 0.15, "sanctions": 0.10, "ceasefire": 0.10,
         "trump_threat": 0.10, "defense_spend": 0.10,
         "oil_positive": 0.05, "oil_negative": 0.05,
+        "rbi_policy": 0.15, "nbfc_reform": 0.10, "ev_policy": 0.10,
+        "tax_reform": 0.15, "infra_capex": 0.10, "sebi_regulation": 0.10,
     }
 
     for category, rules in KEYWORD_RULES.items():
