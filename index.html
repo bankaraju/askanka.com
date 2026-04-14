@@ -71,6 +71,73 @@
             100% { transform: translateX(-50%); }
         }
 
+        /* ── F&O News Scroll ── */
+        .news-scroll-section {
+            background: rgba(17,24,39,0.6);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+        .news-scroll-track {
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(90deg, transparent, black 60px, black calc(100% - 60px), transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, black 60px, black calc(100% - 60px), transparent);
+        }
+        .news-scroll-inner {
+            display: flex;
+            gap: 24px;
+            animation: news-scroll-anim 90s linear infinite;
+            padding: 0 24px;
+        }
+        .news-scroll-inner:hover { animation-play-state: paused; }
+        @keyframes news-scroll-anim {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .news-card {
+            flex: 0 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            max-width: 340px;
+            min-width: 280px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .news-card:hover {
+            border-color: var(--accent-gold);
+            background: var(--bg-card-hover);
+        }
+        .news-card .news-symbol {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            background: var(--accent-gold-dim);
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-bottom: 6px;
+        }
+        .news-card .news-title {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .news-card .news-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         /* ── MSI background glow (scroll-triggered) ── */
         .msi-bg-glow {
             position: fixed;
@@ -1230,6 +1297,22 @@
     </div>
 </div>
 
+<!-- ══════════════ F&O STOCK NEWS SCROLL ══════════════ -->
+<div class="news-scroll-section" id="news-scroll-section" style="display:none;">
+    <div class="container" style="padding-top:16px; padding-bottom:0;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <h3 style="font-family:'DM Serif Display',Georgia,serif; font-size:18px; color:#f1f5f9; margin:0;">Stock News</h3>
+            <span class="badge badge-live" style="font-size:10px;"><span class="live-dot" style="width:5px;height:5px;margin-right:2px;"></span> LIVE</span>
+            <span id="news-count" style="font-size:11px; color:#64748b; font-family:'JetBrains Mono',monospace;"></span>
+        </div>
+    </div>
+    <div class="news-scroll-track">
+        <div class="news-scroll-inner" id="news-scroll-inner">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+
 <!-- ══════════════ STATS BAR ══════════════ -->
 <div class="stats-bar" id="stats-bar">
     <div class="stat-card" title="Spread positions currently open and being tracked in real-time">
@@ -1658,7 +1741,7 @@
     function hideTooltip() { tooltip.classList.remove('visible'); }
 
     // ── Load Live Status ──
-    fetch('/data/live_status.json')
+    fetch('data/live_status.json')
         .then(r => r.json())
         .then(data => {
             // MSI
@@ -1786,7 +1869,7 @@
     }
 
     // ── Load Track Record ──
-    fetch('/data/track_record.json')
+    fetch('data/track_record.json')
         .then(r => r.json())
         .then(data => {
             const container = document.getElementById('track-record-container');
@@ -1865,7 +1948,7 @@
         }
     };
 
-    fetch('/data/spread_universe.json')
+    fetch('data/spread_universe.json')
         .then(r => r.json())
         .then(data => {
             const spreads = data.spreads;
@@ -1992,7 +2075,7 @@
     }
 
     // ── Load MSI History Chart ──
-    fetch('/data/msi_history.json')
+    fetch('data/msi_history.json')
         .then(r => r.json())
         .then(data => {
             if (!data || data.length === 0) {
@@ -2106,7 +2189,7 @@
     }
 
     // Hook into existing live data fetch
-    fetch('/data/live_status.json')
+    fetch('data/live_status.json')
         .then(r => r.json())
         .then(data => {
             if (data.msi) {
@@ -2116,6 +2199,44 @@
             }
         })
         .catch(() => {});
+
+    // ── F&O Stock News Scroll ──
+    fetch('data/fno_news.json')
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+        .then(data => {
+            if (!data || !data.headlines || data.headlines.length === 0) return;
+
+            const section = document.getElementById('news-scroll-section');
+            const inner = document.getElementById('news-scroll-inner');
+            const countEl = document.getElementById('news-count');
+
+            section.style.display = 'block';
+            countEl.textContent = data.headlines.length + ' headlines';
+
+            // Build news cards (duplicate for seamless loop)
+            const cards = data.headlines.map(h => {
+                const title = h.title || '';
+                const cleanTitle = title.replace(/ - [^-]+$/, ''); // Remove "- SourceName" suffix
+                const source = h.source || '';
+                return '<a href="' + (h.url || '#') + '" target="_blank" rel="noopener" class="news-card">' +
+                    '<span class="news-symbol">' + (h.symbol || '') + '</span>' +
+                    '<div class="news-title">' + cleanTitle.replace(/[<>]/g, '') + '</div>' +
+                    '<div class="news-meta">' + source.replace(/[<>]/g, '') + '</div>' +
+                    '</a>';
+            }).join('');
+
+            // Double the content for seamless infinite scroll
+            inner.innerHTML = cards + cards;
+
+            // Adjust animation duration based on content width
+            requestAnimationFrame(() => {
+                const totalWidth = inner.scrollWidth / 2;
+                const speed = 60; // pixels per second
+                const duration = totalWidth / speed;
+                inner.style.animationDuration = duration + 's';
+            });
+        });
 
 })();
 </script>

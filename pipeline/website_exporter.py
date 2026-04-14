@@ -237,6 +237,13 @@ def run_export():
         path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
         print(f"  Exported {name} ({path})")
 
+    # Copy F&O news data if available
+    fno_news = DATA_DIR / "fno_news.json"
+    if fno_news.exists():
+        import shutil
+        shutil.copy2(fno_news, WEBSITE_DIR / "fno_news.json")
+        print(f"  Exported fno_news.json ({WEBSITE_DIR / 'fno_news.json'})")
+
     print(f"\nWebsite data exported to {WEBSITE_DIR}")
     print(f"  Open positions: {live['stats']['open_positions']}")
     print(f"  Closed trades:  {track['summary']['total']}")
