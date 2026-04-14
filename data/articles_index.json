@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-15",
+      "segment": "war",
+      "filename": "2026-04-15-war.html",
+      "headline": "Hormuz Meltdown: The US-China-Russia Standoff Ignites, India's Oil Supply Under Siege, and Defence Stocks Go Parabolic",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 15, 2026"
+    },
+    {
+      "date": "2026-04-15",
+      "segment": "epstein",
+      "filename": "2026-04-15-epstein.html",
+      "headline": "DOJ's Bondi Cover-Up Implodes: Epstein's Mossad Web, Trump's Lies, and India's Geopolitical Reckoning",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 15, 2026"
+    },
+    {
       "date": "2026-04-14",
       "segment": "war",
       "filename": "2026-04-14-war.html",
