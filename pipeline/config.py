@@ -356,5 +356,108 @@ CORRELATION_THRESHOLDS = [-5.0, -3.0, -2.0, 2.0, 3.0, 5.0]
 TELEGRAM_BOT_TOKEN = None  # Override from .env
 TELEGRAM_CHAT_ID = None    # Override from .env
 
+# === F&O UNIVERSE ===
+from pathlib import Path as _Path
+FNO_UNIVERSE_FILE = _Path(__file__).parent.parent / "opus" / "config" / "fno_stocks.json"
+
+FNO_TOP_40 = [
+    "RELIANCE", "HDFCBANK", "ICICIBANK", "INFY", "TCS",
+    "BHARTIARTL", "SBIN", "BAJFINANCE", "AXISBANK", "KOTAKBANK",
+    "LT", "MARUTI", "HCLTECH", "SUNPHARMA", "TITAN",
+    "ADANIENT", "ADANIPORTS", "TATASTEEL", "HINDUNILVR", "ITC",
+    "WIPRO", "CIPLA", "COALINDIA", "HAL", "BEL",
+    "NTPC", "ONGC", "GAIL", "BPCL", "M&M",
+    "ASIANPAINT", "TECHM", "DLF", "VEDL", "INDIGO",
+    "DRREDDY", "JSWSTEEL", "TATAPOWER", "PNB", "HDFCLIFE",
+]
+
+# === NEWS INTELLIGENCE CATEGORIES ===
+NEWS_CATEGORIES = {
+    "merger_acquisition": {
+        "keywords": ["acquire", "acquisition", "merger", "takeover", "buyout", "amalgamation", "demerger"],
+        "impact": "HIGH", "default_shelf_life_days": 5,
+    },
+    "results_announcement": {
+        "keywords": ["quarterly result", "Q1 result", "Q2 result", "Q3 result", "Q4 result",
+                     "profit rises", "profit falls", "net profit", "revenue growth", "PAT"],
+        "impact": "HIGH", "default_shelf_life_days": 3,
+    },
+    "block_deal": {
+        "keywords": ["block deal", "bulk deal", "stake sale", "promoter sell", "FII buying"],
+        "impact": "MEDIUM", "default_shelf_life_days": 2,
+    },
+    "rating_action": {
+        "keywords": ["upgrade", "downgrade", "target price", "price target", "initiating coverage",
+                     "outperform", "underperform", "overweight", "underweight"],
+        "impact": "MEDIUM", "default_shelf_life_days": 3,
+    },
+    "fraud_investigation": {
+        "keywords": ["fraud", "SEBI penalty", "investigation", "insider trading", "manipulation",
+                     "default", "NPA", "scam", "irregularities"],
+        "impact": "HIGH", "default_shelf_life_days": 5,
+    },
+    "govt_policy": {
+        "keywords": ["RBI", "repo rate", "rate cut", "rate hike", "monetary policy",
+                     "GST", "fiscal", "budget", "subsidy", "tariff", "import duty",
+                     "FAME", "EV policy", "PLI scheme", "disinvestment"],
+        "impact": "HIGH", "default_shelf_life_days": 5,
+    },
+    "sector_regulation": {
+        "keywords": ["SEBI regulation", "TRAI", "FSSAI", "drug pricing", "DPCO",
+                     "mining policy", "coal auction", "spectrum auction", "licence"],
+        "impact": "HIGH", "default_shelf_life_days": 5,
+    },
+    "management_change": {
+        "keywords": ["CEO appoint", "MD appoint", "CFO resign", "board member",
+                     "promoter", "succession", "chairman"],
+        "impact": "MEDIUM", "default_shelf_life_days": 2,
+    },
+    "capex_expansion": {
+        "keywords": ["capex", "expansion", "new plant", "capacity addition", "greenfield",
+                     "brownfield", "order win", "contract win", "order book"],
+        "impact": "MEDIUM", "default_shelf_life_days": 3,
+    },
+}
+
+# === POLICY KEYWORDS (policy → affected spreads mapping) ===
+POLICY_KEYWORDS = {
+    "oil_policy": {
+        "keywords": ["oil price", "crude oil", "OPEC", "Hormuz", "fuel price", "petrol price",
+                     "diesel price", "oil import", "strategic reserve"],
+        "spreads": ["Upstream vs Downstream", "Coal vs OMCs", "PSU Energy vs Private"],
+        "default_direction": "long_energy",
+    },
+    "defence_policy": {
+        "keywords": ["defence budget", "defense budget", "military spend", "arms deal",
+                     "border tension", "surgical strike", "ceasefire violation"],
+        "spreads": ["Defence vs IT", "Defence vs Auto"],
+        "default_direction": "long_defence",
+    },
+    "rbi_monetary": {
+        "keywords": ["repo rate", "rate cut", "rate hike", "monetary policy", "RBI MPC",
+                     "liquidity injection", "CRR", "SLR"],
+        "spreads": ["Banks vs IT", "Pharma vs Banks", "PSU NBFC vs Private Banks"],
+        "default_direction": "context_dependent",
+    },
+    "ev_auto": {
+        "keywords": ["EV policy", "electric vehicle", "FAME scheme", "battery policy",
+                     "EV subsidy", "charging infra"],
+        "spreads": ["EV Plays vs ICE Auto"],
+        "default_direction": "long_ev",
+    },
+    "infra_capex": {
+        "keywords": ["infrastructure spend", "capex push", "highway project", "smart city",
+                     "PLI scheme", "production linked"],
+        "spreads": ["Infra Capex Beneficiaries"],
+        "default_direction": "long_infra",
+    },
+    "sanctions_geopolitics": {
+        "keywords": ["sanctions", "trade war", "tariff war", "export ban", "import restriction",
+                     "Trump threat", "escalation"],
+        "spreads": ["Upstream vs Downstream", "Defence vs IT", "PSU Commodity vs Banks"],
+        "default_direction": "risk_off",
+    },
+}
+
 # === REFERENCE DATE (war start) ===
 WAR_START_DATE = "2026-02-28"
