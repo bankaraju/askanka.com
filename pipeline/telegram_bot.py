@@ -416,6 +416,101 @@ def format_eod_dashboard(
     return "\n".join(lines)
 
 
+def format_eod_track_record(
+    date_str: str,
+    open_positions: list,
+    closed_this_week: list,
+    scorecard: Dict[str, Any],
+    macro_line: str = "",
+    fii_line: str = "",
+) -> str:
+    """Format the daily EOD track record for Telegram (Signal Universe v2 spec)."""
+    lines = [
+        LINE,
+        f"\U0001f4cb ANKA DAILY RECORD \u2014 {date_str}",
+        LINE,
+    ]
+
+    # Section 1 — Open positions
+    if open_positions:
+        lines.append("")
+        lines.append("OPEN POSITIONS:")
+        for pos in open_positions:
+            badge = pos.get("tier_badge", "\u26aa")
+            name = pos.get("spread_name", "?")
+            pnl = pos.get("spread_pnl_pct", 0)
+            emoji = pos.get("pnl_emoji", "\u26aa")
+            days = pos.get("days_held", 1)
+            stop = pos.get("daily_stop")
+            stop_str = f" | stop {stop:+.1f}%" if stop else ""
+
+            long_legs = pos.get("long_legs", [])
+            short_legs = pos.get("short_legs", [])
+            long_str = ", ".join(
+                f"{l.get('ticker', '?')} {l.get('pnl_pct', 0):+.1f}%"
+                for l in long_legs
+            )
+            short_str = ", ".join(
+                f"{s.get('ticker', '?')} {s.get('pnl_pct', 0):+.1f}%"
+                for s in short_legs
+            )
+
+            lines.append(f"  {badge} {name}")
+            lines.append(f"    {emoji} {pnl:+.2f}% | {days}d held{stop_str}")
+            if long_str:
+                lines.append(f"    L: {long_str}")
+            if short_str:
+                lines.append(f"    S: {short_str}")
+    else:
+        lines.append("")
+        lines.append("No open positions.")
+
+    # Section 2 — Closed this week
+    if closed_this_week:
+        lines.append("")
+        lines.append("CLOSED THIS WEEK:")
+        for c in closed_this_week:
+            badge = c.get("result_badge", "?")
+            name = c.get("spread_name", "?")
+            pnl = c.get("spread_pnl_pct", 0)
+            days = c.get("days_held", 1)
+            reason = c.get("exit_label", "?")
+            lines.append(f"  {badge} {name}: {pnl:+.2f}% | {days}d | {reason}")
+
+    # Section 3 — Running scorecard
+    lines.append("")
+    strip = scorecard.get("strip", "")
+    lines.append(f"SCORECARD: {strip}")
+
+    sig = scorecard.get("signal_stats", {})
+    exp = scorecard.get("exploring_stats", {})
+    lines.append(
+        f"  \U0001f535 SIGNAL: {sig.get('wins', 0)}W / {sig.get('losses', 0)}L "
+        f"| avg {sig.get('avg_pnl', 0):+.2f}%"
+    )
+    lines.append(
+        f"  \U0001f7e1 EXPLORING: {exp.get('wins', 0)}W / {exp.get('losses', 0)}L "
+        f"| avg {exp.get('avg_pnl', 0):+.2f}%"
+    )
+
+    win_rate = scorecard.get("win_rate_pct", 0)
+    total = scorecard.get("total_signals", 0)
+    lines.append(f"  Win rate: {win_rate:.0f}% ({total} signals tracked)")
+
+    # Section 4 — Macro context
+    if macro_line or fii_line:
+        lines.append("")
+        if macro_line:
+            lines.append(macro_line)
+        if fii_line:
+            lines.append(fii_line)
+
+    lines.append("")
+    lines.append(DISCLAIMER)
+    lines.append(LINE)
+    return "\n".join(lines)
+
+
 # ---------------------------------------------------------------------------
 # Service Call Formatters — ENTRY, STOP LOSS, EXIT, ALERT, UPDATE
 # ---------------------------------------------------------------------------
@@ -740,6 +835,117 @@ def send_message(text: str, parse_mode: str = "Markdown") -> bool:
         success = success or result
 
     return success
+
+
+# ---------------------------------------------------------------------------
+# Reverse Regime Cards (Phase B + C)
+# ---------------------------------------------------------------------------
+
+
+def format_regime_transition_card(
+    transition_from: str,
+    transition_to: str,
+    longs: list,
+    shorts: list,
+    best_spread: Optional[Dict] = None,
+    confidence: str = "MEDIUM",
+) -> str:
+    """Format Phase B regime transition recommendation for Telegram."""
+    lines = [
+        LINE,
+        f"\U0001f504 REGIME TRANSITION: {transition_from} \u2192 {transition_to}",
+        LINE,
+    ]
+
+    if longs:
+        lines.append("\U0001f4c8 HISTORICAL LONGS (drift > gap, persistent):")
+        for i, s in enumerate(longs[:5], 1):
+            lines.append(
+                f"  {i}. {s['symbol']} \u2014 "
+                f"{s['drift_5d_mean']:+.2f}% 5d drift, "
+                f"{s['hit_rate']:.0f}% hit, {s['episodes']} eps"
+            )
+        lines.append("")
+
+    if shorts:
+        lines.append("\U0001f4c9 HISTORICAL SHORTS:")
+        for i, s in enumerate(shorts[:5], 1):
+            lines.append(
+                f"  {i}. {s['symbol']} \u2014 "
+                f"{s['drift_5d_mean']:+.2f}% 5d drift, "
+                f"{s['hit_rate']:.0f}% hit, {s['episodes']} eps"
+            )
+        lines.append("")
+
+    if best_spread and longs and shorts:
+        spread_drift = best_spread.get("spread_drift", 0)
+        min_hit = best_spread.get("min_hit", 0)
+        lines.append(
+            f"\U0001f4ca SPREAD: Long {longs[0]['symbol']} / Short {shorts[0]['symbol']}"
+        )
+        lines.append(f"  Net drift: {spread_drift:+.2f}% | Min hit: {min_hit:.0f}%")
+        lines.append("")
+
+    lines.append(f"Confidence: {confidence} | Hold: 5 trading days")
+    lines.append(LINE)
+    return "\n".join(lines)
+
+
+def format_correlation_break_card(
+    symbol: str,
+    regime: str,
+    expected: float,
+    actual: float,
+    z_score: float,
+    classification: str,
+    action: str,
+    pcr: float,
+    pcr_sentiment: str,
+    oi_anomaly: bool,
+    phase_b_rec: Optional[Dict] = None,
+    standalone_trade: Optional[Dict] = None,
+) -> str:
+    """Format Phase C correlation break alert for Telegram."""
+    icon = {
+        "OPPORTUNITY": "\u2705",
+        "POSSIBLE_OPPORTUNITY": "\u2754",
+        "WARNING": "\u26a0\ufe0f",
+        "CONFIRMED_WARNING": "\U0001f6a8",
+        "UNCERTAIN": "\u2753",
+    }.get(classification, "\u26a0\ufe0f")
+
+    lines = [
+        LINE,
+        f"{icon} CORRELATION BREAK: {symbol}",
+        LINE,
+        f"Regime: {regime}",
+        f"Expected: {expected:+.1f}% | Actual: {actual:+.1f}% | Z: {z_score:.1f}\u03c3",
+        f"Classification: {classification}",
+        "",
+        f"Options: PCR {pcr:.2f} ({pcr_sentiment}) | OI anomaly: {'YES' if oi_anomaly else 'No'}",
+        "",
+        f"Action: {action}",
+    ]
+
+    if action == "ADD" and standalone_trade:
+        direction = standalone_trade.get("direction", "LONG")
+        stop = standalone_trade.get("stop", 0)
+        target = standalone_trade.get("target", 0)
+        lines.append(
+            f"  \u2192 Standalone {direction} {symbol} @ market, "
+            f"stop {stop:.1f}%, target {target:.1f}%, 3d hold"
+        )
+
+    if phase_b_rec:
+        lines.append("")
+        lines.append(
+            f"Phase B: {phase_b_rec.get('direction', '?')} {symbol}, "
+            f"entry {phase_b_rec.get('entry_date', '?')}, "
+            f"expires {phase_b_rec.get('expiry_date', '?')}"
+        )
+
+    lines.append(LINE)
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------

@@ -100,7 +100,7 @@ INDIA_SIGNAL_STOCKS = {
     # Neutral / multi-factor
     "HDFCBANK":   {"yf": "HDFCBANK.NS",   "eodhd": "HDFCBANK.NSE",   "sector": "Banking/Private",      "group": "neutral"},
     "ICICIBANK":  {"yf": "ICICIBANK.NS",  "eodhd": "ICICIBANK.NSE",  "sector": "Banking/Private",      "group": "neutral"},
-    "TATAMOTORS": {"yf": "TMPV.NS",       "eodhd": "TATAMOTORS.NSE", "sector": "Auto",                 "group": "loser"},  # Tata Motors demerged Oct 2025 → TMPV (passenger vehicles)
+    "TMPV": {"yf": "TMPV.NS",       "eodhd": "TMPV.NSE", "sector": "Auto",                 "group": "loser"},  # Tata Motors demerged Oct 2025 → TMPV (passenger vehicles)
     "M&M":        {"yf": "M&M.NS",        "eodhd": "M&M.NSE",        "sector": "Auto/Farm",            "group": "neutral"},
     "MARUTI":     {"yf": "MARUTI.NS",     "eodhd": "MARUTI.NSE",     "sector": "Auto/Passenger",       "group": "loser"},
     "ADANIENT":   {"yf": "ADANIENT.NS",   "eodhd": "ADANIENT.NSE",   "sector": "Conglomerate",         "group": "neutral"},
@@ -119,7 +119,7 @@ INDIA_SPREAD_PAIRS = [
     {
         "name": "Upstream vs Downstream",
         "long": ["ONGC", "OIL"],
-        "short": ["IOC", "BPCL", "HPCL"],
+        "short": ["IOC", "BPCL"],
         "triggers": ["oil_up", "escalation", "hormuz", "sanctions", "trump_threat"],
     },
     {
@@ -129,22 +129,22 @@ INDIA_SPREAD_PAIRS = [
         "triggers": ["escalation", "defense_spend", "sanctions", "trump_threat", "hormuz", "oil_positive"],
     },
     {
-        "name": "Reliance Pivot",
+        "name": "Reliance vs OMCs",
         "long": ["RELIANCE"],
-        "short": ["HPCL", "IOC"],
+        "short": ["BPCL", "IOC"],
         "triggers": ["oil_up", "refining_margin", "escalation"],
     },
     {
         "name": "Coal vs OMCs",
         "long": ["COALINDIA"],
-        "short": ["BPCL", "HPCL"],
+        "short": ["BPCL", "IOC"],
         "triggers": ["energy_crisis", "oil_up", "escalation", "hormuz", "oil_positive"],
     },
     # ── Phase 2 spreads (expanding universe) ────────────────────────────
     {
         "name": "Pharma vs Cyclicals",
         "long": ["SUNPHARMA", "DRREDDY"],
-        "short": ["TATAMOTORS", "M&M"],
+        "short": ["TMPV", "M&M"],
         "triggers": ["escalation", "de_escalation", "diplomacy"],
     },
     {
@@ -156,7 +156,7 @@ INDIA_SPREAD_PAIRS = [
     {
         "name": "Defence vs Auto",
         "long": ["HAL", "BEL"],
-        "short": ["TATAMOTORS", "MARUTI"],
+        "short": ["TMPV", "MARUTI"],
         "triggers": ["escalation", "defense_spend", "trump_threat"],
     },
     {
@@ -164,6 +164,38 @@ INDIA_SPREAD_PAIRS = [
         "long": ["ONGC", "COALINDIA", "OIL"],
         "short": ["RELIANCE", "ADANIENT"],
         "triggers": ["oil_up", "escalation", "hormuz"],
+    },
+    # ── ETF-backtested spreads (from autoresearch regime engine) ─────
+    {
+        "name": "Pharma vs Banks",
+        "long": ["SUNPHARMA", "DRREDDY"],
+        "short": ["HDFCBANK", "ICICIBANK"],
+        "triggers": ["rbi_policy", "de_escalation", "diplomacy"],
+    },
+    {
+        "name": "Banks vs IT",
+        "long": ["HDFCBANK", "ICICIBANK"],
+        "short": ["TCS", "INFY", "WIPRO"],
+        "triggers": ["rbi_policy", "de_escalation", "diplomacy"],
+    },
+    # ── Domestic policy spreads ────────────────────────────────────────
+    {
+        "name": "PSU NBFC vs Private Banks",
+        "long": ["HUDCO", "NHPC"],
+        "short": ["HDFCBANK", "ICICIBANK"],
+        "triggers": ["rbi_policy", "nbfc_reform"],
+    },
+    {
+        "name": "EV Plays vs ICE Auto",
+        "long": ["TMPV", "M&M"],
+        "short": ["MARUTI"],
+        "triggers": ["ev_policy"],
+    },
+    {
+        "name": "Infra Capex Beneficiaries",
+        "long": ["ULTRACEMCO", "AMBUJACEM"],
+        "short": ["ADANIENT"],
+        "triggers": ["infra_capex", "tax_reform"],
     },
 ]
 
@@ -179,6 +211,13 @@ EVENT_TAXONOMY = {
     "defense_spend": {"oil": "flat", "defense": "up",   "it": "flat",  "downstream": "flat"},
     "trump_threat":  {"oil": "up",   "defense": "up",   "it": "down",  "downstream": "down"},
     "diplomacy":     {"oil": "down", "defense": "down", "it": "up",    "downstream": "up"},
+    # ── Domestic regulatory / policy ──────────────────────────────────
+    "rbi_policy":    {"banking": "move", "nbfc": "move", "rate_sensitive": "move", "it": "flat"},
+    "nbfc_reform":   {"nbfc": "up",     "banking": "flat", "housing_fin": "up"},
+    "ev_policy":     {"auto_ev": "up",   "auto_ice": "down", "battery": "up"},
+    "tax_reform":    {"broad_market": "move", "fmcg": "move", "auto": "move"},
+    "infra_capex":   {"infra": "up",    "cement": "up", "steel": "up", "capital_goods": "up"},
+    "sebi_regulation": {"broad_market": "move", "brokers": "move"},
 }
 
 # === ASIAN MARKET CASCADE (pre-market signals for India) ===
@@ -201,8 +240,8 @@ ASIA_INDIA_CASCADE = {
     "nikkei_defence_up":   {"india_long": ["HAL", "BEL"],          "india_short": ["TCS", "INFY"]},
     "kospi_defence_up":    {"india_long": ["HAL", "BEL", "BDL"],   "india_short": ["WIPRO"]},
     "asian_energy_up":     {"india_long": ["ONGC", "OIL", "RELIANCE"], "india_short": ["IOC", "BPCL"]},
-    "asian_broad_selloff": {"india_long": ["COALINDIA", "SUNPHARMA"], "india_short": ["HPCL", "BPCL"]},
-    "oil_above_100":       {"india_long": ["ONGC", "OIL"],         "india_short": ["IOC", "BPCL", "HPCL"]},
+    "asian_broad_selloff": {"india_long": ["COALINDIA", "SUNPHARMA"], "india_short": ["IOC", "BPCL"]},
+    "oil_above_100":       {"india_long": ["ONGC", "OIL"],         "india_short": ["IOC", "BPCL"]},
     "usd_inr_spike":       {"india_long": ["TCS", "INFY"],         "india_short": ["IOC"]},
 }
 
