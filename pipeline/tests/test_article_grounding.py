@@ -73,3 +73,37 @@ def test_build_panel_returns_raw_alongside(tmp_path, monkeypatch):
     assert "_raw" in panel
     assert panel["_raw"]["Brent"] == 95.07
     assert panel["_raw"]["India VIX"] is None  # missing
+
+
+def test_extract_dollar_numbers():
+    from article_grounding import _extract_numbers
+    text = "Brent rose to $103 a barrel and gold hit $2,478."
+    found = _extract_numbers(text)
+    kinds_and_vals = [(f.pattern_kind, f.value) for f in found]
+    assert ("dollar", 103.0) in kinds_and_vals
+    assert ("dollar", 2478.0) in kinds_and_vals
+
+
+def test_extract_percent_and_bps():
+    from article_grounding import _extract_numbers
+    text = "CPI is 5.7% and the RBI raised by 25 bps."
+    found = _extract_numbers(text)
+    pcts = [f.value for f in found if f.pattern_kind == "pct_bps"]
+    assert 5.7 in pcts
+    assert 25.0 in pcts
+
+
+def test_extract_index_levels():
+    from article_grounding import _extract_numbers
+    text = "Nifty 50 closed at 25,432 today."
+    found = _extract_numbers(text)
+    idx = [f.value for f in found if f.pattern_kind == "index"]
+    assert 25432.0 in idx
+
+
+def test_extract_includes_text_excerpt():
+    from article_grounding import _extract_numbers
+    text = "Indian refiners face $103 oil pressure today."
+    found = _extract_numbers(text)
+    dol = [f for f in found if f.pattern_kind == "dollar"][0]
+    assert "$103" in dol.text_excerpt

@@ -55,6 +55,53 @@ class Violation:
     closest_panel_value: tuple[str, float] | None
 
 
+@dataclass
+class Extraction:
+    value: float
+    text_excerpt: str
+    pattern_kind: str  # "dollar" | "rupee" | "pct_bps" | "index"
+
+
+_PATTERN_DOLLAR = re.compile(r"\$\s?([\d,]+(?:\.\d+)?)")
+_PATTERN_RUPEE  = re.compile(r"₹\s?([\d,]+(?:\.\d+)?)")
+_PATTERN_PCTBPS = re.compile(r"([\d,]+(?:\.\d+)?)\s?(?:%|bps)")
+_PATTERN_INDEX  = re.compile(
+    r"(?i)(?:Nifty|Sensex|Dow|S&P|BSE)[\s\w]{0,15}?\s+(?:at|@|of|to)\s+([\d,]+(?:\.\d+)?)"
+)
+
+
+def _excerpt(text: str, start: int, end: int, window: int = 60) -> str:
+    a = max(0, start - window)
+    b = min(len(text), end + window)
+    return text[a:b].replace("\n", " ").strip()
+
+
+def _to_float(s: str) -> float:
+    return float(s.replace(",", ""))
+
+
+def _extract_numbers(text: str) -> list[Extraction]:
+    """Scan text, return all numeric mentions with kind labels."""
+    out = []
+    for kind, pat in (
+        ("dollar",  _PATTERN_DOLLAR),
+        ("rupee",   _PATTERN_RUPEE),
+        ("pct_bps", _PATTERN_PCTBPS),
+        ("index",   _PATTERN_INDEX),
+    ):
+        for m in pat.finditer(text):
+            try:
+                val = _to_float(m.group(1))
+            except (ValueError, IndexError):
+                continue
+            out.append(Extraction(
+                value=val,
+                text_excerpt=_excerpt(text, m.start(), m.end()),
+                pattern_kind=kind,
+            ))
+    return out
+
+
 def load_market_context(date_str: str) -> dict:
     """Load merged authoritative market data for a YYYY-MM-DD date.
 
