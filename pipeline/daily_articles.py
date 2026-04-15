@@ -96,6 +96,27 @@ def generate_article(segment: str, sources: list, date: str) -> str:
     panel = build_topic_panel(segment, ctx)
     panel_lines = "\n".join(f"  - {k}: {v}" for k, v in panel.items() if k != "_raw")
 
+    template_path = GIT_REPO / "articles" / "_template" / "regime-engine-defining.html"
+    template_excerpt = ""
+    if template_path.exists():
+        try:
+            tpl_html = template_path.read_text(encoding="utf-8")
+            h1 = re.search(r"<h1>(.*?)</h1>", tpl_html, re.DOTALL)
+            body_match = re.search(r'<div class="body">(.*?)</div>', tpl_html, re.DOTALL)
+            if body_match:
+                paras = re.findall(r"<p>(.*?)</p>", body_match.group(1), re.DOTALL)
+                clean = [re.sub(r"<.*?>", "", p).strip() for p in paras[:3]]
+                template_excerpt = (
+                    f"\n# REFERENCE STYLE — match this voice, structure, and "
+                    f"panel-anchored discipline:\n"
+                    f"Headline: {h1.group(1).strip() if h1 else ''}\n"
+                    f"Opening paragraphs:\n" + "\n\n".join(clean) + "\n"
+                )
+        except Exception as e:
+            log.warning(f"Could not load defining-article template: {e}")
+    else:
+        log.info(f"No defining-article template at {template_path}; using fallback style")
+
     grounding_block = f"""
 # GROUNDING — DO NOT VIOLATE
 The following panel will be displayed to the reader at the top of the article:
@@ -174,6 +195,7 @@ REQUIREMENTS:
 9. Include at least ONE specific number or data point per paragraph
 10. Reference specific stocks or sectors where actionable
 
+{template_excerpt}
 {grounding_block}
 OUTPUT FORMAT:
 Return ONLY a JSON object:
