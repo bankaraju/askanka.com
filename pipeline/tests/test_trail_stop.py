@@ -49,3 +49,56 @@ class TestTrailStopTriggered:
     def test_zero_budget_never_fires(self):
         # Defensive: zero budget = no historical data, don't fire
         assert trail_stop_triggered(cumulative=-50.0, peak=10.0, trail_budget=0.0) is False
+
+
+from signal_tracker import check_signal_status
+
+
+def _signal_with_prices(entry_long, entry_short, peak_pnl, prev_long=None, prev_short=None):
+    """Build a minimal signal dict for check_signal_status."""
+    sig = {
+        "signal_id": "TEST-1",
+        "spread_name": "Defence vs IT",  # must exist in spread_stats.json
+        "long_legs":  [{"ticker": "HAL",  "price": entry_long}],
+        "short_legs": [{"ticker": "TCS",  "price": entry_short}],
+        "peak_spread_pnl_pct": peak_pnl,
+    }
+    if prev_long:
+        sig["_prev_close_long"] = {"HAL": prev_long}
+    if prev_short:
+        sig["_prev_close_short"] = {"TCS": prev_short}
+    return sig
+
+
+class TestTrailStopIntegration:
+    def test_trail_stop_fires_when_giving_back_from_peak(self, monkeypatch):
+        # Force known historical levels
+        monkeypatch.setattr(
+            "signal_tracker.get_levels_for_spread",
+            lambda name: {"daily_std": 2.0, "avg_favorable_move": 2.38},
+        )
+        # Peak at +7%, now at +5% (gave back 2%). Budget = 1.19%.
+        # Trail stop = 7 - 1.19 = 5.81. Cum 5.0 < 5.81 -> FIRE.
+        sig = _signal_with_prices(
+            entry_long=100.0, entry_short=100.0,
+            peak_pnl=7.0,
+            prev_long=104.0, prev_short=101.0,
+        )
+        prices = {"HAL": 103.0, "TCS": 102.0}
+        status, _ = check_signal_status(sig, prices)
+        assert status == "STOPPED_OUT_TRAIL"
+
+    def test_trail_stop_holds_near_peak(self, monkeypatch):
+        # Cum at +6.5%, peak +7%, budget 1.19 -> trail = 5.81 -> HOLD
+        monkeypatch.setattr(
+            "signal_tracker.get_levels_for_spread",
+            lambda name: {"daily_std": 2.0, "avg_favorable_move": 2.38},
+        )
+        sig = _signal_with_prices(
+            entry_long=100.0, entry_short=100.0,
+            peak_pnl=7.0,
+            prev_long=106.0, prev_short=99.5,
+        )
+        prices = {"HAL": 106.5, "TCS": 100.0}
+        status, _ = check_signal_status(sig, prices)
+        assert status == "OPEN"

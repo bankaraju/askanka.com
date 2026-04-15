@@ -432,20 +432,22 @@ def check_signal_status(
     take profits — the only exits are stops. This keeps winning positions
     compounding. Losses are cut short by data-driven daily thresholds.
 
-    Two exit conditions (both data-driven from 1-month spread statistics):
+    Three exit conditions (all data-driven from 1-month spread statistics):
+
+      0. TRAIL STOP: Peak-relative give-back. Budget =
+         avg_favorable_move * 0.50 * sqrt(days_since_last_check).
+         Locks in profit as cumulative P&L ratchets up. Checked first so
+         it protects gains before the static daily stop allows flat-day
+         slippage. Has a guard: doesn't fire until peak exceeds budget
+         (daily stop handles the fresh-trade regime).
 
       1. DAILY STOP: Today's spread move breaches -(avg_favorable × 50%).
-         Fires on any single bad day, regardless of cumulative P&L.
-         A trader up +10% cumulative who has a -1% day gets stopped out
-         at +9% — the daily stop protects accumulated gains.
+         Flat-trade safety net — catches bad days when trail stop hasn't
+         armed yet.
 
       2. 2-DAY RUNNING STOP: Two consecutive losing days AND combined
          2-day loss exceeds 2 × daily_stop. Catches persistent
-         deterioration that individual daily stops might miss (each day
-         loses less than the daily stop but the trend is clearly broken).
-
-    No target exit. No trailing stop. No expiry. No correlation break.
-    Entry = 1-month average spread (fair value).
+         deterioration that individual daily stops might miss.
 
     Returns ``("OPEN", None)`` or ``(reason, pnl_dict)``.
     """
@@ -473,26 +475,61 @@ def check_signal_status(
     was_yesterday_loss = (prev_day_move is not None and prev_day_move < 0)
     two_day_combined = (todays_move + prev_day_move) if prev_day_move is not None else None
 
-    # Update peak cumulative (for reporting, not exit logic)
+    # Update peak cumulative (for reporting AND trail stop)
     peak_pnl = signal.get("peak_spread_pnl_pct", 0.0)
     if cumulative_spread > peak_pnl:
         signal["peak_spread_pnl_pct"] = cumulative_spread
+        peak_pnl = cumulative_spread
 
-    # Store levels on the signal for Telegram display
+    # Trail stop: peak-relative, historic-basis, holiday-scaled
+    last_check_iso = signal.get("_last_trail_check")
+    days_since = 1
+    if last_check_iso:
+        try:
+            from datetime import datetime as _dt
+            last_check = _dt.fromisoformat(last_check_iso.replace("Z", "+00:00"))
+            now = _dt.now(last_check.tzinfo) if last_check.tzinfo else _dt.now()
+            delta_days = (now - last_check).days
+            days_since = max(1, delta_days)
+        except Exception:
+            days_since = 1
+    trail_budget = compute_trail_budget(avg_favorable, days_since)
+    trail_stop = peak_pnl - trail_budget if trail_budget > 0 else None
+
+    # Store levels on the signal for Telegram display + replay
     signal["_data_levels"] = {
         "daily_stop": round(daily_stop, 2),
         "two_day_stop": round(two_day_stop, 2),
+        "trail_stop": round(trail_stop, 2) if trail_stop is not None else None,
+        "trail_budget": round(trail_budget, 2),
         "todays_move": round(todays_move, 2),
         "cumulative": round(cumulative_spread, 2),
+        "peak": round(peak_pnl, 2),
         "daily_std": round(daily_std, 2),
         "avg_favorable": round(avg_favorable, 2),
         "consecutive_losses": 2 if (is_today_loss and was_yesterday_loss) else (1 if is_today_loss else 0),
         "two_day_combined": round(two_day_combined, 2) if two_day_combined is not None else None,
     }
 
+    # Stamp the trail-check timestamp for the next invocation
+    from datetime import datetime as _dt2
+    signal["_last_trail_check"] = _dt2.now().isoformat()
+
+    # ── EXIT 0: TRAIL STOP ─────────────────────────────────
+    # Peak-relative give-back using historic favorable-move distribution.
+    # Checked FIRST so it protects accumulated gains before the daily stop
+    # (which is insensitive to peak) can let profit slip back to negative.
+    if trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget):
+        log.info(
+            f"Signal {signal.get('signal_id')}: TRAIL STOP "
+            f"(cum {cumulative_spread:+.2f}% <= trail {trail_stop:+.2f}%, "
+            f"peak {peak_pnl:+.2f}% - budget {trail_budget:.2f}%)"
+        )
+        return ("STOPPED_OUT_TRAIL", pnl)
+
     # ── EXIT 1: DAILY STOP ──────────────────────────────────
     # Today's spread move breaches 50% of avg daily favorable move.
-    # Fires regardless of cumulative P&L — protects gains + cuts losses.
+    # Flat-trade safety net — fires when peak hasn't accumulated yet.
     if todays_move <= daily_stop:
         log.info(
             f"Signal {signal.get('signal_id')}: DAILY STOP "
@@ -502,8 +539,6 @@ def check_signal_status(
         return ("STOPPED_OUT", pnl)
 
     # ── EXIT 2: 2-DAY RUNNING STOP ──────────────────────────
-    # Two consecutive losing days AND combined loss exceeds threshold.
-    # daily_std² × 50% catches persistent deterioration.
     if is_today_loss and was_yesterday_loss and two_day_combined is not None:
         if two_day_combined <= two_day_stop:
             log.info(
