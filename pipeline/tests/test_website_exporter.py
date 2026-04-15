@@ -172,3 +172,43 @@ def test_stock_card_fields(monkeypatch):
     assert s["direction"] == "LONG"
     assert s["conviction"] == "HIGH"
     assert s["source"] == "ranker"
+
+
+def test_news_only_today_events(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    tickers = [n["ticker"] for n in out["news_driven"]]
+    # OLDSTUFF is in verdicts but not in today's events — must be excluded
+    assert "OLDSTUFF" not in tickers
+
+
+def test_news_drops_hold_recommendations(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    # All fixture today-events have BUY/SELL verdicts; no HOLD should appear
+    assert all(n["direction"] in ("LONG", "SHORT") for n in out["news_driven"])
+
+
+def test_news_sorted_by_hit_rate_desc(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    rates = [n["historical_hit_rate"] for n in out["news_driven"]]
+    assert rates == sorted(rates, reverse=True)
+    # RELIANCE hit_rate 0.71 wins
+    assert out["news_driven"][0]["ticker"] == "RELIANCE"
+
+
+def test_news_card_fields(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    n = out["news_driven"][0]
+    assert set(n.keys()) == {"ticker", "headline", "category", "direction",
+                              "shelf_days", "historical_hit_rate", "precedent_count",
+                              "source_timestamp", "is_stale"}
+    assert n["headline"] == "Q4 results beat estimates by 8%"
+    assert n["historical_hit_rate"] == 0.71
+    assert n["precedent_count"] == 14

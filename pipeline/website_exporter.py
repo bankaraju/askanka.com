@@ -161,7 +161,37 @@ def _build_stock_recs() -> list:
 
 
 def _build_news_recs() -> list:
-    return []
+    events_raw = _load_json(NEWS_EVENTS_FILE) or {}
+    verdicts_raw = _load_json(NEWS_VERDICTS_FILE) or []
+    src_ts = events_raw.get("last_scan")
+    stale = stale_check(src_ts)
+
+    # Index latest verdict per (symbol, category)
+    verdict_idx = {}
+    for v in verdicts_raw:
+        key = (v.get("symbol"), v.get("category"))
+        verdict_idx[key] = v  # last write wins; verdicts file is append-order
+
+    out = []
+    for ev in events_raw.get("events", []) or []:
+        v = verdict_idx.get((ev.get("symbol"), ev.get("category")))
+        if not v:
+            continue
+        if v.get("recommendation") not in ("BUY", "SELL"):
+            continue
+        out.append({
+            "ticker": ev.get("symbol", ""),
+            "headline": ev.get("title", ""),
+            "category": ev.get("category", ""),
+            "direction": v.get("direction", ""),
+            "shelf_days": v.get("shelf_days", 0),
+            "historical_hit_rate": v.get("historical_hit_rate", 0),
+            "precedent_count": v.get("precedent_count", 0),
+            "source_timestamp": src_ts,
+            "is_stale": stale,
+        })
+    out.sort(key=lambda n: -(n.get("historical_hit_rate") or 0))
+    return out[:3]
 
 
 def export_live_status() -> dict:
