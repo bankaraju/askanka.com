@@ -300,51 +300,6 @@
         }
 
 
-        /* ── Stats Bar ── */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 1px;
-            background: rgba(212,168,85,0.08);
-            border-bottom: 1px solid rgba(212,168,85,0.12);
-        }
-
-        .stat-card {
-            background: rgba(17,24,39,0.95);
-            backdrop-filter: blur(10px);
-            padding: 22px 16px;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .stat-card:hover {
-            background: rgba(26,35,50,0.95);
-        }
-
-        .stat-card:hover .stat-value {
-            color: #d4a855;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .stat-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-            transition: color 0.3s;
-        }
-
-        .stat-value.positive { color: var(--accent-green); }
-        .stat-value.negative { color: var(--accent-red); }
-
         /* ── Section Headers ── */
         .section {
             padding: 52px 0;
@@ -804,7 +759,6 @@
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
-            .stats-bar { grid-template-columns: repeat(3, 1fr); }
             .pipeline-steps { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .pipeline-step { margin: 0; }
             .pipeline-arrow { display: none; }
@@ -818,7 +772,6 @@
         }
 
         @media (max-width: 600px) {
-            .stats-bar { grid-template-columns: repeat(2, 1fr); }
             .pipeline-steps { grid-template-columns: 1fr; }
             .hero { padding: 40px 16px 32px; }
             .hero-title { font-size: 26px; }
@@ -827,7 +780,6 @@
             .hero-stats { gap: 16px; }
             .hero-stat-value { font-size: 20px; }
             .hero-stat-label { font-size: 9px; }
-            .stat-value { font-size: 22px; }
             .position-meta { grid-template-columns: repeat(2, 1fr); }
             .legs-section { grid-template-columns: 1fr; }
             .position-pnl { font-size: 24px; }
@@ -857,7 +809,6 @@
             .hero-title { font-size: 22px; }
             .hero-stats { gap: 12px; }
             .hero-stat-value { font-size: 18px; }
-            .stats-bar { grid-template-columns: 1fr 1fr; }
             .event-item { padding: 5px 8px; font-size: 10px; }
         }
 
@@ -1009,45 +960,6 @@
     </div>
 </div>
 
-<!-- ══════════════ STATS BAR ══════════════ -->
-<div class="stats-bar" id="stats-bar">
-    <div class="stat-card" title="Spread positions currently open and being tracked in real-time">
-        <div class="stat-label">Open Positions</div>
-        <div class="stat-value mono" id="stat-open">--</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Live spread trades</div>
-    </div>
-    <div class="stat-card" title="Total signals fired since launch — each signal is a regime-driven spread entry">
-        <div class="stat-label">Total Signals</div>
-        <div class="stat-value mono" id="stat-signals">--</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Since April 1</div>
-    </div>
-    <div class="stat-card" title="Percentage of closed positions that were profitable. Early stage — small sample.">
-        <div class="stat-label">Win Rate</div>
-        <div class="stat-value mono" id="stat-winrate">--%</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
-    </div>
-    <div class="stat-card" title="Realized P&L from closed positions only.">
-        <div class="stat-label">Realized P&L</div>
-        <div class="stat-value mono" id="stat-pnl">--</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Closed trades only</div>
-    </div>
-    <div class="stat-card" title="Unrealized P&L from currently open spread positions. Updates intraday.">
-        <div class="stat-label">Unrealized P&L</div>
-        <div class="stat-value mono" id="stat-unrealized">--</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Open positions, live</div>
-    </div>
-    <div class="stat-card" title="Calendar days since first signal was fired">
-        <div class="stat-label">Days Active</div>
-        <div class="stat-value mono" id="stat-days">--</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Since first signal</div>
-    </div>
-    <div class="stat-card" title="Total sector spread pairs being monitored for entry/exit signals">
-        <div class="stat-label">Spreads Tracked</div>
-        <div class="stat-value mono" id="stat-spreads">25</div>
-        <div style="font-size:10px; color:#6b7280; margin-top:4px;">Across 8 sectors</div>
-    </div>
-</div>
-
 <!-- ══════════════ HOW THIS WORKS ══════════════ -->
 <div class="container">
     <section class="section" style="padding-bottom:0;">
@@ -1164,33 +1076,6 @@
                 <h3>3.5 Million Pages, Zero Handcuffs</h3>
                 <div class="report-date mono">April 8, 2026</div>
             </a>
-            <a href="reports/week-007.html" class="report-card">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week 007</div>
-                    <h3>Energy Infra Leads, Defense Consolidates — Portfolio +6.3%</h3>
-                    <p>April 6-11. Top winner ENR +11.7% (DAX energy infra); top loser NOC -4.1% (defense pause). 15 active positions, 6.34% average USD return. Automated weekly brief across 8 global indices, 20 stocks, commodities, and FX.</p>
-                    <div class="report-date mono">April 11, 2026</div>
-            </a>
-            <a href="reports/week-006.html" class="report-card">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week 006</div>
-                    <h3>Global Markets in Crisis: War, Oil & Institutional Flight</h3>
-                    <p>Iran-US conflict enters Week 6. Defence stocks surge, OMCs crushed. FII outflows accelerate as crude breaches $95. Full analysis with AI-generated commentary on 12 key movers.</p>
-                    <div class="report-date mono">April 4, 2026</div>
-            </a>
-            <a href="reports/week-005.html" class="report-card">
-                <h3>Signals Go Live: First Automated Trades</h3>
-                <p>Defence vs IT and Coal vs OMCs — our first spread signals fire in real-time. How the pipeline performed on day one.</p>
-                <div class="report-date mono">March 28, 2026</div>
-            </a>
-            <a href="reports/week-001.html" class="report-card">
-                <h3>When the Bombs Dropped: Market Day One</h3>
-                <p>The inaugural analysis. How Indian equities reacted in the first 48 hours of the Iran-US conflict.</p>
-                <div class="report-date mono">March 3, 2026</div>
-            </a>
-            <a href="reports/india-deep-dive.html" class="report-card">
-                <h3>India Sector Playbook</h3>
-                <p>The foundation: sector-by-sector breakdown of how Indian equities respond to geopolitical and macro stress events.</p>
-                <div class="report-date mono">Research</div>
-            </a>
         </div>
     </section>
 
@@ -1240,7 +1125,7 @@
             <div class="pipeline-step">
                 <div class="pipeline-step-num">4</div>
                 <h3>Signal</h3>
-                <p>Signals delivered via Telegram with data-driven stop levels and P&L tracking</p>
+                <p>Signals published to the live terminal with data-driven stop levels and P&L tracking</p>
             </div>
         </div>
     </section>
