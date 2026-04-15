@@ -153,3 +153,163 @@ def simulate_signal(
         "simulated_exit": sim_exit,
         "delta_pct": delta,
     }
+
+
+import json
+from datetime import datetime, timedelta
+
+
+PIPELINE_ROOT = Path(__file__).resolve().parent.parent
+CLOSED_SIGS_PATH = PIPELINE_ROOT / "data" / "signals" / "closed_signals.json"
+SPREAD_STATS_PATH = PIPELINE_ROOT / "data" / "spread_stats.json"
+OUTPUT_PATH = PIPELINE_ROOT.parent / "data" / "trail_stop_replay.json"
+
+
+def _fetch_daily_closes(
+    tickers: List[str],
+    start_date: str,
+    end_date: str,
+) -> Dict[str, List[Tuple[str, float]]]:
+    """Fetch daily closes for each ticker via yfinance.
+
+    Tickers without a dot or caret are treated as NSE names and suffixed
+    with ``.NS``. start_date/end_date are YYYY-MM-DD strings (inclusive).
+    """
+    import yfinance as yf  # noqa: WPS433
+
+    result: Dict[str, List[Tuple[str, float]]] = {}
+    end_dt = (datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=2)).strftime("%Y-%m-%d")
+
+    for tk in tickers:
+        yf_symbol = tk if "." in tk or "^" in tk else f"{tk}.NS"
+        hist = yf.Ticker(yf_symbol).history(start=start_date, end=end_dt)
+        if hist.empty:
+            result[tk] = []
+            continue
+        series = []
+        for idx, row in hist.iterrows():
+            date_str = idx.strftime("%Y-%m-%d")
+            close = float(row["Close"])
+            series.append((date_str, close))
+        result[tk] = series
+    return result
+
+
+def _load_levels_for(spread_name: str, stats_all: dict) -> Dict[str, float]:
+    """Pull avg_favorable + daily_std from spread_stats.json for one spread.
+
+    Handles multiple shapes:
+    - Flat: {name: {avg_favorable_move: ..., daily_std: ...}}
+    - Nested overall: {name: {overall: {avg_favorable_move: ..., daily_std: ...}}}
+    - Regime-keyed: {name: {MACRO_NEUTRAL: {mean: ..., std: ...}, ...}}
+      In this case we average mean/std across all regimes and map to the
+      expected field names (mean -> avg_favorable_move, std -> daily_std).
+    """
+    entry = stats_all.get(spread_name)
+    if entry is None:
+        entry = stats_all.get("spreads", {}).get(spread_name, {})
+    if not isinstance(entry, dict):
+        return {"avg_favorable_move": 0.0, "daily_std": 0.0}
+
+    # Nested overall shape
+    if "overall" in entry:
+        entry = entry["overall"]
+        if not isinstance(entry, dict):
+            return {"avg_favorable_move": 0.0, "daily_std": 0.0}
+
+    # Flat shape: has avg_favorable_move directly
+    if "avg_favorable_move" in entry:
+        return {
+            "avg_favorable_move": float(entry.get("avg_favorable_move", 0.0) or 0.0),
+            "daily_std": float(entry.get("daily_std", 0.0) or 0.0),
+        }
+
+    # Flat shape: has mean directly (no nested regimes)
+    if "mean" in entry and not any(
+        isinstance(v, dict) for v in entry.values()
+    ):
+        return {
+            "avg_favorable_move": float(entry.get("mean", 0.0) or 0.0),
+            "daily_std": float(entry.get("std", 0.0) or 0.0),
+        }
+
+    # Regime-keyed shape: {MACRO_NEUTRAL: {mean: ..., std: ...}, ...}
+    # Average across all regimes weighted equally.
+    means = []
+    stds = []
+    for regime_val in entry.values():
+        if not isinstance(regime_val, dict):
+            continue
+        m = regime_val.get("mean", 0.0)
+        s = regime_val.get("std", 0.0)
+        if m is not None:
+            means.append(float(m))
+        if s is not None:
+            stds.append(float(s))
+    if not means:
+        return {"avg_favorable_move": 0.0, "daily_std": 0.0}
+    return {
+        "avg_favorable_move": sum(means) / len(means),
+        "daily_std": sum(stds) / len(stds) if stds else 0.0,
+    }
+
+
+def run_replay() -> Dict[str, Any]:
+    """Replay every closed signal; write result to data/trail_stop_replay.json."""
+    closed = json.loads(CLOSED_SIGS_PATH.read_text(encoding="utf-8"))
+    stats_all = json.loads(SPREAD_STATS_PATH.read_text(encoding="utf-8")) if SPREAD_STATS_PATH.exists() else {}
+
+    trades: List[Dict[str, Any]] = []
+    actual_sum = 0.0
+    sim_sum = 0.0
+    improved = 0
+    worse = 0
+
+    for sig in closed:
+        tickers = [l["ticker"] for l in sig.get("long_legs", []) + sig.get("short_legs", [])]
+        open_date = (sig.get("open_timestamp") or "")[:10]
+        close_date = (sig.get("close_timestamp") or "")[:10]
+        if not (open_date and close_date and tickers):
+            continue
+
+        try:
+            prices = _fetch_daily_closes(tickers, open_date, close_date)
+        except Exception as e:
+            print(f"  skip {sig.get('signal_id')}: fetch failed ({e})")
+            continue
+
+        levels = _load_levels_for(sig.get("spread_name", ""), stats_all)
+        if levels["avg_favorable_move"] == 0:
+            print(f"  skip {sig.get('signal_id')}: no stats for {sig.get('spread_name')}")
+            continue
+
+        result = simulate_signal(sig, prices, levels)
+        trades.append(result)
+
+        actual_sum += result["actual_exit"]["pnl_pct"]
+        sim_sum    += result["simulated_exit"]["pnl_pct"]
+        if result["delta_pct"] > 0:
+            improved += 1
+        elif result["delta_pct"] < 0:
+            worse += 1
+
+    out = {
+        "updated_at": datetime.now().isoformat(),
+        "total_trades": len(trades),
+        "trades_improved": improved,
+        "trades_worse": worse,
+        "actual_pnl_sum_pct": round(actual_sum, 2),
+        "simulated_pnl_sum_pct": round(sim_sum, 2),
+        "delta_sum_pct": round(sim_sum - actual_sum, 2),
+        "trades": trades,
+    }
+
+    OUTPUT_PATH.write_text(json.dumps(out, indent=2, default=str), encoding="utf-8")
+    print(f"Wrote {OUTPUT_PATH}")
+    print(f"  Trades: {len(trades)}  improved: {improved}  worse: {worse}")
+    print(f"  Actual sum: {actual_sum:+.2f}%  Simulated: {sim_sum:+.2f}%  Delta: {sim_sum - actual_sum:+.2f}%")
+    return out
+
+
+if __name__ == "__main__":
+    run_replay()
