@@ -142,6 +142,57 @@ Rules:
     else:
         grounding_block = ""
 
+    # ── ETF regime ground truth block (market-grounded topics only) ───────
+    regime_block = ""
+    if market_grounded:
+        try:
+            regime_path = GIT_REPO / "data" / "global_regime.json"
+            today_regime_path = PIPELINE_DIR / "data" / "today_regime.json"
+            if regime_path.exists():
+                rg = json.loads(regime_path.read_text(encoding="utf-8"))
+                comp = rg.get("components", {})
+                driver_lines = []
+                for name, c in comp.items():
+                    raw = c.get("raw")
+                    if raw is None:
+                        continue
+                    label = {
+                        "inst_flow": "FII/DII flow",
+                        "india_vix": "India VIX",
+                        "usdinr": "USD/INR 5d move",
+                        "nifty_30d": "Nifty 30d return",
+                        "crude_5d": "Brent 5d return",
+                    }.get(name, name)
+                    suffix = "%" if name in ("usdinr", "nifty_30d", "crude_5d") else ""
+                    driver_lines.append(f"  - {label}: {raw}{suffix}")
+                drivers_txt = "\n".join(driver_lines) if driver_lines else "  (no driver data)"
+                eligible = []
+                if today_regime_path.exists():
+                    tr = json.loads(today_regime_path.read_text(encoding="utf-8"))
+                    for name, s in sorted(
+                        tr.get("eligible_spreads", {}).items(),
+                        key=lambda kv: -(kv[1].get("best_win") or 0),
+                    )[:3]:
+                        eligible.append(f"  - {name}: best win {s.get('best_win')}% over {s.get('best_period')}d")
+                eligible_txt = "\n".join(eligible) if eligible else "  (none)"
+                regime_block = f"""
+# ETF REGIME GROUND TRUTH — align your thesis with this
+Current zone: {rg.get('zone')} (score {rg.get('score')})
+Top drivers: {', '.join(rg.get('top_drivers') or [])}
+Component reads:
+{drivers_txt}
+Highest-edge spreads under this regime:
+{eligible_txt}
+
+If the ETF engine says crude is DOWN 5d, you cannot describe oil as "surging"
+or "jumping". If VIX is falling, you cannot describe fear as rising. Your
+narrative MUST be consistent with these component reads. Contradictions are
+article failures.
+"""
+        except Exception as e:
+            log.warning(f"Could not load ETF regime context: {e}")
+            regime_block = ""
+
     seg_config = {
         "war": {
             "title_style": "provocative geopolitical analysis",
@@ -210,6 +261,7 @@ REQUIREMENTS:
 10. Reference specific stocks or sectors where actionable
 
 {template_excerpt}
+{regime_block}
 {grounding_block}
 OUTPUT FORMAT:
 Return ONLY a JSON object:
