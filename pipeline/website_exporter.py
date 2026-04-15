@@ -26,6 +26,7 @@ CLOSED_FILE = SIGNALS_DIR / "closed_signals.json"
 MSI_HISTORY = DATA_DIR / "msi_history.json"
 PATTERN_LOOKUP = DATA_DIR / "pattern_lookup.json"
 SPREAD_STATS = DATA_DIR / "spread_stats.json"
+TODAY_REGIME_FILE = DATA_DIR / "today_regime.json"
 
 
 def _load_json(path: Path) -> list | dict:
@@ -35,6 +36,43 @@ def _load_json(path: Path) -> list | dict:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return [] if "signal" in path.name else {}
+
+
+def export_global_regime() -> dict:
+    """Export 31-ETF regime engine output for the website hero block."""
+    raw = _load_json(TODAY_REGIME_FILE)
+    if not raw:
+        return {
+            "updated_at": datetime.now(IST).isoformat(),
+            "zone": "UNKNOWN",
+            "score": None,
+            "regime_source": "unavailable",
+            "stable": False,
+            "consecutive_days": 0,
+            "components": {},
+            "top_drivers": [],
+            "source_timestamp": None,
+        }
+
+    components = raw.get("components", {}) or {}
+    ranked = sorted(
+        components.items(),
+        key=lambda kv: abs((kv[1] or {}).get("contribution", 0) or 0),
+        reverse=True,
+    )
+    top_drivers = [name for name, _ in ranked[:3]]
+
+    return {
+        "updated_at": datetime.now(IST).isoformat(),
+        "zone": raw.get("regime", "UNKNOWN"),
+        "score": raw.get("msi_score"),
+        "regime_source": raw.get("regime_source", "unknown"),
+        "stable": raw.get("regime_stable", False),
+        "consecutive_days": raw.get("consecutive_days", 0),
+        "components": components,
+        "top_drivers": top_drivers,
+        "source_timestamp": raw.get("timestamp"),
+    }
 
 
 def export_live_status() -> dict:
