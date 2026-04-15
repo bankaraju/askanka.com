@@ -1,0 +1,6 @@
+[
+  {"symbol": "RELIANCE", "category": "earnings", "event_title": "Q4 results beat estimates by 8%", "event_date": "2026-04-15", "impact": "positive", "recommendation": "BUY", "direction": "LONG", "shelf_life": "short", "shelf_days": 3, "price_reaction_1d": 1.4, "historical_avg_5d": 2.8, "historical_hit_rate": 0.71, "precedent_count": 14},
+  {"symbol": "TCS", "category": "deal_win", "event_title": "Wins $500M deal with European bank", "event_date": "2026-04-15", "impact": "positive", "recommendation": "BUY", "direction": "LONG", "shelf_life": "short", "shelf_days": 5, "price_reaction_1d": 0.9, "historical_avg_5d": 3.1, "historical_hit_rate": 0.65, "precedent_count": 22},
+  {"symbol": "HDFCBANK", "category": "regulatory_action", "event_title": "RBI fines bank Rs 5 crore", "event_date": "2026-04-15", "impact": "negative", "recommendation": "SELL", "direction": "SHORT", "shelf_life": "short", "shelf_days": 2, "price_reaction_1d": -0.6, "historical_avg_5d": -1.4, "historical_hit_rate": 0.58, "precedent_count": 9},
+  {"symbol": "OLDSTUFF", "category": "earnings", "event_title": "irrelevant historical entry", "event_date": "2025-08-01", "impact": "positive", "recommendation": "HOLD", "direction": "NEUTRAL", "shelf_life": "long", "shelf_days": 30, "price_reaction_1d": 0.1, "historical_avg_5d": 0.2, "historical_hit_rate": 0.50, "precedent_count": 2}
+]

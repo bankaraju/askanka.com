@@ -1,0 +1,10 @@
+{
+  "last_zone": "NEUTRAL",
+  "updated": "2026-04-15 09:25:00",
+  "active_recommendations": [
+    {"ticker": "HAL", "direction": "LONG", "conviction": "HIGH", "trigger": "regime_active_NEUTRAL"},
+    {"ticker": "INFY", "direction": "SHORT", "conviction": "MEDIUM", "trigger": "regime_active_NEUTRAL"},
+    {"ticker": "RELIANCE", "direction": "LONG", "conviction": "MEDIUM", "trigger": "regime_active_NEUTRAL"},
+    {"ticker": "ITC", "direction": "LONG", "conviction": "LOW", "trigger": "regime_active_NEUTRAL"}
+  ]
+}

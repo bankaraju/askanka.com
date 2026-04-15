@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-04-15T09:25:08.000+05:30",
+  "regime": "NEUTRAL",
+  "msi_score": 43.7,
+  "recommendations": [
+    {"name": "Upstream vs Downstream", "gate_status": "BELOW_2STD", "spread_return": -2.1, "reason": "Z_BELOW_MEAN_2STD", "score": 85, "action": "ENTER", "conviction": "HIGH", "z_score": -2.05},
+    {"name": "Defence vs IT", "gate_status": "ABOVE_1STD", "spread_return": 1.2, "reason": "Z_ABOVE_MEAN_1STD", "score": 60, "action": "ENTER", "conviction": "MEDIUM", "z_score": 1.42},
+    {"name": "PSU Banks vs Private", "gate_status": "AT_MEAN", "spread_return": 0.0, "reason": "AT_MEAN", "score": 0, "action": "INACTIVE", "conviction": "NONE", "z_score": -0.02},
+    {"name": "Metals vs Cement", "gate_status": "BELOW_1STD", "spread_return": -0.8, "reason": "Z_BELOW_MEAN_1STD", "score": 50, "action": "ENTER", "conviction": "MEDIUM", "z_score": -1.18},
+    {"name": "Pharma vs Auto", "gate_status": "ABOVE_2STD", "spread_return": 2.5, "reason": "Z_ABOVE_MEAN_2STD", "score": 90, "action": "ENTER", "conviction": "HIGH", "z_score": 2.31}
+  ]
+}
