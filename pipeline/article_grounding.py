@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from pathlib import Path
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -136,6 +137,28 @@ def load_market_context(date_str: str) -> dict:
     return json.loads(dump_path.read_text(encoding="utf-8"))
 
 
+def load_prior_context(date_str: str, max_lookback: int = 5) -> dict | None:
+    """Walk back from date_str - 1 day up to max_lookback days, return first
+    existing daily dump (parsed). Returns None if nothing found in window.
+
+    Missing priors are normal (weekends, holidays, early history) — callers
+    should treat None as "no delta available".
+    """
+    try:
+        anchor = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+    for n in range(1, max_lookback + 1):
+        prior_date = anchor - timedelta(days=n)
+        p = DAILY_DUMP_DIR / f"{prior_date.isoformat()}.json"
+        if p.exists():
+            try:
+                return json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return None
+    return None
+
+
 def _resolve_path(ctx: dict, dotted: str):
     """Walk a dotted path through nested dicts. Return None if any step missing."""
     cur = ctx
@@ -157,25 +180,57 @@ def _format_value(val) -> str:
     return str(val)
 
 
-def build_topic_panel(topic: str, context: dict) -> dict:
+def build_topic_panel(topic: str, context: dict, prior_context: dict | None = None) -> dict:
     """Resolve the topic schema against context.
 
-    Returns {label: formatted_string} ordered as the schema, plus a hidden
-    "_raw" key whose value is {label: float_or_None} for the verifier.
+    Returns {label: formatted_string} ordered as the schema, plus hidden
+    "_raw" ({label: float_or_None}) and "_deltas" ({label: pct_or_None})
+    keys. When prior_context is supplied AND both current and prior values
+    are numeric, the formatted string embeds a day-over-day Δ%:
+        "$95.07 (-7.5%)"   for dollar-kind
+        "23,842.65 (-0.8%)" for index-kind
+    When prior is missing or unavailable for that field, the bare value is
+    shown and _deltas[label] = None.
     """
     if topic not in TOPIC_SCHEMAS:
         raise KeyError(f"unknown topic {topic!r}")
     panel = {}
     raw = {}
+    deltas: dict[str, float | None] = {}
     for label, dotted in TOPIC_SCHEMAS[topic]:
         val = _resolve_path(context, dotted)
         raw[label] = val if isinstance(val, (int, float)) else None
-        # For dollar-denominated commodities prefix with $; for indices/fx leave plain.
+
+        # Resolve prior value for delta (if prior_context given)
+        prior_val = None
+        if prior_context is not None:
+            pv = _resolve_path(prior_context, dotted)
+            if isinstance(pv, (int, float)):
+                prior_val = pv
+
+        delta_pct: float | None = None
+        if (
+            isinstance(val, (int, float))
+            and isinstance(prior_val, (int, float))
+            and prior_val != 0
+        ):
+            delta_pct = (val - prior_val) / prior_val * 100.0
+        deltas[label] = delta_pct
+
+        # Base formatted value
         if val is not None and label in ("Brent", "WTI", "Gold", "Bitcoin", "DXY"):
-            panel[label] = f"${_format_value(val)}"
+            base = f"${_format_value(val)}"
         else:
-            panel[label] = _format_value(val)
+            base = _format_value(val)
+
+        # Append delta suffix when available
+        if delta_pct is not None and base != "—":
+            sign = "+" if delta_pct >= 0 else ""
+            panel[label] = f"{base} ({sign}{delta_pct:.1f}%)"
+        else:
+            panel[label] = base
     panel["_raw"] = raw
+    panel["_deltas"] = deltas
     return panel
 
 
@@ -229,7 +284,7 @@ def verify_narrative(narrative_html: str, panel: dict) -> list[Violation]:
 def render_panel_html(panel: dict, date_str: str) -> str:
     cells = []
     for label, value in panel.items():
-        if label == "_raw":
+        if label in ("_raw", "_deltas"):
             continue
         cells.append(
             f'<div><span class="lbl">{label}</span>'

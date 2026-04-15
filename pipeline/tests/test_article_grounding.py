@@ -16,6 +16,7 @@ from article_grounding import (
 )
 
 FIXTURE = Path(__file__).parent / "fixtures" / "daily_dump_fixture.json"
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
 def _stage_fixture(tmp_path, monkeypatch, name="2026-04-15.json"):
@@ -209,3 +210,41 @@ def test_render_panel_html_renders_dash_for_missing():
     html = render_panel_html(panel, "2026-04-15")
     assert "India VIX" in html
     assert "\u2014" in html
+
+
+def test_panel_includes_delta_when_prior_present(tmp_path):
+    import json as _json
+    from article_grounding import build_topic_panel
+    curr = _json.loads((FIXTURES / "daily_dump_fixture.json").read_text(encoding="utf-8"))
+    prior = _json.loads((FIXTURES / "daily_dump_prior_fixture.json").read_text(encoding="utf-8"))
+    panel = build_topic_panel("war", curr, prior_context=prior)
+    assert "Brent" in panel
+    # Brent fell 102.78 -> 95.07, ~-7.5%
+    assert "-7.5" in panel["Brent"] or "-7.50" in panel["Brent"]
+    # _deltas should be populated and numeric
+    assert "_deltas" in panel
+    assert panel["_deltas"]["Brent"] is not None
+    assert panel["_deltas"]["Brent"] < -5
+
+
+def test_panel_no_delta_when_prior_missing():
+    from article_grounding import build_topic_panel
+    import json as _json
+    curr = _json.loads((FIXTURES / "daily_dump_fixture.json").read_text(encoding="utf-8"))
+    panel = build_topic_panel("war", curr, prior_context=None)
+    # No delta should appear in the Brent string
+    assert "(" not in panel["Brent"] or "%" not in panel["Brent"]
+    assert panel["_deltas"]["Brent"] is None
+
+
+def test_load_prior_context_walks_back_past_missing(tmp_path, monkeypatch):
+    from article_grounding import load_prior_context
+    # Create only day -3 exists
+    daily = tmp_path / "daily"
+    daily.mkdir()
+    (daily / "2026-04-11.json").write_text('{"ok": 1}', encoding="utf-8")
+    monkeypatch.setattr("article_grounding.DAILY_DUMP_DIR", daily)
+    out = load_prior_context("2026-04-14", max_lookback=5)
+    assert out == {"ok": 1}
+    out2 = load_prior_context("2026-04-14", max_lookback=1)
+    assert out2 is None
