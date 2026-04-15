@@ -318,11 +318,20 @@ def _derive_close_reason(sig: dict) -> str:
     """Human-readable close reason from the signal's final state."""
     status = sig.get("status", "")
     dl = sig.get("_data_levels", {}) or {}
+    if status == "STOPPED_OUT_TRAIL":
+        cum = dl.get("cumulative")
+        ts = dl.get("trail_stop")
+        peak = dl.get("peak")
+        budget = dl.get("trail_budget")
+        if all(v is not None for v in (cum, ts, peak, budget)):
+            return (f"Trail stop: cum {cum:+.2f}% <= trail {ts:+.2f}% "
+                    f"(peak {peak:+.2f}% - budget {budget:.2f}%)")
+        return "Trail stop hit"
     if status == "STOPPED_OUT":
         tm = dl.get("todays_move")
         ds = dl.get("daily_stop")
         if tm is not None and ds is not None:
-            return f"Trailing stop: today {tm:+.2f}% ≤ stop {ds:+.2f}%"
+            return f"Trailing stop: today {tm:+.2f}% <= stop {ds:+.2f}%"
         return "Trailing stop hit"
     if status == "STOPPED_OUT_2DAY":
         return "2-day running stop hit (two consecutive losing days)"

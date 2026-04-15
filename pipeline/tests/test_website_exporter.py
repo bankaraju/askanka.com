@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from website_exporter import export_global_regime
+from website_exporter import export_global_regime, _derive_close_reason
 
 FIXTURE = Path(__file__).parent / "fixtures" / "today_regime_fixture.json"
 
@@ -232,3 +232,34 @@ def test_missing_engine_files_returns_empty_lists(tmp_path, monkeypatch):
     assert out["news_driven"] == []
     assert out["regime_zone"] == "UNKNOWN"
     assert out["holiday_mode"] is False
+
+
+# ---------------------------------------------------------------------------
+# _derive_close_reason tests
+# ---------------------------------------------------------------------------
+
+def test_trail_stop_reason_renders_peak_and_budget():
+    sig = {
+        "status": "STOPPED_OUT_TRAIL",
+        "_data_levels": {
+            "cumulative": 5.50,
+            "trail_stop": 5.81,
+            "peak": 7.00,
+            "trail_budget": 1.19,
+        },
+    }
+    reason = _derive_close_reason(sig)
+    assert "Trail stop" in reason
+    assert "5.50" in reason
+    assert "5.81" in reason
+    assert "7.00" in reason
+
+
+def test_daily_stop_reason_unchanged():
+    sig = {
+        "status": "STOPPED_OUT",
+        "_data_levels": {"todays_move": -1.10, "daily_stop": -0.98},
+    }
+    reason = _derive_close_reason(sig)
+    assert "Trailing stop" in reason
+    assert "-1.10" in reason
