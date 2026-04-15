@@ -31,15 +31,10 @@ TOPIC_SCHEMAS = {
         ("India VIX",     "indices.INDIA VIX.close"),
         ("FII flow Cr",   "flows.fii_equity_net"),
     ],
-    "epstein": [
-        ("Dow",           "indices.DJI.close"),
-        ("S&P 500",       "indices.S&P 500.close"),
-        ("VIX (US)",      "volatility.VIX.close"),
-        ("Gold",          "commodities.Gold.close"),
-        ("DXY",           "fx.DXY.close"),
-        ("US 10Y",        "bonds.US10Y.close"),
-        ("Bitcoin",       "crypto.BTC.close"),
-    ],
+    # NOTE: epstein is a political/investigative topic, not a market topic.
+    # It synthesizes YouTube watch history about the Trump impeachment angle
+    # and intentionally does not cite market numbers. It is deliberately
+    # excluded from TOPIC_SCHEMAS so generate_article() skips market grounding.
 }
 
 

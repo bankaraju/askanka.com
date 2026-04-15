@@ -26,7 +26,7 @@ import requests
 
 from article_grounding import (
     load_market_context, build_topic_panel, verify_narrative,
-    render_panel_html, MarketDataMissing,
+    render_panel_html, MarketDataMissing, TOPIC_SCHEMAS,
 )
 
 log = logging.getLogger("anka.daily_articles")
@@ -88,13 +88,21 @@ def generate_article(segment: str, sources: list, date: str) -> str:
     if not ANTHROPIC_API_KEY:
         return ""
 
-    try:
-        ctx = load_market_context(date)
-    except MarketDataMissing as e:
-        log.error(f"Cannot generate {segment} article — market data missing: {e}")
-        return ""
-    panel = build_topic_panel(segment, ctx)
-    panel_lines = "\n".join(f"  - {k}: {v}" for k, v in panel.items() if k != "_raw")
+    # Market-number grounding only applies to market-anchored topics.
+    # Political/investigative topics (e.g. epstein) recontextualize YouTube
+    # watch history and do not cite market data, so we skip the panel and
+    # the verification gate for them.
+    market_grounded = segment in TOPIC_SCHEMAS
+    panel = {}
+    panel_lines = ""
+    if market_grounded:
+        try:
+            ctx = load_market_context(date)
+        except MarketDataMissing as e:
+            log.error(f"Cannot generate {segment} article — market data missing: {e}")
+            return ""
+        panel = build_topic_panel(segment, ctx)
+        panel_lines = "\n".join(f"  - {k}: {v}" for k, v in panel.items() if k != "_raw")
 
     template_path = GIT_REPO / "articles" / "_template" / "regime-engine-defining.html"
     template_excerpt = ""
@@ -117,7 +125,8 @@ def generate_article(segment: str, sources: list, date: str) -> str:
     else:
         log.info(f"No defining-article template at {template_path}; using fallback style")
 
-    grounding_block = f"""
+    if market_grounded:
+        grounding_block = f"""
 # GROUNDING — DO NOT VIOLATE
 The following panel will be displayed to the reader at the top of the article:
 {panel_lines}
@@ -130,6 +139,8 @@ Rules:
    but should not contradict the panel direction.
 4. Articles whose numbers contradict the panel are REJECTED and not published.
 """
+    else:
+        grounding_block = ""
 
     seg_config = {
         "war": {
@@ -238,8 +249,9 @@ Return ONLY a JSON object:
             article = json.loads(raw.strip())
 
             # ── Publish gate: verify narrative against panel ───────────────
+            # Skipped for non-market-grounded topics (e.g. epstein).
             narrative = article.get("body", "")
-            violations = verify_narrative(narrative, panel)
+            violations = verify_narrative(narrative, panel) if market_grounded else []
             if violations:
                 failed_dir = GIT_REPO / "articles" / "_failed"
                 failed_dir.mkdir(parents=True, exist_ok=True)
@@ -263,12 +275,13 @@ Return ONLY a JSON object:
                     pass
                 return ""
 
-            # 0 violations: attach panel HTML for the builder to prepend
-            try:
-                panel_date_display = datetime.strptime(date, "%Y-%m-%d").strftime("%B %d, %Y")
-            except ValueError:
-                panel_date_display = date
-            article["panel_html"] = render_panel_html(panel, date_str=panel_date_display)
+            # 0 violations: attach panel HTML (market-grounded topics only)
+            if market_grounded:
+                try:
+                    panel_date_display = datetime.strptime(date, "%Y-%m-%d").strftime("%B %d, %Y")
+                except ValueError:
+                    panel_date_display = date
+                article["panel_html"] = render_panel_html(panel, date_str=panel_date_display)
             return article
 
         except requests.exceptions.Timeout:
