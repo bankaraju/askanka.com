@@ -496,6 +496,16 @@ def close_signal(
     signal["status"] = reason
     signal["close_timestamp"] = datetime.utcnow().isoformat()
     signal["final_pnl"] = pnl_dict
+    # Populate days_open from the actual open→close span (bug: this was
+    # defaulting to 0, so the track record showed all closed trades as 0-day).
+    try:
+        open_ts = signal.get("open_timestamp") or signal.get("timestamp", "")
+        if open_ts:
+            opened = datetime.fromisoformat(open_ts.replace("Z", "+00:00"))
+            closed = datetime.fromisoformat(signal["close_timestamp"].replace("Z", "+00:00"))
+            signal["days_open"] = max(0, (closed.replace(tzinfo=None) - opened.replace(tzinfo=None)).days)
+    except Exception:
+        pass  # fall back to whatever was set; don't block the close path
 
     # Remove from open
     open_signals = load_open_signals()

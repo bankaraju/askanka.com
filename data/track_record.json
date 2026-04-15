@@ -1,0 +1,47 @@
+{
+  "updated_at": "2026-04-15T16:50:27.479367+05:30",
+  "total_closed": 3,
+  "win_rate_pct": 33.3,
+  "avg_pnl_pct": 1.01,
+  "recent": [
+    {
+      "signal_id": "SIG-2026-03-31-003-Defence_vs_IT",
+      "spread_name": "Defence vs IT",
+      "category": "hormuz",
+      "tier": "SIGNAL",
+      "event_headline": "White House: Reopening Strait of Hormuz Not Vital to Ending Iran War - Time Magazine",
+      "open_date": "2026-04-01",
+      "close_date": "2026-04-15",
+      "days_open": 13,
+      "peak_pnl_pct": 11.11,
+      "final_pnl_pct": 8.66,
+      "close_reason": "Trailing stop: today -1.10% \u2264 stop -0.98%"
+    },
+    {
+      "signal_id": "SIG-2026-04-15-004-Upstream_vs_Downstream",
+      "spread_name": "Upstream vs Downstream",
+      "category": "sanctions",
+      "tier": "SIGNAL",
+      "event_headline": "Delcy Rodriguez calls for a \u2018Venezuela free of sanctions\u2019 amid US detente",
+      "open_date": "2026-04-15",
+      "close_date": "2026-04-15",
+      "days_open": 0,
+      "peak_pnl_pct": 0,
+      "final_pnl_pct": -1.58,
+      "close_reason": "Trailing stop: today -1.58% \u2264 stop -1.25%"
+    },
+    {
+      "signal_id": "SIG-2026-03-31-020-Coal_vs_OMCs",
+      "spread_name": "Coal vs OMCs",
+      "category": "oil_positive",
+      "tier": "SIGNAL",
+      "event_headline": "US crude oil futures rise above $106 a barrel after Kuwaiti tanker attack",
+      "open_date": "2026-04-01",
+      "close_date": "2026-04-08",
+      "days_open": 6,
+      "peak_pnl_pct": 7.07,
+      "final_pnl_pct": -4.04,
+      "close_reason": "Trailing stop: today -4.04% \u2264 stop -1.19%"
+    }
+  ]
+}

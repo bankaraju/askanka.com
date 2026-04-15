@@ -314,6 +314,66 @@ def export_live_status() -> dict:
     }
 
 
+def _derive_close_reason(sig: dict) -> str:
+    """Human-readable close reason from the signal's final state."""
+    status = sig.get("status", "")
+    dl = sig.get("_data_levels", {}) or {}
+    if status == "STOPPED_OUT":
+        tm = dl.get("todays_move")
+        ds = dl.get("daily_stop")
+        if tm is not None and ds is not None:
+            return f"Trailing stop: today {tm:+.2f}% ≤ stop {ds:+.2f}%"
+        return "Trailing stop hit"
+    if status == "STOPPED_OUT_2DAY":
+        return "2-day running stop hit (two consecutive losing days)"
+    if status == "EXPIRED":
+        return "Holding period expired"
+    return status or "Closed"
+
+
+def export_track_record(limit: int = 20) -> dict:
+    """Export the most recent N closed signals for the Track Record section."""
+    closed_raw = _load_json(CLOSED_FILE) or []
+    rows = []
+    for sig in closed_raw:
+        fp = sig.get("final_pnl", {}) or {}
+        rows.append({
+            "signal_id": sig.get("signal_id", ""),
+            "spread_name": sig.get("spread_name", ""),
+            "category": sig.get("category", ""),
+            "tier": sig.get("tier", ""),
+            "event_headline": sig.get("event_headline", ""),
+            "open_date": (sig.get("open_timestamp") or "")[:10],
+            "close_date": (sig.get("close_timestamp") or "")[:10],
+            "days_open": sig.get("days_open", 0) or 0,
+            "peak_pnl_pct": sig.get("peak_spread_pnl_pct", 0) or 0,
+            "final_pnl_pct": fp.get("spread_pnl_pct", 0) or 0,
+            "close_reason": _derive_close_reason(sig),
+        })
+    # Most recent first by close_date desc
+    rows.sort(key=lambda r: r["close_date"], reverse=True)
+    rows = rows[:limit]
+
+    # Aggregate stats over all closed (not just the shown N)
+    all_final = [
+        (s.get("final_pnl") or {}).get("spread_pnl_pct", 0) or 0
+        for s in closed_raw
+    ]
+    wins = sum(1 for p in all_final if p > 0)
+    losses = sum(1 for p in all_final if p <= 0)
+    total = len(all_final)
+    win_rate = (wins / total * 100) if total else 0
+    avg_pnl = (sum(all_final) / total) if total else 0
+
+    return {
+        "updated_at": datetime.now(IST).isoformat(),
+        "total_closed": total,
+        "win_rate_pct": round(win_rate, 1),
+        "avg_pnl_pct": round(avg_pnl, 2),
+        "recent": rows,
+    }
+
+
 def run_export():
     """Run full export to website JSON files."""
     WEBSITE_DIR.mkdir(parents=True, exist_ok=True)
@@ -321,11 +381,13 @@ def run_export():
     regime = export_global_regime()
     live = export_live_status()
     recs = export_today_recommendations()
+    track = export_track_record()
 
     for name, data in [
         ("global_regime.json", regime),
         ("live_status.json", live),
         ("today_recommendations.json", recs),
+        ("track_record.json", track),
     ]:
         path = WEBSITE_DIR / name
         path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
