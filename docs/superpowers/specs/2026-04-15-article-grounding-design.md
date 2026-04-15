@@ -299,6 +299,34 @@ After implementation:
 
 ---
 
+## Library auto-prune (added 2026-04-15 per user directive)
+
+Daily job archives articles older than the retention window:
+
+- **Retention:** 7 days (configurable via `ARTICLE_RETENTION_DAYS` constant)
+- **What "old" means:** article date (parsed from filename `YYYY-MM-DD-{topic}.html`) is more than 7 days before today (IST)
+- **Action:** move file from `articles/` to `articles/_archive/`. Drop entry from `data/articles_index.json`.
+- **Where:** new function `prune_old_articles()` in a new module `pipeline/article_lifecycle.py`. Called at the end of `daily_articles.py` after publish, AND directly from a new bat task `pipeline/scripts/prune_articles.bat` scheduled daily at 04:50 IST (after `daily_articles` at 04:45).
+- **Idempotent:** running twice is a no-op the second time.
+- **Rollback:** archived files are not deleted; they can be moved back to `articles/` and re-indexed if needed.
+
+Tests:
+- `test_prune_keeps_recent` — articles dated within 7 days remain
+- `test_prune_archives_old` — article from 10 days ago moves to `_archive/`
+- `test_prune_updates_index` — `articles_index.json` no longer references archived files
+- `test_prune_idempotent` — running twice doesn't error
+
+## Template-driven generation (added 2026-04-15 per user directive)
+
+The daily generator uses a **single defining article** as a few-shot reference for voice, structure, and the panel-anchored style.
+
+- The defining article is hand-crafted (Phase B, separate from this spec) and lives at `articles/_template/regime-engine-defining.html`.
+- `daily_articles.py` loads this template at the start of each run and includes the headline + first ~400 words in the LLM prompt as: "Match this voice, structure, and ground-anchored style".
+- If the template file is missing, the generator falls back to the previous behavior (no template) and logs a warning.
+- Replacing the template = drop a new file at the same path. No code change.
+
+The template MUST itself pass the grounding verifier — the same `verify_narrative()` checks against the same `build_topic_panel()` output. A template that violates its own rules is rejected at load time.
+
 ## Open questions for Wave 4 (logged, not blocking)
 
 1. Multi-day drift assertions ("Brent has fallen 8% this week") — needs historical context loader and a different verifier rule.
@@ -318,3 +346,6 @@ After implementation:
 - [ ] `pipeline/logs/article_violations.log` records each rejection with date, topic, violation count.
 - [ ] Today's `2026-04-15-war.html` and `2026-04-15-epstein.html` are regenerated (or rejected and human-fixed) using the new pipeline.
 - [ ] Live verification on https://askanka.com — open a published article, see the panel, see numbers in the prose match the panel within tolerance.
+- [ ] `pipeline/article_lifecycle.py` exists with `prune_old_articles()`. All prune tests pass.
+- [ ] `pipeline/scripts/prune_articles.bat` exists and is scheduled at 04:50 IST.
+- [ ] `articles/_template/regime-engine-defining.html` exists and is loaded as the daily few-shot reference. Template itself passes verification.
