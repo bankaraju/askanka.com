@@ -916,6 +916,24 @@
             border-top: 1px solid var(--border);
             margin: 0;
         }
+
+        /* ── Global Regime Score Hero ── */
+        .hero-block { padding: 32px 24px; border-bottom: 1px solid #2a2a2a; }
+        .hero-grid { display: grid; grid-template-columns: auto 1fr 1fr; gap: 32px; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .zone-badge { font-family: 'DM Serif Display', serif; font-size: 48px; padding: 16px 28px; border-radius: 8px; text-align: center; }
+        .zone-badge.RISK-OFF   { background: #3a1818; color: #ff6b6b; }
+        .zone-badge.CAUTION    { background: #3a2a18; color: #ffa94d; }
+        .zone-badge.NEUTRAL    { background: #2a2418; color: #f59e0b; }
+        .zone-badge.RISK-ON    { background: #18331f; color: #69db7c; }
+        .zone-badge.EUPHORIA   { background: #18402b; color: #2fb344; }
+        .zone-badge.UNKNOWN    { background: #222; color: #888; }
+        .zone-detail { font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.7; color: #cfcfcf; }
+        .score-line { font-size: 18px; color: #f3f3f3; }
+        .stability-line { color: #9c9c9c; }
+        .updated-line { color: #6e6e6e; font-size: 12px; }
+        .drivers-title { font-family: 'Inter', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #9c9c9c; margin-bottom: 6px; }
+        #regime-drivers { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #f3f3f3; padding-left: 20px; }
+        @media (max-width: 720px) { .hero-grid { grid-template-columns: 1fr; } .zone-badge { font-size: 36px; } }
     </style>
 </head>
 <body>
@@ -948,6 +966,22 @@
         </div>
 
     </div>
+</section>
+
+<!-- Global Regime Score Hero -->
+<section id="regime-hero" class="hero-block">
+  <div class="hero-grid">
+    <div class="zone-badge" id="regime-zone">—</div>
+    <div class="zone-detail">
+      <div class="score-line">Score: <span id="regime-score">—</span></div>
+      <div class="stability-line" id="regime-stability">—</div>
+      <div class="updated-line">Updated: <span id="regime-updated">—</span></div>
+    </div>
+    <div class="drivers-list">
+      <div class="drivers-title">Top drivers</div>
+      <ol id="regime-drivers"><li>loading…</li></ol>
+    </div>
+  </div>
 </section>
 
 <!-- ══════════════ F&O STOCK NEWS SCROLL ══════════════ -->
@@ -1330,6 +1364,38 @@
         });
 
 })();
+</script>
+
+<!-- ═════════════ GLOBAL REGIME SCORE ═════════════ -->
+<script>
+async function loadGlobalRegime() {
+  try {
+    const res = await fetch('data/global_regime.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const d = await res.json();
+    const zone = d.zone || 'UNKNOWN';
+    document.getElementById('regime-zone').textContent = zone;
+    document.getElementById('regime-zone').className = 'zone-badge ' + zone;
+    document.getElementById('regime-score').textContent = d.score == null ? '—' : Number(d.score).toFixed(1);
+    document.getElementById('regime-stability').textContent =
+      (d.stable ? 'Stable' : 'Shifting') + ' · Day ' + (d.consecutive_days || 0) + ' of ' + zone;
+    document.getElementById('regime-updated').textContent =
+      d.updated_at ? new Date(d.updated_at).toLocaleString('en-IN', { hour12: false }) : '—';
+    const ol = document.getElementById('regime-drivers');
+    ol.innerHTML = '';
+    (d.top_drivers || []).forEach(name => {
+      const li = document.createElement('li');
+      const c = (d.components || {})[name] || {};
+      const contrib = c.contribution != null ? ' (' + Number(c.contribution).toFixed(1) + ')' : '';
+      li.textContent = name + contrib;
+      ol.appendChild(li);
+    });
+  } catch (e) {
+    document.getElementById('regime-zone').textContent = 'OFFLINE';
+  }
+}
+loadGlobalRegime();
+setInterval(loadGlobalRegime, 60000);
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
