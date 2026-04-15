@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-15T16:29:21.766037+05:30",
+  "updated_at": "2026-04-15T16:36:01.677086+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -47,11 +47,11 @@
           "pnl_pct": -0.97
         }
       ],
-      "spread_pnl_pct": 0,
-      "todays_move": 0,
+      "spread_pnl_pct": 0.24,
+      "todays_move": 0.24,
       "daily_stop": 0,
       "two_day_stop": 0,
-      "peak_pnl": 0.0
+      "peak_pnl": 0.24
     }
   ],
   "fragility": {

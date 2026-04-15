@@ -267,19 +267,35 @@ def export_live_status() -> dict:
     positions = []
     for sig in open_sigs:
         dl = sig.get("_data_levels", {})
+        long_mtm  = [_mtm_leg(l, is_long=True)  for l in sig.get("long_legs", [])]
+        short_mtm = [_mtm_leg(s, is_long=False) for s in sig.get("short_legs", [])]
+
+        # Compute spread-level P&L from per-leg MTM when signal_tracker hasn't
+        # yet written _data_levels (which is common for freshly-opened signals).
+        # Average pnl_pct across each side, sum for the spread.
+        def _avg(legs):
+            pnls = [l["pnl_pct"] for l in legs]
+            return sum(pnls) / len(pnls) if pnls else 0.0
+
+        computed_spread_pnl = round(_avg(long_mtm) + _avg(short_mtm), 2)
+        # Prefer tracker's cumulative if it has a non-zero value; fall back to MTM.
+        cumulative = dl.get("cumulative") if dl.get("cumulative") else computed_spread_pnl
+        todays_move = dl.get("todays_move") if dl.get("todays_move") else computed_spread_pnl
+        peak = sig.get("peak_spread_pnl_pct") or computed_spread_pnl
+
         positions.append({
             "signal_id": sig.get("signal_id", ""),
             "spread_name": sig.get("spread_name", ""),
             "category": sig.get("category", ""),
             "tier": sig.get("tier", "SIGNAL"),
             "open_date": sig.get("open_timestamp", "")[:10],
-            "long_legs":  [_mtm_leg(l, is_long=True)  for l in sig.get("long_legs", [])],
-            "short_legs": [_mtm_leg(s, is_long=False) for s in sig.get("short_legs", [])],
-            "spread_pnl_pct": dl.get("cumulative", 0),
-            "todays_move": dl.get("todays_move", 0),
+            "long_legs":  long_mtm,
+            "short_legs": short_mtm,
+            "spread_pnl_pct": cumulative,
+            "todays_move": todays_move,
             "daily_stop": dl.get("daily_stop", 0),
             "two_day_stop": dl.get("two_day_stop", 0),
-            "peak_pnl": sig.get("peak_spread_pnl_pct", 0),
+            "peak_pnl": peak,
         })
 
     fragility = {}

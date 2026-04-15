@@ -94,8 +94,14 @@ def load_state() -> dict:
 
 
 def save_state(state: dict) -> None:
-    """Persist state to disk."""
+    """Persist state to disk.
+
+    Always bumps the `updated` timestamp on write so downstream staleness
+    checks (website_exporter.stale_check) see the actual last-write time,
+    not an old value carried through from a previous state snapshot.
+    """
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    state["updated"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(STATE_PATH, "w") as f:
         json.dump(state, f, indent=2)
 
