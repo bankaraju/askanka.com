@@ -46,3 +46,20 @@ def test_global_regime_missing_file(tmp_path, monkeypatch):
     assert out["zone"] == "UNKNOWN"
     assert out["score"] is None
     assert out["top_drivers"] == []
+
+
+OPEN_SIG_FIXTURE = Path(__file__).parent / "fixtures" / "open_signals_fixture.json"
+
+
+def test_live_status_only_positions_and_fragility(tmp_path, monkeypatch):
+    """Slimmed live_status emits updated_at, positions, fragility — no win/loss/track stats."""
+    monkeypatch.setattr("website_exporter.OPEN_FILE", OPEN_SIG_FIXTURE)
+    monkeypatch.setattr("website_exporter.CLOSED_FILE", tmp_path / "missing.json")
+    monkeypatch.setattr("website_exporter.DATA_DIR", tmp_path)
+    from website_exporter import export_live_status
+    out = export_live_status()
+    assert set(out.keys()) == {"updated_at", "positions", "fragility"}
+    assert len(out["positions"]) == 1
+    pos = out["positions"][0]
+    assert pos["spread_name"] == "Defence vs IT"
+    assert pos["spread_pnl_pct"] == 11.14

@@ -76,25 +76,9 @@ def export_global_regime() -> dict:
 
 
 def export_live_status() -> dict:
-    """Export current pipeline state for the live dashboard."""
+    """Export current open positions for the live dashboard."""
     open_sigs = _load_json(OPEN_FILE)
-    closed_sigs = _load_json(CLOSED_FILE)
-    msi_history = _load_json(MSI_HISTORY)
 
-    # Latest MSI
-    latest_msi = msi_history[-1] if msi_history else {"msi_score": 50, "regime": "MACRO_NEUTRAL"}
-
-    # Stats
-    total_signals = len(open_sigs) + len(closed_sigs)
-    wins = sum(1 for s in closed_sigs if s.get("final_pnl", {}).get("spread_pnl_pct", 0) > 0)
-    losses = len(closed_sigs) - wins
-    win_rate = (wins / len(closed_sigs) * 100) if closed_sigs else 0
-
-    # Cumulative P&L
-    closed_pnls = [s.get("final_pnl", {}).get("spread_pnl_pct", 0) for s in closed_sigs]
-    cumulative_pnl = sum(closed_pnls)
-
-    # Open positions for display
     positions = []
     for sig in open_sigs:
         dl = sig.get("_data_levels", {})
@@ -105,13 +89,11 @@ def export_live_status() -> dict:
             "tier": sig.get("tier", "SIGNAL"),
             "open_date": sig.get("open_timestamp", "")[:10],
             "long_legs": [
-                {"ticker": l["ticker"], "entry": l["price"],
-                 "current": l.get("price", 0)}
+                {"ticker": l["ticker"], "entry": l["price"], "current": l.get("price", 0)}
                 for l in sig.get("long_legs", [])
             ],
             "short_legs": [
-                {"ticker": s["ticker"], "entry": s["price"],
-                 "current": s.get("price", 0)}
+                {"ticker": s["ticker"], "entry": s["price"], "current": s.get("price", 0)}
                 for s in sig.get("short_legs", [])
             ],
             "spread_pnl_pct": dl.get("cumulative", 0),
@@ -121,16 +103,6 @@ def export_live_status() -> dict:
             "peak_pnl": sig.get("peak_spread_pnl_pct", 0),
         })
 
-    # Days active (from first signal)
-    all_dates = []
-    for s in open_sigs + closed_sigs:
-        ts = s.get("open_timestamp", "")
-        if ts:
-            all_dates.append(ts[:10])
-    first_date = min(all_dates) if all_dates else datetime.now(IST).strftime("%Y-%m-%d")
-    days_active = (datetime.now(IST).date() - datetime.strptime(first_date, "%Y-%m-%d").date()).days
-
-    # Fragility scores
     fragility = {}
     frag_file = DATA_DIR / "fragility_scores.json"
     if frag_file.exists():
@@ -142,20 +114,6 @@ def export_live_status() -> dict:
 
     return {
         "updated_at": datetime.now(IST).isoformat(),
-        "msi": {
-            "score": latest_msi.get("msi_score", 50),
-            "regime": latest_msi.get("regime", "MACRO_NEUTRAL"),
-            "date": latest_msi.get("date", ""),
-        },
-        "stats": {
-            "open_positions": len(open_sigs),
-            "total_signals": total_signals,
-            "wins": wins,
-            "losses": losses,
-            "win_rate_pct": round(win_rate, 1),
-            "cumulative_pnl_pct": round(cumulative_pnl, 2),
-            "days_active": days_active,
-        },
         "positions": positions,
         "fragility": fragility,
     }

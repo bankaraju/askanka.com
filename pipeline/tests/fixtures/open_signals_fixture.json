@@ -1,0 +1,13 @@
+[
+  {
+    "signal_id": "DEF_IT_2026-04-12",
+    "spread_name": "Defence vs IT",
+    "category": "REGIME_NEUTRAL",
+    "tier": "SIGNAL",
+    "open_timestamp": "2026-04-12T09:30:00+05:30",
+    "long_legs": [{"ticker": "HAL", "price": 4500.0}],
+    "short_legs": [{"ticker": "INFY", "price": 1800.0}],
+    "_data_levels": {"cumulative": 11.14, "todays_move": 0.4, "daily_stop": -2.0, "two_day_stop": -3.5},
+    "peak_spread_pnl_pct": 12.0
+  }
+]
