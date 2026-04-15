@@ -1,0 +1,26 @@
+{
+  "date": "2026-04-15",
+  "generated_at": "2026-04-15T04:31:00+05:30",
+  "indices": {
+    "S&P 500": {"date": "2026-04-14", "close": 5612.4, "source": "yfinance"},
+    "Nifty 50": {"date": "2026-04-14", "close": 25432.1, "source": "yfinance"},
+    "Nikkei 225": {"date": "2026-04-14", "close": 58162.84, "source": "yfinance"}
+  },
+  "commodities": {
+    "Brent Crude": {"date": "2026-04-14", "open": 95.52, "high": 95.52, "low": 94.84, "close": 95.07, "source": "yfinance"},
+    "WTI Crude": {"date": "2026-04-14", "open": 92.02, "high": 92.5, "low": 91.0, "close": 92.02, "source": "yfinance"},
+    "Gold": {"date": "2026-04-14", "close": 2478.4, "source": "yfinance"}
+  },
+  "fx": {
+    "USD/INR": {"date": "2026-04-14", "close": 83.12, "source": "yfinance"},
+    "USD/JPY": {"date": "2026-04-14", "close": 152.4, "source": "yfinance"},
+    "USD/CNY": {"date": "2026-04-14", "close": 7.18, "source": "yfinance"}
+  },
+  "volatility": {
+    "VIX": {"date": "2026-04-14", "close": 18.36, "source": "eodhd"}
+  },
+  "sector_etfs": {
+    "XLE": {"date": "2026-04-14", "close": 55.95, "name": "Energy Select SPDR"},
+    "ITA": {"date": "2026-04-14", "close": 235.43, "name": "iShares US Aerospace & Defense"}
+  }
+}
