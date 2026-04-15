@@ -108,6 +108,12 @@ _WHITELIST_RULES: list[tuple[re.Pattern, set[str] | None]] = [
     # Percentage-change/move language — only fires for pct_bps extractions
     (re.compile(r"(?:another|up|down|fell?|rose?|gained?|lost?|dropped?|surged?|slipped?|climbed?|slid?|jumped?|eased?)\s+[\d.]+\s*%", re.I), {"pct_bps"}),
     (re.compile(r"[\d.]+\s*%\s+(?:higher|lower|above|below|more|less)", re.I),      {"pct_bps"}),
+    # Regime-context phrasing: period-over-period returns/moves (the ETF engine
+    # feeds these verbatim into the prompt, e.g. "5-day return of -12.65%",
+    # "30-day return of 2.41%", "5d move of 0.54%"). These are regime telemetry,
+    # not price claims, so they must not be flagged as violations.
+    (re.compile(r"\d+[- ]?(?:day|d|month|mo|week|wk|year|yr)s?\s+(?:[\w ]{0,40}?\s+)?(?:return|move|change|performance|decline|drop|fall|gain|rise|rally|slide|loss|surge|jump|advance)\s+of\s+-?[\d.]+\s*%", re.I), {"pct_bps"}),
+    (re.compile(r"-?[\d.]+\s*%\s+(?:over|in)\s+(?:the\s+)?(?:last\s+|past\s+|previous\s+)?\d+[- ]?(?:day|d|month|mo|week|wk|year|yr)s?", re.I), {"pct_bps"}),
 ]
 
 # Keep the old name so existing unit tests (_is_whitelisted) still work unchanged
@@ -229,6 +235,12 @@ def build_topic_panel(topic: str, context: dict, prior_context: dict | None = No
             panel[label] = f"{base} ({sign}{delta_pct:.1f}%)"
         else:
             panel[label] = base
+    # Promote delta magnitudes into _raw so the verifier accepts narrative
+    # citations of them (extractor emits unsigned, so use abs()). Round to
+    # one decimal to match the displayed panel precision.
+    for lbl, dp in deltas.items():
+        if isinstance(dp, (int, float)):
+            raw[f"delta_{lbl}"] = round(abs(dp), 1)
     panel["_raw"] = raw
     panel["_deltas"] = deltas
     return panel
@@ -257,6 +269,10 @@ def verify_narrative(narrative_html: str, panel: dict) -> list[Violation]:
 
     violations = []
     for ext in _extract_numbers(text):
+        # Zero is semantically null — can't match any specific level and can't
+        # contradict direction on its own. "Nifty was flat 0.0%" is safe.
+        if ext.value == 0:
+            continue
         if _is_whitelisted(ext.text_excerpt, ext.value, ext.pattern_kind):
             continue
 

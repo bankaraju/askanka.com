@@ -155,6 +155,13 @@ Rules:
             if regime_path.exists():
                 rg = json.loads(regime_path.read_text(encoding="utf-8"))
                 comp = rg.get("components", {})
+                # Augment panel["_raw"] with regime driver magnitudes so the
+                # verifier treats them as approved panel values (the extractor
+                # emits unsigned pct_bps, so store abs()).
+                for name, c in comp.items():
+                    raw_val = c.get("raw")
+                    if isinstance(raw_val, (int, float)):
+                        panel.setdefault("_raw", {})[f"regime_{name}"] = abs(raw_val)
                 driver_lines = []
                 for name, c in comp.items():
                     raw = c.get("raw")
@@ -173,6 +180,13 @@ Rules:
                 eligible = []
                 if today_regime_path.exists():
                     tr = json.loads(today_regime_path.read_text(encoding="utf-8"))
+                    # Augment _raw with every win-rate surfaced so the LLM can
+                    # cite them verbatim without tripping the verifier.
+                    for sp_name, s in tr.get("eligible_spreads", {}).items():
+                        for k in ("1d_win", "3d_win", "5d_win", "best_win"):
+                            wv = s.get(k)
+                            if isinstance(wv, (int, float)):
+                                panel.setdefault("_raw", {})[f"win_{sp_name}_{k}"] = abs(wv)
                     for name, s in sorted(
                         tr.get("eligible_spreads", {}).items(),
                         key=lambda kv: -(kv[1].get("best_win") or 0),
