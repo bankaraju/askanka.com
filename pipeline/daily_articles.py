@@ -264,7 +264,11 @@ Return ONLY a JSON object:
                 return ""
 
             # 0 violations: attach panel HTML for the builder to prepend
-            article["panel_html"] = render_panel_html(panel, date_str=date)
+            try:
+                panel_date_display = datetime.strptime(date, "%Y-%m-%d").strftime("%B %d, %Y")
+            except ValueError:
+                panel_date_display = date
+            article["panel_html"] = render_panel_html(panel, date_str=panel_date_display)
             return article
 
         except requests.exceptions.Timeout:
@@ -376,7 +380,7 @@ def generate_and_publish(segments=None):
         log.info("  Sources: %d videos", len(sources))
 
         # Generate article
-        article = generate_article(segment, sources, today_display)
+        article = generate_article(segment, sources, today)
         if not article or not article.get("headline"):
             log.warning("  No article generated for %s", segment)
             continue
