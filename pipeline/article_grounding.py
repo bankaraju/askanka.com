@@ -229,3 +229,23 @@ def verify_narrative(narrative_html: str, panel: dict) -> list[Violation]:
             closest_panel_value=(best[1], best[2]) if best else None,
         ))
     return violations
+
+
+def render_panel_html(panel: dict, date_str: str) -> str:
+    cells = []
+    for label, value in panel.items():
+        if label == "_raw":
+            continue
+        cells.append(
+            f'<div><span class="lbl">{label}</span>'
+            f'<span class="val">{value}</span></div>'
+        )
+    return (
+        '<section class="market-anchor">'
+        f'<div class="anchor-title">Today\'s Numbers '
+        f'<span class="anchor-date">{date_str}</span></div>'
+        f'<div class="anchor-grid">{"".join(cells)}</div>'
+        '<div class="anchor-source">Source: NSE / yfinance, last close. '
+        'Numbers in this article must match this panel.</div>'
+        '</section>'
+    )

@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from article_grounding import (
     load_market_context, build_topic_panel, verify_narrative,
+    render_panel_html,
     MarketDataMissing, Violation, TOPIC_SCHEMAS, TOLERANCE_PCT,
 )
 
@@ -186,3 +187,25 @@ def test_verify_index_violation(tmp_path, monkeypatch):
     issues = verify_narrative(text, panel)
     assert len(issues) == 1
     assert issues[0].pattern_kind == "index"
+
+
+def test_render_panel_html_contains_labels_and_values(tmp_path, monkeypatch):
+    panel = {
+        "Brent": "$93.20/bbl",
+        "Nifty 50": "25,432.10",
+        "_raw": {"should": "not appear"},
+    }
+    html = render_panel_html(panel, "2026-04-15")
+    assert "Brent" in html
+    assert "$93.20/bbl" in html
+    assert "Nifty 50" in html
+    assert "25,432.10" in html
+    assert "2026-04-15" in html
+    assert "_raw" not in html
+
+
+def test_render_panel_html_renders_dash_for_missing():
+    panel = {"India VIX": "\u2014"}
+    html = render_panel_html(panel, "2026-04-15")
+    assert "India VIX" in html
+    assert "\u2014" in html
