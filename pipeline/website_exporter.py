@@ -142,7 +142,22 @@ def _build_spread_recs() -> list:
 
 
 def _build_stock_recs() -> list:
-    return []
+    raw = _load_json(RANKER_STATE_FILE) or {}
+    src_ts = raw.get("updated")
+    stale = stale_check(src_ts)
+    out = []
+    for r in raw.get("active_recommendations", []) or []:
+        out.append({
+            "ticker": r.get("ticker", ""),
+            "direction": r.get("direction", ""),
+            "conviction": r.get("conviction", "NONE"),
+            "trigger": r.get("trigger", ""),
+            "source": "ranker",
+            "source_timestamp": src_ts,
+            "is_stale": stale,
+        })
+    out.sort(key=lambda s: -_CONV_RANK.get(s["conviction"], 0))
+    return out[:3]
 
 
 def _build_news_recs() -> list:

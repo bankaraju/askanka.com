@@ -147,3 +147,28 @@ def test_spread_card_fields(monkeypatch):
                               "source_timestamp", "is_stale"}
     assert s["source_timestamp"] == "2026-04-15T09:25:08.000+05:30"
     assert s["is_stale"] in (True, False)
+
+
+def test_stocks_top_3_from_ranker(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    assert len(out["stocks"]) <= 3
+    tickers = [s["ticker"] for s in out["stocks"]]
+    # Fixture: HAL (HIGH), INFY (MED), RELIANCE (MED), ITC (LOW)
+    # ITC (LOW) drops out at top-3
+    assert "HAL" in tickers
+    assert "ITC" not in tickers
+
+
+def test_stock_card_fields(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    s = out["stocks"][0]
+    assert set(s.keys()) == {"ticker", "direction", "conviction", "trigger",
+                              "source", "source_timestamp", "is_stale"}
+    assert s["ticker"] == "HAL"
+    assert s["direction"] == "LONG"
+    assert s["conviction"] == "HIGH"
+    assert s["source"] == "ranker"
