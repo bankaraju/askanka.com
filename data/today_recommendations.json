@@ -1,0 +1,37 @@
+{
+  "updated_at": "2026-04-15T09:50:52.158730+05:30",
+  "regime_zone": "NEUTRAL",
+  "regime_source_timestamp": "2026-04-15T09:25:06.779170+05:30",
+  "spreads": [],
+  "stocks": [
+    {
+      "ticker": "",
+      "direction": "LONG",
+      "conviction": "NONE",
+      "trigger": "",
+      "source": "ranker",
+      "source_timestamp": "2026-04-14 11:08:46",
+      "is_stale": true
+    },
+    {
+      "ticker": "",
+      "direction": "LONG",
+      "conviction": "NONE",
+      "trigger": "",
+      "source": "ranker",
+      "source_timestamp": "2026-04-14 11:08:46",
+      "is_stale": true
+    },
+    {
+      "ticker": "",
+      "direction": "LONG",
+      "conviction": "NONE",
+      "trigger": "",
+      "source": "ranker",
+      "source_timestamp": "2026-04-14 11:08:46",
+      "is_stale": true
+    }
+  ],
+  "news_driven": [],
+  "holiday_mode": false
+}

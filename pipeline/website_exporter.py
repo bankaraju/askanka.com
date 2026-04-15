@@ -244,10 +244,12 @@ def run_export():
 
     regime = export_global_regime()
     live = export_live_status()
+    recs = export_today_recommendations()
 
     for name, data in [
         ("global_regime.json", regime),
         ("live_status.json", live),
+        ("today_recommendations.json", recs),
     ]:
         path = WEBSITE_DIR / name
         path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
@@ -256,6 +258,8 @@ def run_export():
     print(f"\nWebsite data exported to {WEBSITE_DIR}")
     print(f"  Regime zone:    {regime['zone']} (score {regime['score']})")
     print(f"  Open positions: {len(live['positions'])}")
+    print(f"  Recommendations: {len(recs['spreads'])} spreads, "
+          f"{len(recs['stocks'])} stocks, {len(recs['news_driven'])} news")
 
 
 if __name__ == "__main__":
