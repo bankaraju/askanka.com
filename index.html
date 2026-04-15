@@ -934,6 +934,15 @@
         .drivers-title { font-family: 'Inter', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #9c9c9c; margin-bottom: 6px; }
         #regime-drivers { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #f3f3f3; padding-left: 20px; }
         @media (max-width: 720px) { .hero-grid { grid-template-columns: 1fr; } .zone-badge { font-size: 36px; } }
+
+        /* ── Live Positions Table ── */
+        .positions-block { padding: 24px; max-width: 1200px; margin: 0 auto; }
+        .block-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: #f3f3f3; }
+        .positions-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+        .positions-table th, .positions-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #2a2a2a; }
+        .positions-table th { color: #9c9c9c; text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
+        .positions-table td.pos { color: #69db7c; }
+        .positions-table td.neg { color: #ff6b6b; }
     </style>
 </head>
 <body>
@@ -1187,16 +1196,20 @@
 
     <hr class="section-divider">
 
-<!-- ══════════════ ACTIVE POSITIONS ══════════════ -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Active Positions</h2>
-            <span class="badge badge-live"><span class="live-dot" style="width:6px;height:6px;margin-right:2px;"></span> LIVE</span>
-        </div>
-        <div id="positions-container" class="positions-grid">
-            <div class="no-positions">Loading positions...</div>
-        </div>
-    </section>
+<!-- ══════════════ LIVE POSITIONS ══════════════ -->
+<section id="live-positions" class="positions-block">
+  <h2 class="block-title">Live Positions</h2>
+  <table class="positions-table">
+    <thead>
+      <tr>
+        <th>Spread</th><th>Open</th><th>Today's move</th><th>Cumulative</th><th>Peak</th>
+      </tr>
+    </thead>
+    <tbody id="positions-body">
+      <tr><td colspan="5">Loading…</td></tr>
+    </tbody>
+  </table>
+</section>
 
     <hr class="section-divider">
 
@@ -1396,6 +1409,43 @@ async function loadGlobalRegime() {
 }
 loadGlobalRegime();
 setInterval(loadGlobalRegime, 60000);
+</script>
+
+<!-- ═════════════ LIVE POSITIONS ═════════════ -->
+<script>
+async function loadLivePositions() {
+  try {
+    const res = await fetch('data/live_status.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const d = await res.json();
+    const tbody = document.getElementById('positions-body');
+    tbody.innerHTML = '';
+    if (!d.positions || d.positions.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5">No open positions</td></tr>';
+      const openEl = document.getElementById('stat-open');
+      if (openEl) openEl.textContent = '0';
+      return;
+    }
+    const openEl = document.getElementById('stat-open');
+    if (openEl) openEl.textContent = d.positions.length;
+    d.positions.forEach(p => {
+      const tr = document.createElement('tr');
+      const todayCls = p.todays_move >= 0 ? 'pos' : 'neg';
+      const cumCls = p.spread_pnl_pct >= 0 ? 'pos' : 'neg';
+      tr.innerHTML =
+        '<td>' + p.spread_name + '</td>' +
+        '<td>' + p.open_date + '</td>' +
+        '<td class="' + todayCls + '">' + Number(p.todays_move).toFixed(2) + '%</td>' +
+        '<td class="' + cumCls + '">' + Number(p.spread_pnl_pct).toFixed(2) + '%</td>' +
+        '<td>' + Number(p.peak_pnl).toFixed(2) + '%</td>';
+      tbody.appendChild(tr);
+    });
+  } catch (e) {
+    document.getElementById('positions-body').innerHTML = '<tr><td colspan="5">Offline</td></tr>';
+  }
+}
+loadLivePositions();
+setInterval(loadLivePositions, 60000);
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
