@@ -72,7 +72,8 @@ def _signal_with_prices(entry_long, entry_short, peak_pnl, prev_long=None, prev_
 
 class TestTrailStopIntegration:
     def test_trail_stop_fires_when_giving_back_from_peak(self, monkeypatch):
-        # Force known historical levels
+        # Force known historical levels + enable the feature flag for this test
+        monkeypatch.setattr("signal_tracker.TRAIL_STOP_ENABLED", True)
         monkeypatch.setattr(
             "signal_tracker.get_levels_for_spread",
             lambda name: {"daily_std": 2.0, "avg_favorable_move": 2.38},
@@ -88,7 +89,25 @@ class TestTrailStopIntegration:
         status, _ = check_signal_status(sig, prices)
         assert status == "STOPPED_OUT_TRAIL"
 
+    def test_trail_stop_suppressed_when_flag_disabled(self, monkeypatch):
+        # Same setup as the firing test, but flag OFF -> trail must not fire.
+        # Confirms the live gate protects us from untuned parameters.
+        monkeypatch.setattr("signal_tracker.TRAIL_STOP_ENABLED", False)
+        monkeypatch.setattr(
+            "signal_tracker.get_levels_for_spread",
+            lambda name: {"daily_std": 2.0, "avg_favorable_move": 2.38},
+        )
+        sig = _signal_with_prices(
+            entry_long=100.0, entry_short=100.0,
+            peak_pnl=7.0,
+            prev_long=104.0, prev_short=101.0,
+        )
+        prices = {"HAL": 103.0, "TCS": 102.0}
+        status, _ = check_signal_status(sig, prices)
+        assert status != "STOPPED_OUT_TRAIL"
+
     def test_trail_stop_holds_near_peak(self, monkeypatch):
+        monkeypatch.setattr("signal_tracker.TRAIL_STOP_ENABLED", True)
         # Cum at +6.5%, peak +7%, budget 1.19 -> trail = 5.81 -> HOLD
         monkeypatch.setattr(
             "signal_tracker.get_levels_for_spread",

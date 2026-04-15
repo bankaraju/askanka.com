@@ -6,6 +6,15 @@ P&L tracking, lifecycle management, and monitoring for trading signals.
 import json
 import logging
 import math
+
+# Feature flag: the trail-stop cascade is RESEARCH-ONLY until the parameter
+# sweep runs on a real sample size (~200+ synthetic trades from spread-return
+# history). A 3-trade sweep on 2026-04-15 showed no parameter set beats doing
+# nothing — naive trail cuts winners before they run and can't save one-bar
+# gap-down losers. Replay + sweep scripts in pipeline/autoresearch/ still
+# consume compute_trail_budget and trail_stop_triggered directly, so those
+# helpers stay wired; only the live exit rule is gated.
+TRAIL_STOP_ENABLED = False
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -517,9 +526,9 @@ def check_signal_status(
 
     # ── EXIT 0: TRAIL STOP ─────────────────────────────────
     # Peak-relative give-back using historic favorable-move distribution.
-    # Checked FIRST so it protects accumulated gains before the daily stop
-    # (which is insensitive to peak) can let profit slip back to negative.
-    if trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget):
+    # Gated behind TRAIL_STOP_ENABLED — off by default until parameters
+    # are validated on a real backtest sample. See module-level comment.
+    if TRAIL_STOP_ENABLED and trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget):
         log.info(
             f"Signal {signal.get('signal_id')}: TRAIL STOP "
             f"(cum {cumulative_spread:+.2f}% <= trail {trail_stop:+.2f}%, "
