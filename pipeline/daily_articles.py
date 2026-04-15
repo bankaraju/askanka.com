@@ -24,6 +24,11 @@ from pathlib import Path
 
 import requests
 
+from article_grounding import (
+    load_market_context, build_topic_panel, verify_narrative,
+    render_panel_html, MarketDataMissing,
+)
+
 log = logging.getLogger("anka.daily_articles")
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -82,6 +87,28 @@ def generate_article(segment: str, sources: list, date: str) -> str:
     """Generate a provocative daily article from source headlines."""
     if not ANTHROPIC_API_KEY:
         return ""
+
+    try:
+        ctx = load_market_context(date)
+    except MarketDataMissing as e:
+        log.error(f"Cannot generate {segment} article — market data missing: {e}")
+        return ""
+    panel = build_topic_panel(segment, ctx)
+    panel_lines = "\n".join(f"  - {k}: {v}" for k, v in panel.items() if k != "_raw")
+
+    grounding_block = f"""
+# GROUNDING — DO NOT VIOLATE
+The following panel will be displayed to the reader at the top of the article:
+{panel_lines}
+
+Rules:
+1. Every market number you cite (oil, gold, indices, currencies, yields) must match
+   the panel within ±2%.
+2. If a number you want to cite is NOT in the panel, OMIT it. Do not invent.
+3. Non-market figures (population %, retail prices ₹/liter, forecasts) are allowed
+   but should not contradict the panel direction.
+4. Articles whose numbers contradict the panel are REJECTED and not published.
+"""
 
     seg_config = {
         "war": {
@@ -147,6 +174,7 @@ REQUIREMENTS:
 9. Include at least ONE specific number or data point per paragraph
 10. Reference specific stocks or sectors where actionable
 
+{grounding_block}
 OUTPUT FORMAT:
 Return ONLY a JSON object:
 {{"headline": "...", "body": "full article with \\n\\n between paragraphs", "sources": ["channel1", "channel2"]}}
