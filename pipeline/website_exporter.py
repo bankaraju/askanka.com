@@ -147,16 +147,29 @@ def _build_stock_recs() -> list:
     stale = stale_check(src_ts)
     out = []
     for r in raw.get("active_recommendations", []) or []:
+        drift = r.get("drift_5d_mean", 0) or 0
+        abs_drift = abs(drift)
+        if abs_drift >= 0.30:
+            conviction = "HIGH"
+        elif abs_drift >= 0.15:
+            conviction = "MEDIUM"
+        else:
+            conviction = "LOW"
         out.append({
-            "ticker": r.get("ticker", ""),
+            "ticker": r.get("symbol", ""),
             "direction": r.get("direction", ""),
-            "conviction": r.get("conviction", "NONE"),
-            "trigger": r.get("trigger", ""),
+            "conviction": conviction,
+            "trigger": r.get("regime", ""),
             "source": "ranker",
             "source_timestamp": src_ts,
             "is_stale": stale,
+            "hit_rate": r.get("hit_rate", 0),
+            "episodes": r.get("episodes", 0),
+            "_abs_drift": abs_drift,
         })
-    out.sort(key=lambda s: -_CONV_RANK.get(s["conviction"], 0))
+    out.sort(key=lambda s: (-_CONV_RANK.get(s["conviction"], 0), -s["_abs_drift"]))
+    for card in out:
+        card.pop("_abs_drift", None)
     return out[:3]
 
 

@@ -1416,7 +1416,9 @@ function renderStockCard(s) {
     '<div class="name"><span class="dir-' + s.direction + '">' + s.direction + '</span> ' +
     s.ticker + stalePill(s) + '</div>' +
     '<div class="meta"><span class="conv-' + s.conviction + '">' + s.conviction + '</span>' +
-    ' &middot; ' + s.trigger + '</div>' +
+    ' &middot; ' + s.trigger + ' regime</div>' +
+    '<div class="meta">hit ' + Math.round((s.hit_rate || 0) * 100) + '%' +
+    ' &middot; ' + (s.episodes || 0) + ' precedents</div>' +
     '</div>';
 }
 

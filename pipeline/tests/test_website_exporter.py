@@ -167,11 +167,15 @@ def test_stock_card_fields(monkeypatch):
     out = export_today_recommendations()
     s = out["stocks"][0]
     assert set(s.keys()) == {"ticker", "direction", "conviction", "trigger",
-                              "source", "source_timestamp", "is_stale"}
+                              "source", "source_timestamp", "is_stale",
+                              "hit_rate", "episodes"}
     assert s["ticker"] == "HAL"
     assert s["direction"] == "LONG"
     assert s["conviction"] == "HIGH"
+    assert s["trigger"] == "NEUTRAL"
     assert s["source"] == "ranker"
+    assert s["hit_rate"] == 1.0
+    assert s["episodes"] == 3
 
 
 def test_news_only_today_events(monkeypatch):

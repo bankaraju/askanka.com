@@ -1,35 +1,41 @@
 {
-  "updated_at": "2026-04-15T09:50:52.158730+05:30",
+  "updated_at": "2026-04-15T10:03:44.553082+05:30",
   "regime_zone": "NEUTRAL",
   "regime_source_timestamp": "2026-04-15T09:25:06.779170+05:30",
   "spreads": [],
   "stocks": [
     {
-      "ticker": "",
+      "ticker": "KAYNES",
       "direction": "LONG",
-      "conviction": "NONE",
-      "trigger": "",
+      "conviction": "HIGH",
+      "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-14 11:08:46",
-      "is_stale": true
+      "is_stale": true,
+      "hit_rate": 1.0,
+      "episodes": 1
     },
     {
-      "ticker": "",
+      "ticker": "PGEL",
       "direction": "LONG",
-      "conviction": "NONE",
-      "trigger": "",
+      "conviction": "HIGH",
+      "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-14 11:08:46",
-      "is_stale": true
+      "is_stale": true,
+      "hit_rate": 1.0,
+      "episodes": 1
     },
     {
-      "ticker": "",
+      "ticker": "MOTILALOFS",
       "direction": "LONG",
-      "conviction": "NONE",
-      "trigger": "",
+      "conviction": "MEDIUM",
+      "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-14 11:08:46",
-      "is_stale": true
+      "is_stale": true,
+      "hit_rate": 1.0,
+      "episodes": 1
     }
   ],
   "news_driven": [],
