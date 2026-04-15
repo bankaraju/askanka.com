@@ -63,3 +63,30 @@ def test_live_status_only_positions_and_fragility(tmp_path, monkeypatch):
     pos = out["positions"][0]
     assert pos["spread_name"] == "Defence vs IT"
     assert pos["spread_pnl_pct"] == 11.14
+
+
+from datetime import datetime, timedelta, timezone
+
+IST = timezone(timedelta(hours=5, minutes=30))
+
+
+def test_stale_check_recent_returns_false():
+    from website_exporter import stale_check
+    recent = (datetime.now(IST) - timedelta(hours=1)).isoformat()
+    assert stale_check(recent) is False
+
+
+def test_stale_check_old_returns_true():
+    from website_exporter import stale_check
+    old = (datetime.now(IST) - timedelta(hours=5)).isoformat()
+    assert stale_check(old) is True
+
+
+def test_stale_check_none_returns_true():
+    from website_exporter import stale_check
+    assert stale_check(None) is True
+
+
+def test_stale_check_empty_string_returns_true():
+    from website_exporter import stale_check
+    assert stale_check("") is True

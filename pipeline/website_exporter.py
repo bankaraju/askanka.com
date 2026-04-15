@@ -23,6 +23,11 @@ WEBSITE_DIR = Path(__file__).parent.parent / "data"  # askanka.com/data/ when sy
 OPEN_FILE = SIGNALS_DIR / "open_signals.json"
 CLOSED_FILE = SIGNALS_DIR / "closed_signals.json"
 TODAY_REGIME_FILE = DATA_DIR / "today_regime.json"
+RECOMMENDATIONS_FILE = DATA_DIR / "recommendations.json"
+RANKER_STATE_FILE = DATA_DIR / "regime_ranker_state.json"
+NEWS_EVENTS_FILE = DATA_DIR / "news_events_today.json"
+NEWS_VERDICTS_FILE = DATA_DIR / "news_verdicts.json"
+STALE_HOURS = 4
 
 
 def _load_json(path: Path) -> list | dict:
@@ -32,6 +37,20 @@ def _load_json(path: Path) -> list | dict:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return [] if "signal" in path.name else {}
+
+
+def stale_check(timestamp_str) -> bool:
+    """Return True if the given ISO timestamp is older than STALE_HOURS or unparseable."""
+    if not timestamp_str:
+        return True
+    try:
+        ts = datetime.fromisoformat(timestamp_str)
+    except (ValueError, TypeError):
+        return True
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=IST)
+    age = datetime.now(IST) - ts
+    return age > timedelta(hours=STALE_HOURS)
 
 
 def export_global_regime() -> dict:
