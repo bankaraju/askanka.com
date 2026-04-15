@@ -29,6 +29,11 @@ NEWS_EVENTS_FILE = DATA_DIR / "news_events_today.json"
 NEWS_VERDICTS_FILE = DATA_DIR / "news_verdicts.json"
 STALE_HOURS = 4
 
+# A hit-rate is only trustworthy with enough precedents. "100% after 1 occurrence"
+# is noise, not signal. Cards below this threshold are marked not-meaningful and
+# demoted in the sort so robust samples outrank lucky ones.
+MIN_PRECEDENTS = 5
+
 
 def _load_json(path: Path) -> list | dict:
     if not path.exists():
@@ -155,6 +160,7 @@ def _build_stock_recs() -> list:
             conviction = "MEDIUM"
         else:
             conviction = "LOW"
+        episodes = r.get("episodes", 0) or 0
         out.append({
             "ticker": r.get("symbol", ""),
             "direction": r.get("direction", ""),
@@ -164,10 +170,16 @@ def _build_stock_recs() -> list:
             "source_timestamp": src_ts,
             "is_stale": stale,
             "hit_rate": r.get("hit_rate", 0),
-            "episodes": r.get("episodes", 0),
+            "episodes": episodes,
+            "hit_rate_meaningful": episodes >= MIN_PRECEDENTS,
             "_abs_drift": abs_drift,
         })
-    out.sort(key=lambda s: (-_CONV_RANK.get(s["conviction"], 0), -s["_abs_drift"]))
+    # Demote non-meaningful hit-rates so robust samples rank above lucky ones.
+    out.sort(key=lambda s: (
+        -int(s["hit_rate_meaningful"]),
+        -_CONV_RANK.get(s["conviction"], 0),
+        -s["_abs_drift"],
+    ))
     for card in out:
         card.pop("_abs_drift", None)
     return out[:3]
@@ -192,6 +204,7 @@ def _build_news_recs() -> list:
             continue
         if v.get("recommendation") not in ("BUY", "SELL"):
             continue
+        precedents = v.get("precedent_count", 0) or 0
         out.append({
             "ticker": ev.get("symbol", ""),
             "headline": ev.get("title", ""),
@@ -199,11 +212,16 @@ def _build_news_recs() -> list:
             "direction": v.get("direction", ""),
             "shelf_days": v.get("shelf_days", 0),
             "historical_hit_rate": v.get("historical_hit_rate", 0),
-            "precedent_count": v.get("precedent_count", 0),
+            "precedent_count": precedents,
+            "hit_rate_meaningful": precedents >= MIN_PRECEDENTS,
             "source_timestamp": src_ts,
             "is_stale": stale,
         })
-    out.sort(key=lambda n: -(n.get("historical_hit_rate") or 0))
+    # Meaningful rates rank above lucky 100%@1 cards.
+    out.sort(key=lambda n: (
+        -int(n["hit_rate_meaningful"]),
+        -(n.get("historical_hit_rate") or 0),
+    ))
     return out[:3]
 
 

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-15T16:08:50.000492+05:30",
+  "updated_at": "2026-04-15T16:29:21.808899+05:30",
   "regime_zone": "NEUTRAL",
   "regime_source_timestamp": "2026-04-15T09:25:06.779170+05:30",
   "spreads": [],
@@ -13,7 +13,8 @@
       "source_timestamp": "2026-04-14 11:08:46",
       "is_stale": true,
       "hit_rate": 1.0,
-      "episodes": 1
+      "episodes": 1,
+      "hit_rate_meaningful": false
     },
     {
       "ticker": "PGEL",
@@ -24,7 +25,8 @@
       "source_timestamp": "2026-04-14 11:08:46",
       "is_stale": true,
       "hit_rate": 1.0,
-      "episodes": 1
+      "episodes": 1,
+      "hit_rate_meaningful": false
     },
     {
       "ticker": "MOTILALOFS",
@@ -35,7 +37,8 @@
       "source_timestamp": "2026-04-14 11:08:46",
       "is_stale": true,
       "hit_rate": 1.0,
-      "episodes": 1
+      "episodes": 1,
+      "hit_rate_meaningful": false
     }
   ],
   "news_driven": [],

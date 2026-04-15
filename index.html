@@ -914,6 +914,7 @@
         .rec-card .conv-LOW    { color: #9c9c9c; }
         .rec-card .dir-LONG  { color: #69db7c; }
         .rec-card .dir-SHORT { color: #ff6b6b; }
+        .rec-card .low-conf  { color: #f59e0b; font-style: italic; }
         .rec-empty { color: #6e6e6e; font-size: 12px; font-style: italic; }
     </style>
 </head>
@@ -1411,14 +1412,23 @@ function renderSpreadCard(s) {
     '</div>';
 }
 
+function hitRateLine(meaningful, rate, count, suffix) {
+  // meaningful: show the % with sample size
+  // not meaningful: show "low confidence (n=N)" — honest about insufficient sample
+  if (meaningful) {
+    return 'hit ' + Math.round((rate || 0) * 100) + '% &middot; ' +
+           (count || 0) + ' precedents' + (suffix || '');
+  }
+  return '<span class="low-conf">low confidence (n=' + (count || 0) + ')</span>' + (suffix || '');
+}
+
 function renderStockCard(s) {
   return '<div class="rec-card">' +
     '<div class="name"><span class="dir-' + s.direction + '">' + s.direction + '</span> ' +
     s.ticker + stalePill(s) + '</div>' +
     '<div class="meta"><span class="conv-' + s.conviction + '">' + s.conviction + '</span>' +
     ' &middot; ' + s.trigger + ' regime</div>' +
-    '<div class="meta">hit ' + Math.round((s.hit_rate || 0) * 100) + '%' +
-    ' &middot; ' + (s.episodes || 0) + ' precedents</div>' +
+    '<div class="meta">' + hitRateLine(s.hit_rate_meaningful, s.hit_rate, s.episodes, '') + '</div>' +
     '</div>';
 }
 
@@ -1427,8 +1437,8 @@ function renderNewsCard(n) {
     '<div class="name"><span class="dir-' + n.direction + '">' + n.direction + '</span> ' +
     n.ticker + stalePill(n) + '</div>' +
     '<div class="meta">' + n.headline + '</div>' +
-    '<div class="meta">hit ' + Math.round(n.historical_hit_rate * 100) + '%' +
-    ' &middot; ' + n.precedent_count + ' precedents &middot; ' + n.shelf_days + 'd shelf</div>' +
+    '<div class="meta">' + hitRateLine(n.hit_rate_meaningful, n.historical_hit_rate, n.precedent_count,
+      ' &middot; ' + n.shelf_days + 'd shelf') + '</div>' +
     '</div>';
 }
 
