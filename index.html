@@ -46,30 +46,6 @@
         .section { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .section.visible { opacity: 1; transform: translateY(0); }
 
-        /* ── Live signal ticker ── */
-        .signal-ticker {
-            overflow: hidden;
-            background: rgba(212,168,85,0.06);
-            border-top: 1px solid rgba(212,168,85,0.1);
-            border-bottom: 1px solid rgba(212,168,85,0.1);
-            padding: 8px 0;
-            white-space: nowrap;
-        }
-        .signal-ticker-inner {
-            display: inline-block;
-            animation: ticker-scroll 30s linear infinite;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-        .signal-ticker-inner .up { color: #10b981; }
-        .signal-ticker-inner .down { color: #ef4444; }
-        .signal-ticker-inner .gold { color: #d4a855; }
-        .signal-ticker-inner .sep { color: #2a2a2a; margin: 0 20px; }
-        @keyframes ticker-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
 
         /* ── F&O News Scroll ── */
         .news-scroll-section {
@@ -138,18 +114,6 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* ── MSI background glow (scroll-triggered) ── */
-        .msi-bg-glow {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.03;
-            transition: background 2s ease;
-        }
-        .msi-bg-glow.calm { background: radial-gradient(ellipse at 50% 0%, #10b981, transparent 70%); }
-        .msi-bg-glow.neutral { background: radial-gradient(ellipse at 50% 0%, #f59e0b, transparent 70%); }
-        .msi-bg-glow.stress { background: radial-gradient(ellipse at 50% 0%, #ef4444, transparent 70%); }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -298,76 +262,6 @@
             margin-top: 2px;
         }
 
-        .hero-row {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        /* ── MSI Gauge ── */
-        .msi-gauge-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .msi-gauge {
-            position: relative;
-            width: 240px;
-            height: 130px;
-            overflow: hidden;
-        }
-
-        .msi-gauge svg { width: 240px; height: 130px; }
-
-        .msi-gauge-label {
-            font-family: 'DM Serif Display', Georgia, serif;
-            font-size: 16px;
-            color: #d1d5db;
-            letter-spacing: 0.5px;
-        }
-
-        .msi-score-display {
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-        }
-
-        .msi-score-display .score {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 42px;
-            font-weight: 800;
-            text-shadow: 0 0 20px rgba(212,168,85,0.3);
-        }
-
-        .msi-context {
-            font-size: 12px;
-            color: #6b7280;
-            text-align: center;
-            max-width: 280px;
-            line-height: 1.5;
-        }
-
-        .msi-scale-labels {
-            display: flex;
-            justify-content: space-between;
-            width: 240px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: -4px;
-        }
-        .msi-scale-labels .calm { color: #10b981; }
-        .msi-scale-labels .neutral { color: #f59e0b; }
-        .msi-scale-labels .stress { color: #ef4444; }
-
         .regime-badge {
             display: inline-flex;
             align-items: center;
@@ -405,39 +299,6 @@
             gap: 8px;
         }
 
-        .telegram-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #d4a855, #b8860b);
-            color: #0a0e1a;
-            font-weight: 700;
-            font-size: 15px;
-            border-radius: 12px;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(212, 168, 85, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .telegram-cta::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            transition: left 0.5s;
-        }
-
-        .telegram-cta:hover::before { left: 100%; }
-
-        .telegram-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(212, 168, 85, 0.4);
-        }
-
-        .telegram-cta svg { width: 20px; height: 20px; fill: #0a0e1a; }
 
         /* ── Stats Bar ── */
         .stats-bar {
@@ -688,85 +549,6 @@
 
         .no-positions .icon { font-size: 32px; margin-bottom: 12px; }
 
-        /* ── MSI Chart ── */
-        .msi-chart-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 24px;
-            overflow: hidden;
-            max-width: 100%;
-        }
-        .msi-chart-container .js-plotly-plot { max-width: 100% !important; }
-        .msi-chart-container .plotly { max-width: 100% !important; }
-
-        #msi-chart { width: 100%; height: 300px; }
-
-        /* ── Track Record ── */
-        .track-record-table-wrap {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .track-record-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .track-record-table th {
-            background: rgba(30, 41, 59, 0.5);
-            padding: 14px 16px;
-            text-align: left;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            user-select: none;
-            white-space: nowrap;
-        }
-
-        .track-record-table th:hover { color: var(--text-secondary); }
-
-        .track-record-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-        }
-
-        .track-record-table tr:last-child td { border-bottom: none; }
-
-        .result-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .result-win { background: var(--accent-green-dim); color: var(--accent-green); }
-        .result-loss { background: var(--accent-red-dim); color: var(--accent-red); }
-
-        .track-empty {
-            text-align: center;
-            padding: 48px 24px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-secondary);
-        }
-
-        .summary-row td {
-            font-weight: 700;
-            background: rgba(30, 41, 59, 0.3);
-        }
-
-        /* ── Heatmap ── */
         /* ── Signal Explorer ── */
         .signal-container {
             background: linear-gradient(160deg, #0f1629, #111827);
@@ -843,61 +625,10 @@
 
         .signal-no-results { text-align: center; padding: 80px 20px; color: #6b7280; font-size: 14px; }
 
-        /* Grid view (inside signal container) */
-        .signal-grid-view { display: none; padding: 24px; overflow-x: auto; }
-
-        /* Brighter grid cell colors */
-        .heatmap-container { padding: 0; background: transparent; border: none; border-radius: 0; overflow-x: auto; }
-        .heatmap-table { border-collapse: separate; border-spacing: 3px; min-width: 100%; }
-        .heatmap-table th { padding: 6px 5px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; font-weight: 600; white-space: nowrap; }
-        .heatmap-table th.row-header { text-align: right; padding-right: 16px; font-size: 12px; font-weight: 600; color: #9ca3af; min-width: 220px; position: sticky; left: 0; background: #111827; z-index: 2; }
-        .heatmap-table tbody tr { transition: all 0.2s; }
-        .heatmap-table tbody tr:hover { background: rgba(212,168,85,0.03); }
-        .heatmap-table tbody tr:hover th.row-header { color: #d4a855; }
-        .heatmap-table thead th { position: sticky; top: 0; background: #111827; z-index: 1; writing-mode: vertical-lr; transform: rotate(180deg); text-align: left; padding: 12px 6px; height: 120px; font-size: 10px; color: #6b7280; }
-        .heatmap-table thead th:first-child { writing-mode: horizontal-tb; transform: none; text-align: right; }
-        .heatmap-cell { width: 50px; height: 36px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: default; transition: all 0.25s; padding: 0 2px; }
-        .heatmap-cell:hover { transform: scale(1.25); z-index: 5; box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
-        .heatmap-cell.no-data { background: transparent; color: transparent; }
-        .heatmap-cell.zero { background: rgba(255,255,255,0.02); color: transparent; }
-        .heatmap-cell.low { background: rgba(239,68,68,0.25); color: #f87171; }
-        .heatmap-cell.mid { background: rgba(16,185,129,0.2); color: #6ee7b7; }
-        .heatmap-cell.high { background: rgba(16,185,129,0.35); color: #34d399; box-shadow: inset 0 0 0 1px rgba(16,185,129,0.2); }
-        .heatmap-cell.elite { background: linear-gradient(135deg, rgba(212,168,85,0.35), rgba(212,168,85,0.2)); color: #f5c563; box-shadow: inset 0 0 0 1px rgba(212,168,85,0.4), 0 0 8px rgba(212,168,85,0.15); }
-
         @media (max-width: 768px) {
             .signal-explorer { flex-direction: column; }
             .event-sidebar { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 20px 16px; }
             .result-bar-wrap { display: none; }
-        }
-
-        .heatmap-note {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-
-        .heatmap-legend {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .legend-swatch {
-            width: 16px;
-            height: 12px;
-            border-radius: 2px;
         }
 
         /* ── Reports ── */
@@ -1103,9 +834,6 @@
             .section { padding: 32px 0; }
             .section-header h2 { font-size: 20px; }
             .container { padding: 0 16px; }
-            /* Charts: force responsive width */
-            .msi-chart-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .msi-chart-container > div { min-width: 100% !important; }
             /* Signal Explorer mobile */
             .signal-explorer { flex-direction: column; min-height: auto; }
             .event-sidebar { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 4px; }
@@ -1120,10 +848,6 @@
             .result-bar-wrap { display: none; }
             .result-rank { width: 22px; font-size: 11px; }
             .signal-footer { flex-direction: column; text-align: center; gap: 8px; }
-            /* Heatmap grid mobile */
-            .signal-grid-view { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .heatmap-cell { width: 40px; height: 30px; font-size: 11px; }
-            .heatmap-table th.row-header { min-width: 160px; font-size: 10px; }
             /* Report cards */
             .report-hero h3 { font-size: 22px; }
             .report-hero p { font-size: 13px; }
@@ -1223,79 +947,8 @@
             <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">Regime Zones</div></div>
         </div>
 
-        <div class="hero-row">
-            <div class="msi-gauge-wrap">
-                <div class="msi-gauge-label">Global Regime Score</div>
-                <div class="msi-gauge" id="msi-gauge">
-                    <svg viewBox="0 0 240 130">
-                        <!-- Background arc segments — thicker, brighter -->
-                        <path d="M 20 120 A 100 100 0 0 1 92 25" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
-                        <path d="M 92 25 A 100 100 0 0 1 148 25" fill="none" stroke="#f59e0b" stroke-width="14" opacity="0.5"/>
-                        <path d="M 148 25 A 100 100 0 0 1 220 120" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
-                        <!-- Active arc glow layer -->
-                        <path d="M 20 120 A 100 100 0 0 1 92 25" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" opacity="0.15" filter="blur(4px)"/>
-                        <path d="M 148 25 A 100 100 0 0 1 220 120" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round" opacity="0.15" filter="blur(4px)"/>
-                        <!-- Needle -->
-                        <line id="msi-needle" x1="120" y1="120" x2="120" y2="28" stroke="#f1f5f9" stroke-width="3" stroke-linecap="round" transform="rotate(-90, 120, 120)"/>
-                        <circle cx="120" cy="120" r="6" fill="#d4a855"/>
-                        <circle cx="120" cy="120" r="3" fill="#0a0e1a"/>
-                    </svg>
-                    <div class="msi-score-display">
-                        <div class="score" id="msi-score">--</div>
-                    </div>
-                </div>
-                <div class="msi-scale-labels">
-                    <span class="calm">Risk-On</span>
-                    <span class="neutral">Neutral</span>
-                    <span class="stress">Risk-Off</span>
-                </div>
-                <div class="msi-context" id="msi-context">31 global ETFs: credit, equity, commodity, currency, and volatility flows</div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-                <div id="regime-badge" class="regime-badge regime-MACRO_NEUTRAL">
-                    <span class="live-dot"></span>
-                    <span id="regime-text">LOADING</span>
-                </div>
-                <div class="updated-time">
-                    <span class="live-dot"></span>
-                    <span>Last updated: <span id="updated-time" class="mono">--:--</span> IST</span>
-                </div>
-                <div style="margin-top:8px; font-size:11px; color:#6b7280; max-width:220px; text-align:center; line-height:1.4;">
-                    Unified Regime Engine v2 &mdash; shadow validated daily until May 5. <a href="research/autoresearch.html" style="color:#d4a855; text-decoration:none;">Read methodology &rarr;</a>
-                </div>
-            </div>
-        </div>
-
-        <a href="https://t.me/ANKASIGNALS" target="_blank" class="telegram-cta">
-            <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 1 0 24 12.056A12.014 12.014 0 0 0 11.944 0Zm5.654 8.22l-1.7 8.01c-.128.6-.462.746-.937.464l-2.588-1.908l-1.248 1.2a.65.65 0 0 1-.52.254l.186-2.636 4.8-4.338c.209-.186-.045-.29-.324-.104l-5.936 3.738l-2.556-.8c-.556-.174-.568-.556.116-.824l9.992-3.852c.462-.168.868.112.716.796Z"/></svg>
-            Join @ANKASIGNALS
-        </a>
     </div>
 </section>
-
-<!-- ══════════════ MSI BACKGROUND GLOW ══════════════ -->
-<div class="msi-bg-glow neutral" id="msi-bg-glow"></div>
-
-<!-- ══════════════ SIGNAL TICKER ══════════════ -->
-<div class="signal-ticker">
-    <div class="signal-ticker-inner" id="signal-ticker">
-        <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
-        <span>Regime: <span id="ticker-msi">--</span>/100</span><span class="sep">|</span>
-        <span>Defence vs IT: <span class="up" id="ticker-dit">+3.3%</span></span><span class="sep">|</span>
-        <span>Coal vs OMCs: <span class="up" id="ticker-coal">+3.8%</span></span><span class="sep">|</span>
-        <span>PCR: <span id="ticker-pcr">1.32</span></span><span class="sep">|</span>
-        <span>VIX: <span id="ticker-vix">25.5</span></span><span class="sep">|</span>
-        <span>Nifty Pin: <span class="gold" id="ticker-pin">22,800</span></span><span class="sep">|</span>
-        <span class="gold">ANKA RESEARCH</span><span class="sep">|</span>
-        <span>Regime: <span>--</span>/100</span><span class="sep">|</span>
-        <span>Defence vs IT: <span class="up">+3.3%</span></span><span class="sep">|</span>
-        <span>Coal vs OMCs: <span class="up">+3.8%</span></span><span class="sep">|</span>
-        <span>PCR: <span>1.32</span></span><span class="sep">|</span>
-        <span>VIX: <span>25.5</span></span><span class="sep">|</span>
-        <span>Nifty Pin: <span class="gold">22,800</span></span><span class="sep">|</span>
-    </div>
-</div>
 
 <!-- ══════════════ F&O STOCK NEWS SCROLL ══════════════ -->
 <div class="news-scroll-section" id="news-scroll-section" style="display:none;">
@@ -1513,75 +1166,6 @@
 
     <hr class="section-divider">
 
-    <!-- ══════════════ MSI HISTORY CHART ══════════════ -->
-    <section class="section">
-        <div class="section-header">
-            <h2>MSI History</h2>
-            <span class="badge badge-count">Time Series</span>
-        </div>
-        <div class="msi-chart-container">
-            <div id="msi-chart"></div>
-        </div>
-    </section>
-
-    <hr class="section-divider">
-
-    <!-- ══════════════ TRACK RECORD ══════════════ -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Track Record</h2>
-            <span class="badge badge-count" id="track-count">0 trades</span>
-        </div>
-        <div id="track-record-container"></div>
-    </section>
-
-    <hr class="section-divider">
-
-    <!-- ══════════════ HEATMAP ══════════════ -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Signal Universe</h2>
-            <span class="badge badge-count">Hit Rate Heatmap</span>
-        </div>
-        <div class="signal-container" id="signal-container">
-            <div class="signal-intro">
-                <h3>Explore the Edge</h3>
-                <p>Select an event scenario to see which spread trades have historically outperformed. Ranked by hit rate from 4 years of backtesting.</p>
-            </div>
-            <div class="signal-tab-toggle">
-                <div class="signal-tab-group">
-                    <button class="signal-tab-btn active" onclick="showSignalTab('explorer')">Explorer</button>
-                    <button class="signal-tab-btn" onclick="showSignalTab('grid')">Full Grid</button>
-                </div>
-            </div>
-            <div class="signal-explorer" id="explorer-view">
-                <div class="event-sidebar"><div class="event-sidebar-label">Event Scenarios</div><div id="event-list"></div></div>
-                <div class="results-panel" id="results-panel"><div class="signal-no-results">Loading...</div></div>
-            </div>
-            <div class="signal-grid-view" id="grid-view">
-                <div class="heatmap-container" id="heatmap-container">
-                    <div style="text-align:center; padding:32px; color:var(--text-muted);">Loading grid...</div>
-                </div>
-            </div>
-            <div class="signal-footer">
-                <div class="signal-footer-note">Backtested across 90+ events over 4 years. Only setups with 3+ precedents shown.</div>
-                <div class="signal-footer-stats">
-                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-tested">--</div><div class="signal-footer-label">Tested</div></div>
-                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-elite">--</div><div class="signal-footer-label">Elite 80%+</div></div>
-                    <div class="signal-footer-stat"><div class="signal-footer-val" id="stat-high">--</div><div class="signal-footer-label">High 65%+</div></div>
-                </div>
-            </div>
-            <div class="signal-legend">
-                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(212,168,85,0.4);"></div> 80%+ Elite</div>
-                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(16,185,129,0.4);"></div> 65-79% High</div>
-                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(255,255,255,0.15);"></div> 50-64%</div>
-                <div class="signal-legend-item"><div class="signal-legend-dot" style="background:rgba(239,68,68,0.3);"></div> Below 50%</div>
-            </div>
-        </div>
-    </section>
-
-    <hr class="section-divider">
-
     <!-- ══════════════ HOW IT WORKS ══════════════ -->
     <section class="section">
         <div class="section-header">
@@ -1617,12 +1201,6 @@
 
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer class="footer">
-    <div class="footer-cta">
-        <a href="https://t.me/ANKASIGNALS" target="_blank" class="telegram-cta">
-            <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 1 0 24 12.056A12.014 12.014 0 0 0 11.944 0Zm5.654 8.22l-1.7 8.01c-.128.6-.462.746-.937.464l-2.588-1.908l-1.248 1.2a.65.65 0 0 1-.52.254l.186-2.636 4.8-4.338c.209-.186-.045-.29-.324-.104l-5.936 3.738l-2.556-.8c-.556-.174-.568-.556.116-.824l9.992-3.852c.462-.168.868.112.716.796Z"/></svg>
-            Join @ANKASIGNALS on Telegram
-        </a>
-    </div>
     <p class="footer-disclaimer">
         Anka Research provides data-driven market analysis for educational and informational purposes only.
         This is not financial advice. Spread trading involves significant risk. Past backtest performance does not guarantee future results.
@@ -1692,44 +1270,6 @@
         requestAnimationFrame(update);
     }
 
-    // ── MSI Gauge Needle ──
-    function setGaugeNeedle(score) {
-        const needle = document.getElementById('msi-needle');
-        if (!needle) return;
-        // Map 0-100 to -90deg to +90deg rotation around (120, 120) — new larger gauge
-        const angle = -90 + (score / 100) * 180;
-        needle.setAttribute('transform', 'rotate(' + angle + ', 120, 120)');
-
-        const scoreEl = document.getElementById('msi-score');
-        if (scoreEl) {
-            const color = score < 35 ? '#10b981' : score < 65 ? '#f59e0b' : '#ef4444';
-            scoreEl.style.color = color;
-            scoreEl.style.textShadow = '0 0 20px ' + color + '40';
-            animateValue(scoreEl, score, '', 1200);
-        }
-
-        // Update context text based on score — URE zones
-        const ctx = document.getElementById('msi-context');
-        if (ctx) {
-            if (score < 20) {
-                ctx.textContent = 'RISK-ON — Global credit strong, equity flows positive. Full conviction on long spreads.';
-                ctx.style.color = '#10b981';
-            } else if (score < 35) {
-                ctx.textContent = 'LEANING RISK-ON — Overnight markets supportive. Nifty likely positive tomorrow.';
-                ctx.style.color = '#10b981';
-            } else if (score < 65) {
-                ctx.textContent = 'NEUTRAL — 77% of days fall here. No strong directional signal. Existing positions hold.';
-                ctx.style.color = '#f59e0b';
-            } else if (score < 80) {
-                ctx.textContent = 'CAUTION — Global risk appetite weakening. Tighten stops, reduce position sizes to 75%.';
-                ctx.style.color = '#ef4444';
-            } else {
-                ctx.textContent = 'RISK-OFF — Credit markets freezing, VIX spiking. Exit long-biased spreads immediately.';
-                ctx.style.color = '#ef4444';
-            }
-        }
-    }
-
     // ── Tooltip ──
     const tooltip = document.getElementById('tooltip');
     function showTooltip(e, text) {
@@ -1739,421 +1279,6 @@
         tooltip.style.top = (e.clientY - 10) + 'px';
     }
     function hideTooltip() { tooltip.classList.remove('visible'); }
-
-    // ── Load Live Status ──
-    fetch('data/live_status.json')
-        .then(r => r.json())
-        .then(data => {
-            // MSI
-            setGaugeNeedle(data.msi.score);
-
-            // Regime
-            const regimeBadge = document.getElementById('regime-badge');
-            const regimeText = document.getElementById('regime-text');
-            regimeBadge.className = 'regime-badge regime-' + data.msi.regime;
-            regimeText.textContent = data.msi.regime.replace('_', ' ');
-
-            // Updated time
-            document.getElementById('updated-time').textContent = formatTime(data.updated_at);
-
-            // Stats
-            const s = data.stats;
-            animateValue(document.getElementById('stat-open'), s.open_positions, '');
-            animateValue(document.getElementById('stat-signals'), s.total_signals, '');
-            const wrEl = document.getElementById('stat-winrate');
-            if (s.total_signals === 0 || (s.wins === 0 && s.losses === 0)) {
-                wrEl.textContent = '--';
-            } else {
-                animateValue(wrEl, s.win_rate_pct, '%');
-            }
-
-            // Realized P&L (closed trades)
-            const pnlEl = document.getElementById('stat-pnl');
-            if (s.cumulative_pnl_pct === 0 && s.wins === 0 && s.losses === 0) {
-                pnlEl.textContent = '--';
-            } else {
-                pnlEl.className = 'stat-value mono ' + pnlClass(s.cumulative_pnl_pct);
-                pnlEl.textContent = formatPnl(s.cumulative_pnl_pct);
-            }
-
-            // Unrealized P&L (open positions)
-            const unrealizedEl = document.getElementById('stat-unrealized');
-            if (data.positions && data.positions.length > 0) {
-                let totalUnrealized = 0;
-                let count = 0;
-                data.positions.forEach(p => {
-                    if (p.spread_pnl_pct !== undefined && p.spread_pnl_pct !== null) {
-                        totalUnrealized += p.spread_pnl_pct;
-                        count++;
-                    }
-                });
-                const avgUnrealized = count > 0 ? totalUnrealized / count : 0;
-                unrealizedEl.className = 'stat-value mono ' + pnlClass(avgUnrealized);
-                unrealizedEl.textContent = formatPnl(avgUnrealized);
-            } else {
-                unrealizedEl.textContent = '--';
-            }
-
-            animateValue(document.getElementById('stat-days'), s.days_active, '');
-
-            // Positions
-            renderPositions(data.positions);
-        })
-        .catch(err => {
-            console.error('Failed to load live_status.json:', err);
-            document.getElementById('positions-container').innerHTML =
-                '<div class="no-positions">Unable to load live data. Please refresh.</div>';
-        });
-
-    function renderPositions(positions) {
-        const container = document.getElementById('positions-container');
-        if (!positions || positions.length === 0) {
-            container.innerHTML = '<div class="no-positions"><div class="icon">&#x1F50D;</div>No open positions &mdash; system is scanning</div>';
-            return;
-        }
-
-        container.innerHTML = positions.map((pos, idx) => {
-            const daysHeld = daysBetween(pos.open_date);
-            return `
-            <div class="position-card animate-in animate-delay-${idx + 1}">
-                <div class="position-header">
-                    <div>
-                        <div class="position-name">${pos.spread_name}</div>
-                        <div class="position-badges">
-                            <span class="tier-badge tier-${pos.tier}">${pos.tier}</span>
-                            <span class="category-badge">${formatCategory(pos.category)}</span>
-                        </div>
-                    </div>
-                    <div class="position-pnl ${pnlClass(pos.spread_pnl_pct)}">${formatPnl(pos.spread_pnl_pct)}</div>
-                </div>
-                <div class="legs-section">
-                    <div class="leg-group long">
-                        <h4>&#9650; Long</h4>
-                        ${pos.long_legs.map(l => `
-                            <div class="leg-item">
-                                <span class="leg-ticker">${l.ticker}</span>
-                                <span class="leg-price">${formatPrice(l.entry)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="leg-group short">
-                        <h4>&#9660; Short</h4>
-                        ${pos.short_legs.map(l => `
-                            <div class="leg-item">
-                                <span class="leg-ticker">${l.ticker}</span>
-                                <span class="leg-price">${formatPrice(l.entry)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                <div class="position-meta">
-                    <div class="meta-item">
-                        <div class="meta-label">Today</div>
-                        <div class="meta-value ${pnlClass(pos.todays_move)}">${formatPnl(pos.todays_move)}</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">Peak</div>
-                        <div class="meta-value positive">${formatPnl(pos.peak_pnl)}</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">Daily Stop</div>
-                        <div class="meta-value negative">${pos.daily_stop.toFixed(2)}%</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">Days Held</div>
-                        <div class="meta-value">${daysHeld}d <span style="font-size:10px;color:var(--text-muted);">(${pos.open_date})</span></div>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    // ── Load Track Record ──
-    fetch('data/track_record.json')
-        .then(r => r.json())
-        .then(data => {
-            const container = document.getElementById('track-record-container');
-            const countBadge = document.getElementById('track-count');
-
-            if (!data.trades || data.trades.length === 0) {
-                countBadge.textContent = '0 trades';
-                container.innerHTML = `
-                    <div class="track-empty">
-                        <p style="font-size:16px; margin-bottom:8px;">Track record builds as trades close</p>
-                        <p style="font-size:13px; color:var(--text-muted);">First signals are live &mdash; results will appear here when positions are closed.</p>
-                    </div>`;
-                return;
-            }
-
-            countBadge.textContent = data.trades.length + ' trades';
-
-            const rows = data.trades.map(t => {
-                const resultClass = t.pnl_pct >= 0 ? 'result-win' : 'result-loss';
-                const resultText = t.pnl_pct >= 0 ? 'WIN' : 'LOSS';
-                return `<tr>
-                    <td class="mono" style="font-size:13px;">${t.close_date || t.date || '--'}</td>
-                    <td style="font-weight:600;">${t.spread_name}</td>
-                    <td><span class="category-badge">${formatCategory(t.category)}</span></td>
-                    <td class="mono ${pnlClass(t.pnl_pct)}" style="font-weight:600;">${formatPnl(t.pnl_pct)}</td>
-                    <td class="mono">${t.days_held || '--'}</td>
-                    <td><span class="result-badge ${resultClass}">${resultText}</span></td>
-                </tr>`;
-            }).join('');
-
-            const sum = data.summary;
-            container.innerHTML = `
-                <div class="track-record-table-wrap">
-                    <table class="track-record-table">
-                        <thead><tr>
-                            <th>Date</th><th>Spread</th><th>Category</th><th>P&L %</th><th>Days</th><th>Result</th>
-                        </tr></thead>
-                        <tbody>
-                            ${rows}
-                            <tr class="summary-row">
-                                <td colspan="2" style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">
-                                    ${sum.total} trades &middot; ${sum.wins}W / ${sum.losses}L
-                                </td>
-                                <td class="mono" style="font-size:12px; color:var(--text-secondary);">${sum.win_rate_pct}% WR</td>
-                                <td class="mono ${pnlClass(sum.cumulative_pnl_pct)}" style="font-weight:700;">${formatPnl(sum.cumulative_pnl_pct)}</td>
-                                <td colspan="2" style="font-size:12px; color:var(--text-muted);">cumulative</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>`;
-        })
-        .catch(err => {
-            console.error('Failed to load track_record.json:', err);
-        });
-
-    // ── Signal Universe Explorer + Grid ──
-    const EVENT_COLORS = {
-        ceasefire:'#10b981', de_escalation:'#10b981', diplomacy:'#10b981', fii_buying:'#10b981',
-        rbi_rate_cut:'#10b981', oil_positive:'#10b981', weak_dollar:'#3b82f6',
-        escalation:'#ef4444', hormuz:'#ef4444', oil_negative:'#ef4444', sanctions:'#ef4444',
-        trump_threat:'#ef4444', us_recession:'#ef4444',
-        fii_selling:'#3b82f6', india_stress:'#3b82f6', rbi_rate_hike:'#3b82f6', strong_dollar:'#3b82f6',
-        defense_spend:'#d4a855'
-    };
-
-    window.showSignalTab = function(tab) {
-        document.querySelectorAll('.signal-tab-btn').forEach(b => b.classList.remove('active'));
-        if (tab === 'explorer') {
-            document.getElementById('explorer-view').style.display = 'flex';
-            document.getElementById('grid-view').style.display = 'none';
-            document.querySelectorAll('.signal-tab-btn')[0].classList.add('active');
-        } else {
-            document.getElementById('explorer-view').style.display = 'none';
-            document.getElementById('grid-view').style.display = 'block';
-            document.querySelectorAll('.signal-tab-btn')[1].classList.add('active');
-        }
-    };
-
-    fetch('data/spread_universe.json')
-        .then(r => r.json())
-        .then(data => {
-            const spreads = data.spreads;
-            const categories = Object.keys(spreads[0].categories).sort();
-
-            // Count stats
-            let totalTested = 0, eliteCount = 0, highCount = 0;
-            spreads.forEach(s => {
-                categories.forEach(c => {
-                    const e = s.categories[c];
-                    if (e && e.n >= 3 && e.hit_rate > 0) { totalTested++; if (e.hit_rate >= 0.8) eliteCount++; else if (e.hit_rate >= 0.65) highCount++; }
-                });
-            });
-            document.getElementById('stat-tested').textContent = totalTested;
-            document.getElementById('stat-elite').textContent = eliteCount;
-            document.getElementById('stat-high').textContent = highCount;
-            document.getElementById('stat-spreads').textContent = spreads.length;
-
-            // ── Build Explorer ──
-            const eventList = document.getElementById('event-list');
-            categories.forEach((cat, i) => {
-                // Count results for this event
-                let count = 0;
-                spreads.forEach(s => { const e = s.categories[cat]; if (e && e.n >= 3 && e.hit_rate > 0) count++; });
-
-                const div = document.createElement('div');
-                div.className = 'event-item' + (i === 0 ? ' active' : '');
-                div.innerHTML = '<div class="ev-dot" style="background:' + (EVENT_COLORS[cat] || '#6b7280') + '"></div>' +
-                    '<span>' + formatCategory(cat) + '</span>' +
-                    '<span class="ev-count">' + count + '</span>';
-                div.addEventListener('click', function() {
-                    document.querySelectorAll('.event-item').forEach(e => e.classList.remove('active'));
-                    div.classList.add('active');
-                    showExplorerResults(cat, spreads);
-                });
-                eventList.appendChild(div);
-            });
-
-            // Auto-select first event
-            showExplorerResults(categories[0], spreads);
-
-            // ── Build Grid Tab ──
-            const container = document.getElementById('heatmap-container');
-            let html = '<table class="heatmap-table"><thead><tr><th class="row-header" style="writing-mode:horizontal-tb;transform:none;">Spread</th>';
-            categories.forEach(cat => { html += '<th>' + formatCategory(cat) + '</th>'; });
-            html += '</tr></thead><tbody>';
-            spreads.forEach(spread => {
-                html += '<tr><th class="row-header">' + spread.name + '</th>';
-                categories.forEach(cat => {
-                    const entry = spread.categories[cat];
-                    if (!entry || entry.n < 3 || entry.hit_rate === 0) {
-                        html += '<td class="heatmap-cell no-data"></td>';
-                    } else {
-                        const pct = (entry.hit_rate * 100).toFixed(0);
-                        let cls = 'low';
-                        if (entry.hit_rate >= 0.8) cls = 'elite';
-                        else if (entry.hit_rate >= 0.65) cls = 'high';
-                        else if (entry.hit_rate >= 0.5) cls = 'mid';
-                        html += '<td class="heatmap-cell ' + cls + '" data-tip="' + spread.name + ' / ' + formatCategory(cat) + ': ' + pct + '% (n=' + entry.n + ')">' + pct + '</td>';
-                    }
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
-
-            // Grid tooltips
-            container.querySelectorAll('.heatmap-cell[data-tip]').forEach(cell => {
-                cell.addEventListener('mouseenter', function(e) { showTooltip(e, this.getAttribute('data-tip')); });
-                cell.addEventListener('mousemove', function(e) { tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-10)+'px'; });
-                cell.addEventListener('mouseleave', hideTooltip);
-            });
-        })
-        .catch(err => { console.error('Failed to load spread_universe.json:', err); });
-
-    function showExplorerResults(cat, spreads) {
-        const panel = document.getElementById('results-panel');
-        // Build results for this category
-        const results = [];
-        spreads.forEach(s => {
-            const e = s.categories[cat];
-            if (e && e.n >= 3 && e.hit_rate > 0) {
-                results.push({ name: s.name, hit: Math.round(e.hit_rate * 100), n: e.n,
-                    spread5d: e.spread_5d ? e.spread_5d.toFixed(1) : '0.0',
-                    long: s.long || [], short: s.short || [] });
-            }
-        });
-        results.sort((a, b) => b.hit - a.hit);
-
-        if (results.length === 0) {
-            panel.innerHTML = '<div class="signal-no-results">No tested setups for this scenario</div>';
-            return;
-        }
-
-        let html = '<div class="results-header"><div class="results-title">When ' + formatCategory(cat) + ' fires</div>' +
-            '<div class="results-subtitle">' + results.length + ' spreads tested</div></div>';
-
-        results.forEach((r, i) => {
-            let tier = 'tier-low';
-            if (r.hit >= 80) tier = 'tier-elite';
-            else if (r.hit >= 65) tier = 'tier-high';
-            else if (r.hit >= 50) tier = 'tier-mid';
-            const sign = parseFloat(r.spread5d) >= 0 ? '+' : '';
-
-            html += '<div class="result-row ' + tier + '">' +
-                '<div class="result-rank">#' + (i+1) + '</div>' +
-                '<div class="result-hit">' + r.hit + '%</div>' +
-                '<div class="result-info"><div class="result-name">' + r.name + '</div>' +
-                '<div class="result-meta">n=' + r.n + ' | ' + sign + r.spread5d + '% avg 5d</div></div>' +
-                '<div class="result-bar-wrap"><div class="result-bar"><div class="result-bar-fill" style="width:' + r.hit + '%"></div></div>' +
-                '<div class="result-tickers"><span style="color:' + (r.hit>=65?'#10b981':'#6b7280') + '">L:</span> ' + r.long.join(', ') +
-                ' <span style="color:' + (r.hit<50?'#ef4444':'#6b7280') + '; margin-left:6px;">S:</span> ' + r.short.join(', ') + '</div></div></div>';
-        });
-
-        panel.innerHTML = html;
-
-        // Animate bars
-        setTimeout(() => {
-            panel.querySelectorAll('.result-bar-fill').forEach(bar => {
-                const w = bar.style.width; bar.style.width = '0%';
-                requestAnimationFrame(() => { requestAnimationFrame(() => { bar.style.width = w; }); });
-            });
-        }, 50);
-    }
-
-    // ── Load MSI History Chart ──
-    fetch('data/msi_history.json')
-        .then(r => r.json())
-        .then(data => {
-            if (!data || data.length === 0) {
-                document.getElementById('msi-chart').innerHTML =
-                    '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">MSI chart will populate as more data points accumulate.</div>';
-                return;
-            }
-
-            const dates = data.map(d => d.date);
-            const scores = data.map(d => d.msi_score);
-
-            const trace = {
-                x: dates,
-                y: scores,
-                type: 'scatter',
-                mode: 'lines+markers',
-                line: { color: '#f59e0b', width: 2.5, shape: 'spline' },
-                marker: { size: 6, color: '#f59e0b' },
-                fill: 'tozeroy',
-                fillcolor: 'rgba(245, 158, 11, 0.05)',
-                hovertemplate: 'MSI: %{y:.1f}<br>%{x}<extra></extra>'
-            };
-
-            // Colored background bands
-            const shapes = [
-                { type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 0, y1: 35,
-                  fillcolor: 'rgba(16, 185, 129, 0.06)', line: { width: 0 } },
-                { type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 35, y1: 65,
-                  fillcolor: 'rgba(245, 158, 11, 0.06)', line: { width: 0 } },
-                { type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 65, y1: 100,
-                  fillcolor: 'rgba(239, 68, 68, 0.06)', line: { width: 0 } }
-            ];
-
-            const annotations = [
-                { xref: 'paper', yref: 'y', x: 1.02, y: 17, text: 'EASY', showarrow: false,
-                  font: { color: '#10b981', size: 9, family: 'JetBrains Mono' } },
-                { xref: 'paper', yref: 'y', x: 1.02, y: 50, text: 'NEUTRAL', showarrow: false,
-                  font: { color: '#f59e0b', size: 9, family: 'JetBrains Mono' } },
-                { xref: 'paper', yref: 'y', x: 1.02, y: 82, text: 'STRESS', showarrow: false,
-                  font: { color: '#ef4444', size: 9, family: 'JetBrains Mono' } }
-            ];
-
-            const layout = {
-                paper_bgcolor: 'transparent',
-                plot_bgcolor: 'transparent',
-                margin: { t: 10, r: window.innerWidth < 600 ? 10 : 60, b: 40, l: window.innerWidth < 600 ? 35 : 50 },
-                autosize: true,
-                xaxis: {
-                    gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
-                    tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
-                    linecolor: '#1e293b'
-                },
-                yaxis: {
-                    range: [0, 100],
-                    gridcolor: 'rgba(30,41,59,0.5)', gridwidth: 1,
-                    tickfont: { color: '#64748b', size: 11, family: 'JetBrains Mono' },
-                    linecolor: '#1e293b',
-                    dtick: 20
-                },
-                shapes: shapes,
-                annotations: annotations,
-                hoverlabel: {
-                    bgcolor: '#1e293b', bordercolor: '#f59e0b',
-                    font: { color: '#f1f5f9', family: 'JetBrains Mono', size: 13 }
-                },
-                font: { family: 'Inter, sans-serif' }
-            };
-
-            Plotly.newPlot('msi-chart', [trace], layout, {
-                responsive: true,
-                displayModeBar: false
-            });
-        })
-        .catch(err => {
-            console.error('Failed to load msi_history.json:', err);
-            document.getElementById('msi-chart').innerHTML =
-                '<div style="text-align:center; padding:60px 0; color:var(--text-muted);">Unable to load MSI history.</div>';
-        });
 
     // ── Scroll fade-in animations ──
     const sections = document.querySelectorAll('.section');
@@ -2165,40 +1290,6 @@
         });
     }, { threshold: 0.1 });
     sections.forEach(s => observer.observe(s));
-
-    // ── MSI background glow (updates with live data) ──
-    function updateMSIGlow(score) {
-        const glow = document.getElementById('msi-bg-glow');
-        if (!glow) return;
-        if (score < 35) {
-            glow.className = 'msi-bg-glow calm';
-        } else if (score < 65) {
-            glow.className = 'msi-bg-glow neutral';
-        } else {
-            glow.className = 'msi-bg-glow stress';
-        }
-    }
-
-    // ── Update ticker from live data ──
-    function updateTicker(data) {
-        const msiEl = document.getElementById('ticker-msi');
-        if (msiEl && data.msi) {
-            msiEl.textContent = data.msi.score;
-            updateMSIGlow(data.msi.score);
-        }
-    }
-
-    // Hook into existing live data fetch
-    fetch('data/live_status.json')
-        .then(r => r.json())
-        .then(data => {
-            if (data.msi) {
-                updateMSIGlow(data.msi.score);
-                const msiEls = document.querySelectorAll('#ticker-msi');
-                msiEls.forEach(el => { el.textContent = data.msi.score; });
-            }
-        })
-        .catch(() => {});
 
     // ── F&O Stock News Scroll ──
     fetch('data/fno_news.json')
@@ -2242,11 +1333,11 @@
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
-     Single source of truth: data/articles_index.json + data/weekly_index.json
-     Pipeline scripts (daily_articles.py, weekly_report_generator.py) only
-     append to these JSON files. They never touch index.html. This ensures
-     the 2026-04-11 regression (where the generator clobbered 934 lines)
-     can NEVER recur. On fetch failure, static HTML remains as fallback. -->
+     Single source of truth: data/articles_index.json
+     Pipeline scripts (daily_articles.py) only append to this JSON file.
+     They never touch index.html. This ensures the 2026-04-11 regression
+     (where the generator clobbered 934 lines) can NEVER recur.
+     On fetch failure, static HTML remains as fallback. -->
 <script>
 (function() {
     const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2268,24 +1359,11 @@
         </a>`;
     }
 
-    function weeklyCard(w) {
-        const filename = String(w.filename || '').replace(/\\/g, '/');
-        return `<a href="reports/${esc(filename)}" class="report-card">
-            <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Week ${String(w.week).padStart(3,'0')}</div>
-            <h3>${esc(w.title || ('Weekly Brief #' + w.week))}</h3>
-            ${w.description ? `<p>${esc(w.description)}</p>` : ''}
-            <div class="report-date mono">${esc(w.published_at || w.period_end || '')}</div>
-        </a>`;
-    }
-
-    Promise.all([
-        fetch('data/articles_index.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('data/weekly_index.json').then(r => r.ok ? r.json() : null).catch(() => null),
-    ]).then(([articlesData, weeklyData]) => {
-        if (!articlesData && !weeklyData) return; // fetch failed on both — leave static fallback
+    fetch('data/articles_index.json').then(r => r.ok ? r.json() : null).catch(() => null)
+    .then(articlesData => {
+        if (!articlesData) return; // fetch failed — leave static fallback
 
         const articles = (articlesData && articlesData.articles) || [];
-        const weeklies = (weeklyData && weeklyData.weekly_briefs) || [];
 
         // Split articles: most recent date = Today's Intelligence, rest = Library
         if (articles.length > 0) {
@@ -2303,19 +1381,11 @@
                 if (grid) grid.innerHTML = todays.map(articleCard).join('\n');
             }
 
-            // Library & Archive grid: older articles + weeklies, newest first
+            // Library & Archive grid: older articles, newest first
             const libGrid = document.getElementById('library-grid');
             if (libGrid) {
-                const libCards = [
-                    ...older.map(articleCard),
-                    ...weeklies.map(weeklyCard),
-                ];
-                libGrid.innerHTML = libCards.join('\n');
+                libGrid.innerHTML = older.map(articleCard).join('\n');
             }
-        } else if (weeklies.length > 0) {
-            // Articles missing but weeklies OK — at least render those
-            const libGrid = document.getElementById('library-grid');
-            if (libGrid) libGrid.innerHTML = weeklies.map(weeklyCard).join('\n');
         }
     }).catch(err => {
         console.warn('[askanka] Dynamic render failed, static fallback in use:', err);
