@@ -118,3 +118,32 @@ def test_today_recommendations_top_level_fields(monkeypatch):
     assert isinstance(out["spreads"], list)
     assert isinstance(out["stocks"], list)
     assert isinstance(out["news_driven"], list)
+
+
+def test_spreads_drop_inactive_and_none(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    names = [s["name"] for s in out["spreads"]]
+    assert "PSU Banks vs Private" not in names  # action=INACTIVE conv=NONE
+
+
+def test_spreads_top_3_by_conviction_then_zscore(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    assert len(out["spreads"]) <= 3
+    # Fixture: HIGH (Pharma z=2.31, Upstream z=-2.05), MEDIUM (Defence 1.42, Metals -1.18)
+    # Expected order: Pharma, Upstream, Defence
+    assert [s["name"] for s in out["spreads"]] == ["Pharma vs Auto", "Upstream vs Downstream", "Defence vs IT"]
+
+
+def test_spread_card_fields(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    s = out["spreads"][0]
+    assert set(s.keys()) == {"name", "action", "conviction", "z_score", "reason",
+                              "source_timestamp", "is_stale"}
+    assert s["source_timestamp"] == "2026-04-15T09:25:08.000+05:30"
+    assert s["is_stale"] in (True, False)

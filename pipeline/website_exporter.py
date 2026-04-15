@@ -115,8 +115,30 @@ def export_today_recommendations() -> dict:
     }
 
 
+_CONV_RANK = {"HIGH": 3, "MEDIUM": 2, "LOW": 1, "NONE": 0}
+
+
 def _build_spread_recs() -> list:
-    return []
+    raw = _load_json(RECOMMENDATIONS_FILE) or {}
+    src_ts = raw.get("timestamp")
+    stale = stale_check(src_ts)
+    out = []
+    for r in raw.get("recommendations", []) or []:
+        if r.get("action") not in ("ENTER", "EXIT"):
+            continue
+        if r.get("conviction") in (None, "NONE"):
+            continue
+        out.append({
+            "name": r.get("name", ""),
+            "action": r.get("action", ""),
+            "conviction": r.get("conviction", "NONE"),
+            "z_score": r.get("z_score", 0),
+            "reason": r.get("reason", ""),
+            "source_timestamp": src_ts,
+            "is_stale": stale,
+        })
+    out.sort(key=lambda s: (-_CONV_RANK.get(s["conviction"], 0), -abs(s.get("z_score") or 0)))
+    return out[:3]
 
 
 def _build_stock_recs() -> list:
