@@ -42,3 +42,34 @@ def test_load_market_context_missing_file_raises(tmp_path, monkeypatch):
     monkeypatch.setattr("article_grounding.DAILY_DUMP_DIR", tmp_path / "daily")
     with pytest.raises(MarketDataMissing):
         load_market_context("2099-01-01")
+
+
+def test_build_panel_war_brent_present(tmp_path, monkeypatch):
+    _stage_fixture(tmp_path, monkeypatch)
+    ctx = load_market_context("2026-04-15")
+    panel = build_topic_panel("war", ctx)
+    assert panel["Brent"] == "$95.07"
+
+
+def test_build_panel_war_missing_field_renders_dash(tmp_path, monkeypatch):
+    _stage_fixture(tmp_path, monkeypatch)
+    ctx = load_market_context("2026-04-15")
+    panel = build_topic_panel("war", ctx)
+    # Fixture has no INDIA VIX or FII flow → both render as "—"
+    assert panel["India VIX"] == "—"
+    assert panel["FII flow Cr"] == "—"
+
+
+def test_build_panel_unknown_topic_raises():
+    with pytest.raises(KeyError):
+        build_topic_panel("nonexistent", {})
+
+
+def test_build_panel_returns_raw_alongside(tmp_path, monkeypatch):
+    """Panel must include a hidden _raw map for the verifier to use."""
+    _stage_fixture(tmp_path, monkeypatch)
+    ctx = load_market_context("2026-04-15")
+    panel = build_topic_panel("war", ctx)
+    assert "_raw" in panel
+    assert panel["_raw"]["Brent"] == 95.07
+    assert panel["_raw"]["India VIX"] is None  # missing
