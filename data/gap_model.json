@@ -1,0 +1,27 @@
+{
+  "updated_at": "2026-04-15T18:18:20.437219",
+  "train_rows": 801,
+  "test_rows": 201,
+  "coefficients": {
+    "NIKKEI": 0.09162271423435803,
+    "KOSPI": 0.16237289629309024,
+    "BRENT": -0.007144616485759683,
+    "SPY": 0.02259281094686999,
+    "USDINR": -0.3104566849745783,
+    "VIX_excess": -0.0002537308913592648,
+    "intercept": 0.08891949627135516
+  },
+  "r2_in_sample": 0.3554,
+  "r2_out_of_sample": 0.462,
+  "test_mae_pct": 0.354,
+  "test_direction_accuracy_pct": 64.7,
+  "feature_order": [
+    "NIKKEI",
+    "KOSPI",
+    "BRENT",
+    "SPY",
+    "USDINR",
+    "VIX_excess",
+    "intercept"
+  ]
+}
