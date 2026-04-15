@@ -1,7 +1,7 @@
 """
 Anka Research Pipeline — Website Data Exporter
-Reads pipeline state (signals, MSI, backtest) and writes JSON files
-for the live dashboard at askanka.com.
+Reads the 31-ETF Global Regime Score and open positions, writes
+global_regime.json + live_status.json for the live dashboard at askanka.com.
 
 Run after each signal cycle or on-demand:
     python website_exporter.py
@@ -22,9 +22,6 @@ WEBSITE_DIR = Path(__file__).parent.parent / "data"  # askanka.com/data/ when sy
 
 OPEN_FILE = SIGNALS_DIR / "open_signals.json"
 CLOSED_FILE = SIGNALS_DIR / "closed_signals.json"
-MSI_HISTORY = DATA_DIR / "msi_history.json"
-PATTERN_LOOKUP = DATA_DIR / "pattern_lookup.json"
-SPREAD_STATS = DATA_DIR / "spread_stats.json"
 TODAY_REGIME_FILE = DATA_DIR / "today_regime.json"
 
 
@@ -40,7 +37,7 @@ def _load_json(path: Path) -> list | dict:
 def export_global_regime() -> dict:
     """Export 31-ETF regime engine output for the website hero block."""
     raw = _load_json(TODAY_REGIME_FILE)
-    if not raw:
+    if not isinstance(raw, dict) or not raw:
         return {
             "updated_at": datetime.now(IST).isoformat(),
             "zone": "UNKNOWN",
