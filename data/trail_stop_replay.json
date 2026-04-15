@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-04-15T17:33:38.114934",
+  "updated_at": "2026-04-15T17:37:00.691165",
   "total_trades": 3,
   "trades_improved": 0,
-  "trades_worse": 0,
+  "trades_worse": 2,
   "actual_pnl_sum_pct": 3.04,
-  "simulated_pnl_sum_pct": 3.04,
-  "delta_sum_pct": 0.0,
+  "simulated_pnl_sum_pct": -5.92,
+  "delta_sum_pct": -8.96,
   "trades": [
     {
       "signal_id": "SIG-2026-03-31-020-Coal_vs_OMCs",
@@ -18,10 +18,10 @@
       },
       "simulated_exit": {
         "date": "2026-04-08",
-        "reason": "ACTUAL_CLOSE",
-        "pnl_pct": -4.04
+        "reason": "TRAIL_STOP",
+        "pnl_pct": -6.26
       },
-      "delta_pct": 0.0
+      "delta_pct": -2.22
     },
     {
       "signal_id": "SIG-2026-03-31-003-Defence_vs_IT",
@@ -33,11 +33,11 @@
         "pnl_pct": 8.66
       },
       "simulated_exit": {
-        "date": "2026-04-15",
-        "reason": "ACTUAL_CLOSE",
-        "pnl_pct": 8.66
+        "date": "2026-04-02",
+        "reason": "TRAIL_STOP",
+        "pnl_pct": 1.92
       },
-      "delta_pct": 0.0
+      "delta_pct": -6.74
     },
     {
       "signal_id": "SIG-2026-04-15-004-Upstream_vs_Downstream",

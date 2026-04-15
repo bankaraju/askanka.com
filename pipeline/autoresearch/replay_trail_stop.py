@@ -161,7 +161,13 @@ from datetime import datetime, timedelta
 
 PIPELINE_ROOT = Path(__file__).resolve().parent.parent
 CLOSED_SIGS_PATH = PIPELINE_ROOT / "data" / "signals" / "closed_signals.json"
-SPREAD_STATS_PATH = PIPELINE_ROOT / "data" / "spread_stats.json"
+SPREAD_STATS_PATH = PIPELINE_ROOT.parent / "data" / "spread_stats.json"
+
+# yfinance ticker aliases for symbols that have moved or use different tickers
+# than the names we store in signal legs.
+YF_TICKER_ALIASES = {
+    "HPCL": "HINDPETRO",
+}
 OUTPUT_PATH = PIPELINE_ROOT.parent / "data" / "trail_stop_replay.json"
 
 
@@ -181,7 +187,8 @@ def _fetch_daily_closes(
     end_dt = (datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=2)).strftime("%Y-%m-%d")
 
     for tk in tickers:
-        yf_symbol = tk if "." in tk or "^" in tk else f"{tk}.NS"
+        mapped = YF_TICKER_ALIASES.get(tk, tk)
+        yf_symbol = mapped if "." in mapped or "^" in mapped else f"{mapped}.NS"
         hist = yf.Ticker(yf_symbol).history(start=start_date, end=end_dt)
         if hist.empty:
             result[tk] = []
