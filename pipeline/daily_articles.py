@@ -214,6 +214,35 @@ Return ONLY a JSON object:
                 if raw.startswith("json"):
                     raw = raw[4:]
             article = json.loads(raw.strip())
+
+            # ── Publish gate: verify narrative against panel ───────────────
+            narrative = article.get("body", "")
+            violations = verify_narrative(narrative, panel)
+            if violations:
+                failed_dir = GIT_REPO / "articles" / "_failed"
+                failed_dir.mkdir(parents=True, exist_ok=True)
+                failed_path = failed_dir / f"{date}-{segment}.html"
+                failed_path.write_text(narrative, encoding="utf-8")
+                log.error(f"REJECTED {segment} article — {len(violations)} violations:")
+                for v in violations:
+                    log.error(f"  {v.pattern_kind}={v.number} (closest panel: {v.closest_panel_value}) — '{v.text_excerpt[:80]}'")
+                # Append to violations log
+                viol_log = PIPELINE_DIR / "logs" / "article_violations.log"
+                viol_log.parent.mkdir(parents=True, exist_ok=True)
+                with viol_log.open("a", encoding="utf-8") as f:
+                    f.write(f"\n=== {date} {segment} — {len(violations)} violations ===\n")
+                    for v in violations:
+                        f.write(f"  {v.pattern_kind}={v.number} closest={v.closest_panel_value} text='{v.text_excerpt[:120]}'\n")
+                # Best-effort telegram alert
+                try:
+                    from telegram_bot import send_message
+                    send_message(f"⚠️ {segment} article rejected ({len(violations)} violations). Drafted to articles/_failed/")
+                except Exception:
+                    pass
+                return ""
+
+            # 0 violations: attach panel HTML for the builder to prepend
+            article["panel_html"] = render_panel_html(panel, date_str=date)
             return article
 
         except requests.exceptions.Timeout:
@@ -234,6 +263,7 @@ def build_article_html(segment: str, article: dict, date: str) -> str:
     headline = article.get("headline", "")
     body = article.get("body", "")
     sources = article.get("sources", [])
+    panel_html = article.get("panel_html", "")
 
     if not headline or not body:
         return ""
@@ -251,6 +281,10 @@ def build_article_html(segment: str, article: dict, date: str) -> str:
         r'<span style="font-size:12px;color:#d4a855;font-weight:500;">Source: \1</span>',
         body_html,
     )
+
+    # Prepend the grounding panel (if any) so readers see anchor numbers up top.
+    if panel_html:
+        body_html = panel_html + "\n" + body_html
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -275,6 +309,14 @@ body {{ background: var(--bg); color: var(--text); font-family: 'Inter', sans-se
 .nav-bar {{ display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); }}
 .nav-bar a {{ color: var(--gold); text-decoration: none; font-size: 14px; font-weight: 500; }}
 .nav-bar .brand {{ font-weight: 800; font-size: 16px; }}
+.market-anchor {{ background:#161616; border:1px solid #2a2a2a; border-radius:8px; padding:14px 18px; margin:18px 0 24px; }}
+.anchor-title {{ font-family:'Inter',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:#d4a855; margin-bottom:10px; }}
+.anchor-date {{ color:#9c9c9c; font-size:11px; margin-left:8px; text-transform:none; letter-spacing:0; }}
+.anchor-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px 16px; font-family:'JetBrains Mono',monospace; font-size:13px; }}
+@media (max-width:600px){{.anchor-grid{{grid-template-columns:repeat(2,1fr);}}}}
+.anchor-grid .lbl {{ color:#9c9c9c; font-size:11px; display:block; }}
+.anchor-grid .val {{ color:#f3f3f3; font-size:14px; font-weight:600; }}
+.anchor-source {{ color:#6e6e6e; font-size:10px; margin-top:10px; font-style:italic; }}
 </style>
 </head>
 <body>
