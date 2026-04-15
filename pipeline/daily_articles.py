@@ -272,7 +272,7 @@ REQUIREMENTS:
 3. Open with the most provocative development
 4. Connect EVERY paragraph back to Indian markets or subscribers' positioning
 5. End with concrete "What to watch tomorrow" bullet points
-6. Cite sources inline: [Source: channel name]
+6. Attribute claims with [Source: channel name] — place AT THE END of the sentence that uses the claim. These are post-processed into numbered footnotes (^1, ^2) with a Sources list at the bottom; keep each attribution compact and factual (no inline editorial, no repeated attributions for the same channel in the same paragraph).
 7. Be opinionated — this is analysis, not news
 8. NO disclaimers, NO "alleged", NO "reportedly" — state your view clearly
 9. Include at least ONE specific number or data point per paragraph
@@ -387,12 +387,34 @@ def build_article_html(segment: str, article: dict, date: str) -> str:
     paragraphs = body.split("\n\n")
     body_html = "\n".join(f"<p>{p.strip()}</p>" for p in paragraphs if p.strip())
 
-    # Add [Source: X] formatting
-    body_html = re.sub(
-        r'\[Source:\s*([^\]]+)\]',
-        r'<span style="font-size:12px;color:#d4a855;font-weight:500;">Source: \1</span>',
-        body_html,
-    )
+    # Convert [Source: X] markers into numbered footnotes.
+    # Each unique channel gets one number assigned in first-seen order; all
+    # subsequent references reuse that number. A <section class="sources">
+    # list is appended at the end of body_html with anchor targets.
+    channel_order: list[str] = []
+    channel_num: dict[str, int] = {}
+
+    def _footnote_ref(match: re.Match) -> str:
+        channel = match.group(1).strip()
+        if channel not in channel_num:
+            channel_order.append(channel)
+            channel_num[channel] = len(channel_order)
+        n = channel_num[channel]
+        return f'<sup class="fn-ref"><a href="#fn-{n}">[{n}]</a></sup>'
+
+    body_html = re.sub(r'\[Source:\s*([^\]]+)\]', _footnote_ref, body_html)
+
+    if channel_order:
+        items = "\n".join(
+            f'  <li id="fn-{channel_num[c]}">{channel_num[c]}. {c}</li>'
+            for c in channel_order
+        )
+        body_html += (
+            '\n<section class="sources">'
+            '<h3 class="sources-title">Sources</h3>'
+            f'<ol class="sources-list">\n{items}\n</ol>'
+            '</section>'
+        )
 
     # Prepend the grounding panel (if any) so readers see anchor numbers up top.
     if panel_html:
@@ -429,6 +451,14 @@ body {{ background: var(--bg); color: var(--text); font-family: 'Inter', sans-se
 .anchor-grid .lbl {{ color:#9c9c9c; font-size:11px; display:block; }}
 .anchor-grid .val {{ color:#f3f3f3; font-size:14px; font-weight:600; }}
 .anchor-source {{ color:#6e6e6e; font-size:10px; margin-top:10px; font-style:italic; }}
+.fn-ref {{ font-size:10px; vertical-align:super; line-height:0; }}
+.fn-ref a {{ color:#d4a855; text-decoration:none; padding:0 1px; }}
+.fn-ref a:hover {{ text-decoration:underline; }}
+.sources {{ margin-top:40px; padding-top:20px; border-top:1px solid #2a2a2a; }}
+.sources-title {{ font-family:'Inter',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:#9c9c9c; margin-bottom:12px; font-weight:600; }}
+.sources-list {{ list-style:none; padding:0; counter-reset:none; }}
+.sources-list li {{ color:#9c9c9c; font-size:12px; line-height:1.7; margin-bottom:4px; padding-left:4px; }}
+.sources-list li:target {{ color:#d4a855; background:rgba(212,168,85,0.05); }}
 </style>
 </head>
 <body>
