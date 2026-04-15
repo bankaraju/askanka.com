@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-04-15T09:25:08.354943+05:30",
+  "regime": "NEUTRAL",
+  "regime_source": "etf_engine",
+  "msi_score": 43.7,
+  "msi_regime": "MACRO_NEUTRAL",
+  "regime_stable": true,
+  "consecutive_days": 2,
+  "trade_map_key": "NEUTRAL",
+  "eligible_spreads": {
+    "Defence vs IT": {"spread": "Defence vs IT", "1d_win": 57.0, "best_period": 5, "best_win": 59.0}
+  },
+  "components": {
+    "inst_flow": {"raw": null, "norm": 0.5, "weight": 0.3, "contribution": 15.0},
+    "india_vix": {"raw": 19.93, "norm": 0.49, "weight": 0.25, "contribution": 12.3},
+    "usd_inr": {"raw": 0.002, "norm": 0.4, "weight": 0.2, "contribution": 8.0},
+    "nifty_30d": {"raw": 0.015, "norm": 0.55, "weight": 0.15, "contribution": 8.25},
+    "crude_5d": {"raw": -0.01, "norm": 0.015, "weight": 0.1, "contribution": 0.15}
+  }
+}
