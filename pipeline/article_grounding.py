@@ -56,8 +56,16 @@ class Violation:
 
 
 def load_market_context(date_str: str) -> dict:
-    """Load merged authoritative market data for a YYYY-MM-DD date."""
-    raise NotImplementedError
+    """Load merged authoritative market data for a YYYY-MM-DD date.
+
+    Reads <DAILY_DUMP_DIR>/<date>.json. Raises MarketDataMissing if absent.
+    Future: merge today_regime.json + fii_flows.json into the same dict
+    under top-level keys 'regime' and 'flows'. For now those are optional.
+    """
+    dump_path = DAILY_DUMP_DIR / f"{date_str}.json"
+    if not dump_path.exists():
+        raise MarketDataMissing(f"daily dump not found: {dump_path}")
+    return json.loads(dump_path.read_text(encoding="utf-8"))
 
 
 def build_topic_panel(topic: str, context: dict) -> dict:
