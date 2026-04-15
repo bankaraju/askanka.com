@@ -5,6 +5,7 @@ P&L tracking, lifecycle management, and monitoring for trading signals.
 
 import json
 import logging
+import math
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -386,6 +387,39 @@ def snapshot_eod_prices(
             if price:
                 prev_short[ticker] = price
         sig["_prev_close_short"] = prev_short
+
+
+def compute_trail_budget(avg_favorable: float, days_since_check: int) -> float:
+    """Historic-basis trailing budget scaled for elapsed days.
+
+    Budget = avg_favorable_move * 0.50 * sqrt(max(1, days_since_check)).
+    The sqrt scaler accounts for variance accumulating across holiday gaps:
+    on a 3-day re-open, the spread has had 3 days of action to cover, so
+    the single-day budget is widened accordingly.
+
+    Returns 0.0 when avg_favorable is 0 (no historical data -> no trail).
+    """
+    if avg_favorable <= 0:
+        return 0.0
+    days = max(1, days_since_check)
+    return avg_favorable * 0.50 * math.sqrt(days)
+
+
+def trail_stop_triggered(cumulative: float, peak: float, trail_budget: float) -> bool:
+    """Peak-relative trailing stop check.
+
+    Fires when cumulative P&L has given back more than ``trail_budget`` from
+    the running peak. Guard: does not fire until peak has exceeded the budget
+    (otherwise fresh trades with noisy early moves would trip instantly —
+    daily_stop handles that regime).
+
+    Returns False when trail_budget is 0 (no historical basis -> skip).
+    """
+    if trail_budget <= 0:
+        return False
+    if peak < trail_budget:
+        return False
+    return cumulative <= (peak - trail_budget)
 
 
 def check_signal_status(
