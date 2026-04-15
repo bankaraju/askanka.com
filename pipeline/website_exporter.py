@@ -208,8 +208,43 @@ def _build_news_recs() -> list:
 
 
 def export_live_status() -> dict:
-    """Export current open positions for the live dashboard."""
+    """Export current open positions for the live dashboard.
+
+    Mark-to-market: fetches live prices for every leg ticker so current !=
+    entry when the market has moved. Falls back to entry only when a fetch
+    fails. Without this the dashboard shows 0% P&L indefinitely.
+    """
     open_sigs = _load_json(OPEN_FILE)
+
+    # Collect every leg ticker across all open signals and fetch once.
+    all_tickers = set()
+    for sig in open_sigs:
+        for l in sig.get("long_legs", []) + sig.get("short_legs", []):
+            all_tickers.add(l["ticker"])
+
+    current_prices: dict = {}
+    if all_tickers:
+        try:
+            from signal_tracker import fetch_current_prices
+            current_prices = fetch_current_prices(sorted(all_tickers)) or {}
+        except Exception as e:
+            print(f"[live_status] fetch_current_prices failed: {e} — falling back to entry", file=sys.stderr)
+
+    def _mtm_leg(leg: dict, is_long: bool) -> dict:
+        ticker = leg["ticker"]
+        entry = leg.get("price", 0) or 0
+        current = current_prices.get(ticker)
+        if current is None or not entry:
+            current = entry
+            pnl_pct = 0.0
+        else:
+            pnl_pct = ((current / entry - 1) * 100) if is_long else ((1 - current / entry) * 100)
+        return {
+            "ticker": ticker,
+            "entry": round(entry, 2),
+            "current": round(float(current), 2),
+            "pnl_pct": round(pnl_pct, 2),
+        }
 
     positions = []
     for sig in open_sigs:
@@ -220,14 +255,8 @@ def export_live_status() -> dict:
             "category": sig.get("category", ""),
             "tier": sig.get("tier", "SIGNAL"),
             "open_date": sig.get("open_timestamp", "")[:10],
-            "long_legs": [
-                {"ticker": l["ticker"], "entry": l["price"], "current": l.get("price", 0)}
-                for l in sig.get("long_legs", [])
-            ],
-            "short_legs": [
-                {"ticker": s["ticker"], "entry": s["price"], "current": s.get("price", 0)}
-                for s in sig.get("short_legs", [])
-            ],
+            "long_legs":  [_mtm_leg(l, is_long=True)  for l in sig.get("long_legs", [])],
+            "short_legs": [_mtm_leg(s, is_long=False) for s in sig.get("short_legs", [])],
             "spread_pnl_pct": dl.get("cumulative", 0),
             "todays_move": dl.get("todays_move", 0),
             "daily_stop": dl.get("daily_stop", 0),
