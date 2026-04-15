@@ -107,3 +107,28 @@ def test_extract_includes_text_excerpt():
     found = _extract_numbers(text)
     dol = [f for f in found if f.pattern_kind == "dollar"][0]
     assert "$103" in dol.text_excerpt
+
+
+def test_whitelist_pct_of_imports():
+    from article_grounding import _is_whitelisted
+    assert _is_whitelisted("85% of crude imports come from", 85.0, "pct_bps")
+
+
+def test_whitelist_per_liter():
+    from article_grounding import _is_whitelisted
+    assert _is_whitelisted("retail prices up by ₹5-7 per liter", 7.0, "rupee")
+
+
+def test_whitelist_year_window():
+    from article_grounding import _is_whitelisted
+    assert _is_whitelisted("over the next 2-3 years", 3.0, "pct_bps")
+
+
+def test_whitelist_jobs():
+    from article_grounding import _is_whitelisted
+    assert _is_whitelisted("creating 3,000 jobs in defence", 3000.0, "pct_bps")
+
+
+def test_whitelist_does_not_match_market_price():
+    from article_grounding import _is_whitelisted
+    assert not _is_whitelisted("Brent rose to $103 a barrel", 103.0, "dollar")

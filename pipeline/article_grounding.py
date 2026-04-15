@@ -102,6 +102,23 @@ def _extract_numbers(text: str) -> list[Extraction]:
     return out
 
 
+_WHITELIST_PATTERNS = [
+    re.compile(r"\d+(?:\.\d+)?%\s+of\s+\w+", re.I),
+    re.compile(r"₹\s?[\d.]+(?:-[\d.]+)?\s+per\s+(liter|kg|share|barrel)", re.I),
+    re.compile(r"\d+(?:-\d+)?\s+(year|month|day|week)s?", re.I),
+    re.compile(r"\d+(?:,\d{3})*\s+jobs", re.I),
+    re.compile(r"\d+%\s+(?:increase|decrease|growth|decline)\s+in\s+\w+", re.I),
+]
+
+
+def _is_whitelisted(text_excerpt: str, value: float, pattern_kind: str) -> bool:
+    """Return True if the text around the number matches a known-safe pattern."""
+    for pat in _WHITELIST_PATTERNS:
+        if pat.search(text_excerpt):
+            return True
+    return False
+
+
 def load_market_context(date_str: str) -> dict:
     """Load merged authoritative market data for a YYYY-MM-DD date.
 
