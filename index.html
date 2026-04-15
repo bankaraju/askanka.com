@@ -1373,6 +1373,65 @@ async function loadLivePositions() {
 }
 loadLivePositions();
 setInterval(loadLivePositions, 60000);
+
+async function loadTodayRecs() {
+  try {
+    const res = await fetch('data/today_recommendations.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const d = await res.json();
+    renderRecColumn('recs-spreads', d.spreads, renderSpreadCard,
+      'No spread setups today — regime stable');
+    renderRecColumn('recs-stocks', d.stocks, renderStockCard,
+      'No standalone stock signals today');
+    renderRecColumn('recs-news', d.news_driven, renderNewsCard,
+      'No news-driven trades today');
+  } catch (e) {
+    ['recs-spreads', 'recs-stocks', 'recs-news'].forEach(id =>
+      document.getElementById(id).innerHTML = '<div class="rec-empty">Offline</div>');
+  }
+}
+
+function renderRecColumn(elId, items, renderFn, emptyMsg) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '';
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div class="rec-empty">' + emptyMsg + '</div>';
+    return;
+  }
+  items.forEach(it => el.insertAdjacentHTML('beforeend', renderFn(it)));
+}
+
+function stalePill(it) { return it.is_stale ? '<span class="stale-pill">stale</span>' : ''; }
+
+function renderSpreadCard(s) {
+  return '<div class="rec-card">' +
+    '<div class="name">' + s.name + stalePill(s) + '</div>' +
+    '<div class="meta"><span class="conv-' + s.conviction + '">' + s.conviction + '</span>' +
+    ' &middot; ' + s.action + ' &middot; z=' + Number(s.z_score).toFixed(2) + ' &middot; ' + s.reason + '</div>' +
+    '</div>';
+}
+
+function renderStockCard(s) {
+  return '<div class="rec-card">' +
+    '<div class="name"><span class="dir-' + s.direction + '">' + s.direction + '</span> ' +
+    s.ticker + stalePill(s) + '</div>' +
+    '<div class="meta"><span class="conv-' + s.conviction + '">' + s.conviction + '</span>' +
+    ' &middot; ' + s.trigger + '</div>' +
+    '</div>';
+}
+
+function renderNewsCard(n) {
+  return '<div class="rec-card">' +
+    '<div class="name"><span class="dir-' + n.direction + '">' + n.direction + '</span> ' +
+    n.ticker + stalePill(n) + '</div>' +
+    '<div class="meta">' + n.headline + '</div>' +
+    '<div class="meta">hit ' + Math.round(n.historical_hit_rate * 100) + '%' +
+    ' &middot; ' + n.precedent_count + ' precedents &middot; ' + n.shelf_days + 'd shelf</div>' +
+    '</div>';
+}
+
+loadTodayRecs();
+setInterval(loadTodayRecs, 60000);
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
