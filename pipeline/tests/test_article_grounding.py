@@ -132,3 +132,57 @@ def test_whitelist_jobs():
 def test_whitelist_does_not_match_market_price():
     from article_grounding import _is_whitelisted
     assert not _is_whitelisted("Brent rose to $103 a barrel", 103.0, "dollar")
+
+
+def _war_panel(tmp_path, monkeypatch):
+    _stage_fixture(tmp_path, monkeypatch)
+    return build_topic_panel("war", load_market_context("2026-04-15"))
+
+
+def test_verify_clean_narrative_returns_no_violations(tmp_path, monkeypatch):
+    panel = _war_panel(tmp_path, monkeypatch)
+    text = "<p>Brent closed at $95 a barrel today, with WTI at $92.</p>"
+    issues = verify_narrative(text, panel)
+    assert issues == []
+
+
+def test_verify_catches_today_bug_103_oil(tmp_path, monkeypatch):
+    panel = _war_panel(tmp_path, monkeypatch)
+    text = "<p>Crude spiked another 3% today to $103 a barrel.</p>"
+    issues = verify_narrative(text, panel)
+    assert len(issues) == 1
+    v = issues[0]
+    assert v.number == 103.0
+    assert v.pattern_kind == "dollar"
+    assert v.closest_panel_value == ("Brent", 95.07)
+
+
+def test_verify_within_tolerance_passes(tmp_path, monkeypatch):
+    panel = _war_panel(tmp_path, monkeypatch)
+    # 95.07 * 1.018 = 96.78 — within 2% tolerance
+    text = "<p>Brent at $96.78 today.</p>"
+    issues = verify_narrative(text, panel)
+    assert issues == []
+
+
+def test_verify_whitelisted_85pct_of_imports_passes(tmp_path, monkeypatch):
+    panel = _war_panel(tmp_path, monkeypatch)
+    text = "<p>India imports 85% of crude oil from OPEC.</p>"
+    issues = verify_narrative(text, panel)
+    assert issues == []
+
+
+def test_verify_whitelisted_per_liter_passes(tmp_path, monkeypatch):
+    panel = _war_panel(tmp_path, monkeypatch)
+    text = "<p>Petrol prices could rise ₹5-7 per liter at the pump.</p>"
+    issues = verify_narrative(text, panel)
+    assert issues == []
+
+
+def test_verify_index_violation(tmp_path, monkeypatch):
+    panel = _war_panel(tmp_path, monkeypatch)
+    # Panel Nifty 50 = 25432.1; "26500" is way outside ±2% (~510)
+    text = "<p>Nifty 50 closed at 26,500 today.</p>"
+    issues = verify_narrative(text, panel)
+    assert len(issues) == 1
+    assert issues[0].pattern_kind == "index"

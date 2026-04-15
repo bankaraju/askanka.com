@@ -102,18 +102,27 @@ def _extract_numbers(text: str) -> list[Extraction]:
     return out
 
 
-_WHITELIST_PATTERNS = [
-    re.compile(r"\d+(?:\.\d+)?%\s+of\s+\w+", re.I),
-    re.compile(r"₹\s?[\d.]+(?:-[\d.]+)?\s+per\s+(liter|kg|share|barrel)", re.I),
-    re.compile(r"\d+(?:-\d+)?\s+(year|month|day|week)s?", re.I),
-    re.compile(r"\d+(?:,\d{3})*\s+jobs", re.I),
-    re.compile(r"\d+%\s+(?:increase|decrease|growth|decline)\s+in\s+\w+", re.I),
+# Each entry: (compiled_regex, set_of_kinds_it_applies_to | None-means-all)
+_WHITELIST_RULES: list[tuple[re.Pattern, set[str] | None]] = [
+    (re.compile(r"\d+(?:\.\d+)?%\s+of\s+\w+", re.I),                               {"pct_bps"}),
+    (re.compile(r"₹\s?[\d.]+(?:-[\d.]+)?\s+per\s+(liter|kg|share|barrel)", re.I), {"rupee"}),
+    (re.compile(r"\d+(?:-\d+)?\s+(year|month|day|week)s?", re.I),                   {"pct_bps"}),
+    (re.compile(r"\d+(?:,\d{3})*\s+jobs", re.I),                                    {"pct_bps"}),
+    (re.compile(r"\d+%\s+(?:increase|decrease|growth|decline)\s+in\s+\w+", re.I),   {"pct_bps"}),
+    # Percentage-change/move language — only fires for pct_bps extractions
+    (re.compile(r"(?:another|up|down|fell?|rose?|gained?|lost?|dropped?|surged?|slipped?|climbed?|slid?|jumped?|eased?)\s+[\d.]+\s*%", re.I), {"pct_bps"}),
+    (re.compile(r"[\d.]+\s*%\s+(?:higher|lower|above|below|more|less)", re.I),      {"pct_bps"}),
 ]
+
+# Keep the old name so existing unit tests (_is_whitelisted) still work unchanged
+_WHITELIST_PATTERNS = [pat for pat, _ in _WHITELIST_RULES]
 
 
 def _is_whitelisted(text_excerpt: str, value: float, pattern_kind: str) -> bool:
     """Return True if the text around the number matches a known-safe pattern."""
-    for pat in _WHITELIST_PATTERNS:
+    for pat, kinds in _WHITELIST_RULES:
+        if kinds is not None and pattern_kind not in kinds:
+            continue
         if pat.search(text_excerpt):
             return True
     return False
@@ -176,5 +185,47 @@ def build_topic_panel(topic: str, context: dict) -> dict:
 
 
 def verify_narrative(narrative_html: str, panel: dict) -> list[Violation]:
-    """Scan narrative, return list of Violations (empty if clean)."""
-    raise NotImplementedError
+    """Scan the narrative, return Violations for numbers outside tolerance.
+
+    Strips HTML tags first so attribute values aren't matched.
+    Rules:
+      - For each number found, if a whitelist pattern matches the surrounding
+        text, skip it.
+      - Otherwise compare against every panel value of a comparable kind:
+        dollar/index check against numeric panel values; rupee always
+        considered against panel values too. pct_bps without whitelist is
+        an unsourced market percent — also a violation if no panel match.
+      - "Within tolerance" = abs(num - panel_val) / panel_val <= TOLERANCE_PCT
+      - The first panel value within tolerance wins (no violation).
+      - If no panel value is within tolerance, record a Violation whose
+        closest_panel_value is the (label, value) with smallest relative
+        distance.
+    """
+    text = re.sub(r"<[^>]+>", " ", narrative_html)
+    raw = panel.get("_raw", {})
+    panel_pairs = [(label, val) for label, val in raw.items() if isinstance(val, (int, float))]
+
+    violations = []
+    for ext in _extract_numbers(text):
+        if _is_whitelisted(ext.text_excerpt, ext.value, ext.pattern_kind):
+            continue
+
+        # Find closest panel value (by relative distance)
+        best = None
+        for label, pval in panel_pairs:
+            if pval == 0:
+                continue
+            rel = abs(ext.value - pval) / pval
+            if best is None or rel < best[0]:
+                best = (rel, label, pval)
+
+        if best is not None and best[0] <= TOLERANCE_PCT:
+            continue  # within tolerance, OK
+
+        violations.append(Violation(
+            number=ext.value,
+            text_excerpt=ext.text_excerpt,
+            pattern_kind=ext.pattern_kind,
+            closest_panel_value=(best[1], best[2]) if best else None,
+        ))
+    return violations
