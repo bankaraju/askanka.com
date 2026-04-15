@@ -11,18 +11,22 @@ from signal_tracker import compute_trail_budget, trail_stop_triggered
 
 
 class TestComputeTrailBudget:
-    def test_single_day_returns_half_favorable(self):
-        # 1 day gap: budget = favorable * 0.5 * sqrt(1) = favorable * 0.5
-        assert compute_trail_budget(avg_favorable=2.38, days_since_check=1) == pytest.approx(1.19)
+    def test_live_default_uses_module_mult(self):
+        # Live default: TRAIL_BUDGET_MULT = 1.0 -> budget = favorable * 1.0 * sqrt(1) = 2.38
+        assert compute_trail_budget(avg_favorable=2.38, days_since_check=1) == pytest.approx(2.38)
+
+    def test_override_mult_scales_budget(self):
+        # Explicit override: budget_mult=0.5 -> budget = 2.38 * 0.5 = 1.19
+        assert compute_trail_budget(avg_favorable=2.38, days_since_check=1, budget_mult=0.5) == pytest.approx(1.19)
 
     def test_three_day_gap_widens_budget(self):
-        # 3 day gap: budget = 2.38 * 0.5 * sqrt(3) ~= 2.06
-        result = compute_trail_budget(avg_favorable=2.38, days_since_check=3)
+        # 3 day gap with explicit mult=0.5: budget = 2.38 * 0.5 * sqrt(3) ~= 2.06
+        result = compute_trail_budget(avg_favorable=2.38, days_since_check=3, budget_mult=0.5)
         assert result == pytest.approx(2.38 * 0.5 * math.sqrt(3), rel=1e-6)
 
     def test_zero_days_clamped_to_one(self):
-        # Edge: same-day re-check shouldn't produce 0 budget
-        assert compute_trail_budget(avg_favorable=2.0, days_since_check=0) == pytest.approx(1.0)
+        # Edge: same-day re-check shouldn't produce 0 budget (mult=0.5 override)
+        assert compute_trail_budget(avg_favorable=2.0, days_since_check=0, budget_mult=0.5) == pytest.approx(1.0)
 
     def test_zero_favorable_returns_zero(self):
         # Defensive: if no historical favorable data, no budget

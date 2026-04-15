@@ -7,14 +7,17 @@ import json
 import logging
 import math
 
-# Feature flag: the trail-stop cascade is RESEARCH-ONLY until the parameter
-# sweep runs on a real sample size (~200+ synthetic trades from spread-return
-# history). A 3-trade sweep on 2026-04-15 showed no parameter set beats doing
-# nothing — naive trail cuts winners before they run and can't save one-bar
-# gap-down losers. Replay + sweep scripts in pipeline/autoresearch/ still
-# consume compute_trail_budget and trail_stop_triggered directly, so those
-# helpers stay wired; only the live exit rule is gated.
-TRAIL_STOP_ENABLED = False
+# Trail-stop live config. Validated by backtest 2026-04-15 across 1223
+# synthetic 10-day trades from 11 spread pairs (6mo OHLC). bm=1.0 af=1.0
+# lifted Sharpe from 1.21 → 1.29 (+7%), win rate 57% → 59%, mean return
+# essentially unchanged (+1.43% vs +1.47% baseline). Trail fires on ~32%
+# of trades, locking in avg +2.46% on those exits.
+# Tail risk (max -15.57%) is NOT addressed by any trail setting — that
+# loss mode is an overnight gap that a Layer-0 gap predictor must catch.
+# See data/backtest_trail_stop.json and pipeline/autoresearch/backtest_trail_stop.py.
+TRAIL_STOP_ENABLED   = True
+TRAIL_BUDGET_MULT    = 1.0     # budget = avg_favorable_move * mult * sqrt(days)
+TRAIL_ARM_FACTOR     = 1.0     # arm when peak >= budget * arm_factor
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -398,35 +401,52 @@ def snapshot_eod_prices(
         sig["_prev_close_short"] = prev_short
 
 
-def compute_trail_budget(avg_favorable: float, days_since_check: int) -> float:
+def compute_trail_budget(
+    avg_favorable: float,
+    days_since_check: int,
+    budget_mult: float = None,
+) -> float:
     """Historic-basis trailing budget scaled for elapsed days.
 
-    Budget = avg_favorable_move * 0.50 * sqrt(max(1, days_since_check)).
+    Budget = avg_favorable_move * budget_mult * sqrt(max(1, days_since_check)).
     The sqrt scaler accounts for variance accumulating across holiday gaps:
     on a 3-day re-open, the spread has had 3 days of action to cover, so
     the single-day budget is widened accordingly.
+
+    ``budget_mult`` defaults to module-level ``TRAIL_BUDGET_MULT``. Passing
+    an explicit value lets replay / sweep / backtest scripts override it
+    without touching the live constant.
 
     Returns 0.0 when avg_favorable is 0 (no historical data -> no trail).
     """
     if avg_favorable <= 0:
         return 0.0
+    mult = TRAIL_BUDGET_MULT if budget_mult is None else budget_mult
     days = max(1, days_since_check)
-    return avg_favorable * 0.50 * math.sqrt(days)
+    return avg_favorable * mult * math.sqrt(days)
 
 
-def trail_stop_triggered(cumulative: float, peak: float, trail_budget: float) -> bool:
+def trail_stop_triggered(
+    cumulative: float,
+    peak: float,
+    trail_budget: float,
+    arm_factor: float = None,
+) -> bool:
     """Peak-relative trailing stop check.
 
     Fires when cumulative P&L has given back more than ``trail_budget`` from
-    the running peak. Guard: does not fire until peak has exceeded the budget
-    (otherwise fresh trades with noisy early moves would trip instantly —
-    daily_stop handles that regime).
+    the running peak. Arm guard: does not fire until peak has exceeded
+    ``trail_budget * arm_factor`` — prevents fresh trades with noisy early
+    moves from tripping instantly (daily_stop handles that regime).
+
+    ``arm_factor`` defaults to module-level ``TRAIL_ARM_FACTOR``.
 
     Returns False when trail_budget is 0 (no historical basis -> skip).
     """
     if trail_budget <= 0:
         return False
-    if peak < trail_budget:
+    af = TRAIL_ARM_FACTOR if arm_factor is None else arm_factor
+    if peak < trail_budget * af:
         return False
     return cumulative <= (peak - trail_budget)
 
