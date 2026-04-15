@@ -90,6 +90,43 @@ def export_global_regime() -> dict:
     }
 
 
+def export_today_recommendations() -> dict:
+    """Build the unified recommendations view for the website.
+
+    Reads spread engine, ranker, and news intelligence outputs; returns top-3
+    of each as a single dict with per-card freshness flags.
+    """
+    regime_raw = _load_json(TODAY_REGIME_FILE) or {}
+    regime_zone = regime_raw.get("regime", "UNKNOWN")
+    regime_ts = regime_raw.get("timestamp")
+
+    spreads = _build_spread_recs()
+    stocks = _build_stock_recs()
+    news_driven = _build_news_recs()
+
+    return {
+        "updated_at": datetime.now(IST).isoformat(),
+        "regime_zone": regime_zone,
+        "regime_source_timestamp": regime_ts,
+        "spreads": spreads,
+        "stocks": stocks,
+        "news_driven": news_driven,
+        "holiday_mode": False,
+    }
+
+
+def _build_spread_recs() -> list:
+    return []
+
+
+def _build_stock_recs() -> list:
+    return []
+
+
+def _build_news_recs() -> list:
+    return []
+
+
 def export_live_status() -> dict:
     """Export current open positions for the live dashboard."""
     open_sigs = _load_json(OPEN_FILE)

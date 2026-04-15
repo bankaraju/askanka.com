@@ -90,3 +90,31 @@ def test_stale_check_none_returns_true():
 def test_stale_check_empty_string_returns_true():
     from website_exporter import stale_check
     assert stale_check("") is True
+
+
+RECS_FIXTURE = Path(__file__).parent / "fixtures" / "recommendations_fixture.json"
+RANKER_FIXTURE = Path(__file__).parent / "fixtures" / "regime_ranker_state_fixture.json"
+NEWS_EVENTS_FIXTURE = Path(__file__).parent / "fixtures" / "news_events_today_fixture.json"
+NEWS_VERDICTS_FIXTURE = Path(__file__).parent / "fixtures" / "news_verdicts_fixture.json"
+
+
+def _patch_all_sources(monkeypatch):
+    monkeypatch.setattr("website_exporter.TODAY_REGIME_FILE", FIXTURE)
+    monkeypatch.setattr("website_exporter.RECOMMENDATIONS_FILE", RECS_FIXTURE)
+    monkeypatch.setattr("website_exporter.RANKER_STATE_FILE", RANKER_FIXTURE)
+    monkeypatch.setattr("website_exporter.NEWS_EVENTS_FILE", NEWS_EVENTS_FIXTURE)
+    monkeypatch.setattr("website_exporter.NEWS_VERDICTS_FILE", NEWS_VERDICTS_FIXTURE)
+
+
+def test_today_recommendations_top_level_fields(monkeypatch):
+    _patch_all_sources(monkeypatch)
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    assert set(out.keys()) == {"updated_at", "regime_zone", "regime_source_timestamp",
+                                "spreads", "stocks", "news_driven", "holiday_mode"}
+    assert out["regime_zone"] == "NEUTRAL"
+    assert out["regime_source_timestamp"] == "2026-04-14T09:25:08.354943+05:30"
+    assert out["holiday_mode"] is False
+    assert isinstance(out["spreads"], list)
+    assert isinstance(out["stocks"], list)
+    assert isinstance(out["news_driven"], list)
