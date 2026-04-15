@@ -14,7 +14,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from config import INDIA_SPREAD_PAIRS, INDIA_SIGNAL_STOCKS
 
 IST = timezone(timedelta(hours=5, minutes=30))
 DATA_DIR = Path(__file__).parent / "data"
@@ -119,125 +118,24 @@ def export_live_status() -> dict:
     }
 
 
-def export_track_record() -> dict:
-    """Export closed trades for the track record table."""
-    closed_sigs = _load_json(CLOSED_FILE)
-
-    trades = []
-    for sig in closed_sigs:
-        pnl = sig.get("final_pnl", {})
-        trades.append({
-            "signal_id": sig.get("signal_id", ""),
-            "spread_name": sig.get("spread_name", ""),
-            "category": sig.get("category", ""),
-            "tier": sig.get("tier", "SIGNAL"),
-            "open_date": sig.get("open_timestamp", "")[:10],
-            "close_date": sig.get("close_timestamp", "")[:10],
-            "status": sig.get("status", ""),
-            "spread_pnl_pct": pnl.get("spread_pnl_pct", 0),
-            "long_pnl_pct": pnl.get("long_pnl_pct", 0),
-            "short_pnl_pct": pnl.get("short_pnl_pct", 0),
-            "peak_pnl_pct": sig.get("peak_spread_pnl_pct", 0),
-        })
-
-    # Sort by close date descending
-    trades.sort(key=lambda t: t.get("close_date", ""), reverse=True)
-
-    # Summary stats
-    pnls = [t["spread_pnl_pct"] for t in trades]
-    return {
-        "updated_at": datetime.now(IST).isoformat(),
-        "trades": trades,
-        "summary": {
-            "total": len(trades),
-            "wins": sum(1 for p in pnls if p > 0),
-            "losses": sum(1 for p in pnls if p <= 0),
-            "win_rate_pct": round(sum(1 for p in pnls if p > 0) / len(pnls) * 100, 1) if pnls else 0,
-            "avg_pnl_pct": round(sum(pnls) / len(pnls), 2) if pnls else 0,
-            "best_trade_pct": round(max(pnls), 2) if pnls else 0,
-            "worst_trade_pct": round(min(pnls), 2) if pnls else 0,
-            "cumulative_pnl_pct": round(sum(pnls), 2),
-        },
-    }
-
-
-def export_spread_universe() -> dict:
-    """Export all 25 spreads with backtest stats for the heatmap."""
-    pattern_data = _load_json(PATTERN_LOOKUP)
-    spread_backtests = pattern_data.get("spread_backtests", {})
-
-    spreads = []
-    for pair in INDIA_SPREAD_PAIRS:
-        name = pair["name"]
-        backtest = spread_backtests.get(name, {})
-
-        # Build category stats
-        cat_stats = {}
-        for cat, stats in backtest.items():
-            cat_stats[cat] = {
-                "hit_rate": stats.get("hit_rate", 0),
-                "spread_1d": stats.get("1d_spread_median", 0),
-                "spread_5d": stats.get("5d_spread_median", 0),
-                "n": stats.get("n", 0),
-            }
-
-        # Best trigger
-        best_cat = max(cat_stats.items(), key=lambda x: x[1]["hit_rate"]) if cat_stats else (None, {})
-
-        spreads.append({
-            "name": name,
-            "long": pair["long"],
-            "short": pair["short"],
-            "triggers": pair.get("triggers", []),
-            "notes": pair.get("notes", ""),
-            "best_trigger": best_cat[0],
-            "best_hit_rate": best_cat[1].get("hit_rate", 0) if best_cat[0] else 0,
-            "categories": cat_stats,
-        })
-
-    # All unique categories across all spreads
-    all_cats = sorted(set(
-        cat for s in spreads for cat in s["categories"]
-    ))
-
-    return {
-        "updated_at": datetime.now(IST).isoformat(),
-        "spreads": spreads,
-        "categories": all_cats,
-        "total_spreads": len(spreads),
-        "total_categories": len(all_cats),
-    }
-
-
-def export_msi_history() -> list:
-    """Export MSI history for the chart."""
-    return _load_json(MSI_HISTORY)
-
-
 def run_export():
     """Run full export to website JSON files."""
     WEBSITE_DIR.mkdir(parents=True, exist_ok=True)
 
+    regime = export_global_regime()
     live = export_live_status()
-    track = export_track_record()
-    universe = export_spread_universe()
-    msi = export_msi_history()
 
     for name, data in [
+        ("global_regime.json", regime),
         ("live_status.json", live),
-        ("track_record.json", track),
-        ("spread_universe.json", universe),
-        ("msi_history.json", msi),
     ]:
         path = WEBSITE_DIR / name
         path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
         print(f"  Exported {name} ({path})")
 
     print(f"\nWebsite data exported to {WEBSITE_DIR}")
-    print(f"  Open positions: {live['stats']['open_positions']}")
-    print(f"  Closed trades:  {track['summary']['total']}")
-    print(f"  Spread pairs:   {universe['total_spreads']}")
-    print(f"  MSI history:    {len(msi)} days")
+    print(f"  Regime zone:    {regime['zone']} (score {regime['score']})")
+    print(f"  Open positions: {len(live['positions'])}")
 
 
 if __name__ == "__main__":
