@@ -212,3 +212,19 @@ def test_news_card_fields(monkeypatch):
     assert n["headline"] == "Q4 results beat estimates by 8%"
     assert n["historical_hit_rate"] == 0.71
     assert n["precedent_count"] == 14
+
+
+def test_missing_engine_files_returns_empty_lists(tmp_path, monkeypatch):
+    """All engine source files missing → empty lists, UNKNOWN zone, no crash."""
+    monkeypatch.setattr("website_exporter.TODAY_REGIME_FILE", tmp_path / "missing.json")
+    monkeypatch.setattr("website_exporter.RECOMMENDATIONS_FILE", tmp_path / "missing.json")
+    monkeypatch.setattr("website_exporter.RANKER_STATE_FILE", tmp_path / "missing.json")
+    monkeypatch.setattr("website_exporter.NEWS_EVENTS_FILE", tmp_path / "missing.json")
+    monkeypatch.setattr("website_exporter.NEWS_VERDICTS_FILE", tmp_path / "missing.json")
+    from website_exporter import export_today_recommendations
+    out = export_today_recommendations()
+    assert out["spreads"] == []
+    assert out["stocks"] == []
+    assert out["news_driven"] == []
+    assert out["regime_zone"] == "UNKNOWN"
+    assert out["holiday_mode"] is False
