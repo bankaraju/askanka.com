@@ -25,8 +25,8 @@ from pathlib import Path
 import requests
 
 from article_grounding import (
-    load_market_context, build_topic_panel, verify_narrative,
-    render_panel_html, MarketDataMissing, TOPIC_SCHEMAS,
+    load_market_context, load_prior_context, build_topic_panel,
+    verify_narrative, render_panel_html, MarketDataMissing, TOPIC_SCHEMAS,
 )
 
 log = logging.getLogger("anka.daily_articles")
@@ -101,8 +101,12 @@ def generate_article(segment: str, sources: list, date: str) -> str:
         except MarketDataMissing as e:
             log.error(f"Cannot generate {segment} article — market data missing: {e}")
             return ""
-        panel = build_topic_panel(segment, ctx)
-        panel_lines = "\n".join(f"  - {k}: {v}" for k, v in panel.items() if k != "_raw")
+        prior_ctx = load_prior_context(date)
+        panel = build_topic_panel(segment, ctx, prior_context=prior_ctx)
+        panel_lines = "\n".join(
+            f"  - {k}: {v}" for k, v in panel.items()
+            if k not in ("_raw", "_deltas")
+        )
 
     template_path = GIT_REPO / "articles" / "_template" / "regime-engine-defining.html"
     template_excerpt = ""
