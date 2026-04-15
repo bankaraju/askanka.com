@@ -168,8 +168,11 @@ Rules:
         for s in sources[:15]
     )
 
-    # Load yesterday's article as a style reference (if it exists)
-    yesterday_example = _load_yesterday_example(segment)
+    # Load yesterday's article as a style reference (if it exists).
+    # SKIP for market-grounded topics: yesterday's thesis is likely
+    # stale vs today's panel direction and transmits the stale frame
+    # (e.g. "oil surging" narrative copied onto a day when oil dropped).
+    yesterday_example = None if market_grounded else _load_yesterday_example(segment)
     example_section = ""
     if yesterday_example:
         example_section = f"""
