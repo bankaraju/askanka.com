@@ -2,15 +2,6 @@
   "articles": [
     {
       "date": "2026-04-15",
-      "segment": "war",
-      "filename": "2026-04-15-war.html",
-      "headline": "Hormuz Meltdown: The US-China-Russia Standoff Ignites, India's Oil Supply Under Siege, and Defence Stocks Go Parabolic",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 15, 2026"
-    },
-    {
-      "date": "2026-04-15",
       "segment": "epstein",
       "filename": "2026-04-15-epstein.html",
       "headline": "DOJ's Bondi Cover-Up Implodes: Epstein's Mossad Web, Trump's Lies, and India's Geopolitical Reckoning",
@@ -20,30 +11,12 @@
     },
     {
       "date": "2026-04-14",
-      "segment": "war",
-      "filename": "2026-04-14-war.html",
-      "headline": "Hormuz Endgame: Trump's Blockade Threats, India's Oil Crisis, and the Defence Stock Bonanza",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 14, 2026"
-    },
-    {
-      "date": "2026-04-14",
       "segment": "epstein",
       "filename": "2026-04-14-epstein.html",
       "headline": "Trump's Epstein Lies Unravel: DOJ Complicity, Mossad's Shadow, and India's Market Reckoning",
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 14, 2026"
-    },
-    {
-      "date": "2026-04-13",
-      "segment": "war",
-      "filename": "2026-04-13-war.html",
-      "headline": "Trump's 'Peace' Offensive: US Bombs Iran's Energy, Hormuz Blockade Tightens, India's Oil Bill Explodes",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 13, 2026"
     },
     {
       "date": "2026-04-13",
@@ -103,14 +76,6 @@
       "headline": "Melania's Desperate Denials and the Enduring Silence on Epstein's Indian Connections",
       "category": "INVESTIGATION",
       "color": "#d4a855"
-    },
-    {
-      "date": "2026-04-09",
-      "segment": "war",
-      "filename": "2026-04-09-war.html",
-      "headline": "Trump's Iran Ceasefire is a Strategic Retreat — and India's Oil Markets Just Woke Up to the Risk",
-      "category": "Geopolitical Analysis",
-      "color": "#ef4444"
     },
     {
       "date": "2026-04-09",
