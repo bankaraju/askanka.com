@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-15T18:19:25.614463",
-  "predicted_gap_pct": 1.0,
+  "updated_at": "2026-04-15T18:33:11.381636",
+  "predicted_gap_pct": 0.999,
   "direction": "UP",
   "severity": "HIGH",
   "severity_thresholds": {
@@ -16,9 +16,9 @@
   "contributions": [
     {
       "driver": "USDINR",
-      "value": -1.6523,
+      "value": -1.646,
       "coeff": -0.3105,
-      "contribution_pct": 0.513
+      "contribution_pct": 0.511
     },
     {
       "driver": "KOSPI",
@@ -40,9 +40,9 @@
     },
     {
       "driver": "BRENT",
-      "value": 0.5908,
+      "value": 0.5486,
       "coeff": -0.0071,
-      "contribution_pct": -0.0042
+      "contribution_pct": -0.0039
     },
     {
       "driver": "VIX_excess",

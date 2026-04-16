@@ -1,44 +1,44 @@
 {
-  "updated_at": "2026-04-15T16:50:27.469461+05:30",
+  "updated_at": "2026-04-16T09:32:31.147312+05:30",
   "regime_zone": "NEUTRAL",
-  "regime_source_timestamp": "2026-04-15T09:25:06.779170+05:30",
+  "regime_source_timestamp": "2026-04-16T09:25:10.284780+05:30",
   "spreads": [],
   "stocks": [
     {
-      "ticker": "KAYNES",
+      "ticker": "MCX",
       "direction": "LONG",
-      "conviction": "HIGH",
-      "trigger": "CAUTION",
+      "conviction": "LOW",
+      "trigger": "NEUTRAL",
       "source": "ranker",
-      "source_timestamp": "2026-04-15 16:35:50",
+      "source_timestamp": "2026-04-16 09:31:09",
       "is_stale": false,
       "hit_rate": 1.0,
-      "episodes": 1,
-      "hit_rate_meaningful": false
+      "episodes": 6,
+      "hit_rate_meaningful": true
     },
     {
-      "ticker": "PGEL",
-      "direction": "LONG",
-      "conviction": "HIGH",
-      "trigger": "CAUTION",
+      "ticker": "KPITTECH",
+      "direction": "SHORT",
+      "conviction": "LOW",
+      "trigger": "NEUTRAL",
       "source": "ranker",
-      "source_timestamp": "2026-04-15 16:35:50",
+      "source_timestamp": "2026-04-16 09:31:09",
       "is_stale": false,
-      "hit_rate": 1.0,
-      "episodes": 1,
-      "hit_rate_meaningful": false
+      "hit_rate": 0.3333,
+      "episodes": 6,
+      "hit_rate_meaningful": true
     },
     {
-      "ticker": "MOTILALOFS",
-      "direction": "LONG",
-      "conviction": "MEDIUM",
-      "trigger": "CAUTION",
+      "ticker": "IDFCFIRSTB",
+      "direction": "SHORT",
+      "conviction": "LOW",
+      "trigger": "NEUTRAL",
       "source": "ranker",
-      "source_timestamp": "2026-04-15 16:35:50",
+      "source_timestamp": "2026-04-16 09:31:09",
       "is_stale": false,
-      "hit_rate": 1.0,
-      "episodes": 1,
-      "hit_rate_meaningful": false
+      "hit_rate": 0.1667,
+      "episodes": 6,
+      "hit_rate_meaningful": true
     }
   ],
   "news_driven": [],

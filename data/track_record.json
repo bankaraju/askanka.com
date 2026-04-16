@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-15T16:50:27.479367+05:30",
+  "updated_at": "2026-04-16T09:32:31.157268+05:30",
   "total_closed": 3,
   "win_rate_pct": 33.3,
   "avg_pnl_pct": 1.01,
@@ -15,7 +15,7 @@
       "days_open": 13,
       "peak_pnl_pct": 11.11,
       "final_pnl_pct": 8.66,
-      "close_reason": "Trailing stop: today -1.10% \u2264 stop -0.98%"
+      "close_reason": "Trailing stop: today -1.10% <= stop -0.98%"
     },
     {
       "signal_id": "SIG-2026-04-15-004-Upstream_vs_Downstream",
@@ -28,7 +28,7 @@
       "days_open": 0,
       "peak_pnl_pct": 0,
       "final_pnl_pct": -1.58,
-      "close_reason": "Trailing stop: today -1.58% \u2264 stop -1.25%"
+      "close_reason": "Trailing stop: today -1.58% <= stop -1.25%"
     },
     {
       "signal_id": "SIG-2026-03-31-020-Coal_vs_OMCs",
@@ -41,7 +41,7 @@
       "days_open": 6,
       "peak_pnl_pct": 7.07,
       "final_pnl_pct": -4.04,
-      "close_reason": "Trailing stop: today -4.04% \u2264 stop -1.19%"
+      "close_reason": "Trailing stop: today -4.04% <= stop -1.19%"
     }
   ]
 }
