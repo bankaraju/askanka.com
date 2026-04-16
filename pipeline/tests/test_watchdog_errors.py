@@ -115,3 +115,49 @@ class TestLoadInventory:
         f.write_text(json.dumps({"version": 1, "updated": "2026-04-16", "tasks": []}))
         inv = load_inventory(f)
         assert inv["tasks"] == []
+
+
+from unittest.mock import patch, MagicMock
+
+
+class TestEndToEndErrorPaths:
+    def test_missing_inventory_exits_1_with_emergency_alert(self, tmp_path):
+        """Calling watchdog with missing inventory path → exit 1, emergency alert."""
+        import pipeline.watchdog as wd
+
+        args = MagicMock(all=True, tier=None, dry_run=True, inventory=tmp_path / "absent.json")
+
+        with patch("pipeline.watchdog.send_or_log_digest") as mock_send:
+            with pytest.raises(SystemExit) as exc:
+                wd.run(args, inventory_path=args.inventory)
+            assert exc.value.code == 1
+            mock_send.assert_called_once()
+            # First positional arg is the emergency digest string
+            emergency_msg = mock_send.call_args[0][0]
+            assert "EMERGENCY" in emergency_msg
+            assert "inventory" in emergency_msg.lower()
+
+    def test_scheduler_query_failure_skips_drift_continues_file_checks(self, tmp_path, monkeypatch):
+        """If PowerShell fails, drift is skipped but file checks still run, exit 0."""
+        import pipeline.watchdog as wd
+
+        # Minimal valid inventory
+        inv = tmp_path / "inv.json"
+        inv.write_text(json.dumps({
+            "version": 1, "updated": "2026-04-16",
+            "tasks": [{
+                "task_name": "AnkaTest", "tier": "info", "cadence_class": "daily",
+                "outputs": [], "grace_multiplier": 1.5, "notes": "",
+            }],
+        }))
+        # Redirect side-effect paths to tmp so no real state/log file is touched
+        state = tmp_path / "state.json"
+        monkeypatch.setattr(wd, "STATE_PATH", state)
+        monkeypatch.setattr(wd, "ALERT_FALLBACK_PATH", tmp_path / "alerts.log")
+
+        from pipeline.watchdog_scheduler import SchedulerQueryError
+        with patch("pipeline.watchdog.query_anka_tasks", side_effect=SchedulerQueryError("ps fail")):
+            with patch("pipeline.watchdog.send_or_log_digest") as mock_send:
+                args = MagicMock(all=True, tier=None, dry_run=True, inventory=inv)
+                exit_code = wd.run(args, inventory_path=inv)
+        assert exit_code == 0  # ran cleanly despite drift-skip
