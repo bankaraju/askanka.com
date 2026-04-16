@@ -100,7 +100,7 @@ Telegram has no CSS, so the palette is encoded as **emoji semantics** and **stru
 | Section separator      | `• ` bullet + newline | `  • AnkaWeeklyReport — task stale`  |
 
 **Structural rules:**
-- Always send with `parse_mode=None` — no Markdown surprises from dashes, parens, or underscores in task/ticker names.
+- `telegram_bot.send_message` defaults to `parse_mode="Markdown"` with an automatic fallback to plain text if Telegram rejects the payload (retry path in `_send_to_chat_http`). For task/ticker-dense alerts where underscores, dashes, or parens would collide with Markdown (watchdog digests, `ANKA*` task names), pass `parse_mode=None` explicitly.
 - Headlines use 🚨 (alert) / 🟢 🟡 🔴 (regime). Never mix emojis within a headline.
 - ₹ for INR; `K / M / Cr` suffixes for large numbers.
 - Tabular data uses `|` separators: `AAPL | +1.2% | ₹+12,450 | IT-sector`.
