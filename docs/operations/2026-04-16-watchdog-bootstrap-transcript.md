@@ -205,3 +205,72 @@ DRIFT (2):
 ```
 
 **Interpretation:** shadow mode is working as designed. Digest renders with header totals (CRITICAL 0 / WARN 1 / DRIFT 2 = 3 surface-able) while the Python logger INFO line shows the raw count including info-tier (6 issues tracked, 3 rendered). The dedup state correctly retained AnkaWeeklyReport as "(run 2)" across sessions. No Telegram message was sent (dry-run active).
+
+## Canary drift acceptance test (T17 — spec §Acceptance #7)
+
+Sequence: register `AnkaWatchdogDriftCanary` in scheduler only → add to inventory → unregister from scheduler → remove from inventory. Each step fires the gate task and checks the digest for the expected IssueKind transition.
+
+### (a) scheduler has canary, inventory does not → ORPHAN_TASK expected ✅
+```
+🚨 Anka Watchdog — 2026-04-16 15:49 IST
+Gate run • 4 issues
+
+CRITICAL (0):
+
+WARN (1):
+  • AnkaWeeklyReport — task stale result
+    LastTaskResult=0x1 LastRunTime=2026-04-11T10:00:30.0000000+05:30
+
+DRIFT (3):
+  • AnkaWatchdogDriftCanary — orphan task
+    registered in scheduler but not in inventory
+  • AnkaWatchdogGate — orphan task
+    registered in scheduler but not in inventory
+  • AnkaWatchdogIntraday — orphan task
+    registered in scheduler but not in inventory
+```
+
+### (b) canary added to inventory → ORPHAN_TASK resolves ✅
+```
+🚨 Anka Watchdog — 2026-04-16 15:50 IST
+Gate run • 3 issues
+...
+DRIFT (2):
+  • AnkaWatchdogGate still orphan task (run 2)
+  • AnkaWatchdogIntraday still orphan task (run 2)
+
+RESOLVED (1):
+  ✅ AnkaWatchdogDriftCanary — fresh again
+```
+
+### (c) canary unregistered from scheduler → INVENTORY_GHOST expected ✅
+```
+🚨 Anka Watchdog — 2026-04-16 15:50 IST
+Gate run • 4 issues
+...
+DRIFT (3):
+  • AnkaWatchdogGate still orphan task (run 3)
+  • AnkaWatchdogIntraday still orphan task (run 3)
+  • AnkaWatchdogDriftCanary — inventory ghost
+    in inventory but missing from scheduler
+
+RESOLVED (1):
+  ✅ AnkaWatchdogDriftCanary — fresh again
+```
+(The RESOLVED line here reflects the prior ORPHAN_TASK key transitioning to a new INVENTORY_GHOST key — dedup works at the `{task}|{path}|{kind}` level, so a kind change shows both sides cleanly.)
+
+### (d) canary removed from inventory → clean ✅
+```
+🚨 Anka Watchdog — 2026-04-16 15:51 IST
+Gate run • 3 issues
+...
+DRIFT (2):
+  • AnkaWatchdogGate still orphan task (run 4)
+  • AnkaWatchdogIntraday still orphan task (run 4)
+
+RESOLVED (1):
+  ✅ AnkaWatchdogDriftCanary — fresh again
+```
+No mention of `AnkaWatchdogDriftCanary` in CRITICAL/WARN/DRIFT. The canary fully exits the active-issues set.
+
+**Spec §Acceptance #7 SATISFIED** — all four transitions detected, reported, and de-duplicated.
