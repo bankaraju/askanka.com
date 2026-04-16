@@ -1,6 +1,8 @@
 @echo off
 REM ANKA Correlation Break Scanner (Phase C) — runs every 15 min intraday
 REM Reads regime from Phase B state, OI from latest positioning.json
+REM CLI accepts: --regime, --transition, --dry-run, --verbose (per
+REM docs/superpowers/plans/2026-04-14-correlation-break-detector.md §CLI).
 cd /d "C:\Users\Claude_Anka\askanka.com\pipeline"
 
 REM Get current regime from state file
@@ -14,4 +16,4 @@ if "%TRANSITION%"=="" (
     exit /b 0
 )
 
-python -X utf8 autoresearch\reverse_regime_breaks.py --transition "%TRANSITION%" --regime "%REGIME%" --day 1 --no-telegram >> logs\correlation_breaks.log 2>&1
+python -X utf8 autoresearch\reverse_regime_breaks.py --transition "%TRANSITION%" --regime "%REGIME%" >> logs\correlation_breaks.log 2>&1
