@@ -14,27 +14,31 @@
     },
     {
       "task_name": "AnkaDailyArticles",
-      "tier": "info",
+      "tier": "warn",
       "cadence_class": "daily",
-      "outputs": [],
+      "outputs": [
+        "data/articles_index.json"
+      ],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "16:30 IST. daily_articles.py — writes war + epstein articles and data/articles_index.json."
     },
     {
       "task_name": "AnkaDailyDump",
-      "tier": "info",
+      "tier": "critical",
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "04:30 IST. run_daily.py — prices/fundamentals/FII flows. Writes date-stamped files in data/daily/; freshness judged on task-liveness only (file-freshness would need glob support)."
     },
     {
       "task_name": "AnkaEODNews",
-      "tier": "info",
+      "tier": "warn",
       "cadence_class": "daily",
-      "outputs": [],
+      "outputs": [
+        "pipeline/data/news_verdicts.json"
+      ],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "16:20 IST. news_backtest.py — verdicts on detected news events."
     },
     {
       "task_name": "AnkaEODReview",
@@ -42,7 +46,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "16:00 IST. Runs run_signals.py --eod \u2014 prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
+      "notes": "16:00 IST. Runs run_signals.py --eod — prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
     },
     {
       "task_name": "AnkaEODTrackRecord",
@@ -58,217 +62,369 @@
       "task_name": "AnkaGapPredictor",
       "tier": "info",
       "cadence_class": "daily",
-      "outputs": [],
+      "outputs": [
+        "data/gap_risk.json"
+      ],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "08:30 IST. autoresearch/gap_predictor.py — overnight gap risk analysis."
     },
     {
       "task_name": "AnkaIntraday0930",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "09:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday0945",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "09:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1000",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "10:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1015",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "10:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1030",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "10:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1045",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "10:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1100",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "11:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1115",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "11:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1130",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "11:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1145",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "11:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1200",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "12:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1215",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "12:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1230",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "12:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1245",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "12:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1300",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "13:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1315",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "13:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1330",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "13:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1345",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "13:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1400",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "14:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1415",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "14:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1430",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "14:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1445",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "14:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1500",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "15:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1515",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "15:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1530",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/technicals.json",
+        "pipeline/data/positioning.json",
+        "pipeline/data/oi_anomalies.json",
+        "pipeline/data/news.json",
+        "pipeline/data/recommendations.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "15:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaMorningBrief0730",
-      "tier": "info",
+      "tier": "warn",
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "07:30 IST. arcbe_brief.bat → morning_brief.py — reads correlation_report and sends Telegram; no file outputs."
     },
     {
       "task_name": "AnkaMorningScan",
@@ -285,17 +441,21 @@
       "task_name": "AnkaOpenCapture",
       "tier": "info",
       "cadence_class": "daily",
-      "outputs": [],
+      "outputs": [
+        "pipeline/data/today_open_prices.json"
+      ],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "09:16 IST. Captures open prices for the day."
     },
     {
       "task_name": "AnkaPreMarket",
-      "tier": "info",
+      "tier": "warn",
       "cadence_class": "daily",
-      "outputs": [],
+      "outputs": [
+        "pipeline/data/premarket_snapshot.json"
+      ],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "09:15 IST. premarket_scanner. Writes premarket snapshot + regime hint."
     },
     {
       "task_name": "AnkaPruneArticles",
@@ -303,7 +463,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "Daily lifecycle. article_lifecycle.py — archives articles >7 days old. Modifies articles/index.json but is not the owner."
     },
     {
       "task_name": "AnkaRefreshKite",
@@ -329,103 +489,139 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "04:30 IST. daily_shadow.bat points to pipeline/live_shadow/daily_shadow_runner.py which does NOT exist — task is broken. Flagged for cleanup."
     },
     {
       "task_name": "AnkaSignal0942",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "09:42 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1012",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "10:12 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1042",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "10:42 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1112",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "11:12 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1142",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "11:42 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1212",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "12:12 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1242",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "12:42 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1312",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "13:12 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1342",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "13:42 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1412",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "14:12 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1442",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "14:42 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1512",
-      "tier": "info",
-      "cadence_class": "daily",
-      "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/signals/open_signals.json",
+        "pipeline/data/signals/closed_signals.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "15:12 IST. signals.bat → run_signals.py → signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaTrustEOD",
@@ -433,103 +629,103 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "16:35 IST. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra0942",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "09:42 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1012",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "10:12 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1042",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "10:42 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1112",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "11:12 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1142",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "11:42 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1212",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "12:12 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1242",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "12:42 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1312",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "13:12 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1342",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "13:42 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1412",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "14:12 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1442",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "14:42 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustIntra1512",
       "tier": "info",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 2.0,
+      "notes": "15:12 IST. Model portfolio intraday monitor. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaTrustMorning",
@@ -537,15 +733,15 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "04:30 IST. Model portfolio morning rebalance. PATH DRIFT: scheduled task invokes opus-anka/scripts/*.bat (outside canonical repo). Writes opus-anka/artifacts/model_portfolio.json which is outside repo tree — not checked. Tier kept at info pending re-point to askanka.com/opus/ per single-repo-mandate."
     },
     {
       "task_name": "AnkaWeeklyAgg",
-      "tier": "info",
-      "cadence_class": "daily",
+      "tier": "warn",
+      "cadence_class": "weekly",
       "outputs": [],
-      "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "grace_multiplier": 1.25,
+      "notes": "Weekly. weekly_aggregator.py — writes date-stamped weekly/week-NNN.json; file-freshness not checked (would need glob)."
     },
     {
       "task_name": "AnkaWeeklyReport",
@@ -564,6 +760,22 @@
       ],
       "grace_multiplier": 1.25,
       "notes": "Sunday 22:00 IST. Backtest refresh for spread library."
+    },
+    {
+      "task_name": "AnkaWatchdogGate",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "09:20 + 16:45 IST. Watchdog gate pass — all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift."
+    },
+    {
+      "task_name": "AnkaWatchdogIntraday",
+      "tier": "info",
+      "cadence_class": "intraday",
+      "outputs": [],
+      "grace_multiplier": 2.0,
+      "notes": "Every 15 min Mon-Fri 09:30-15:30 IST. Watchdog intraday pass — critical tier only. Registered 2026-04-16. Inventoried to eliminate self-drift."
     }
   ]
 }

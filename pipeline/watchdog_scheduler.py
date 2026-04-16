@@ -10,7 +10,11 @@ import json
 import subprocess
 from datetime import datetime
 
-from pipeline.watchdog_freshness import IST, compute_window_seconds
+from pipeline.watchdog_freshness import IST, compute_window_seconds, is_market_hours
+
+# Windows Task Scheduler informational (non-failure) codes.
+# 0x00041301 = SCHED_S_TASK_RUNNING — task is currently running when queried.
+_SCHED_INFO_CODES = frozenset({0x41301})
 
 # PowerShell one-liner: enumerate Anka*, join with TaskInfo, emit JSON array.
 _PS_QUERY = (
@@ -89,8 +93,9 @@ def check_task_liveness(
     if last_run_raw.startswith("1999-") or last_run_raw.startswith("0001-"):
         return TaskLivenessResult.TASK_NEVER_RAN
 
-    # Non-zero result = crashed or failed
-    if task.get("LastTaskResult", 0) != 0:
+    # Non-zero result = crashed or failed (but exclude informational codes like SCHED_S_TASK_RUNNING).
+    result_code = task.get("LastTaskResult", 0)
+    if result_code != 0 and result_code not in _SCHED_INFO_CODES:
         return TaskLivenessResult.TASK_STALE_RESULT
 
     # Parse last-run timestamp and compute age
@@ -103,6 +108,11 @@ def check_task_liveness(
             now = now.replace(tzinfo=IST)
     except (ValueError, AttributeError):
         return TaskLivenessResult.TASK_STALE_RUN
+
+    # Intraday tasks don't run outside market hours — skip age check if we're
+    # currently in a no-run window (post-market, pre-market, or weekend).
+    if cadence_class == "intraday" and not is_market_hours(now):
+        return TaskLivenessResult.ALIVE
 
     age = (now - last_run).total_seconds()
     window = compute_window_seconds(cadence_class, grace_multiplier)

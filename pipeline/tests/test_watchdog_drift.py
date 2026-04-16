@@ -138,3 +138,40 @@ class TestCheckTaskLiveness:
             result = check_task_liveness(t, cadence_class="daily", grace_multiplier=1.5,
                                          now_iso="2026-04-16T10:00:00")
             assert result == TaskLivenessResult.TASK_NEVER_RAN
+
+    def test_intraday_outside_market_hours_is_alive_even_if_old(self):
+        # Intraday task last ran at 09:30 IST; now is 20:00 IST (post-market).
+        # Age = 10h 30m = 37800s > 4500s intraday window → would be stale.
+        # But post-market: no new runs expected until tomorrow → ALIVE.
+        task = {"TaskName": "AnkaIntraday0930", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-16T09:30:00+05:30"}
+        result = check_task_liveness(task, cadence_class="intraday", grace_multiplier=2.0,
+                                     now_iso="2026-04-16T20:00:00+05:30")
+        assert result == TaskLivenessResult.ALIVE
+
+    def test_intraday_during_market_hours_still_flags_stale_run(self):
+        # Intraday task last ran at 10:00; now is 12:00 IST (market hours).
+        # Age = 2h = 7200s > 4500s (75 min) intraday window → stale run should still fire.
+        task = {"TaskName": "AnkaIntraday1000", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-16T10:00:00+05:30"}
+        result = check_task_liveness(task, cadence_class="intraday", grace_multiplier=2.0,
+                                     now_iso="2026-04-16T12:00:00+05:30")
+        assert result == TaskLivenessResult.TASK_STALE_RUN
+
+    def test_intraday_weekend_is_alive_even_if_very_old(self):
+        # Intraday task last ran Friday 15:30 IST; now is Monday 09:00 IST (pre-market).
+        # Age = 65.5 hours, but weekend + pre-market → ALIVE.
+        task = {"TaskName": "AnkaIntraday1530", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-10T15:30:00+05:30"}  # Friday
+        result = check_task_liveness(task, cadence_class="intraday", grace_multiplier=2.0,
+                                     now_iso="2026-04-13T09:00:00+05:30")  # Monday 09:00
+        assert result == TaskLivenessResult.ALIVE
+
+    def test_sched_s_task_running_treated_as_alive(self):
+        # 0x00041301 (267009) = SCHED_S_TASK_RUNNING — task is in-flight when queried.
+        # This is informational, not a failure.
+        task = {"TaskName": "AnkaEODTrackRecord", "LastTaskResult": 0x41301,
+                "LastRunTime": "2026-04-16T16:15:45+05:30"}
+        result = check_task_liveness(task, cadence_class="daily", grace_multiplier=1.5,
+                                     now_iso="2026-04-16T16:15:47+05:30")
+        assert result == TaskLivenessResult.ALIVE

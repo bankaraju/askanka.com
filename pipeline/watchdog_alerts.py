@@ -166,14 +166,14 @@ def build_digest(
 
 
 def _send_alert(digest: str) -> bool:
-    """Thin shim around pipeline.telegram_bot.send_alert. Isolated for mocking.
+    """Thin shim around pipeline.telegram_bot.send_message. Isolated for mocking.
 
-    send_alert's signature takes **kwargs of alert fields. Watchdog sends one
-    plain-text message with the 'message' key, which the telegram_bot formatter
-    renders as the body of the Telegram message.
+    The digest is already fully formatted — bypass telegram_bot's format_alert
+    and send the plain text directly. parse_mode=None avoids Markdown surprises
+    from emoji/dashes/parens in task names and headers.
     """
-    from pipeline.telegram_bot import send_alert
-    return send_alert(kind="WATCHDOG", message=digest)
+    from pipeline.telegram_bot import send_message
+    return send_message(digest, parse_mode=None)
 
 
 def send_or_log_digest(digest: str, fallback_log: Path, dry_run: bool = False) -> bool:
