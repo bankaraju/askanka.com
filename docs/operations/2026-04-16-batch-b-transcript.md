@@ -98,9 +98,66 @@ UpdateLibrary | Exec="%ProgramFiles%\Windows Media Player\wmpnscfg.exe"
 
 **Result:** 3 OK, 0 FAIL. Zero Anka quote-bug tasks remain. Triggers, settings, and principal preserved across re-register. XML backups in `pipeline/backups/scheduled_tasks/2026-04-16/` untouched.
 
-## Section B3 — Manual run verification of never-ran tasks (populated by Task 10)
+## Section B3 — Manual run verification of never-ran tasks
 
-_Placeholder: will capture Start-ScheduledTask + LastResult check for AnkaEODNews, AnkaGapPredictor, AnkaPruneArticles, AnkaWeeklyStats to flip the never-ran flag._
+Script: `C:/Users/Claude_Anka/AppData/Local/Temp/verify_never_ran.ps1`
+Captured output: `C:/Users/Claude_Anka/AppData/Local/Temp/never_ran_out.txt`
+
+**Scope adaptation from plan Task 10:** The plan lists 5 never-ran tasks. After B1+B2, the effective set is 4:
+
+- `AnkaSpreadStats` — SKIPPED. Was a Documents\ zombie deleted in B1 (`78e0268`). Its `.bat` target (`Documents\askanka.com\pipeline\scripts\weekly_stats.bat`) no longer exists. Per plan Task 10 Step 3 ("if the .bat is missing, document as subsumed and do not reschedule"), no re-registration attempt. `AnkaWeeklyStats` is the askanka.com-path replacement holding the weekly-stats cron slot.
+- Remaining 4 manually run: `AnkaEODNews`, `AnkaGapPredictor`, `AnkaPruneArticles`, `AnkaWeeklyStats`.
+
+**Initial captured output (before AnkaWeeklyStats finished):**
+
+```
+=== AnkaEODNews ===
+  Execute: C:\Users\Claude_Anka\askanka.com\pipeline\scripts\overnight_news.bat
+  Starting...
+  DONE: LastResult=0  LastRun=04/16/2026 12:19:49
+  PASS
+
+=== AnkaGapPredictor ===
+  Execute: C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat
+  Starting...
+  DONE: LastResult=0  LastRun=04/16/2026 12:20:50
+  PASS
+
+=== AnkaPruneArticles ===
+  Execute: C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat
+  Starting...
+  DONE: LastResult=0  LastRun=04/16/2026 12:20:50
+  PASS
+
+=== AnkaWeeklyStats ===
+  Execute: C:\Users\Claude_Anka\askanka.com\pipeline\scripts\weekly_stats.bat
+  Starting...
+  DONE: LastResult=267009  LastRun=04/16/2026 12:20:50
+  NONZERO result=267009 - inspect task log
+```
+
+**AnkaWeeklyStats — initial 267009 was mid-run noise (`SCHED_S_TASK_HAS_NOT_RUN`-ish transient), not a failure.** The 120s poll window clipped the job mid-execution; `weekly_stats.bat` is a long-running weekly aggregator (expected to take several minutes per plan guidance). Extended-poll follow-up:
+
+```
+Still running... LastResult=267009
+Still running... LastResult=267009
+Done: State=Ready LastResult=0 LastRun=04/16/2026 12:20:50
+FINAL: State=Ready LastResult=0 LastRun=04/16/2026 12:20:50
+```
+
+The task transitioned `Running` → `Ready` with `LastTaskResult=0`. PASS.
+
+**Final per-task verdict:**
+
+| Task | LastTaskResult | LastRunTime | Verdict |
+|---|---|---|---|
+| AnkaEODNews | 0 | 2026-04-16 12:19:49 | PASS |
+| AnkaGapPredictor | 0 | 2026-04-16 12:20:50 | PASS |
+| AnkaPruneArticles | 0 | 2026-04-16 12:20:50 | PASS |
+| AnkaWeeklyStats | 0 | 2026-04-16 12:20:50 | PASS (after extended poll — transient 267009 while Running) |
+| AnkaSpreadStats | n/a | n/a | SUBSUMED by B1 (see above) |
+
+**Result:** 4 PASS, 0 NONZERO, 0 TIMEOUT, 1 SUBSUMED (AnkaSpreadStats). All four B3-scope tasks now have `LastTaskResult=0` and a 2026-04-16 LastRunTime — never-ran flag flipped. `AnkaSpreadStats` remains deleted per B1; no re-registration needed since `AnkaWeeklyStats` covers the weekly-stats slot.
 
 ## Section B4 — Post-Batch-B scheduler snapshot (populated by Task 11)
 
