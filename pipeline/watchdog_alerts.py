@@ -2,6 +2,7 @@
 
 import enum
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
@@ -57,18 +58,24 @@ def load_state(path: Path) -> State:
 def save_state(state: State, path: Path) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w") as f:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w") as f:
         json.dump({"last_run": state.last_run, "active_issues": state.active_issues},
                   f, indent=2)
         f.write("\n")
+    os.replace(tmp, path)
 
 
 def update_state(
     prior: State,
     current_issues: list[Issue],
     now_iso: str,
-) -> tuple[State, dict[str, bool]]:
-    """Return (new_state, is_new_map). is_new_map[key] = True if first time seen."""
+) -> tuple[State, dict[str, bool], list[str]]:
+    """Return (new_state, is_new_map, resolved_keys).
+
+    - is_new_map[key] = True if first time seen in this run
+    - resolved_keys = keys present in prior but absent in current_issues
+    """
     is_new: dict[str, bool] = {}
     new_active: dict[str, dict] = {}
     for issue in current_issues:
@@ -88,7 +95,8 @@ def update_state(
                 "alert_count": 1,
             }
             is_new[key] = True
-    return State(last_run=now_iso, active_issues=new_active), is_new
+    resolved_keys = sorted(set(prior.active_issues.keys()) - set(new_active.keys()))
+    return State(last_run=now_iso, active_issues=new_active), is_new, resolved_keys
 
 
 def _format_issue_loud(issue: Issue) -> str:
@@ -112,13 +120,21 @@ def build_digest(
     state: State,
     is_new: dict[str, bool],
 ) -> str:
-    """Assemble the Telegram-ready digest message."""
-    by_bucket: dict[str, list[Issue]] = {"CRITICAL": [], "WARN": [], "INFO": [], "DRIFT": []}
+    """Assemble the Telegram-ready digest message.
+
+    now_iso must be an ISO-8601 timestamp starting "YYYY-MM-DDTHH:MM:..."
+    (e.g. datetime.isoformat() on an aware datetime). Only the first 16
+    characters are rendered in the header.
+    """
+    by_bucket: dict[str, list[Issue]] = {"CRITICAL": [], "WARN": [], "DRIFT": []}
     for issue in current_issues:
         if issue.kind in (IssueKind.ORPHAN_TASK, IssueKind.INVENTORY_GHOST):
             by_bucket["DRIFT"].append(issue)
-        else:
-            by_bucket[issue.tier.upper()].append(issue)
+            continue
+        tier = (issue.tier or "info").upper()
+        if tier in ("CRITICAL", "WARN"):
+            by_bucket[tier].append(issue)
+        # info-tier issues are logged but not surfaced in the Telegram digest
 
     total = sum(len(v) for v in by_bucket.values())
     header = f"🚨 Anka Watchdog — {now_iso[:16].replace('T', ' ')} IST\n{run_label} • {total} issue{'s' if total != 1 else ''}"
@@ -132,7 +148,7 @@ def build_digest(
             count = state.active_issues.get(key, {}).get("alert_count", 1)
             if is_new.get(key, True):
                 sections.append(_format_issue_loud(issue))
-            elif count == ESCALATION_COUNT:
+            elif count >= ESCALATION_COUNT and count % ESCALATION_COUNT == 0:
                 sections.append(f"  ⚠️ STILL BROKEN AFTER {count // 2} DAYS")
                 sections.append(_format_issue_loud(issue))
             else:

@@ -63,6 +63,14 @@ class TestStateIO:
         loaded = load_state(f)
         assert loaded.active_issues == state.active_issues
 
+    def test_save_is_atomic_no_tmp_left_behind(self, tmp_path):
+        state = State(last_run="", active_issues={})
+        f = tmp_path / "state.json"
+        save_state(state, f)
+        assert f.exists()
+        # Temp file must not survive a successful write
+        assert not (tmp_path / "state.json.tmp").exists()
+
 
 class TestUpdateState:
     def _now(self):
@@ -71,10 +79,11 @@ class TestUpdateState:
     def test_new_issue_gets_alert_count_1(self):
         state = State(last_run="", active_issues={})
         issue = Issue(IssueKind.OUTPUT_STALE, "A", "p.json", "")
-        new_state, is_new = update_state(state, [issue], self._now())
+        new_state, is_new, resolved = update_state(state, [issue], self._now())
         key = stable_key(issue)
         assert is_new[key] is True
         assert new_state.active_issues[key]["alert_count"] == 1
+        assert resolved == []
 
     def test_persistent_issue_increments_count(self):
         key = "A|p.json|OUTPUT_STALE"
@@ -82,9 +91,10 @@ class TestUpdateState:
             key: {"first_seen": "x", "last_seen": "x", "alert_count": 2}
         })
         issue = Issue(IssueKind.OUTPUT_STALE, "A", "p.json", "")
-        new_state, is_new = update_state(state, [issue], self._now())
+        new_state, is_new, resolved = update_state(state, [issue], self._now())
         assert is_new[key] is False
         assert new_state.active_issues[key]["alert_count"] == 3
+        assert resolved == []
 
     def test_resolved_issue_returns_resolved_list(self):
         key = "A|p.json|OUTPUT_STALE"
@@ -92,8 +102,9 @@ class TestUpdateState:
             key: {"first_seen": "x", "last_seen": "x", "alert_count": 2}
         })
         # No current issues
-        new_state, is_new = update_state(state, [], self._now())
+        new_state, is_new, resolved = update_state(state, [], self._now())
         assert key not in new_state.active_issues
+        assert resolved == ["A|p.json|OUTPUT_STALE"]
 
 
 class TestBuildDigest:
@@ -160,6 +171,23 @@ class TestBuildDigest:
         )
         assert "STILL BROKEN" in digest
 
+    def test_escalation_refires_at_count_12(self):
+        i = Issue(
+            kind=IssueKind.OUTPUT_STALE, task_name="AnkaWeeklyStats",
+            output_path="data/spread_stats.json", detail="",
+            tier="warn",
+        )
+        key = stable_key(i)
+        state = State(last_run="", active_issues={key: {
+            "first_seen": "", "last_seen": "", "alert_count": 12,
+        }})
+        digest = build_digest(
+            run_label="Gate run", now_iso="2026-04-16T09:20:00+05:30",
+            current_issues=[i], resolved_keys=[], state=state,
+            is_new={key: False},
+        )
+        assert "STILL BROKEN" in digest
+
     def test_resolved_tail_shows_recovered_keys(self):
         digest = build_digest(
             run_label="Gate run", now_iso="2026-04-16T09:20:00+05:30",
@@ -168,3 +196,23 @@ class TestBuildDigest:
         )
         assert "RESOLVED" in digest
         assert "AnkaEODReview" in digest
+
+    def test_info_tier_not_rendered(self):
+        i = Issue(
+            kind=IssueKind.OUTPUT_STALE, task_name="AnkaBackfill",
+            output_path="data/whatever.json", detail="",
+            tier="info",
+        )
+        key = stable_key(i)
+        state = State(last_run="", active_issues={key: {
+            "first_seen": "", "last_seen": "", "alert_count": 1,
+        }})
+        digest = build_digest(
+            run_label="Gate run", now_iso="2026-04-16T09:20:00+05:30",
+            current_issues=[i], resolved_keys=[], state=state,
+            is_new={key: True},
+        )
+        # Info-tier issues must not appear in any section
+        assert "AnkaBackfill" not in digest
+        # And must not be counted in header total
+        assert "0 issue" in digest
