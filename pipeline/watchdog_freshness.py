@@ -6,7 +6,10 @@ The watchdog asks two orthogonal questions per file:
   2. If so, is the file older than its grace-adjusted window?
 """
 
+import enum
+import os
 from datetime import datetime, time, timedelta, timezone
+from pathlib import Path
 
 IST = timezone(timedelta(hours=5, minutes=30), name="IST")
 
@@ -42,3 +45,36 @@ def is_market_hours(now: datetime) -> bool:
     if now_ist.weekday() >= 5:  # Saturday=5, Sunday=6
         return False
     return _MARKET_OPEN <= now_ist.time() <= _MARKET_CLOSE
+
+
+class FreshnessResult(enum.Enum):
+    FRESH = "FRESH"
+    OUTPUT_STALE = "OUTPUT_STALE"
+    OUTPUT_MISSING = "OUTPUT_MISSING"
+
+
+def check_file_freshness(
+    output_path: Path,
+    cadence_class: str,
+    grace_multiplier: float,
+    now: datetime,
+) -> FreshnessResult:
+    """Classify one file's freshness per the spec's stale-detection logic.
+
+    1. If file missing → OUTPUT_MISSING.
+    2. If intraday AND not market hours → FRESH (always fresh outside market hours).
+    3. If file age > window → OUTPUT_STALE.
+    4. Else → FRESH.
+    """
+    path = Path(output_path)
+    if not path.exists():
+        return FreshnessResult.OUTPUT_MISSING
+
+    if cadence_class == "intraday" and not is_market_hours(now):
+        return FreshnessResult.FRESH
+
+    window = compute_window_seconds(cadence_class, grace_multiplier)
+    age = now.timestamp() - os.stat(path).st_mtime
+    if age > window:
+        return FreshnessResult.OUTPUT_STALE
+    return FreshnessResult.FRESH

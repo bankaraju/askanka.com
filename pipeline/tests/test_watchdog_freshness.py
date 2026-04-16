@@ -1,6 +1,7 @@
 """Tests for cadence formulas and market-hours awareness."""
 
 from datetime import datetime, timezone, timedelta
+from pathlib import Path
 
 import pytest
 
@@ -8,6 +9,8 @@ from pipeline.watchdog_freshness import (
     IST,
     compute_window_seconds,
     is_market_hours,
+    FreshnessResult,
+    check_file_freshness,
 )
 
 
@@ -78,3 +81,69 @@ class TestMarketHours:
         naive = datetime(2026, 4, 14, 10, 0)  # no tzinfo
         with pytest.raises(ValueError, match="timezone-aware"):
             is_market_hours(naive)
+
+
+class TestCheckFileFreshness:
+    def test_missing_file_returns_missing(self, tmp_path):
+        missing = tmp_path / "nope.json"
+        result = check_file_freshness(
+            missing, cadence_class="daily", grace_multiplier=1.5,
+            now=datetime(2026, 4, 16, 10, 0, tzinfo=IST),
+        )
+        assert result == FreshnessResult.OUTPUT_MISSING
+
+    def test_fresh_daily_file(self, tmp_path):
+        f = tmp_path / "fresh.json"
+        f.write_text("{}")
+        now = datetime(2026, 4, 16, 10, 0, tzinfo=IST)
+        # Set mtime 1 hour ago
+        one_hour_ago = (now - timedelta(hours=1)).timestamp()
+        import os
+        os.utime(f, (one_hour_ago, one_hour_ago))
+
+        result = check_file_freshness(
+            f, cadence_class="daily", grace_multiplier=1.5, now=now,
+        )
+        assert result == FreshnessResult.FRESH
+
+    def test_stale_daily_file(self, tmp_path):
+        f = tmp_path / "stale.json"
+        f.write_text("{}")
+        now = datetime(2026, 4, 16, 10, 0, tzinfo=IST)
+        # Set mtime 31 hours ago (window for daily/1.5 is 30h)
+        import os
+        old = (now - timedelta(hours=31)).timestamp()
+        os.utime(f, (old, old))
+
+        result = check_file_freshness(
+            f, cadence_class="daily", grace_multiplier=1.5, now=now,
+        )
+        assert result == FreshnessResult.OUTPUT_STALE
+
+    def test_intraday_outside_market_hours_is_fresh(self, tmp_path):
+        f = tmp_path / "live_status.json"
+        f.write_text("{}")
+        # Saturday 10:00 IST — outside market hours, always fresh
+        now = datetime(2026, 4, 18, 10, 0, tzinfo=IST)
+        import os
+        very_old = (now - timedelta(days=5)).timestamp()
+        os.utime(f, (very_old, very_old))
+
+        result = check_file_freshness(
+            f, cadence_class="intraday", grace_multiplier=1.5, now=now,
+        )
+        assert result == FreshnessResult.FRESH
+
+    def test_intraday_during_market_hours_stale(self, tmp_path):
+        f = tmp_path / "live_status.json"
+        f.write_text("{}")
+        # Tuesday 10:00 IST, file is 2 hours old — window is 60 min → stale
+        now = datetime(2026, 4, 14, 10, 0, tzinfo=IST)
+        import os
+        old = (now - timedelta(minutes=120)).timestamp()
+        os.utime(f, (old, old))
+
+        result = check_file_freshness(
+            f, cadence_class="intraday", grace_multiplier=1.5, now=now,
+        )
+        assert result == FreshnessResult.OUTPUT_STALE
