@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.6" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Date>2016-01-01T00:00:00</Date>
+    <Source>$(@%SystemRoot%\system32\ClipRenew.exe,-103)</Source>
+    <Author>$(@%SystemRoot%\system32\ClipRenew.exe,-100)</Author>
+    <Description>$(@%SystemRoot%\system32\ClipRenew.exe,-102)</Description>
+    <URI>\Microsoft\Windows\Subscription\LicenseAcquisition</URI>
+  </RegistrationInfo>
+  <Principals>
+    <Principal id="InteractiveUser">
+      <GroupId>S-1-5-4</GroupId>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <AllowHardTerminate>false</AllowHardTerminate>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <Enabled>false</Enabled>
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+    <Hidden>true</Hidden>
+    <MultipleInstancesPolicy>Queue</MultipleInstancesPolicy>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <UseUnifiedSchedulingEngine>true</UseUnifiedSchedulingEngine>
+  </Settings>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2016-01-01T05:30:00+05:30</StartBoundary>
+      <RandomDelay>PT8H</RandomDelay>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+    </CalendarTrigger>
+    <RegistrationTrigger />
+    <WnfStateChangeTrigger>
+      <StateName>7518BCA33E06830D</StateName>
+    </WnfStateChangeTrigger>
+  </Triggers>
+  <Actions Context="InteractiveUser">
+    <Exec>
+      <Command>%SystemRoot%\system32\ClipRenew.exe</Command>
+    </Exec>
+  </Actions>
+</Task>

@@ -184,7 +184,79 @@ TOTAL_AFFECTED=67
 
 ## Section A2 — XML backups
 
-<populated by Task 3>
+```
+Backing up 67 tasks to C:\Users\Claude_Anka\askanka.com\pipeline\backups\scheduled_tasks\2026-04-16
+  OK   Account Cleanup -> Account_Cleanup.xml
+  OK   AnkaARCBE2300 -> AnkaARCBE2300.xml
+  OK   AnkaCorrelationBreaks -> AnkaCorrelationBreaks.xml
+  OK   AnkaEOD1630 -> AnkaEOD1630.xml
+  OK   AnkaEODNews -> AnkaEODNews.xml
+  OK   AnkaGapPredictor -> AnkaGapPredictor.xml
+  OK   AnkaIntraday0940 -> AnkaIntraday0940.xml
+  OK   AnkaIntraday0955 -> AnkaIntraday0955.xml
+  OK   AnkaIntraday1010 -> AnkaIntraday1010.xml
+  OK   AnkaIntraday1025 -> AnkaIntraday1025.xml
+  OK   AnkaIntraday1040 -> AnkaIntraday1040.xml
+  OK   AnkaIntraday1055 -> AnkaIntraday1055.xml
+  OK   AnkaIntraday1110 -> AnkaIntraday1110.xml
+  OK   AnkaIntraday1125 -> AnkaIntraday1125.xml
+  OK   AnkaIntraday1140 -> AnkaIntraday1140.xml
+  OK   AnkaIntraday1155 -> AnkaIntraday1155.xml
+  OK   AnkaIntraday1210 -> AnkaIntraday1210.xml
+  OK   AnkaIntraday1225 -> AnkaIntraday1225.xml
+  OK   AnkaIntraday1240 -> AnkaIntraday1240.xml
+  OK   AnkaIntraday1255 -> AnkaIntraday1255.xml
+  OK   AnkaIntraday1310 -> AnkaIntraday1310.xml
+  OK   AnkaIntraday1325 -> AnkaIntraday1325.xml
+  OK   AnkaIntraday1340 -> AnkaIntraday1340.xml
+  OK   AnkaIntraday1355 -> AnkaIntraday1355.xml
+  OK   AnkaIntraday1410 -> AnkaIntraday1410.xml
+  OK   AnkaIntraday1425 -> AnkaIntraday1425.xml
+  OK   AnkaIntraday1440 -> AnkaIntraday1440.xml
+  OK   AnkaIntraday1455 -> AnkaIntraday1455.xml
+  OK   AnkaIntraday1510 -> AnkaIntraday1510.xml
+  OK   AnkaIntraday1525 -> AnkaIntraday1525.xml
+  OK   AnkaPruneArticles -> AnkaPruneArticles.xml
+  OK   AnkaSpreadStats -> AnkaSpreadStats.xml
+  OK   AnkaWeeklyStats -> AnkaWeeklyStats.xml
+  OK   AnkaWeeklyVideo -> AnkaWeeklyVideo.xml
+  OK   Automatic-Device-Join -> Automatic-Device-Join.xml
+  OK   BfeOnServiceStartTypeChange -> BfeOnServiceStartTypeChange.xml
+  OK   Cellular -> Cellular.xml
+  OK   dusmtask -> dusmtask.xml
+  OK   EduPrintProv -> EduPrintProv.xml
+  OK   FamilySafetyMonitor -> FamilySafetyMonitor.xml
+  OK   GatherNetworkInfo -> GatherNetworkInfo.xml
+  OK   HeadsetButtonPress -> HeadsetButtonPress.xml
+  OK   LicenseAcquisition -> LicenseAcquisition.xml
+  OK   LicenseImdsIntegration -> LicenseImdsIntegration.xml
+  OK   MareBackup -> MareBackup.xml
+  OK   Microsoft-Windows-DiskDiagnosticResolver -> Microsoft-Windows-DiskDiagnosticResolver.xml
+  OK   MNO Metadata Parser -> MNO_Metadata_Parser.xml
+  OK   NotificationTask -> NotificationTask.xml
+  OK   Office Performance Monitor -> Office_Performance_Monitor.xml
+  OK   OpenCapture -> OpenCapture.xml
+  OK   PolicyConverter -> PolicyConverter.xml
+  OK   Recovery-Check -> Recovery-Check.xml
+  OK   Retry -> Retry.xml
+  OK   RunOnReboot -> RunOnReboot.xml
+  OK   RunUpdateNotificationMgr -> RunUpdateNotificationMgr.xml
+  OK   SpaceAgentTask -> SpaceAgentTask.xml
+  OK   SpaceManagerTask -> SpaceManagerTask.xml
+  OK   Storage Tiers Optimization -> Storage_Tiers_Optimization.xml
+  OK   SyspartRepair -> SyspartRepair.xml
+  OK   Sysprep Generalize Drivers -> Sysprep_Generalize_Drivers.xml
+  OK   UninstallDeviceTask -> UninstallDeviceTask.xml
+  OK   UpdateLibrary -> UpdateLibrary.xml
+  OK   UPnPHostConfig -> UPnPHostConfig.xml
+  OK   VerifiedPublisherCertStoreCheck -> VerifiedPublisherCertStoreCheck.xml
+  OK   WiFiTask -> WiFiTask.xml
+  OK   WindowsActionDialog -> WindowsActionDialog.xml
+  OK   XblGameSaveTask -> XblGameSaveTask.xml
+
+Total: 67 OK, 0 FAIL
+
+```
 
 ## Section A3 — Data snapshots
 

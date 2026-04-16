@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.6" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <SecurityDescriptor>D:(A;;FA;;;BA)(A;;FA;;;SY)</SecurityDescriptor>
+    <URI>\Microsoft\Windows\Management\Provisioning\Cellular</URI>
+  </RegistrationInfo>
+  <Principals>
+    <Principal id="LocalSystem">
+      <UserId>S-1-5-18</UserId>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <AllowHardTerminate>false</AllowHardTerminate>
+    <AllowStartOnDemand>false</AllowStartOnDemand>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <Hidden>true</Hidden>
+    <MultipleInstancesPolicy>Queue</MultipleInstancesPolicy>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <UseUnifiedSchedulingEngine>true</UseUnifiedSchedulingEngine>
+  </Settings>
+  <Triggers>
+    <WnfStateChangeTrigger>
+      <StateName>7518BCA33A19870F</StateName>
+    </WnfStateChangeTrigger>
+  </Triggers>
+  <Actions Context="LocalSystem">
+    <Exec>
+      <Command>%windir%\system32\ProvTool.exe</Command>
+      <Arguments>/turn 7 /source CellStateChangeTask</Arguments>
+    </Exec>
+  </Actions>
+</Task>
