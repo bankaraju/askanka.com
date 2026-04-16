@@ -1,6 +1,15 @@
 {
   "articles": [
     {
+      "date": "2026-04-16",
+      "segment": "epstein",
+      "filename": "2026-04-16-epstein.html",
+      "headline": "DOJ's Epstein Cover-Up Deepens: Trump's Irrationality, Israel's Losses, and India's Strategic Vulnerabilities",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 16, 2026"
+    },
+    {
       "date": "2026-04-15",
       "segment": "war",
       "filename": "2026-04-15-war.html",
