@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updated": "2026-04-16",
+  "tasks": [
+    {
+      "task_name": "AnkaReverseRegimeProfile",
+      "tier": "critical",
+      "cadence_class": "daily",
+      "outputs": ["pipeline/tests/fixtures/does_not_exist_on_purpose.json"],
+      "grace_multiplier": 1.5,
+      "notes": "fixture — expected to fire OUTPUT_MISSING"
+    },
+    {
+      "task_name": "AnkaFixtureOK",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "outputs": ["pipeline/tests/fixtures/inventory_valid_minimal.json"],
+      "grace_multiplier": 1000.0,
+      "notes": "fixture — huge grace means never stale, for RESOLVED testing"
+    }
+  ]
+}

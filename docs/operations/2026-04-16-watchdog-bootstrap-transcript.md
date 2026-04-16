@@ -30,6 +30,66 @@ tasks: 69
 
 <populated by Task 14>
 
+### Dry-run smoke test (T11)
+
+```
+🚨 Anka Watchdog — 2026-04-16 15:35 IST
+Gate run • 70 issues
+
+CRITICAL (1):
+  • AnkaReverseRegimeProfile — output missing
+    pipeline/tests/fixtures/does_not_exist_on_purpose.json  file does not exist
+
+WARN (0):
+
+DRIFT (69):
+  • AnkaCorrelationBreaks — orphan task
+    registered in scheduler but not in inventory
+  • AnkaDailyArticles — orphan task
+    registered in scheduler but not in inventory
+  • AnkaDailyDump — orphan task
+    registered in scheduler but not in inventory
+  • AnkaEODNews — orphan task
+    registered in scheduler but not in inventory
+  • AnkaEODReview — orphan task
+    registered in scheduler but not in inventory
+  • AnkaEODTrackRecord — orphan task
+    registered in scheduler but not in inventory
+  • AnkaGapPredictor — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday0930 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday0945 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday1000 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday1015 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday1030 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday1045 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday1100 — orphan task
+    registered in scheduler but not in inventory
+  • AnkaIntraday1115 — orphan task
+    registered in scheduler but not in inventory
+```
+
+### Full watchdog test suite (T11)
+
+```
+pipeline/tests/test_watchdog_dedup.py::TestBuildDigest::test_persistent_issue_renders_compact_reminder PASSED [ 90%]
+pipeline/tests/test_watchdog_dedup.py::TestBuildDigest::test_escalation_at_count_6 PASSED [ 91%]
+pipeline/tests/test_watchdog_dedup.py::TestBuildDigest::test_escalation_refires_at_count_12 PASSED [ 92%]
+pipeline/tests/test_watchdog_dedup.py::TestBuildDigest::test_resolved_tail_shows_recovered_keys PASSED [ 94%]
+pipeline/tests/test_watchdog_dedup.py::TestBuildDigest::test_info_tier_not_rendered PASSED [ 95%]
+pipeline/tests/test_watchdog_telegram_fallback.py::TestSendOrLogDigest::test_happy_path_calls_send_alert PASSED [ 97%]
+pipeline/tests/test_watchdog_telegram_fallback.py::TestSendOrLogDigest::test_telegram_failure_writes_fallback_log PASSED [ 98%]
+pipeline/tests/test_watchdog_telegram_fallback.py::TestSendOrLogDigest::test_dry_run_skips_telegram PASSED [100%]
+
+============================= 71 passed in 0.48s ==============================
+```
+
 ## Scheduler registration
 
 <populated by Task 15>
