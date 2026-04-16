@@ -84,6 +84,88 @@ A single mapping table embedded at the top of the implementation plan. One row p
 
 **Why this is the anchor artifact:** every Batch-B and Batch-C step cites a row number in this table. If a step has no row, it's out of scope. If a row has no Remediation-action, the plan is not complete.
 
+### Full mapping table (populated 2026-04-16 Batch A6)
+
+Row counts reconciled with `/tmp/audit_out.txt` (committed to transcript A1):
+- **29 zombies** = 4 unquoted-Documents\ (AnkaARCBE2300, AnkaEOD1630, AnkaWeeklyVideo, OpenCapture) + 24 quoted-Documents\ intraday slots + AnkaSpreadStats (Documents\, quoted) = 29
+- **28 Anka-scope quote-bugs** = 3 askanka.com (AnkaCorrelationBreaks, AnkaGapPredictor, AnkaPruneArticles) + 24 intraday (Documents\) + AnkaSpreadStats (Documents\) = 28. UpdateLibrary is a Windows Media Player system task — out of scope.
+- **5 Anka-scope never-ran** = AnkaEODNews, AnkaGapPredictor, AnkaPruneArticles, AnkaSpreadStats, AnkaWeeklyStats. The other 33 never-ran tasks are Windows system tasks unrelated to this plan.
+
+Overlap: AnkaGapPredictor and AnkaPruneArticles appear in both quote-bug and never-ran buckets; AnkaSpreadStats appears in all three (zombie + quote-bug + never-ran). Remediation order: B1 delete first, then B2 rewrite, then B3 re-register only what remains.
+
+| # | Gap | Evidence | Bucket | Parent plan + § | Drift note | Remediation action | Status |
+|---|-----|----------|--------|-----------------|------------|---------------------|--------|
+| 1 | Zombie: AnkaARCBE2300 | Execute=`C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\arcbe_scan.bat` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover | Unregister (Batch B1) | PENDING |
+| 2 | Zombie: AnkaEOD1630 | Execute=`C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\eod_track_record.bat` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover; likely the master EOD job (C3 scope) | Unregister (Batch B1); re-register fresh from askanka.com path in C3 | PENDING |
+| 3 | Zombie: AnkaIntraday0940 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 4 | Zombie: AnkaIntraday0955 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 5 | Zombie: AnkaIntraday1010 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 6 | Zombie: AnkaIntraday1025 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 7 | Zombie: AnkaIntraday1040 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 8 | Zombie: AnkaIntraday1055 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 9 | Zombie: AnkaIntraday1110 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 10 | Zombie: AnkaIntraday1125 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 11 | Zombie: AnkaIntraday1140 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 12 | Zombie: AnkaIntraday1155 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 13 | Zombie: AnkaIntraday1210 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 14 | Zombie: AnkaIntraday1225 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 15 | Zombie: AnkaIntraday1240 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 16 | Zombie: AnkaIntraday1255 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 17 | Zombie: AnkaIntraday1310 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 18 | Zombie: AnkaIntraday1325 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 19 | Zombie: AnkaIntraday1340 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 20 | Zombie: AnkaIntraday1355 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 21 | Zombie: AnkaIntraday1410 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 22 | Zombie: AnkaIntraday1425 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 23 | Zombie: AnkaIntraday1440 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 24 | Zombie: AnkaIntraday1455 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 25 | Zombie: AnkaIntraday1510 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 26 | Zombie: AnkaIntraday1525 | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover + quote-bug | Unregister (Batch B1) | PENDING |
+| 27 | Zombie + Quote-bug + Never-ran: AnkaSpreadStats | Execute=`"C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\weekly_stats.bat"`; LastResult=267011 | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Triple-hit: Documents\ + quote-wrap + never-ran | Unregister (B1); task AnkaWeeklyStats already holds the askanka.com cron slot | PENDING |
+| 28 | Zombie: AnkaWeeklyVideo | Execute=`C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\weekly_video.bat` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover | Unregister (Batch B1) | PENDING |
+| 29 | Zombie: OpenCapture (TaskPath=\Anka\) | Execute=`C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\open_capture.bat` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Post-migration leftover under \Anka\ folder | Unregister (Batch B1) | PENDING |
+| 30 | Quote-bug: AnkaCorrelationBreaks | Execute=`"C:\Users\Claude_Anka\askanka.com\pipeline\scripts\correlation_breaks.bat"` | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Re-registration side-effect (askanka.com path — legit target, quotes wrong) | Unregister+Register clean (Batch B2); also C1 CLI fix to the .bat | PENDING |
+| 31 | Quote-bug + Never-ran: AnkaGapPredictor | Execute=`"C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat"`; LastResult=267011 | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Quote-bug caused never-ran | Unregister+Register clean (B2); verify manual run in B3 | PENDING |
+| 32 | Quote-bug + Never-ran: AnkaPruneArticles | Execute=`"C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat"`; LastResult=267011 | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Quote-bug caused never-ran | Unregister+Register clean (B2); verify manual run in B3 | PENDING |
+| 33 | Quote-bug (quoted Documents\): AnkaIntraday0940 | Overlap with row 3 (zombie) | (ii) | — | Deleted via row 3 | N/A — subsumed by B1 row 3 | PENDING (subsumed) |
+| 34 | Quote-bug (quoted Documents\): AnkaIntraday0955 | Overlap with row 4 (zombie) | (ii) | — | Deleted via row 4 | N/A — subsumed by B1 row 4 | PENDING (subsumed) |
+| 35 | Quote-bug (quoted Documents\): AnkaIntraday1010 | Overlap with row 5 (zombie) | (ii) | — | Deleted via row 5 | N/A — subsumed by B1 row 5 | PENDING (subsumed) |
+| 36 | Quote-bug (quoted Documents\): AnkaIntraday1025 | Overlap with row 6 (zombie) | (ii) | — | Deleted via row 6 | N/A — subsumed by B1 row 6 | PENDING (subsumed) |
+| 37 | Quote-bug (quoted Documents\): AnkaIntraday1040 | Overlap with row 7 (zombie) | (ii) | — | Deleted via row 7 | N/A — subsumed by B1 row 7 | PENDING (subsumed) |
+| 38 | Quote-bug (quoted Documents\): AnkaIntraday1055 | Overlap with row 8 (zombie) | (ii) | — | Deleted via row 8 | N/A — subsumed by B1 row 8 | PENDING (subsumed) |
+| 39 | Quote-bug (quoted Documents\): AnkaIntraday1110 | Overlap with row 9 (zombie) | (ii) | — | Deleted via row 9 | N/A — subsumed by B1 row 9 | PENDING (subsumed) |
+| 40 | Quote-bug (quoted Documents\): AnkaIntraday1125 | Overlap with row 10 (zombie) | (ii) | — | Deleted via row 10 | N/A — subsumed by B1 row 10 | PENDING (subsumed) |
+| 41 | Quote-bug (quoted Documents\): AnkaIntraday1140 | Overlap with row 11 (zombie) | (ii) | — | Deleted via row 11 | N/A — subsumed by B1 row 11 | PENDING (subsumed) |
+| 42 | Quote-bug (quoted Documents\): AnkaIntraday1155 | Overlap with row 12 (zombie) | (ii) | — | Deleted via row 12 | N/A — subsumed by B1 row 12 | PENDING (subsumed) |
+| 43 | Quote-bug (quoted Documents\): AnkaIntraday1210 | Overlap with row 13 (zombie) | (ii) | — | Deleted via row 13 | N/A — subsumed by B1 row 13 | PENDING (subsumed) |
+| 44 | Quote-bug (quoted Documents\): AnkaIntraday1225 | Overlap with row 14 (zombie) | (ii) | — | Deleted via row 14 | N/A — subsumed by B1 row 14 | PENDING (subsumed) |
+| 45 | Quote-bug (quoted Documents\): AnkaIntraday1240 | Overlap with row 15 (zombie) | (ii) | — | Deleted via row 15 | N/A — subsumed by B1 row 15 | PENDING (subsumed) |
+| 46 | Quote-bug (quoted Documents\): AnkaIntraday1255 | Overlap with row 16 (zombie) | (ii) | — | Deleted via row 16 | N/A — subsumed by B1 row 16 | PENDING (subsumed) |
+| 47 | Quote-bug (quoted Documents\): AnkaIntraday1310 | Overlap with row 17 (zombie) | (ii) | — | Deleted via row 17 | N/A — subsumed by B1 row 17 | PENDING (subsumed) |
+| 48 | Quote-bug (quoted Documents\): AnkaIntraday1325 | Overlap with row 18 (zombie) | (ii) | — | Deleted via row 18 | N/A — subsumed by B1 row 18 | PENDING (subsumed) |
+| 49 | Quote-bug (quoted Documents\): AnkaIntraday1340 | Overlap with row 19 (zombie) | (ii) | — | Deleted via row 19 | N/A — subsumed by B1 row 19 | PENDING (subsumed) |
+| 50 | Quote-bug (quoted Documents\): AnkaIntraday1355 | Overlap with row 20 (zombie) | (ii) | — | Deleted via row 20 | N/A — subsumed by B1 row 20 | PENDING (subsumed) |
+| 51 | Quote-bug (quoted Documents\): AnkaIntraday1410 | Overlap with row 21 (zombie) | (ii) | — | Deleted via row 21 | N/A — subsumed by B1 row 21 | PENDING (subsumed) |
+| 52 | Quote-bug (quoted Documents\): AnkaIntraday1425 | Overlap with row 22 (zombie) | (ii) | — | Deleted via row 22 | N/A — subsumed by B1 row 22 | PENDING (subsumed) |
+| 53 | Quote-bug (quoted Documents\): AnkaIntraday1440 | Overlap with row 23 (zombie) | (ii) | — | Deleted via row 23 | N/A — subsumed by B1 row 23 | PENDING (subsumed) |
+| 54 | Quote-bug (quoted Documents\): AnkaIntraday1455 | Overlap with row 24 (zombie) | (ii) | — | Deleted via row 24 | N/A — subsumed by B1 row 24 | PENDING (subsumed) |
+| 55 | Quote-bug (quoted Documents\): AnkaIntraday1510 | Overlap with row 25 (zombie) | (ii) | — | Deleted via row 25 | N/A — subsumed by B1 row 25 | PENDING (subsumed) |
+| 56 | Quote-bug (quoted Documents\): AnkaIntraday1525 | Overlap with row 26 (zombie) | (ii) | — | Deleted via row 26 | N/A — subsumed by B1 row 26 | PENDING (subsumed) |
+| 57 | Quote-bug (quoted Documents\): AnkaSpreadStats | Overlap with row 27 | (ii) | — | Deleted via row 27 | N/A — subsumed by B1 row 27 | PENDING (subsumed) |
+| 58 | Never-ran: AnkaEODNews | LastResult=267011; Execute=`C:\Users\Claude_Anka\askanka.com\pipeline\scripts\overnight_news.bat` (clean path, no quote-bug) | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Recently registered; needs first successful run to flip flag | Verify via manual Start-ScheduledTask in B3 | PENDING |
+| 59 | Never-ran: AnkaGapPredictor | Overlap with row 31 | (ii) | — | Fixed in row 31's B2 re-register | N/A — subsumed by row 31 | PENDING (subsumed) |
+| 60 | Never-ran: AnkaPruneArticles | Overlap with row 32 | (ii) | — | Fixed in row 32's B2 re-register | N/A — subsumed by row 32 | PENDING (subsumed) |
+| 61 | Never-ran: AnkaSpreadStats | Overlap with row 27 | (ii) | — | Deleted via row 27; AnkaWeeklyStats is the askanka.com-path replacement | N/A — subsumed by row 27 | PENDING (subsumed) |
+| 62 | Never-ran: AnkaWeeklyStats | LastResult=267011; Execute=`C:\Users\Claude_Anka\askanka.com\pipeline\scripts\weekly_stats.bat` (clean path, no quote-bug) | (ii) | 2026-04-14-unified-repo-clockwork §Migration | Needs first successful run to flip flag | Verify via manual Start-ScheduledTask in B3 | PENDING |
+| 63 | Phase A not scheduled | No task runs `reverse_regime_analysis.py`; `reverse_regime_profile.json` = Apr 14 (2-day stale) | (iii) interim (i) | — | Phase B runs with stale profile — live data-integrity issue | Schedule AnkaReverseRegimeProfile @ 04:45 IST (Batch C2) as INTERIM | PENDING |
+| 64 | AnkaCorrelationBreaks CLI | `correlation_breaks.bat` passes `--day 1 --no-telegram` which argparse rejects | (i) | 2026-04-14-correlation-break-detector §CLI | `.bat` written against older CLI | Strip those args from .bat (Batch C1) | PENDING |
+| 65 | Apr 14 15:38 cluster | 18 `pipeline/data/*.json` files share exact mtime Apr 14 15:38 (snapshotted in A3) | (i) master-job | 2026-04-14-unified-repo-clockwork (task registry) | Master EOD job stopped firing — almost certainly AnkaEOD1630 which points to Documents\eod_track_record.bat (zombie row 2) | Identify + diagnose + fix master (Batch C3); re-register AnkaEOD1630 fresh at askanka.com path | PENDING |
+| 66 | gamma_result.json orphan | 231 bytes; no committed writer in codebase | (ii) hygiene | — | Delete or resolve via gamma_scanner.py untracked script | Resolve in Batch C3.x | PENDING |
+| 67 | options_monitor.py untracked | `git status` shows untracked; writes oi_history.json | (ii) hygiene | — | Single-repo mandate violation | Commit or delete in Batch C3.x | PENDING |
+| 68 | 9 other untracked scripts | `git status`: daily_articles_v2, data_validator, expiry_monitor, gen_*, pinning_*, regime_*, sector_rotation, unified_regime_engine, video_pipeline, list_gemini_models | (iii) NEW | — | Judgment-per-file | Defer to future mini-plan | DEFERRED-NEW |
+
+**Row totals:** 68 rows. Breakdown: 29 zombie (rows 1–29, including 25 overlap-to-quote-bug and 1 triple-hit AnkaSpreadStats), 3 askanka.com quote-bugs (30, 31, 32), 25 quote-bug subsumed (33–57), 5 never-ran (58 + 3 subsumed 59–61 + 62), 5 "fixed" categories (63 Phase A interim, 64 Phase C CLI, 65 master job, 66 orphan, 67 options_monitor), 1 deferred (68).
+
 ---
 
 ## Section 3 — Batch A: Backup + verification (zero destructive ops)
