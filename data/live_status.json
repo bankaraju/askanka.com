@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-16T14:17:20.617998+05:30",
+  "updated_at": "2026-04-16T14:32:31.233747+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,40 +11,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4341.2,
-          "pnl_pct": 1.32
+          "current": 4338.2,
+          "pnl_pct": 1.25
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 453.0,
-          "pnl_pct": 0.7
+          "current": 452.55,
+          "pnl_pct": 0.6
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1349.6,
-          "pnl_pct": -1.79
+          "current": 1348.1,
+          "pnl_pct": -1.9
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2572.5,
-          "pnl_pct": -0.02
+          "current": 2569.5,
+          "pnl_pct": 0.1
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1313.0,
-          "pnl_pct": 0.69
+          "current": 1311.6,
+          "pnl_pct": 0.79
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 210.48,
-          "pnl_pct": 1.17
+          "current": 210.33,
+          "pnl_pct": 1.24
         }
       ],
       "spread_pnl_pct": 1.26,
