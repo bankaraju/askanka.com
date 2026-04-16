@@ -14,6 +14,11 @@ os.chdir(_pipeline)
 
 if __name__ == "__main__":
     script = sys.argv[1]
+    # runpy.run_path sets __file__ to the path string as given. Pass an
+    # absolute path so scripts that derive paths from Path(__file__).parent
+    # don't silently compute against CWD.
+    if not os.path.isabs(script):
+        script = os.path.abspath(script)
     sys.argv = sys.argv[1:]
     import runpy
     runpy.run_path(script, run_name="__main__")

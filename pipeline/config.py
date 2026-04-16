@@ -201,6 +201,53 @@ INDIA_SPREAD_PAIRS = [
     },
 ]
 
+# === ARCBE — Sector correlation groups (restored from commit 9aa7455) ===
+ARCBE_SECTOR_GROUPS: dict[str, list[str]] = {
+    "IT":            ["TCS", "INFY", "WIPRO", "HCLTECH", "TECHM", "LTIM", "PERSISTENT"],
+    "Real Estate":   ["DLF", "SOBHA", "GODREJPROP", "OBEROIRLTY"],
+    "Banks Private": ["HDFCBANK", "ICICIBANK", "AXISBANK", "KOTAKBANK"],
+    "Banks PSU":     ["SBI", "BANKBARODA", "FEDERALBNK"],
+    "Metals":        ["HINDALCO", "TATASTEEL", "JSPL", "NMDC", "SAIL", "VEDL"],
+    "FMCG":          ["HUL", "ITC", "BRITANNIA", "DABUR"],
+    "Energy Upstream": ["ONGC", "OIL", "COALINDIA"],
+    "Defence":       ["HAL", "BEL", "BDL", "MTAR", "BHARATFORG"],
+    "Power":         ["NTPC", "POWERGRID", "TATAPOWER"],
+    "Cement":        ["ULTRACEMCO", "AMBUJACEM"],
+    "Healthcare":    ["SUNPHARMA", "DRREDDY", "CIPLA", "DIVISLAB", "APOLLOHOSP", "MAXHEALTH", "ASTERDM"],
+}
+
+# === ARCBE — Hypothesis spreads (data must confirm before publishing) ===
+ARCBE_HYPOTHESIS_SPREADS: list[dict] = [
+    {
+        "name": "Domestic vs Gulf Real Estate",
+        "long": ["GODREJPROP", "OBEROIRLTY"],
+        "short": ["SOBHA"],
+        "theme": "Gulf NRI demand risk — domestic RE insulated, SOBHA exposed",
+        "expected_driver": "brent",
+    },
+    {
+        "name": "Domestic vs ME-Exposed IT",
+        "long": ["TCS", "INFY"],
+        "short": ["WIPRO", "HCLTECH", "LTIM"],
+        "theme": "ME project revenue risk — US-heavy IT vs ME-project-heavy IT",
+        "expected_driver": "brent",
+    },
+    {
+        "name": "Domestic Infra vs Gulf EPC",
+        "long": ["NBCC", "SIEMENS"],
+        "short": ["LT", "KECINTL"],
+        "theme": "ME construction exposure — domestic govt contracts vs Gulf infra",
+        "expected_driver": "brent",
+    },
+    {
+        "name": "Domestic Banking vs NRI Corridor",
+        "long": ["HDFCBANK", "ICICIBANK"],
+        "short": ["FEDERALBNK"],
+        "theme": "Gulf remittance risk — Kerala-Gulf NRI deposit base",
+        "expected_driver": "brent",
+    },
+]
+
 # === EVENT TAXONOMY (political event → expected market direction) ===
 EVENT_TAXONOMY = {
     "escalation":    {"oil": "up",   "defense": "up",   "it": "down",  "downstream": "down"},
