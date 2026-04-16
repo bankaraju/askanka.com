@@ -188,37 +188,66 @@ def _build_stock_recs() -> list:
 
 
 def _build_news_recs() -> list:
+    """Render the news-driven card list from events + backtest verdicts.
+
+    Schema contract (must match upstream writers, not what "feels right"):
+      - events carry `categories` as a list (news_intelligence.py),
+        `matched_stocks` as a list of tickers, not scalar `symbol`.
+      - verdicts carry `recommendation` in {ADD, CUT, MONITOR, NO_ACTION}
+        with `direction` in {LONG, SHORT, None} (news_backtest.py:98).
+      Drift from these names = empty card list.
+    """
     events_raw = _load_json(NEWS_EVENTS_FILE) or {}
     verdicts_raw = _load_json(NEWS_VERDICTS_FILE) or []
     src_ts = events_raw.get("last_scan")
     stale = stale_check(src_ts)
 
-    # Index latest verdict per (symbol, category)
-    verdict_idx = {}
+    # Index latest verdict per (symbol, category). Last write wins.
+    verdict_idx: dict = {}
     for v in verdicts_raw:
         key = (v.get("symbol"), v.get("category"))
-        verdict_idx[key] = v  # last write wins; verdicts file is append-order
+        verdict_idx[key] = v
 
-    out = []
+    seen: set = set()
+    out: list = []
     for ev in events_raw.get("events", []) or []:
-        v = verdict_idx.get((ev.get("symbol"), ev.get("category")))
-        if not v:
+        stocks = ev.get("matched_stocks") or []
+        if isinstance(stocks, str):
+            try:
+                stocks = json.loads(stocks.replace("'", '"'))
+            except Exception:
+                stocks = []
+        cats = ev.get("categories") or []
+        if isinstance(cats, str):
+            try:
+                cats = json.loads(cats.replace("'", '"'))
+            except Exception:
+                cats = []
+        if not stocks or not cats:
             continue
-        if v.get("recommendation") not in ("BUY", "SELL"):
-            continue
-        precedents = v.get("precedent_count", 0) or 0
-        out.append({
-            "ticker": ev.get("symbol", ""),
-            "headline": ev.get("title", ""),
-            "category": ev.get("category", ""),
-            "direction": v.get("direction", ""),
-            "shelf_days": v.get("shelf_days", 0),
-            "historical_hit_rate": v.get("historical_hit_rate", 0),
-            "precedent_count": precedents,
-            "hit_rate_meaningful": precedents >= MIN_PRECEDENTS,
-            "source_timestamp": src_ts,
-            "is_stale": stale,
-        })
+        # Try every (stock, category) pair — events can be multi-category.
+        for sym in stocks:
+            for cat in cats:
+                v = verdict_idx.get((sym, cat))
+                if not v or v.get("recommendation") not in ("ADD", "CUT"):
+                    continue
+                dedup_key = (sym, cat)
+                if dedup_key in seen:
+                    continue
+                seen.add(dedup_key)
+                precedents = v.get("precedent_count", 0) or 0
+                out.append({
+                    "ticker": sym,
+                    "headline": ev.get("title", ""),
+                    "category": cat,
+                    "direction": v.get("direction", ""),
+                    "shelf_days": v.get("shelf_days", 0),
+                    "historical_hit_rate": v.get("historical_hit_rate", 0),
+                    "precedent_count": precedents,
+                    "hit_rate_meaningful": precedents >= MIN_PRECEDENTS,
+                    "source_timestamp": src_ts,
+                    "is_stale": stale,
+                })
     # Meaningful rates rank above lucky 100%@1 cards.
     out.sort(key=lambda n: (
         -int(n["hit_rate_meaningful"]),

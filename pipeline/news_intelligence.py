@@ -290,6 +290,14 @@ def scan(full_universe: bool = False, send_telegram: bool = True) -> dict:
         except (json.JSONDecodeError, KeyError):
             pass
 
+    # Keep a rolling 7-day window in EVENTS_TODAY. Without this cap the file
+    # grows unbounded and the website news card surfaces 2+-day-old items as
+    # fresh. 7 days covers the longest NEWS_CATEGORIES shelf life so nothing
+    # actionable gets evicted. Longer-term history lives in EVENTS_HISTORY.
+    from datetime import timedelta as _td
+    cutoff = (now - _td(days=7)).strftime("%Y-%m-%d")
+    existing = [e for e in existing if (e.get("detected_at", "")[:10] >= cutoff)]
+
     existing_titles = {e["title"].lower()[:80] for e in existing}
     new_events = [e for e in events if e["title"].lower()[:80] not in existing_titles]
     all_today = existing + new_events
