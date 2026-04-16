@@ -6,7 +6,21 @@
 
 ## Bootstrap inventory
 
-<populated by Task 2>
+### Bootstrap output
+```
+Wrote C:\Users\Claude_Anka\askanka.com\pipeline\config\anka_inventory.json
+  69 tasks total
+  7 classified
+  62 defaulted to info/daily (needs human review)
+```
+
+### Inventory size
+tasks: 69
+
+### Classification notes
+- 7 of 8 `KNOWN_TASKS` entries matched live scheduler names.
+- 1 `KNOWN_TASKS` entry did NOT match: `AnkaKiteRefresh` — the live task is actually named `AnkaRefreshKite`. Flagged for human review; left as-is so inventory accurately reflects live scheduler state.
+- 62 tasks defaulted to `tier=info / cadence_class=daily / UNCLASSIFIED` pending human review.
 
 ## Unit test suite
 

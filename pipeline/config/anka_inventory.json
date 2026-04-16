@@ -1,0 +1,571 @@
+{
+  "version": 1,
+  "updated": "2026-04-16",
+  "tasks": [
+    {
+      "task_name": "AnkaCorrelationBreaks",
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/correlation_breaks.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Phase C every 15 min during market hours. Restored 2026-04-16 C1."
+    },
+    {
+      "task_name": "AnkaDailyArticles",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaDailyDump",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaEODNews",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaEODReview",
+      "tier": "critical",
+      "cadence_class": "daily",
+      "outputs": [
+        "data/track_record.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "16:00 IST. EOD P&L + track record."
+    },
+    {
+      "task_name": "AnkaEODTrackRecord",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "outputs": [
+        "data/track_record.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "16:15 IST. Generates EOD report + website export."
+    },
+    {
+      "task_name": "AnkaGapPredictor",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday0930",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday0945",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1000",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1015",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1030",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1045",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1100",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1115",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1130",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1145",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1200",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1215",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1230",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1245",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1300",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1315",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1330",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1345",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1400",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1415",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1430",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1445",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1500",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1515",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaIntraday1530",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaMorningBrief0730",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaMorningScan",
+      "tier": "critical",
+      "cadence_class": "daily",
+      "outputs": [
+        "data/global_regime.json",
+        "data/live_status.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "09:25 IST. Regime + technicals + OI + news + spread + Phase B ranker."
+    },
+    {
+      "task_name": "AnkaOpenCapture",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaPreMarket",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaPruneArticles",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaRefreshKite",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaReverseRegimeProfile",
+      "tier": "critical",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/autoresearch/reverse_regime_profile.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "Phase A overnight profile @ 04:45 IST. Backbone of Phase B ranker."
+    },
+    {
+      "task_name": "AnkaShadow",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal0942",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1012",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1042",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1112",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1142",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1212",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1242",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1312",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1342",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1412",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1442",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaSignal1512",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustEOD",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra0942",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1012",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1042",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1112",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1142",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1212",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1242",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1312",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1342",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1412",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1442",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustIntra1512",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaTrustMorning",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaWeeklyAgg",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+    },
+    {
+      "task_name": "AnkaWeeklyReport",
+      "tier": "warn",
+      "cadence_class": "weekly",
+      "outputs": [],
+      "grace_multiplier": 1.25,
+      "notes": "Friday 10:00 IST. Weekly rollup summary."
+    },
+    {
+      "task_name": "AnkaWeeklyStats",
+      "tier": "warn",
+      "cadence_class": "weekly",
+      "outputs": [
+        "data/spread_stats.json"
+      ],
+      "grace_multiplier": 1.25,
+      "notes": "Sunday 22:00 IST. Backtest refresh for spread library."
+    }
+  ]
+}
