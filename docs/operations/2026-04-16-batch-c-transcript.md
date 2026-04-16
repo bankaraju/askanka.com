@@ -131,7 +131,56 @@ This is not scheduler debt; it's **script rot + missing orchestrator**. Each wri
 
 ## Section C3.x — Orphan + untracked writer resolution
 
-<populated by Task 15>
+**Scope:** 3 items from mapping table rows 66–68 — `gamma_result.json` orphan, `options_monitor.py` untracked, `gamma_scanner.py` untracked.
+
+### Row 66 — `pipeline/data/gamma_result.json` (231 bytes, Apr 14 15:38)
+
+**Content inspection:** JSON contained a Gamma.app API response (`generationId`, `gammaUrl`, credit deducted from gamma.app presentation tool) — unrelated to our GEX scanner despite the shared "gamma" name.
+
+**Writer search:** `grep -rn "gamma_result\|GAMMA_RESULT" pipeline/` returned no matches. Genuine orphan.
+
+**Tracked status:** `git ls-files pipeline/data/gamma_result.json` returned empty — never committed.
+
+**Action:** Deleted. File gone; no git rm needed.
+
+**Mapping table row 66 → DONE (deleted).**
+
+### Row 67 — `pipeline/options_monitor.py` (264 lines, untracked)
+
+**Purpose:** Kite API-backed Nifty options OI monitor — PCR, max pain, OI change alerts, support/resistance from OI concentration. Writes `oi_history.json`.
+
+**Consumers (grep for `options_monitor` under pipeline/):**
+- `pipeline/unified_regime_engine.py:179` — `from options_monitor import fetch_nifty_oi`
+- `pipeline/regime_signals.py:222` — `from options_monitor import fetch_nifty_oi`
+- `pipeline/regime_playbook.py:254` — `from options_monitor import fetch_nifty_oi`
+
+**Import smoke:** `python -c "import options_monitor"` → OK. Exports: `fetch_nifty_oi`, `format_oi_telegram`, `OI_HISTORY_FILE`, etc.
+
+**Decision criterion:** 3 tracked modules import it — leaving it untracked means any clone / worktree / CI environment will `ImportError`. Single-repo mandate violation + live dependency → **commit**.
+
+**Mapping table row 67 → DONE (committed).**
+
+### Row 68 — `pipeline/gamma_scanner.py` (293 lines, untracked)
+
+**Purpose:** Computes Gamma Exposure (GEX) across Nifty/BankNifty option chain to predict market-maker pin strikes. Writes `gex_history.json` (one of the Apr 14 15:38 stale cluster files).
+
+**Consumers:** None found via `grep -rn "gamma_scanner\|compute_gex\|from gamma"` — only self-references inside the module. No tracked file imports it; no scheduled task runs it.
+
+**Import smoke:** `python -c "import gamma_scanner"` → OK. Exports: `compute_gex`, `format_gex_telegram`, `GEX_HISTORY`, etc.
+
+**Decision:** Purposeful, well-documented pipeline script that owns a data file surfaced in our stale cluster. Zero external consumers today means it's dark code, but single-repo mandate says *no untracked files in pipeline/*. The "is this dark code worth keeping?" question belongs to the same DEFERRED-NEW mini-plan that owns the broader Apr 14 15:38 cluster triage — deciding it here would be out-of-scope. **Commit** now (safe, zero behavior change) and let the mini-plan decide fate.
+
+**Mapping table row 68 → DONE (committed).**
+
+### Summary
+
+| File | Fate | Status |
+|---|---|---|
+| `pipeline/data/gamma_result.json` | deleted (true orphan, unrelated to pipeline) | DONE |
+| `pipeline/options_monitor.py` | committed (3 tracked consumers) | DONE |
+| `pipeline/gamma_scanner.py` | committed (purposeful, dark for now — triage in DEFERRED-NEW plan) | DONE |
+
+No other C3 writers (`pinning_detector`, `unified_regime_engine`, `expiry_monitor`) were in C3.x scope — they're in the broader DEFERRED-NEW mini-plan per row 65 and the plan's out-of-scope list.
 
 ## Section C4 — Downstream Apr 15 consumer smoke test
 
