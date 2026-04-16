@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "updated": "2026-04-16",
+  "tasks": [
+    {
+      "task_name": "AnkaMorningScan",
+      "tier": "critical",
+      "cadence_class": "daily",
+      "outputs": ["data/global_regime.json"],
+      "grace_multiplier": 1.5,
+      "notes": "morning scan"
+    }
+  ]
+}
