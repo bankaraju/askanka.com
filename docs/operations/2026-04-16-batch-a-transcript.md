@@ -284,7 +284,23 @@ Total: 67 OK, 0 FAIL
 
 ## Section A4 — Migration spec re-read gate
 
-<populated by Task 5>
+Grep output confirming Documents\ archived+deleted:
+
+```
+10:**Killed:** `C:/Users/Claude_Anka/Documents/askanka.com/` (archived then deleted)
+13:- Files only in Documents → copy to askanka.com
+14:- Files in both, diverged → Documents wins (production-tested), EXCEPT:
+16:  - `pipeline/autoresearch/reverse_regime_*.py` → take BEST of both (Documents has tests, askanka.com has std fixes)
+17:- `pipeline/.env` → merge (Documents has INDIANAPI_KEY)
+18:- `pipeline/config.py` → Documents wins (has TMPV fix, 32 spreads)
+19:- All data directories (signals/, daily/, india_historical/, etc.) → copy from Documents
+20:- All test files → copy from Documents
+21:- All logs/ → copy from Documents
+24:Every .bat file updated: `Documents\askanka.com` → `askanka.com`
+
+```
+
+**Gate result: PASS — zombies safe to delete.** (Line 10: "Killed: C:/Users/Claude_Anka/Documents/askanka.com/ (archived then deleted)")
 
 ## Section A5 — Dry-run output
 
