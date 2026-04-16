@@ -66,6 +66,8 @@ def check_file_freshness(
     3. If file age > window → OUTPUT_STALE.
     4. Else → FRESH.
     """
+    if now.tzinfo is None or now.tzinfo.utcoffset(now) is None:
+        raise ValueError("now must be timezone-aware")
     path = Path(output_path)
     if not path.exists():
         return FreshnessResult.OUTPUT_MISSING
@@ -74,7 +76,11 @@ def check_file_freshness(
         return FreshnessResult.FRESH
 
     window = compute_window_seconds(cadence_class, grace_multiplier)
-    age = now.timestamp() - os.stat(path).st_mtime
+    try:
+        mtime = os.stat(path).st_mtime
+    except OSError:
+        return FreshnessResult.OUTPUT_MISSING
+    age = now.timestamp() - mtime
     if age > window:
         return FreshnessResult.OUTPUT_STALE
     return FreshnessResult.FRESH

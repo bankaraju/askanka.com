@@ -147,3 +147,62 @@ class TestCheckFileFreshness:
             f, cadence_class="intraday", grace_multiplier=1.5, now=now,
         )
         assert result == FreshnessResult.OUTPUT_STALE
+
+    def test_naive_now_raises(self, tmp_path):
+        # check_file_freshness must reject naive datetimes for all cadences
+        f = tmp_path / "x.json"
+        f.write_text("{}")
+        naive = datetime(2026, 4, 16, 10, 0)  # no tzinfo
+        with pytest.raises(ValueError, match="timezone-aware"):
+            check_file_freshness(
+                f, cadence_class="daily", grace_multiplier=1.5, now=naive,
+            )
+
+    def test_age_exactly_at_window_is_fresh(self, tmp_path):
+        # Spec: stale is age > window (strict). Equality is FRESH.
+        f = tmp_path / "edge.json"
+        f.write_text("{}")
+        now = datetime(2026, 4, 16, 10, 0, tzinfo=IST)
+        # Daily/1.5 window = 30h exactly
+        exactly_window = (now - timedelta(seconds=30 * 3600)).timestamp()
+        import os
+        os.utime(f, (exactly_window, exactly_window))
+
+        result = check_file_freshness(
+            f, cadence_class="daily", grace_multiplier=1.5, now=now,
+        )
+        assert result == FreshnessResult.FRESH
+
+    def test_directory_path_treated_as_missing(self, tmp_path):
+        # os.stat on a directory returns stats; explicit IsADirectoryError
+        # won't fire — but the inventory should never point at a directory.
+        # We use a file path where os.stat would raise (simulate by pointing
+        # at a non-existent path with a truly unreachable parent).
+        # Simpler: verify an unreadable-but-existing path returns OUTPUT_MISSING
+        # by pointing at a path.exists()==False leaf (already covered by
+        # test_missing_file_returns_missing). This test locks the OSError
+        # catch path by deleting the file between exists() and stat().
+        import os
+        f = tmp_path / "racing.json"
+        f.write_text("{}")
+        now = datetime(2026, 4, 16, 10, 0, tzinfo=IST)
+
+        call_count = [0]
+        original_stat = os.stat
+        def flaky_stat(path, *args, **kwargs):
+            call_count[0] += 1
+            # Raise only on the second call (after path.exists() succeeds)
+            if str(path).endswith("racing.json") and call_count[0] > 1:
+                raise PermissionError("simulated")
+            return original_stat(path, *args, **kwargs)
+
+        import pipeline.watchdog_freshness as wf
+        wf.os.stat = flaky_stat
+        try:
+            result = check_file_freshness(
+                f, cadence_class="daily", grace_multiplier=1.5, now=now,
+            )
+        finally:
+            wf.os.stat = original_stat
+
+        assert result == FreshnessResult.OUTPUT_MISSING
