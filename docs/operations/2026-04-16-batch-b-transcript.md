@@ -55,9 +55,48 @@ powershell.exe -ExecutionPolicy Bypass -Command "(Get-ScheduledTask | Where-Obje
 
 **Result:** 29 DELETED, 0 FAIL. Zero Documents\ tasks remain in the live scheduler. XML backups in `pipeline/backups/scheduled_tasks/2026-04-16/` untouched (67 files).
 
-## Section B2 — Re-register quote-bug tasks (populated by Task 9)
+## Section B2 — Re-register quote-bug tasks
 
-_Placeholder: will capture the unregister+register-clean cycle for the three askanka.com-path tasks whose Execute has stray quote-wrapping (AnkaCorrelationBreaks, AnkaGapPredictor, AnkaPruneArticles)._
+Script: `C:/Users/Claude_Anka/AppData/Local/Temp/fix_quote_bugs.ps1`
+Captured output: `C:/Users/Claude_Anka/AppData/Local/Temp/quote_fix_out.txt`
+
+**Intentional deviation from the plan's PowerShell:** the filter was tightened from the plan's naive quote-match to `... -and $t.TaskName -like 'Anka*'`. The plan's filter would have swept in `UpdateLibrary` (a Windows Media Player SYSTEM task whose `"%ProgramFiles%\Windows Media Player\wmpnscfg.exe"` Execute legitimately uses quote-wrapping as a system-task convention). Batch A's concern #2 flagged this; the design spec §scope also excludes it. The Anka-only filter keeps rewrite scope to the remediation's declared scope.
+
+**Second deviation (empty-WorkingDirectory guard):** the plan's `New-ScheduledTaskAction` call passes `-WorkingDirectory $oldWd` unconditionally. The 3 target tasks all have empty `WorkingDirectory`, which makes the cmdlet throw `The argument is null or empty`. First run failed cleanly (New-ScheduledTaskAction is validated before Unregister is called, so all 3 tasks were still intact — verified). The script was updated to pass `-Argument`/`-WorkingDirectory` only when non-empty, then re-run.
+
+**Live count discovered by the filter:** 3 Anka quote-bug tasks (matches Batch A mapping table rows 30-32; the other 25 quote-bugs from the raw Batch A audit were subsumed by the Documents\ zombie set already deleted in B1).
+
+```
+Rewriting 3 Anka quote-bug tasks
+  OK:   AnkaCorrelationBreaks  FROM="C:\Users\Claude_Anka\askanka.com\pipeline\scripts\correlation_breaks.bat"  TO=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\correlation_breaks.bat
+  OK:   AnkaGapPredictor  FROM="C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat"  TO=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat
+  OK:   AnkaPruneArticles  FROM="C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat"  TO=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat
+
+Total: 3 OK, 0 FAIL
+```
+
+**Independent verify (Anka-scope quote-bug count):**
+
+```
+powershell.exe -ExecutionPolicy Bypass -Command "(Get-ScheduledTask | Where-Object { (`$_.Actions[0].Execute -match '^\"' -or `$_.Actions[0].Execute -match '\"\"') -and `$_.TaskName -like 'Anka*' }).Count"
+0
+```
+
+**Post-rewrite sanity check (state / triggers / principal preserved):**
+
+```
+AnkaCorrelationBreaks | State=Ready | Exec=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\correlation_breaks.bat | Triggers=1 | RunAs=Claude_Anka
+AnkaGapPredictor      | State=Ready | Exec=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat      | Triggers=1 | RunAs=Claude_Anka
+AnkaPruneArticles     | State=Ready | Exec=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat     | Triggers=1 | RunAs=Claude_Anka
+```
+
+**UpdateLibrary untouched (Windows system task — outside Anka scope):**
+
+```
+UpdateLibrary | Exec="%ProgramFiles%\Windows Media Player\wmpnscfg.exe"
+```
+
+**Result:** 3 OK, 0 FAIL. Zero Anka quote-bug tasks remain. Triggers, settings, and principal preserved across re-register. XML backups in `pipeline/backups/scheduled_tasks/2026-04-16/` untouched.
 
 ## Section B3 — Manual run verification of never-ran tasks (populated by Task 10)
 
