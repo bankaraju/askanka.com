@@ -68,3 +68,50 @@ class TestLoadInventory:
         }))
         with pytest.raises(InventoryError, match="missing"):
             load_inventory(f)
+
+    def test_version_as_string_raises(self, tmp_path):
+        f = tmp_path / "string_version.json"
+        f.write_text(json.dumps({"version": "1", "updated": "2026-04-16", "tasks": []}))
+        with pytest.raises(InventoryError, match="'1'"):
+            load_inventory(f)
+
+    def test_duplicate_task_name_raises(self, tmp_path):
+        f = tmp_path / "dupes.json"
+        f.write_text(json.dumps({
+            "version": 1, "updated": "2026-04-16",
+            "tasks": [
+                {"task_name": "AnkaMorningScan", "tier": "critical", "cadence_class": "daily",
+                 "outputs": [], "grace_multiplier": 1.5, "notes": ""},
+                {"task_name": "AnkaMorningScan", "tier": "warn", "cadence_class": "daily",
+                 "outputs": [], "grace_multiplier": 1.0, "notes": ""},
+            ],
+        }))
+        with pytest.raises(InventoryError, match="duplicate task_name"):
+            load_inventory(f)
+
+    def test_non_string_output_entry_raises(self, tmp_path):
+        f = tmp_path / "bad_outputs.json"
+        f.write_text(json.dumps({
+            "version": 1, "updated": "2026-04-16",
+            "tasks": [{
+                "task_name": "X", "tier": "info", "cadence_class": "daily",
+                "outputs": ["data/ok.json", None, 42],
+                "grace_multiplier": 1.5, "notes": "",
+            }],
+        }))
+        with pytest.raises(InventoryError, match="list of strings"):
+            load_inventory(f)
+
+    def test_production_inventory_loads(self):
+        # Smoke test: the real bootstrap output must validate at all times.
+        repo_root = Path(__file__).resolve().parents[2]
+        prod_path = repo_root / "pipeline" / "config" / "anka_inventory.json"
+        inv = load_inventory(prod_path)
+        assert inv["version"] == 1
+        assert len(inv["tasks"]) > 0
+
+    def test_empty_tasks_list_is_valid(self, tmp_path):
+        f = tmp_path / "empty.json"
+        f.write_text(json.dumps({"version": 1, "updated": "2026-04-16", "tasks": []}))
+        inv = load_inventory(f)
+        assert inv["tasks"] == []
