@@ -2,9 +2,18 @@
   "articles": [
     {
       "date": "2026-04-16",
+      "segment": "war",
+      "filename": "2026-04-16-war.html",
+      "headline": "Hormuz Blockade Juked: America's Oil Grab Falters, India's Defence Stocks Poised",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 16, 2026"
+    },
+    {
+      "date": "2026-04-16",
       "segment": "epstein",
       "filename": "2026-04-16-epstein.html",
-      "headline": "DOJ's Epstein Cover-Up Deepens: Trump's Irrationality, Israel's Losses, and India's Strategic Vulnerabilities",
+      "headline": "Epstein Cover-Up Escalates: DOJ's Silence on Mossad Links Threatens Global Trust, Indian Markets Brace for Impact",
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 16, 2026"
