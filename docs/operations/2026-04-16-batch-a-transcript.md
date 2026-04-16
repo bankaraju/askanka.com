@@ -260,7 +260,27 @@ Total: 67 OK, 0 FAIL
 
 ## Section A3 — Data snapshots
 
-<populated by Task 4>
+```
+-rw-r--r-- 1 Claude_Anka 197121  64902 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/correlation_history.json
+-rw-r--r-- 1 Claude_Anka 197121  10710 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/correlation_report_2026-04-03.json
+-rw-r--r-- 1 Claude_Anka 197121  16332 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/expiry_divergence_log.json
+-rw-r--r-- 1 Claude_Anka 197121   1033 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/fragility_model.json
+-rw-r--r-- 1 Claude_Anka 197121   6841 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/fragility_scores.json
+-rw-r--r-- 1 Claude_Anka 197121     51 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/gamma_generation.json
+-rw-r--r-- 1 Claude_Anka 197121    231 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/gamma_result.json
+-rw-r--r-- 1 Claude_Anka 197121    407 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/gex_history.json
+-rw-r--r-- 1 Claude_Anka 197121  16937 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/historical_events.json
+-rw-r--r-- 1 Claude_Anka 197121     71 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/macro_trigger_state.json
+-rw-r--r-- 1 Claude_Anka 197121   1025 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/ml_performance.json
+-rw-r--r-- 1 Claude_Anka 197121   8512 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/msi_history.json
+-rw-r--r-- 1 Claude_Anka 197121  19151 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/oi_history.json
+-rw-r--r-- 1 Claude_Anka 197121 364244 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/pattern_lookup.json
+-rw-r--r-- 1 Claude_Anka 197121    494 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/pinning_backtest_summary.json
+-rw-r--r-- 1 Claude_Anka 197121  30437 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/pinning_history.json
+-rw-r--r-- 1 Claude_Anka 197121   3558 Apr 14 15:38 pipeline/backups/data_snapshots/2026-04-16/regime_history.json
+-rw-r--r-- 1 Claude_Anka 197121  14473 Apr 14 13:04 pipeline/backups/data_snapshots/2026-04-16/scorecard_alpha_results.json
+
+```
 
 ## Section A4 — Migration spec re-read gate
 

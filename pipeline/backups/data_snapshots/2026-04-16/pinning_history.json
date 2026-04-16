@@ -1,0 +1,1402 @@
+[
+  {
+    "date": "2026-04-07",
+    "time": "09:25",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24390.0,
+        "pin_strike": 24400,
+        "distance_pct": 0.041,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52031.45,
+        "pin_strike": 52000,
+        "distance_pct": 0.06,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22815.6,
+        "pin_strike": 22800,
+        "distance_pct": 0.068,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "09:45",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24410.7,
+        "pin_strike": 24400,
+        "distance_pct": 0.044,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22811.7,
+        "pin_strike": 22800,
+        "distance_pct": 0.051,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52038.75,
+        "pin_strike": 52000,
+        "distance_pct": 0.074,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "10:13",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 22905.25,
+        "pin_strike": 22900,
+        "distance_pct": 0.023,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 24461.5,
+        "pin_strike": 24450,
+        "distance_pct": 0.047,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52171.95,
+        "pin_strike": 52200,
+        "distance_pct": 0.054,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "10:43",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24499.3,
+        "pin_strike": 24500,
+        "distance_pct": 0.003,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22962.45,
+        "pin_strike": 22950,
+        "distance_pct": 0.054,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52268.15,
+        "pin_strike": 52300,
+        "distance_pct": 0.061,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "11:13",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24356.0,
+        "pin_strike": 24350,
+        "distance_pct": 0.025,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22857.65,
+        "pin_strike": 22850,
+        "distance_pct": 0.033,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 51976.8,
+        "pin_strike": 52000,
+        "distance_pct": 0.045,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "11:47",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 52117.05,
+        "pin_strike": 52100,
+        "distance_pct": 0.033,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22910.25,
+        "pin_strike": 22900,
+        "distance_pct": 0.045,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 24433.75,
+        "pin_strike": 24450,
+        "distance_pct": 0.067,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "12:17",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24460.4,
+        "pin_strike": 24450,
+        "distance_pct": 0.043,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22936.35,
+        "pin_strike": 22950,
+        "distance_pct": 0.06,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52162.75,
+        "pin_strike": 52200,
+        "distance_pct": 0.071,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "12:47",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24460.25,
+        "pin_strike": 24450,
+        "distance_pct": 0.042,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22936.7,
+        "pin_strike": 22950,
+        "distance_pct": 0.058,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52142.4,
+        "pin_strike": 52100,
+        "distance_pct": 0.081,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "13:17",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 52205.05,
+        "pin_strike": 52200,
+        "distance_pct": 0.01,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 22956.1,
+        "pin_strike": 22950,
+        "distance_pct": 0.027,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 24483.25,
+        "pin_strike": 24500,
+        "distance_pct": 0.068,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "13:46",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23051.05,
+        "pin_strike": 23050,
+        "distance_pct": 0.005,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 24612.2,
+        "pin_strike": 24600,
+        "distance_pct": 0.05,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52546.3,
+        "pin_strike": 52500,
+        "distance_pct": 0.088,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "14:17",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24552.1,
+        "pin_strike": 24550,
+        "distance_pct": 0.009,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23003.0,
+        "pin_strike": 23000,
+        "distance_pct": 0.013,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52435.45,
+        "pin_strike": 52400,
+        "distance_pct": 0.068,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "14:46",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 24564.55,
+        "pin_strike": 24550,
+        "distance_pct": 0.059,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 52456.15,
+        "pin_strike": 52500,
+        "distance_pct": 0.084,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23029.35,
+        "pin_strike": 23050,
+        "distance_pct": 0.09,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "time": "15:17",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 52697.35,
+        "pin_strike": 52700,
+        "distance_pct": 0.005,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23113.25,
+        "pin_strike": 23100,
+        "distance_pct": 0.057,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 24674.2,
+        "pin_strike": 24650,
+        "distance_pct": 0.098,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "09:44",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25889.75,
+        "pin_strike": 25900,
+        "distance_pct": 0.04,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55177.2,
+        "pin_strike": 55200,
+        "distance_pct": 0.041,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23916.15,
+        "pin_strike": 23900,
+        "distance_pct": 0.068,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "10:12",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23899.05,
+        "pin_strike": 23900,
+        "distance_pct": 0.004,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55197.95,
+        "pin_strike": 55200,
+        "distance_pct": 0.004,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25877.9,
+        "pin_strike": 25900,
+        "distance_pct": 0.085,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "10:42",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55311.2,
+        "pin_strike": 55300,
+        "distance_pct": 0.02,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23917.85,
+        "pin_strike": 23900,
+        "distance_pct": 0.075,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25930.4,
+        "pin_strike": 25950,
+        "distance_pct": 0.076,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "11:12",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23999.1,
+        "pin_strike": 24000,
+        "distance_pct": 0.004,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55523.2,
+        "pin_strike": 55500,
+        "distance_pct": 0.042,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26071.3,
+        "pin_strike": 26050,
+        "distance_pct": 0.082,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "11:43",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55479.35,
+        "pin_strike": 55500,
+        "distance_pct": 0.037,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23987.25,
+        "pin_strike": 24000,
+        "distance_pct": 0.053,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26029.8,
+        "pin_strike": 26050,
+        "distance_pct": 0.078,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "12:13",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55429.25,
+        "pin_strike": 55400,
+        "distance_pct": 0.053,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23963.7,
+        "pin_strike": 23950,
+        "distance_pct": 0.057,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25983.8,
+        "pin_strike": 26000,
+        "distance_pct": 0.062,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "12:43",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55409.35,
+        "pin_strike": 55400,
+        "distance_pct": 0.017,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25992.4,
+        "pin_strike": 26000,
+        "distance_pct": 0.029,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23940.15,
+        "pin_strike": 23950,
+        "distance_pct": 0.041,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "13:13",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55431.7,
+        "pin_strike": 55400,
+        "distance_pct": 0.057,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26016.95,
+        "pin_strike": 26000,
+        "distance_pct": 0.065,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23969.9,
+        "pin_strike": 23950,
+        "distance_pct": 0.083,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "13:43",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23989.65,
+        "pin_strike": 24000,
+        "distance_pct": 0.043,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26033.25,
+        "pin_strike": 26050,
+        "distance_pct": 0.064,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55454.05,
+        "pin_strike": 55500,
+        "distance_pct": 0.083,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "14:13",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23948.45,
+        "pin_strike": 23950,
+        "distance_pct": 0.006,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55408.2,
+        "pin_strike": 55400,
+        "distance_pct": 0.015,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25974.95,
+        "pin_strike": 25950,
+        "distance_pct": 0.096,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "14:43",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 24002.5,
+        "pin_strike": 24000,
+        "distance_pct": 0.01,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26053.85,
+        "pin_strike": 26050,
+        "distance_pct": 0.015,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55689.05,
+        "pin_strike": 55700,
+        "distance_pct": 0.02,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "time": "15:13",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55701.8,
+        "pin_strike": 55700,
+        "distance_pct": 0.003,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 24004.1,
+        "pin_strike": 24000,
+        "distance_pct": 0.017,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26060.45,
+        "pin_strike": 26050,
+        "distance_pct": 0.04,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "09:42",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23865.95,
+        "pin_strike": 23850,
+        "distance_pct": 0.067,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55255.1,
+        "pin_strike": 55300,
+        "distance_pct": 0.081,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25826.9,
+        "pin_strike": 25850,
+        "distance_pct": 0.089,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "09:45",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25842.1,
+        "pin_strike": 25850,
+        "distance_pct": 0.031,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55278.85,
+        "pin_strike": 55300,
+        "distance_pct": 0.038,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23866.0,
+        "pin_strike": 23850,
+        "distance_pct": 0.067,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "10:12",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23848.7,
+        "pin_strike": 23850,
+        "distance_pct": 0.005,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55382.6,
+        "pin_strike": 55400,
+        "distance_pct": 0.031,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25861.8,
+        "pin_strike": 25850,
+        "distance_pct": 0.046,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "10:13",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23848.05,
+        "pin_strike": 23850,
+        "distance_pct": 0.008,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25855.8,
+        "pin_strike": 25850,
+        "distance_pct": 0.022,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55361.3,
+        "pin_strike": 55400,
+        "distance_pct": 0.07,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "10:42",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25834.65,
+        "pin_strike": 25850,
+        "distance_pct": 0.059,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55357.45,
+        "pin_strike": 55400,
+        "distance_pct": 0.077,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23823.0,
+        "pin_strike": 23800,
+        "distance_pct": 0.097,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "10:43",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25835.25,
+        "pin_strike": 25850,
+        "distance_pct": 0.057,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55354.1,
+        "pin_strike": 55400,
+        "distance_pct": 0.083,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23824.2,
+        "pin_strike": 23800,
+        "distance_pct": 0.102,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "11:12",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23855.0,
+        "pin_strike": 23850,
+        "distance_pct": 0.021,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55384.2,
+        "pin_strike": 55400,
+        "distance_pct": 0.029,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25867.1,
+        "pin_strike": 25850,
+        "distance_pct": 0.066,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "11:13",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23854.55,
+        "pin_strike": 23850,
+        "distance_pct": 0.019,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55380.6,
+        "pin_strike": 55400,
+        "distance_pct": 0.035,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25861.35,
+        "pin_strike": 25850,
+        "distance_pct": 0.044,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "11:42",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 55279.55,
+        "pin_strike": 55300,
+        "distance_pct": 0.037,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23863.15,
+        "pin_strike": 23850,
+        "distance_pct": 0.055,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25865.05,
+        "pin_strike": 25850,
+        "distance_pct": 0.058,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "11:43",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25856.65,
+        "pin_strike": 25850,
+        "distance_pct": 0.026,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23859.15,
+        "pin_strike": 23850,
+        "distance_pct": 0.038,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55261.8,
+        "pin_strike": 55300,
+        "distance_pct": 0.069,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "12:12",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23891.25,
+        "pin_strike": 23900,
+        "distance_pct": 0.037,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25881.9,
+        "pin_strike": 25900,
+        "distance_pct": 0.07,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55258.65,
+        "pin_strike": 55300,
+        "distance_pct": 0.075,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "12:13",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23891.8,
+        "pin_strike": 23900,
+        "distance_pct": 0.034,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25888.7,
+        "pin_strike": 25900,
+        "distance_pct": 0.044,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55264.15,
+        "pin_strike": 55300,
+        "distance_pct": 0.065,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "12:42",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23859.35,
+        "pin_strike": 23850,
+        "distance_pct": 0.039,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25829.4,
+        "pin_strike": 25850,
+        "distance_pct": 0.08,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55153.8,
+        "pin_strike": 55200,
+        "distance_pct": 0.084,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "12:43",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23849.9,
+        "pin_strike": 23850,
+        "distance_pct": 0.0,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55118.05,
+        "pin_strike": 55100,
+        "distance_pct": 0.033,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25811.2,
+        "pin_strike": 25800,
+        "distance_pct": 0.043,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "13:12",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23805.55,
+        "pin_strike": 23800,
+        "distance_pct": 0.023,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54943.5,
+        "pin_strike": 54900,
+        "distance_pct": 0.079,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25725.9,
+        "pin_strike": 25750,
+        "distance_pct": 0.094,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "13:13",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23808.4,
+        "pin_strike": 23800,
+        "distance_pct": 0.035,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25728.65,
+        "pin_strike": 25750,
+        "distance_pct": 0.083,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54949.7,
+        "pin_strike": 54900,
+        "distance_pct": 0.09,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "13:42",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25664.6,
+        "pin_strike": 25650,
+        "distance_pct": 0.057,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23765.45,
+        "pin_strike": 23750,
+        "distance_pct": 0.065,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54840.75,
+        "pin_strike": 54800,
+        "distance_pct": 0.074,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "13:43",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23759.25,
+        "pin_strike": 23750,
+        "distance_pct": 0.039,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25662.25,
+        "pin_strike": 25650,
+        "distance_pct": 0.048,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54834.85,
+        "pin_strike": 54800,
+        "distance_pct": 0.064,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "14:12",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25659.05,
+        "pin_strike": 25650,
+        "distance_pct": 0.035,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23758.85,
+        "pin_strike": 23750,
+        "distance_pct": 0.037,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54844.9,
+        "pin_strike": 54800,
+        "distance_pct": 0.082,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "14:13",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 54884.35,
+        "pin_strike": 54900,
+        "distance_pct": 0.029,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25674.5,
+        "pin_strike": 25650,
+        "distance_pct": 0.095,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23776.15,
+        "pin_strike": 23800,
+        "distance_pct": 0.1,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "14:42",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "BANKNIFTY",
+        "spot": 54723.1,
+        "pin_strike": 54700,
+        "distance_pct": 0.042,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25616.6,
+        "pin_strike": 25600,
+        "distance_pct": 0.065,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23724.55,
+        "pin_strike": 23700,
+        "distance_pct": 0.103,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "14:43",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23742.65,
+        "pin_strike": 23750,
+        "distance_pct": 0.031,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54774.05,
+        "pin_strike": 54800,
+        "distance_pct": 0.047,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25635.7,
+        "pin_strike": 25650,
+        "distance_pct": 0.056,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "15:12",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23797.95,
+        "pin_strike": 23800,
+        "distance_pct": 0.009,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54889.4,
+        "pin_strike": 54900,
+        "distance_pct": 0.019,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 25718.25,
+        "pin_strike": 25700,
+        "distance_pct": 0.071,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "time": "15:13",
+    "is_expiry": true,
+    "pins": [
+      {
+        "index": "FINNIFTY",
+        "spot": 25708.0,
+        "pin_strike": 25700,
+        "distance_pct": 0.031,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "NIFTY",
+        "spot": 23791.9,
+        "pin_strike": 23800,
+        "distance_pct": 0.034,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 54869.1,
+        "pin_strike": 54900,
+        "distance_pct": 0.056,
+        "strength": "PERFECT"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-10",
+    "time": "09:45",
+    "is_expiry": false,
+    "pins": [
+      {
+        "index": "NIFTY",
+        "spot": 23951.05,
+        "pin_strike": 23950,
+        "distance_pct": 0.004,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "BANKNIFTY",
+        "spot": 55695.1,
+        "pin_strike": 55700,
+        "distance_pct": 0.009,
+        "strength": "PERFECT"
+      },
+      {
+        "index": "FINNIFTY",
+        "spot": 26086.2,
+        "pin_strike": 26100,
+        "distance_pct": 0.053,
+        "strength": "PERFECT"
+      }
+    ]
+  }
+]

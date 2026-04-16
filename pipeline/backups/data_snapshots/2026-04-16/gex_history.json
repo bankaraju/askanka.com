@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2026-04-07T09:59:55.973800+05:30",
+    "index": "NIFTY",
+    "spot": 22888.5,
+    "predicted_pin": 22800,
+    "max_gex": -1812109,
+    "pcr": 1.0,
+    "iv_skew": 2.9
+  },
+  {
+    "timestamp": "2026-04-07T09:59:59.373448+05:30",
+    "index": "NIFTY",
+    "spot": 22885.8,
+    "predicted_pin": 22800,
+    "max_gex": -1816810,
+    "pcr": 1.0,
+    "iv_skew": 3.4
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "trained_at": "2026-04-10 09:43 IST",
+  "n_samples": 7502,
+  "n_train": 6001,
+  "n_test": 1501,
+  "class_balance": {
+    "stable": 5707,
+    "break_events": 294
+  },
+  "scale_pos_weight": 19.41,
+  "accuracy": 0.8981,
+  "precision": 0.0222,
+  "recall": 0.125,
+  "f1_score": 0.0377,
+  "feature_importance": {
+    "corr_21": 0.0645,
+    "beta_21": 0.0603,
+    "spread_momentum_21d": 0.0581,
+    "corr_change_21d": 0.0543,
+    "ret_b_5d": 0.0525,
+    "corr_divergence": 0.0511,
+    "corr_63": 0.0511,
+    "dispersion_21d": 0.0499,
+    "vol_ratio_b": 0.0499,
+    "ret_b_21d_vol": 0.0498,
+    "volume_shock_b": 0.0404,
+    "ret_a_21d": 0.0394,
+    "ret_a_21d_vol": 0.0391,
+    "beta_instability": 0.038,
+    "corr_change_5d": 0.0339,
+    "vol_ratio_a": 0.0331,
+    "spread_momentum_5d": 0.0325,
+    "dispersion_ratio": 0.0322,
+    "dispersion_5d": 0.0312,
+    "volume_shock_a": 0.0305,
+    "ret_a_5d_vol": 0.0289,
+    "ret_b_21d": 0.0277,
+    "ret_a_5d": 0.0266,
+    "ret_b_5d_vol": 0.0254
+  }
+}

@@ -1,0 +1,198 @@
+[
+  {
+    "date": "2026-04-08",
+    "time": "11:11",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "11:42",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "12:12",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "12:42",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "13:12",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "13:42",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "14:00",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "14:12",
+    "zone": "NEUTRAL",
+    "score": -1.28,
+    "confidence": 33
+  },
+  {
+    "date": "2026-04-08",
+    "time": "14:42",
+    "zone": "RISK-ON",
+    "score": 4.2,
+    "confidence": 66
+  },
+  {
+    "date": "2026-04-08",
+    "time": "15:12",
+    "zone": "RISK-ON",
+    "score": 4.42,
+    "confidence": 66
+  },
+  {
+    "date": "2026-04-09",
+    "time": "09:42",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "10:12",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "10:42",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "11:12",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "11:42",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "12:12",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "12:42",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 83
+  },
+  {
+    "date": "2026-04-09",
+    "time": "13:12",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 82
+  },
+  {
+    "date": "2026-04-09",
+    "time": "13:42",
+    "zone": "EUPHORIA",
+    "score": 10.17,
+    "confidence": 82
+  },
+  {
+    "date": "2026-04-09",
+    "time": "14:12",
+    "zone": "RISK-ON",
+    "score": 5.94,
+    "confidence": 68
+  },
+  {
+    "date": "2026-04-09",
+    "time": "14:42",
+    "zone": "RISK-ON",
+    "score": 5.94,
+    "confidence": 68
+  },
+  {
+    "date": "2026-04-09",
+    "time": "15:12",
+    "zone": "RISK-ON",
+    "score": 5.98,
+    "confidence": 69
+  },
+  {
+    "date": "2026-04-10",
+    "time": "04:31",
+    "zone": "NEUTRAL",
+    "score": 1.08,
+    "confidence": 48
+  },
+  {
+    "date": "2026-04-10",
+    "time": "09:42",
+    "zone": "NEUTRAL",
+    "score": 1.08,
+    "confidence": 48
+  },
+  {
+    "date": "2026-04-11",
+    "time": "04:31",
+    "zone": "NEUTRAL",
+    "score": -0.28,
+    "confidence": 35
+  },
+  {
+    "date": "2026-04-12",
+    "time": "04:30",
+    "zone": "NEUTRAL",
+    "score": -0.28,
+    "confidence": 50
+  },
+  {
+    "date": "2026-04-13",
+    "time": "04:30",
+    "zone": "NEUTRAL",
+    "score": -0.28,
+    "confidence": 50
+  },
+  {
+    "date": "2026-04-14",
+    "time": "04:31",
+    "zone": "NEUTRAL",
+    "score": 3.4,
+    "confidence": 34
+  }
+]
