@@ -19,3 +19,9 @@ pipeline/test_*.py
 .vscode/
 __pycache__/
 *.pyc
+
+# Watchdog runtime state (regenerates each run)
+pipeline/data/watchdog_state.json
+
+# Watchdog fallback alerts log (generated when Telegram fails)
+pipeline/logs/watchdog_alerts.log

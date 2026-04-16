@@ -43,6 +43,10 @@ The system runs automatically via Windows Scheduled Tasks:
 - 16:30 — Website data export + news refresh
 - Sunday 22:00 — Weekly spread statistics
 
+## Scheduler Inventory (Canonical)
+
+Every `Anka*` scheduled task MUST appear in `pipeline/config/anka_inventory.json` with its tier (critical/warn/info), cadence_class (intraday/daily/weekly), expected output files, and grace_multiplier. The data-freshness watchdog (`pipeline/watchdog.py`) uses this inventory as the source-of-truth for what should exist in the scheduler and what their output-file freshness contracts are. Adding a new scheduled task without updating the inventory will trigger an `ORPHAN_TASK` alert on the next watchdog run — this is by design.
+
 ## Obsidian Vault — Deep Context
 The Obsidian vault at `C:/Users/Claude_Anka/ObsidianVault/` is the project's knowledge base. Read `_claude_context/VAULT_MAP.md` for what's where. Key rules:
 - When memory files don't have the answer, check the vault (chat exports, project state docs, trust scores)
