@@ -40,16 +40,22 @@ class TaskLivenessResult(enum.Enum):
 
 def query_anka_tasks() -> list[dict]:
     """Invoke PowerShell, return list of {TaskName, LastTaskResult, LastRunTime, NextRunTime}."""
-    result = subprocess.run(
-        ["powershell.exe", "-NoProfile", "-Command", _PS_QUERY],
-        capture_output=True, text=True, timeout=120,
-    )
+    try:
+        result = subprocess.run(
+            ["powershell.exe", "-NoProfile", "-Command", _PS_QUERY],
+            capture_output=True, text=True, timeout=30,
+        )
+    except subprocess.TimeoutExpired as e:
+        raise SchedulerQueryError(f"PowerShell query timed out after {e.timeout}s") from e
     if result.returncode != 0:
         raise SchedulerQueryError(f"Get-ScheduledTask failed: {result.stderr.strip()}")
     out = result.stdout.strip()
     if not out:
         return []
-    data = json.loads(out)
+    try:
+        data = json.loads(out)
+    except json.JSONDecodeError as e:
+        raise SchedulerQueryError(f"PowerShell returned non-JSON output: {e}") from e
     # PowerShell returns a single object (not array) when only one result
     if isinstance(data, dict):
         return [data]
@@ -77,7 +83,9 @@ def check_task_liveness(
 ) -> TaskLivenessResult:
     """Classify one live-scheduler task entry against its expected cadence."""
     # 1999 sentinel = never ran
-    last_run_raw = task.get("LastRunTime", "")
+    last_run_raw = task.get("LastRunTime") or ""
+    if not last_run_raw:
+        return TaskLivenessResult.TASK_NEVER_RAN
     if last_run_raw.startswith("1999-") or last_run_raw.startswith("0001-"):
         return TaskLivenessResult.TASK_NEVER_RAN
 

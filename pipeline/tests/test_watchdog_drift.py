@@ -1,5 +1,6 @@
 """Tests for scheduler query bridge and drift detection."""
 
+import subprocess
 from unittest.mock import patch, MagicMock
 
 import pytest
@@ -44,6 +45,19 @@ class TestQueryAnkaTasks:
         mock_result = MagicMock(returncode=1, stdout="", stderr="Access denied")
         with patch("pipeline.watchdog_scheduler.subprocess.run", return_value=mock_result):
             with pytest.raises(SchedulerQueryError, match="Access denied"):
+                query_anka_tasks()
+
+    def test_timeout_raises_SchedulerQueryError(self):
+        def raise_timeout(*args, **kwargs):
+            raise subprocess.TimeoutExpired(cmd="powershell.exe", timeout=30)
+        with patch("pipeline.watchdog_scheduler.subprocess.run", side_effect=raise_timeout):
+            with pytest.raises(SchedulerQueryError, match="timed out"):
+                query_anka_tasks()
+
+    def test_malformed_json_raises_SchedulerQueryError(self):
+        mock_result = MagicMock(returncode=0, stdout="not valid json", stderr="")
+        with patch("pipeline.watchdog_scheduler.subprocess.run", return_value=mock_result):
+            with pytest.raises(SchedulerQueryError, match="non-JSON"):
                 query_anka_tasks()
 
 
@@ -115,3 +129,12 @@ class TestCheckTaskLiveness:
         result = check_task_liveness(task, cadence_class="daily", grace_multiplier=1.5,
                                      now_iso="2026-04-16T10:00:00")
         assert result == TaskLivenessResult.TASK_STALE_RUN
+
+    def test_missing_last_run_time_is_never_ran(self):
+        # PowerShell can omit the field entirely, or return None
+        task1 = {"TaskName": "AnkaFoo", "LastTaskResult": 0}  # no LastRunTime
+        task2 = {"TaskName": "AnkaBar", "LastTaskResult": 0, "LastRunTime": None}
+        for t in (task1, task2):
+            result = check_task_liveness(t, cadence_class="daily", grace_multiplier=1.5,
+                                         now_iso="2026-04-16T10:00:00")
+            assert result == TaskLivenessResult.TASK_NEVER_RAN
