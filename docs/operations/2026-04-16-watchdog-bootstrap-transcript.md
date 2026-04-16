@@ -152,3 +152,29 @@ pipeline/tests/test_watchdog_telegram_fallback.py::TestSendOrLogDigest::test_dry
 
 ============================= 71 passed in 0.56s ==============================
 ```
+
+## Scheduler registration (T15)
+
+### register_watchdog.ps1 output
+```
+registered AnkaWatchdogIntraday
+registered AnkaWatchdogGate
+
+TaskName             State
+--------             -----
+AnkaWatchdogGate     Ready
+AnkaWatchdogIntraday Ready
+```
+
+### AnkaWatchdogGate first manual fire
+```
+LastTaskResult : 0
+LastRunTime    : 16-04-2026 15:46:16
+NextRunTime    : 16-04-2026 16:45:15
+```
+
+**Note on log-file split (fix during T15):** The .bat's `>>` redirect initially conflicted with Python's `RotatingFileHandler` on the same file — Windows can't share an append-opened file with a handler that opens it exclusively. Fix: cmd output redirects to `pipeline/logs/watchdog_stdout.log` (captures `print()` output and pre-init crashes); Python's structured logger owns `pipeline/logs/watchdog.log` exclusively. Both .bat wrappers updated accordingly.
+
+**Stage 1 shadow mode active:** both .bat wrappers pass `--dry-run`, so digests write to `watchdog_stdout.log` only — no Telegram traffic. Promote to live alerts by removing `--dry-run` from both .bats after T16/T17 sign-off.
+
+**First-run digest reveals:** 1 WARN (AnkaWeeklyReport task stale result) + 2 DRIFT (AnkaWatchdogGate, AnkaWatchdogIntraday flagged as ORPHAN_TASK because they're registered but not in the inventory yet — drift detection working as designed).

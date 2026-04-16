@@ -1,5 +1,5 @@
 @echo off
-REM ANKA Watchdog — twice-daily gate (09:20 + 16:45 IST)
+REM ANKA Watchdog — twice-daily gate (STAGE 1 SHADOW: --dry-run ON)
 REM Checks every task, every tier, plus drift.
 cd /d "C:\Users\Claude_Anka\askanka.com"
-python -X utf8 -m pipeline.watchdog --all >> pipeline\logs\watchdog.log 2>&1
+python -X utf8 -m pipeline.watchdog --all --dry-run >> pipeline\logs\watchdog_stdout.log 2>&1
