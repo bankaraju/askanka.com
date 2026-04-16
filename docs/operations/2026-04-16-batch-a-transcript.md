@@ -304,4 +304,57 @@ Grep output confirming Documents\ archived+deleted:
 
 ## Section A5 — Dry-run output
 
-<populated by Task 6>
+```
+=== DRY RUN: zombie deletions ===
+WOULD DELETE: AnkaARCBE2300  (Execute=C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\arcbe_scan.bat)
+WOULD DELETE: AnkaEOD1630  (Execute=C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\eod_track_record.bat)
+WOULD DELETE: AnkaIntraday0940  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday0955  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1010  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1025  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1040  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1055  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1110  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1125  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1140  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1155  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1210  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1225  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1240  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1255  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1310  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1325  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1340  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1355  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1410  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1425  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1440  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1455  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1510  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaIntraday1525  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\intraday_scan.bat")
+WOULD DELETE: AnkaSpreadStats  (Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\weekly_stats.bat")
+WOULD DELETE: AnkaWeeklyVideo  (Execute=C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\weekly_video.bat)
+WOULD DELETE: OpenCapture  (Execute=C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\open_capture.bat)
+
+=== DRY RUN: quote-bug rewrites ===
+WOULD REWRITE: AnkaCorrelationBreaks
+  FROM: "C:\Users\Claude_Anka\askanka.com\pipeline\scripts\correlation_breaks.bat"
+  TO:   C:\Users\Claude_Anka\askanka.com\pipeline\scripts\correlation_breaks.bat
+WOULD REWRITE: AnkaGapPredictor
+  FROM: "C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat"
+  TO:   C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat
+WOULD REWRITE: AnkaPruneArticles
+  FROM: "C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat"
+  TO:   C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat
+WOULD REWRITE: UpdateLibrary
+  FROM: "%ProgramFiles%\Windows Media Player\wmpnscfg.exe"
+  TO:   %ProgramFiles%\Windows Media Player\wmpnscfg.exe
+
+=== DRY RUN: never-ran re-registrations ===
+REGISTER: AnkaEODNews  Execute=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\overnight_news.bat  bat_exists=YES  lastResult=267011
+REGISTER: AnkaGapPredictor  Execute="C:\Users\Claude_Anka\askanka.com\pipeline\scripts\gap_predictor.bat"  bat_exists=YES  lastResult=267011
+REGISTER: AnkaPruneArticles  Execute="C:\Users\Claude_Anka\askanka.com\pipeline\scripts\prune_articles.bat"  bat_exists=YES  lastResult=267011
+REGISTER: AnkaSpreadStats  Execute="C:\Users\Claude_Anka\Documents\askanka.com\pipeline\scripts\weekly_stats.bat"  bat_exists=NO  lastResult=267011
+REGISTER: AnkaWeeklyStats  Execute=C:\Users\Claude_Anka\askanka.com\pipeline\scripts\weekly_stats.bat  bat_exists=YES  lastResult=267011
+
+```
