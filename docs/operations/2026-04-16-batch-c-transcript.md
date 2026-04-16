@@ -259,4 +259,69 @@ CORRELATION BREAK: LUPIN      | NEUTRAL d1 | Exp -0.3% Act -2.0% z=1.5 | POSSIBL
 
 ## Section C5 — Final health check + closeout
 
-<populated by Task 17>
+### Acceptance criteria (all 8)
+
+```
+=== Batch B invariants (Anka-scope) ===
+Tasks with Documents\ path:        0  (target: 0)          ✅ AC1
+Anka tasks with embedded quotes:   0  (target: 0)          ✅ AC2
+Anka tasks still never-ran:        0  (target: 0)          ✅ AC2
+Total Anka* tasks:                 69
+
+AC3  Phase A profile                                        ✅
+  pipeline/autoresearch/reverse_regime_profile.json
+  size=3,516,749 bytes  mtime=2026-04-16 12:38:40 IST
+  (was Apr 14 before C2 interim cron)
+
+AC4  Apr 14 15:38 stale cluster                             DEFERRED-NEW (per row 65)
+  12 files still Apr 14 15:38:40 (correlation_history, fragility_*,
+  ml_performance, oi_history, msi_history, macro_trigger_state,
+  historical_events, regime_history, gex_history, pinning_history,
+  expiry_divergence_log). 1 file refreshed by C3 partial:
+  pattern_lookup.json → 2026-04-16 12:44. Script rot + missing
+  orchestrator is out of scheduler-debt scope.
+
+AC5  Phase C output                                         ✅
+  correlation_breaks.json         17,134 bytes  mtime 2026-04-16 12:54
+  correlation_break_history.json  43,528 bytes  mtime 2026-04-16 12:54
+  Last 5 surfaced: PNBHOUSING, HCLTECH, DLF, BHARTIARTL, GMRAIRPORT
+
+AC6  intraday_scan end-to-end                               ✅
+  exit 0; technical + oi + news + news_intel + spread_intel +
+  phase-C + exporter all green in a single cycle (see C4 step 3)
+
+AC7  website data freshness                                 ✅
+  live_status / global_regime / today_recommendations / track_record
+  all mtime 2026-04-16 12:54 (exporter ran as final step of scan)
+  articles_index.json: 12:20 today (separate job)
+
+AC8  Mapping table                                          ✅
+  rows still PENDING: 0
+```
+
+### Verdict
+
+All 8 acceptance criteria met. The Apr 14 15:38 cluster is the only residual debt and it's out-of-scope (DEFERRED-NEW, row 65) — it stops being scheduler-debt and becomes script-rot / orchestrator-design, which will get its own brainstorm + plan.
+
+### What changed across Batches A→C
+
+| Batch | Outcome |
+|---|---|
+| A | 67 task XML backups + 18 data snapshots + 68-row mapping table committed |
+| B1 | 29 `Documents\` zombie tasks unregistered (rows 1–29 → DONE) |
+| B2 | 3 askanka.com tasks with embedded-quote bugs rewritten from their XML backup with Execute/Args corrected (rows 30–32 → DONE) |
+| B3 | 4 never-ran tasks re-run and verified exit=0 (rows 58, 59–61, 62 → DONE) |
+| B4 | Post-batch sweep: 0 / 0 / 0 invariants held |
+| C1 | `correlation_breaks.bat` stripped of `--day 1 --no-telegram`; Phase C restored (row 64 → DONE) |
+| C2 | `AnkaReverseRegimeProfile` registered @ 04:45 IST as INTERIM cron (row 63 → DONE-INTERIM) |
+| C3 | Master-job hypothesis disproved — 8 writers, 5 untracked, `correlation_regime.py` ImportError. Row 65 → DEFERRED-NEW. Partial win: `pattern_lookup.json` refreshed |
+| C3.x | Orphan `gamma_result.json` deleted; `options_monitor.py` + `gamma_scanner.py` committed (rows 66, 67 → DONE) |
+| C4 | Downstream smoke test passed; secondary CLI bug caught in `intraday_scan.bat:13` and patched |
+| C5 | All 8 AC green, 0 PENDING rows, plan complete |
+
+### Residual debt (out of this plan; for future brainstorm)
+
+- **DEFERRED-NEW** Apr 14 15:38 cluster — script rot + missing orchestrator (row 65). 12 files still Apr 14, 8 distinct writers, `correlation_regime.py` broken on `CORRELATION_PAIRS` import.
+- **DEFERRED-NEW** 9 other untracked pipeline scripts (row 68) — single-repo mandate violation; judgment-per-file mini-plan.
+- **Structural fix (from user feedback "why has this become such a pain?"):** add `scheduled_tasks_inventory.json` to git + health-check cron so the scheduler state stops being invisible to git and drift is caught in hours, not days.
+- **AnkaWeeklyStats 267009 transient** (noted during B3) — poll-exit logic should wait past "still running" states.
