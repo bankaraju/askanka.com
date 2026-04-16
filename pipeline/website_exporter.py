@@ -8,6 +8,8 @@ Run after each signal cycle or on-demand:
 """
 
 import json
+import os
+import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -407,6 +409,56 @@ def run_export():
     print(f"  Open positions: {len(live['positions'])}")
     print(f"  Recommendations: {len(recs['spreads'])} spreads, "
           f"{len(recs['stocks'])} stocks, {len(recs['news_driven'])} news")
+
+    if os.environ.get("WEBSITE_AUTODEPLOY", "1") != "0":
+        deploy_to_site()
+
+
+DEPLOY_FILES = [
+    "data/global_regime.json",
+    "data/live_status.json",
+    "data/today_recommendations.json",
+    "data/track_record.json",
+    "data/gap_risk.json",
+    "data/spread_stats.json",
+    "data/articles_index.json",
+    "data/fno_news.json",
+]
+
+
+def deploy_to_site():
+    """Stage + commit + push website data JSONs. Noop if nothing staged.
+
+    WHY: website_exporter writes data/*.json locally but GitHub Pages only
+    serves committed state. Without this, the live site lags until the next
+    human-initiated push.
+    """
+    repo = Path(__file__).parent.parent
+    existing = [f for f in DEPLOY_FILES if (repo / f).exists()]
+    if not existing:
+        return
+    try:
+        subprocess.run(["git", "-C", str(repo), "add", "--"] + existing,
+                       check=True, capture_output=True, text=True)
+        diff = subprocess.run(["git", "-C", str(repo), "diff", "--cached", "--quiet", "--"] + existing,
+                              capture_output=True)
+        if diff.returncode == 0:
+            print("  [deploy] no data changes to push")
+            return
+        ts = datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
+        msg = f"data: auto-refresh website JSONs {ts}"
+        subprocess.run(["git", "-C", str(repo), "commit", "-m", msg],
+                       check=True, capture_output=True, text=True)
+        push = subprocess.run(["git", "-C", str(repo), "push"],
+                              capture_output=True, text=True, timeout=60)
+        if push.returncode == 0:
+            print(f"  [deploy] pushed: {msg}")
+        else:
+            print(f"  [deploy] push failed (non-fatal): {push.stderr.strip()[:200]}")
+    except subprocess.TimeoutExpired:
+        print("  [deploy] push timed out after 60s (non-fatal)")
+    except subprocess.CalledProcessError as e:
+        print(f"  [deploy] git error (non-fatal): {e.stderr.strip()[:200] if e.stderr else e}")
 
 
 if __name__ == "__main__":
