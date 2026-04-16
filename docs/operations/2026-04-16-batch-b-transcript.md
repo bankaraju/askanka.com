@@ -159,6 +159,32 @@ The task transitioned `Running` → `Ready` with `LastTaskResult=0`. PASS.
 
 **Result:** 4 PASS, 0 NONZERO, 0 TIMEOUT, 1 SUBSUMED (AnkaSpreadStats). All four B3-scope tasks now have `LastTaskResult=0` and a 2026-04-16 LastRunTime — never-ran flag flipped. `AnkaSpreadStats` remains deleted per B1; no re-registration needed since `AnkaWeeklyStats` covers the weekly-stats slot.
 
-## Section B4 — Post-Batch-B scheduler snapshot (populated by Task 11)
+## Section B4 — Post-Batch-B scheduler snapshot
 
-_Placeholder: full scheduler audit re-run after B1/B2/B3. Expected: 0 Documents\ tasks, 0 quote-bug tasks, 0 never-ran tasks (or documented exceptions)._
+**Script:** `C:/Users/Claude_Anka/AppData/Local/Temp/post_b_sweep.ps1`
+**Output:** `C:/Users/Claude_Anka/AppData/Local/Temp/post_b_out.txt`
+
+```
+=== Batch B invariants (Anka-scope) ===
+Tasks with Documents\ path:        0  (target: 0)
+Anka tasks with embedded quotes:   0    (target: 0)
+Anka tasks still never-ran:        0  (target: 0 or documented NEW)
+
+Total Anka* tasks: 68
+
+BATCH B GATE: PASS
+exit_code=0
+```
+
+**Invariant deltas vs Batch A audit (Anka-scope):**
+
+| Invariant | Batch A | Post-B4 | Delta |
+|---|---|---|---|
+| Documents\ zombies | 29 | 0 | −29 (B1 deletions) |
+| Anka quote-bug Execute | 28 | 0 | −28 (3 rewritten in B2; 25 removed as zombies in B1) |
+| Anka never-ran | 5 | 0 | −5 (4 manually run in B3; 1 subsumed by B1) |
+| Total Anka* tasks | 97 | 68 | −29 (zombie deletions; no new tasks added in Batch B) |
+
+**Gate verdict:** PASS. All three invariants at target. Ready to proceed to Batch C (wiring + freshness).
+
+Batch B executed safely: every destructive op reversible via XML backups in `pipeline/backups/scheduled_tasks/2026-04-16/` (67 files, untouched). No .bat files modified; no Python code modified; no XML backups disturbed.
