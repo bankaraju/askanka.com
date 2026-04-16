@@ -178,3 +178,30 @@ NextRunTime    : 16-04-2026 16:45:15
 **Stage 1 shadow mode active:** both .bat wrappers pass `--dry-run`, so digests write to `watchdog_stdout.log` only — no Telegram traffic. Promote to live alerts by removing `--dry-run` from both .bats after T16/T17 sign-off.
 
 **First-run digest reveals:** 1 WARN (AnkaWeeklyReport task stale result) + 2 DRIFT (AnkaWatchdogGate, AnkaWatchdogIntraday flagged as ORPHAN_TASK because they're registered but not in the inventory yet — drift detection working as designed).
+
+## Shadow-mode first-run verification (T16)
+
+### Python logger tail (`pipeline/logs/watchdog.log`)
+```
+2026-04-16 15:46:36,203 INFO [DRY-RUN] digest written to stdout (6 issues, 0 resolved)
+```
+(Earlier entries in the file include one `PermissionError` traceback from the pre-fix run before the log-file split — retained as forensic evidence of the Windows file-lock issue.)
+
+### Digest captured in `pipeline/logs/watchdog_stdout.log`
+```
+🚨 Anka Watchdog — 2026-04-16 15:46 IST
+Gate run • 3 issues
+
+CRITICAL (0):
+
+WARN (1):
+  • AnkaWeeklyReport still task stale result (run 2)
+
+DRIFT (2):
+  • AnkaWatchdogGate — orphan task
+    registered in scheduler but not in inventory
+  • AnkaWatchdogIntraday — orphan task
+    registered in scheduler but not in inventory
+```
+
+**Interpretation:** shadow mode is working as designed. Digest renders with header totals (CRITICAL 0 / WARN 1 / DRIFT 2 = 3 surface-able) while the Python logger INFO line shows the raw count including info-tier (6 issues tracked, 3 rendered). The dedup state correctly retained AnkaWeeklyReport as "(run 2)" across sessions. No Telegram message was sent (dry-run active).
