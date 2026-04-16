@@ -10,6 +10,7 @@ classifications for task_names already present in the inventory).
 import json
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -36,9 +37,9 @@ KNOWN_TASKS = {
     "AnkaEODReview": {
         "tier": "critical",
         "cadence_class": "daily",
-        "outputs": ["data/track_record.json"],
+        "outputs": [],
         "grace_multiplier": 1.5,
-        "notes": "16:00 IST. EOD P&L + track record.",
+        "notes": "16:00 IST. Runs run_signals.py --eod — prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py).",
     },
     "AnkaCorrelationBreaks": {
         "tier": "critical",
@@ -54,7 +55,7 @@ KNOWN_TASKS = {
         "cadence_class": "daily",
         "outputs": ["data/track_record.json"],
         "grace_multiplier": 1.5,
-        "notes": "16:15 IST. Generates EOD report + website export.",
+        "notes": "16:15 IST. run_eod_report.py + website_exporter.py. Authoritative writer of data/track_record.json (website_exporter.py line 430).",
     },
     "AnkaRefreshKite": {
         "tier": "warn",
@@ -111,8 +112,16 @@ def enumerate_anka_tasks() -> list[str]:
 def load_existing_inventory() -> dict:
     """Load existing inventory if present, else return empty shell."""
     if INVENTORY_PATH.exists():
-        with INVENTORY_PATH.open() as f:
-            return json.load(f)
+        try:
+            with INVENTORY_PATH.open() as f:
+                return json.load(f)
+        except json.JSONDecodeError as e:
+            print(
+                f"existing inventory at {INVENTORY_PATH} is malformed — "
+                f"delete or fix before re-running.\nerror: {e}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
     return {"version": 1, "updated": "", "tasks": []}
 
 
@@ -127,17 +136,21 @@ def main() -> None:
 
     merged = []
     for name in live_tasks:
-        if name in existing_by_name:
-            # Preserve existing classification (human may have refined it).
-            merged.append(existing_by_name[name])
+        existing_row = existing_by_name.get(name)
+        is_bootstrap_default = (
+            existing_row is not None
+            and "UNCLASSIFIED" in existing_row.get("notes", "")
+        )
+
+        if existing_row is not None and not is_bootstrap_default:
+            # Preserve human-refined classification.
+            merged.append(existing_row)
         elif name in KNOWN_TASKS:
             entry = {"task_name": name, **KNOWN_TASKS[name]}
             merged.append(entry)
         else:
             entry = {"task_name": name, **DEFAULT_CLASSIFICATION}
             merged.append(entry)
-
-    from datetime import date
 
     inventory = {
         "version": 1,

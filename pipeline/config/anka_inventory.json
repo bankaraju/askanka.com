@@ -40,11 +40,9 @@
       "task_name": "AnkaEODReview",
       "tier": "critical",
       "cadence_class": "daily",
-      "outputs": [
-        "data/track_record.json"
-      ],
+      "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "16:00 IST. EOD P&L + track record."
+      "notes": "16:00 IST. Runs run_signals.py --eod \u2014 prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
     },
     {
       "task_name": "AnkaEODTrackRecord",
@@ -54,7 +52,7 @@
         "data/track_record.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "16:15 IST. Generates EOD report + website export."
+      "notes": "16:15 IST. run_eod_report.py + website_exporter.py. Authoritative writer of data/track_record.json (website_exporter.py line 430)."
     },
     {
       "task_name": "AnkaGapPredictor",

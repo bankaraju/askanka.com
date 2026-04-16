@@ -45,3 +45,18 @@ tasks: 69
 ### Fix: AnkaRefreshKite name drift
 
 Bootstrap initially used `AnkaKiteRefresh` but live scheduler has `AnkaRefreshKite`. Renamed in KNOWN_TASKS; rerun. Classification count: 7 → 8.
+
+### Code-review follow-up fixes
+
+- Merge logic now upgrades UNCLASSIFIED rows when KNOWN_TASKS gains a matching entry (rows are only preserved when `notes` does not contain "UNCLASSIFIED").
+- Duplicate `data/track_record.json` ownership resolved: **AnkaEODTrackRecord is the authoritative writer**. Evidence:
+  - `pipeline/scripts/eod_review.bat` (AnkaEODReview) runs `run_signals.py --eod` which only prints the EOD dashboard and sends to Telegram (`run_signals.py:620 Running EOD review...`, `:635 print(eod_text)`, `:639 send_message(eod_text)`) — no file writes to `data/track_record.json`.
+  - `pipeline/scripts/eod_track_record.bat` (AnkaEODTrackRecord) runs `run_eod_report.py` then `website_exporter.py`. The track_record JSON is written at `website_exporter.py:430 ("track_record.json", track)` → `:433 path.write_text(json.dumps(...))`.
+  - Fix: AnkaEODReview `outputs` set to `[]` with clarifying note; AnkaEODTrackRecord keeps `data/track_record.json` as its sole output.
+- Minor: `from datetime import date` moved to module top (line 13); `load_existing_inventory` now prints a friendly message and exits 1 on malformed JSON.
+
+### Verification
+- Fix 1 simulated: added a fake `AnkaDailyArticles` entry to KNOWN_TASKS, re-ran bootstrap → classified jumped 8→9, inventory row was upgraded from UNCLASSIFIED default to the new classification. Fake entry reverted before commit.
+- Fix 2: after removing stale AnkaEODReview/AnkaEODTrackRecord rows and re-running, `grep data/track_record.json` against `outputs` lists in the inventory returns exactly one owner (AnkaEODTrackRecord).
+- Fix 3: `grep -n "from datetime import date" pipeline/bootstrap_watchdog_inventory.py` → line 13.
+- Fix 4: writing a deliberately malformed JSON to `pipeline/config/anka_inventory.json` and re-running prints "existing inventory at ... is malformed" and exits 1 (file restored from backup afterwards).
