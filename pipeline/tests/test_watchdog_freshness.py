@@ -72,3 +72,9 @@ class TestMarketHours:
         # 04:30 UTC on Tuesday = 10:00 IST — market hours
         t = datetime(2026, 4, 14, 4, 30, tzinfo=timezone.utc)
         assert is_market_hours(t) is True
+
+    def test_naive_datetime_raises(self):
+        # Naive datetime must be rejected to avoid platform-dependent conversion.
+        naive = datetime(2026, 4, 14, 10, 0)  # no tzinfo
+        with pytest.raises(ValueError, match="timezone-aware"):
+            is_market_hours(naive)

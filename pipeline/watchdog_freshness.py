@@ -36,6 +36,8 @@ def is_market_hours(now: datetime) -> bool:
 
     Accepts any timezone-aware datetime; converts to IST internally.
     """
+    if now.tzinfo is None or now.tzinfo.utcoffset(now) is None:
+        raise ValueError("now must be timezone-aware")
     now_ist = now.astimezone(IST)
     if now_ist.weekday() >= 5:  # Saturday=5, Sunday=6
         return False
