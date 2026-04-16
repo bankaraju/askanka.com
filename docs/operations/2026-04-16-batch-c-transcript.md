@@ -54,7 +54,27 @@ CORRELATION BREAK: TORNTPHARM
 
 ## Section C2 — Phase A interim cron (AnkaReverseRegimeProfile)
 
-<populated by Task 13>
+**New .bat:** `pipeline/scripts/reverse_regime_profile.bat` (thin wrapper around `python -X utf8 autoresearch/reverse_regime_analysis.py`)
+
+**New scheduled task:** `AnkaReverseRegimeProfile`
+- Daily @ 04:45 IST
+- WakeToRun, AllowStartIfOnBatteries, StartWhenAvailable, MultipleInstances IgnoreNew, ExecutionTimeLimit 2h, RestartCount 2
+- Description field: `INTERIM - pending fresh brainstorm 2026-04-17+. Writes pipeline/autoresearch/reverse_regime_profile.json consumed by Phase B.`
+
+**Direct .bat manual run:** exit 0; `pipeline/autoresearch/reverse_regime_profile.json` refreshed — 3,516,749 bytes, mtime 2026-04-16 12:37 (was Apr 14 — 2 days stale).
+
+**Scheduler-driven run (Start-ScheduledTask):**
+```
+LastTaskResult : 0
+LastRunTime    : 16-04-2026 12:38:08
+NextRunTime    : 17-04-2026 04:45:15
+```
+
+**Path discovery:** Phase A writes to `pipeline/autoresearch/reverse_regime_profile.json` (not `pipeline/data/`). That's the canonical location the script uses and Phase B consumes. Plan had listed the wrong directory — no correction needed beyond noting it here.
+
+**Phase A interim cron live.** Phase B ranker will now run against fresh (today's) profile on its next fire, not the Apr-14 stale profile that was blocking it.
+
+Designed cadence and trigger for Phase A get a fresh brainstorm 2026-04-17+ — this is interim, clearly labeled in the task's Description field.
 
 ## Section C3 — Master EOD job identification
 
