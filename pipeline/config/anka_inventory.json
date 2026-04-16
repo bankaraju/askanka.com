@@ -20,7 +20,7 @@
         "data/articles_index.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "16:30 IST. daily_articles.py — writes war + epstein articles and data/articles_index.json."
+      "notes": "04:45 IST daily. daily_articles.py — writes war + epstein articles and data/articles_index.json."
     },
     {
       "task_name": "AnkaDailyDump",
