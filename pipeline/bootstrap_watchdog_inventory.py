@@ -56,7 +56,7 @@ KNOWN_TASKS = {
         "grace_multiplier": 1.5,
         "notes": "16:15 IST. Generates EOD report + website export.",
     },
-    "AnkaKiteRefresh": {
+    "AnkaRefreshKite": {
         "tier": "warn",
         "cadence_class": "daily",
         "outputs": [],

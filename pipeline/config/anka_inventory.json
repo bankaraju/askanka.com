@@ -309,11 +309,11 @@
     },
     {
       "task_name": "AnkaRefreshKite",
-      "tier": "info",
+      "tier": "warn",
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "UNCLASSIFIED \u2014 bootstrap default. Review and update tier/cadence/outputs."
+      "notes": "09:00 IST. Zerodha API session refresh. No file output; freshness judged on task-last-run only."
     },
     {
       "task_name": "AnkaReverseRegimeProfile",

@@ -41,3 +41,7 @@ tasks: 69
 ## Canary drift acceptance test (spec §Acceptance #7)
 
 <populated by Task 17>
+
+### Fix: AnkaRefreshKite name drift
+
+Bootstrap initially used `AnkaKiteRefresh` but live scheduler has `AnkaRefreshKite`. Renamed in KNOWN_TASKS; rerun. Classification count: 7 → 8.
