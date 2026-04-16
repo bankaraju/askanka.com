@@ -184,7 +184,78 @@ No other C3 writers (`pinning_detector`, `unified_regime_engine`, `expiry_monito
 
 ## Section C4 — Downstream Apr 15 consumer smoke test
 
-<populated by Task 16>
+**Goal:** confirm that Apr 15's downstream consumers (website exporter, article grounding loader, intraday scan) read the now-fresh inputs without error.
+
+### Step 1 — website_exporter.py (autodeploy off)
+
+**Command:** `WEBSITE_AUTODEPLOY=0 python pipeline/website_exporter.py`
+**Exit:** 0
+**Tail:**
+```
+  Exported global_regime.json
+  Exported live_status.json
+  Exported today_recommendations.json
+  Exported track_record.json
+Website data exported to C:\Users\Claude_Anka\askanka.com\data
+  Regime zone:    NEUTRAL (score 42.5)
+  Open positions: 1
+  Recommendations: 0 spreads, 3 stocks, 0 news
+```
+
+**Output mtimes (today 2026-04-16):**
+- `data/live_status.json` — 12:51:20 ✅
+- `data/global_regime.json` — 12:51:20 ✅
+- `data/today_recommendations.json` — 12:51:20 ✅
+- `data/track_record.json` — 12:51:20 ✅
+- `data/articles_index.json` — 12:20:06 ✅ (refreshed today by separate job)
+- `data/fno_news.json` — Apr 14 13:17 ⚠️ (separate news pipeline, not in exporter scope)
+
+**Verdict:** exporter healthy, 4 files refreshed, regime resolves NEUTRAL/42.5.
+
+### Step 2 — article_grounding.load_market_context
+
+**Signature correction:** plan showed `load_market_context()` with no args, but the function requires `date_str`. Called with today's date `2026-04-16`.
+
+**Result:**
+```
+load OK for 2026-04-16
+flows present: True
+indices present: True
+prices present: False
+context keys: ['commodities', 'date', 'flows', 'fx', 'generated_at', 'indices', 'metadata', 'sector_etfs', 'stocks', 'volatility']
+```
+
+**Note:** `prices` is not a top-level key in the current schema — instrument prices live under `stocks` / `sector_etfs` / `indices`. The check "prices present" was stale against the live schema; the relevant signal is that `flows` + `indices` resolve and no `MarketDataMissing` is raised.
+
+**Verdict:** article grounding healthy against today's dump.
+
+### Step 3 — intraday_scan.bat (full cycle)
+
+**Secondary bug caught during smoke test:** `intraday_scan.bat:13` also passed `--day 1` to `reverse_regime_breaks.py` — same root cause as C1. Patched inline (only `--transition` and `--regime` remain, per argparse at `autoresearch/reverse_regime_breaks.py:542-548`).
+
+**Command:** `cmd //c "pipeline\scripts\intraday_scan.bat"`
+**Exit:** 0
+
+**Log tail (last Phase C breaks on the actual intraday run):**
+```
+CORRELATION BREAK: YESBANK    | NEUTRAL d1 | Exp -0.5% Act +0.9% z=1.6 | UNCERTAIN
+CORRELATION BREAK: RECLTD     | NEUTRAL d1 | Exp +0.1% Act +3.1% z=1.6 | POSSIBLE_OPPORTUNITY
+CORRELATION BREAK: HCLTECH    | NEUTRAL d1 | Exp +0.1% Act -1.3% z=1.6 | UNCERTAIN
+CORRELATION BREAK: LICI       | NEUTRAL d1 | Exp +0.2% Act -1.2% z=1.6 | UNCERTAIN
+CORRELATION BREAK: LUPIN      | NEUTRAL d1 | Exp -0.3% Act -2.0% z=1.5 | POSSIBLE_OPPORTUNITY
+```
+
+**Verdict:** full chain green — technical_scanner, oi_scanner, news_scanner, news_intelligence, spread_intelligence, phase-C breaks, website_exporter all exit 0 inside one cycle.
+
+### C4 summary
+
+| Consumer | Exit | Output refreshed | Note |
+|---|---|---|---|
+| website_exporter | 0 | ✅ 4 files to 12:51 | autodeploy off for inspection |
+| article_grounding.load_market_context | n/a | ✅ 2026-04-16 dump loaded | `flows` + `indices` present |
+| intraday_scan cycle | 0 | ✅ Phase C surfaced 5 real breaks | secondary CLI bug patched mid-test |
+
+**Secondary fix:** `pipeline/scripts/intraday_scan.bat:13` — removed `--day 1`. Row 64's remediation widened to cover the intraday_scan invocation as well as the standalone `correlation_breaks.bat`; status stays DONE.
 
 ## Section C5 — Final health check + closeout
 
