@@ -4,6 +4,7 @@ import enum
 import json
 import os
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -162,3 +163,31 @@ def build_digest(
             sections.append(f"  ✅ {task_name} — fresh again")
 
     return "\n".join(sections).rstrip() + "\n"
+
+
+def _send_alert(digest: str) -> bool:
+    """Thin shim around pipeline.telegram_bot.send_alert. Isolated for mocking.
+
+    send_alert's signature takes **kwargs of alert fields. Watchdog sends one
+    plain-text message with the 'message' key, which the telegram_bot formatter
+    renders as the body of the Telegram message.
+    """
+    from pipeline.telegram_bot import send_alert
+    return send_alert(kind="WATCHDOG", message=digest)
+
+
+def send_or_log_digest(digest: str, fallback_log: Path, dry_run: bool = False) -> bool:
+    """Send digest to Telegram, fall back to log on failure.
+
+    Returns True iff Telegram delivery succeeded (or dry_run). Log-fallback
+    returns False but does not raise.
+    """
+    if dry_run:
+        return True
+    try:
+        return bool(_send_alert(digest))
+    except Exception as e:
+        fallback_log.parent.mkdir(parents=True, exist_ok=True)
+        with Path(fallback_log).open("a", encoding="utf-8") as f:
+            f.write(f"\n---\nTELEGRAM_FAILED {datetime.now().isoformat()}\nerror: {type(e).__name__}: {e}\n{digest}\n")
+        return False
