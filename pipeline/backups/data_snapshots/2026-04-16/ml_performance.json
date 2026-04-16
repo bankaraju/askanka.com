@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2026-04-03",
+    "signal_id": "TEST-002",
+    "source": "arbitration",
+    "msi_score": 78,
+    "regime": "MACRO_STRESS",
+    "spread_name": "",
+    "predicted_direction": "de_escalation",
+    "fii_net": null,
+    "dii_net": null,
+    "combined_flow": null,
+    "vix": null,
+    "usdinr_change": null,
+    "nifty_return": null,
+    "crude_change": null,
+    "arbitration_result": "downgraded",
+    "actual_pnl_pct": null,
+    "result": null,
+    "status": "pending"
+  },
+  {
+    "date": "2026-04-03",
+    "signal_id": "TEST-003",
+    "source": "arbitration",
+    "msi_score": 78,
+    "regime": "MACRO_STRESS",
+    "spread_name": "",
+    "predicted_direction": "de_escalation",
+    "fii_net": null,
+    "dii_net": null,
+    "combined_flow": null,
+    "vix": null,
+    "usdinr_change": null,
+    "nifty_return": null,
+    "crude_change": null,
+    "arbitration_result": "both_fire_warned",
+    "actual_pnl_pct": null,
+    "result": null,
+    "status": "pending"
+  }
+]

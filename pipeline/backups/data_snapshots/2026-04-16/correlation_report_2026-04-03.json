@@ -1,0 +1,457 @@
+{
+  "date": "2026-04-03",
+  "generated_at": "2026-04-03T09:33:17.168593+05:30",
+  "regime": {
+    "score": -2,
+    "label": "TRANSITIONING",
+    "inputs": {
+      "brent_trend": 0,
+      "usdinr_trend": -1,
+      "india_vix": -1,
+      "fii_5d_flow": 0,
+      "nifty_momentum": 0,
+      "us10yr_direction": 0
+    }
+  },
+  "hypothesis_validation": [
+    {
+      "spread_name": "Domestic vs Gulf Real Estate",
+      "theme": "Gulf NRI demand risk \u2014 domestic RE insulated, SOBHA exposed",
+      "z_score": 1.726,
+      "z_signal": "NEUTRAL",
+      "persistence": 0,
+      "beta_confirmation": false,
+      "validation_status": "WATCH"
+    },
+    {
+      "spread_name": "Domestic vs ME-Exposed IT",
+      "theme": "ME project revenue risk \u2014 US-heavy IT vs ME-project-heavy IT",
+      "z_score": -1.333,
+      "z_signal": "NEUTRAL",
+      "persistence": 0,
+      "beta_confirmation": true,
+      "validation_status": "WATCH"
+    },
+    {
+      "spread_name": "Domestic Infra vs Gulf EPC",
+      "theme": "ME construction exposure \u2014 domestic govt contracts vs Gulf infra",
+      "z_score": -0.382,
+      "z_signal": "NEUTRAL",
+      "persistence": 0,
+      "beta_confirmation": false,
+      "validation_status": "REJECTED"
+    },
+    {
+      "spread_name": "Domestic Banking vs NRI Corridor",
+      "theme": "Gulf remittance risk \u2014 Kerala-Gulf NRI deposit base",
+      "z_score": -1.604,
+      "z_signal": "NEUTRAL",
+      "persistence": 0,
+      "beta_confirmation": false,
+      "validation_status": "WATCH"
+    }
+  ],
+  "beta_shifts": [
+    {
+      "ticker": "SIEMENS",
+      "driver": "us10yr",
+      "beta_20d": 0.6628,
+      "beta_90d": -0.0116,
+      "beta_shift": 57.9016,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "PERSISTENT",
+      "driver": "usdinr",
+      "beta_20d": 1.7473,
+      "beta_90d": 0.0478,
+      "beta_shift": 35.5822,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "WIPRO",
+      "driver": "usdinr",
+      "beta_20d": 1.5561,
+      "beta_90d": 0.0632,
+      "beta_shift": 23.6053,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "FEDERALBNK",
+      "driver": "usdinr",
+      "beta_20d": 1.9531,
+      "beta_90d": 0.0846,
+      "beta_shift": 22.0819,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "DIVISLAB",
+      "driver": "usdinr",
+      "beta_20d": 1.2139,
+      "beta_90d": -0.0732,
+      "beta_shift": 17.581,
+      "signal": "INVERSION"
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "driver": "usdinr",
+      "beta_20d": 1.4618,
+      "beta_90d": 0.0822,
+      "beta_shift": 16.7839,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "INTERGLOBE",
+      "driver": "us10yr",
+      "beta_20d": 0.4073,
+      "beta_90d": -0.0277,
+      "beta_shift": 15.7224,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "M&M",
+      "driver": "usdinr",
+      "beta_20d": 0.5204,
+      "beta_90d": 0.0381,
+      "beta_shift": 12.6611,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "HCLTECH",
+      "driver": "usdinr",
+      "beta_20d": 0.7678,
+      "beta_90d": 0.0674,
+      "beta_shift": 10.393,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "AMBUJACEM",
+      "driver": "usdinr",
+      "beta_20d": 1.0023,
+      "beta_90d": -0.1123,
+      "beta_shift": 9.9254,
+      "signal": "INVERSION"
+    },
+    {
+      "ticker": "SOBHA",
+      "driver": "usdinr",
+      "beta_20d": 1.9203,
+      "beta_90d": -0.2373,
+      "beta_shift": 9.094,
+      "signal": "INVERSION"
+    },
+    {
+      "ticker": "LICHSGFIN",
+      "driver": "usdinr",
+      "beta_20d": 1.7682,
+      "beta_90d": -0.2231,
+      "beta_shift": 8.9241,
+      "signal": "INVERSION"
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "driver": "us10yr",
+      "beta_20d": 0.0917,
+      "beta_90d": 0.0043,
+      "beta_shift": 8.7403,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "SBI",
+      "driver": "us10yr",
+      "beta_20d": 0.0927,
+      "beta_90d": 0.0077,
+      "beta_shift": 8.5048,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "MTAR",
+      "driver": "us10yr",
+      "beta_20d": 0.1169,
+      "beta_90d": 0.0135,
+      "beta_shift": 7.6355,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "NBCC",
+      "driver": "usdinr",
+      "beta_20d": 2.3592,
+      "beta_90d": -0.3758,
+      "beta_shift": 7.2777,
+      "signal": "INVERSION"
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "driver": "usdinr",
+      "beta_20d": 1.975,
+      "beta_90d": 0.2387,
+      "beta_shift": 7.2752,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "IOC",
+      "driver": "usdinr",
+      "beta_20d": 2.0155,
+      "beta_90d": 0.2682,
+      "beta_shift": 6.5161,
+      "signal": "ALERT"
+    },
+    {
+      "ticker": "DLF",
+      "driver": "usdinr",
+      "beta_20d": 1.2609,
+      "beta_90d": -0.256,
+      "beta_shift": 5.9253,
+      "signal": "INVERSION"
+    },
+    {
+      "ticker": "DRREDDY",
+      "driver": "usdinr",
+      "beta_20d": 1.3959,
+      "beta_90d": 0.2035,
+      "beta_shift": 5.861,
+      "signal": "ALERT"
+    }
+  ],
+  "linkage_discoveries": [
+    {
+      "ticker": "SUNPHARMA",
+      "driver": "usdinr",
+      "corr_20d": 0.291,
+      "corr_90d": -0.133,
+      "delta": 0.424,
+      "rank": 1
+    },
+    {
+      "ticker": "BHARATFORG",
+      "driver": "usdinr",
+      "corr_20d": 0.34,
+      "corr_90d": -0.083,
+      "delta": 0.424,
+      "rank": 2
+    },
+    {
+      "ticker": "DIVISLAB",
+      "driver": "usdinr",
+      "corr_20d": 0.399,
+      "corr_90d": -0.018,
+      "delta": 0.417,
+      "rank": 3
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "driver": "usdinr",
+      "corr_20d": 0.476,
+      "corr_90d": 0.062,
+      "delta": 0.415,
+      "rank": 4
+    },
+    {
+      "ticker": "POWERGRID",
+      "driver": "nifty",
+      "corr_20d": 0.048,
+      "corr_90d": 0.452,
+      "delta": -0.404,
+      "rank": 5
+    },
+    {
+      "ticker": "IOC",
+      "driver": "us10yr",
+      "corr_20d": 0.469,
+      "corr_90d": 0.075,
+      "delta": 0.394,
+      "rank": 6
+    },
+    {
+      "ticker": "WIPRO",
+      "driver": "usdinr",
+      "corr_20d": 0.395,
+      "corr_90d": 0.013,
+      "delta": 0.382,
+      "rank": 7
+    },
+    {
+      "ticker": "MAXHEALTH",
+      "driver": "usdinr",
+      "corr_20d": 0.323,
+      "corr_90d": -0.053,
+      "delta": 0.376,
+      "rank": 8
+    },
+    {
+      "ticker": "ITC",
+      "driver": "nifty",
+      "corr_20d": 0.749,
+      "corr_90d": 0.392,
+      "delta": 0.357,
+      "rank": 9
+    },
+    {
+      "ticker": "BANKBARODA",
+      "driver": "usdinr",
+      "corr_20d": 0.266,
+      "corr_90d": -0.088,
+      "delta": 0.355,
+      "rank": 10
+    }
+  ],
+  "sector_dispersion": {
+    "IT": {
+      "sector": "IT",
+      "tickers_found": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM",
+        "PERSISTENT"
+      ],
+      "dispersion_20d": 0.2594,
+      "dispersion_90d_mean": 0.3588,
+      "dispersion_90d_std": 0.0436,
+      "dispersion_z": -2.28,
+      "signal": "LOW_DISPERSION"
+    },
+    "Real Estate": {
+      "sector": "Real Estate",
+      "tickers_found": [
+        "DLF",
+        "SOBHA",
+        "GODREJPROP",
+        "OBEROIRLTY"
+      ],
+      "dispersion_20d": 0.2952,
+      "dispersion_90d_mean": 0.4074,
+      "dispersion_90d_std": 0.0745,
+      "dispersion_z": -1.507,
+      "signal": "LOW_DISPERSION"
+    },
+    "Banks Private": {
+      "sector": "Banks Private",
+      "tickers_found": [
+        "HDFCBANK",
+        "ICICIBANK",
+        "AXISBANK",
+        "KOTAKBANK"
+      ],
+      "dispersion_20d": 0.1626,
+      "dispersion_90d_mean": 0.626,
+      "dispersion_90d_std": 0.1011,
+      "dispersion_z": -4.584,
+      "signal": "LOW_DISPERSION"
+    },
+    "Banks PSU": {
+      "sector": "Banks PSU",
+      "tickers_found": [
+        "SBI",
+        "BANKBARODA",
+        "FEDERALBNK"
+      ],
+      "dispersion_20d": 0.2107,
+      "dispersion_90d_mean": 0.4727,
+      "dispersion_90d_std": 0.0765,
+      "dispersion_z": -3.425,
+      "signal": "LOW_DISPERSION"
+    },
+    "Metals": {
+      "sector": "Metals",
+      "tickers_found": [
+        "HINDALCO",
+        "TATASTEEL",
+        "NMDC",
+        "SAIL",
+        "VEDL"
+      ],
+      "dispersion_20d": 0.256,
+      "dispersion_90d_mean": 0.396,
+      "dispersion_90d_std": 0.0766,
+      "dispersion_z": -1.828,
+      "signal": "LOW_DISPERSION"
+    },
+    "FMCG": {
+      "sector": "FMCG",
+      "tickers_found": [
+        "HUL",
+        "ITC",
+        "BRITANNIA",
+        "DABUR"
+      ],
+      "dispersion_20d": 0.2425,
+      "dispersion_90d_mean": 0.6802,
+      "dispersion_90d_std": 0.1148,
+      "dispersion_z": -3.812,
+      "signal": "LOW_DISPERSION"
+    },
+    "Energy Upstream": {
+      "sector": "Energy Upstream",
+      "tickers_found": [
+        "ONGC",
+        "OIL",
+        "COALINDIA"
+      ],
+      "dispersion_20d": 0.8932,
+      "dispersion_90d_mean": 0.5216,
+      "dispersion_90d_std": 0.1011,
+      "dispersion_z": 3.675,
+      "signal": "HIGH_DISPERSION"
+    },
+    "Defence": {
+      "sector": "Defence",
+      "tickers_found": [
+        "HAL",
+        "BEL",
+        "BDL",
+        "MTAR",
+        "BHARATFORG"
+      ],
+      "dispersion_20d": 0.27,
+      "dispersion_90d_mean": 0.5336,
+      "dispersion_90d_std": 0.0469,
+      "dispersion_z": -5.615,
+      "signal": "LOW_DISPERSION"
+    },
+    "Power": {
+      "sector": "Power",
+      "tickers_found": [
+        "NTPC",
+        "POWERGRID",
+        "TATAPOWER"
+      ],
+      "dispersion_20d": 0.4576,
+      "dispersion_90d_mean": 0.4279,
+      "dispersion_90d_std": 0.0683,
+      "dispersion_z": 0.435,
+      "signal": "NORMAL"
+    },
+    "Cement": {
+      "sector": "Cement",
+      "tickers_found": [
+        "ULTRACEMCO",
+        "AMBUJACEM"
+      ],
+      "dispersion_20d": 0.1524,
+      "dispersion_90d_mean": 0.4681,
+      "dispersion_90d_std": 0.0839,
+      "dispersion_z": -3.762,
+      "signal": "LOW_DISPERSION"
+    },
+    "Healthcare": {
+      "sector": "Healthcare",
+      "tickers_found": [
+        "SUNPHARMA",
+        "DRREDDY",
+        "CIPLA",
+        "DIVISLAB",
+        "APOLLOHOSP",
+        "MAXHEALTH",
+        "ASTERDM"
+      ],
+      "dispersion_20d": 0.4471,
+      "dispersion_90d_mean": 0.7353,
+      "dispersion_90d_std": 0.0295,
+      "dispersion_z": -9.773,
+      "signal": "LOW_DISPERSION"
+    }
+  },
+  "beta_decay": []
+}

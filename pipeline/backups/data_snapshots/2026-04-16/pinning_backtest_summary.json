@@ -1,0 +1,29 @@
+[
+  {
+    "index": "NIFTY",
+    "win_rate": 100,
+    "avg_pnl": 1.12,
+    "stop_hits": 0,
+    "n": 7,
+    "pin_held_pct": 57,
+    "avg_max_dev": 1.02
+  },
+  {
+    "index": "BANKNIFTY",
+    "win_rate": 86,
+    "avg_pnl": 1.15,
+    "stop_hits": 0,
+    "n": 7,
+    "pin_held_pct": 71,
+    "avg_max_dev": 1.11
+  },
+  {
+    "index": "FINNIFTY",
+    "win_rate": 86,
+    "avg_pnl": 1.07,
+    "stop_hits": 0,
+    "n": 7,
+    "pin_held_pct": 71,
+    "avg_max_dev": 1.18
+  }
+]

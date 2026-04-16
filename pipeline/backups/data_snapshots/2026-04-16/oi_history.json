@@ -1,0 +1,792 @@
+[
+  {
+    "timestamp": "2026-04-06T12:33:07.413196+05:30",
+    "nifty": 22683.0,
+    "pcr": 1.036,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 23000,
+    "total_ce_oi": 24106355,
+    "total_pe_oi": 24980150
+  },
+  {
+    "timestamp": "2026-04-06T12:35:02.609480+05:30",
+    "nifty": 22649.4,
+    "pcr": 1.059,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 23000,
+    "total_ce_oi": 23484045,
+    "total_pe_oi": 24869000
+  },
+  {
+    "timestamp": "2026-04-06T12:37:24.787330+05:30",
+    "nifty": 22677.5,
+    "pcr": 1.034,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 23000,
+    "total_ce_oi": 24157120,
+    "total_pe_oi": 24987170
+  },
+  {
+    "timestamp": "2026-04-06T12:42:18.275508+05:30",
+    "nifty": 22663.8,
+    "pcr": 1.029,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 23000,
+    "total_ce_oi": 24195535,
+    "total_pe_oi": 24908195
+  },
+  {
+    "timestamp": "2026-04-06T12:42:55.062857+05:30",
+    "nifty": 22659.9,
+    "pcr": 1.036,
+    "bias": "NEUTRAL",
+    "support": 22000,
+    "resistance": 23000,
+    "total_ce_oi": 23892310,
+    "total_pe_oi": 24758695
+  },
+  {
+    "timestamp": "2026-04-06T12:43:26.959884+05:30",
+    "nifty": 22661.2,
+    "pcr": 1.029,
+    "bias": "NEUTRAL",
+    "support": 22000,
+    "resistance": 23000,
+    "total_ce_oi": 24195470,
+    "total_pe_oi": 24907220
+  },
+  {
+    "timestamp": "2026-04-06T13:12:12.479680+05:30",
+    "nifty": 22841.2,
+    "pcr": 1.022,
+    "bias": "NEUTRAL",
+    "support": 22000,
+    "resistance": 23000,
+    "total_ce_oi": 24558495,
+    "total_pe_oi": 25091625
+  },
+  {
+    "timestamp": "2026-04-06T13:42:14.815915+05:30",
+    "nifty": 22869.0,
+    "pcr": 1.032,
+    "bias": "NEUTRAL",
+    "support": 22000,
+    "resistance": 23000,
+    "total_ce_oi": 24993605,
+    "total_pe_oi": 25783810
+  },
+  {
+    "timestamp": "2026-04-06T14:12:12.331870+05:30",
+    "nifty": 22887.8,
+    "pcr": 1.047,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 23000,
+    "total_ce_oi": 25054185,
+    "total_pe_oi": 26223340
+  },
+  {
+    "timestamp": "2026-04-06T14:42:16.127795+05:30",
+    "nifty": 22911.2,
+    "pcr": 1.062,
+    "bias": "MILDLY_BULLISH",
+    "support": 22500,
+    "resistance": 23000,
+    "total_ce_oi": 25079405,
+    "total_pe_oi": 26639600
+  },
+  {
+    "timestamp": "2026-04-06T14:51:01.513003+05:30",
+    "nifty": 22926.3,
+    "pcr": 1.063,
+    "bias": "MILDLY_BULLISH",
+    "support": 22500,
+    "resistance": 23000,
+    "total_ce_oi": 25068940,
+    "total_pe_oi": 26639145
+  },
+  {
+    "timestamp": "2026-04-07T09:04:50.211048+05:30",
+    "nifty": 22848.0,
+    "pcr": 1.318,
+    "bias": "BULLISH",
+    "support": 21500,
+    "resistance": 24000,
+    "total_ce_oi": 146647020,
+    "total_pe_oi": 193253190
+  },
+  {
+    "timestamp": "2026-04-07T09:06:45.538186+05:30",
+    "nifty": 22844.5,
+    "pcr": 1.318,
+    "bias": "BULLISH",
+    "support": 21500,
+    "resistance": 24000,
+    "total_ce_oi": 146647020,
+    "total_pe_oi": 193253190
+  },
+  {
+    "timestamp": "2026-04-07T09:42:16.766721+05:30",
+    "nifty": 22829.9,
+    "pcr": 1.219,
+    "bias": "BULLISH",
+    "support": 22000,
+    "resistance": 23000,
+    "total_ce_oi": 241041060,
+    "total_pe_oi": 293904000
+  },
+  {
+    "timestamp": "2026-04-07T10:12:13.334757+05:30",
+    "nifty": 22912.5,
+    "pcr": 1.238,
+    "bias": "BULLISH",
+    "support": 22800,
+    "resistance": 23500,
+    "total_ce_oi": 258866595,
+    "total_pe_oi": 320477820
+  },
+  {
+    "timestamp": "2026-04-07T10:42:17.505452+05:30",
+    "nifty": 22956.4,
+    "pcr": 1.234,
+    "bias": "BULLISH",
+    "support": 22800,
+    "resistance": 23000,
+    "total_ce_oi": 275074020,
+    "total_pe_oi": 339569750
+  },
+  {
+    "timestamp": "2026-04-07T11:12:20.384905+05:30",
+    "nifty": 22851.5,
+    "pcr": 1.108,
+    "bias": "MILDLY_BULLISH",
+    "support": 22500,
+    "resistance": 23000,
+    "total_ce_oi": 296063040,
+    "total_pe_oi": 328040180
+  },
+  {
+    "timestamp": "2026-04-07T11:42:57.557729+05:30",
+    "nifty": 22923.7,
+    "pcr": 1.21,
+    "bias": "BULLISH",
+    "support": 22800,
+    "resistance": 23000,
+    "total_ce_oi": 289925870,
+    "total_pe_oi": 350761060
+  },
+  {
+    "timestamp": "2026-04-07T12:12:55.982215+05:30",
+    "nifty": 22925.3,
+    "pcr": 1.182,
+    "bias": "MILDLY_BULLISH",
+    "support": 22800,
+    "resistance": 23000,
+    "total_ce_oi": 297048635,
+    "total_pe_oi": 351233415
+  },
+  {
+    "timestamp": "2026-04-07T12:42:59.961905+05:30",
+    "nifty": 22936.3,
+    "pcr": 1.115,
+    "bias": "MILDLY_BULLISH",
+    "support": 22800,
+    "resistance": 23000,
+    "total_ce_oi": 315552445,
+    "total_pe_oi": 351872950
+  },
+  {
+    "timestamp": "2026-04-07T13:12:56.494135+05:30",
+    "nifty": 22931.5,
+    "pcr": 1.145,
+    "bias": "MILDLY_BULLISH",
+    "support": 22800,
+    "resistance": 23000,
+    "total_ce_oi": 316587700,
+    "total_pe_oi": 362567205
+  },
+  {
+    "timestamp": "2026-04-07T13:42:52.750639+05:30",
+    "nifty": 23053.3,
+    "pcr": 1.208,
+    "bias": "BULLISH",
+    "support": 22900,
+    "resistance": 23000,
+    "total_ce_oi": 298940590,
+    "total_pe_oi": 361060050
+  },
+  {
+    "timestamp": "2026-04-07T14:12:55.329269+05:30",
+    "nifty": 23010.5,
+    "pcr": 1.109,
+    "bias": "MILDLY_BULLISH",
+    "support": 22900,
+    "resistance": 23100,
+    "total_ce_oi": 313264965,
+    "total_pe_oi": 347404135
+  },
+  {
+    "timestamp": "2026-04-07T14:42:53.562646+05:30",
+    "nifty": 23020.5,
+    "pcr": 1.096,
+    "bias": "MILDLY_BULLISH",
+    "support": 22900,
+    "resistance": 23100,
+    "total_ce_oi": 316327180,
+    "total_pe_oi": 346755045
+  },
+  {
+    "timestamp": "2026-04-07T15:12:57.431999+05:30",
+    "nifty": 23118.8,
+    "pcr": 1.29,
+    "bias": "BULLISH",
+    "support": 23100,
+    "resistance": 23150,
+    "total_ce_oi": 275665910,
+    "total_pe_oi": 355636645
+  },
+  {
+    "timestamp": "2026-04-08T09:42:17.547983+05:30",
+    "nifty": 23908.3,
+    "pcr": 1.114,
+    "bias": "MILDLY_BULLISH",
+    "support": 20100,
+    "resistance": 25000,
+    "total_ce_oi": 88200970,
+    "total_pe_oi": 98259460
+  },
+  {
+    "timestamp": "2026-04-08T10:12:12.165110+05:30",
+    "nifty": 23897.0,
+    "pcr": 1.107,
+    "bias": "MILDLY_BULLISH",
+    "support": 22000,
+    "resistance": 24500,
+    "total_ce_oi": 97406335,
+    "total_pe_oi": 107790930
+  },
+  {
+    "timestamp": "2026-04-08T10:42:11.281015+05:30",
+    "nifty": 23922.0,
+    "pcr": 1.081,
+    "bias": "MILDLY_BULLISH",
+    "support": 22000,
+    "resistance": 24500,
+    "total_ce_oi": 104961155,
+    "total_pe_oi": 113490325
+  },
+  {
+    "timestamp": "2026-04-08T11:10:51.252762+05:30",
+    "nifty": 23995.6,
+    "pcr": 1.266,
+    "bias": "BULLISH",
+    "support": 22000,
+    "resistance": 25000,
+    "total_ce_oi": 98029490,
+    "total_pe_oi": 124122245
+  },
+  {
+    "timestamp": "2026-04-08T11:12:10.389951+05:30",
+    "nifty": 24000.7,
+    "pcr": 1.266,
+    "bias": "BULLISH",
+    "support": 22000,
+    "resistance": 25000,
+    "total_ce_oi": 98035600,
+    "total_pe_oi": 124108855
+  },
+  {
+    "timestamp": "2026-04-08T11:42:33.728627+05:30",
+    "nifty": 23978.7,
+    "pcr": 1.248,
+    "bias": "BULLISH",
+    "support": 22000,
+    "resistance": 24000,
+    "total_ce_oi": 101805990,
+    "total_pe_oi": 127094370
+  },
+  {
+    "timestamp": "2026-04-08T11:42:45.954717+05:30",
+    "nifty": 23976.8,
+    "pcr": 1.248,
+    "bias": "BULLISH",
+    "support": 22000,
+    "resistance": 24000,
+    "total_ce_oi": 101805990,
+    "total_pe_oi": 127094370
+  },
+  {
+    "timestamp": "2026-04-08T12:12:37.388761+05:30",
+    "nifty": 23959.7,
+    "pcr": 1.168,
+    "bias": "MILDLY_BULLISH",
+    "support": 22000,
+    "resistance": 24000,
+    "total_ce_oi": 106966470,
+    "total_pe_oi": 124978555
+  },
+  {
+    "timestamp": "2026-04-08T12:12:53.030828+05:30",
+    "nifty": 23965.8,
+    "pcr": 1.168,
+    "bias": "MILDLY_BULLISH",
+    "support": 22000,
+    "resistance": 24000,
+    "total_ce_oi": 106966275,
+    "total_pe_oi": 124975695
+  },
+  {
+    "timestamp": "2026-04-08T12:42:37.889351+05:30",
+    "nifty": 23920.8,
+    "pcr": 1.121,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 111069660,
+    "total_pe_oi": 124511725
+  },
+  {
+    "timestamp": "2026-04-08T12:42:52.856287+05:30",
+    "nifty": 23924.7,
+    "pcr": 1.121,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 111069465,
+    "total_pe_oi": 124511725
+  },
+  {
+    "timestamp": "2026-04-08T13:12:37.223794+05:30",
+    "nifty": 23988.6,
+    "pcr": 1.15,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 109560750,
+    "total_pe_oi": 125996715
+  },
+  {
+    "timestamp": "2026-04-08T13:12:56.950509+05:30",
+    "nifty": 23972.3,
+    "pcr": 1.15,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 109560490,
+    "total_pe_oi": 125997300
+  },
+  {
+    "timestamp": "2026-04-08T13:32:41.421478+05:30",
+    "nifty": 23995.2,
+    "pcr": 1.186,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 109033405,
+    "total_pe_oi": 129360270
+  },
+  {
+    "timestamp": "2026-04-08T13:42:35.577051+05:30",
+    "nifty": 23981.7,
+    "pcr": 1.239,
+    "bias": "BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 105417585,
+    "total_pe_oi": 130654940
+  },
+  {
+    "timestamp": "2026-04-08T13:42:50.954510+05:30",
+    "nifty": 23986.2,
+    "pcr": 1.239,
+    "bias": "BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 105417650,
+    "total_pe_oi": 130653185
+  },
+  {
+    "timestamp": "2026-04-08T13:59:56.476818+05:30",
+    "nifty": 23986.7,
+    "pcr": 1.201,
+    "bias": "BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 108203680,
+    "total_pe_oi": 129940265
+  },
+  {
+    "timestamp": "2026-04-08T14:12:35.030560+05:30",
+    "nifty": 23978.8,
+    "pcr": 1.183,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 109632250,
+    "total_pe_oi": 129686635
+  },
+  {
+    "timestamp": "2026-04-08T14:12:47.955343+05:30",
+    "nifty": 23972.2,
+    "pcr": 1.183,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 109631925,
+    "total_pe_oi": 129686830
+  },
+  {
+    "timestamp": "2026-04-08T14:42:35.644324+05:30",
+    "nifty": 23992.7,
+    "pcr": 1.186,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 108546815,
+    "total_pe_oi": 128775660
+  },
+  {
+    "timestamp": "2026-04-08T14:42:48.004488+05:30",
+    "nifty": 23997.0,
+    "pcr": 1.186,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 108543110,
+    "total_pe_oi": 128775855
+  },
+  {
+    "timestamp": "2026-04-08T15:12:35.550447+05:30",
+    "nifty": 23999.0,
+    "pcr": 1.193,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 102535485,
+    "total_pe_oi": 122306535
+  },
+  {
+    "timestamp": "2026-04-08T15:12:48.096623+05:30",
+    "nifty": 24000.6,
+    "pcr": 1.193,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 102534250,
+    "total_pe_oi": 122289635
+  },
+  {
+    "timestamp": "2026-04-09T09:42:39.256617+05:30",
+    "nifty": 23864.8,
+    "pcr": 1.053,
+    "bias": "MILDLY_BULLISH",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 116426895,
+    "total_pe_oi": 122583760
+  },
+  {
+    "timestamp": "2026-04-09T09:43:03.560027+05:30",
+    "nifty": 23865.2,
+    "pcr": 1.053,
+    "bias": "MILDLY_BULLISH",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 116426895,
+    "total_pe_oi": 122583760
+  },
+  {
+    "timestamp": "2026-04-09T10:12:37.894703+05:30",
+    "nifty": 23847.8,
+    "pcr": 0.892,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 131599000,
+    "total_pe_oi": 117446355
+  },
+  {
+    "timestamp": "2026-04-09T10:12:54.167908+05:30",
+    "nifty": 23848.6,
+    "pcr": 0.892,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 131599000,
+    "total_pe_oi": 117446355
+  },
+  {
+    "timestamp": "2026-04-09T10:42:37.009341+05:30",
+    "nifty": 23823.0,
+    "pcr": 0.939,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 129967110,
+    "total_pe_oi": 122097820
+  },
+  {
+    "timestamp": "2026-04-09T10:42:56.040406+05:30",
+    "nifty": 23822.2,
+    "pcr": 0.939,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 129967110,
+    "total_pe_oi": 122097885
+  },
+  {
+    "timestamp": "2026-04-09T11:12:41.481728+05:30",
+    "nifty": 23853.9,
+    "pcr": 0.932,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 133365895,
+    "total_pe_oi": 124270705
+  },
+  {
+    "timestamp": "2026-04-09T11:13:03.752903+05:30",
+    "nifty": 23853.8,
+    "pcr": 0.932,
+    "bias": "NEUTRAL",
+    "support": 22500,
+    "resistance": 25000,
+    "total_ce_oi": 133366415,
+    "total_pe_oi": 124271940
+  },
+  {
+    "timestamp": "2026-04-09T11:42:37.973238+05:30",
+    "nifty": 23862.5,
+    "pcr": 0.949,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 132845635,
+    "total_pe_oi": 126078875
+  },
+  {
+    "timestamp": "2026-04-09T11:42:54.976428+05:30",
+    "nifty": 23859.7,
+    "pcr": 0.949,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 132845635,
+    "total_pe_oi": 126079720
+  },
+  {
+    "timestamp": "2026-04-09T12:12:36.809211+05:30",
+    "nifty": 23892.5,
+    "pcr": 0.958,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 131106885,
+    "total_pe_oi": 125542625
+  },
+  {
+    "timestamp": "2026-04-09T12:12:53.795070+05:30",
+    "nifty": 23889.2,
+    "pcr": 0.958,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 131107405,
+    "total_pe_oi": 125542625
+  },
+  {
+    "timestamp": "2026-04-09T12:42:39.684683+05:30",
+    "nifty": 23857.2,
+    "pcr": 0.958,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 131787045,
+    "total_pe_oi": 126251320
+  },
+  {
+    "timestamp": "2026-04-09T12:42:57.355454+05:30",
+    "nifty": 23856.6,
+    "pcr": 0.958,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 131787760,
+    "total_pe_oi": 126251320
+  },
+  {
+    "timestamp": "2026-04-09T13:12:36.893606+05:30",
+    "nifty": 23806.2,
+    "pcr": 0.918,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 133876665,
+    "total_pe_oi": 122945030
+  },
+  {
+    "timestamp": "2026-04-09T13:12:54.546138+05:30",
+    "nifty": 23805.3,
+    "pcr": 0.918,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 133878485,
+    "total_pe_oi": 122944705
+  },
+  {
+    "timestamp": "2026-04-09T13:42:38.019212+05:30",
+    "nifty": 23765.5,
+    "pcr": 0.869,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 137894185,
+    "total_pe_oi": 119814370
+  },
+  {
+    "timestamp": "2026-04-09T13:42:54.975628+05:30",
+    "nifty": 23766.7,
+    "pcr": 0.869,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 137894185,
+    "total_pe_oi": 119814890
+  },
+  {
+    "timestamp": "2026-04-09T14:12:36.612409+05:30",
+    "nifty": 23756.8,
+    "pcr": 0.861,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 139503130,
+    "total_pe_oi": 120156725
+  },
+  {
+    "timestamp": "2026-04-09T14:12:54.621423+05:30",
+    "nifty": 23762.0,
+    "pcr": 0.861,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 139503715,
+    "total_pe_oi": 120155230
+  },
+  {
+    "timestamp": "2026-04-09T14:42:40.068053+05:30",
+    "nifty": 23722.5,
+    "pcr": 0.85,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 140973885,
+    "total_pe_oi": 119883530
+  },
+  {
+    "timestamp": "2026-04-09T14:42:56.751701+05:30",
+    "nifty": 23722.0,
+    "pcr": 0.85,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 140974015,
+    "total_pe_oi": 119884570
+  },
+  {
+    "timestamp": "2026-04-09T15:12:36.865334+05:30",
+    "nifty": 23798.8,
+    "pcr": 0.899,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 137075575,
+    "total_pe_oi": 123234215
+  },
+  {
+    "timestamp": "2026-04-09T15:12:53.984429+05:30",
+    "nifty": 23800.0,
+    "pcr": 0.899,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 137076095,
+    "total_pe_oi": 123235970
+  },
+  {
+    "timestamp": "2026-04-10T04:30:53.359868+05:30",
+    "nifty": 23775.1,
+    "pcr": 0.918,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 134955145,
+    "total_pe_oi": 123833125
+  },
+  {
+    "timestamp": "2026-04-10T09:42:38.840030+05:30",
+    "nifty": 23947.2,
+    "pcr": 0.919,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 175850415,
+    "total_pe_oi": 161606185
+  },
+  {
+    "timestamp": "2026-04-10T09:42:54.583551+05:30",
+    "nifty": 23943.8,
+    "pcr": 0.919,
+    "bias": "NEUTRAL",
+    "support": 23000,
+    "resistance": 24000,
+    "total_ce_oi": 175852950,
+    "total_pe_oi": 161606315
+  },
+  {
+    "timestamp": "2026-04-11T04:30:54.873042+05:30",
+    "nifty": 24050.6,
+    "pcr": 1.148,
+    "bias": "MILDLY_BULLISH",
+    "support": 23000,
+    "resistance": 25000,
+    "total_ce_oi": 147452825,
+    "total_pe_oi": 169206180
+  },
+  {
+    "timestamp": "2026-04-12T04:30:44.580780+05:30",
+    "nifty": 24050.6,
+    "pcr": 0.0,
+    "bias": "BEARISH",
+    "support": 24100,
+    "resistance": 24100,
+    "total_ce_oi": 0,
+    "total_pe_oi": 0
+  },
+  {
+    "timestamp": "2026-04-13T04:30:44.348086+05:30",
+    "nifty": 24050.6,
+    "pcr": 0.0,
+    "bias": "BEARISH",
+    "support": 24100,
+    "resistance": 24100,
+    "total_ce_oi": 0,
+    "total_pe_oi": 0
+  },
+  {
+    "timestamp": "2026-04-14T04:30:51.576953+05:30",
+    "nifty": 23842.7,
+    "pcr": 0.0,
+    "bias": "BEARISH",
+    "support": 23800,
+    "resistance": 23800,
+    "total_ce_oi": 0,
+    "total_pe_oi": 0
+  }
+]

@@ -1,0 +1,618 @@
+{
+  "overall_fwd_5d": {
+    "QUALITY": {
+      "mean_return_pct": 0.277,
+      "median_return_pct": 0.06,
+      "std_pct": 5.128,
+      "win_rate_pct": 50.8,
+      "n_observations": 2620,
+      "sharpe_annualized": 0.38
+    },
+    "NEUTRAL": {
+      "mean_return_pct": 0.352,
+      "median_return_pct": -0.037,
+      "std_pct": 4.425,
+      "win_rate_pct": 49.5,
+      "n_observations": 3668,
+      "sharpe_annualized": 0.56
+    },
+    "WEAK": {
+      "mean_return_pct": 0.363,
+      "median_return_pct": 0.084,
+      "std_pct": 4.306,
+      "win_rate_pct": 51.1,
+      "n_observations": 8646,
+      "sharpe_annualized": 0.6
+    }
+  },
+  "overall_fwd_10d": {
+    "QUALITY": {
+      "mean_return_pct": 0.325,
+      "median_return_pct": 0.156,
+      "std_pct": 6.762,
+      "win_rate_pct": 51.1,
+      "n_observations": 2570,
+      "sharpe_annualized": 0.24
+    },
+    "NEUTRAL": {
+      "mean_return_pct": 0.457,
+      "median_return_pct": 0.045,
+      "std_pct": 5.993,
+      "win_rate_pct": 50.4,
+      "n_observations": 3598,
+      "sharpe_annualized": 0.38
+    },
+    "WEAK": {
+      "mean_return_pct": 0.511,
+      "median_return_pct": 0.163,
+      "std_pct": 5.868,
+      "win_rate_pct": 51.4,
+      "n_observations": 8481,
+      "sharpe_annualized": 0.44
+    }
+  },
+  "overall_fwd_20d": {
+    "QUALITY": {
+      "mean_return_pct": 0.533,
+      "median_return_pct": 0.593,
+      "std_pct": 9.341,
+      "win_rate_pct": 52.5,
+      "n_observations": 2470,
+      "sharpe_annualized": 0.2
+    },
+    "NEUTRAL": {
+      "mean_return_pct": 0.73,
+      "median_return_pct": 0.444,
+      "std_pct": 8.481,
+      "win_rate_pct": 52.2,
+      "n_observations": 3458,
+      "sharpe_annualized": 0.31
+    },
+    "WEAK": {
+      "mean_return_pct": 0.916,
+      "median_return_pct": 0.239,
+      "std_pct": 8.151,
+      "win_rate_pct": 51.6,
+      "n_observations": 8151,
+      "sharpe_annualized": 0.4
+    }
+  },
+  "by_regime": {
+    "RISK-ON": {
+      "QUALITY": {
+        "mean_return_pct": -0.025,
+        "median_return_pct": -0.091,
+        "win_rate_pct": 49.5,
+        "n_observations": 1840
+      },
+      "NEUTRAL": {
+        "mean_return_pct": 0.086,
+        "median_return_pct": -0.123,
+        "win_rate_pct": 48.9,
+        "n_observations": 2576
+      },
+      "WEAK": {
+        "mean_return_pct": 0.344,
+        "median_return_pct": 0.068,
+        "win_rate_pct": 50.5,
+        "n_observations": 6072
+      }
+    },
+    "NEUTRAL": {
+      "QUALITY": {
+        "mean_return_pct": 0.784,
+        "median_return_pct": 0.847,
+        "win_rate_pct": 55.7,
+        "n_observations": 420
+      },
+      "NEUTRAL": {
+        "mean_return_pct": 0.912,
+        "median_return_pct": 0.349,
+        "win_rate_pct": 52.7,
+        "n_observations": 588
+      },
+      "WEAK": {
+        "mean_return_pct": 0.091,
+        "median_return_pct": -0.037,
+        "win_rate_pct": 49.5,
+        "n_observations": 1386
+      }
+    },
+    "CAUTION": {
+      "QUALITY": {
+        "mean_return_pct": 1.575,
+        "median_return_pct": 0.544,
+        "win_rate_pct": 53.2,
+        "n_observations": 280
+      },
+      "NEUTRAL": {
+        "mean_return_pct": 1.548,
+        "median_return_pct": 0.344,
+        "win_rate_pct": 52.6,
+        "n_observations": 392
+      },
+      "WEAK": {
+        "mean_return_pct": 1.543,
+        "median_return_pct": 0.896,
+        "win_rate_pct": 56.1,
+        "n_observations": 924
+      }
+    },
+    "RISK-OFF": {
+      "QUALITY": {
+        "mean_return_pct": 3.685,
+        "median_return_pct": 3.134,
+        "win_rate_pct": 66.7,
+        "n_observations": 30
+      },
+      "NEUTRAL": {
+        "mean_return_pct": 6.683,
+        "median_return_pct": 6.851,
+        "win_rate_pct": 90.5,
+        "n_observations": 42
+      },
+      "WEAK": {
+        "mean_return_pct": 6.93,
+        "median_return_pct": 7.196,
+        "win_rate_pct": 90.9,
+        "n_observations": 99
+      }
+    }
+  },
+  "alpha_spread": {
+    "fwd_5d": {
+      "quality_minus_weak_pct": -0.086,
+      "quality_mean": 0.277,
+      "weak_mean": 0.363
+    },
+    "fwd_10d": {
+      "quality_minus_weak_pct": -0.186,
+      "quality_mean": 0.325,
+      "weak_mean": 0.511
+    },
+    "fwd_20d": {
+      "quality_minus_weak_pct": -0.383,
+      "quality_mean": 0.533,
+      "weak_mean": 0.916
+    }
+  },
+  "alpha_by_regime": {
+    "RISK-ON": {
+      "quality_minus_weak_pct": -0.369,
+      "quality_mean": -0.025,
+      "weak_mean": 0.344,
+      "quality_n": 1840,
+      "weak_n": 6072
+    },
+    "NEUTRAL": {
+      "quality_minus_weak_pct": 0.693,
+      "quality_mean": 0.784,
+      "weak_mean": 0.091,
+      "quality_n": 420,
+      "weak_n": 1386
+    },
+    "CAUTION": {
+      "quality_minus_weak_pct": 0.032,
+      "quality_mean": 1.575,
+      "weak_mean": 1.543,
+      "quality_n": 280,
+      "weak_n": 924
+    },
+    "RISK-OFF": {
+      "quality_minus_weak_pct": -3.245,
+      "quality_mean": 3.685,
+      "weak_mean": 6.93,
+      "quality_n": 30,
+      "weak_n": 99
+    }
+  },
+  "per_stock_10d": {
+    "DABUR": {
+      "grade": "B",
+      "delivery_rate": 62.2,
+      "mean_10d_return_pct": -0.498,
+      "win_rate_pct": 46.7,
+      "n": 257
+    },
+    "GODFRYPHLP": {
+      "grade": "B",
+      "delivery_rate": 62.5,
+      "mean_10d_return_pct": 0.554,
+      "win_rate_pct": 44.4,
+      "n": 257
+    },
+    "HDFCAMC": {
+      "grade": "B",
+      "delivery_rate": 67.1,
+      "mean_10d_return_pct": 1.141,
+      "win_rate_pct": 52.5,
+      "n": 257
+    },
+    "INDIANB": {
+      "grade": "B+",
+      "delivery_rate": 73.6,
+      "mean_10d_return_pct": 2.443,
+      "win_rate_pct": 67.7,
+      "n": 257
+    },
+    "KFINTECH": {
+      "grade": "B",
+      "delivery_rate": 67.4,
+      "mean_10d_return_pct": 0.053,
+      "win_rate_pct": 43.2,
+      "n": 257
+    },
+    "NAM-INDIA": {
+      "grade": "A",
+      "delivery_rate": 85.0,
+      "mean_10d_return_pct": 2.119,
+      "win_rate_pct": 61.1,
+      "n": 257
+    },
+    "NAUKRI": {
+      "grade": "A+",
+      "delivery_rate": 95.7,
+      "mean_10d_return_pct": -0.962,
+      "win_rate_pct": 42.0,
+      "n": 257
+    },
+    "PGEL": {
+      "grade": "A+",
+      "delivery_rate": 92.5,
+      "mean_10d_return_pct": -1.858,
+      "win_rate_pct": 46.7,
+      "n": 257
+    },
+    "SBILIFE": {
+      "grade": "A+",
+      "delivery_rate": 95.4,
+      "mean_10d_return_pct": 1.019,
+      "win_rate_pct": 61.5,
+      "n": 257
+    },
+    "SWIGGY": {
+      "grade": "B",
+      "delivery_rate": 62.6,
+      "mean_10d_return_pct": -0.76,
+      "win_rate_pct": 45.1,
+      "n": 257
+    },
+    "COCHINSHIP": {
+      "grade": "C",
+      "delivery_rate": 43.6,
+      "mean_10d_return_pct": 0.326,
+      "win_rate_pct": 39.7,
+      "n": 257
+    },
+    "CONCOR": {
+      "grade": "C",
+      "delivery_rate": 58.7,
+      "mean_10d_return_pct": -0.368,
+      "win_rate_pct": 41.2,
+      "n": 257
+    },
+    "GODREJCP": {
+      "grade": "C",
+      "delivery_rate": 56.4,
+      "mean_10d_return_pct": 0.085,
+      "win_rate_pct": 51.8,
+      "n": 257
+    },
+    "HINDPETRO": {
+      "grade": "C",
+      "delivery_rate": 57.6,
+      "mean_10d_return_pct": 0.534,
+      "win_rate_pct": 51.4,
+      "n": 257
+    },
+    "IDFCFIRSTB": {
+      "grade": "C",
+      "delivery_rate": 47.0,
+      "mean_10d_return_pct": 0.709,
+      "win_rate_pct": 56.8,
+      "n": 257
+    },
+    "MANAPPURAM": {
+      "grade": "C",
+      "delivery_rate": 58.6,
+      "mean_10d_return_pct": 0.991,
+      "win_rate_pct": 53.7,
+      "n": 257
+    },
+    "NUVAMA": {
+      "grade": "C",
+      "delivery_rate": 55.8,
+      "mean_10d_return_pct": 0.981,
+      "win_rate_pct": 48.6,
+      "n": 257
+    },
+    "NYKAA": {
+      "grade": "C",
+      "delivery_rate": 51.3,
+      "mean_10d_return_pct": 1.784,
+      "win_rate_pct": 57.6,
+      "n": 257
+    },
+    "OBEROIRLTY": {
+      "grade": "C",
+      "delivery_rate": 48.8,
+      "mean_10d_return_pct": 0.169,
+      "win_rate_pct": 49.8,
+      "n": 257
+    },
+    "POLYCAB": {
+      "grade": "C",
+      "delivery_rate": 51.7,
+      "mean_10d_return_pct": 1.641,
+      "win_rate_pct": 66.9,
+      "n": 257
+    },
+    "SRF": {
+      "grade": "C",
+      "delivery_rate": 40.9,
+      "mean_10d_return_pct": -0.597,
+      "win_rate_pct": 43.2,
+      "n": 257
+    },
+    "TORNTPOWER": {
+      "grade": "C",
+      "delivery_rate": 56.7,
+      "mean_10d_return_pct": 0.206,
+      "win_rate_pct": 46.3,
+      "n": 257
+    },
+    "UNITDSPR": {
+      "grade": "C",
+      "delivery_rate": 53.8,
+      "mean_10d_return_pct": -0.198,
+      "win_rate_pct": 44.4,
+      "n": 257
+    },
+    "UPL": {
+      "grade": "C",
+      "delivery_rate": 53.8,
+      "mean_10d_return_pct": 0.14,
+      "win_rate_pct": 54.1,
+      "n": 257
+    },
+    "ADANIENT": {
+      "grade": "F",
+      "delivery_rate": 18.7,
+      "mean_10d_return_pct": -0.431,
+      "win_rate_pct": 46.3,
+      "n": 257
+    },
+    "AMBUJACEM": {
+      "grade": "F",
+      "delivery_rate": 5.2,
+      "mean_10d_return_pct": -0.439,
+      "win_rate_pct": 40.9,
+      "n": 257
+    },
+    "APLAPOLLO": {
+      "grade": "F",
+      "delivery_rate": 0.0,
+      "mean_10d_return_pct": 1.328,
+      "win_rate_pct": 63.8,
+      "n": 257
+    },
+    "BAJFINANCE": {
+      "grade": "D",
+      "delivery_rate": 25.5,
+      "mean_10d_return_pct": 0.182,
+      "win_rate_pct": 49.0,
+      "n": 257
+    },
+    "BHARATFORG": {
+      "grade": "F",
+      "delivery_rate": 5.0,
+      "mean_10d_return_pct": 1.965,
+      "win_rate_pct": 59.1,
+      "n": 257
+    },
+    "DIXON": {
+      "grade": "F",
+      "delivery_rate": 10.0,
+      "mean_10d_return_pct": -0.729,
+      "win_rate_pct": 41.2,
+      "n": 257
+    },
+    "GAIL": {
+      "grade": "F",
+      "delivery_rate": 16.7,
+      "mean_10d_return_pct": -0.151,
+      "win_rate_pct": 50.2,
+      "n": 257
+    },
+    "GMRAIRPORT": {
+      "grade": "F",
+      "delivery_rate": 7.5,
+      "mean_10d_return_pct": 0.949,
+      "win_rate_pct": 52.9,
+      "n": 257
+    },
+    "HAL": {
+      "grade": "D",
+      "delivery_rate": 34.9,
+      "mean_10d_return_pct": 0.405,
+      "win_rate_pct": 48.6,
+      "n": 257
+    },
+    "HDFCBANK": {
+      "grade": "D",
+      "delivery_rate": 21.2,
+      "mean_10d_return_pct": -0.286,
+      "win_rate_pct": 47.5,
+      "n": 257
+    },
+    "HINDUNILVR": {
+      "grade": "D",
+      "delivery_rate": 25.0,
+      "mean_10d_return_pct": -0.069,
+      "win_rate_pct": 49.0,
+      "n": 257
+    },
+    "HUDCO": {
+      "grade": "F",
+      "delivery_rate": 11.7,
+      "mean_10d_return_pct": -0.002,
+      "win_rate_pct": 49.0,
+      "n": 257
+    },
+    "ICICIBANK": {
+      "grade": "F",
+      "delivery_rate": 0.0,
+      "mean_10d_return_pct": 0.018,
+      "win_rate_pct": 47.5,
+      "n": 257
+    },
+    "IDEA": {
+      "grade": "F",
+      "delivery_rate": 16.3,
+      "mean_10d_return_pct": 1.2,
+      "win_rate_pct": 54.1,
+      "n": 257
+    },
+    "INDUSTOWER": {
+      "grade": "F",
+      "delivery_rate": 14.3,
+      "mean_10d_return_pct": 1.119,
+      "win_rate_pct": 55.3,
+      "n": 257
+    },
+    "KEI": {
+      "grade": "D",
+      "delivery_rate": 38.0,
+      "mean_10d_return_pct": 1.627,
+      "win_rate_pct": 62.6,
+      "n": 257
+    },
+    "LAURUSLABS": {
+      "grade": "F",
+      "delivery_rate": 0.0,
+      "mean_10d_return_pct": 2.529,
+      "win_rate_pct": 68.5,
+      "n": 257
+    },
+    "LICI": {
+      "grade": "F",
+      "delivery_rate": 0.0,
+      "mean_10d_return_pct": 0.169,
+      "win_rate_pct": 44.4,
+      "n": 257
+    },
+    "MARUTI": {
+      "grade": "D",
+      "delivery_rate": 24.0,
+      "mean_10d_return_pct": 0.632,
+      "win_rate_pct": 60.3,
+      "n": 257
+    },
+    "MAZDOCK": {
+      "grade": "D",
+      "delivery_rate": 33.3,
+      "mean_10d_return_pct": 0.123,
+      "win_rate_pct": 40.5,
+      "n": 257
+    },
+    "NATIONALUM": {
+      "grade": "F",
+      "delivery_rate": 0.0,
+      "mean_10d_return_pct": 3.389,
+      "win_rate_pct": 68.1,
+      "n": 257
+    },
+    "NHPC": {
+      "grade": "D",
+      "delivery_rate": 31.3,
+      "mean_10d_return_pct": 0.052,
+      "win_rate_pct": 42.8,
+      "n": 257
+    },
+    "NMDC": {
+      "grade": "F",
+      "delivery_rate": 11.5,
+      "mean_10d_return_pct": 1.172,
+      "win_rate_pct": 57.2,
+      "n": 257
+    },
+    "PATANJALI": {
+      "grade": "F",
+      "delivery_rate": 6.7,
+      "mean_10d_return_pct": -0.675,
+      "win_rate_pct": 38.9,
+      "n": 257
+    },
+    "PHOENIXLTD": {
+      "grade": "D",
+      "delivery_rate": 38.8,
+      "mean_10d_return_pct": 0.17,
+      "win_rate_pct": 53.7,
+      "n": 257
+    },
+    "RELIANCE": {
+      "grade": "F",
+      "delivery_rate": 12.4,
+      "mean_10d_return_pct": 0.399,
+      "win_rate_pct": 54.1,
+      "n": 257
+    },
+    "RVNL": {
+      "grade": "D",
+      "delivery_rate": 35.5,
+      "mean_10d_return_pct": -0.679,
+      "win_rate_pct": 34.2,
+      "n": 257
+    },
+    "TIINDIA": {
+      "grade": "F",
+      "delivery_rate": 6.7,
+      "mean_10d_return_pct": -0.076,
+      "win_rate_pct": 48.2,
+      "n": 257
+    },
+    "ULTRACEMCO": {
+      "grade": "D",
+      "delivery_rate": 26.1,
+      "mean_10d_return_pct": 0.244,
+      "win_rate_pct": 49.8,
+      "n": 257
+    },
+    "UNOMINDA": {
+      "grade": "D",
+      "delivery_rate": 36.2,
+      "mean_10d_return_pct": 0.759,
+      "win_rate_pct": 56.0,
+      "n": 257
+    },
+    "VBL": {
+      "grade": "F",
+      "delivery_rate": 12.0,
+      "mean_10d_return_pct": -0.712,
+      "win_rate_pct": 42.8,
+      "n": 257
+    },
+    "VEDL": {
+      "grade": "F",
+      "delivery_rate": 13.7,
+      "mean_10d_return_pct": 2.121,
+      "win_rate_pct": 70.0,
+      "n": 257
+    },
+    "YESBANK": {
+      "grade": "F",
+      "delivery_rate": 12.9,
+      "mean_10d_return_pct": 0.543,
+      "win_rate_pct": 49.8,
+      "n": 257
+    }
+  },
+  "significance": {
+    "t_statistic": -1.254,
+    "p_value": 0.2099,
+    "significant_at_5pct": "False",
+    "significant_at_10pct": "False",
+    "quality_n": 2570,
+    "weak_n": 8481
+  }
+}

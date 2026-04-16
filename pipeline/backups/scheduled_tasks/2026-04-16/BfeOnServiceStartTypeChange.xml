@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.6" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Author>$(@%SystemRoot%\system32\bfe.dll,-2001)</Author>
+    <Description>$(@%SystemRoot%\system32\bfe.dll,-2002)</Description>
+    <URI>\Microsoft\Windows\Windows Filtering Platform\BfeOnServiceStartTypeChange</URI>
+  </RegistrationInfo>
+  <Principals>
+    <Principal id="LocalSystem">
+      <UserId>S-1-5-18</UserId>
+    </Principal>
+  </Principals>
+  <Settings>
+    <AllowHardTerminate>false</AllowHardTerminate>
+    <AllowStartOnDemand>false</AllowStartOnDemand>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <Hidden>true</Hidden>
+    <MultipleInstancesPolicy>Queue</MultipleInstancesPolicy>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <UseUnifiedSchedulingEngine>true</UseUnifiedSchedulingEngine>
+  </Settings>
+  <Triggers>
+    <EventTrigger id="06688f40-e0af-4efa-8a89-2617bd993d71">
+      <Subscription>&lt;QueryList&gt;&lt;Query Id="0" Path="System"&gt;&lt;Select Path="System"&gt;*/System/Provider[@Name='Service Control Manager'] and */System/EventID='7040' and */EventData/Data[@Name='param4']='BFE'&lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;</Subscription>
+    </EventTrigger>
+  </Triggers>
+  <Actions Context="LocalSystem">
+    <Exec>
+      <Command>%windir%\system32\rundll32.exe</Command>
+      <Arguments>bfe.dll,BfeOnServiceStartTypeChange</Arguments>
+    </Exec>
+  </Actions>
+</Task>

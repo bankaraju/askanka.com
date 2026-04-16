@@ -1,0 +1,659 @@
+[
+  {
+    "timestamp": "2026-04-07T09:55:54.785087+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -0.71,
+    "direction": "LONG",
+    "pin_strike": 52200,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-07T09:55:54.785087+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -0.86,
+    "direction": "LONG",
+    "pin_strike": 52200,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-07T09:55:54.785087+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.84,
+    "direction": "LONG",
+    "pin_strike": 22850,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-07T09:55:54.785087+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -0.71,
+    "direction": "LONG",
+    "pin_strike": 22850,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-07T09:55:54.785087+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 0.63,
+    "direction": "SHORT",
+    "pin_strike": 22850,
+    "reversion_rate": 31
+  },
+  {
+    "timestamp": "2026-04-09T09:45:40.403686+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.29,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T09:45:40.403686+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.25,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T09:45:40.403686+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.42,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T09:45:40.403686+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.29,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T09:45:40.403686+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -0.63,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T10:13:16.043693+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.57,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T10:13:16.043693+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.15,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T10:13:16.043693+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.75,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T10:13:16.043693+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.57,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T10:13:16.043693+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -0.75,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T10:43:34.404769+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.72,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T10:43:34.404769+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.16,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T10:43:34.404769+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -1.08,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T10:43:34.404769+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.72,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T10:43:34.404769+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -0.93,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T11:13:39.874233+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.62,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T11:13:39.874233+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.05,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T11:13:39.874233+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.82,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T11:13:39.874233+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.62,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T11:13:39.874233+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.0,
+    "direction": "LONG",
+    "pin_strike": 55400,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T11:43:25.886767+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.65,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T11:43:25.886767+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.31,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T11:43:25.886767+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.83,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T11:43:25.886767+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.65,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T11:43:25.886767+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 1.05,
+    "direction": "SHORT",
+    "pin_strike": 23850,
+    "reversion_rate": 31
+  },
+  {
+    "timestamp": "2026-04-09T11:43:25.886767+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.21,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T12:13:25.186356+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.57,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T12:13:25.186356+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.43,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T12:13:25.186356+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.76,
+    "direction": "LONG",
+    "pin_strike": 23900,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T12:13:25.186356+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.57,
+    "direction": "LONG",
+    "pin_strike": 23900,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T12:13:25.186356+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 1.2,
+    "direction": "SHORT",
+    "pin_strike": 23900,
+    "reversion_rate": 31
+  },
+  {
+    "timestamp": "2026-04-09T12:13:25.186356+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.18,
+    "direction": "LONG",
+    "pin_strike": 55300,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T12:43:31.698627+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.83,
+    "direction": "LONG",
+    "pin_strike": 55100,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T12:43:31.698627+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.68,
+    "direction": "LONG",
+    "pin_strike": 55100,
+    "reversion_rate": 49
+  },
+  {
+    "timestamp": "2026-04-09T12:43:31.698627+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -0.93,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 43
+  },
+  {
+    "timestamp": "2026-04-09T12:43:31.698627+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.83,
+    "direction": "LONG",
+    "pin_strike": 23850,
+    "reversion_rate": 39
+  },
+  {
+    "timestamp": "2026-04-09T12:43:31.698627+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 1.22,
+    "direction": "SHORT",
+    "pin_strike": 23850,
+    "reversion_rate": 31
+  },
+  {
+    "timestamp": "2026-04-09T12:43:31.698627+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.8,
+    "direction": "LONG",
+    "pin_strike": 55100,
+    "reversion_rate": 35
+  },
+  {
+    "timestamp": "2026-04-09T13:13:28.352081+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.99,
+    "direction": "LONG",
+    "pin_strike": 55000,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T13:13:28.352081+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.79,
+    "direction": "LONG",
+    "pin_strike": 55000,
+    "reversion_rate": 71
+  },
+  {
+    "timestamp": "2026-04-09T13:13:28.352081+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -1.01,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 62
+  },
+  {
+    "timestamp": "2026-04-09T13:13:28.352081+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -1.99,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T13:13:28.352081+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 1.47,
+    "direction": "SHORT",
+    "pin_strike": 23800,
+    "reversion_rate": 45
+  },
+  {
+    "timestamp": "2026-04-09T13:13:28.352081+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.01,
+    "direction": "LONG",
+    "pin_strike": 55000,
+    "reversion_rate": 50
+  },
+  {
+    "timestamp": "2026-04-09T13:43:36.156537+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.31,
+    "direction": "LONG",
+    "pin_strike": 54800,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T13:43:36.156537+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.99,
+    "direction": "LONG",
+    "pin_strike": 54800,
+    "reversion_rate": 71
+  },
+  {
+    "timestamp": "2026-04-09T13:43:36.156537+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -1.14,
+    "direction": "LONG",
+    "pin_strike": 23750,
+    "reversion_rate": 62
+  },
+  {
+    "timestamp": "2026-04-09T13:43:36.156537+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -2.31,
+    "direction": "LONG",
+    "pin_strike": 23750,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T13:43:36.156537+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 0.98,
+    "direction": "SHORT",
+    "pin_strike": 23750,
+    "reversion_rate": 45
+  },
+  {
+    "timestamp": "2026-04-09T13:43:36.156537+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.42,
+    "direction": "LONG",
+    "pin_strike": 54800,
+    "reversion_rate": 50
+  },
+  {
+    "timestamp": "2026-04-09T14:13:31.857228+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.17,
+    "direction": "LONG",
+    "pin_strike": 54900,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T14:13:31.857228+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -1.89,
+    "direction": "LONG",
+    "pin_strike": 54900,
+    "reversion_rate": 71
+  },
+  {
+    "timestamp": "2026-04-09T14:13:31.857228+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -1.05,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 62
+  },
+  {
+    "timestamp": "2026-04-09T14:13:31.857228+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -2.17,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T14:13:31.857228+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 0.9,
+    "direction": "SHORT",
+    "pin_strike": 23800,
+    "reversion_rate": 45
+  },
+  {
+    "timestamp": "2026-04-09T14:13:31.857228+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.35,
+    "direction": "LONG",
+    "pin_strike": 54900,
+    "reversion_rate": 50
+  },
+  {
+    "timestamp": "2026-04-09T14:43:30.373628+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.62,
+    "direction": "LONG",
+    "pin_strike": 54800,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T14:43:30.373628+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.18,
+    "direction": "LONG",
+    "pin_strike": 54800,
+    "reversion_rate": 71
+  },
+  {
+    "timestamp": "2026-04-09T14:43:30.373628+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -1.37,
+    "direction": "LONG",
+    "pin_strike": 23750,
+    "reversion_rate": 62
+  },
+  {
+    "timestamp": "2026-04-09T14:43:30.373628+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -2.62,
+    "direction": "LONG",
+    "pin_strike": 23750,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T14:43:30.373628+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 0.87,
+    "direction": "SHORT",
+    "pin_strike": 23750,
+    "reversion_rate": 45
+  },
+  {
+    "timestamp": "2026-04-09T14:43:30.373628+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.2,
+    "direction": "LONG",
+    "pin_strike": 54800,
+    "reversion_rate": 50
+  },
+  {
+    "timestamp": "2026-04-09T15:13:25.563006+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.13,
+    "direction": "LONG",
+    "pin_strike": 54900,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T15:13:25.563006+05:30",
+    "stock": "ICICIBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.06,
+    "direction": "LONG",
+    "pin_strike": 54900,
+    "reversion_rate": 71
+  },
+  {
+    "timestamp": "2026-04-09T15:13:25.563006+05:30",
+    "stock": "RELIANCE",
+    "index": "NIFTY 50",
+    "stock_return": -1.33,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 62
+  },
+  {
+    "timestamp": "2026-04-09T15:13:25.563006+05:30",
+    "stock": "HDFCBANK",
+    "index": "NIFTY 50",
+    "stock_return": -2.13,
+    "direction": "LONG",
+    "pin_strike": 23800,
+    "reversion_rate": 56
+  },
+  {
+    "timestamp": "2026-04-09T15:13:25.563006+05:30",
+    "stock": "TCS",
+    "index": "NIFTY 50",
+    "stock_return": 1.23,
+    "direction": "SHORT",
+    "pin_strike": 23800,
+    "reversion_rate": 45
+  },
+  {
+    "timestamp": "2026-04-09T15:13:25.563006+05:30",
+    "stock": "KOTAKBANK",
+    "index": "NIFTY BANK",
+    "stock_return": -2.1,
+    "direction": "LONG",
+    "pin_strike": 54900,
+    "reversion_rate": 50
+  }
+]

@@ -2,7 +2,7 @@
   "Upstream vs Downstream": {
     "name": "Upstream vs Downstream",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:17:42.071043+05:30",
+    "computed_at": "2026-04-16T12:46:17.991537+05:30",
     "daily_mean": 0.5037,
     "daily_std": 3.1732,
     "daily_min": -9.5994,
@@ -25,16 +25,16 @@
   "Defence vs IT": {
     "name": "Defence vs IT",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:18:00.965688+05:30",
-    "daily_mean": 0.1721,
-    "daily_std": 2.0912,
+    "computed_at": "2026-04-16T12:46:33.129292+05:30",
+    "daily_mean": 0.1724,
+    "daily_std": 2.091,
     "daily_min": -4.5931,
     "daily_max": 4.3593,
     "daily_p10": -2.1664,
     "daily_p25": -1.1319,
     "daily_p75": 1.6977,
     "daily_p90": 2.711,
-    "cum_current": 5.681,
+    "cum_current": 5.688,
     "cum_peak": 8.044,
     "cum_trough": -3.935,
     "cum_mean": 2.7,
@@ -48,7 +48,7 @@
   "Reliance vs OMCs": {
     "name": "Reliance vs OMCs",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:18:09.849492+05:30",
+    "computed_at": "2026-04-16T12:46:39.453931+05:30",
     "daily_mean": 0.333,
     "daily_std": 2.5818,
     "daily_min": -3.7062,
@@ -71,7 +71,7 @@
   "Coal vs OMCs": {
     "name": "Coal vs OMCs",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:18:18.232795+05:30",
+    "computed_at": "2026-04-16T12:46:45.878775+05:30",
     "daily_mean": 0.5872,
     "daily_std": 3.3599,
     "daily_min": -9.9874,
@@ -94,7 +94,7 @@
   "Pharma vs Cyclicals": {
     "name": "Pharma vs Cyclicals",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:18:31.492085+05:30",
+    "computed_at": "2026-04-16T12:46:54.711640+05:30",
     "daily_mean": 0.0223,
     "daily_std": 2.7025,
     "daily_min": -7.899,
@@ -117,7 +117,7 @@
   "PSU Commodity vs Banks": {
     "name": "PSU Commodity vs Banks",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:18:44.021422+05:30",
+    "computed_at": "2026-04-16T12:47:02.565063+05:30",
     "daily_mean": 0.3156,
     "daily_std": 2.6155,
     "daily_min": -7.1622,
@@ -140,7 +140,7 @@
   "Defence vs Auto": {
     "name": "Defence vs Auto",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:18:57.203523+05:30",
+    "computed_at": "2026-04-16T12:47:11.817953+05:30",
     "daily_mean": 0.2961,
     "daily_std": 2.0874,
     "daily_min": -5.275,
@@ -163,7 +163,7 @@
   "PSU Energy vs Private": {
     "name": "PSU Energy vs Private",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:19:13.153460+05:30",
+    "computed_at": "2026-04-16T12:47:21.951738+05:30",
     "daily_mean": 0.1177,
     "daily_std": 2.6106,
     "daily_min": -8.6625,
@@ -186,7 +186,7 @@
   "Pharma vs Banks": {
     "name": "Pharma vs Banks",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:19:24.502212+05:30",
+    "computed_at": "2026-04-16T12:47:30.175043+05:30",
     "daily_mean": 0.122,
     "daily_std": 2.1041,
     "daily_min": -5.7721,
@@ -209,7 +209,7 @@
   "Banks vs IT": {
     "name": "Banks vs IT",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:19:40.313947+05:30",
+    "computed_at": "2026-04-16T12:47:41.299900+05:30",
     "daily_mean": -0.1358,
     "daily_std": 2.0998,
     "daily_min": -3.1185,
@@ -255,7 +255,7 @@
   "EV Plays vs ICE Auto": {
     "name": "EV Plays vs ICE Auto",
     "n_days": 33,
-    "computed_at": "2026-04-16T10:19:53.729001+05:30",
+    "computed_at": "2026-04-16T12:47:52.509587+05:30",
     "daily_mean": 0.2232,
     "daily_std": 1.2697,
     "daily_min": -2.0685,

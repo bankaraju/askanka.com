@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.6" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Date>2021-03-01T00:00:00</Date>
+    <SecurityDescriptor>D:P(A;;FA;;;BA)(A;;FA;;;SY)</SecurityDescriptor>
+    <Source>$(@%SystemRoot%\system32\fclip.exe,-102)</Source>
+    <Author>$(@%SystemRoot%\system32\fclip.exe,-100)</Author>
+    <Description>$(@%SystemRoot%\system32\fclip.exe,-101)</Description>
+    <URI>\Microsoft\Windows\Clip\LicenseImdsIntegration</URI>
+  </RegistrationInfo>
+  <Principals>
+    <Principal id="AnyUser">
+      <GroupId>S-1-5-32-545</GroupId>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <AllowHardTerminate>false</AllowHardTerminate>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <Enabled>false</Enabled>
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+    <Hidden>true</Hidden>
+    <MultipleInstancesPolicy>Queue</MultipleInstancesPolicy>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <UseUnifiedSchedulingEngine>true</UseUnifiedSchedulingEngine>
+  </Settings>
+  <Triggers>
+    <LogonTrigger />
+    <CalendarTrigger>
+      <StartBoundary>2021-03-01T08:00:00</StartBoundary>
+      <RandomDelay>PT1H</RandomDelay>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+    </CalendarTrigger>
+    <WnfStateChangeTrigger>
+      <StateName>7570BCA322028F02</StateName>
+    </WnfStateChangeTrigger>
+  </Triggers>
+  <Actions Context="AnyUser">
+    <Exec>
+      <Command>%SystemRoot%\system32\fclip.exe</Command>
+    </Exec>
+  </Actions>
+</Task>

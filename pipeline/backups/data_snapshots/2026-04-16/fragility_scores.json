@@ -1,60 +1,7 @@
 {
-  "updated_at": "2026-04-16T12:54:35.544833+05:30",
-  "positions": [
-    {
-      "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
-      "spread_name": "Defence vs IT",
-      "category": "hormuz",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-15",
-      "long_legs": [
-        {
-          "ticker": "HAL",
-          "entry": 4284.8,
-          "current": 4333.5,
-          "pnl_pct": 1.14
-        },
-        {
-          "ticker": "BEL",
-          "entry": 449.85,
-          "current": 452.15,
-          "pnl_pct": 0.51
-        },
-        {
-          "ticker": "BDL",
-          "entry": 1374.2,
-          "current": 1353.6,
-          "pnl_pct": -1.5
-        }
-      ],
-      "short_legs": [
-        {
-          "ticker": "TCS",
-          "entry": 2572.0,
-          "current": 2563.6,
-          "pnl_pct": 0.33
-        },
-        {
-          "ticker": "INFY",
-          "entry": 1322.1,
-          "current": 1313.6,
-          "pnl_pct": 0.64
-        },
-        {
-          "ticker": "WIPRO",
-          "entry": 212.98,
-          "current": 209.16,
-          "pnl_pct": 1.79
-        }
-      ],
-      "spread_pnl_pct": 1.26,
-      "todays_move": 1.26,
-      "daily_stop": -0.98,
-      "two_day_stop": -1.96,
-      "peak_pnl": 1.26
-    }
-  ],
-  "fragility": {
+  "generated_at": "2026-04-03 12:57 IST",
+  "model_trained_at": "2026-04-03 12:57 IST",
+  "scores": {
     "Nifty_vs_BankNifty": {
       "fragility_score": 9.7,
       "probability": 0.097,

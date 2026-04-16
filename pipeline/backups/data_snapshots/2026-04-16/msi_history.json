@@ -1,0 +1,458 @@
+[
+  {
+    "date": "2025-12-01",
+    "msi_score": 58.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-02",
+    "msi_score": 51.5,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-03",
+    "msi_score": 38.4,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-04",
+    "msi_score": 49.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-05",
+    "msi_score": 21.7,
+    "regime": "MACRO_EASY"
+  },
+  {
+    "date": "2025-12-08",
+    "msi_score": 17.5,
+    "regime": "MACRO_EASY"
+  },
+  {
+    "date": "2025-12-09",
+    "msi_score": 19.8,
+    "regime": "MACRO_EASY"
+  },
+  {
+    "date": "2025-12-10",
+    "msi_score": 36.1,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-11",
+    "msi_score": 36.7,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-12",
+    "msi_score": 31.6,
+    "regime": "MACRO_EASY"
+  },
+  {
+    "date": "2025-12-15",
+    "msi_score": 43.7,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-16",
+    "msi_score": 35.6,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-17",
+    "msi_score": 38.2,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-18",
+    "msi_score": 21.8,
+    "regime": "MACRO_EASY"
+  },
+  {
+    "date": "2025-12-19",
+    "msi_score": 36.5,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-22",
+    "msi_score": 39.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-23",
+    "msi_score": 41.3,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-24",
+    "msi_score": 40.2,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-26",
+    "msi_score": 48.5,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-29",
+    "msi_score": 44.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-30",
+    "msi_score": 45.2,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2025-12-31",
+    "msi_score": 48.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-01",
+    "msi_score": 51.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-02",
+    "msi_score": 52.3,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-05",
+    "msi_score": 79.3,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-06",
+    "msi_score": 88.4,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-07",
+    "msi_score": 82.0,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-08",
+    "msi_score": 84.8,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-09",
+    "msi_score": 82.9,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-12",
+    "msi_score": 75.2,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-13",
+    "msi_score": 66.0,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-01-14",
+    "msi_score": 62.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-15",
+    "msi_score": 53.9,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-16",
+    "msi_score": 38.3,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-19",
+    "msi_score": 51.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-20",
+    "msi_score": 49.6,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-21",
+    "msi_score": 37.3,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-22",
+    "msi_score": 38.6,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-23",
+    "msi_score": 59.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-27",
+    "msi_score": 48.5,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-28",
+    "msi_score": 64.6,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-29",
+    "msi_score": 53.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-01-30",
+    "msi_score": 54.1,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-02",
+    "msi_score": 45.2,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-03",
+    "msi_score": 59.2,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-04",
+    "msi_score": 54.6,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-05",
+    "msi_score": 47.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-06",
+    "msi_score": 51.3,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-09",
+    "msi_score": 72.3,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-10",
+    "msi_score": 69.2,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-11",
+    "msi_score": 73.8,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-12",
+    "msi_score": 88.0,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-13",
+    "msi_score": 87.5,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-16",
+    "msi_score": 81.8,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-17",
+    "msi_score": 80.9,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-18",
+    "msi_score": 75.9,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-19",
+    "msi_score": 73.8,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-20",
+    "msi_score": 67.5,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-23",
+    "msi_score": 63.7,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-24",
+    "msi_score": 69.4,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-02-25",
+    "msi_score": 63.5,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-26",
+    "msi_score": 59.4,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-02-27",
+    "msi_score": 47.5,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-02",
+    "msi_score": 71.6,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-04",
+    "msi_score": 73.1,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-05",
+    "msi_score": 74.8,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-06",
+    "msi_score": 85.0,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-09",
+    "msi_score": 86.4,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-10",
+    "msi_score": 83.3,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-11",
+    "msi_score": 87.8,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-12",
+    "msi_score": 87.4,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-13",
+    "msi_score": 76.2,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-16",
+    "msi_score": 55.7,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-17",
+    "msi_score": 59.4,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-18",
+    "msi_score": 38.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-19",
+    "msi_score": 54.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-20",
+    "msi_score": 57.7,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-23",
+    "msi_score": 68.0,
+    "regime": "MACRO_STRESS"
+  },
+  {
+    "date": "2026-03-24",
+    "msi_score": 59.9,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-25",
+    "msi_score": 63.4,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-27",
+    "msi_score": 56.4,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-03-30",
+    "msi_score": 55.0,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-04-01",
+    "msi_score": 39.8,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-04-02",
+    "msi_score": 40.6,
+    "regime": "MACRO_NEUTRAL"
+  },
+  {
+    "date": "2026-04-06",
+    "msi_score": 59.1,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": -2722.72
+  },
+  {
+    "date": "2026-04-07",
+    "msi_score": 55.5,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": -78.47
+  },
+  {
+    "date": "2026-04-08",
+    "msi_score": 49.2,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": -712.61
+  },
+  {
+    "date": "2026-04-09",
+    "msi_score": 40.8,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": 1356.2
+  },
+  {
+    "date": "2026-04-10",
+    "msi_score": 41.0,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": -755.29
+  },
+  {
+    "date": "2026-04-13",
+    "msi_score": 44.9,
+    "regime": "MACRO_NEUTRAL",
+    "combined_flow": null
+  }
+]

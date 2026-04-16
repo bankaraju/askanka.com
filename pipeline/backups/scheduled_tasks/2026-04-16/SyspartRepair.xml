@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.6" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <SecurityDescriptor>D:P(A;;FR;;;AU)(A;;FA;;;SY)</SecurityDescriptor>
+    <URI>\Microsoft\Windows\Chkdsk\SyspartRepair</URI>
+  </RegistrationInfo>
+  <Principals>
+    <Principal id="LocalSystem">
+      <UserId>S-1-5-18</UserId>
+    </Principal>
+  </Principals>
+  <Settings>
+    <AllowHardTerminate>false</AllowHardTerminate>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <Hidden>true</Hidden>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <UseUnifiedSchedulingEngine>true</UseUnifiedSchedulingEngine>
+  </Settings>
+  <Triggers>
+    <WnfStateChangeTrigger>
+      <StateName>7508BCA32C0D8E0A</StateName>
+    </WnfStateChangeTrigger>
+  </Triggers>
+  <Actions Context="LocalSystem">
+    <Exec>
+      <Command>%windir%\system32\bcdboot.exe</Command>
+      <Arguments>%windir% /sysrepair</Arguments>
+    </Exec>
+  </Actions>
+</Task>
