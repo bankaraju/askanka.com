@@ -5,14 +5,16 @@ All tickers, indices, FX pairs, and commodities tracked across 8 global markets.
 
 # === INDEX TICKERS (EODHD format: SYMBOL.EXCHANGE) ===
 INDICES = {
-    "S&P 500":    {"eodhd": "GSPC.INDX",   "yf": "^GSPC",    "currency": "USD"},
-    "FTSE 100":   {"eodhd": "FTSE.INDX",   "yf": "^FTSE",    "currency": "GBP"},
-    "CAC 40":     {"eodhd": "FCHI.INDX",   "yf": "^FCHI",    "currency": "EUR"},
-    "DAX":        {"eodhd": "GDAXI.INDX",  "yf": "^GDAXI",   "currency": "EUR"},
-    "Nifty 50":   {"eodhd": "NSEI.INDX",   "yf": "^NSEI",    "currency": "INR"},
-    "KOSPI":      {"eodhd": "KS11.INDX",   "yf": "^KS11",    "currency": "KRW"},
-    "Nikkei 225": {"eodhd": "N225.INDX",   "yf": "^N225",    "currency": "JPY"},
-    "CSI 300":    {"eodhd": "CSI300.INDX",  "yf": "000300.SS", "currency": "CNY"},
+    "S&P 500":       {"eodhd": "GSPC.INDX",     "yf": "^GSPC",                "currency": "USD"},
+    "FTSE 100":      {"eodhd": "FTSE.INDX",     "yf": "^FTSE",                "currency": "GBP"},
+    "CAC 40":        {"eodhd": "FCHI.INDX",     "yf": "^FCHI",                "currency": "EUR"},
+    "DAX":           {"eodhd": "GDAXI.INDX",    "yf": "^GDAXI",               "currency": "EUR"},
+    "Nifty 50":      {"eodhd": "NSEI.INDX",     "yf": "^NSEI",                "currency": "INR"},
+    "KOSPI":         {"eodhd": "KS11.INDX",     "yf": "^KS11",                "currency": "KRW"},
+    "Nikkei 225":    {"eodhd": "N225.INDX",     "yf": "^N225",                "currency": "JPY"},
+    "CSI 300":       {"eodhd": "CSI300.INDX",   "yf": "000300.SS",            "currency": "CNY"},
+    "NIFTY DEFENCE": {"eodhd": "",              "yf": "NIFTY_IND_DEFENCE.NS", "currency": "INR"},
+    "INDIA VIX":     {"eodhd": "INDIAVIX.INDX", "yf": "^INDIAVIX",            "currency": "INR"},
 }
 
 # === STOCK WATCHLIST (from Week 001 report + Week 002 strategy ideas) ===

@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 from daily_prices import run_daily_dump
 from daily_fundamentals import run_daily_fundamentals
+from fii_flows import run as run_fii_flows
 
 
 def main():
@@ -25,6 +26,10 @@ def main():
     print("-" * 40)
     fundamentals = run_daily_fundamentals(date)
 
+    print(f"\nSTEP 3: FII/DII flows (NSE)")
+    print("-" * 40)
+    flows = run_fii_flows(date)
+
     print(f"\n{'='*60}")
     print(f"DAILY PIPELINE COMPLETE")
     print(f"Prices: {prices['metadata']['eodhd_calls']} EODHD + "
@@ -32,6 +37,8 @@ def main():
           f"{prices['metadata']['failures']} failures")
     print(f"Fundamentals: {fundamentals['metadata']['success']}/"
           f"{fundamentals['metadata']['total']} success")
+    print(f"Flows: {'ok' if flows else 'FAILED'} "
+          f"(FII net {flows['fii_equity_net'] if flows else 'n/a'})")
     print(f"{'='*60}")
 
 

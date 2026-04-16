@@ -45,6 +45,8 @@ EODHD_BASE = "https://eodhd.com/api"
 def fetch_eodhd_eod(symbol: str, date: str) -> dict | None:
     """Fetch EOD data from EODHD for a single symbol on a given date.
     Uses a 5-day lookback buffer to handle weekends/holidays."""
+    if not symbol:
+        return None
     if not API_KEY or API_KEY == "YOUR_KEY_HERE":
         return None
     try:

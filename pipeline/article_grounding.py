@@ -18,6 +18,7 @@ from pathlib import Path
 
 DATA_DIR = Path(__file__).parent / "data"
 DAILY_DUMP_DIR = DATA_DIR / "daily"
+FLOWS_DIR = DATA_DIR / "flows"
 
 TOLERANCE_PCT = 0.02  # ±2% per spec
 
@@ -134,13 +135,22 @@ def load_market_context(date_str: str) -> dict:
     """Load merged authoritative market data for a YYYY-MM-DD date.
 
     Reads <DAILY_DUMP_DIR>/<date>.json. Raises MarketDataMissing if absent.
-    Future: merge today_regime.json + fii_flows.json into the same dict
-    under top-level keys 'regime' and 'flows'. For now those are optional.
+    Optionally merges <FLOWS_DIR>/<date>.json under top-level 'flows'
+    (NSE FII/DII daily net values). Flows may lag by 1 session — callers
+    handling their own panels should treat a missing 'flows' as "—".
     """
     dump_path = DAILY_DUMP_DIR / f"{date_str}.json"
     if not dump_path.exists():
         raise MarketDataMissing(f"daily dump not found: {dump_path}")
-    return json.loads(dump_path.read_text(encoding="utf-8"))
+    ctx = json.loads(dump_path.read_text(encoding="utf-8"))
+
+    flows_path = FLOWS_DIR / f"{date_str}.json"
+    if flows_path.exists():
+        try:
+            ctx["flows"] = json.loads(flows_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return ctx
 
 
 def load_prior_context(date_str: str, max_lookback: int = 5) -> dict | None:
