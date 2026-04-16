@@ -9,6 +9,7 @@ Usage:
 import argparse
 import logging
 import sys
+from logging.handlers import RotatingFileHandler
 from datetime import datetime
 from pathlib import Path
 
@@ -59,7 +60,7 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
     level=logging.INFO,
     handlers=[
-        logging.FileHandler(LOG_PATH, encoding="utf-8"),
+        RotatingFileHandler(LOG_PATH, maxBytes=5_000_000, backupCount=3, encoding="utf-8"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -134,14 +135,14 @@ def _eval_task(task: dict, live_by_name: dict, now: datetime) -> list:
     return issues
 
 
-def run(args: argparse.Namespace) -> int:
+def run(args: argparse.Namespace, inventory_path: Path = INVENTORY_PATH) -> int:
     now = datetime.now(IST)
     now_iso = now.isoformat()
     run_label = "Intraday check" if args.tier else "Gate run"
 
     # 1. Load inventory (fatal on failure)
     try:
-        inventory = load_inventory(INVENTORY_PATH)
+        inventory = load_inventory(inventory_path)
     except InventoryError as e:
         _fail_inventory(str(e), now_iso, args.dry_run)
         return 1  # unreachable
@@ -218,12 +219,8 @@ def main() -> int:
     parser.add_argument("--inventory", type=Path, help="override inventory path (for tests)")
     args = parser.parse_args()
 
-    # Allow --inventory override for fixtures
-    if args.inventory:
-        global INVENTORY_PATH
-        INVENTORY_PATH = args.inventory
-
-    return run(args)
+    inventory_path = args.inventory if args.inventory else INVENTORY_PATH
+    return run(args, inventory_path=inventory_path)
 
 
 if __name__ == "__main__":
