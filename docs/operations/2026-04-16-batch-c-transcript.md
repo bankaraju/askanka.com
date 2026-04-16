@@ -78,7 +78,56 @@ Designed cadence and trigger for Phase A get a fresh brainstorm 2026-04-17+ — 
 
 ## Section C3 — Master EOD job identification
 
-<populated by Task 14>
+**Hypothesis revision:** The plan's "single master EOD job" framing does not hold. Investigation found:
+
+**Writer map for the 18-file Apr-14-15:38 stale cluster:**
+
+| Writer script | Files owned | Tracked? |
+|---|---|---|
+| `pipeline/correlation_regime.py` | correlation_history, fragility_model, fragility_scores | yes |
+| `pipeline/macro_stress.py` | macro_trigger_state, msi_history | yes |
+| `pipeline/pattern_engine.py` | historical_events, pattern_lookup | yes |
+| `pipeline/model_drift.py` | ml_performance | yes |
+| `pipeline/gamma_scanner.py` | gex_history | **UNTRACKED** |
+| `pipeline/options_monitor.py` | oi_history | **UNTRACKED** |
+| `pipeline/pinning_detector.py` | pinning_history | **UNTRACKED** |
+| `pipeline/unified_regime_engine.py` | regime_history | **UNTRACKED** |
+| `pipeline/expiry_monitor.py` | expiry_divergence_log | **UNTRACKED** |
+| no writer in codebase | gamma_result, gamma_generation, pinning_backtest_summary | orphan |
+
+8 distinct writers (5 of them untracked), not one master.
+
+**Surviving Anka EOD tasks in live scheduler (after B1 zombie cleanup):**
+
+| Task | .bat | LastRun | LastResult |
+|------|------|---------|-----------|
+| `AnkaEODReview` | `eod_review.bat` | 2026-04-15 16:00:30 | 0 |
+| `AnkaEODTrackRecord` | `eod_track_record.bat` | 2026-04-15 16:15:45 | 0 |
+| `AnkaTrustEOD` | (opus-anka repo, external) | 2026-04-15 16:35:05 | 0 |
+| `AnkaWeeklyReport` | `weekly_report.bat` | 2026-04-11 10:00:30 | **1 (FAILED)** |
+
+`eod_track_record.bat` only calls `run_eod_report.py` + `website_exporter.py` — **neither writes any of the 18 cluster files**. So the live EOD tasks are not the missing orchestrator; they never wrote the cluster.
+
+**Attempted in-session remediation (tracked writers only):**
+
+| Writer | Exit | Output file refreshed? |
+|---|---|---|
+| `correlation_regime.py` | 1 | ❌ `ImportError: cannot import name 'CORRELATION_PAIRS' from 'config'` — config.py doesn't define this constant anywhere in the repo (only this script and the old 2026-04-03 plan reference it) |
+| `macro_stress.py` | 0 | ❌ Ran clean to exit 0 but `macro_trigger_state.json` + `msi_history.json` still Apr 14 15:38 — internal no-op guard |
+| `model_drift.py` | 0 | ❌ Ran to exit 0, `ml_performance.json` still Apr 14 15:38 — internal no-op |
+| `pattern_engine.py` | 0 | ✅ `pattern_lookup.json` refreshed to 2026-04-16 12:44; `historical_events.json` still Apr 14 15:38 (same script, partial refresh) |
+
+**Conclusion — deferred to future brainstorm (DEFERRED-NEW):**
+
+This is not scheduler debt; it's **script rot + missing orchestrator**. Each writer needs its own triage:
+1. `correlation_regime.py` — genuine break (CORRELATION_PAIRS removed from config.py at some point; needs either restore or refactor).
+2. `macro_stress.py`, `model_drift.py`, `pattern_engine.py` (historical_events branch) — have internal guards that silently no-op on daily runs; need to understand the "refresh" mode flags or alternative invocation pattern.
+3. 5 untracked writers — single-repo mandate violation; need separate audit (fate-per-file) — already flagged in row 68 as `DEFERRED-NEW`.
+4. No scheduled orchestrator wires them together — by design (they may each have their own cadence) or by drift; needs design call.
+
+**In-scope remediation action for C3:** None safe to apply in this plan. Row 65 -> `DEFERRED-NEW`. Snapshots in `pipeline/backups/data_snapshots/2026-04-16/` remain available as a baseline for the future mini-plan.
+
+**Partial win:** `pattern_lookup.json` refreshed to today (pattern_engine.py partial success). Documented but does not change row 65 status.
 
 ## Section C3.x — Orphan + untracked writer resolution
 
