@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-17T14:02:44.258716+05:30",
-  "total_scored": 62,
+  "updated_at": "2026-04-17T14:04:56.845404+05:30",
+  "total_scored": 63,
   "stocks": [
     {
       "symbol": "ADANIENT",
@@ -61,6 +61,12 @@
       "trust_grade": "A+",
       "trust_score": 98.2,
       "thesis": "The bank's biggest strength lies in its consistent delivery and often exceeding of critical financial targets, especially in asset quality improvement (e.g., Gross NPA declining to 5.15% and Net NPA t"
+    },
+    {
+      "symbol": "CDSL",
+      "trust_grade": "A+",
+      "trust_score": 95.7,
+      "thesis": "CDSL's biggest strength lies in its consistent delivery on critical financial metrics and its dominant market position. Achieving 32% consolidated revenue growth and 25% PAT growth in FY2024-25, along"
     },
     {
       "symbol": "COCHINSHIP",
