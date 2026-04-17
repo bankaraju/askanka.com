@@ -1,7 +1,13 @@
 {
-  "updated_at": "2026-04-17T15:17:10.227550+05:30",
-  "total_scored": 63,
+  "updated_at": "2026-04-17T15:32:46.736231+05:30",
+  "total_scored": 64,
   "stocks": [
+    {
+      "symbol": "ABB",
+      "trust_grade": "B",
+      "trust_score": 69.2,
+      "thesis": "The company's exceptional performance in environmental sustainability, particularly exceeding targets for GHG emissions reduction (87% in 2025 vs. 'at least 80%' by 2030), water positive facilities (8"
+    },
     {
       "symbol": "ADANIENT",
       "trust_grade": "F",
