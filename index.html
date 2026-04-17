@@ -1274,7 +1274,7 @@ setInterval(loadTrackRecord, 120000);
             // Find "Today's Intelligence" container: the .reports-grid that comes
             // right after an <h2>Today's Intelligence</h2>
             const allH2 = Array.from(document.querySelectorAll('h2'));
-            const todayHeader = allH2.find(h => /today'?s intelligence/i.test(h.textContent));
+            const todayHeader = allH2.find(h => /today.?s intelligence/i.test(h.textContent));
             if (todayHeader) {
                 const section = todayHeader.closest('section');
                 const grid = section && section.querySelector('.reports-grid');
