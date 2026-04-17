@@ -3,14 +3,16 @@ signal_enrichment.py — Load 4 rigour JSON files and expose per-ticker lookup h
 
 Loaders never raise on missing or corrupt files; they return an empty dict instead.
 Task 1 of the signal-enrichment wiring initiative.
+Tasks 2-3 add enrich_signal() and gate_signal() for conviction scoring.
 """
 from __future__ import annotations
 
+import copy
 import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -186,3 +188,244 @@ def get_rank(symbol: str, cache: Dict) -> Optional[Dict]:
 def get_oi(symbol: str, cache: Dict) -> Optional[Dict]:
     """Return OI anomaly data for symbol, or None if not present."""
     return cache.get(symbol)
+
+
+# ---------------------------------------------------------------------------
+# Provenance helper
+# ---------------------------------------------------------------------------
+
+def _provenance(path: Path) -> Dict[str, Any]:
+    """
+    Record file provenance metadata for the rigour trail.
+
+    Returns a dict with:
+        path       — relative to _REPO_ROOT if possible, else absolute str
+        exists     — bool
+        mtime      — ISO UTC string if file exists, else None
+        size_bytes — int if file exists, else None
+    """
+    try:
+        rel = str(path.relative_to(_REPO_ROOT))
+    except ValueError:
+        rel = str(path)
+
+    if path.exists():
+        stat = path.stat()
+        mtime = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
+        size = stat.st_size
+        exists = True
+    else:
+        mtime = None
+        size = None
+        exists = False
+
+    return {
+        "path": rel,
+        "exists": exists,
+        "mtime": mtime,
+        "size_bytes": size,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Task 2: enrich_signal
+# ---------------------------------------------------------------------------
+
+def enrich_signal(
+    signal: Dict[str, Any],
+    trust_cache: Dict,
+    breaks_cache: Dict,
+    profile_cache: Dict,
+    oi_cache: Dict,
+    trust_path: Path = TRUST_PATH,
+    breaks_path: Path = BREAKS_PATH,
+    profile_path: Path = REGIME_PROFILE_PATH,
+    oi_path: Path = OI_ANOMALIES_PATH,
+) -> Dict[str, Any]:
+    """
+    Attach rigour data from the four caches to a signal dict.
+
+    Returns a NEW dict (does not mutate input) with original fields plus:
+      - trust_scores:       {ticker: {trust_grade, trust_score, opus_side, thesis} | None}
+      - regime_rank:        {ticker: {hit_rate, tradeable_rate, ...} | None}
+      - correlation_breaks: {ticker: {classification, z_score, ...} | None}
+      - oi_anomalies:       {ticker: {anomaly_type, pcr, sentiment, ...} | None}
+      - rigour_trail:       {enriched_at, sources: {trust, breaks, regime_profile, oi_anomalies}}
+    """
+    enriched = copy.deepcopy(signal)
+
+    # Collect all tickers from long and short legs
+    tickers: List[str] = []
+    for leg in signal.get("long_legs", []):
+        t = leg.get("ticker")
+        if t:
+            tickers.append(t)
+    for leg in signal.get("short_legs", []):
+        t = leg.get("ticker")
+        if t:
+            tickers.append(t)
+
+    # Build per-ticker enrichment dicts
+    trust_scores: Dict[str, Optional[Dict]] = {}
+    regime_rank: Dict[str, Optional[Dict]] = {}
+    correlation_breaks: Dict[str, Optional[Dict]] = {}
+    oi_anomalies: Dict[str, Optional[Dict]] = {}
+
+    for ticker in tickers:
+        trust_scores[ticker] = get_trust(ticker, trust_cache)
+        regime_rank[ticker] = get_rank(ticker, profile_cache)
+        correlation_breaks[ticker] = get_break(ticker, breaks_cache)
+        oi_anomalies[ticker] = get_oi(ticker, oi_cache)
+
+    enriched["trust_scores"] = trust_scores
+    enriched["regime_rank"] = regime_rank
+    enriched["correlation_breaks"] = correlation_breaks
+    enriched["oi_anomalies"] = oi_anomalies
+
+    # Build rigour trail
+    enriched["rigour_trail"] = {
+        "enriched_at": datetime.now(tz=timezone.utc).isoformat(),
+        "sources": {
+            "trust": _provenance(trust_path),
+            "breaks": _provenance(breaks_path),
+            "regime_profile": _provenance(profile_path),
+            "oi_anomalies": _provenance(oi_path),
+        },
+    }
+
+    return enriched
+
+
+# ---------------------------------------------------------------------------
+# Task 3: gate_signal — conviction scoring with hard-block rules
+# ---------------------------------------------------------------------------
+
+# Grade order (index = rank, 0 = lowest/F, 7 = highest/A+)
+_GRADE_ORDER: List[str] = ["F", "D", "C", "C+", "B", "B+", "A", "A+"]
+
+
+def _grade_rank(grade: Optional[str]) -> Optional[int]:
+    """Return 0-based rank for a trust grade, or None if unknown."""
+    if grade is None:
+        return None
+    try:
+        return _GRADE_ORDER.index(grade)
+    except ValueError:
+        return None
+
+
+def gate_signal(
+    enriched: Dict[str, Any],
+) -> Tuple[bool, Optional[str], float]:
+    """
+    Evaluate conviction for an enriched signal.
+
+    Hard rules (blocking):
+      - Long a name with trust_grade C or worse (rank <= 2) → blocked
+      - Short a name with trust_grade A or A+ (rank >= 6) → blocked
+
+    Soft adjustments (score +/-):
+      - Phase C break trade_rec matches leg direction: +8
+      - Phase C break trade_rec opposes: -8
+      - OI CALL_BUILDUP / BULLISH sentiment on long leg: +5
+      - OI PUT_BUILDUP / BEARISH sentiment on long leg: -5
+      - Short legs: PUT_BUILDUP confirms short → +5; CALL_BUILDUP opposes → -5
+      - regime_rank hit_rate > 0.55: +min(10, (hr-0.5)*50)
+      - regime_rank hit_rate < 0.45: -min(10, (0.5-hr)*50)
+
+    Returns (blocked, reason, score) where score is clamped to [0, 100].
+    Fail-open: missing enrichment data → no penalty, no bonus.
+    """
+    trust_scores = enriched.get("trust_scores", {})
+    regime_rank = enriched.get("regime_rank", {})
+    correlation_breaks = enriched.get("correlation_breaks", {})
+    oi_anomalies = enriched.get("oi_anomalies", {})
+
+    long_tickers = [leg["ticker"] for leg in enriched.get("long_legs", []) if "ticker" in leg]
+    short_tickers = [leg["ticker"] for leg in enriched.get("short_legs", []) if "ticker" in leg]
+
+    score = 50.0
+
+    # ---- Hard rules ----
+    for ticker in long_tickers:
+        trust = trust_scores.get(ticker)
+        if trust is None:
+            continue
+        grade = trust.get("trust_grade")
+        rank = _grade_rank(grade)
+        if rank is not None and rank <= 2:  # F, D, C
+            return True, f"BLOCKED: long leg {ticker} has trust_grade {grade} (rank {rank} <= 2)", score
+
+    for ticker in short_tickers:
+        trust = trust_scores.get(ticker)
+        if trust is None:
+            continue
+        grade = trust.get("trust_grade")
+        rank = _grade_rank(grade)
+        if rank is not None and rank >= 6:  # A, A+
+            return True, f"BLOCKED: short leg {ticker} has trust_grade {grade} (rank {rank} >= 6)", score
+
+    # ---- Soft adjustments ----
+
+    # Phase C correlation break alignment
+    for ticker in long_tickers:
+        brk = correlation_breaks.get(ticker)
+        if brk is None:
+            continue
+        trade_rec = (brk.get("trade_rec") or "").upper()
+        if trade_rec in ("BUY", "LONG"):
+            score += 8
+        elif trade_rec in ("SELL", "SHORT"):
+            score -= 8
+
+    for ticker in short_tickers:
+        brk = correlation_breaks.get(ticker)
+        if brk is None:
+            continue
+        trade_rec = (brk.get("trade_rec") or "").upper()
+        if trade_rec in ("SELL", "SHORT"):
+            score += 8
+        elif trade_rec in ("BUY", "LONG"):
+            score -= 8
+
+    # OI anomaly alignment
+    for ticker in long_tickers:
+        oi = oi_anomalies.get(ticker)
+        if oi is None:
+            continue
+        anomaly_type = (oi.get("anomaly_type") or "").upper()
+        sentiment = (oi.get("sentiment") or "").upper()
+        if "CALL" in anomaly_type or sentiment == "BULLISH":
+            score += 5
+        elif "PUT" in anomaly_type or sentiment == "BEARISH":
+            score -= 5
+
+    for ticker in short_tickers:
+        oi = oi_anomalies.get(ticker)
+        if oi is None:
+            continue
+        anomaly_type = (oi.get("anomaly_type") or "").upper()
+        sentiment = (oi.get("sentiment") or "").upper()
+        if "PUT" in anomaly_type or sentiment == "BEARISH":
+            score += 5
+        elif "CALL" in anomaly_type or sentiment == "BULLISH":
+            score -= 5
+
+    # Regime hit_rate adjustment (applies to all tickers)
+    all_tickers = long_tickers + short_tickers
+    for ticker in all_tickers:
+        rank_data = regime_rank.get(ticker)
+        if rank_data is None:
+            continue
+        hr = rank_data.get("hit_rate")
+        if hr is None:
+            continue
+        if hr > 0.55:
+            score += min(10.0, (hr - 0.5) * 50)
+        elif hr < 0.45:
+            score -= min(10.0, (0.5 - hr) * 50)
+
+    # Clamp
+    score = max(0.0, min(100.0, score))
+
+    return False, None, score
