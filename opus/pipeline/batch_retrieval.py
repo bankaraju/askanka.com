@@ -53,7 +53,16 @@ def run_batch(
     if force:
         completed = set()
 
-    log.info("Batch retrieval: %d stocks, %d already completed", len(symbols), len(completed))
+    # Resolve BSE scrips for any missing symbols
+    missing_bse = [s for s in symbols if s not in scrip_map]
+    if missing_bse:
+        from opus.pipeline.retrieval.bse_resolver import batch_resolve
+        log.info("Resolving %d missing BSE scrip codes...", len(missing_bse))
+        updated_cache = batch_resolve(symbols, cache_path=scrip_map_path, delay=delay)
+        scrip_map = updated_cache.get("mappings", {})
+
+    log.info("Batch retrieval: %d stocks, %d already completed, %d BSE scrips",
+             len(symbols), len(completed), len(scrip_map))
 
     fully_covered = 0
     partial_transcripts = 0
