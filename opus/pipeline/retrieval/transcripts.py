@@ -24,6 +24,12 @@ IST = timezone(timedelta(hours=5, minutes=30))
 MIN_WORD_COUNT = 500
 DEFAULT_CACHE = Path(__file__).parent.parent.parent / "artifacts" / "transcripts"
 
+_PDF_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/pdf,*/*",
+    "Referer": "https://www.bseindia.com/",
+}
+
 
 def _extract_pdf_text(pdf_bytes: bytes) -> str:
     """Extract text from PDF bytes using pymupdf."""
@@ -50,6 +56,27 @@ def _extract_quarter_from_title(title: str) -> str:
             year = year[2:]
         return f"Q{q}FY{year}"
     return f"UNKNOWN_{hash(title) % 10000:04d}"
+
+
+def _extract_quarter_from_text(text: str) -> str:
+    """Extract quarter from transcript body text when title is generic."""
+    # Try Q1FY25 style
+    m = re.search(r'Q([1-4])\s*FY\s*(\d{2,4})', text[:2000], re.IGNORECASE)
+    if m:
+        q, year = m.group(1), m.group(2)
+        if len(year) == 4:
+            year = year[2:]
+        return f"Q{q}FY{year}"
+    # Try "quarter ended March 2025" style
+    m = re.search(r'quarter\s+ended\s+(\w+)\s+(\d{4})', text[:3000], re.IGNORECASE)
+    if m:
+        month, year = m.group(1), m.group(2)
+        month_q = {"march": "Q4", "june": "Q1", "september": "Q2", "december": "Q3",
+                   "mar": "Q4", "jun": "Q1", "sep": "Q2", "dec": "Q3"}
+        q = month_q.get(month.lower(), "Q?")
+        fy = str(int(year))[-2:] if q == "Q4" else str(int(year) + 1)[-2:]
+        return f"{q}FY{fy}"
+    return ""
 
 
 def _load_cache(cache_dir: Path, symbol: str) -> list[dict]:
@@ -98,17 +125,23 @@ def fetch_transcripts(
                 continue
 
             try:
-                resp = requests.get(doc["url"], timeout=30)
+                resp = requests.get(doc["url"], headers=_PDF_HEADERS, timeout=30)
                 resp.raise_for_status()
                 text = _extract_pdf_text(resp.content)
                 word_count = len(text.split())
 
                 if word_count < MIN_WORD_COUNT:
-                    log.info(
-                        "  %s %s: skipped (%d chars < %d min)",
-                        nse_symbol, quarter, word_count, MIN_WORD_COUNT,
-                    )
+                    log.info("  %s %s: skipped (%d words < %d min)",
+                             nse_symbol, quarter, word_count, MIN_WORD_COUNT)
                     continue
+
+                # If title didn't give us a quarter, try extracting from text
+                if quarter.startswith("UNKNOWN_"):
+                    text_quarter = _extract_quarter_from_text(text)
+                    if text_quarter:
+                        quarter = text_quarter
+                    if quarter in cached_quarters:
+                        continue
 
                 transcript = {
                     "quarter": quarter,
