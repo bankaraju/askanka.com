@@ -29,7 +29,7 @@ def test_fetch_transcripts_returns_screener_results(cache_dir: Path):
     """Screener returns 2 transcript links → 2 transcripts fetched."""
     from opus.pipeline.retrieval.transcripts import fetch_transcripts
 
-    fake_text = "Management discussion about quarterly results and future guidance " * 15
+    fake_text = "Management discussion about quarterly results and future guidance plans " * 60
 
     with patch("opus.pipeline.retrieval.transcripts.ScreenerClient") as MockSC, \
          patch("opus.pipeline.retrieval.transcripts.requests") as mock_req, \

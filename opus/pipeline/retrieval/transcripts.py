@@ -21,7 +21,7 @@ from opus.pipeline.retrieval.screener_client import ScreenerClient
 log = logging.getLogger("opus.transcripts")
 
 IST = timezone(timedelta(hours=5, minutes=30))
-MIN_WORD_COUNT = 500  # minimum character count (not word count)
+MIN_WORD_COUNT = 500
 DEFAULT_CACHE = Path(__file__).parent.parent.parent / "artifacts" / "transcripts"
 
 
@@ -101,7 +101,7 @@ def fetch_transcripts(
                 resp = requests.get(doc["url"], timeout=30)
                 resp.raise_for_status()
                 text = _extract_pdf_text(resp.content)
-                word_count = len(text)  # character count stored as word_count
+                word_count = len(text.split())
 
                 if word_count < MIN_WORD_COUNT:
                     log.info(
