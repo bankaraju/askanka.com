@@ -11,6 +11,11 @@ from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
 
+try:
+    from signal_badges import trust_badge, conviction_badge
+except ImportError:
+    trust_badge = conviction_badge = None
+
 log = logging.getLogger("anka.telegram")
 
 # ---------------------------------------------------------------------------
@@ -234,6 +239,30 @@ def format_multi_spread_card(signal_card: Dict[str, Any], regime: str = "") -> s
         f"\U0001f3f7\ufe0f {category} (confidence: {confidence_pct}%){regime_str}",
         "",
     ]
+
+    # Enrichment badges (signal_badges.py)
+    if trust_badge is not None:
+        trust_scores = signal_card.get("trust_scores") or {}
+        conviction = signal_card.get("conviction_score")
+        if trust_scores or conviction is not None:
+            enrich_parts = []
+            if conviction is not None:
+                cb = conviction_badge(conviction)
+                enrich_parts.append(f"{cb['emoji']} CONV {cb['label']}")
+            for spread in signal_spreads[:1]:
+                for lg in spread.get("long_leg", []):
+                    tg = (trust_scores.get(lg["ticker"]) or {}).get("trust_grade")
+                    if tg:
+                        b = trust_badge(tg)
+                        enrich_parts.append(f"{b['emoji']} L {lg['ticker']} {b['label']}")
+                for sg in spread.get("short_leg", []):
+                    tg = (trust_scores.get(sg["ticker"]) or {}).get("trust_grade")
+                    if tg:
+                        b = trust_badge(tg)
+                        enrich_parts.append(f"{b['emoji']} S {sg['ticker']} {b['label']}")
+            if enrich_parts:
+                lines.append(" | ".join(enrich_parts))
+                lines.append("")
 
     for spread in signal_spreads:
         name = spread.get("spread_name", "?")
