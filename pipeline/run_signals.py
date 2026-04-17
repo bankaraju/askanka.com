@@ -319,7 +319,6 @@ def _run_once_inner(send_telegram=False):
     # 1b. Phase C break → standalone signal candidates
     try:
         from break_signal_generator import generate_break_candidates
-        from signal_tracker import load_open_signals
         existing_ids = {s.get("signal_id") for s in load_open_signals()}
         for cand in generate_break_candidates():
             if cand["signal_id"] in existing_ids:
