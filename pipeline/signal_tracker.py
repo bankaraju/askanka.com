@@ -27,6 +27,7 @@ import yfinance as yf
 from config import (
     INDIA_SIGNAL_STOCKS, SIGNAL_STOP_LOSS_PCT,
     SIGNAL_TRAILING_STOP_ACTIVATE_PCT, SIGNAL_TRAILING_STOP_DISTANCE_PCT,
+    SIGNAL_ENRICHMENT_ENABLED, SIGNAL_GATE_ENABLED,
 )
 from spread_statistics import get_levels_for_spread
 
@@ -125,12 +126,40 @@ def save_closed_signals(signals: List[Dict[str, Any]]) -> None:
         log.error(f"Failed to save closed signals: {e}")
 
 
+def _apply_enrichment(signal: dict) -> dict:
+    """Attach trust/rank/break/OI + conviction score. No-op if flag off."""
+    if not SIGNAL_ENRICHMENT_ENABLED:
+        return signal
+    try:
+        from signal_enrichment import (
+            load_trust_scores, load_correlation_breaks, load_regime_profile,
+            load_oi_anomalies, enrich_signal, gate_signal,
+        )
+        trust = load_trust_scores()
+        breaks = load_correlation_breaks()
+        profile = load_regime_profile()
+        oi = load_oi_anomalies()
+        enriched = enrich_signal(signal, trust, breaks, profile, oi)
+        blocked, reason, score = gate_signal(enriched)
+        enriched["conviction_score"] = score
+        enriched["gate_reason"] = reason
+        enriched["gate_blocked"] = blocked if SIGNAL_GATE_ENABLED else False
+        return enriched
+    except Exception as e:
+        log.warning("Enrichment failed, saving signal unenriched: %s", e)
+        return signal
+
+
 def save_signal(signal: Dict[str, Any]) -> None:
-    """Append a new signal to *open_signals.json*."""
+    """Append a new signal to *open_signals.json* with enrichment applied."""
+    signal = _apply_enrichment(signal)
+    if signal.get("gate_blocked"):
+        log.warning("Signal %s blocked by gate: %s", signal.get("signal_id"), signal.get("gate_reason"))
+        return
     signals = load_open_signals()
     signals.append(signal)
     save_open_signals(signals)
-    log.info(f"Saved new signal {signal.get('signal_id', '?')}")
+    log.info("Saved new signal %s (conviction=%.0f)", signal.get("signal_id", "?"), signal.get("conviction_score", 0))
 
 
 def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
