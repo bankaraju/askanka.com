@@ -511,6 +511,18 @@ POLICY_KEYWORDS = {
 # === REFERENCE DATE (war start) ===
 WAR_START_DATE = "2026-02-28"
 
+# === CORRELATION REGIME CONSTANTS ===
+CORRELATION_PAIRS = [
+    {"name": p["name"], "a": p["long"][0], "b": p["short"][0]}
+    for p in INDIA_SPREAD_PAIRS
+    if len(p.get("long", [])) >= 1 and len(p.get("short", [])) >= 1
+]
+CORR_WINDOW_SHORT = 30
+CORR_WINDOW_LONG = 90
+CORR_BREAK_ZSCORE = 2.0
+CORR_BREAK_MIN_SHIFT = 0.3
+FRAGILITY_FORWARD_WINDOW = 10
+
 # === SIGNAL ENRICHMENT GATES ===
 SIGNAL_ENRICHMENT_ENABLED = True
 SIGNAL_GATE_ENABLED = False

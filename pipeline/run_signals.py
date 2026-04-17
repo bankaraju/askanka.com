@@ -328,7 +328,6 @@ def _run_once_inner(send_telegram=False):
             print(f"  📊 Phase C break signal: {cand['spread_name']}")
             if send_telegram:
                 try:
-                    from telegram_bot import send_message
                     msg = f"📊 PHASE C BREAK\n{cand['spread_name']}\n{cand.get('event_headline', '')}"
                     send_message(msg, parse_mode=None)
                 except Exception as e:
