@@ -176,6 +176,16 @@ def _build_stock_recs() -> list:
             "hit_rate_meaningful": episodes >= MIN_PRECEDENTS,
             "_abs_drift": abs_drift,
         })
+    # Filter: never publish sub-50% hit-rate recs to the website (investor-facing)
+    out = [s for s in out if s.get("hit_rate", 0) >= 0.50]
+    # Dedup by ticker (keep highest conviction variant)
+    seen = set()
+    deduped = []
+    for s in out:
+        if s["ticker"] not in seen:
+            seen.add(s["ticker"])
+            deduped.append(s)
+    out = deduped
     # Demote non-meaningful hit-rates so robust samples rank above lucky ones.
     out.sort(key=lambda s: (
         -int(s["hit_rate_meaningful"]),
