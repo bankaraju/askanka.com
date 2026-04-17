@@ -90,3 +90,32 @@ def volume_spike(df: pd.DataFrame, lookback: int = 20, threshold: float = 2.0) -
     vol = df["Volume"].astype(float)
     avg_vol = vol.rolling(window=lookback, min_periods=lookback).mean().shift(1)
     return vol > (threshold * avg_vol)
+
+
+def detect_candles(df: pd.DataFrame) -> pd.DataFrame:
+    """Detect candlestick patterns: doji, hammer, shooting_star, engulfing_bull, engulfing_bear."""
+    o, h, l, c = df["Open"].astype(float), df["High"].astype(float), df["Low"].astype(float), df["Close"].astype(float)
+    body = (c - o).abs()
+    full_range = h - l
+    upper_shadow = h - pd.concat([o, c], axis=1).max(axis=1)
+    lower_shadow = pd.concat([o, c], axis=1).min(axis=1) - l
+
+    doji = (full_range > 0) & (body / full_range < 0.1)
+
+    hammer = (lower_shadow >= 2 * body) & (upper_shadow <= body.clip(lower=0.01)) & (full_range > 0)
+
+    shooting_star = (upper_shadow >= 2 * body) & (lower_shadow <= body.clip(lower=0.01)) & (full_range > 0)
+
+    prev_o, prev_c = o.shift(1), c.shift(1)
+    today_green = c > o
+    prev_red = prev_c < prev_o
+    engulfing_bull = today_green & prev_red & (o <= prev_c) & (c >= prev_o)
+
+    today_red = c < o
+    prev_green = prev_c > prev_o
+    engulfing_bear = today_red & prev_green & (o >= prev_c) & (c <= prev_o)
+
+    return pd.DataFrame({
+        "doji": doji, "hammer": hammer, "shooting_star": shooting_star,
+        "engulfing_bull": engulfing_bull, "engulfing_bear": engulfing_bear,
+    }, index=df.index)

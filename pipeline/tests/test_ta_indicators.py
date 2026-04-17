@@ -129,3 +129,59 @@ def test_volume_spike_detects_2x():
     result = volume_spike(df, lookback=20, threshold=2.0)
     assert result.iloc[-1] == True
     assert result.iloc[-2] == False
+
+
+def test_detect_doji():
+    from ta_indicators import detect_candles
+    df = pd.DataFrame({
+        "Date": pd.date_range("2025-01-01", periods=5, freq="B"),
+        "Open":  [100.0, 100.0, 100.0, 100.0, 100.1],
+        "High":  [101.0, 102.0, 103.0, 104.0, 105.0],
+        "Low":   [99.0,  98.0,  97.0,  96.0,  95.0],
+        "Close": [100.0, 100.0, 100.0, 100.0, 100.0],
+        "Volume": [1e6] * 5,
+    })
+    result = detect_candles(df)
+    assert result["doji"].iloc[-1] == True
+
+
+def test_detect_bullish_engulfing():
+    from ta_indicators import detect_candles
+    df = pd.DataFrame({
+        "Date": pd.date_range("2025-01-01", periods=5, freq="B"),
+        "Open":  [105, 104, 103, 102, 98],
+        "High":  [106, 105, 104, 103, 104],
+        "Low":   [104, 103, 102, 97,  97],
+        "Close": [104, 103, 102, 98,  103],
+        "Volume": [1e6] * 5,
+    })
+    result = detect_candles(df)
+    assert result["engulfing_bull"].iloc[-1] == True
+
+
+def test_detect_hammer():
+    from ta_indicators import detect_candles
+    df = pd.DataFrame({
+        "Date": pd.date_range("2025-01-01", periods=5, freq="B"),
+        "Open":  [105, 104, 103, 102, 100.5],
+        "High":  [106, 105, 104, 103, 101.0],
+        "Low":   [104, 103, 102, 101, 97.0],
+        "Close": [104, 103, 102, 101, 100.0],
+        "Volume": [1e6] * 5,
+    })
+    result = detect_candles(df)
+    assert result["hammer"].iloc[-1] == True
+
+
+def test_no_false_doji_on_big_body():
+    from ta_indicators import detect_candles
+    df = pd.DataFrame({
+        "Date": pd.date_range("2025-01-01", periods=3, freq="B"),
+        "Open":  [100, 100, 95],
+        "High":  [101, 101, 106],
+        "Low":   [99,  99,  94],
+        "Close": [100, 100, 105],
+        "Volume": [1e6] * 3,
+    })
+    result = detect_candles(df)
+    assert result["doji"].iloc[-1] == False
