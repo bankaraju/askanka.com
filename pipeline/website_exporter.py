@@ -266,6 +266,27 @@ def _build_news_recs() -> list:
     return out[:3]
 
 
+_CRYPTIC_NAMES = {
+    "Defence vs IT": "Sovereign Shield Alpha",
+    "Upstream vs Downstream": "Energy Chain Divergence",
+    "Coal vs OMCs": "Fossil Arbitrage",
+    "Reliance vs OMCs": "Refinery Spread",
+    "Pharma vs Cyclicals": "Defensive Rotation",
+    "PSU Banks vs Private Banks": "Banking Regime Play",
+    "PSU Commodity vs Banks": "Commodity-Credit Divergence",
+    "IT vs Banks": "Global-Local Pivot",
+    "Infra Capex Beneficiaries": "Capex Momentum",
+    "Auto vs FMCG": "Discretionary Shift",
+    "Metals vs FMCG": "Cyclical-Staple Spread",
+    "Telecom vs Media": "Network Effect Arb",
+    "Real Estate vs IT": "Asset-Income Rotation",
+}
+
+
+def _cryptic_name(spread_name: str) -> str:
+    return _CRYPTIC_NAMES.get(spread_name, f"Strategy {abs(hash(spread_name)) % 900 + 100}")
+
+
 def _refresh_trust(sig: dict, fresh_trust: dict) -> dict:
     """Rebuild trust_scores for a signal using fresh per-stock data."""
     all_tickers = set()
@@ -349,7 +370,7 @@ def export_live_status() -> dict:
 
         positions.append({
             "signal_id": sig.get("signal_id", ""),
-            "spread_name": sig.get("spread_name", ""),
+            "spread_name": _cryptic_name(sig.get("spread_name", "")),
             "category": sig.get("category", ""),
             "tier": sig.get("tier", "SIGNAL"),
             "open_date": sig.get("open_timestamp", "")[:10],
@@ -419,7 +440,7 @@ def export_track_record(limit: int = 20) -> dict:
         fp = sig.get("final_pnl", {}) or {}
         rows.append({
             "signal_id": sig.get("signal_id", ""),
-            "spread_name": sig.get("spread_name", ""),
+            "spread_name": _cryptic_name(sig.get("spread_name", "")),
             "category": sig.get("category", ""),
             "tier": sig.get("tier", ""),
             "event_headline": sig.get("event_headline", ""),
