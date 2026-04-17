@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-04-17T16:15:24.165875+05:30",
+  "updated_at": "2026-04-17T16:40:49.972259+05:30",
   "total_closed": 3,
   "win_rate_pct": 33.3,
   "avg_pnl_pct": 1.01,
   "recent": [
     {
       "signal_id": "SIG-2026-03-31-003-Defence_vs_IT",
-      "spread_name": "Defence vs IT",
+      "spread_name": "Sovereign Shield Alpha",
       "category": "hormuz",
       "tier": "SIGNAL",
       "event_headline": "White House: Reopening Strait of Hormuz Not Vital to Ending Iran War - Time Magazine",
@@ -19,7 +19,7 @@
     },
     {
       "signal_id": "SIG-2026-04-15-004-Upstream_vs_Downstream",
-      "spread_name": "Upstream vs Downstream",
+      "spread_name": "Energy Chain Divergence",
       "category": "sanctions",
       "tier": "SIGNAL",
       "event_headline": "Delcy Rodriguez calls for a \u2018Venezuela free of sanctions\u2019 amid US detente",
@@ -32,7 +32,7 @@
     },
     {
       "signal_id": "SIG-2026-03-31-020-Coal_vs_OMCs",
-      "spread_name": "Coal vs OMCs",
+      "spread_name": "Fossil Arbitrage",
       "category": "oil_positive",
       "tier": "SIGNAL",
       "event_headline": "US crude oil futures rise above $106 a barrel after Kuwaiti tanker attack",

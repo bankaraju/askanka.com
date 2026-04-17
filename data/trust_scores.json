@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-17T16:15:24.266490+05:30",
-  "total_scored": 86,
+  "updated_at": "2026-04-17T16:40:50.035357+05:30",
+  "total_scored": 101,
   "stocks": [
     {
       "symbol": "360ONE",
@@ -195,6 +195,12 @@
       "thesis": "The company's biggest strength lies in its consistent delivery and expansion of its StAR MF platform and overall market participation. BSE StAR MF transactions grew to 66.3 Crore in FY24-25 and furthe"
     },
     {
+      "symbol": "CAMS",
+      "trust_grade": "C",
+      "trust_score": 53.8,
+      "thesis": "The company's ability to maintain its RTA market share at ~68% (Q3 FY26 Concall, Page 3) while simultaneously expanding its AIF offerings and onboarding new AMC clients (6 AMCs live in the last calend"
+    },
+    {
       "symbol": "CANBK",
       "trust_grade": "A+",
       "trust_score": 98.2,
@@ -207,10 +213,34 @@
       "thesis": "CDSL's biggest strength lies in its consistent delivery on critical financial metrics and its dominant market position. Achieving 32% consolidated revenue growth and 25% PAT growth in FY2024-25, along"
     },
     {
+      "symbol": "CGPOWER",
+      "trust_grade": "D",
+      "trust_score": 37.1,
+      "thesis": "The company has consistently demonstrated strong execution and even exceeded targets in Power Transformer capacity expansion (e.g., from 17,000 MVA to 25,000 MVA, then to 35,000 MVA, and currently tar"
+    },
+    {
+      "symbol": "COALINDIA",
+      "trust_grade": "D",
+      "trust_score": 22.1,
+      "thesis": "Coal India's biggest strength lies in its robust financial performance, particularly its ability to consistently exceed capital expenditure targets (e.g., 41.42% above target for FY2023-24 and '19,500"
+    },
+    {
       "symbol": "COCHINSHIP",
       "trust_grade": "C",
       "trust_score": 43.6,
       "thesis": "The consistent and accurate reporting of the order book value, with actuals closely matching or slightly exceeding guidance (e.g., FY24 order book of H22,000 crores delivered, FY25 order book of ~H21,"
+    },
+    {
+      "symbol": "COFORGE",
+      "trust_grade": "D",
+      "trust_score": 31.5,
+      "thesis": "The company's exceptional performance in order intake, with the next 12-month signed order book reaching a record $1.72 billion in Q3 FY2026, exceeding the FY26 target of $1.5 billion by 14.67%, demon"
+    },
+    {
+      "symbol": "COLPAL",
+      "trust_grade": "F",
+      "trust_score": 14.3,
+      "thesis": "Colgate-Palmolive India demonstrates strong commitment and execution in waste management, consistently exceeding its 100% plastic waste collection under EPR target (e.g., ~120% in FY22-23 and ~107% in"
     },
     {
       "symbol": "CONCOR",
@@ -225,10 +255,70 @@
       "thesis": "The most impressive delivery is the 100% elimination of coal usage across operations by FY 2024-25, which was achieved ahead of schedule in FY24 (FY24 Annual Report, Page 8). This demonstrates strong "
     },
     {
+      "symbol": "DALBHARAT",
+      "trust_grade": "D",
+      "trust_score": 24.4,
+      "thesis": "The company's biggest strength lies in its consistent and strong financial management, particularly maintaining a Net Debt to EBITDA ratio well below the target of 2x (0.30x in FY2024-25 and 0.56x in "
+    },
+    {
+      "symbol": "DELHIVERY",
+      "trust_grade": "F",
+      "trust_score": 13.3,
+      "thesis": "The company demonstrated strong execution in expanding its tractor-trailer fleet, with 562 total 43-46ft tractors as of FY2022-23, significantly exceeding the stated target of 150 TTs for FY23. This i"
+    },
+    {
+      "symbol": "DIVISLAB",
+      "trust_grade": "A",
+      "trust_score": 83.7,
+      "thesis": "Divi's consistent delivery on revenue growth, achieving an 18% YoY growth in Q1 FY25, exceeding their general double-digit growth guidance. This, coupled with successful US FDA inspection at Unit-II ("
+    },
+    {
       "symbol": "DIXON",
       "trust_grade": "F",
       "trust_score": 10.0,
       "thesis": "The consistent delivery and confirmation of major production capacity expansions, such as the Dehradun washing machine plant (FY23 AR, Page 14, confirmed in FY24 AR, Page 12) and the Greater Noida ref"
+    },
+    {
+      "symbol": "DLF",
+      "trust_grade": "C",
+      "trust_score": 42.4,
+      "thesis": "DLF's biggest strength lies in its consistent ability to exceed its new product development potential, both in terms of area (66 msf product pipeline vs. 11 msf identified potential) and sales value ("
+    },
+    {
+      "symbol": "DMART",
+      "trust_grade": "A",
+      "trust_score": 89.2,
+      "thesis": "The company's ability to consistently deliver on its core financial metrics (revenue, PAT, ROCE) and store expansion targets, coupled with a clear, value-driven strategy for both offline and online ch"
+    },
+    {
+      "symbol": "DRREDDY",
+      "trust_grade": "C",
+      "trust_score": 41.4,
+      "thesis": "Dr. Reddy's demonstrates strong performance and commitment to product innovation, as evidenced by exceeding the '25% new launches to be first-to-market by 2027' target with 39% in FY2022-23. Additiona"
+    },
+    {
+      "symbol": "EICHERMOT",
+      "trust_grade": "C",
+      "trust_score": 57.0,
+      "thesis": "Eicher Motors has significantly exceeded its carbon emissions reduction target, achieving a 46% reduction in Scope 1 & 2 emissions by FY2024-25 against a 40% target (from FY21-22 baseline). This demon"
+    },
+    {
+      "symbol": "ETERNAL",
+      "trust_grade": "D",
+      "trust_score": 26.6,
+      "thesis": "The company's ability to consistently increase its overall Adjusted EBITDA margin, moving from 2.75% in FY24 to 5.0% in FY25, exceeding its own guidance for 'continue increasing', demonstrates strong "
+    },
+    {
+      "symbol": "EXIDEIND",
+      "trust_grade": "D",
+      "trust_score": 21.9,
+      "thesis": "The company's significant equity investment of Rs 2,852 crore in the lithium-ion cell manufacturing facility as of Oct 2024, which is ahead of the pro-rata target for FY2025-26 (Rs 2,000 crore for a R"
+    },
+    {
+      "symbol": "FORTIS",
+      "trust_grade": "F",
+      "trust_score": 9.2,
+      "thesis": "The company demonstrates strong execution and transparency on specific financial commitments, such as the 'approximately ` 300 Crores' capex for FY23, which was precisely met. Additionally, the consis"
     },
     {
       "symbol": "GAIL",
