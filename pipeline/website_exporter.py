@@ -327,6 +327,13 @@ def export_live_status() -> dict:
             "daily_stop": dl.get("daily_stop", 0),
             "two_day_stop": dl.get("two_day_stop", 0),
             "peak_pnl": peak,
+            "source": sig.get("source", "SPREAD"),
+            "trust_scores": sig.get("trust_scores"),
+            "regime_rank": sig.get("regime_rank"),
+            "correlation_breaks": sig.get("correlation_breaks"),
+            "oi_anomalies": sig.get("oi_anomalies"),
+            "conviction_score": sig.get("conviction_score"),
+            "gate_reason": sig.get("gate_reason"),
         })
 
     fragility = {}
