@@ -43,7 +43,7 @@ ARTIFACTS = Path(__file__).parent / "artifacts"
 # Set ANKA_LLM_PROVIDER=claude to fall back to Claude.
 
 # Load Gemini key from askanka.com pipeline .env as well
-_ASKANKA_ENV = Path("C:/Users/Claude_Anka/Documents/askanka.com/pipeline/.env")
+_ASKANKA_ENV = Path("C:/Users/Claude_Anka/askanka.com/pipeline/.env")
 if _ASKANKA_ENV.exists():
     load_dotenv(_ASKANKA_ENV)
 

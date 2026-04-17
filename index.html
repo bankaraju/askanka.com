@@ -896,6 +896,7 @@
         .positions-table th { color: #9c9c9c; text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
         .positions-table td.pos { color: #69db7c; }
         .positions-table td.neg { color: #ff6b6b; }
+        .thesis-cell { font-size: 12px; color: #9c9c9c; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .tr-subtitle { color: #9c9c9c; font-size: 14px; margin: 4px 0 16px; }
         .tr-stats { display: flex; gap: 32px; margin: 12px 0 20px; flex-wrap: wrap; }
         .tr-stat { display: flex; flex-direction: column; gap: 4px; }
@@ -1173,6 +1174,29 @@
       </tr>
     </thead>
     <tbody id="track-record-body">
+      <tr><td colspan="7">Loading…</td></tr>
+    </tbody>
+  </table>
+</section>
+
+    <hr class="section-divider">
+
+<!-- ══════════════ TRUST SCORES ══════════════ -->
+<section id="trust-scores" class="positions-block">
+  <h2 class="block-title">ANKA Trust Scores</h2>
+  <p class="tr-subtitle">Management credibility scores across the F&O universe. Based on 5-year guidance-vs-delivery analysis.</p>
+  <div class="tr-stats" id="ts-stats">
+    <div class="tr-stat"><span class="tr-stat-label">Scored</span><span class="tr-stat-value" id="ts-total">—</span></div>
+    <div class="tr-stat"><span class="tr-stat-label">A+/A</span><span class="tr-stat-value" id="ts-strong">—</span></div>
+    <div class="tr-stat"><span class="tr-stat-label">Avg Score</span><span class="tr-stat-value" id="ts-avg">—</span></div>
+  </div>
+  <table class="positions-table">
+    <thead>
+      <tr>
+        <th>Stock</th><th>Grade</th><th>Score</th><th>Items</th><th>Delivery</th><th>Trajectory</th><th>Key Insight</th>
+      </tr>
+    </thead>
+    <tbody id="trust-scores-body">
       <tr><td colspan="7">Loading…</td></tr>
     </tbody>
   </table>
@@ -1562,6 +1586,49 @@ function renderNewsCard(n) {
 
 loadTodayRecs();
 setInterval(loadTodayRecs, 60000);
+</script>
+
+<!-- ═════════════ TRUST SCORES ═════════════ -->
+<script>
+async function loadTrustScores() {
+  try {
+    const res = await fetch('data/trust_scores.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const d = await res.json();
+    const stocks = d.stocks || [];
+    const tbody = document.getElementById('trust-scores-body');
+    if (!tbody) return;
+
+    document.getElementById('ts-total').textContent = d.total_scored || 0;
+    const strong = stocks.filter(s => s.trust_grade === 'A+' || s.trust_grade === 'A').length;
+    document.getElementById('ts-strong').textContent = strong;
+    const avg = stocks.length ? (stocks.reduce((a, s) => a + (s.trust_score || 0), 0) / stocks.length).toFixed(1) : '—';
+    document.getElementById('ts-avg').textContent = avg + '%';
+
+    const gradeOrder = {'A+':0,'A':1,'B+':2,'B':3,'C+':4,'C':5,'D':6,'F':7};
+    stocks.sort((a, b) => (gradeOrder[a.trust_grade] ?? 99) - (gradeOrder[b.trust_grade] ?? 99) || (b.trust_score || 0) - (a.trust_score || 0));
+
+    tbody.innerHTML = '';
+    stocks.forEach(s => {
+      const tb = trustBadge(s.trust_grade);
+      const scorePct = (s.trust_score || 0).toFixed(1) + '%';
+      const thesis = (s.thesis || '').substring(0, 120);
+      const row = document.createElement('tr');
+      row.innerHTML =
+        '<td><strong>' + s.symbol + '</strong></td>' +
+        '<td>' + renderBadge(tb, '') + '</td>' +
+        '<td>' + scorePct + '</td>' +
+        '<td>—</td>' +
+        '<td>—</td>' +
+        '<td>—</td>' +
+        '<td class="thesis-cell">' + thesis + '</td>';
+      tbody.appendChild(row);
+    });
+  } catch (e) {
+    console.warn('Trust scores load failed:', e);
+  }
+}
+loadTrustScores();
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════

@@ -266,6 +266,22 @@ def _build_news_recs() -> list:
     return out[:3]
 
 
+def _refresh_trust(sig: dict, fresh_trust: dict) -> dict:
+    """Rebuild trust_scores for a signal using fresh per-stock data."""
+    all_tickers = set()
+    for leg in sig.get("long_legs", []) + sig.get("short_legs", []):
+        all_tickers.add(leg["ticker"])
+    result = {}
+    for t in all_tickers:
+        if t in fresh_trust:
+            result[t] = fresh_trust[t]
+        else:
+            old = (sig.get("trust_scores") or {}).get(t)
+            if old:
+                result[t] = old
+    return result or sig.get("trust_scores")
+
+
 def export_live_status() -> dict:
     """Export current open positions for the live dashboard.
 
@@ -305,6 +321,13 @@ def export_live_status() -> dict:
             "pnl_pct": round(pnl_pct, 2),
         }
 
+    # Fresh trust score lookup (per-stock files, not stale signal data)
+    try:
+        from signal_enrichment import load_trust_scores
+        _fresh_trust = load_trust_scores()
+    except Exception:
+        _fresh_trust = {}
+
     positions = []
     for sig in open_sigs:
         dl = sig.get("_data_levels", {})
@@ -338,7 +361,7 @@ def export_live_status() -> dict:
             "two_day_stop": dl.get("two_day_stop", 0),
             "peak_pnl": peak,
             "source": sig.get("source", "SPREAD"),
-            "trust_scores": sig.get("trust_scores"),
+            "trust_scores": _refresh_trust(sig, _fresh_trust),
             "regime_rank": sig.get("regime_rank"),
             "correlation_breaks": sig.get("correlation_breaks"),
             "oi_anomalies": sig.get("oi_anomalies"),
@@ -431,6 +454,31 @@ def export_track_record(limit: int = 20) -> dict:
     }
 
 
+def export_trust_scores() -> dict:
+    """Export all OPUS trust scores as a standalone JSON for the website."""
+    try:
+        from signal_enrichment import load_trust_scores
+        scores = load_trust_scores()
+    except Exception:
+        scores = {}
+
+    stocks = []
+    for sym in sorted(scores):
+        s = scores[sym]
+        stocks.append({
+            "symbol": sym,
+            "trust_grade": s.get("trust_grade"),
+            "trust_score": s.get("trust_score"),
+            "thesis": (s.get("thesis") or "")[:200],
+        })
+
+    return {
+        "updated_at": datetime.now(IST).isoformat(),
+        "total_scored": len(stocks),
+        "stocks": stocks,
+    }
+
+
 def run_export():
     """Run full export to website JSON files."""
     WEBSITE_DIR.mkdir(parents=True, exist_ok=True)
@@ -439,12 +487,14 @@ def run_export():
     live = export_live_status()
     recs = export_today_recommendations()
     track = export_track_record()
+    trust = export_trust_scores()
 
     for name, data in [
         ("global_regime.json", regime),
         ("live_status.json", live),
         ("today_recommendations.json", recs),
         ("track_record.json", track),
+        ("trust_scores.json", trust),
     ]:
         path = WEBSITE_DIR / name
         path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
@@ -465,6 +515,7 @@ DEPLOY_FILES = [
     "data/live_status.json",
     "data/today_recommendations.json",
     "data/track_record.json",
+    "data/trust_scores.json",
     "data/gap_risk.json",
     "data/spread_stats.json",
     "data/articles_index.json",

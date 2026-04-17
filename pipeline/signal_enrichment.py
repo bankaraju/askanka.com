@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 
 TRUST_PATH = _REPO_ROOT / "opus" / "artifacts" / "model_portfolio.json"
+TRUST_SCORES_DIR = _REPO_ROOT / "opus" / "artifacts"
 BREAKS_PATH = _REPO_ROOT / "pipeline" / "data" / "correlation_breaks.json"
 REGIME_PROFILE_PATH = _REPO_ROOT / "pipeline" / "autoresearch" / "reverse_regime_profile.json"
 OI_ANOMALIES_PATH = _REPO_ROOT / "pipeline" / "data" / "oi_anomalies.json"
@@ -33,32 +34,62 @@ OI_ANOMALIES_PATH = _REPO_ROOT / "pipeline" / "data" / "oi_anomalies.json"
 
 def load_trust_scores(path: Path = TRUST_PATH) -> Dict[str, Dict]:
     """
-    Load OPUS Trust Scores from model_portfolio.json.
+    Load OPUS Trust Scores from per-stock trust_score.json files.
+
+    Primary source: opus/artifacts/{symbol}/trust_score.json (all scored stocks)
+    Fallback: model_portfolio.json (for opus_side and thesis fields)
 
     Returns a dict keyed by symbol:
         {trust_grade, trust_score, opus_side, thesis}
     """
+    result: Dict[str, Dict] = {}
+
+    # Primary: scan per-stock trust_score.json files
+    try:
+        for sym_dir in TRUST_SCORES_DIR.iterdir():
+            if not sym_dir.is_dir() or sym_dir.name == "transcripts":
+                continue
+            ts_path = sym_dir / "trust_score.json"
+            if not ts_path.exists():
+                continue
+            try:
+                data = json.loads(ts_path.read_text(encoding="utf-8"))
+                grade = data.get("trust_score_grade", "?")
+                if grade in ("?", "INSUFFICIENT_DATA", ""):
+                    continue
+                result[sym_dir.name] = {
+                    "trust_grade": grade,
+                    "trust_score": data.get("trust_score_pct", 0),
+                    "opus_side": None,
+                    "thesis": data.get("biggest_strength", ""),
+                }
+            except Exception:
+                continue
+    except Exception as exc:
+        logger.warning("load_trust_scores: scan failed — %s", exc)
+
+    # Overlay model_portfolio.json for opus_side and thesis
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
-        positions = raw.get("positions", [])
-        result: Dict[str, Dict] = {}
-        for pos in positions:
+        for pos in raw.get("positions", []):
             symbol = pos.get("symbol")
             if not symbol:
                 continue
-            result[symbol] = {
-                "trust_grade": pos.get("trust_grade"),
-                "trust_score": pos.get("trust_score"),
-                "opus_side": pos.get("side"),
-                "thesis": pos.get("thesis"),
-            }
-        return result
-    except FileNotFoundError:
-        logger.debug("load_trust_scores: file not found — %s", path)
-        return {}
-    except Exception as exc:
-        logger.warning("load_trust_scores: failed to load %s — %s", path, exc)
-        return {}
+            if symbol in result:
+                result[symbol]["opus_side"] = pos.get("side")
+                if pos.get("thesis"):
+                    result[symbol]["thesis"] = pos["thesis"]
+            else:
+                result[symbol] = {
+                    "trust_grade": pos.get("trust_grade"),
+                    "trust_score": pos.get("trust_score"),
+                    "opus_side": pos.get("side"),
+                    "thesis": pos.get("thesis"),
+                }
+    except Exception:
+        pass
+
+    return result
 
 
 def load_correlation_breaks(path: Path = BREAKS_PATH) -> Dict[str, Dict]:
