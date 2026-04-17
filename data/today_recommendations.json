@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-17T09:49:03.803989+05:30",
+  "updated_at": "2026-04-17T09:53:47.312425+05:30",
   "regime_zone": "NEUTRAL",
   "regime_source_timestamp": "2026-04-17T09:25:09.433535+05:30",
   "spreads": [],
@@ -17,28 +17,28 @@
       "hit_rate_meaningful": true
     },
     {
-      "ticker": "KPITTECH",
-      "direction": "SHORT",
-      "conviction": "LOW",
-      "trigger": "NEUTRAL",
+      "ticker": "KAYNES",
+      "direction": "LONG",
+      "conviction": "HIGH",
+      "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-17 09:29:58",
       "is_stale": false,
-      "hit_rate": 0.3333,
-      "episodes": 6,
-      "hit_rate_meaningful": true
+      "hit_rate": 1.0,
+      "episodes": 1,
+      "hit_rate_meaningful": false
     },
     {
-      "ticker": "IDFCFIRSTB",
-      "direction": "SHORT",
-      "conviction": "LOW",
-      "trigger": "NEUTRAL",
+      "ticker": "KAYNES",
+      "direction": "LONG",
+      "conviction": "HIGH",
+      "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-17 09:29:58",
       "is_stale": false,
-      "hit_rate": 0.1667,
-      "episodes": 6,
-      "hit_rate_meaningful": true
+      "hit_rate": 1.0,
+      "episodes": 1,
+      "hit_rate_meaningful": false
     }
   ],
   "news_driven": [],
