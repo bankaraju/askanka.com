@@ -452,6 +452,7 @@ def format_eod_track_record(
     scorecard: Dict[str, Any],
     macro_line: str = "",
     fii_line: str = "",
+    institutional_data: dict = None,
 ) -> str:
     """Format the daily EOD track record for Telegram (Signal Universe v2 spec)."""
     lines = [
