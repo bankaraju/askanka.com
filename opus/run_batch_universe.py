@@ -129,7 +129,8 @@ def run_score(symbols: list[str]):
         if ts_file.exists():
             try:
                 t = json.loads(ts_file.read_text(encoding="utf-8"))
-                if t.get("guidance_scored", 0) > 0:
+                grade = t.get("trust_score_grade", "?")
+                if t.get("guidance_scored", 0) > 0 and grade not in ("?", "", "INSUFFICIENT_DATA"):
                     real_done.add(sym)
             except Exception:
                 pass

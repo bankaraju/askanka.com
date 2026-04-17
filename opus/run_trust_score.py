@@ -811,6 +811,36 @@ def extract_narratives(symbol: str) -> list[dict]:
         except Exception as e:
             print(f"    → Error: {e}")
 
+    # Supplement with concall transcript guidance if AR extraction found < 5 items
+    ar_item_count = sum(len(n.get("guidance", n.get("claims", []))) for n in all_narratives)
+    if ar_item_count < 5:
+        concall_path = ARTIFACTS / symbol / "concall_text.txt"
+        if concall_path.exists():
+            concall_text = concall_path.read_text(encoding="utf-8", errors="replace")
+            if len(concall_text) > 2000:
+                print(f"    Supplementing with concall transcripts ({len(concall_text)//1024}KB)...")
+                try:
+                    concall_prompt = (
+                        NARRATIVE_EXTRACTION_PROMPT
+                        + "\n\n## EARNINGS CALL TRANSCRIPT TEXT\n\n"
+                        + concall_text[:80000]
+                    )
+                    response = call_llm(concall_prompt, max_tokens=8192, role="extraction")
+                    text = _extract_json_payload(response)
+                    parsed = json.loads(text)
+                    parsed["source_year"] = "concall"
+                    parsed["source_file"] = "concall_text.txt"
+                    items = parsed.get("guidance", parsed.get("claims", []))
+                    filtered = _filter_vague_guidance(items)
+                    parsed["guidance"] = filtered
+                    if filtered:
+                        all_narratives.append(parsed)
+                        print(f"    → {len(filtered)} concall items added (total now: {ar_item_count + len(filtered)})")
+                    else:
+                        print(f"    → 0 specific items from concall")
+                except Exception as e:
+                    print(f"    → Concall extraction error: {e}")
+
     return all_narratives
 
 
