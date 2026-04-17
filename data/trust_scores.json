@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-17T15:54:10.761404+05:30",
-  "total_scored": 71,
+  "updated_at": "2026-04-17T16:15:24.266490+05:30",
+  "total_scored": 86,
   "stocks": [
     {
       "symbol": "360ONE",
@@ -75,10 +75,40 @@
       "thesis": "The consistent delivery on dividend payouts, with both interim and final dividends for FY25 matching the guidance (Rs 19/- per share total), demonstrates reliability in shareholder returns. Additional"
     },
     {
+      "symbol": "ASHOKLEY",
+      "trust_grade": "C",
+      "trust_score": 45.6,
+      "thesis": "Ashok Leyland's consistent over-delivery and strong progress on environmental commitments, particularly in renewable energy. The renewable energy footprint rose from 61% in FY24 to 69% in FY25 and fur"
+    },
+    {
+      "symbol": "ASIANPAINT",
+      "trust_grade": "D",
+      "trust_score": 29.7,
+      "thesis": "The company's performance in water replenishment, achieving 478% in FY2024-25 against a 2025 target of 400% (19.5% variance), demonstrates a strong commitment and effective execution in water neutrali"
+    },
+    {
+      "symbol": "ASTRAL",
+      "trust_grade": "D",
+      "trust_score": 32.5,
+      "thesis": "Astral's biggest strength lies in its commitment and execution on capacity expansion and operational footprint. The successful commissioning of the Hyderabad plant, the gearing up of the Kanpur plant,"
+    },
+    {
+      "symbol": "AUBANK",
+      "trust_grade": "A",
+      "trust_score": 83.3,
+      "thesis": "The bank's consistent delivery on overall financial performance, including strong deposit and loan growth (23% and 19.3% YoY respectively in Q3 FY26), expanding ROA (1.6% in Q3 FY26), and improving as"
+    },
+    {
       "symbol": "AUROPHARMA",
       "trust_grade": "F",
       "trust_score": 9.6,
       "thesis": "The company demonstrates strong commitment and execution in certain sustainability metrics, notably exceeding its carbon footprint reduction target (22% actual vs 12.5% target by 2025) and consistentl"
+    },
+    {
+      "symbol": "AXISBANK",
+      "trust_grade": "A+",
+      "trust_score": 94.5,
+      "thesis": "The bank's significant over-achievement in 'incremental financing under Wholesale Banking to sectors with positive social and environmental outcomes', reaching \u20b948,412 crores by March 31, 2025, agains"
     },
     {
       "symbol": "BAJFINANCE",
@@ -87,10 +117,28 @@
       "thesis": "Consistent delivery and even exceeding of 'through the cycle' Return on Equity (ROE) targets. The company guided for 19-21% shareholder returns (FY23 AR) and 21-23% ROE (FY24 AR), and achieved 23.5% i"
     },
     {
+      "symbol": "BANDHANBNK",
+      "trust_grade": "F",
+      "trust_score": 0.0,
+      "thesis": "While not a 'strength' in terms of exceeding targets, management's proactive communication regarding the challenges in the EEB segment and the implementation of guardrails, along with efforts to diver"
+    },
+    {
+      "symbol": "BANKBARODA",
+      "trust_grade": "A+",
+      "trust_score": 99.0,
+      "thesis": "Bank of Baroda's consistent delivery on critical financial performance metrics, particularly net profit (standalone INR 19,581 crore, consolidated INR 20,865 crore for FY2025) and asset quality (GNPA "
+    },
+    {
       "symbol": "BANKINDIA",
       "trust_grade": "F",
       "trust_score": 6.0,
       "thesis": "The bank's ability to exceed its target for new digital products launched (25 products live vs 20 targeted for FY24-25) demonstrates a strong capability in product development and platform implementat"
+    },
+    {
+      "symbol": "BEL",
+      "trust_grade": "C",
+      "trust_score": 55.0,
+      "thesis": "BEL's biggest strength lies in its consistent ability to exceed its EBITDA margin guidance. For FY2025-26, management guided for 27% EBITDA margin but achieved 30% (Screener TTM), demonstrating strong"
     },
     {
       "symbol": "BHARATFORG",
@@ -99,10 +147,52 @@
       "thesis": "The biggest strength is the consistent delivery on the immediate environmental target of 'over 37% of our electricity came from renewable sources' in FY2025, which was explicitly stated and met. This "
     },
     {
+      "symbol": "BHARTIARTL",
+      "trust_grade": "D",
+      "trust_score": 20.0,
+      "thesis": "The company's strong execution on its FWA rollout, achieving 'nationwide rollout' (live in over 3,200 cities by Q3 FY2025-26) by the target year FY2024-25, demonstrates effective operational deploymen"
+    },
+    {
+      "symbol": "BHEL",
+      "trust_grade": "B",
+      "trust_score": 65.6,
+      "thesis": "BHEL's biggest strength lies in its ability to secure and execute large power sector orders, significantly exceeding its own guidance for order inflow and total order book. For FY2024-25, the company "
+    },
+    {
+      "symbol": "BIOCON",
+      "trust_grade": "C",
+      "trust_score": 44.0,
+      "thesis": "The successful and accelerated integration of Viatris' emerging markets business (70+ countries by July 2023, ahead of the two-year plan) demonstrates strong execution capabilities in a critical strat"
+    },
+    {
       "symbol": "BLUESTARCO",
       "trust_grade": "C",
       "trust_score": 53.0,
       "thesis": "Blue Star's ability to consistently meet or exceed its revenue growth targets (FY24 growth of 23.6% vs 15% target) and maintain market share (13.5% in Q1FY24, 13.75% in Q1FY25) in a volatile market, c"
+    },
+    {
+      "symbol": "BOSCHLTD",
+      "trust_grade": "C",
+      "trust_score": 48.8,
+      "thesis": "Bosch demonstrated strong execution in meeting the BS6 OBD II Stage B regulation readiness by April 2025, leading to a 'successful production ramp-up of OBD-II requirements' and a 'landmark year for o"
+    },
+    {
+      "symbol": "BPCL",
+      "trust_grade": "D",
+      "trust_score": 24.9,
+      "thesis": "The company demonstrates a strong commitment to its overall capital expenditure plan, with 'I 1.4 Lakh crore committed out of I 1.7 Lakh crore planned' for Project Aspire as of March 31, 2025 (FY2024-"
+    },
+    {
+      "symbol": "BRITANNIA",
+      "trust_grade": "D",
+      "trust_score": 33.3,
+      "thesis": "The company's consistent achievement of plastic neutrality for four consecutive years (FY2024-25 AR, other_key_numbers) and the reported successful implementation of Energy Management Systems in 6 fac"
+    },
+    {
+      "symbol": "BSE",
+      "trust_grade": "A+",
+      "trust_score": 92.5,
+      "thesis": "The company's biggest strength lies in its consistent delivery and expansion of its StAR MF platform and overall market participation. BSE StAR MF transactions grew to 66.3 Crore in FY24-25 and furthe"
     },
     {
       "symbol": "CANBK",

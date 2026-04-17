@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-17T15:54:10.676641+05:30",
+  "updated_at": "2026-04-17T16:15:24.126994+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -31,8 +31,8 @@
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2581.5,
-          "pnl_pct": -0.37
+          "current": 2583.6,
+          "pnl_pct": -0.45
         },
         {
           "ticker": "INFY",
@@ -59,6 +59,12 @@
           "trust_score": 69.5,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "BEL": {
+          "trust_grade": "C",
+          "trust_score": 55.0,
+          "opus_side": null,
+          "thesis": "BEL's biggest strength lies in its consistent ability to exceed its EBITDA margin guidance. For FY2025-26, management guided for 27% EBITDA margin but achieved 30% (Screener TTM), demonstrating strong operational efficiency and favorable product mix management, even amidst revenue growth challenges."
         }
       },
       "regime_rank": {
