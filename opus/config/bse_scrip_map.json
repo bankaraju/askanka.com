@@ -1,0 +1,271 @@
+{
+  "resolved_at": "2026-04-17T11:28:32.258649+05:30",
+  "count": 53,
+  "mappings": {
+    "HAL": {
+      "bse_scrip": "541154",
+      "company_name": "HAL",
+      "isin": ""
+    },
+    "BEL": {
+      "bse_scrip": "500049",
+      "company_name": "BEL",
+      "isin": ""
+    },
+    "BDL": {
+      "bse_scrip": "541143",
+      "company_name": "BDL",
+      "isin": ""
+    },
+    "BHARATFORGE": {
+      "bse_scrip": "500493",
+      "company_name": "BHARATFORGE",
+      "isin": ""
+    },
+    "DATAPATTNS": {
+      "bse_scrip": "543232",
+      "company_name": "DATAPATTNS",
+      "isin": ""
+    },
+    "TCS": {
+      "bse_scrip": "532540",
+      "company_name": "TCS",
+      "isin": ""
+    },
+    "INFY": {
+      "bse_scrip": "500209",
+      "company_name": "INFY",
+      "isin": ""
+    },
+    "WIPRO": {
+      "bse_scrip": "507685",
+      "company_name": "WIPRO",
+      "isin": ""
+    },
+    "HCLTECH": {
+      "bse_scrip": "532281",
+      "company_name": "HCLTECH",
+      "isin": ""
+    },
+    "LTIM": {
+      "bse_scrip": "540005",
+      "company_name": "LTIM",
+      "isin": ""
+    },
+    "TECHM": {
+      "bse_scrip": "532755",
+      "company_name": "TECHM",
+      "isin": ""
+    },
+    "ONGC": {
+      "bse_scrip": "500312",
+      "company_name": "ONGC",
+      "isin": ""
+    },
+    "COALINDIA": {
+      "bse_scrip": "533278",
+      "company_name": "COALINDIA",
+      "isin": ""
+    },
+    "OIL": {
+      "bse_scrip": "533106",
+      "company_name": "OIL",
+      "isin": ""
+    },
+    "GAIL": {
+      "bse_scrip": "532155",
+      "company_name": "GAIL",
+      "isin": ""
+    },
+    "BPCL": {
+      "bse_scrip": "500547",
+      "company_name": "BPCL",
+      "isin": ""
+    },
+    "HINDPETRO": {
+      "bse_scrip": "500104",
+      "company_name": "HINDPETRO",
+      "isin": ""
+    },
+    "IOC": {
+      "bse_scrip": "530965",
+      "company_name": "IOC",
+      "isin": ""
+    },
+    "HDFCBANK": {
+      "bse_scrip": "500180",
+      "company_name": "HDFCBANK",
+      "isin": ""
+    },
+    "ICICIBANK": {
+      "bse_scrip": "532174",
+      "company_name": "ICICIBANK",
+      "isin": ""
+    },
+    "KOTAKBANK": {
+      "bse_scrip": "500247",
+      "company_name": "KOTAKBANK",
+      "isin": ""
+    },
+    "AXISBANK": {
+      "bse_scrip": "532215",
+      "company_name": "AXISBANK",
+      "isin": ""
+    },
+    "INDUSINDBK": {
+      "bse_scrip": "532187",
+      "company_name": "INDUSINDBK",
+      "isin": ""
+    },
+    "BANDHANBNK": {
+      "bse_scrip": "541153",
+      "company_name": "BANDHANBNK",
+      "isin": ""
+    },
+    "SBIN": {
+      "bse_scrip": "500112",
+      "company_name": "SBIN",
+      "isin": ""
+    },
+    "BANKBARODA": {
+      "bse_scrip": "532134",
+      "company_name": "BANKBARODA",
+      "isin": ""
+    },
+    "PNB": {
+      "bse_scrip": "532461",
+      "company_name": "PNB",
+      "isin": ""
+    },
+    "CANBK": {
+      "bse_scrip": "532483",
+      "company_name": "CANBK",
+      "isin": ""
+    },
+    "SUNPHARMA": {
+      "bse_scrip": "524715",
+      "company_name": "SUNPHARMA",
+      "isin": ""
+    },
+    "DRREDDY": {
+      "bse_scrip": "500124",
+      "company_name": "DRREDDY",
+      "isin": ""
+    },
+    "CIPLA": {
+      "bse_scrip": "500087",
+      "company_name": "CIPLA",
+      "isin": ""
+    },
+    "DIVISLAB": {
+      "bse_scrip": "532488",
+      "company_name": "DIVISLAB",
+      "isin": ""
+    },
+    "AUROPHARMA": {
+      "bse_scrip": "524804",
+      "company_name": "AUROPHARMA",
+      "isin": ""
+    },
+    "TATAMOTORS": {
+      "bse_scrip": "500570",
+      "company_name": "TATAMOTORS",
+      "isin": ""
+    },
+    "M&M": {
+      "bse_scrip": "500520",
+      "company_name": "M&M",
+      "isin": ""
+    },
+    "MARUTI": {
+      "bse_scrip": "532500",
+      "company_name": "MARUTI",
+      "isin": ""
+    },
+    "BAJAJ-AUTO": {
+      "bse_scrip": "532977",
+      "company_name": "BAJAJ-AUTO",
+      "isin": ""
+    },
+    "HEROMOTOCO": {
+      "bse_scrip": "500182",
+      "company_name": "HEROMOTOCO",
+      "isin": ""
+    },
+    "EICHERMOT": {
+      "bse_scrip": "505200",
+      "company_name": "EICHERMOT",
+      "isin": ""
+    },
+    "TATASTEEL": {
+      "bse_scrip": "500470",
+      "company_name": "TATASTEEL",
+      "isin": ""
+    },
+    "JSWSTEEL": {
+      "bse_scrip": "500228",
+      "company_name": "JSWSTEEL",
+      "isin": ""
+    },
+    "HINDALCO": {
+      "bse_scrip": "500440",
+      "company_name": "HINDALCO",
+      "isin": ""
+    },
+    "VEDL": {
+      "bse_scrip": "500295",
+      "company_name": "VEDL",
+      "isin": ""
+    },
+    "NMDC": {
+      "bse_scrip": "526371",
+      "company_name": "NMDC",
+      "isin": ""
+    },
+    "HINDUNILVR": {
+      "bse_scrip": "500696",
+      "company_name": "HINDUNILVR",
+      "isin": ""
+    },
+    "ITC": {
+      "bse_scrip": "500875",
+      "company_name": "ITC",
+      "isin": ""
+    },
+    "NESTLEIND": {
+      "bse_scrip": "500790",
+      "company_name": "NESTLEIND",
+      "isin": ""
+    },
+    "BRITANNIA": {
+      "bse_scrip": "500825",
+      "company_name": "BRITANNIA",
+      "isin": ""
+    },
+    "DABUR": {
+      "bse_scrip": "500096",
+      "company_name": "DABUR",
+      "isin": ""
+    },
+    "LT": {
+      "bse_scrip": "500510",
+      "company_name": "LT",
+      "isin": ""
+    },
+    "SIEMENS": {
+      "bse_scrip": "500550",
+      "company_name": "SIEMENS",
+      "isin": ""
+    },
+    "ABB": {
+      "bse_scrip": "500002",
+      "company_name": "ABB",
+      "isin": ""
+    },
+    "BHEL": {
+      "bse_scrip": "500103",
+      "company_name": "BHEL",
+      "isin": ""
+    }
+  }
+}
