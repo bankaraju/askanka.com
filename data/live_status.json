@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-17T09:30:27.253744+05:30",
+  "updated_at": "2026-04-17T09:31:30.970804+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,14 +11,14 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4380.0,
-          "pnl_pct": 2.22
+          "current": 4397.5,
+          "pnl_pct": 2.63
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 458.0,
-          "pnl_pct": 1.81
+          "current": 458.5,
+          "pnl_pct": 1.92
         },
         {
           "ticker": "BDL",
@@ -31,20 +31,20 @@
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2567.6,
-          "pnl_pct": 0.17
+          "current": 2567.4,
+          "pnl_pct": 0.18
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1312.8,
-          "pnl_pct": 0.7
+          "current": 1313.5,
+          "pnl_pct": 0.65
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 203.37,
-          "pnl_pct": 4.51
+          "current": 204.35,
+          "pnl_pct": 4.05
         }
       ],
       "spread_pnl_pct": 1.26,
@@ -53,11 +53,98 @@
       "two_day_stop": -1.96,
       "peak_pnl": 1.26,
       "source": "SPREAD",
-      "trust_scores": null,
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
+      "trust_scores": {
+        "HAL": {
+          "trust_grade": "A",
+          "trust_score": 80,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "BEL": null,
+        "BDL": null,
+        "TCS": null,
+        "INFY": null,
+        "WIPRO": null
+      },
+      "regime_rank": {
+        "HAL": {
+          "episode_count": 35,
+          "tradeable_rate": 0.9412,
+          "persistence_rate": 0.3824,
+          "hit_rate": 0.5,
+          "avg_drift_1d": 0.000936
+        },
+        "BEL": {
+          "episode_count": 35,
+          "tradeable_rate": 0.8235,
+          "persistence_rate": 0.4706,
+          "hit_rate": 0.6176,
+          "avg_drift_1d": 0.002941
+        },
+        "BDL": {
+          "episode_count": 35,
+          "tradeable_rate": 0.8824,
+          "persistence_rate": 0.5588,
+          "hit_rate": 0.5882,
+          "avg_drift_1d": 0.002958
+        },
+        "TCS": {
+          "episode_count": 35,
+          "tradeable_rate": 0.7941,
+          "persistence_rate": 0.4706,
+          "hit_rate": 0.3235,
+          "avg_drift_1d": -0.000227
+        },
+        "INFY": {
+          "episode_count": 35,
+          "tradeable_rate": 0.7941,
+          "persistence_rate": 0.4706,
+          "hit_rate": 0.5,
+          "avg_drift_1d": -0.001396
+        },
+        "WIPRO": {
+          "episode_count": 35,
+          "tradeable_rate": 0.8235,
+          "persistence_rate": 0.6176,
+          "hit_rate": 0.5588,
+          "avg_drift_1d": -0.001946
+        }
+      },
+      "correlation_breaks": {
+        "HAL": null,
+        "BEL": null,
+        "BDL": null,
+        "TCS": null,
+        "INFY": null,
+        "WIPRO": null
+      },
+      "oi_anomalies": {
+        "HAL": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.4922,
+          "sentiment": "BEARISH",
+          "oi_change": 597900,
+          "pcr_flip": false
+        },
+        "BEL": null,
+        "BDL": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.4321,
+          "sentiment": "BEARISH",
+          "oi_change": 415800,
+          "pcr_flip": false
+        },
+        "TCS": null,
+        "INFY": null,
+        "WIPRO": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.2775,
+          "sentiment": "BEARISH",
+          "oi_change": 16443000,
+          "pcr_flip": false
+        }
+      },
+      "conviction_score": 49.405,
       "gate_reason": null
     }
   ],
