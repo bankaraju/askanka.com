@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anka Research | Data-Driven Spread Trading Signals</title>
-    <meta name="description" content="Live market intelligence dashboard for Indian equity spread trading. AI-powered geopolitical signal detection across 25 spread pairs.">
-    <meta property="og:title" content="Anka Research | Data-Driven Spread Trading Signals">
-    <meta property="og:description" content="Live spread trading signals for Indian equities. 25 pairs, 18 event categories, fully automated pipeline.">
+    <title>Anka Research | Algorithmic Intelligence for Indian Markets</title>
+    <meta name="description" content="Proprietary AI-driven market research combining forensic financial analysis, global regime modelling, and technical fingerprinting for Indian equities.">
+    <meta property="og:title" content="Anka Research | Algorithmic Intelligence for Indian Markets">
+    <meta property="og:description" content="Where numbers, news, and sentiment converge. AI-powered research for the Indian F&O universe.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://askanka.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -946,7 +946,6 @@
     <div class="hero-content">
         <div class="logo-badge">
             <svg width="42" height="42" viewBox="0 0 100 100" fill="none">
-                <!-- Phoenix / Anka bird mark -->
                 <path d="M50 8 C35 8, 20 20, 18 38 C16 52, 22 62, 30 70 L25 88 C25 88, 38 78, 50 78 C62 78, 75 88, 75 88 L70 70 C78 62, 84 52, 82 38 C80 20, 65 8, 50 8Z" fill="url(#phoenix-grad)" opacity="0.9"/>
                 <path d="M50 18 C42 18, 34 26, 33 36 C32 44, 36 50, 42 56 L50 68 L58 56 C64 50, 68 44, 67 36 C66 26, 58 18, 50 18Z" fill="#0a0e1a" opacity="0.6"/>
                 <path d="M44 36 C44 33, 47 30, 50 30 C53 30, 56 33, 56 36 C56 40, 53 42, 50 42 C47 42, 44 40, 44 36Z" fill="#d4a855"/>
@@ -954,285 +953,127 @@
             </svg>
         </div>
         <h1 class="hero-title">Anka Research</h1>
-        <p class="hero-tagline">Where Geopolitics Meets Indian Equities</p>
-        <p class="hero-subtitle">AI-powered global regime detection and spread trading signals. 31 ETFs across 8 asset classes feed a single regime score every morning before Indian markets open.</p>
+        <p class="hero-tagline">Algorithmic Intelligence for Indian Markets</p>
+        <p class="hero-subtitle">We built a proprietary model that reads numbers, news, and sentiment simultaneously. It sees what humans miss and moves before narratives form.</p>
 
         <div class="hero-stats">
-            <div class="hero-stat"><div class="hero-stat-value">31</div><div class="hero-stat-label">Global ETFs Tracked</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">716</div><div class="hero-stat-label">Days Backtested</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">62.3%</div><div class="hero-stat-label">Directional Accuracy</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">Regime Zones</div></div>
+            <div class="hero-stat"><div class="hero-stat-value" id="ats-value">--</div><div class="hero-stat-label">Anka Trust Score</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">213</div><div class="hero-stat-label">Stocks Under Lens</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">5yr</div><div class="hero-stat-label">Backtest Depth</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">Live</div><div class="hero-stat-label">Shadow Trading</div></div>
         </div>
 
     </div>
 </section>
 
-<!-- Global Regime Score Hero -->
-<section id="regime-hero" class="hero-block">
-  <div class="hero-grid">
-    <div class="zone-badge" id="regime-zone">—</div>
-    <div class="zone-detail">
-      <div class="score-line">Score: <span id="regime-score">—</span></div>
-      <div class="stability-line" id="regime-stability">—</div>
-      <div class="updated-line">Updated: <span id="regime-updated">—</span></div>
-    </div>
-    <div class="drivers-list">
-      <div class="drivers-title">Top drivers</div>
-      <ol id="regime-drivers"><li>loading…</li></ol>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ F&O STOCK NEWS SCROLL ══════════════ -->
-<div class="news-scroll-section" id="news-scroll-section" style="display:none;">
-    <div class="container" style="padding-top:16px; padding-bottom:0;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-            <h3 style="font-family:'DM Serif Display',Georgia,serif; font-size:18px; color:#f1f5f9; margin:0;">Stock News</h3>
-            <span class="badge badge-live" style="font-size:10px;"><span class="live-dot" style="width:5px;height:5px;margin-right:2px;"></span> LIVE</span>
-            <span id="news-count" style="font-size:11px; color:#64748b; font-family:'JetBrains Mono',monospace;"></span>
-        </div>
-    </div>
-    <div class="news-scroll-track">
-        <div class="news-scroll-inner" id="news-scroll-inner">
-            <!-- Populated by JS -->
-        </div>
-    </div>
-</div>
-
-<!-- ══════════════ HOW THIS WORKS ══════════════ -->
+<!-- ══════════════ THE MODEL ══════════════ -->
 <div class="container">
     <section class="section" style="padding-bottom:0;">
-        <div style="background: rgba(212,168,85,0.06); border: 1px solid rgba(212,168,85,0.12); border-radius: 12px; padding: 24px 28px; margin-bottom: 0;">
-            <h3 style="font-family:'DM Serif Display',serif; font-size:18px; color:#d4a855; margin-bottom:12px;">How the Global Regime Score Works</h3>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; font-size:14px; color:#9ca3af; line-height:1.6;">
+        <div style="background: rgba(212,168,85,0.06); border: 1px solid rgba(212,168,85,0.12); border-radius: 12px; padding: 32px 28px;">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px; font-size:15px; color:#9ca3af; line-height:1.7;">
                 <div>
-                    <strong style="color:#e5e7eb;">1. Overnight Global Scan</strong><br>
-                    Every morning at 4:30 AM IST, before Indian markets open, the engine reads what happened overnight across 31 global ETFs &mdash; credit appetite (HYG), equity flows (SPY, EEM), volatility (VIX), currencies (UUP, FXY), and commodities (USO, GLD).
+                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">Numbers tell one story.</strong><br>
+                    We read five years of financial data for every stock in the F&amp;O universe. Not just ratios &mdash; what management promised vs. what they actually delivered. The gap between words and numbers is where the edge lives.
                 </div>
                 <div>
-                    <strong style="color:#e5e7eb;">2. Data-Driven Weights</strong><br>
-                    Each ETF's weight was determined by 2,000 automated experiments (not hand-picked). The strongest predictor of Indian markets isn't the S&amp;P 500 &mdash; it's <span style="color:#d4a855;">high-yield corporate bonds</span>. When global credit appetite is strong, India follows the next day.
+                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">News tells another.</strong><br>
+                    Global events don’t arrive pre-labelled as "bullish" or "bearish." Our system classifies them in real time, measures their historical impact, and knows which sectors move before the market digests the headline.
                 </div>
                 <div>
-                    <strong style="color:#e5e7eb;">3. Five Regime Zones</strong><br>
-                    The composite score maps to five zones: <span style="color:#ef4444;">RISK-OFF</span> (15% up rate), CAUTION (38%), <span style="color:#f59e0b;">NEUTRAL</span> (55%), <span style="color:#10b981;">RISK-ON</span> (72%), and <span style="color:#10b981;">EUPHORIA</span> (82% up rate). We only trade when the signal is in the extremes.
+                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">Sentiment completes it.</strong><br>
+                    Positioning data, options flow, and technical patterns for each individual stock &mdash; backtested across thousands of occurrences. Not generic indicators. Stock-specific fingerprints that reveal when a name is coiling for a move.
                 </div>
                 <div>
-                    <strong style="color:#e5e7eb;">4. Validation</strong><br>
-                    62.3% directional accuracy across 716 days. Outperforms 100% of random weight simulations. Confirmed by 12-fold walk-forward cross-validation. Currently in live shadow validation through May 5, 2026. <a href="research/autoresearch.html" style="color:#d4a855; text-decoration:none;">Full research paper &rarr;</a>
+                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">One model. Three signals. Zero guesswork.</strong><br>
+                    The Anka Trust Score synthesises all three layers into a single daily reading for Indian markets. We are currently shadow trading this model and will publish verified results on <strong style="color:#f1f5f9;">June 1, 2026</strong>.
                 </div>
             </div>
         </div>
     </section>
 </div>
+
+    <hr class="section-divider">
 
 <!-- ══════════════ ARTICLES ══════════════ -->
 <div class="container">
     <section class="section">
         <div class="section-header">
-            <h2>Today's Intelligence</h2>
+            <h2>Today’s Intelligence</h2>
             <span class="badge badge-live">Daily</span>
         </div>
         <div class="reports-grid">
-            <a href="articles/2026-04-11-war.html" class="report-card" style="border-top: 2px solid #ef4444;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">GEOPOLITICAL ANALYSIS</div>
-                <h3>Hormuz Chokehold Tightens: Trump's Retreat Fuels Oil Anarchy, India Pays The Price</h3>
-                <p>The 'Trump Cancelled Attack' narrative, despite US bombs raining down on Iran’s energy infrastructure Source: ET Now World, is a dangerous c</p>
-                <div class="report-date mono">April 11, 2026</div>
-            </a>
-            <a href="articles/2026-04-11-epstein.html" class="report-card" style="border-top: 2px solid #d4a855;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">INVESTIGATION</div>
-                <h3>Melania's Epstein Fumble: A High-Stakes Bet Against Disclosure, With Indian Capital at Risk</h3>
-                <p>April 11, 2026 – The walls are closing in, and Melania Trump’s latest foray into the Epstein discourse isn't just a misstep; it’s a desperat</p>
-                <div class="report-date mono">April 11, 2026</div>
-            </a>
-            <a href="research/hal-pattern-premium.html" class="report-card" style="border-top: 2px solid #10b981;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; font-weight:700; margin-bottom:10px;">Pattern Premium</div>
-                <h3>HAL Forensic Research: Order Book Fantasy vs Production Reality</h3>
-                <p>8 annual reports. 15 forensic ratios. Order book 1.89L Cr but production dropped 46%. Street says Rs 4,500. Our forensics: Rs 3,050-3,375.</p>
-                <div class="report-date mono">April 8, 2026</div>
-            </a>
-            <a href="research/autoresearch.html" class="report-card" style="border-top: 2px solid #10b981;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; font-weight:700; margin-bottom:10px;">Research Paper</div>
-                <h3>AutoResearch: How AI Fixed Our Broken ML Model Overnight</h3>
-                <p>74 autonomous experiments. F1 score: 3.8% to 32.3%. How anomaly detection outperforms classification for rare-event detection.</p>
-                <div class="report-date mono">April 5, 2026</div>
-            </a>
+            <!-- Populated dynamically from articles_index.json -->
         </div>
     </section>
 
     <hr class="section-divider">
 
-    <!-- ══════════════ REPORTS ══════════════ -->
     <section class="section">
         <div class="section-header">
-            <h2 style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';">Library &amp; Archive</h2>
-            <span class="badge badge-count" style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';this.textContent=g.style.display==='none'?'Show':'Hide';">Show</span>
-            <!-- Remove the original badge below -->
+            <h2 style="cursor:pointer;" onclick="var g=document.getElementById(‘library-grid’);g.style.display=g.style.display===’none’?’grid’:’none’;">Library &amp; Archive</h2>
+            <span class="badge badge-count" style="cursor:pointer;" onclick="var g=document.getElementById(‘library-grid’);g.style.display=g.style.display===’none’?’grid’:’none’;this.textContent=g.style.display===’none’?’Show’:’Hide’;">Show</span>
         </div>
         <div class="reports-grid" id="library-grid" style="display:none;">
-            <a href="articles/2026-04-10-war.html" class="report-card" style="border-top: 2px solid #ef4444;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">GEOPOLITICAL ANALYSIS</div>
-                <h3>Hormuz Holds Hostage: US-Iran 'Ceasefire' a Sham as Oil War Escalates</h3>
-                <p>The 'ceasefire' between the US and Iran, a fragile construct championed by UK PM Keir Starmer in his Gulf tour Source: Al Jazeera English, i</p>
-                <div class="report-date mono">April 10, 2026</div>
-            </a>
-            <a href="articles/2026-04-10-epstein.html" class="report-card" style="border-top: 2px solid #d4a855;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">INVESTIGATION</div>
-                <h3>Melania's Desperate Denials and the Enduring Silence on Epstein's Indian Connections</h3>
-                <p>April 10, 2026 – The stench of panic is palpable. Melania Trump's recent public plea for 'rumours linking her to Epstein' to 'need to stop' </p>
-                <div class="report-date mono">April 10, 2026</div>
-            </a>
-            <a href="articles/2026-04-09-war.html" class="report-card" style="border-top: 2px solid #ef4444;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">Geopolitical Analysis</div>
-                <h3>Trump's Iran Ceasefire is a Strategic Retreat — and India's Oil Markets Just Woke Up to the Risk</h3>
-                <p>The Trump administration's abrupt pivot to a 14-day ceasefire with Iran marks a humbling recalibration of American power.</p>
-                <div class="report-date mono">April 9, 2026</div>
-            </a>
-            <a href="articles/2026-04-09-epstein.html" class="report-card" style="border-top: 2px solid #d4a855;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Investigation</div>
-                <h3>Bondi's Epstein Escape: How Trump's AG Dodges Deposition While DOJ Crumbles</h3>
-                <p>Attorney General Pam Bondi is running — literally refusing to appear for depositions tied to the Epstein case.</p>
-                <div class="report-date mono">April 9, 2026</div>
-            </a>
-            <a href="articles/2026-04-08-war-ceasefire-fresh.html" class="report-card" style="border-top: 2px solid #ef4444;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">War Analysis</div>
-                <h3>Forced Retreat: Trump's Iran War Implodes as Military Abandons Command</h3>
-                <div class="report-date mono">April 8, 2026</div>
-            </a>
-            <a href="articles/2026-04-08-war-collapse-fresh.html" class="report-card" style="border-top: 2px solid #ef4444;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#ef4444; font-weight:700; margin-bottom:10px;">War Analysis</div>
-                <h3>Military Mutiny: 25th Amendment Demands as Bases Abandoned</h3>
-                <div class="report-date mono">April 8, 2026</div>
-            </a>
-            <a href="articles/2026-04-08-epstein-bondi-fired.html" class="report-card" style="border-top: 2px solid #d4a855;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Investigation</div>
-                <h3>Trump Fires AG Bondi Over Epstein Files</h3>
-                <div class="report-date mono">April 8, 2026</div>
-            </a>
-            <a href="articles/2026-04-08-epstein-3point5million.html" class="report-card" style="border-top: 2px solid #d4a855;">
-                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#d4a855; font-weight:700; margin-bottom:10px;">Investigation</div>
-                <h3>3.5 Million Pages, Zero Handcuffs</h3>
-                <div class="report-date mono">April 8, 2026</div>
-            </a>
         </div>
     </section>
-
-    <hr class="section-divider">
-
-<!-- Today's Recommendations (Wave 2) -->
-<section id="today-recs" class="recs-block">
-  <h2 class="block-title">Today's Recommendations</h2>
-  <div class="recs-grid">
-    <div class="rec-column">
-      <div class="rec-header">Spread Trades</div>
-      <div class="rec-cards" id="recs-spreads"><div class="rec-empty">Loading…</div></div>
-    </div>
-    <div class="rec-column">
-      <div class="rec-header">Standalone Stocks</div>
-      <div class="rec-cards" id="recs-stocks"><div class="rec-empty">Loading…</div></div>
-    </div>
-    <div class="rec-column">
-      <div class="rec-header">News-Driven</div>
-      <div class="rec-cards" id="recs-news"><div class="rec-empty">Loading…</div></div>
-    </div>
-  </div>
-</section>
-
-    <hr class="section-divider">
-
-<!-- ══════════════ LIVE POSITIONS ══════════════ -->
-<section id="live-positions" class="positions-block">
-  <h2 class="block-title">Live Positions</h2>
-  <table class="positions-table">
-    <thead>
-      <tr>
-        <th>Spread</th><th>Open</th><th>Today's move</th><th>Cumulative</th><th>Peak</th><th>Enrichment</th>
-      </tr>
-    </thead>
-    <tbody id="positions-body">
-      <tr><td colspan="5">Loading…</td></tr>
-    </tbody>
-  </table>
-</section>
 
     <hr class="section-divider">
 
 <!-- ══════════════ TRACK RECORD ══════════════ -->
 <section id="track-record" class="positions-block">
-  <h2 class="block-title">Track Record</h2>
-  <p class="tr-subtitle">Every closed spread. Win/loss, how long it ran, and why it exited.</p>
+  <h2 class="block-title">Shadow Trading Record</h2>
+  <p class="tr-subtitle">Live model validation. Every position tracked from entry to exit with real market prices.</p>
   <div class="tr-stats" id="tr-stats">
-    <div class="tr-stat"><span class="tr-stat-label">Closed</span><span class="tr-stat-value" id="tr-total">—</span></div>
-    <div class="tr-stat"><span class="tr-stat-label">Win rate</span><span class="tr-stat-value" id="tr-winrate">—</span></div>
-    <div class="tr-stat"><span class="tr-stat-label">Avg P&amp;L</span><span class="tr-stat-value" id="tr-avg">—</span></div>
+    <div class="tr-stat"><span class="tr-stat-label">Closed</span><span class="tr-stat-value" id="tr-total">--</span></div>
+    <div class="tr-stat"><span class="tr-stat-label">Win rate</span><span class="tr-stat-value" id="tr-winrate">--</span></div>
+    <div class="tr-stat"><span class="tr-stat-label">Avg P&amp;L</span><span class="tr-stat-value" id="tr-avg">--</span></div>
   </div>
   <table class="positions-table">
     <thead>
       <tr>
-        <th>Spread</th><th>Open</th><th>Close</th><th>Days</th><th>Peak</th><th>Final</th><th>Why closed</th>
+        <th>Strategy</th><th>Open</th><th>Close</th><th>Days</th><th>Peak</th><th>Final</th><th>Exit reason</th>
       </tr>
     </thead>
     <tbody id="track-record-body">
-      <tr><td colspan="7">Loading…</td></tr>
+      <tr><td colspan="7">Shadow trading commenced April 2026. Full results published June 1.</td></tr>
     </tbody>
   </table>
 </section>
 
     <hr class="section-divider">
 
-<!-- ══════════════ TRUST SCORES ══════════════ -->
-<section id="trust-scores" class="positions-block">
-  <h2 class="block-title">ANKA Trust Scores</h2>
-  <p class="tr-subtitle">Management credibility scores across the F&O universe. Based on 5-year guidance-vs-delivery analysis.</p>
-  <div class="tr-stats" id="ts-stats">
-    <div class="tr-stat"><span class="tr-stat-label">Scored</span><span class="tr-stat-value" id="ts-total">—</span></div>
-    <div class="tr-stat"><span class="tr-stat-label">A+/A</span><span class="tr-stat-value" id="ts-strong">—</span></div>
-    <div class="tr-stat"><span class="tr-stat-label">Avg Score</span><span class="tr-stat-value" id="ts-avg">—</span></div>
-  </div>
-  <table class="positions-table">
-    <thead>
-      <tr>
-        <th>Stock</th><th>Grade</th><th>Score</th><th>Items</th><th>Delivery</th><th>Trajectory</th><th>Key Insight</th>
-      </tr>
-    </thead>
-    <tbody id="trust-scores-body">
-      <tr><td colspan="7">Loading…</td></tr>
-    </tbody>
-  </table>
-</section>
-
-    <hr class="section-divider">
-
-    <!-- ══════════════ HOW IT WORKS ══════════════ -->
+<!-- ══════════════ ABOUT ══════════════ -->
     <section class="section">
-        <div class="section-header">
-            <h2>How It Works</h2>
+        <div style="max-width:720px; margin:0 auto;">
+            <h2 style="font-family:'DM Serif Display',serif; font-size:26px; color:#f1f5f9; margin-bottom:20px; text-align:center;">Built by a practitioner, not a pitch deck</h2>
+            <p style="font-size:15px; color:#9ca3af; line-height:1.8; margin-bottom:16px;">
+                Anka Research is the work of <strong style="color:#f1f5f9;">Bharat Ankaraju</strong> &mdash; a technologist who spent years building AI systems for enterprise before turning the same discipline toward financial markets. The thesis is simple: the tools that detect patterns in unstructured data, model regime shifts, and score management credibility should work just as well on equities as they do in any other domain.
+            </p>
+            <p style="font-size:15px; color:#9ca3af; line-height:1.8; margin-bottom:16px;">
+                The Anka engine is not a chatbot wrapper or a sentiment dashboard. It is a multi-layer system that combines <strong style="color:#d4a855;">forensic financial analysis</strong> (5 years of annual reports and earnings calls, scored for promise vs. delivery), <strong style="color:#d4a855;">global regime modelling</strong> (overnight macro signals from 31 cross-asset ETFs, ML-optimised), and <strong style="color:#d4a855;">stock-specific technical fingerprinting</strong> (15 pattern types backtested across 74,000+ historical events). Each layer uses a different AI architecture. Together, they produce a conviction signal that no single approach can match.
+            </p>
+            <p style="font-size:15px; color:#9ca3af; line-height:1.8;">
+                The entire pipeline &mdash; data collection, indicator computation, pattern detection, scoring, and signal generation &mdash; runs autonomously every trading day. No manual intervention. No discretionary overrides. The model trades the numbers it sees, not the narratives humans prefer.
+            </p>
         </div>
-        <div class="pipeline-steps">
-            <div class="pipeline-step">
-                <div class="pipeline-step-num">1</div>
-                <h3>Scan</h3>
-                <p>RSS + news feeds scanned every 30 minutes for geopolitical and macro events</p>
-                <span class="pipeline-arrow">&#9654;</span>
+    </section>
+
+    <hr class="section-divider">
+
+<!-- ══════════════ GET ACCESS ══════════════ -->
+    <section class="section">
+        <div style="text-align:center; max-width:640px; margin:0 auto; padding: 40px 0;">
+            <h2 style="font-family:’DM Serif Display’,serif; font-size:28px; color:#f1f5f9; margin-bottom:16px;">Want the full terminal?</h2>
+            <p style="font-size:15px; color:#9ca3af; line-height:1.7; margin-bottom:24px;">
+                The research you see here is a fraction of what the model produces daily. The Anka Trading Terminal includes real-time recommendations, stop-loss management, options flow analysis, technical fingerprints, and emerging trade ideas &mdash; all driven by the same three-signal engine.
+            </p>
+            <p style="font-size:15px; color:#9ca3af; line-height:1.7; margin-bottom:24px;">
+                We are making the terminal available as an open-source download on GitHub. Currently built for Indian F&amp;O markets, with architecture designed to extend to any market with sufficient data.
+            </p>
+            <div style="margin-top:32px;">
+                <a href="mailto:info@askanka.com" style="display:inline-block; background: linear-gradient(135deg, #d4a855, #b8860b); color:#0a0e1a; padding:14px 36px; border-radius:8px; font-weight:700; font-size:15px; text-decoration:none; letter-spacing:0.5px;">Contact info@askanka.com</a>
             </div>
-            <div class="pipeline-step">
-                <div class="pipeline-step-num">2</div>
-                <h3>Classify</h3>
-                <p>Events classified into 18 categories: escalation, sanctions, oil shocks, rate decisions, and more</p>
-                <span class="pipeline-arrow">&#9654;</span>
-            </div>
-            <div class="pipeline-step">
-                <div class="pipeline-step-num">3</div>
-                <h3>Match</h3>
-                <p>Matched to 25 spread pairs with backtest-validated hit rates across 90+ historical events</p>
-                <span class="pipeline-arrow">&#9654;</span>
-            </div>
-            <div class="pipeline-step">
-                <div class="pipeline-step-num">4</div>
-                <h3>Signal</h3>
-                <p>Signals published to the live terminal with data-driven stop levels and P&L tracking</p>
-            </div>
+            <p style="font-size:12px; color:#64748b; margin-top:16px;">Shadow trading results and terminal download available June 1, 2026</p>
         </div>
     </section>
 </div>
@@ -1240,11 +1081,11 @@
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer class="footer">
     <p class="footer-disclaimer">
-        Anka Research provides data-driven market analysis for educational and informational purposes only.
-        This is not financial advice. Spread trading involves significant risk. Past backtest performance does not guarantee future results.
-        Always do your own research and consult a qualified financial advisor before making investment decisions.
+        Anka Research provides algorithmic market analysis for educational and research purposes only.
+        Nothing on this website constitutes investment advice or a recommendation to trade.
+        Past performance and backtest results do not guarantee future outcomes. Consult a qualified financial advisor before making any investment decisions.
     </p>
-    <p class="footer-powered">Powered by Anka Research Pipeline &mdash; fully automated</p>
+    <p class="footer-powered">Powered by the Anka Research Engine</p>
     <p class="footer-copy">&copy; 2026 Anka Research. All rights reserved.</p>
 </footer>
 
@@ -1329,155 +1170,25 @@
     }, { threshold: 0.1 });
     sections.forEach(s => observer.observe(s));
 
-    // ── F&O Stock News Scroll ──
-    fetch('data/fno_news.json')
+    // ── Anka Trust Score (single index from trust_scores.json) ──
+    fetch('data/trust_scores.json?t=' + Date.now())
         .then(r => r.ok ? r.json() : null)
         .catch(() => null)
         .then(data => {
-            if (!data || !data.headlines || data.headlines.length === 0) return;
-
-            const section = document.getElementById('news-scroll-section');
-            const inner = document.getElementById('news-scroll-inner');
-            const countEl = document.getElementById('news-count');
-
-            section.style.display = 'block';
-            countEl.textContent = data.headlines.length + ' headlines';
-
-            // Build news cards (duplicate for seamless loop)
-            const cards = data.headlines.map(h => {
-                const title = h.title || '';
-                const cleanTitle = title.replace(/ - [^-]+$/, ''); // Remove "- SourceName" suffix
-                const source = h.source || '';
-                return '<a href="' + (h.url || '#') + '" target="_blank" rel="noopener" class="news-card">' +
-                    '<span class="news-symbol">' + (h.symbol || '') + '</span>' +
-                    '<div class="news-title">' + cleanTitle.replace(/[<>]/g, '') + '</div>' +
-                    '<div class="news-meta">' + source.replace(/[<>]/g, '') + '</div>' +
-                    '</a>';
-            }).join('');
-
-            // Double the content for seamless infinite scroll
-            inner.innerHTML = cards + cards;
-
-            // Adjust animation duration based on content width
-            requestAnimationFrame(() => {
-                const totalWidth = inner.scrollWidth / 2;
-                const speed = 60; // pixels per second
-                const duration = totalWidth / speed;
-                inner.style.animationDuration = duration + 's';
-            });
+            if (!data || !data.stocks) return;
+            const el = document.getElementById('ats-value');
+            if (!el) return;
+            const avg = data.stocks.length
+                ? (data.stocks.reduce((a, s) => a + (s.trust_score || 0), 0) / data.stocks.length)
+                : 0;
+            animateValue(el, Math.round(avg), '', 1200);
         });
 
 })();
 </script>
 
-<!-- ═════════════ GLOBAL REGIME SCORE ═════════════ -->
+<!-- ═════════════ TRACK RECORD ═════════════ -->
 <script>
-async function loadGlobalRegime() {
-  try {
-    const res = await fetch('data/global_regime.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const d = await res.json();
-    const zone = d.zone || 'UNKNOWN';
-    document.getElementById('regime-zone').textContent = zone;
-    document.getElementById('regime-zone').className = 'zone-badge ' + zone;
-    document.getElementById('regime-score').textContent = d.score == null ? '—' : Number(d.score).toFixed(1);
-    document.getElementById('regime-stability').textContent =
-      (d.stable ? 'Stable' : 'Shifting') + ' · Day ' + (d.consecutive_days || 0) + ' of ' + zone;
-    document.getElementById('regime-updated').textContent =
-      d.updated_at ? new Date(d.updated_at).toLocaleString('en-IN', { hour12: false }) : '—';
-    const ol = document.getElementById('regime-drivers');
-    ol.innerHTML = '';
-    (d.top_drivers || []).forEach(name => {
-      const li = document.createElement('li');
-      const c = (d.components || {})[name] || {};
-      const contrib = c.contribution != null ? ' (' + Number(c.contribution).toFixed(1) + ')' : '';
-      li.textContent = name + contrib;
-      ol.appendChild(li);
-    });
-  } catch (e) {
-    document.getElementById('regime-zone').textContent = 'OFFLINE';
-  }
-}
-loadGlobalRegime();
-setInterval(loadGlobalRegime, 60000);
-</script>
-
-<!-- ═════════════ LIVE POSITIONS ═════════════ -->
-<script>
-const TRUST_STRONG = new Set(["A+", "A"]);
-const TRUST_OK = new Set(["B+", "B"]);
-function trustBadge(grade) {
-  if (grade == null) return { label: "—", tone: "none" };
-  if (TRUST_STRONG.has(grade)) return { label: grade, tone: "strong" };
-  if (TRUST_OK.has(grade))     return { label: grade, tone: "ok" };
-  return { label: grade, tone: "weak" };
-}
-function convictionBadge(s) {
-  if (s == null) return { label: "—", tone: "none" };
-  const r = Math.round(s);
-  if (s >= 65) return { label: r, tone: "strong" };
-  if (s >= 40) return { label: r, tone: "ok" };
-  return { label: r, tone: "weak" };
-}
-function renderBadge(b, prefix) {
-  return '<span class="badge-enrich ' + b.tone + '">' + (prefix || "") + " " + b.label + '</span>';
-}
-function renderEnrichRow(p) {
-  const parts = [];
-  const cb = convictionBadge(p.conviction_score);
-  parts.push(renderBadge(cb, "CONV"));
-  const ts = p.trust_scores || {};
-  const firstLong = (p.long_legs || [])[0];
-  const firstShort = (p.short_legs || [])[0];
-  if (firstLong && ts[firstLong.ticker]) {
-    const tb = trustBadge(ts[firstLong.ticker].trust_grade);
-    parts.push(renderBadge(tb, "L"));
-  }
-  if (firstShort && ts[firstShort.ticker]) {
-    const tb = trustBadge(ts[firstShort.ticker].trust_grade);
-    parts.push(renderBadge(tb, "S"));
-  }
-  if (p.source === "CORRELATION_BREAK") {
-    parts.push('<span class="badge-enrich ok">PHASE-C</span>');
-  }
-  return '<div class="enrich-row">' + parts.join("") + '</div>';
-}
-
-async function loadLivePositions() {
-  try {
-    const res = await fetch('data/live_status.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const d = await res.json();
-    const tbody = document.getElementById('positions-body');
-    tbody.innerHTML = '';
-    if (!d.positions || d.positions.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6">No open positions</td></tr>';
-      const openEl = document.getElementById('stat-open');
-      if (openEl) openEl.textContent = '0';
-      return;
-    }
-    const openEl = document.getElementById('stat-open');
-    if (openEl) openEl.textContent = d.positions.length;
-    d.positions.forEach(p => {
-      const tr = document.createElement('tr');
-      const todayCls = p.todays_move >= 0 ? 'pos' : 'neg';
-      const cumCls = p.spread_pnl_pct >= 0 ? 'pos' : 'neg';
-      tr.innerHTML =
-        '<td>' + p.spread_name + '</td>' +
-        '<td>' + p.open_date + '</td>' +
-        '<td class="' + todayCls + '">' + Number(p.todays_move).toFixed(2) + '%</td>' +
-        '<td class="' + cumCls + '">' + Number(p.spread_pnl_pct).toFixed(2) + '%</td>' +
-        '<td>' + Number(p.peak_pnl).toFixed(2) + '%</td>' +
-        '<td>' + renderEnrichRow(p) + '</td>';
-      tbody.appendChild(tr);
-    });
-  } catch (e) {
-    document.getElementById('positions-body').innerHTML = '<tr><td colspan="6">Offline</td></tr>';
-  }
-}
-loadLivePositions();
-setInterval(loadLivePositions, 60000);
-
 async function loadTrackRecord() {
   try {
     const res = await fetch('data/track_record.json?t=' + Date.now());
@@ -1516,119 +1227,6 @@ async function loadTrackRecord() {
 }
 loadTrackRecord();
 setInterval(loadTrackRecord, 120000);
-
-async function loadTodayRecs() {
-  try {
-    const res = await fetch('data/today_recommendations.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const d = await res.json();
-    renderRecColumn('recs-spreads', d.spreads, renderSpreadCard,
-      'No spread setups today — regime stable');
-    renderRecColumn('recs-stocks', d.stocks, renderStockCard,
-      'No standalone stock signals today');
-    renderRecColumn('recs-news', d.news_driven, renderNewsCard,
-      'No news-driven trades today');
-  } catch (e) {
-    ['recs-spreads', 'recs-stocks', 'recs-news'].forEach(id =>
-      document.getElementById(id).innerHTML = '<div class="rec-empty">Offline</div>');
-  }
-}
-
-function renderRecColumn(elId, items, renderFn, emptyMsg) {
-  const el = document.getElementById(elId);
-  el.innerHTML = '';
-  if (!items || items.length === 0) {
-    el.innerHTML = '<div class="rec-empty">' + emptyMsg + '</div>';
-    return;
-  }
-  items.forEach(it => el.insertAdjacentHTML('beforeend', renderFn(it)));
-}
-
-function stalePill(it) { return it.is_stale ? '<span class="stale-pill">stale</span>' : ''; }
-
-function renderSpreadCard(s) {
-  return '<div class="rec-card">' +
-    '<div class="name">' + s.name + stalePill(s) + '</div>' +
-    '<div class="meta"><span class="conv-' + s.conviction + '">' + s.conviction + '</span>' +
-    ' &middot; ' + s.action + ' &middot; z=' + Number(s.z_score).toFixed(2) + ' &middot; ' + s.reason + '</div>' +
-    '</div>';
-}
-
-function hitRateLine(meaningful, rate, count, suffix) {
-  // meaningful: show the % with sample size
-  // not meaningful: show "low confidence (n=N)" — honest about insufficient sample
-  if (meaningful) {
-    return 'hit ' + Math.round((rate || 0) * 100) + '% &middot; ' +
-           (count || 0) + ' precedents' + (suffix || '');
-  }
-  return '<span class="low-conf">low confidence (n=' + (count || 0) + ')</span>' + (suffix || '');
-}
-
-function renderStockCard(s) {
-  return '<div class="rec-card">' +
-    '<div class="name"><span class="dir-' + s.direction + '">' + s.direction + '</span> ' +
-    s.ticker + stalePill(s) + '</div>' +
-    '<div class="meta"><span class="conv-' + s.conviction + '">' + s.conviction + '</span>' +
-    ' &middot; ' + s.trigger + ' regime</div>' +
-    '<div class="meta">' + hitRateLine(s.hit_rate_meaningful, s.hit_rate, s.episodes, '') + '</div>' +
-    '</div>';
-}
-
-function renderNewsCard(n) {
-  return '<div class="rec-card">' +
-    '<div class="name"><span class="dir-' + n.direction + '">' + n.direction + '</span> ' +
-    n.ticker + stalePill(n) + '</div>' +
-    '<div class="meta">' + n.headline + '</div>' +
-    '<div class="meta">' + hitRateLine(n.hit_rate_meaningful, n.historical_hit_rate, n.precedent_count,
-      ' &middot; ' + n.shelf_days + 'd shelf') + '</div>' +
-    '</div>';
-}
-
-loadTodayRecs();
-setInterval(loadTodayRecs, 60000);
-</script>
-
-<!-- ═════════════ TRUST SCORES ═════════════ -->
-<script>
-async function loadTrustScores() {
-  try {
-    const res = await fetch('data/trust_scores.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const d = await res.json();
-    const stocks = d.stocks || [];
-    const tbody = document.getElementById('trust-scores-body');
-    if (!tbody) return;
-
-    document.getElementById('ts-total').textContent = d.total_scored || 0;
-    const strong = stocks.filter(s => s.trust_grade === 'A+' || s.trust_grade === 'A').length;
-    document.getElementById('ts-strong').textContent = strong;
-    const avg = stocks.length ? (stocks.reduce((a, s) => a + (s.trust_score || 0), 0) / stocks.length).toFixed(1) : '—';
-    document.getElementById('ts-avg').textContent = avg + '%';
-
-    const gradeOrder = {'A+':0,'A':1,'B+':2,'B':3,'C+':4,'C':5,'D':6,'F':7};
-    stocks.sort((a, b) => (gradeOrder[a.trust_grade] ?? 99) - (gradeOrder[b.trust_grade] ?? 99) || (b.trust_score || 0) - (a.trust_score || 0));
-
-    tbody.innerHTML = '';
-    stocks.forEach(s => {
-      const tb = trustBadge(s.trust_grade);
-      const scorePct = (s.trust_score || 0).toFixed(1) + '%';
-      const thesis = (s.thesis || '').substring(0, 120);
-      const row = document.createElement('tr');
-      row.innerHTML =
-        '<td><strong>' + s.symbol + '</strong></td>' +
-        '<td>' + renderBadge(tb, '') + '</td>' +
-        '<td>' + scorePct + '</td>' +
-        '<td>—</td>' +
-        '<td>—</td>' +
-        '<td>—</td>' +
-        '<td class="thesis-cell">' + thesis + '</td>';
-      tbody.appendChild(row);
-    });
-  } catch (e) {
-    console.warn('Trust scores load failed:', e);
-  }
-}
-loadTrustScores();
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
