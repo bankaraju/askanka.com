@@ -76,7 +76,7 @@ def empty_breaks_file(tmp_path: Path) -> Path:
 
 def test_generate_break_candidates_only_emits_actionable(breaks_file: Path) -> None:
     """3 breaks (2 actionable, 1 None trade_rec) → returns exactly 2 candidates."""
-    from break_signal_generator import generate_break_candidates
+    from pipeline.break_signal_generator import generate_break_candidates
 
     candidates = generate_break_candidates(breaks_path=breaks_file)
 
@@ -89,7 +89,7 @@ def test_generate_break_candidates_only_emits_actionable(breaks_file: Path) -> N
 
 def test_candidate_has_required_signal_fields(breaks_file: Path) -> None:
     """LONG candidate must have all required signal schema fields."""
-    from break_signal_generator import generate_break_candidates
+    from pipeline.break_signal_generator import generate_break_candidates
 
     candidates = generate_break_candidates(breaks_path=breaks_file)
     hal = next(c for c in candidates if c["_break_metadata"]["symbol"] == "HAL")
@@ -124,7 +124,7 @@ def test_candidate_has_required_signal_fields(breaks_file: Path) -> None:
 
 def test_short_candidate_uses_short_legs(breaks_file: Path) -> None:
     """trade_rec=SHORT → long_legs empty, short_legs populated with correct ticker."""
-    from break_signal_generator import generate_break_candidates
+    from pipeline.break_signal_generator import generate_break_candidates
 
     candidates = generate_break_candidates(breaks_path=breaks_file)
     bel = next(c for c in candidates if c["_break_metadata"]["symbol"] == "BEL")
@@ -138,7 +138,7 @@ def test_short_candidate_uses_short_legs(breaks_file: Path) -> None:
 
 def test_empty_file_returns_empty_list(empty_breaks_file: Path) -> None:
     """Empty breaks list in file → returns []."""
-    from break_signal_generator import generate_break_candidates
+    from pipeline.break_signal_generator import generate_break_candidates
 
     candidates = generate_break_candidates(breaks_path=empty_breaks_file)
     assert candidates == []
@@ -146,7 +146,7 @@ def test_empty_file_returns_empty_list(empty_breaks_file: Path) -> None:
 
 def test_missing_file_returns_empty_list(tmp_path: Path) -> None:
     """Non-existent file → returns [] without raising."""
-    from break_signal_generator import generate_break_candidates
+    from pipeline.break_signal_generator import generate_break_candidates
 
     missing = tmp_path / "does_not_exist.json"
     candidates = generate_break_candidates(breaks_path=missing)
