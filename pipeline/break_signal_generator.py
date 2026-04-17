@@ -62,7 +62,12 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
     candidates: List[Dict[str, Any]] = []
 
     for brk in breaks:
-        trade_rec: str | None = brk.get("trade_rec")
+        raw_rec = brk.get("trade_rec")
+        # trade_rec can be a string ("LONG"/"SHORT"), a dict ({"direction": "SHORT", ...}), or None
+        if isinstance(raw_rec, dict):
+            trade_rec = raw_rec.get("direction")
+        else:
+            trade_rec = raw_rec
         if trade_rec not in _ACTIONABLE:
             continue  # informational — skip
 
