@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-17T13:48:49.236338+05:30",
-  "total_scored": 57,
+  "updated_at": "2026-04-17T14:02:44.258716+05:30",
+  "total_scored": 62,
   "stocks": [
     {
       "symbol": "ADANIENT",
@@ -15,10 +15,22 @@
       "thesis": "The company has demonstrated strong performance in water management, achieving 12x water-positive status (FY25 AR, Page 41) against a target of 10x water-positive by 2030 (FY24 AR, Page 44). This indi"
     },
     {
+      "symbol": "ANGELONE",
+      "trust_grade": "B",
+      "trust_score": 63.1,
+      "thesis": "Angel One demonstrates strong execution in expanding its financial product distribution, particularly in lending and mutual funds. The client funding book grew from \u20b911.5 billion in FY23 to \u20b938.6 bill"
+    },
+    {
       "symbol": "APLAPOLLO",
       "trust_grade": "F",
       "trust_score": 0.0,
       "thesis": "The consistent focus on capacity expansion and value-added products, even if slightly behind schedule, demonstrates a clear strategic direction. The company's ability to maintain a low net debt-equity"
+    },
+    {
+      "symbol": "AUROPHARMA",
+      "trust_grade": "F",
+      "trust_score": 9.6,
+      "thesis": "The company demonstrates strong commitment and execution in certain sustainability metrics, notably exceeding its carbon footprint reduction target (22% actual vs 12.5% target by 2025) and consistentl"
     },
     {
       "symbol": "BAJFINANCE",
@@ -27,10 +39,28 @@
       "thesis": "Consistent delivery and even exceeding of 'through the cycle' Return on Equity (ROE) targets. The company guided for 19-21% shareholder returns (FY23 AR) and 21-23% ROE (FY24 AR), and achieved 23.5% i"
     },
     {
+      "symbol": "BANKINDIA",
+      "trust_grade": "F",
+      "trust_score": 6.0,
+      "thesis": "The bank's ability to exceed its target for new digital products launched (25 products live vs 20 targeted for FY24-25) demonstrates a strong capability in product development and platform implementat"
+    },
+    {
       "symbol": "BHARATFORG",
       "trust_grade": "F",
       "trust_score": 5.0,
       "thesis": "The biggest strength is the consistent delivery on the immediate environmental target of 'over 37% of our electricity came from renewable sources' in FY2025, which was explicitly stated and met. This "
+    },
+    {
+      "symbol": "BLUESTARCO",
+      "trust_grade": "C",
+      "trust_score": 53.0,
+      "thesis": "Blue Star's ability to consistently meet or exceed its revenue growth targets (FY24 growth of 23.6% vs 15% target) and maintain market share (13.5% in Q1FY24, 13.75% in Q1FY25) in a volatile market, c"
+    },
+    {
+      "symbol": "CANBK",
+      "trust_grade": "A+",
+      "trust_score": 98.2,
+      "thesis": "The bank's biggest strength lies in its consistent delivery and often exceeding of critical financial targets, especially in asset quality improvement (e.g., Gross NPA declining to 5.15% and Net NPA t"
     },
     {
       "symbol": "COCHINSHIP",
