@@ -1,18 +1,54 @@
 {
-  "updated_at": "2026-04-17T15:32:46.736231+05:30",
-  "total_scored": 64,
+  "updated_at": "2026-04-17T15:54:10.761404+05:30",
+  "total_scored": 71,
   "stocks": [
     {
+      "symbol": "360ONE",
+      "trust_grade": "A",
+      "trust_score": 81.1,
+      "thesis": "The consistent delivery on AUM growth and profitability targets, especially the highest-ever quarterly PAT of Rs 287 Cr in Q1 FY26 and the successful reduction of ET Money's annual burn to Rs 24-28 Cr"
+    },
+    {
       "symbol": "ABB",
-      "trust_grade": "B",
-      "trust_score": 69.2,
-      "thesis": "The company's exceptional performance in environmental sustainability, particularly exceeding targets for GHG emissions reduction (87% in 2025 vs. 'at least 80%' by 2030), water positive facilities (8"
+      "trust_grade": "B+",
+      "trust_score": 71.0,
+      "thesis": "ABB India demonstrates strong execution and transparency on its short-to-medium term environmental targets. The company achieved an ~87% reduction in Scope 1 & 2 GHG emissions by 2025 (vs. 2019 baseli"
+    },
+    {
+      "symbol": "ABCAPITAL",
+      "trust_grade": "F",
+      "trust_score": 8.6,
+      "thesis": "The company demonstrates strength in its commitment to digital transformation, as evidenced by the commercial launch of the ABCD D2C platform and the scaling of the Udyog Plus B2B platform, despite in"
+    },
+    {
+      "symbol": "ADANIENSOL",
+      "trust_grade": "D",
+      "trust_score": 20.2,
+      "thesis": "The company demonstrates strong execution in transmission network expansion, with 26,696 ckm achieved by Q1 FY26, significantly ahead of the pro-rata trajectory for the 30,000 ckm by 2030 target. This"
     },
     {
       "symbol": "ADANIENT",
       "trust_grade": "F",
       "trust_score": 18.7,
       "thesis": "A notable strength is the consistent 'DELIVERED' status for the Navi Mumbai Airport's initial passenger capacity of 20 million (FY23 AR, Page 140 and FY25 AR, Page 24) and the cement capacity target o"
+    },
+    {
+      "symbol": "ADANIGREEN",
+      "trust_grade": "C",
+      "trust_score": 45.9,
+      "thesis": "Adani Green Energy's biggest strength lies in its exceptional ESG performance, being recognized as the 'world's number 1 green utility' in the 2025 Global Top 100 Green Utilities ranking. This signifi"
+    },
+    {
+      "symbol": "ADANIPORTS",
+      "trust_grade": "F",
+      "trust_score": 19.6,
+      "thesis": "The company's biggest strength lies in its prudent financial management, consistently maintaining its 'net debt to EBITDA ratio within the guided range of 3x to 3.5x' (FY22-23 AR, Page 120). Actuals s"
+    },
+    {
+      "symbol": "ADANIPOWER",
+      "trust_grade": "D",
+      "trust_score": 39.6,
+      "thesis": "Adani Power's biggest strength lies in its aggressive and successful capacity expansion and PPA securing strategy. The company has not only delivered on its 1.6 GW additional capacity by June 2023 (Go"
     },
     {
       "symbol": "AMBUJACEM",
@@ -31,6 +67,12 @@
       "trust_grade": "F",
       "trust_score": 0.0,
       "thesis": "The consistent focus on capacity expansion and value-added products, even if slightly behind schedule, demonstrates a clear strategic direction. The company's ability to maintain a low net debt-equity"
+    },
+    {
+      "symbol": "APOLLOHOSP",
+      "trust_grade": "F",
+      "trust_score": 13.6,
+      "thesis": "The consistent delivery on dividend payouts, with both interim and final dividends for FY25 matching the guidance (Rs 19/- per share total), demonstrates reliability in shareholder returns. Additional"
     },
     {
       "symbol": "AUROPHARMA",
