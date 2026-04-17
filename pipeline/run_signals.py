@@ -316,6 +316,28 @@ def _run_once_inner(send_telegram=False):
             except Exception:
                 pass
 
+    # 1b. Phase C break → standalone signal candidates
+    try:
+        from break_signal_generator import generate_break_candidates
+        from signal_tracker import load_open_signals
+        existing_ids = {s.get("signal_id") for s in load_open_signals()}
+        for cand in generate_break_candidates():
+            if cand["signal_id"] in existing_ids:
+                continue  # already registered — skip dedup
+            save_signal(cand)
+            existing_ids.add(cand["signal_id"])
+            print(f"  📊 Phase C break signal: {cand['spread_name']}")
+            if send_telegram:
+                try:
+                    from telegram_bot import send_message
+                    msg = f"📊 PHASE C BREAK\n{cand['spread_name']}\n{cand.get('event_headline', '')}"
+                    send_message(msg, parse_mode=None)
+                except Exception as e:
+                    print(f"  Failed to send break signal: {e}")
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("break_signal_generator failed: %s", e)
+
     # 2. Check existing open signals for stop-outs / expiry
     closed_results = run_signal_monitor()
     if closed_results:
