@@ -621,7 +621,42 @@ That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
 ---
 
-## 7. Known Gaps and Limitations
+## 7. Anka Terminal
+
+The trading intelligence terminal is a local web application that provides a visual interface over the pipeline data.
+
+### Usage
+
+```bash
+python -m pipeline.terminal              # start on localhost:8501, opens browser
+python -m pipeline.terminal --port 9000  # custom port
+python -m pipeline.terminal --no-open    # don't auto-open browser
+```
+
+### Architecture
+
+- **Backend:** FastAPI serving REST APIs from pipeline JSON files
+- **Frontend:** Vanilla JS + Lightweight Charts (TradingView) + Lucide icons
+- **Data flow:** Pipeline scheduled tasks → JSON files → FastAPI → Browser
+- **No database:** reads directly from `pipeline/data/` and `data/`
+
+### Tabs
+
+| Tab | Content | Data Sources |
+|-----|---------|-------------|
+| Dashboard | Regime, KPIs, signals summary | global_regime.json, today_regime.json, today_recommendations.json |
+| Trading | Signals, spreads, charts, TA | open_signals.json, regime_trade_map.json, OHLCV data |
+| Intelligence | Trust scores, news, research | trust_scores.json, fno_news.json, articles_index.json |
+| Track Record | P&L, equity curve, trades | track_record.json, closed_signals.json |
+| Settings | Broker, alerts, display | Local config file |
+
+### Design System
+
+Design tokens defined in `pipeline/terminal/static/css/terminal.css`. Locked: DM Serif Display + Inter + JetBrains Mono, dark theme with gold accents.
+
+---
+
+## 8. Known Gaps and Limitations
 
 ### Gap 1 (CRITICAL): ETF Engine and Regime Trade Map Are Frozen
 
@@ -743,7 +778,7 @@ during a scheduled task, that cycle is missed.
 
 ---
 
-## 8. How to Check System Health
+## 9. How to Check System Health
 
 ### Quick health check (run anytime):
 ```bash
@@ -773,7 +808,7 @@ cat pipeline/data/signals/open_signals.json | python -m json.tool
 
 ---
 
-## 9. Glossary
+## 10. Glossary
 
 | Term | Meaning |
 |------|---------|

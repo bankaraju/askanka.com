@@ -21,6 +21,7 @@ When context is getting heavy or you've been working for 2+ hours continuously, 
 
 ## Repository Structure
 - `pipeline/` — Daily article generation, options monitoring, regime signals, spread intelligence
+- `pipeline/terminal/` — Anka Terminal: local web UI (FastAPI + vanilla JS + Lightweight Charts)
 - `pipeline/autoresearch/` — Reverse regime engine, overnight research, backtesting
 - `pipeline/scripts/` — Scheduled task .bat files (all point to `C:\Users\Claude_Anka\askanka.com\pipeline\`)
 - `pipeline/data/` — Runtime data: signals, daily prices, regime state, OI positioning
