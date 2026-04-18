@@ -464,37 +464,43 @@ async function renderTAData(ticker) {
       return;
     }
 
+    const dirColors = { 'LONG': 'badge--green', 'SHORT': 'badge--red', 'NEUTRAL': 'badge--muted' };
+    const sigColors = { 'STRONG': 'badge--gold', 'MODERATE': 'badge--blue', 'WEAK': 'badge--muted' };
+
     const cards = patterns.map(p => {
-      const isActive = p.active || active.some(a => a.name === p.name);
-      const borderStyle = isActive ? 'border-left: 3px solid var(--accent-green);' : '';
-      const statusBadge = isActive
-        ? '<span class="badge badge--green">ACTIVE</span>'
-        : '<span class="badge badge--muted">INACTIVE</span>';
-      const winRate = p.win_rate != null ? `${(p.win_rate * 100).toFixed(0)}%` : '--';
-      const avgReturn = p.avg_return != null ? `${(p.avg_return * 100).toFixed(1)}%` : '--';
+      const isStrong = p.significance === 'STRONG' || p.significance === 'MODERATE';
+      const borderStyle = isStrong ? 'border-left: 3px solid var(--accent-green);' : '';
+      const sigBadge = `<span class="badge ${sigColors[p.significance] || 'badge--muted'}">${p.significance || '?'}</span>`;
+      const dirBadge = `<span class="badge ${dirColors[p.direction] || 'badge--muted'}">${p.direction || '?'}</span>`;
+      const winRate = p.win_rate_5d != null ? `${(p.win_rate_5d * 100).toFixed(0)}%` : '--';
+      const avgReturn = p.avg_return_5d != null ? `${p.avg_return_5d.toFixed(2)}%` : '--';
 
       return `
         <div class="card" style="${borderStyle} padding: var(--spacing-md);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <span style="font-size: 0.8125rem; font-weight: 500;">${p.name || p.pattern}</span>
-            ${statusBadge}
+            <span style="font-size: 0.8125rem; font-weight: 500;">${p.pattern}</span>
+            <div style="display: flex; gap: 4px;">${dirBadge} ${sigBadge}</div>
           </div>
           <div class="text-muted" style="font-size: 0.75rem;">
-            Win: <span class="mono">${winRate}</span> |
-            Avg: <span class="mono">${avgReturn}</span> |
-            Events: <span class="mono">${p.event_count || p.events || '--'}</span>
+            Win 5d: <span class="mono">${winRate}</span> |
+            Avg 5d: <span class="mono">${avgReturn}</span> |
+            Events: <span class="mono">${p.occurrences || '--'}</span>
+            ${p.last_occurrence ? `| Last: <span class="mono">${p.last_occurrence}</span>` : ''}
           </div>
         </div>`;
     }).join('');
 
+    const personality = data.personality ? `<span class="badge badge--gold" style="margin-left: 8px;">${data.personality}</span>` : '';
+
     content.innerHTML = `
-      <div style="margin-bottom: var(--spacing-md);">
+      <div style="margin-bottom: var(--spacing-md); display: flex; align-items: center;">
         <span class="text-muted">
-          ${active.length} active pattern${active.length !== 1 ? 's' : ''} for ${ticker}
-          ${data.updated_at ? ` — updated ${new Date(data.updated_at).toLocaleDateString('en-IN')}` : ''}
+          ${active.length} significant / ${patterns.length} total patterns for ${ticker}
+          ${data.updated_at ? ` — ${data.updated_at}` : ''}
         </span>
+        ${personality}
       </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-sm);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-sm);">
         ${cards}
       </div>`;
 
