@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-18T08:43:12.393635+05:30",
-  "total_scored": 174,
+  "updated_at": "2026-04-18T12:37:00.098151+05:30",
+  "total_scored": 182,
   "stocks": [
     {
       "symbol": "360ONE",
@@ -49,6 +49,12 @@
       "trust_grade": "D",
       "trust_score": 39.6,
       "thesis": "Adani Power's biggest strength lies in its aggressive and successful capacity expansion and PPA securing strategy. The company has not only delivered on its 1.6 GW additional capacity by June 2023 (Go"
+    },
+    {
+      "symbol": "ALKEM",
+      "trust_grade": "D",
+      "trust_score": 35.1,
+      "thesis": "A notable strength is the company's performance in energy consumption reduction, achieving an 11.46% electricity consumption reduction in FY2023-24 (FY2023-2024 AR, other_key_numbers) against a long-t"
     },
     {
       "symbol": "AMBUJACEM",
@@ -217,6 +223,12 @@
       "trust_grade": "D",
       "trust_score": 37.1,
       "thesis": "The company has consistently demonstrated strong execution and even exceeded targets in Power Transformer capacity expansion (e.g., from 17,000 MVA to 25,000 MVA, then to 35,000 MVA, and currently tar"
+    },
+    {
+      "symbol": "CHOLAFIN",
+      "trust_grade": "A+",
+      "trust_score": 90.4,
+      "thesis": "The company's consistent delivery on key financial metrics like AUM growth (20% in Q3 FY26, meeting FY26 guidance of 20-25%), NIM improvement (33 bps in Q3 FY26, exceeding FY26 guidance of 12-15 bps),"
     },
     {
       "symbol": "COALINDIA",
@@ -573,6 +585,18 @@
       "thesis": "Management has consistently delivered on its retail sales mix targets, achieving 47% in FY2023-24 (vs 'near-term' 50% aspiration) and 52% in FY2024-25 (vs 'within next two years' 50% aspiration). This"
     },
     {
+      "symbol": "KFINTECH",
+      "trust_grade": "C",
+      "trust_score": 40.9,
+      "thesis": "The company's ability to consistently maintain its EBITDA margin within the 40-45% range, even after significant acquisitions like Ascent (40.9% in Q3 FY26), demonstrates strong operational efficiency"
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "trust_grade": "B+",
+      "trust_score": 71.4,
+      "thesis": "The bank's consistent delivery on Net Interest Margin (NIM), exceeding its 'north of 5%' guidance for FY24 with a consolidated NIM of 5.3%, demonstrates strong financial management and profitability i"
+    },
+    {
       "symbol": "LAURUSLABS",
       "trust_grade": "F",
       "trust_score": 0.0,
@@ -619,6 +643,12 @@
       "trust_grade": "B",
       "trust_score": 61.3,
       "thesis": "Mankind Pharma's biggest strength lies in its consistent delivery of operating and EBITDA margins within the guided 24-26% range, even amidst business transformations and acquisitions. This financial "
+    },
+    {
+      "symbol": "MARUTI",
+      "trust_grade": "F",
+      "trust_score": 10.0,
+      "thesis": "The company demonstrated strong performance in maintaining its Customer Delight Index (CDI) at 126.8 in FY2023-24, exactly meeting its guidance. Additionally, the progress on solar power capacity, rea"
     },
     {
       "symbol": "MAXHEALTH",
@@ -909,10 +939,22 @@
       "thesis": "The company's biggest strength lies in its robust and rapidly growing defence order book, which reached Rs 18,000 Crores by Q3 FY26, significantly exceeding previous expectations. The successful devel"
     },
     {
+      "symbol": "SONACOMS",
+      "trust_grade": "D",
+      "trust_score": 33.0,
+      "thesis": "The company's biggest strength lies in its consistent and strong performance in increasing BEV revenue share. The guidance from FY2022-23 and FY2023-24 targeted 'over 45% of revenue from BEVs by FY202"
+    },
+    {
       "symbol": "SRF",
       "trust_grade": "C",
       "trust_score": 40.9,
       "thesis": "The most impressive delivery is the achievement and exceeding of the ESG commitment to source electricity from renewable sources. Management committed to 30% by 2030 and achieved 31.32% in FY25 (FY25 "
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "trust_grade": "F",
+      "trust_score": 5.6,
+      "thesis": "Management demonstrates a commitment to providing updates on key product development milestones, such as the Ilumya Phase-3 clinical trials for psoriatic arthritis, where the topline data was consiste"
     },
     {
       "symbol": "SUPREMEIND",
@@ -943,6 +985,12 @@
       "trust_grade": "D",
       "trust_score": 36.8,
       "thesis": "The successful and timely commissioning of the 5 MTPA blast furnace at Kalinganagar in 2QFY25, along with the decommissioning of Port Talbot blast furnaces by September 2024, demonstrates strong execu"
+    },
+    {
+      "symbol": "TATATECH",
+      "trust_grade": "D",
+      "trust_score": 30.0,
+      "thesis": "The company's ability to significantly exceed its headcount target for the BMW TechWorks India joint venture, reaching over 1,500 engineers by Q3 FY26 against a target of 'nearing 1,000 by end-2025', "
     },
     {
       "symbol": "TCS",
