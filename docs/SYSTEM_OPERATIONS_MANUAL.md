@@ -710,7 +710,17 @@ DAILY 09:25 — Morning Scan (already works)
 - Unified backtest (Sunday night) for continuous validation
 - Forward test loop: compare weekly predictions to actual outcomes
 
-### Gap 2: Trust Scores Don't Auto-Refresh
+### Gap 2 (FIXED): Shadow P&L + Risk Guardrails Not Wired
+
+**FIXED (2026-04-18, Golden Goose Plans 3-4):**
+- `pipeline/risk_guardrails.py` — portfolio circuit breaker (L1: -10% reduce, L2: -15% pause)
+- `pipeline/shadow_pnl.py` — paper trading engine with stops/targets/expiry
+- Both wired into `run_signals.py` — risk gates checked before every new entry,
+  shadow trades created with full metadata (regime, conviction, z-score)
+- Shadow trades logged to `data/signals/shadow_trades.json`
+- 29 tests covering all exit modes and risk levels
+
+### Gap 3: Trust Scores Don't Auto-Refresh
 Trust scores are batch-computed and stored as static JSON files. When a company
 publishes new earnings, the score doesn't automatically update.
 
