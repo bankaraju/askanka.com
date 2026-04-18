@@ -55,5 +55,41 @@ The Obsidian vault at `C:/Users/Claude_Anka/ObsidianVault/` is the project's kno
 - During /autowrap or /wrapup, write a session summary to `_claude_sessions/` with what was built, decisions made, and open threads
 - Update `_claude_context/VAULT_MAP.md` if new high-value content was created during the session
 
+## System Operations Manual
+The canonical reference for how the entire system works is `docs/SYSTEM_OPERATIONS_MANUAL.md`. It covers:
+- Complete data flow: close → overnight → morning → intraday → EOD
+- Every scheduled task with time, inputs, outputs
+- The watchdog and how it monitors freshness
+- Known gaps and target architecture
+- Glossary of all terms
+
+**READ THIS FIRST** at the start of every session. It prevents the #1 recurring problem: rebuilding understanding from scratch each session.
+
+## Documentation Sync Rule (CRITICAL)
+Any change to the system — new task, new script, new data flow, changed schedule — MUST update ALL of these in the SAME commit:
+1. The code itself
+2. `docs/SYSTEM_OPERATIONS_MANUAL.md` — update the relevant section
+3. `pipeline/config/anka_inventory.json` — if a scheduled task was added/changed
+4. `CLAUDE.md` — if the clockwork schedule or architecture changed
+5. Memory files — if a design decision was made
+
+**Never ship code without updating docs. Never update docs without updating inventory.**
+
+This rule exists because the system breaks between sessions when one document says one thing and the code does another.
+
+## Architecture: The Golden Goose Pipeline
+The system is an 8-layer pipeline where each layer feeds the next:
+1. **ETF Regime Engine** — 28 global ETFs + Indian data → market regime (weekly reopt, daily signal)
+2. **Trust Scores** — OPUS ANKA management credibility grades (174/215 scored)
+3. **Spread Intelligence** — Regime-gated pair trades with per-spread sizing
+4. **Reverse Regime** — Phase A (playbook), Phase B (daily ranker), Phase C (intraday breaks)
+5. **Technicals + OI/PCR** — Confirmation/accentuation of conviction
+6. **Signal Generation** — Conviction scoring with trust score gates
+7. **Shadow P&L** — Paper trading with full stop/target tracking
+8. **Track Record** — Visual proof strip, realized P&L, forward test scorecard
+
+The ETF regime is the BRAIN — if it's stale, everything downstream is wrong.
+See `docs/SYSTEM_OPERATIONS_MANUAL.md` for the complete data flow diagram.
+
 ## LLM Provider Policy
 Gemini 2.5 Flash is the primary provider. Haiku 4.5 is the locked fallback. Do not switch providers without explicit user approval. See `memory/reference_llm_providers.md` for full rationale.
