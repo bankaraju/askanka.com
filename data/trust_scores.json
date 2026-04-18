@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-17T16:40:50.035357+05:30",
-  "total_scored": 101,
+  "updated_at": "2026-04-18T08:43:12.393635+05:30",
+  "total_scored": 174,
   "stocks": [
     {
       "symbol": "360ONE",
@@ -138,7 +138,7 @@
       "symbol": "BEL",
       "trust_grade": "C",
       "trust_score": 55.0,
-      "thesis": "BEL's biggest strength lies in its consistent ability to exceed its EBITDA margin guidance. For FY2025-26, management guided for 27% EBITDA margin but achieved 30% (Screener TTM), demonstrating strong"
+      "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
     },
     {
       "symbol": "BHARATFORG",
@@ -222,7 +222,7 @@
       "symbol": "COALINDIA",
       "trust_grade": "D",
       "trust_score": 22.1,
-      "thesis": "Coal India's biggest strength lies in its robust financial performance, particularly its ability to consistently exceed capital expenditure targets (e.g., 41.42% above target for FY2023-24 and '19,500"
+      "thesis": "Direct oil/coal price beneficiaries. Crude above $80 = earnings tailwind."
     },
     {
       "symbol": "COCHINSHIP",
@@ -327,6 +327,12 @@
       "thesis": "Direct oil/coal price beneficiaries. Crude above $80 = earnings tailwind."
     },
     {
+      "symbol": "GLENMARK",
+      "trust_grade": "D",
+      "trust_score": 28.0,
+      "thesis": "The company's consistent delivery on its capital expenditure target (INR 7,150 Mn in FY2025 vs. INR 7,000 Mn target) and the successful launch of RYALTRIS in 18 new markets by Dec 2025 (within the 15-"
+    },
+    {
       "symbol": "GMRAIRPORT",
       "trust_grade": "F",
       "trust_score": 7.5,
@@ -335,8 +341,8 @@
     {
       "symbol": "GODFRYPHLP",
       "trust_grade": "B",
-      "trust_score": 62.5,
-      "thesis": "Consistent Delivery on ESG and Livelihood Commitments: All 7 routine/ESG guidance items scored DELIVERED or PARTIALLY_DELIVERED with zero misses. FY24 targets (52 agri-sheds, 70,000 saplings, 4 biodiv"
+      "trust_score": 66.7,
+      "thesis": "The company demonstrates strong execution and transparency in its ESG initiatives, particularly in water conservation and community development. The achievement of '63 total RO water plants' (FY2023-2"
     },
     {
       "symbol": "GODREJCP",
@@ -345,22 +351,64 @@
       "thesis": "The most impressive delivery is the GHG emission intensity reduction, where the company achieved 48% reduction against a target of 45% by 2025 (FY23 AR, p. 65), exceeding its commitment. This demonstr"
     },
     {
+      "symbol": "GODREJPROP",
+      "trust_grade": "C",
+      "trust_score": 40.9,
+      "thesis": "Godrej Properties consistently exceeds its booking value targets, demonstrating strong market demand and effective sales strategies. For instance, exceeding the FY24 booking value target of \u20b914,000 Cr"
+    },
+    {
+      "symbol": "GRASIM",
+      "trust_grade": "D",
+      "trust_score": 30.3,
+      "thesis": "The company's aggressive and successful execution on overall capex, exceeding its INR 10,000 crore commitment for FY24-FY25 by 270% (actual INR 37,000 crore), demonstrates strong financial backing and"
+    },
+    {
       "symbol": "HAL",
       "trust_grade": "B",
       "trust_score": 69.5,
       "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
     },
     {
+      "symbol": "HAVELLS",
+      "trust_grade": "A",
+      "trust_score": 87.1,
+      "thesis": "The company's consistent delivery on its R&D spend target, investing >1% of Net sales annually (1.11% in FY2023-24), and its commitment to shareholder returns through a recommended final dividend of R"
+    },
+    {
+      "symbol": "HCLTECH",
+      "trust_grade": "B+",
+      "trust_score": 75.2,
+      "thesis": "HCLTech's exceptional performance in upskilling employees in GenAI (116,200 actual vs. 50,000+ target for FY25, a 132.4% beat) and achieving 83% renewable energy usage by FY25 against an 80% target fo"
+    },
+    {
       "symbol": "HDFCAMC",
-      "trust_grade": "B",
-      "trust_score": 67.1,
-      "thesis": "The company's ability to maintain strong operating margins (36 bps in Q3 FY26, 35 bps in Q2 FY26) despite telescopic pricing and regulatory changes, coupled with disciplined cost management (OPEX grow"
+      "trust_grade": "A+",
+      "trust_score": 95.0,
+      "thesis": "The company's ability to consistently maintain its operating margin within the guided 33-36 basis point range (actual 36 bps in Q3 FY26) despite telescopic pricing impacts, coupled with disciplined OP"
     },
     {
       "symbol": "HDFCBANK",
       "trust_grade": "D",
       "trust_score": 21.2,
       "thesis": "The consistent delivery on proposed dividend per share (e.g., FY24-25 guidance of H22.0 was delivered) and the achievement of the 'women in workforce' aspiration (26.1% by FY25 vs. 25% target) from th"
+    },
+    {
+      "symbol": "HDFCLIFE",
+      "trust_grade": "B+",
+      "trust_score": 75.9,
+      "thesis": "The company's ability to quickly adapt to regulatory changes, such as containing the GST impact on margins to less than 200 basis points in Q3 FY26 from an initial estimate of 300 basis points, and th"
+    },
+    {
+      "symbol": "HEROMOTOCO",
+      "trust_grade": "B",
+      "trust_score": 68.3,
+      "thesis": "Hero MotoCorp's most impressive strength is its exceptional delivery on environmental sustainability targets. Achieving 500% water positivity, 100% zero waste to landfill, and 95%+ product recyclabili"
+    },
+    {
+      "symbol": "HINDALCO",
+      "trust_grade": "C",
+      "trust_score": 50.5,
+      "thesis": "The consistent over-delivery on alumina capacity expansion (3.857 million tonnes in FY24-25 vs. 2.6 million tonnes target for FY23-24) and the strong performance in the Indian downstream aluminum busi"
     },
     {
       "symbol": "HINDPETRO",
@@ -375,10 +423,22 @@
       "thesis": "The most impressive delivery is the 'Water potential created' target. The guidance from FY23-24 was to 'Contribute to 3 trillion litres of water potential in India through HUF by 2025' (Page 14), and "
     },
     {
+      "symbol": "HINDZINC",
+      "trust_grade": "C",
+      "trust_score": 41.6,
+      "thesis": "Hindustan Zinc's ability to consistently achieve and exceed zinc cost of production targets (9-month FY2026 COP of $980/ton vs. guidance of $1,025-$1,050/ton) and its strong progress in renewable ener"
+    },
+    {
       "symbol": "HUDCO",
       "trust_grade": "F",
       "trust_score": 11.7,
       "thesis": "Management's consistent and accurate reporting of government budget allocations for key urban development and housing schemes (e.g., PMAY-U, AMRUT 2.0, Smart Cities Mission, Swachh Bharat Mission) in "
+    },
+    {
+      "symbol": "HYUNDAI",
+      "trust_grade": "D",
+      "trust_score": 30.0,
+      "thesis": "The commencement of vehicle production at the Pune plant in Q3 FY2025-26, precisely as guided, demonstrates strong execution on critical manufacturing expansion. Furthermore, the export volume growth "
     },
     {
       "symbol": "ICICIBANK",
@@ -387,10 +447,16 @@
       "thesis": "The consistent and strong growth in Net Profit and EPS over the past few years (e.g., Net Profit grew from 35461 Cr in Mar 2023 to 46081 Cr in Mar 2024, and projected 54569 Cr in Mar 2025, as per Scre"
     },
     {
+      "symbol": "ICICIGI",
+      "trust_grade": "C",
+      "trust_score": 53.8,
+      "thesis": "The company's consistent delivery on Return on Equity (ROE) targets, achieving 19.5% (1/n basis) and 19.8% (excluding wage code impact) in 9M FY2026, which is well within the guided range of 18-20%. T"
+    },
+    {
       "symbol": "IDEA",
-      "trust_grade": "F",
-      "trust_score": 16.3,
-      "thesis": "4G capacity expansion and network investment execution have dramatically exceeded initial guidance. Capex spend in FY2024-25 (\u20b994,103 Mn) was 5.5x the FY2023-24 spend (\u20b916,967 Mn), translating to 4G d"
+      "trust_grade": "C",
+      "trust_score": 46.0,
+      "thesis": "Despite funding challenges, the company has successfully initiated and expanded 5G services to all 17 priority circles (29 cities) by September 2025, aligning with its guidance to launch 5G. This demo"
     },
     {
       "symbol": "IDFCFIRSTB",
@@ -399,10 +465,28 @@
       "thesis": "The most impressive delivery is the consistent maintenance of the Net NPA below 1% (0.86% in FY23, 0.60% in FY24, 0.53% in FY25) and the CASA ratio within the 40-50% range (49.8% in FY23, 47.25% in FY"
     },
     {
-      "symbol": "INDIANB",
-      "trust_grade": "B+",
-      "trust_score": 73.6,
-      "thesis": "Exceptional and systemic outperformance on all CRITICAL profitability and credit metrics. ROA of 1.32% (9M FY26) at +10% beat vs 1.20% guidance, NIM at 3.40-3.45% at +4.5% beat vs 3.3% upper guidance,"
+      "symbol": "IEX",
+      "trust_grade": "F",
+      "trust_score": 12.0,
+      "thesis": "The company's ability to exceed the GDP growth forecast for FY2025-26 (IMF revised to 7.3% vs. guidance of 6.2-6.5%) demonstrates a strong underlying economic environment that could eventually benefit"
+    },
+    {
+      "symbol": "INDHOTEL",
+      "trust_grade": "B",
+      "trust_score": 61.7,
+      "thesis": "IHCL's ability to consistently exceed its portfolio expansion targets is a major strength. The total hotel portfolio reached 617 (operating + pipeline) by Q3 FY26, significantly exceeding the 300 hote"
+    },
+    {
+      "symbol": "INDIGO",
+      "trust_grade": "D",
+      "trust_score": 22.7,
+      "thesis": "IndiGo's ability to exceed its FY2024 passenger volume target (107 million customers vs 100 million target) and the timely introduction of the Airbus A321XLR in FY2026 demonstrate strong operational e"
+    },
+    {
+      "symbol": "INDUSINDBK",
+      "trust_grade": "D",
+      "trust_score": 22.5,
+      "thesis": "The bank's consistent progress in retailization of liabilities, with retail deposits as per LCR improving to 43.4% in Q1FY24 towards the 45-50% target by FY2026, demonstrates a strong focus and execut"
     },
     {
       "symbol": "INDUSTOWER",
@@ -411,16 +495,82 @@
       "thesis": "The most impressive delivery is the significant improvement in operating margins and net profit from FY23 to FY25. Operating Profit Margin (OPM %) rebounded from 34% in Mar 2023 to 51% in Mar 2024 and"
     },
     {
+      "symbol": "INFY",
+      "trust_grade": "F",
+      "trust_score": 17.5,
+      "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well"
+    },
+    {
+      "symbol": "INOXWIND",
+      "trust_grade": "D",
+      "trust_score": 34.3,
+      "thesis": "The company's O&M subsidiary, Inox Green, has demonstrated strong growth, exceeding its target for O&M assets under management. The guidance for 10 GW by FY27 was exceeded, with actuals reaching 13.3 "
+    },
+    {
+      "symbol": "IOC",
+      "trust_grade": "F",
+      "trust_score": 10.8,
+      "thesis": "Government-controlled pricing = margin compression when crude rises. Classic short in war/oil scenarios."
+    },
+    {
+      "symbol": "IRFC",
+      "trust_grade": "B",
+      "trust_score": 64.0,
+      "thesis": "The company's consistent maintenance of a 'zero NPA' status, as explicitly stated in the Q3 FY25-26 concall, is a significant strength. This, combined with the reported growth in AUM, PAT, and NIM, de"
+    },
+    {
+      "symbol": "ITC",
+      "trust_grade": "C",
+      "trust_score": 45.6,
+      "thesis": "ITC demonstrates strong commitment and execution in environmental sustainability, particularly in renewable energy. The target of '50% Renewable Energy' by 2030 (from FY22-23 AR) was exceeded, reachin"
+    },
+    {
+      "symbol": "JINDALSTEL",
+      "trust_grade": "F",
+      "trust_score": 9.5,
+      "thesis": "The company demonstrates a strong commitment to capital expenditure, with cumulative capex up to Dec 31, 2025, at \u20b932,925 crore against a total target of \u20b947,043 crore by FY28. This is significantly a"
+    },
+    {
+      "symbol": "JIOFIN",
+      "trust_grade": "A+",
+      "trust_score": 100.0,
+      "thesis": "The most impressive strength is the rapid and substantial scaling of operations and core business income in FY26. The 4.5x year-on-year growth in Jio Credit's AUM to Rs. 19,049 crore and the 320% year"
+    },
+    {
+      "symbol": "JSWENERGY",
+      "trust_grade": "C",
+      "trust_score": 49.2,
+      "thesis": "The company's biggest strength lies in its aggressive and successful expansion of overall generation and energy storage capacity, consistently exceeding pro-rata targets for long-term goals. For insta"
+    },
+    {
+      "symbol": "JSWSTEEL",
+      "trust_grade": "D",
+      "trust_score": 36.9,
+      "thesis": "JSW Steel demonstrates strong execution and transparency in commissioning specific projects. For example, the 5 MTPA JVML integrated facility, 0.75 MTPA coke oven battery, and 0.12 MTPA colour coating"
+    },
+    {
+      "symbol": "JUBLFOOD",
+      "trust_grade": "D",
+      "trust_score": 33.2,
+      "thesis": "Jubilant FoodWorks demonstrates strong commitment and execution in its environmental sustainability goals, particularly in renewable energy sourcing for commissaries (53% in FY25 vs. a pro-rata target"
+    },
+    {
+      "symbol": "KALYANKJIL",
+      "trust_grade": "D",
+      "trust_score": 34.3,
+      "thesis": "Kalyan Jewellers demonstrates strong execution in its core store expansion strategy, particularly for Candere and overall India showrooms. For instance, in FY25, they exceeded targets for new Candere "
+    },
+    {
+      "symbol": "KAYNES",
+      "trust_grade": "B",
+      "trust_score": 68.1,
+      "thesis": "The successful commissioning of the OSAT facility at Sanand by end of 2025 and securing FSA approval, along with the progress on the HDI PCB facility, demonstrates strong execution on critical strateg"
+    },
+    {
       "symbol": "KEI",
       "trust_grade": "D",
       "trust_score": 38.0,
       "thesis": "Management has consistently delivered on its retail sales mix targets, achieving 47% in FY2023-24 (vs 'near-term' 50% aspiration) and 52% in FY2024-25 (vs 'within next two years' 50% aspiration). This"
-    },
-    {
-      "symbol": "KFINTECH",
-      "trust_grade": "B",
-      "trust_score": 67.4,
-      "thesis": "Issuer Solutions (RTA/Registry & Transfer Agent) business has delivered across all dimensions: 22%+ organic YoY revenue growth (Q3 FY26), market share expansion to 51.4% of Nifty 500 (top-tier compani"
     },
     {
       "symbol": "LAURUSLABS",
@@ -429,28 +579,82 @@
       "thesis": "The company continues to invest heavily in R&D, with R&D spend to revenue at 4.6% in FY25, indicating a sustained commitment to innovation and product pipeline development. This long-term strategic fo"
     },
     {
+      "symbol": "LICHSGFIN",
+      "trust_grade": "F",
+      "trust_score": 15.3,
+      "thesis": "The company's ability to consistently meet or exceed its Net Interest Margin (NIM) targets is its biggest strength. For FY2024-25, NIM was 2.73% against a 2.5% target (exceeded by 7.6%). For FY2025-26"
+    },
+    {
       "symbol": "LICI",
       "trust_grade": "F",
       "trust_score": 0.0,
       "thesis": "Given the available data and the 'Too Early' or 'Unverifiable' status for many items, a clear 'biggest strength' in terms of delivered guidance is not evident. However, the company's net profit has sh"
     },
     {
-      "symbol": "MANAPPURAM",
+      "symbol": "LODHA",
       "trust_grade": "C",
-      "trust_score": 58.6,
-      "thesis": "Gold loan business execution is exceptional. Manappuram went from 'priced at upper end of market' (FY25) to 'priced at market' (Q3 FY26) and grew AUM 29.3% YoY (standalone) and 58.2% YoY (standalone) "
+      "trust_score": 50.0,
+      "thesis": "The company's biggest strength lies in its consistent pre-sales growth, achieving ~20% year-on-year, and its exceptional performance in reducing net debt, with a Net Debt/Equity ratio of 0.17x in FY24"
     },
     {
-      "symbol": "MARUTI",
+      "symbol": "LTF",
+      "trust_grade": "C",
+      "trust_score": 50.0,
+      "thesis": "The company's exceptional delivery on retailisation, achieving 98% in Q3FY26 against a target of 'around 90%' by FY24, and exceeding the retail loan book CAGR target (28% vs. 'at least 25%') demonstra"
+    },
+    {
+      "symbol": "LTM",
+      "trust_grade": "F",
+      "trust_score": 16.4,
+      "thesis": "The company's achievement of being 2.8x water positive in FY24, well ahead of its 2030 target, demonstrates a strong commitment and effective execution in environmental sustainability. Additionally, m"
+    },
+    {
+      "symbol": "LUPIN",
+      "trust_grade": "B",
+      "trust_score": 68.3,
+      "thesis": "Lupin's consistent outperformance on EBITDA margins (31.1% in Q3 FY26 vs. FY26 guidance of 27-28%) and accurate R&D spend guidance (7.5-8.5% range, with 7.7% for 9M FY26) demonstrates strong financial"
+    },
+    {
+      "symbol": "MANKIND",
+      "trust_grade": "B",
+      "trust_score": 61.3,
+      "thesis": "Mankind Pharma's biggest strength lies in its consistent delivery of operating and EBITDA margins within the guided 24-26% range, even amidst business transformations and acquisitions. This financial "
+    },
+    {
+      "symbol": "MAXHEALTH",
       "trust_grade": "D",
-      "trust_score": 24.0,
-      "thesis": "SOLAR CAPEX DELIVERY AHEAD OF SCHEDULE: FY24-25 AR targets 319 MWp solar capacity by FY 2030-31 (Page 4). Actual FY24-25 result: 78.2 MWp, up 35 MWp from FY23-24's 43.2 MWp (guidance actuals_this_year"
+      "trust_score": 37.0,
+      "thesis": "The company demonstrates strong execution in overall bed capacity addition, exceeding pro-rata targets for long-term goals (e.g., 1,550+ beds added by FY24-25 against a pro-rata target of 1,120 beds f"
     },
     {
       "symbol": "MAZDOCK",
       "trust_grade": "D",
       "trust_score": 33.3,
       "thesis": "The most impressive delivery is the significant outperformance on revenue growth for FY24 (20.8% actual vs. 'around 10%' guidance) and exceeding the FY25 revenue target for an 'excellent rating' (11,4"
+    },
+    {
+      "symbol": "MFSL",
+      "trust_grade": "D",
+      "trust_score": 37.3,
+      "thesis": "The company demonstrates strong execution and transparency in its core insurance business, particularly in maintaining a healthy solvency margin (201% as of Dec 2025 vs. 206% target for Apr 2024) and "
+    },
+    {
+      "symbol": "MOTHERSON",
+      "trust_grade": "D",
+      "trust_score": 27.0,
+      "thesis": "Motherson's biggest strength lies in its disciplined financial management, particularly in maintaining a healthy net debt to EBITDA ratio. The company consistently operates well below its stated polic"
+    },
+    {
+      "symbol": "MPHASIS",
+      "trust_grade": "A+",
+      "trust_score": 96.2,
+      "thesis": "Mphasis's consistent and significant over-delivery on environmental targets, specifically the 5% yearly decrease in energy consumption (actual ~5.97% average) and 1% yearly decrease in carbon footprin"
+    },
+    {
+      "symbol": "MUTHOOTFIN",
+      "trust_grade": "C",
+      "trust_score": 55.0,
+      "thesis": "The company's ability to significantly exceed its annual branch addition target (703 new branches in FY23-24 against a guidance of 150-200) and its gold loan portfolio growth (24% YoY against 15-20% g"
     },
     {
       "symbol": "NAM-INDIA",
@@ -466,45 +670,99 @@
     },
     {
       "symbol": "NAUKRI",
-      "trust_grade": "A+",
-      "trust_score": 95.7,
-      "thesis": "The company's ability to guide and deliver on the operational profitability of its key investments (Zomato & Policybazaar) in FY24, as well as its proactive and verifiable deployment of AI technologie"
+      "trust_grade": "C",
+      "trust_score": 57.5,
+      "thesis": "The company's commitment to and progress in its AI strategy, with 'Over 130 strong' AI team and '500+ AI models deployed' (FY24, FY25 ARs), demonstrates a forward-looking approach and investment in fu"
+    },
+    {
+      "symbol": "NBCC",
+      "trust_grade": "C",
+      "trust_score": 48.0,
+      "thesis": "NBCC's ability to consistently secure large order inflows, with the consolidated order book crossing \u20b91,20,000 crore and a historical \u20b975,280 crore secured in FY25, demonstrates strong business develo"
+    },
+    {
+      "symbol": "NESTLEIND",
+      "trust_grade": "C",
+      "trust_score": 53.8,
+      "thesis": "A key strength is the consistent delivery on sustainability commitments, specifically achieving 'zero coal' status for its factories (Feb 2025 concall, Page 25). This demonstrates effective execution "
     },
     {
       "symbol": "NHPC",
       "trust_grade": "D",
-      "trust_score": 31.3,
-      "thesis": "CAPITAL DEPLOYMENT DISCIPLINE & RENEWABLE ENERGY PIVOT \u2014 Despite execution delays on hydro, NHPC has successfully raised Rs 7,087 Cr in FY2024-25 capex through a diversified funding mix (Rs 2,250 Cr t"
+      "trust_score": 28.8,
+      "thesis": "NHPC demonstrates strong execution and commitment to its solar power expansion, as evidenced by the full commissioning of the 300 MW Karnisar Solar Project by December 2025 and the expectation to add "
     },
     {
       "symbol": "NMDC",
       "trust_grade": "F",
-      "trust_score": 11.5,
-      "thesis": "NMDC demonstrates a clear long-term vision for capacity expansion to 100 MTPA by 2030, and while interim production targets are missed, the company is actively investing in infrastructure projects lik"
+      "trust_score": 16.2,
+      "thesis": "NMDC demonstrates a strong commitment to long-term capacity expansion, with INR40,000 crores of projects sanctioned by Q2 FY26 and another INR31,000-32,000 crores on the drawing board. The highest-eve"
+    },
+    {
+      "symbol": "NTPC",
+      "trust_grade": "D",
+      "trust_score": 21.4,
+      "thesis": "NTPC demonstrates strong execution and strategic flexibility in its conventional power business and related infrastructure. The company exceeded its FY2023-24 coal production target (34.39 MMT vs 34 M"
     },
     {
       "symbol": "NUVAMA",
       "trust_grade": "C",
-      "trust_score": 55.8,
-      "thesis": "Nuvama Wealth Management's MPIS (Managed Products & Investment Solutions) business is a best-in-class execution story: 48% revenue growth YoY (9 months FY26), 30% asset growth YoY, contributing 60% of"
+      "trust_score": 42.5,
+      "thesis": "The company's biggest strength lies in its ability to grow client assets in Asset Services, exceeding its pro-rata target. Capital Markets client assets (Asset Services) grew by 38.16% from FY24 to FY"
     },
     {
       "symbol": "NYKAA",
-      "trust_grade": "C",
-      "trust_score": 51.3,
-      "thesis": "Beauty GMV growth remains resilient and on-target for mid-20s guidance. FY2024-25 saw Beauty GMV grow 24.6% YoY to Rs 11,775 Cr, validating core business momentum and the penetration + premiumisation "
+      "trust_grade": "B",
+      "trust_score": 62.8,
+      "thesis": "Nykaa's consistent delivery of mid-20s% GMV growth for its Beauty business (27% in Q3FY26, 28% in Q2FY26) and overall consolidated growth, coupled with improving EBITDA margins (8.0% in Q3FY26, highes"
     },
     {
       "symbol": "OBEROIRLTY",
-      "trust_grade": "C",
-      "trust_score": 48.8,
-      "thesis": "**Operational asset ramp-up and leasing velocity exceeding expectations.** Commerz III achieved 85%+ leasing by Q1 FY26 (vs phased ramp guidance) and Commerz I & II are fully leased for the first time"
+      "trust_grade": "D",
+      "trust_score": 30.0,
+      "thesis": "The company demonstrates strong execution in bringing large-scale commercial projects like Commerz III and Sky City Mall to operational status within guided timelines. The rapid scaling of Sky City Ma"
+    },
+    {
+      "symbol": "OIL",
+      "trust_grade": "D",
+      "trust_score": 36.2,
+      "thesis": "Direct oil/coal price beneficiaries. Crude above $80 = earnings tailwind."
+    },
+    {
+      "symbol": "ONGC",
+      "trust_grade": "F",
+      "trust_score": 11.5,
+      "thesis": "The company's progress in increasing its overall renewable energy capacity to 2.5 GW by FY2024-25, which is ahead of the pro-rata trajectory needed to achieve the 10 GW target by 2030, demonstrates a "
     },
     {
       "symbol": "PATANJALI",
       "trust_grade": "F",
       "trust_score": 6.7,
       "thesis": "The company significantly exceeded its target for establishing oil palm plantations in FY24, establishing 74,376 hectares against a plan of 25,000 hectares (FY23 AR, Page 119 vs FY24 AR, Page 127). Th"
+    },
+    {
+      "symbol": "PAYTM",
+      "trust_grade": "C",
+      "trust_score": 40.0,
+      "thesis": "The company's ability to significantly exceed its annualized people cost savings target (Rs 651 Cr saved in FY25 vs. Rs 400-500 Cr target from FY24 AR) demonstrates strong cost management capabilities"
+    },
+    {
+      "symbol": "PERSISTENT",
+      "trust_grade": "D",
+      "trust_score": 38.3,
+      "thesis": "The company's consistent delivery on its effective tax rate guidance (23.5% in Q1 FY26 and Q2 FY26, within the 22.5%-23.5% range for FY26) and its ability to maintain strong EBIT margins (16.3% in Q2 "
+    },
+    {
+      "symbol": "PETRONET",
+      "trust_grade": "C",
+      "trust_score": 41.8,
+      "thesis": "The successful augmentation of the Dahej terminal capacity from 17.5 MMTPA to 22.5 MMTPA, as confirmed by the FY2024-25 Annual Report, demonstrates strong execution capability on critical infrastructu"
+    },
+    {
+      "symbol": "PFC",
+      "trust_grade": "B+",
+      "trust_score": 77.0,
+      "thesis": "PFC's exceptional performance in improving asset quality, with the consolidated net NPA ratio reducing to 0.38% and standalone net NPA to 0.39% in FY2025 (the lowest in 7 years), demonstrates robust r"
     },
     {
       "symbol": "PGEL",
@@ -514,9 +772,33 @@
     },
     {
       "symbol": "PHOENIXLTD",
-      "trust_grade": "D",
-      "trust_score": 38.8,
-      "thesis": "Office portfolio expansion has EXCEEDED interim milestones by +15%, demonstrating execution capability in the capital-light leasing phase. Management scaled office GLA from 2 msft (FY2023) to 5 msft ("
+      "trust_grade": "F",
+      "trust_score": 13.4,
+      "thesis": "The company demonstrates strong execution and transparency on specific, near-term operational milestones. For instance, receiving Occupation Certificates for Millennium Towers in Pune in FY2026 and th"
+    },
+    {
+      "symbol": "PIDILITIND",
+      "trust_grade": "A+",
+      "trust_score": 94.0,
+      "thesis": "Pidilite's biggest strength lies in its consistent delivery and even exceeding of critical financial metrics, particularly its EBITDA margin. The company committed to an EBITDA corridor of 20-24% for "
+    },
+    {
+      "symbol": "PNB",
+      "trust_grade": "C",
+      "trust_score": 55.5,
+      "thesis": "The bank's consistent and significant improvement in asset quality, with Gross NPA reducing to 5.73% (Mar 2024) against a revised target of 6.5% and Net NPA to 0.73% (Mar 2024) against a target of 1%,"
+    },
+    {
+      "symbol": "PNBHOUSING",
+      "trust_grade": "A+",
+      "trust_score": 91.3,
+      "thesis": "The company's consistent improvement and maintenance of asset quality is a significant strength. Gross NPA has steadily declined from 3.83% in FY23 to 1.04% in Q3 FY26, well within the stated target o"
+    },
+    {
+      "symbol": "POLICYBZR",
+      "trust_grade": "C",
+      "trust_score": 58.2,
+      "thesis": "The company's ability to consistently exceed its incremental adjusted EBITDA target for core businesses (e.g., \u20b9141 Cr YoY increase in Q1 FY2024-25 vs. \u20b950 Cr per quarter guidance) and achieve consoli"
     },
     {
       "symbol": "POLYCAB",
@@ -525,22 +807,106 @@
       "thesis": "Polycab's ability to consistently exceed its top-line revenue targets, reaching \u20b9224,083 Mn in FY25, well ahead of the \u20b9200 billion target for FY26, demonstrates strong execution and market demand (FY"
     },
     {
-      "symbol": "RELIANCE",
+      "symbol": "POWERGRID",
+      "trust_grade": "D",
+      "trust_score": 27.9,
+      "thesis": "The company's ability to consistently exceed its short-term capital expenditure targets is a major strength. For instance, the FY2023-24 guidance of 'around \u20b918,000 crore in FY25' was significantly ex"
+    },
+    {
+      "symbol": "POWERINDIA",
+      "trust_grade": "C",
+      "trust_score": 53.3,
+      "thesis": "The company's exceptional performance in environmental sustainability, particularly the 84% absolute emissions reduction since 2019 and 58% freshwater usage reduction since 2019 as of FY2024-25 (FY202"
+    },
+    {
+      "symbol": "PPLPHARMA",
       "trust_grade": "F",
-      "trust_score": 12.4,
-      "thesis": "Reliance demonstrates a strong commitment and execution in its oil & gas E&P segment. The successful completion of the first multi-lateral horizontal well (MLW) campaign and the commencement of a 'sec"
+      "trust_score": 15.0,
+      "thesis": "The company demonstrates a clear commitment to ESG initiatives, as evidenced by the reported 16,158 tCo2e lower GHG emissions in FY2025 compared to FY2024, and the meaningful increase in sustainabilit"
+    },
+    {
+      "symbol": "PREMIERENE",
+      "trust_grade": "D",
+      "trust_score": 25.5,
+      "thesis": "The company's ability to significantly exceed module capacity targets (11.1 GW by end of FY2025-26 vs. pro-rata 6.7 GW for FY2026-27 towards a FY2028 target of 10 GW) and TOPCon cell capacity targets "
+    },
+    {
+      "symbol": "PRESTIGE",
+      "trust_grade": "D",
+      "trust_score": 27.8,
+      "thesis": "The company's ability to exceed its initial GDV projection for the Indirapuram land parcel (now 'INR12,000-plus crores' vs. '\u20b910,000 Cr' guided) and the strong presales performance in Q3 FY26 (INR22,3"
+    },
+    {
+      "symbol": "RBLBANK",
+      "trust_grade": "D",
+      "trust_score": 36.8,
+      "thesis": "The consistent and strong growth in wholesale banking advances (21% Y-o-Y in Q3 FY26, exceeding the 10-12% target) and secured retail assets (25% Y-o-Y in Q3 FY26, within the 25-30% target) demonstrat"
+    },
+    {
+      "symbol": "RECLTD",
+      "trust_grade": "D",
+      "trust_score": 20.5,
+      "thesis": "REC has consistently exceeded or delivered on its fund-raising targets through private placement of bonds/debentures. In FY2024-25, it raised \u20b91,42,204 crore against a target of \u20b91,05,000 crore (FY22-"
+    },
+    {
+      "symbol": "RELIANCE",
+      "trust_grade": "D",
+      "trust_score": 30.9,
+      "thesis": "Reliance's biggest strength lies in its rapid and comprehensive execution of New Energy manufacturing infrastructure. The commissioning and ramping up of the 10 GW solar module and cell manufacturing,"
     },
     {
       "symbol": "RVNL",
-      "trust_grade": "D",
-      "trust_score": 35.5,
-      "thesis": "Strong operational execution on awarded projects and gestation-stage milestone delivery. Rail infrastructure commissioning 345.89 km in FY25 (3.2 km New Line + 342.69 km Doubling) was on-plan per guid"
+      "trust_grade": "F",
+      "trust_score": 7.5,
+      "thesis": "The company demonstrates strong execution and progress on critical long-term projects like Vande Bharat, with the first prototype delivery on track for June/July 2026 (Q3 FY26 concall, Page 3). Furthe"
+    },
+    {
+      "symbol": "SAIL",
+      "trust_grade": "C",
+      "trust_score": 50.6,
+      "thesis": "SAIL's consistent delivery on short-term operational and financial targets, particularly in H1 and 9M FY26, is its biggest strength. The company achieved its crude steel production (9.5 MT), sales vol"
+    },
+    {
+      "symbol": "SAMMAANCAP",
+      "trust_grade": "C",
+      "trust_score": 45.8,
+      "thesis": "The company's biggest strength lies in its successful turnaround in profitability, moving from a consolidated loss of INR2,132 crores in 9M FY25 to a net profit of INR957 crores in 9M FY26. This, coup"
+    },
+    {
+      "symbol": "SBICARD",
+      "trust_grade": "F",
+      "trust_score": 15.0,
+      "thesis": "The company demonstrates consistent execution on its partnership strategy, as evidenced by the successful exploration and launch of new co-brand opportunities (IndiGo, Flipkart, PhonePe, Tata Neu) and"
     },
     {
       "symbol": "SBILIFE",
-      "trust_grade": "A+",
-      "trust_score": 95.4,
-      "thesis": "Real-time GST mitigation execution and VoNB margin defense. SBI Life faced a 175 bps (later 150 bps) gross margin headwind from GST exemption on individual policies (effective Sept 22, 2025) with loss"
+      "trust_grade": "B",
+      "trust_score": 67.0,
+      "thesis": "The company's ability to consistently deliver on key operational metrics such as digital proposal submission (99.7%), automated underwriting (58%), death claim settlement (99.3%), and mis-selling rati"
+    },
+    {
+      "symbol": "SHREECEM",
+      "trust_grade": "D",
+      "trust_score": 31.8,
+      "thesis": "The company's consistent delivery and exceeding of green power consumption targets (55.9% in FY2023-24, 56.09% in FY2024-25, 63% in H1 FY26 against a 55% target) and significant expansion in green ene"
+    },
+    {
+      "symbol": "SHRIRAMFIN",
+      "trust_grade": "D",
+      "trust_score": 37.4,
+      "thesis": "The company's AUM growth has significantly exceeded guidance. The FY2022-23 guidance for 13-14% AUM growth in FY2023-24 was exceeded, with AUM growing at an implied CAGR of ~19.0% over two years (FY22"
+    },
+    {
+      "symbol": "SIEMENS",
+      "trust_grade": "C",
+      "trust_score": 41.3,
+      "thesis": "The successful and timely completion of the demerger and listing of Siemens Energy India Limited in calendar year 2025 (as guided in FY23-24 AR) is a significant strength, demonstrating management's a"
+    },
+    {
+      "symbol": "SOLARINDS",
+      "trust_grade": "F",
+      "trust_score": 16.4,
+      "thesis": "The company's biggest strength lies in its robust and rapidly growing defence order book, which reached Rs 18,000 Crores by Q3 FY26, significantly exceeding previous expectations. The successful devel"
     },
     {
       "symbol": "SRF",
@@ -549,10 +915,46 @@
       "thesis": "The most impressive delivery is the achievement and exceeding of the ESG commitment to source electricity from renewable sources. Management committed to 30% by 2030 and achieved 31.32% in FY25 (FY25 "
     },
     {
+      "symbol": "SUPREMEIND",
+      "trust_grade": "D",
+      "trust_score": 28.8,
+      "thesis": "The company's ability to exceed its piping product export value target for FY25 (US$ 27.0 million actual vs US$ 10.0 million target) and its consistent progress in increasing captive solar power capac"
+    },
+    {
       "symbol": "SWIGGY",
-      "trust_grade": "B",
-      "trust_score": 62.6,
-      "thesis": "Plastic offset and renewable energy progress far ahead of pro-rata trajectory: Swiggy achieved 100% plastic offset in direct operations by target year 2025 (FY2024-25 AR, page 47), meeting a committed"
+      "trust_grade": "D",
+      "trust_score": 34.1,
+      "thesis": "The Food Delivery business demonstrates strong performance, with GOV growth of 20.5% Y-o-Y and MTU growth of 22% Y-o-Y in Q3 FY26, exceeding the lower end of their 18-20% guidance. This indicates robu"
+    },
+    {
+      "symbol": "TATACONSUM",
+      "trust_grade": "D",
+      "trust_score": 32.7,
+      "thesis": "The consistent delivery on distribution expansion, reaching 4 million outlets by 2023 (FY22-23 AR, Page 02) and maintaining a strong dividend payout ratio (64% in FY2024-25, within 50-75% guidance), d"
+    },
+    {
+      "symbol": "TATAPOWER",
+      "trust_grade": "F",
+      "trust_score": 6.2,
+      "thesis": "The successful commencement of solar module production in the 4 GW Tirunelveli facility in FY2023-24, with the cell line becoming fully operational in FY2024-25 as guided, demonstrates strong executio"
+    },
+    {
+      "symbol": "TATASTEEL",
+      "trust_grade": "D",
+      "trust_score": 36.8,
+      "thesis": "The successful and timely commissioning of the 5 MTPA blast furnace at Kalinganagar in 2QFY25, along with the decommissioning of Port Talbot blast furnaces by September 2024, demonstrates strong execu"
+    },
+    {
+      "symbol": "TCS",
+      "trust_grade": "B+",
+      "trust_score": 72.4,
+      "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates st"
+    },
+    {
+      "symbol": "TECHM",
+      "trust_grade": "D",
+      "trust_score": 33.6,
+      "thesis": "The company's commitment to shareholder returns is a significant strength, as evidenced by the '85% or more of free cash flow generated over five years to shareholders' guidance (FY23-24 AR). Actual d"
     },
     {
       "symbol": "TIINDIA",
@@ -561,16 +963,40 @@
       "thesis": "The company successfully secured a Rs. 1,000 crore order from Indian Railways for train sets (FY25 AR, Page 6), demonstrating strong capabilities and order book in its core or related engineering segm"
     },
     {
+      "symbol": "TITAN",
+      "trust_grade": "D",
+      "trust_score": 27.0,
+      "thesis": "The company has consistently exceeded its water capacity augmentation targets, with 'water storing capacity increased: 400+ million litres' in FY2024-25, significantly surpassing individual project ta"
+    },
+    {
+      "symbol": "TMPV",
+      "trust_grade": "D",
+      "trust_score": 35.4,
+      "thesis": "The biggest strength is the successful financial turnaround and consistent improvement in profitability, particularly for JLR, achieving EBIT margins over 6% for six consecutive quarters and strong co"
+    },
+    {
       "symbol": "TORNTPOWER",
       "trust_grade": "C",
       "trust_score": 56.7,
       "thesis": "The company's ability to exceed its 'renewable capacity under development' target of 736 MW (FY23 AR, Page 6) by reporting ~3 GWp under construction in FY24 (FY24 AR, other_key_numbers) demonstrates s"
     },
     {
+      "symbol": "TVSMOTOR",
+      "trust_grade": "F",
+      "trust_score": 18.9,
+      "thesis": "TVS Motor demonstrates strong execution in EV market expansion and renewable energy adoption. The company exceeded its target for EV geographical presence, expanding beyond 130 towns to 'about 250 tow"
+    },
+    {
       "symbol": "ULTRACEMCO",
       "trust_grade": "D",
       "trust_score": 26.1,
       "thesis": "The company's ability to exceed its production capacity guidance (160+ MTPA for FY25/FY26 vs. actual 183.36 MTPA by FY25, FY23 AR Page 13, FY25 AR other_key_numbers) demonstrates strong operational ex"
+    },
+    {
+      "symbol": "UNIONBANK",
+      "trust_grade": "A+",
+      "trust_score": 100.0,
+      "thesis": "The bank's robust digital transformation efforts and the resulting operational efficiencies are a significant strength. With a capital budget of INR 1,600 Cr for technology in FY2025-26, the implement"
     },
     {
       "symbol": "UNITDSPR",
@@ -587,8 +1013,8 @@
     {
       "symbol": "UPL",
       "trust_grade": "C",
-      "trust_score": 53.8,
-      "thesis": "Execution on FY25 financial recovery is comprehensive and verifiable: (1) OPM improved from 10.0% to 15.3% YoY (+530bp), showing cost control and operational leverage; (2) Free Cash Flow recovered fro"
+      "trust_score": 40.0,
+      "thesis": "The company's strong performance in reducing waste levels (52% reduction over 4 years against a 25% target by 2025) and achieving its renewable energy usage target (30% in FY24) demonstrates a robust "
     },
     {
       "symbol": "VBL",
@@ -599,14 +1025,26 @@
     {
       "symbol": "VEDL",
       "trust_grade": "F",
-      "trust_score": 13.7,
-      "thesis": "Operational execution on ESG and sustainability commitments has been credible and ahead of trajectory in selective areas. Trees planted 2 million (target 7M by 2030) is exactly on pro-rata pace, sugge"
+      "trust_score": 5.7,
+      "thesis": "The company's ability to achieve record operational and financial performance, including 'highest ever quarterly EBITDA of Rs.15,171 crores' and 'lifetime high revenue and PAT of Rs.7,807 crores' in Q"
+    },
+    {
+      "symbol": "VOLTAS",
+      "trust_grade": "D",
+      "trust_score": 38.3,
+      "thesis": "Voltas' ability to exceed its capex commitment (Rs 600 crores spent by FY2024-25 against a guidance of Rs 450-500 crores over 18-24 months from FY2022-23 AR) demonstrates strong financial commitment a"
     },
     {
       "symbol": "YESBANK",
       "trust_grade": "F",
       "trust_score": 12.9,
       "thesis": "The most impressive delivery is on the 'new CASA accounts onboarded' target. The guidance from the FY25 Annual Report (Page 3) stated '1.3 million new CASA accounts onboarded' for FY25, and the actual"
+    },
+    {
+      "symbol": "ZYDUSLIFE",
+      "trust_grade": "C",
+      "trust_score": 52.7,
+      "thesis": "The company's ability to consistently exceed its EBITDA margin improvement guidance is a major strength. For FY24, management guided for a 150-200 basis point improvement, but actual operating margin "
     }
   ]
 }
