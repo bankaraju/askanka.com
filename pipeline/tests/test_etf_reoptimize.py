@@ -4,6 +4,9 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
+
 # Ensure pipeline/ is on sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -75,3 +78,34 @@ def test_load_indian_data_handles_missing_files(tmp_path):
     for key in ("fii_net", "india_vix", "nifty_close"):
         assert key in result, f"Result must contain '{key}'"
         assert result[key] is None, f"'{key}' should be None when files are missing"
+
+
+def test_optimize_weights_returns_valid_structure():
+    from autoresearch.etf_reoptimize import optimize_weights
+    np.random.seed(42)
+    dates = pd.date_range("2025-01-01", periods=100, freq="B")
+    features = pd.DataFrame(
+        np.random.randn(100, 5),
+        index=dates,
+        columns=["etf_a", "etf_b", "etf_c", "fii_net", "india_vix"],
+    )
+    target = pd.Series(np.random.choice([1, -1], size=100), index=dates)
+    result = optimize_weights(features, target, n_iterations=50)
+    assert "optimal_weights" in result
+    assert "best_accuracy" in result
+    assert "best_sharpe" in result
+    assert isinstance(result["optimal_weights"], dict)
+    assert len(result["optimal_weights"]) > 0
+    assert result["best_accuracy"] >= 0
+    assert result["best_accuracy"] <= 100
+
+
+def test_optimize_weights_beats_baseline():
+    from autoresearch.etf_reoptimize import optimize_weights
+    np.random.seed(42)
+    dates = pd.date_range("2025-01-01", periods=200, freq="B")
+    target = pd.Series(np.random.choice([1, -1], size=200), index=dates)
+    signal = target.astype(float) + np.random.randn(200) * 0.5
+    features = pd.DataFrame({"signal": signal, "noise": np.random.randn(200)}, index=dates)
+    result = optimize_weights(features, target, n_iterations=100)
+    assert result["best_accuracy"] > result["baseline"]

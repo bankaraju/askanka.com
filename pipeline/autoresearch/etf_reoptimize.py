@@ -30,6 +30,9 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+import numpy as np
+import pandas as pd
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -110,6 +113,105 @@ def load_indian_data(
     result.update(_load_positioning(positioning_path))
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# Weight Optimizer
+# ---------------------------------------------------------------------------
+
+def optimize_weights(
+    features: pd.DataFrame,
+    target: pd.Series,
+    n_iterations: int = 2000,
+    train_frac: float = 0.7,
+) -> dict:
+    """Karpathy-style random search weight optimizer for the ETF regime engine.
+
+    Parameters
+    ----------
+    features : pd.DataFrame
+        Feature matrix where each column is an ETF or signal series.
+        Index must be date-aligned with *target*.
+    target : pd.Series
+        Binary direction labels: +1 (up) or -1 (down).
+    n_iterations : int
+        Number of random perturbation steps. Default 2000.
+    train_frac : float
+        Fraction of data used for training the seed weights. Default 0.7.
+
+    Returns
+    -------
+    dict
+        - ``optimal_weights`` — top-20 weights by absolute value (col → weight)
+        - ``best_accuracy``   — accuracy on test set (0–100 float)
+        - ``baseline``        — naive baseline accuracy on test set (0–100 float)
+        - ``best_sharpe``     — annualised Sharpe of the weighted signal on test set
+        - ``n_iterations``    — number of iterations actually run
+    """
+    # --- align and split ---
+    aligned = features.join(target.rename("__target__"), how="inner").dropna()
+    X = aligned.drop(columns=["__target__"])
+    y = aligned["__target__"]
+
+    split = int(len(X) * train_frac)
+    X_train, X_test = X.iloc[:split], X.iloc[split:]
+    y_train, y_test = y.iloc[:split], y.iloc[split:]
+
+    n_test = len(y_test)
+
+    # --- baseline: predict "up" every day ---
+    n_up_test = int((y_test == 1).sum())
+    baseline = (n_up_test / n_test * 100) if n_test > 0 else 50.0
+
+    # --- correlation-weighted seed ---
+    cols = list(X.columns)
+    seed_weights: dict[str, float] = {}
+    for col in cols:
+        corr = X_train[col].corr(y_train)
+        seed_weights[col] = float(corr) if not np.isnan(corr) else 0.0
+
+    # --- random search ---
+    best_weights = dict(seed_weights)
+    best_sharpe = -np.inf
+    best_accuracy = 0.0
+
+    for _ in range(n_iterations):
+        # Perturb each weight
+        candidate: dict[str, float] = {}
+        for col, base in best_weights.items():
+            noise_scale = abs(base) * 0.5 if abs(base) > 1e-9 else 0.1
+            candidate[col] = base + np.random.normal(0, noise_scale)
+
+        # Compute weighted signal on test set
+        signal_test = sum(X_test[col] * w for col, w in candidate.items())
+
+        # Accuracy: correct direction predictions
+        predictions = np.sign(signal_test)
+        correct = (predictions == y_test.values).sum()
+        accuracy = correct / n_test * 100 if n_test > 0 else 0.0
+
+        # Sharpe: annualised on signal * target
+        pnl = signal_test * y_test
+        pnl_std = pnl.std()
+        sharpe = (pnl.mean() / pnl_std * np.sqrt(252)) if pnl_std > 1e-9 else 0.0
+
+        # Track best by Sharpe
+        if sharpe > best_sharpe:
+            best_sharpe = float(sharpe)
+            best_accuracy = float(accuracy)
+            best_weights = candidate
+
+    # --- return top-20 weights by absolute value ---
+    sorted_weights = sorted(best_weights.items(), key=lambda kv: abs(kv[1]), reverse=True)
+    top_weights = dict(sorted_weights[:20])
+
+    return {
+        "optimal_weights": top_weights,
+        "best_accuracy": best_accuracy,
+        "baseline": baseline,
+        "best_sharpe": best_sharpe,
+        "n_iterations": n_iterations,
+    }
 
 
 # ---------------------------------------------------------------------------
