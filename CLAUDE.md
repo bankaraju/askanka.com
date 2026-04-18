@@ -32,16 +32,46 @@ When context is getting heavy or you've been working for 2+ hours continuously, 
 
 ## Clockwork Schedule (IST)
 The system runs automatically via Windows Scheduled Tasks:
-- 04:30 — Overnight global data dump + regime computation
-- 04:45 — Daily article generation (war + epstein)
-- 09:00 — Kite session refresh
-- 09:15 — Pre-market briefing → Telegram
-- 09:25 — Morning scan: regime + technicals + OI + news + spread intelligence + Phase B ranker
-- 09:30-15:30 (every 15 min) — Intraday scan + signal generation + Phase C breaks
-- 15:30 — Closing price capture
-- 16:00 — EOD P&L + track record
-- 16:30 — Website data export + news refresh
-- Sunday 22:00 — Weekly spread statistics
+
+**Overnight Batch:**
+- 04:30 — AnkaDailyDump: fetch global prices, fundamentals, FII flows (CRITICAL)
+- 04:45 — AnkaETFSignal: compute daily regime zone from stored ETF weights (CRITICAL)
+- 04:45 — AnkaReverseRegimeProfile: regime transition patterns, Phase A (CRITICAL)
+- 04:45 — AnkaDailyArticles: generate research articles (warn)
+- 04:45 — AnkaWatchdogGate: watchdog gate run, check everything (warn)
+
+**Pre-Market:**
+- 07:15 — AnkaCorrelationScan: Asian market correlation check (info)
+- 07:30 — AnkaMorningBrief0730: morning briefing → Telegram (warn)
+- 08:30 — AnkaGapPredictor: overnight gap risk analysis (info)
+- 09:00 — AnkaRefreshKite: refresh Zerodha broker session (CRITICAL)
+- 09:16 — AnkaOpenCapture: capture today's opening prices (CRITICAL)
+- 09:25 — AnkaMorningScan: regime + technicals + OI + news + spread intelligence + Phase B ranker (CRITICAL)
+
+**Market Hours (09:30-15:30, every 15 min):**
+- AnkaIntraday####: re-scan technicals, OI, news, spreads, correlation breaks
+- AnkaSignal####: score signals, apply trust gates, send Telegram alerts
+- AnkaCorrelationBreaks: Phase C regime-stock divergence detection
+- AnkaWatchdogIntraday: critical task freshness check
+- AnkaTrustIntra####: OPUS ANKA model portfolio intraday monitor
+
+**Post-Close:**
+- 15:35 — AnkaCloseCapture: capture official closing prices (CRITICAL)
+- 15:35 — AnkaTAScanner: TA fingerprint scan (info)
+- 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL)
+- 16:15 — AnkaEODTrackRecord: write official track record (warn)
+- 16:20 — AnkaEODNews: backtest news predictions (warn)
+- 16:30 — AnkaWebExport: push data to website (warn)
+- 16:35 — AnkaTrustEOD: OPUS ANKA EOD review + next-day outlook (warn)
+- 16:45 — AnkaWatchdogGate: watchdog gate run, check everything (warn)
+
+**Weekly:**
+- Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)
+- Sunday 00:00 — AnkaUnifiedBacktest: 777-day historical replay backtest (CRITICAL)
+- Sunday 22:00 — AnkaWeeklyAgg + AnkaWeeklyStats: weekly spread statistics (warn)
+- Friday 16:00 — AnkaWeeklyReport: weekly performance report → Telegram (warn)
+
+Total: 74+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
 
 ## Scheduler Inventory (Canonical)
 

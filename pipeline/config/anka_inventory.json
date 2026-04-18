@@ -798,6 +798,16 @@
       "notes": "Every 15 min Mon-Fri 09:30-15:30 IST. Watchdog intraday pass \u00e2\u20ac\u201d critical tier only. Registered 2026-04-16. Inventoried to eliminate self-drift."
     },
     {
+      "task_name": "AnkaCloseCapture",
+      "tier": "critical",
+      "cadence_class": "daily",
+      "outputs": [
+        "data/daily_close.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "15:35 IST. Captures official closing prices for all 213 F&O stocks."
+    },
+    {
       "task_name": "AnkaCorrelationScan",
       "tier": "warn",
       "cadence_class": "daily",
@@ -825,6 +835,16 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "04:45 IST daily. etf_daily_signal.py \u2014 compute today_zone using stored weights. Must run AFTER AnkaDailyDump (04:30)."
+    },
+    {
+      "task_name": "AnkaWebExport",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "outputs": [
+        "../data/*.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "16:30 IST. Export all pipeline data to website JSON files for askanka.com."
     },
     {
       "task_name": "AnkaUnifiedBacktest",

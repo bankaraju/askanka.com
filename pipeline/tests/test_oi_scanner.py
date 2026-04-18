@@ -2,7 +2,7 @@
 Tests for pipeline/oi_scanner.py — OI Scanner: PCR, anomaly detection.
 
 Run:
-    cd C:/Users/Claude_Anka/Documents/askanka.com/pipeline
+    cd C:/Users/Claude_Anka/askanka.com/pipeline
     python -m pytest tests/test_oi_scanner.py -v
 """
 
