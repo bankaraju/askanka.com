@@ -1,6 +1,15 @@
 {
   "articles": [
     {
+      "date": "2026-04-18",
+      "segment": "epstein",
+      "filename": "2026-04-18-epstein.html",
+      "headline": "DOJ's Epstein Silence: Wexner's 'S*x Services' Bombshell, Trump's Judicial Gambit, and India's Eroding Trust",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 18, 2026"
+    },
+    {
       "date": "2026-04-17",
       "segment": "war",
       "filename": "2026-04-17-war.html",
@@ -103,22 +112,6 @@
       "segment": "epstein",
       "filename": "2026-04-11-epstein.html",
       "headline": "Melania's Epstein Fumble: A High-Stakes Bet Against Disclosure, With Indian Capital at Risk",
-      "category": "INVESTIGATION",
-      "color": "#d4a855"
-    },
-    {
-      "date": "2026-04-10",
-      "segment": "war",
-      "filename": "2026-04-10-war.html",
-      "headline": "Hormuz Holds Hostage: US-Iran 'Ceasefire' a Sham as Oil War Escalates",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444"
-    },
-    {
-      "date": "2026-04-10",
-      "segment": "epstein",
-      "filename": "2026-04-10-epstein.html",
-      "headline": "Melania's Desperate Denials and the Enduring Silence on Epstein's Indian Connections",
       "category": "INVESTIGATION",
       "color": "#d4a855"
     }

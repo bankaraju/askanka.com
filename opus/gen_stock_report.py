@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / "config" / ".env")
-load_dotenv(Path("C:/Users/Claude_Anka/Documents/askanka.com/pipeline/.env"))
+load_dotenv(ROOT.parent / "pipeline" / ".env")
 
 ARTIFACTS = ROOT / "artifacts"
 

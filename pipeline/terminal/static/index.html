@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anka Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/lightweight-charts@4/dist/lightweight-charts.standalone.production.js"></script>
+  <link rel="stylesheet" href="/static/css/terminal.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar__regime">
+        <span id="regime-badge" class="topbar__regime-badge regime-neutral">LOADING</span>
+        <span id="regime-stability" class="text-muted" style="font-size: 0.75rem;"></span>
+      </div>
+      <div class="topbar__market">
+        <span id="market-status">--</span>
+      </div>
+      <div class="topbar__clock">
+        <span id="clock">--:--:--</span>
+        <span id="stale-indicator" style="display:none; margin-left: 8px;" class="badge badge--stale">STALE</span>
+      </div>
+    </header>
+    <nav class="sidebar" role="navigation" aria-label="Primary">
+      <div class="sidebar__brand">
+        <h1>Anka</h1>
+        <span>Terminal v0.1</span>
+      </div>
+      <div class="sidebar__nav">
+        <button class="sidebar__item sidebar__item--active" data-tab="dashboard" aria-label="Dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="sidebar__item" data-tab="trading" aria-label="Trading">
+          <i data-lucide="trending-up"></i>
+          <span>Trading</span>
+        </button>
+        <button class="sidebar__item" data-tab="intelligence" aria-label="Intelligence">
+          <i data-lucide="brain"></i>
+          <span>Intelligence</span>
+        </button>
+        <button class="sidebar__item" data-tab="track-record" aria-label="Track Record">
+          <i data-lucide="bar-chart-2"></i>
+          <span>Track Record</span>
+        </button>
+        <button class="sidebar__item" data-tab="settings" aria-label="Settings">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </button>
+      </div>
+    </nav>
+    <main class="main" id="main-content" role="main"></main>
+    <aside class="context-panel" id="context-panel" role="complementary" aria-label="Stock details">
+      <div class="context-panel__header">
+        <h3 id="context-panel-title">--</h3>
+        <button class="context-panel__close" id="context-panel-close" aria-label="Close panel">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div id="context-panel-content"></div>
+    </aside>
+  </div>
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

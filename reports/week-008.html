@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anka Research | Week 008 — 2026-04-11 to 2026-04-17</title>
+<meta name="description" content="Anka Research Week 008: AI-augmented weekly wartime market analysis across 8 global indices, 20 stocks, commodities, and FX.">
+<script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2035;
+  --bg-card-hover: #1f2847;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-gold: #f59e0b;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --border-color: #1f2937;
+  --border-highlight: #374151;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  display: flex;
+}
+#sidebar {
+  position: fixed; left: 0; top: 0; width: 260px; height: 100vh;
+  background: var(--bg-secondary); border-right: 1px solid var(--border-color);
+  overflow-y: auto; z-index: 100; padding: 20px 0;
+}
+#sidebar .logo {
+  padding: 0 20px 20px; border-bottom: 1px solid var(--border-color);
+  margin-bottom: 15px;
+}
+#sidebar .logo h2 { font-size: 14px; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 2px; }
+#sidebar .logo p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+#sidebar nav a {
+  display: block; padding: 8px 20px; color: var(--text-secondary);
+  text-decoration: none; font-size: 13px; border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+#sidebar nav a:hover, #sidebar nav a.active {
+  background: var(--bg-card); color: var(--text-primary);
+  border-left-color: var(--accent-gold);
+}
+#sidebar nav a.section-head { font-weight: 700; color: var(--text-primary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; }
+#main {
+  margin-left: 260px; padding: 30px 40px; width: calc(100% - 260px);
+  max-width: 1200px;
+}
+h1 { font-size: 28px; color: var(--accent-gold); margin-bottom: 5px; }
+h2 { font-size: 22px; color: var(--text-primary); margin: 40px 0 15px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+h3 { font-size: 17px; color: var(--accent-cyan); margin: 25px 0 10px; }
+h4 { font-size: 14px; color: var(--accent-gold); margin: 15px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+p, li { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+.subtitle { font-size: 15px; color: var(--text-muted); margin-bottom: 30px; }
+.dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+.dash-card {
+  background: var(--bg-card); border-radius: 8px; padding: 18px;
+  border: 1px solid var(--border-color);
+}
+.dash-card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.dash-card .value { font-size: 24px; font-weight: 700; margin: 5px 0; }
+.dash-card .change { font-size: 13px; font-weight: 600; }
+.positive { color: var(--accent-green); }
+.negative { color: var(--accent-red); }
+.neutral { color: var(--accent-gold); }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
+th {
+  background: var(--bg-secondary); color: var(--accent-gold); padding: 10px 12px;
+  text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  border-bottom: 2px solid var(--border-highlight);
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); }
+tr:hover td { background: var(--bg-card-hover); }
+.stock-card {
+  background: var(--bg-card); border-radius: 10px; padding: 25px;
+  border: 1px solid var(--border-color); margin: 20px 0;
+  transition: border-color 0.3s;
+}
+.stock-card:hover { border-color: var(--accent-gold); }
+.stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.stock-header .ticker { font-size: 22px; font-weight: 700; color: var(--accent-gold); }
+.stock-header .name { font-size: 15px; color: var(--text-primary); margin-left: 12px; }
+.stock-desc { font-size: 13px; color: #9ca3af; line-height: 1.5; margin: -8px 0 12px 0; padding: 0; }
+.anka-take { font-size: 13px; color: #d1d5db; line-height: 1.6; margin: 0 0 14px 0; padding: 10px 14px; background: rgba(212,168,85,0.08); border-left: 3px solid var(--accent-gold); border-radius: 4px; }
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.badge-defense { background: #1e3a2f; color: #34d399; }
+.badge-energy { background: #3b1f1f; color: #f87171; }
+.badge-commodity { background: #3b2f1f; color: #fbbf24; }
+.badge-tech { background: #1f2d3b; color: #60a5fa; }
+.badge-shipping { background: #1f3b3b; color: #2dd4bf; }
+.badge-pharma { background: #1f2a3b; color: #93c5fd; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+.factor-box {
+  background: var(--bg-secondary); border-radius: 8px; padding: 15px;
+  border-left: 3px solid var(--accent-blue);
+}
+.factor-box.macro { border-left-color: var(--accent-purple); }
+.factor-box.specific { border-left-color: var(--accent-green); }
+.factor-box h4 { margin-top: 0; }
+.factor-box ul { padding-left: 18px; }
+.factor-box li { font-size: 13px; margin-bottom: 6px; }
+.metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+.metric {
+  background: var(--bg-secondary); border-radius: 6px; padding: 10px;
+  text-align: center;
+}
+.metric .metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+.metric .metric-value { font-size: 18px; font-weight: 700; margin-top: 3px; }
+.chart-container { background: var(--bg-card); border-radius: 8px; padding: 15px; margin: 15px 0; border: 1px solid var(--border-color); min-height: 400px; overflow: visible; }
+.ratings-bar {
+  display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 8px;
+}
+.rb-segment { height: 100%; }
+.footer-section {
+  text-align: center; padding: 40px 20px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted); font-size: 12px;
+}
+@media print {
+  #sidebar { display: none; }
+  #main { margin-left: 0; max-width: 100%; }
+  .stock-card { break-inside: avoid; }
+}
+@media (max-width: 1024px) {
+  #sidebar { width: 200px; }
+  #main { margin-left: 200px; width: calc(100% - 200px); padding: 20px; }
+  .dashboard { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; width: 100%; padding: 15px; }
+  .two-col { grid-template-columns: 1fr; }
+  .dashboard { grid-template-columns: 1fr 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="logo">
+    <h2>Anka Research</h2>
+    <p>AI-Augmented Market Intelligence<br>Bharat Ankaraju | Week 008</p>
+  </div>
+  <nav>
+    <a href="/">Back to askanka.com</a>
+    <a href="#executive-summary">Executive Summary</a>
+    <a href="#global-indices">Global Indices</a>
+    <a href="#commodities">Commodities & Energy</a>
+    <a href="#fx-impact">FX Impact</a>
+    <a href="#sector-performance">Sector Performance</a>
+    <a href="#top-movers" class="section-head">Top Movers</a>
+    <a href="#winners">Winners</a>
+    <a href="#losers">Losers</a>
+    <a href="#stock-deep-dives" class="section-head">Stock Deep Dives</a>
+    <a href="#stock-sse">SSE</a>
+    <a href="#stock-7012">7012</a>
+    <a href="#stock-7011">7011</a>
+    <a href="#stock-oxy">OXY</a>
+    <a href="#stock-tte">TTE</a>
+    <a href="#stock-300750">300750</a>
+    <a href="#stock-hal">HAL</a>
+    <a href="#stock-vlo">VLO</a>
+    <a href="#stock-bel">BEL</a>
+    <a href="#stock-mpc">MPC</a>
+    <a href="#stock-601857">601857</a>
+    <a href="#stock-lmt">LMT</a>
+    <a href="#methodology" class="section-head">Methodology</a>
+    <a href="#methodology">Sources & Disclaimer</a>
+  </nav>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+<section id="executive-summary">
+<div style="display:flex;align-items:center;gap:15px;margin-bottom:5px;">
+  <div style="width:50px;height:50px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#0a0e1a;">A</div>
+  <div>
+    <h1 style="margin-bottom:0;">Week 008 — Weekly Market Brief</h1>
+    <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">Anka Research | AI-Augmented Market Intelligence</p>
+  </div>
+</div>
+<p class="subtitle">Wartime Market Analysis | 2026-04-11 to 2026-04-17<br>
+<span style="font-size:12px;color:#9ca3af;">By Bharat Ankaraju | Published 2026-04-17 | Weekly Research Brief #008</span></p>
+
+<div class="dashboard">
+  <div class="dash-card">
+    <div class="label">Brent Crude</div>
+    <div class="value negative">$91.87</div>
+    <div class="change negative">-2.73% WoW</div>
+  </div>
+  <div class="dash-card">
+    <div class="label">Gold</div>
+    <div class="value positive">$4,849.40</div>
+    <div class="change positive">+1.64% WoW</div>
+  </div>
+  <div class="dash-card">
+    <div class="label">VIX</div>
+    <div class="value positive">17.5</div>
+    <div class="change positive">-9.10% WoW</div>
+  </div>
+  <div class="dash-card">
+    <div class="label">Best Index</div>
+    <div class="value positive">KOSPI</div>
+    <div class="change positive">+5.68%</div>
+  </div>
+</div>
+
+<div class="dashboard">
+  <div class="dash-card">
+    <div class="label">Worst Index</div>
+    <div class="value negative">FTSE 100</div>
+    <div class="change negative">+0.60%</div>
+  </div>
+  <div class="dash-card">
+    <div class="label">Top Winner</div>
+    <div class="value positive">300750</div>
+    <div class="change positive">+6.78%</div>
+  </div>
+  <div class="dash-card">
+    <div class="label">Top Loser</div>
+    <div class="value negative">SSE</div>
+    <div class="change negative">-10.28%</div>
+  </div>
+  <div class="dash-card">
+    <div class="label">Stocks Tracked</div>
+    <div class="value neutral">20</div>
+    <div class="change neutral">across 8 indices</div>
+  </div>
+</div>
+</section>
+
+<!-- GLOBAL INDICES -->
+<section id="global-indices">
+<h2>Global Indices Performance</h2>
+<div id="chart-indices" class="chart-container"></div>
+<table>
+  <thead><tr><th>Index</th><th>Close</th><th>Previous</th><th>WoW Change</th></tr></thead>
+  <tbody><tr><td><strong>S&P 500</strong></td><td>$7,126.06</td><td>$6,816.89</td><td class="positive">+4.54%</td></tr>
+<tr><td><strong>FTSE 100</strong></td><td>£10,667.60</td><td>£10,603.50</td><td class="positive">+0.60%</td></tr>
+<tr><td><strong>CAC 40</strong></td><td>€8,425.13</td><td>€8,259.60</td><td class="positive">+2.00%</td></tr>
+<tr><td><strong>DAX</strong></td><td>€24,702.24</td><td>€23,803.95</td><td class="positive">+3.77%</td></tr>
+<tr><td><strong>Nifty 50</strong></td><td>₹24,353.55</td><td>₹24,050.60</td><td class="positive">+1.26%</td></tr>
+<tr><td><strong>KOSPI</strong></td><td>₩6,191.92</td><td>₩5,858.87</td><td class="positive">+5.68%</td></tr>
+<tr><td><strong>Nikkei 225</strong></td><td>¥58,475.90</td><td>¥56,924.11</td><td class="positive">+2.73%</td></tr>
+<tr><td><strong>CSI 300</strong></td><td>¥4,728.67</td><td>¥4,636.57</td><td class="positive">+1.99%</td></tr></tbody>
+</table>
+</section>
+
+<!-- COMMODITIES -->
+<section id="commodities">
+<h2>Commodities & Energy</h2>
+<div id="chart-commodities" class="chart-container" style="min-height:350px;"></div>
+<table>
+  <thead><tr><th>Commodity</th><th>Price</th><th>WoW Change</th></tr></thead>
+  <tbody><tr><td><strong>Brent Crude</strong></td><td>$91.87</td><td class="negative">-2.73%</td></tr><tr><td><strong>WTI Crude</strong></td><td>$84.00</td><td class="negative">-12.16%</td></tr><tr><td><strong>Gold</strong></td><td>$4,849.40</td><td class="positive">+1.64%</td></tr><tr><td><strong>Natural Gas</strong></td><td>$2.67</td><td class="positive">+0.83%</td></tr></tbody>
+</table>
+</section>
+
+<!-- FX -->
+<section id="fx-impact">
+<h2>Currency Impact</h2>
+<div id="chart-fx" class="chart-container" style="min-height:350px;"></div>
+<table>
+  <thead><tr><th>Pair</th><th>Rate</th><th>WoW Change</th></tr></thead>
+  <tbody><tr><td>EUR/USD</td><td>1.1792</td><td class="positive">+0.86%</td></tr>
+<tr><td>USD/JPY</td><td>158.3929</td><td class="negative">-0.45%</td></tr>
+<tr><td>GBP/USD</td><td>1.3522</td><td class="positive">+0.69%</td></tr>
+<tr><td>USD/CNY</td><td>6.8169</td><td class="negative">-0.16%</td></tr>
+<tr><td>USD/KRW</td><td>1466.7700</td><td class="negative">-1.21%</td></tr>
+<tr><td>USD/INR</td><td>92.5980</td><td class="negative">-0.51%</td></tr></tbody>
+</table>
+</section>
+
+<!-- SECTOR PERFORMANCE -->
+<section id="sector-performance">
+<h2>Sector Performance (ETFs)</h2>
+<div id="chart-sectors" class="chart-container"></div>
+<table>
+  <thead><tr><th>Sector ETF</th><th>Price</th><th>WoW Change</th></tr></thead>
+  <tbody><tr><td><strong>XLE</strong></td><td>$55.02</td><td class="negative">-3.37%</td></tr>
+<tr><td><strong>XLY</strong></td><td>$120.41</td><td class="positive">+6.66%</td></tr>
+<tr><td><strong>ITA</strong></td><td>$231.94</td><td class="positive">+1.00%</td></tr>
+<tr><td><strong>JETS</strong></td><td>$27.92</td><td class="positive">+7.84%</td></tr>
+<tr><td><strong>CIBR</strong></td><td>$66.48</td><td class="positive">+9.45%</td></tr>
+<tr><td><strong>GDX</strong></td><td>$100.34</td><td class="positive">+0.96%</td></tr>
+<tr><td><strong>GLD</strong></td><td>$445.93</td><td class="positive">+2.01%</td></tr>
+<tr><td><strong>EWZ</strong></td><td>$41.16</td><td class="negative">-0.41%</td></tr>
+<tr><td><strong>SPY</strong></td><td>$710.14</td><td class="positive">+4.52%</td></tr></tbody>
+</table>
+</section>
+
+<!-- TOP MOVERS -->
+<section id="top-movers">
+<h2>Top Movers This Week</h2>
+
+<div id="chart-stocks" class="chart-container"></div>
+
+<h3 id="winners">Top 5 Winners</h3>
+<table>
+  <thead><tr><th>Ticker</th><th>Sector</th><th>Index</th><th>WoW</th></tr></thead>
+  <tbody><tr><td><strong>300750</strong></td><td>EV Batteries</td><td>CSI 300</td><td class="positive">+6.78%</td></tr>
+<tr><td><strong>HAL</strong></td><td>Defense/Aerospace</td><td>Nifty 50</td><td class="positive">+6.71%</td></tr>
+<tr><td><strong>BEL</strong></td><td>Defense Electronics</td><td>Nifty 50</td><td class="positive">+4.59%</td></tr>
+<tr><td><strong>ENR</strong></td><td>Energy Infra</td><td>DAX</td><td class="positive">+2.89%</td></tr>
+<tr><td><strong>BA.</strong></td><td>Defense</td><td>FTSE 100</td><td class="positive">+2.80%</td></tr></tbody>
+</table>
+
+<h3 id="losers">Top 5 Losers</h3>
+<table>
+  <thead><tr><th>Ticker</th><th>Sector</th><th>Index</th><th>WoW</th></tr></thead>
+  <tbody><tr><td><strong>TTE</strong></td><td>Energy/Integrated</td><td>CAC 40</td><td class="negative">-7.05%</td></tr>
+<tr><td><strong>OXY</strong></td><td>Energy/Producer</td><td>S&P 500</td><td class="negative">-7.21%</td></tr>
+<tr><td><strong>7011</strong></td><td>Defense</td><td>Nikkei 225</td><td class="negative">-7.88%</td></tr>
+<tr><td><strong>7012</strong></td><td>Defense/Industrial</td><td>Nikkei 225</td><td class="negative">-9.20%</td></tr>
+<tr><td><strong>SSE</strong></td><td>Energy/Utility</td><td>FTSE 100</td><td class="negative">-10.28%</td></tr></tbody>
+</table>
+</section>
+
+<!-- STOCK DEEP DIVES -->
+<section id="stock-deep-dives">
+<h2>Stock Deep Dives</h2>
+<p>Detailed analysis of the top 12 movers this week, including fundamentals, analyst consensus, and ownership data.</p>
+
+<div class="stock-card" id="stock-sse">
+  <div class="stock-header">
+    <div><span class="ticker">SSE</span><span class="name">FTSE 100</span></div>
+    <span class="badge badge-energy">Energy/Utility</span>
+  </div>
+  
+  <div class="anka-take">SSE is a major utility company involved in electricity generation, transmission, and distribution. The stock declined 10.28% this week, reflecting broader weakness in the energy and utility sectors amid rising interest rate concerns impacting dividend-paying stocks. Despite the dip, analyst consensus remains 'buy' with a target price suggesting potential upside. With a P/E of 13.49 and a 2.44% dividend yield, the stock appears reasonably valued, but significant upside may be limited in the near term.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$2,469.50</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-10.28%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (15)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">13.5x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">2.4%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+10.7%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 2.75x</li>
+        <li>Profit Margin: 9.3%</li>
+        <li>Revenue Growth: +3.9%</li>
+        <li>Target: $2,734.47 (15 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 74.6%</li>
+        
+        <li>Dividend Yield: 2.44%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:33%;background:#10b981;" title="Strong Buy: 5"></span>
+                  <span class="rb-segment" style="width:40%;background:#34d399;" title="Buy: 6"></span>
+                  <span class="rb-segment" style="width:20%;background:#f59e0b;" title="Hold: 3"></span>
+                  <span class="rb-segment" style="width:7%;background:#f87171;" title="Sell: 1"></span>
+                  <span class="rb-segment" style="width:0%;background:#ef4444;" title="Strong Sell: 0"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  5 Strong Buy | 6 Buy | 3 Hold | 1 Sell | 0 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-7012">
+  <div class="stock-header">
+    <div><span class="ticker">7012</span><span class="name">Nikkei 225</span></div>
+    <span class="badge badge-defense">Defense/Industrial</span>
+  </div>
+  
+  <div class="anka-take">This company operates in the defense and industrial sectors, providing various products and services. The stock saw a 9.20% decline this week, possibly due to profit-taking after recent gains or broader market sentiment affecting industrial names. Analysts maintain a 'strong buy' rating with a target price indicating substantial upside potential. Its low forward P/E of 5.38 and 1.08% dividend yield suggest it could be undervalued.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$3,070.00</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-9.20%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Strong_Buy (12)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">5.4x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">1.1%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+19.7%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 3.18x</li>
+        
+        
+        <li>Target: $3,675.00 (12 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 43.9%</li>
+        
+        <li>Dividend Yield: 1.08%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:17%;background:#10b981;" title="Strong Buy: 2"></span>
+                  <span class="rb-segment" style="width:75%;background:#34d399;" title="Buy: 9"></span>
+                  <span class="rb-segment" style="width:8%;background:#f59e0b;" title="Hold: 1"></span>
+                  <span class="rb-segment" style="width:0%;background:#f87171;" title="Sell: 0"></span>
+                  <span class="rb-segment" style="width:0%;background:#ef4444;" title="Strong Sell: 0"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  2 Strong Buy | 9 Buy | 1 Hold | 0 Sell | 0 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-7011">
+  <div class="stock-header">
+    <div><span class="ticker">7011</span><span class="name">Nikkei 225</span></div>
+    <span class="badge badge-defense">Defense</span>
+  </div>
+  
+  <div class="anka-take">This company is a key player in the defense industry. The stock fell 7.88% this week, potentially influenced by sector-specific news or general market corrections. Despite the recent pullback, analysts have a 'buy' rating and a high target price, suggesting strong confidence in future performance. However, its high forward P/E of 47.17 indicates that much of its future growth may already be priced in.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$4,371.00</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-7.88%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (15)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">47.2x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">0.6%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+22.8%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 5.54x</li>
+        <li>Profit Margin: 5.4%</li>
+        <li>Revenue Growth: -2.9%</li>
+        <li>Target: $5,365.95 (15 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 43.3%</li>
+        
+        <li>Dividend Yield: 0.55%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:7%;background:#10b981;" title="Strong Buy: 1"></span>
+                  <span class="rb-segment" style="width:71%;background:#34d399;" title="Buy: 10"></span>
+                  <span class="rb-segment" style="width:14%;background:#f59e0b;" title="Hold: 2"></span>
+                  <span class="rb-segment" style="width:7%;background:#f87171;" title="Sell: 1"></span>
+                  <span class="rb-segment" style="width:0%;background:#ef4444;" title="Strong Sell: 0"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  1 Strong Buy | 10 Buy | 2 Hold | 1 Sell | 0 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-oxy">
+  <div class="stock-header">
+    <div><span class="ticker">OXY</span><span class="name">S&P 500</span></div>
+    <span class="badge badge-energy">Energy/Producer</span>
+  </div>
+  
+  <div class="anka-take">Occidental Petroleum is an energy producer focused on oil and gas exploration and production. The stock dropped 7.21% this week, aligning with a general downturn in energy prices and sector sentiment. Analyst consensus is 'hold,' with a target price indicating modest upside. With a P/E of 14.94 and a 1.93% dividend yield, the stock appears fairly valued, and significant near-term catalysts are not apparent.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$53.79</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-7.21%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Hold (25)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">14.9x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">1.9%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+15.9%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 1.91x</li>
+        <li>Profit Margin: 10.8%</li>
+        <li>Revenue Growth: +148.9%</li>
+        <li>Target: $62.32 (25 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 51.7%</li>
+        <li>Short Ratio: 0.0 days</li>
+        <li>Dividend Yield: 1.93%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:8%;background:#10b981;" title="Strong Buy: 2"></span>
+                  <span class="rb-segment" style="width:23%;background:#34d399;" title="Buy: 6"></span>
+                  <span class="rb-segment" style="width:58%;background:#f59e0b;" title="Hold: 15"></span>
+                  <span class="rb-segment" style="width:8%;background:#f87171;" title="Sell: 2"></span>
+                  <span class="rb-segment" style="width:4%;background:#ef4444;" title="Strong Sell: 1"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  2 Strong Buy | 6 Buy | 15 Hold | 2 Sell | 1 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-tte">
+  <div class="stock-header">
+    <div><span class="ticker">TTE</span><span class="name">CAC 40</span></div>
+    <span class="badge badge-energy">Energy/Integrated</span>
+  </div>
+  
+  <div class="anka-take">TotalEnergies is an integrated energy company with operations spanning oil and gas, renewables, and power generation. The stock declined 7.05% this week, consistent with the broader energy sector's pullback. Analysts rate it a 'buy' with a target price suggesting further upside. Its attractive forward P/E of 9.23 and a robust 4.41% dividend yield make it an appealing income play, with potential for capital appreciation.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$73.07</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-7.05%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (21)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">9.2x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">4.4%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+12.5%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 1.61x</li>
+        <li>Profit Margin: 7.2%</li>
+        <li>Revenue Growth: -2.5%</li>
+        <li>Target: $82.17 (21 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 57.6%</li>
+        
+        <li>Dividend Yield: 4.41%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:29%;background:#10b981;" title="Strong Buy: 6"></span>
+                  <span class="rb-segment" style="width:38%;background:#34d399;" title="Buy: 8"></span>
+                  <span class="rb-segment" style="width:24%;background:#f59e0b;" title="Hold: 5"></span>
+                  <span class="rb-segment" style="width:5%;background:#f87171;" title="Sell: 1"></span>
+                  <span class="rb-segment" style="width:5%;background:#ef4444;" title="Strong Sell: 1"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  6 Strong Buy | 8 Buy | 5 Hold | 1 Sell | 1 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-300750">
+  <div class="stock-header">
+    <div><span class="ticker">300750</span><span class="name">CSI 300</span></div>
+    <span class="badge badge-tech">EV Batteries</span>
+  </div>
+  
+  <div class="anka-take">This company specializes in EV batteries, a critical component for the electric vehicle industry. The stock gained 6.78% this week, driven by positive sentiment in the EV sector and strong demand outlook. Analysts have a 'strong buy' rating with a target price indicating significant upside. Its forward P/E of 19.42 suggests growth expectations are high, but the sector's tailwinds could support further appreciation.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$444.20</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value positive">+6.78%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Strong_Buy (24)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">19.4x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">1.2%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+17.0%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 5.63x</li>
+        <li>Profit Margin: 16.9%</li>
+        <li>Revenue Growth: +52.4%</li>
+        <li>Target: $519.72 (24 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 27.3%</li>
+        
+        <li>Dividend Yield: 1.25%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:23%;background:#10b981;" title="Strong Buy: 7"></span>
+                  <span class="rb-segment" style="width:73%;background:#34d399;" title="Buy: 22"></span>
+                  <span class="rb-segment" style="width:0%;background:#f59e0b;" title="Hold: 0"></span>
+                  <span class="rb-segment" style="width:0%;background:#f87171;" title="Sell: 0"></span>
+                  <span class="rb-segment" style="width:3%;background:#ef4444;" title="Strong Sell: 1"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  7 Strong Buy | 22 Buy | 0 Hold | 0 Sell | 1 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-hal">
+  <div class="stock-header">
+    <div><span class="ticker">HAL</span><span class="name">Nifty 50</span></div>
+    <span class="badge badge-defense">Defense/Aerospace</span>
+  </div>
+  
+  <div class="anka-take">This company operates in the defense and aerospace sectors. The stock rose 6.71% this week, likely benefiting from renewed investor interest in defense spending or specific contract news. Analysts maintain a 'buy' rating with a target price suggesting considerable upside. While its forward P/E of 29.99 is elevated, the strong analyst sentiment indicates potential for continued growth.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$4,388.10</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value positive">+6.71%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (21)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">30.0x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">1.1%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+16.4%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 7.91x</li>
+        <li>Profit Margin: 27.1%</li>
+        <li>Revenue Growth: +10.7%</li>
+        <li>Target: $5,106.81 (21 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 12.7%</li>
+        
+        <li>Dividend Yield: 1.14%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:19%;background:#10b981;" title="Strong Buy: 4"></span>
+                  <span class="rb-segment" style="width:62%;background:#34d399;" title="Buy: 13"></span>
+                  <span class="rb-segment" style="width:5%;background:#f59e0b;" title="Hold: 1"></span>
+                  <span class="rb-segment" style="width:10%;background:#f87171;" title="Sell: 2"></span>
+                  <span class="rb-segment" style="width:5%;background:#ef4444;" title="Strong Sell: 1"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  4 Strong Buy | 13 Buy | 1 Hold | 2 Sell | 1 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-vlo">
+  <div class="stock-header">
+    <div><span class="ticker">VLO</span><span class="name">S&P 500</span></div>
+    <span class="badge badge-energy">Energy/Refiner</span>
+  </div>
+  
+  <div class="anka-take">Valero Energy is an energy refiner, converting crude oil into various petroleum products. The stock fell 6.35% this week, likely due to concerns over refining margins or broader energy market volatility. Analysts rate it a 'buy' with a target price suggesting upside. Its P/E of 13.27 and 2.15% dividend yield offer a reasonable valuation, but refining sector dynamics will dictate future performance.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$223.65</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-6.35%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (18)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">13.3x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">2.1%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+11.6%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 2.82x</li>
+        <li>Profit Margin: 2.0%</li>
+        <li>Revenue Growth: -2.1%</li>
+        <li>Target: $249.56 (18 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 88.0%</li>
+        <li>Short Ratio: 2.1 days</li>
+        <li>Dividend Yield: 2.15%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:20%;background:#10b981;" title="Strong Buy: 4"></span>
+                  <span class="rb-segment" style="width:35%;background:#34d399;" title="Buy: 7"></span>
+                  <span class="rb-segment" style="width:40%;background:#f59e0b;" title="Hold: 8"></span>
+                  <span class="rb-segment" style="width:0%;background:#f87171;" title="Sell: 0"></span>
+                  <span class="rb-segment" style="width:5%;background:#ef4444;" title="Strong Sell: 1"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  4 Strong Buy | 7 Buy | 8 Hold | 0 Sell | 1 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-bel">
+  <div class="stock-header">
+    <div><span class="ticker">BEL</span><span class="name">Nifty 50</span></div>
+    <span class="badge badge-defense">Defense Electronics</span>
+  </div>
+  
+  <div class="anka-take">This company is involved in defense electronics, providing critical technology for military applications. The stock climbed 4.59% this week, possibly driven by increased defense spending outlooks or specific project wins. Analysts have a 'buy' rating with a target price indicating some further upside. Its high forward P/E of 47.13 suggests that much of its growth is already factored into the price.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$462.75</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value positive">+4.59%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (28)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">47.1x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">0.9%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+5.5%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 15.70x</li>
+        <li>Profit Margin: 22.5%</li>
+        <li>Revenue Growth: +24.0%</li>
+        <li>Target: $488.29 (28 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 25.5%</li>
+        
+        <li>Dividend Yield: 0.94%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:25%;background:#10b981;" title="Strong Buy: 7"></span>
+                  <span class="rb-segment" style="width:54%;background:#34d399;" title="Buy: 15"></span>
+                  <span class="rb-segment" style="width:4%;background:#f59e0b;" title="Hold: 1"></span>
+                  <span class="rb-segment" style="width:7%;background:#f87171;" title="Sell: 2"></span>
+                  <span class="rb-segment" style="width:11%;background:#ef4444;" title="Strong Sell: 3"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  7 Strong Buy | 15 Buy | 1 Hold | 2 Sell | 3 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-mpc">
+  <div class="stock-header">
+    <div><span class="ticker">MPC</span><span class="name">S&P 500</span></div>
+    <span class="badge badge-energy">Energy/Refiner</span>
+  </div>
+  
+  <div class="anka-take">Marathon Petroleum is an energy refiner and marketer of petroleum products. The stock declined 4.01% this week, consistent with the broader refining sector's performance. Analysts rate it a 'buy' with a target price indicating potential for appreciation. With a forward P/E of 11.54 and a 1.79% dividend yield, the stock appears to be a solid value, but refining margins remain a key factor.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$213.69</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-4.01%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Buy (18)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">11.5x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">1.8%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+14.9%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 3.64x</li>
+        <li>Profit Margin: 3.0%</li>
+        <li>Revenue Growth: -1.2%</li>
+        <li>Target: $245.56 (18 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 77.2%</li>
+        <li>Short Ratio: 2.1 days</li>
+        <li>Dividend Yield: 1.79%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:21%;background:#10b981;" title="Strong Buy: 4"></span>
+                  <span class="rb-segment" style="width:32%;background:#34d399;" title="Buy: 6"></span>
+                  <span class="rb-segment" style="width:47%;background:#f59e0b;" title="Hold: 9"></span>
+                  <span class="rb-segment" style="width:0%;background:#f87171;" title="Sell: 0"></span>
+                  <span class="rb-segment" style="width:0%;background:#ef4444;" title="Strong Sell: 0"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  4 Strong Buy | 6 Buy | 9 Hold | 0 Sell | 0 Strong Sell
+                </div>
+</div>
+
+<div class="stock-card" id="stock-601857">
+  <div class="stock-header">
+    <div><span class="ticker">601857</span><span class="name">CSI 300</span></div>
+    <span class="badge badge-energy">Energy</span>
+  </div>
+  
+  <div class="anka-take">This company operates in the energy sector. The stock experienced a 3.84% decline this week, likely influenced by general sector weakness. With no analyst coverage, sentiment is harder to gauge. Its P/E of 11.77 and a substantial 4.08% dividend yield suggest it could be an income play, but lack of analyst consensus introduces higher uncertainty.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$11.53</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-3.84%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">None (None)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">11.8x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">4.1%</div></div>
+    
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 1.33x</li>
+        <li>Profit Margin: 5.5%</li>
+        <li>Revenue Growth: +2.2%</li>
+        
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 1.7%</li>
+        
+        <li>Dividend Yield: 4.08%</li>
+      </ul>
+    </div>
+  </div>
+  
+</div>
+
+<div class="stock-card" id="stock-lmt">
+  <div class="stock-header">
+    <div><span class="ticker">LMT</span><span class="name">S&P 500</span></div>
+    <span class="badge badge-defense">Defense</span>
+  </div>
+  
+  <div class="anka-take">Lockheed Martin is a major defense contractor, producing advanced aircraft, missiles, and other defense systems. The stock dropped 3.51% this week, possibly due to broader market corrections or specific program updates. Analysts generally hold a 'hold' rating, with a target price suggesting moderate upside. Its P/E of 18.48 and 2.28% dividend yield indicate a fair valuation, with steady performance expected.</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$592.19</div></div>
+    <div class="metric"><div class="metric-label">WoW Change</div><div class="metric-value negative">-3.51%</div></div>
+    <div class="metric"><div class="metric-label">Consensus</div><div class="metric-value neutral">Hold (20)</div></div>
+    <div class="metric"><div class="metric-label">Fwd P/E</div><div class="metric-value">18.5x</div></div>
+    <div class="metric"><div class="metric-label">Div Yield</div><div class="metric-value positive">2.3%</div></div>
+    <div class="metric"><div class="metric-label">Target Upside</div><div class="metric-value positive">+12.8%</div></div>
+  </div>
+  <div class="two-col">
+    <div class="factor-box macro">
+      <h4>Fundamentals</h4>
+      <ul>
+        <li>P/B Ratio: 20.18x</li>
+        <li>Profit Margin: 6.7%</li>
+        <li>Revenue Growth: +9.1%</li>
+        <li>Target: $667.85 (20 analysts)</li>
+      </ul>
+    </div>
+    <div class="factor-box specific">
+      <h4>Ownership & Flow</h4>
+      <ul>
+        <li>Institutional: 75.1%</li>
+        <li>Short Ratio: 1.3 days</li>
+        <li>Dividend Yield: 2.28%</li>
+      </ul>
+    </div>
+  </div>
+  <h4>Analyst Consensus</h4>
+                <div class="ratings-bar">
+                  <span class="rb-segment" style="width:5%;background:#10b981;" title="Strong Buy: 1"></span>
+                  <span class="rb-segment" style="width:23%;background:#34d399;" title="Buy: 5"></span>
+                  <span class="rb-segment" style="width:68%;background:#f59e0b;" title="Hold: 15"></span>
+                  <span class="rb-segment" style="width:5%;background:#f87171;" title="Sell: 1"></span>
+                  <span class="rb-segment" style="width:0%;background:#ef4444;" title="Strong Sell: 0"></span>
+                </div>
+                <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+                  1 Strong Buy | 5 Buy | 15 Hold | 1 Sell | 0 Strong Sell
+                </div>
+</div>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="methodology">
+<h2>Methodology & Sources</h2>
+<h3>Data Collection</h3>
+<ul>
+  <li><strong>Period:</strong> 2026-04-11 to 2026-04-17 (Week 8)</li>
+  <li><strong>Indices:</strong> 8 global indices (S&P 500, FTSE 100, CAC 40, DAX, Nifty 50, KOSPI, Nikkei 225, CSI 300)</li>
+  <li><strong>Stocks:</strong> 20 individual stocks across all indices</li>
+  <li><strong>Data Sources:</strong> EODHD (primary), Yahoo Finance (supplementary, analyst data, ownership)</li>
+  <li><strong>FX Rates:</strong> 6 major pairs from EODHD</li>
+  <li><strong>Commodities:</strong> Brent, WTI, Gold, Natural Gas from EODHD</li>
+</ul>
+
+<h3>Report Generation</h3>
+<p>This report is generated automatically by the Anka Research Pipeline. Daily market data is collected at 4:30 PM IST (Mon-Fri), aggregated into weekly JSON on Saturday mornings, and converted to this HTML report with interactive Plotly charts.</p>
+
+<h3>Limitations</h3>
+<ul>
+  <li>Week-over-week returns are based on last available closing prices and may not reflect intraday extremes</li>
+  <li>Analyst consensus data from Yahoo Finance may have a 1-2 day lag</li>
+  <li>Some fundamental data points may be unavailable for non-US stocks</li>
+  <li>Conflict ongoing — data and context subject to rapid change</li>
+</ul>
+</section>
+
+<div class="footer-section">
+  <p><strong>Anka Research</strong> | AI-Augmented Market Intelligence</p>
+  <p>By Bharat Ankaraju | Week 008 | Published 2026-04-17</p>
+  <p style="margin-top:12px;font-size:11px;max-width:600px;margin-left:auto;margin-right:auto;">
+    This report is for informational purposes only and does not constitute investment advice.
+    Past performance is not indicative of future results. All data sourced from public markets.
+    AI-assisted analysis with human oversight.
+  </p>
+  <p style="margin-top:8px;font-size:10px;">Generated by Anka Pipeline on 2026-04-18T09:00:06</p>
+</div>
+
+</div><!-- /main -->
+
+<!-- PLOTLY CHARTS -->
+<script>
+const C = {
+  green: '#10b981', red: '#ef4444', gold: '#f59e0b', blue: '#3b82f6',
+  purple: '#8b5cf6', cyan: '#06b6d4', pink: '#ec4899', orange: '#f97316',
+  bg: '#1a2035', grid: '#1f2937', text: '#9ca3af'
+};
+const L = {
+  paper_bgcolor: C.bg, plot_bgcolor: C.bg,
+  font: { color: C.text, family: 'Segoe UI, sans-serif', size: 12 },
+  xaxis: { gridcolor: C.grid, zerolinecolor: C.grid },
+  yaxis: { gridcolor: C.grid, zerolinecolor: C.grid, title: 'WoW Change (%)' },
+  margin: { l: 60, r: 30, t: 50, b: 80 },
+  showlegend: false
+};
+
+// Index Performance Bar Chart
+Plotly.newPlot('chart-indices', [{
+  x: ["S&P 500", "FTSE 100", "CAC 40", "DAX", "Nifty 50", "KOSPI", "Nikkei 225", "CSI 300"],
+  y: [4.54, 0.6, 2.0, 3.77, 1.26, 5.68, 2.73, 1.99],
+  type: 'bar',
+  marker: { color: ["#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981"], line: { width: 0 } },
+  text: [4.54, 0.6, 2.0, 3.77, 1.26, 5.68, 2.73, 1.99].map(v => v.toFixed(2) + '%'),
+  textposition: 'outside',
+  textfont: { size: 11, color: C.text }
+}], {
+  ...L,
+  title: { text: 'Global Index Performance (WoW %)', font: { size: 16, color: C.gold } },
+  xaxis: { ...L.xaxis, tickangle: -30 }
+}, { responsive: true });
+
+// Commodity Bar Chart
+Plotly.newPlot('chart-commodities', [{
+  x: ["Brent Crude", "WTI Crude", "Gold", "Natural Gas"],
+  y: [-2.73, -12.16, 1.64, 0.83],
+  type: 'bar',
+  marker: { color: ["#ef4444", "#ef4444", "#f59e0b", "#f59e0b"], line: { width: 0 } },
+  text: [-2.73, -12.16, 1.64, 0.83].map(v => v.toFixed(2) + '%'),
+  textposition: 'outside',
+  textfont: { size: 11, color: C.text }
+}], {
+  ...L,
+  title: { text: 'Commodity Performance (WoW %)', font: { size: 16, color: C.gold } }
+}, { responsive: true });
+
+// FX Bar Chart
+Plotly.newPlot('chart-fx', [{
+  x: ["EUR/USD", "USD/JPY", "GBP/USD", "USD/CNY", "USD/KRW", "USD/INR"],
+  y: [0.86, -0.45, 0.69, -0.16, -1.21, -0.51],
+  type: 'bar',
+  marker: { color: ["#3b82f6", "#f97316", "#3b82f6", "#f97316", "#f97316", "#f97316"], line: { width: 0 } },
+  text: [0.86, -0.45, 0.69, -0.16, -1.21, -0.51].map(v => v.toFixed(2) + '%'),
+  textposition: 'outside',
+  textfont: { size: 11, color: C.text }
+}], {
+  ...L,
+  title: { text: 'FX Movements (WoW %)', font: { size: 16, color: C.gold } }
+}, { responsive: true });
+
+// Sector ETF Bar Chart
+Plotly.newPlot('chart-sectors', [{
+  x: ["XLE", "XLY", "ITA", "JETS", "CIBR", "GDX", "GLD", "EWZ", "SPY"],
+  y: [-3.37, 6.66, 1.0, 7.84, 9.45, 0.96, 2.01, -0.41, 4.52],
+  type: 'bar',
+  marker: { color: ["#ef4444", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#ef4444", "#10b981"], line: { width: 0 } },
+  text: [-3.37, 6.66, 1.0, 7.84, 9.45, 0.96, 2.01, -0.41, 4.52].map(v => v.toFixed(2) + '%'),
+  textposition: 'outside',
+  textfont: { size: 11, color: C.text }
+}], {
+  ...L,
+  title: { text: 'Sector ETF Performance (WoW %)', font: { size: 16, color: C.gold } },
+  xaxis: { ...L.xaxis, tickangle: -35 }
+}, { responsive: true });
+
+// Stock Waterfall Chart
+Plotly.newPlot('chart-stocks', [{
+  x: ["SSE", "7012", "7011", "OXY", "TTE", "VLO", "MPC", "601857", "LMT", "GLEN", "NOC", "ONGC", "012450", "HO", "RHM", "BA.", "ENR", "BEL", "HAL", "300750"],
+  y: [-10.28, -9.2, -7.88, -7.21, -7.05, -6.35, -4.01, -3.84, -3.51, -3.29, -1.26, -0.86, 0.0, 2.08, 2.15, 2.8, 2.89, 4.59, 6.71, 6.78],
+  type: 'bar',
+  marker: { color: ["#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#ef4444", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981", "#10b981"], line: { width: 0 } },
+  text: [-10.28, -9.2, -7.88, -7.21, -7.05, -6.35, -4.01, -3.84, -3.51, -3.29, -1.26, -0.86, 0.0, 2.08, 2.15, 2.8, 2.89, 4.59, 6.71, 6.78].map(v => v.toFixed(1) + '%'),
+  textposition: 'outside',
+  textfont: { size: 10, color: C.text }
+}], {
+  ...L,
+  title: { text: 'All Stocks — WoW Performance (%)', font: { size: 16, color: C.gold } },
+  xaxis: { ...L.xaxis, tickangle: -45, tickfont: { size: 10 } },
+  margin: { l: 60, r: 30, t: 50, b: 100 }
+}, { responsive: true });
+
+// Sidebar active link tracking
+document.addEventListener('scroll', function() {
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('#sidebar nav a');
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  links.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

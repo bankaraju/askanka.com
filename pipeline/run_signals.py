@@ -47,6 +47,8 @@ from config import (
     MIDDAY_WINDOW_IST,
 )
 from trading_calendar import is_trading_day, get_holiday_name
+from risk_guardrails import check_risk_gates
+from shadow_pnl import create_shadow_trade, update_shadow_trade, generate_daily_strip
 
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -219,6 +221,21 @@ def _run_once_inner(send_telegram=False):
                           f"suppressing duplicate Telegram send")
                     continue
 
+                # ── Risk gate check before any new entries ──
+                _closed_path = Path(__file__).parent / "data" / "signals" / "closed_signals.json"
+                risk_gate = check_risk_gates(_closed_path)
+                if not risk_gate["allowed"]:
+                    print(f"  🛑 CIRCUIT BREAKER {risk_gate['level']}: {risk_gate['reason']}")
+                    if send_telegram:
+                        try:
+                            send_message(f"🛑 CIRCUIT BREAKER: {risk_gate['level']}\n{risk_gate['reason']}", parse_mode=None)
+                        except Exception:
+                            pass
+                    continue  # skip all new entries for this signal card
+
+                if risk_gate["level"] != "NORMAL":
+                    print(f"  ⚠️ Risk gate {risk_gate['level']}: sizing reduced to {risk_gate['sizing_factor']:.0%}")
+
                 for spread in signal_spreads:
                     spread_name = spread.get("spread_name", "")
                     long_tickers = [lg["ticker"] for lg in spread.get("long_leg", [])]
@@ -272,6 +289,46 @@ def _run_once_inner(send_telegram=False):
                     save_signal(trackable)
                     existing_spreads.add(spread_name)
                     print(f"  ✅ Registered {spread_name} for P&L tracking")
+
+                    # ── Shadow trade with full provenance ──
+                    try:
+                        shadow_signal = {
+                            "signal_id": trackable["signal_id"],
+                            "type": "spread",
+                            "spread_name": spread_name,
+                            "direction": "LONG",
+                            "conviction": spread.get("hit_rate", 0) * 100,
+                            "long_legs": spread.get("long_leg", []),
+                            "short_legs": spread.get("short_leg", []),
+                            "event_headline": sig["event"]["headline"][:120],
+                            "z_score": spread.get("z_score"),
+                        }
+                        shadow = create_shadow_trade(
+                            signal=shadow_signal,
+                            entry_price=1.0,
+                            regime=regime,
+                            sizing_factor=risk_gate["sizing_factor"],
+                        )
+                        shadow["confirmation"] = {
+                            "hit_rate": spread.get("hit_rate", 0),
+                            "expected_1d_spread": spread.get("expected_1d_spread", 0),
+                            "tier": "SIGNAL",
+                            "category": sig["event"]["category"],
+                        }
+                        # Save shadow trade alongside the regular signal
+                        shadow_path = Path(__file__).parent / "data" / "signals" / "shadow_trades.json"
+                        shadow_path.parent.mkdir(parents=True, exist_ok=True)
+                        existing_shadows = []
+                        if shadow_path.exists():
+                            try:
+                                existing_shadows = json.loads(shadow_path.read_text(encoding="utf-8"))
+                            except Exception:
+                                existing_shadows = []
+                        existing_shadows.append(shadow)
+                        shadow_path.write_text(json.dumps(existing_shadows, indent=2, default=str), encoding="utf-8")
+                        print(f"  📊 Shadow trade created: {spread_name} (sizing {risk_gate['sizing_factor']:.0%})")
+                    except Exception as e:
+                        print(f"  Shadow trade creation failed: {e}")
                 # Only send the main overview card if new spreads were registered
                 print(card)
                 sent_count += 1

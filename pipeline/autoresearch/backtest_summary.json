@@ -1,0 +1,12 @@
+{
+  "period": "2023-04-20 to 2026-04-17",
+  "trading_days": 777,
+  "regime_accuracy_pct": 50.92,
+  "win_rate_pct": 54.63,
+  "sharpe": 13.48,
+  "max_drawdown_pct": -30.2,
+  "best_spread": "Defence vs IT (85% win rate)",
+  "worst_spread": "Reliance vs OMCs (18% win rate)",
+  "verdict": "FAIL",
+  "computed_at": "2026-04-18T05:35:25.121329+00:00"
+}
