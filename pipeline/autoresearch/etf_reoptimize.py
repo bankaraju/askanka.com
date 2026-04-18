@@ -657,3 +657,22 @@ def _load_positioning(positioning_path: Path) -> dict:
             pass
 
     return out
+
+
+# ---------------------------------------------------------------------------
+# CLI entry point
+# ---------------------------------------------------------------------------
+
+def main():
+    import argparse
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    parser = argparse.ArgumentParser(description="ETF Engine V2 — Weekly Reoptimization")
+    parser.add_argument("--dry-run", action="store_true", help="Compute but don't save")
+    parser.add_argument("--iterations", type=int, default=2000, help="Optimization iterations")
+    args = parser.parse_args()
+    result = run_reoptimize(n_iterations=args.iterations, dry_run=args.dry_run)
+    print(json.dumps({k: v for k, v in result.items() if k != "optimal_weights"}, indent=2))
+
+
+if __name__ == "__main__":
+    main()
