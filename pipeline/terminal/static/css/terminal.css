@@ -439,6 +439,100 @@ h3 { font-size: 1.125rem; }
 
 .page-placeholder h2 { margin-bottom: var(--spacing-sm); color: var(--text-secondary); }
 
+/* ── Intelligence Digest ── */
+.digest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.digest-column-header {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--spacing-md);
+}
+
+.digest-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.digest-card--caution {
+  border-color: var(--accent-amber);
+  border-width: 1px 1px 1px 3px;
+}
+
+.digest-card--blocked {
+  border-color: var(--accent-red);
+  border-width: 1px 1px 1px 3px;
+}
+
+.digest-card__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.digest-card__subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.digest-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+  font-size: 0.8125rem;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.3);
+}
+
+.digest-row:last-child { border-bottom: none; }
+.digest-row__label { color: var(--text-secondary); }
+.digest-row__value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.digest-break-row {
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.3);
+  cursor: pointer;
+}
+
+.digest-break-row:hover { background: rgba(30, 41, 59, 0.3); margin: 0 calc(-1 * var(--spacing-lg)); padding-left: var(--spacing-lg); padding-right: var(--spacing-lg); }
+.digest-break-row:last-child { border-bottom: none; }
+
+.digest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.digest-header__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.digest-header__time {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badge--blocked {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--accent-red);
+  font-weight: 600;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .app-shell { grid-template-columns: var(--sidebar-collapsed) 1fr; }
