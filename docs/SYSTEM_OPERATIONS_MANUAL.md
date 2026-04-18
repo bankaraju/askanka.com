@@ -212,8 +212,9 @@ with 62.3% accuracy (vs 51.6% random).
 
 **Output:** `autoresearch/etf_optimal_weights.json`
 
-**STATUS: NOT SCHEDULED. Last run: April 8, 2026. Must be refreshed periodically
-(monthly recommended) to adapt to changing market correlations.**
+**STATUS: SCHEDULED. AnkaETFReoptimize runs Saturday 22:00 IST (weekly).
+Now includes Indian data: FII flows, India VIX, Nifty close, PCR.
+Deployed 2026-04-18 as part of Golden Goose Plan 1.**
 
 #### Step 2b: Regime Trade Map Builder (OFFLINE — runs manually, NOT scheduled)
 
@@ -222,8 +223,9 @@ Takes the ETF regime zones and backtests which spread trades work in each zone.
 **Output:** `autoresearch/regime_trade_map.json` — contains `today_zone` (the ETF
 engine's regime call) and a mapping of spreads per regime.
 
-**STATUS: NOT SCHEDULED. Last written: April 14, 2026. The `today_zone` field is
-FROZEN at whatever regime was computed on that date.**
+**STATUS: SCHEDULED. AnkaETFSignal runs daily 04:45 IST (after daily dump at 04:30).
+Applies stored weights to fresh ETF + Indian data to compute today's zone.
+Deployed 2026-04-18 as part of Golden Goose Plan 1.**
 
 #### Step 2c: Morning Regime Scanner (09:25 daily — SCHEDULED, runs daily)
 
@@ -519,6 +521,7 @@ When the watchdog finds issues:
 | Time (IST) | Task Name | What It Does | Critical? |
 |------------|-----------|-------------|-----------|
 | 04:30 | AnkaDailyDump | Fetch global prices, fundamentals, FII flows | CRITICAL |
+| 04:45 | AnkaETFSignal | Compute daily regime zone from stored ETF weights | CRITICAL |
 | 04:45 | AnkaReverseRegimeProfile | Compute regime transition patterns (Phase A) | CRITICAL |
 | 04:45 | AnkaDailyArticles | Generate research articles | warn |
 | 04:45 | AnkaWatchdogGate | Watchdog gate run — check everything | warn |
@@ -563,6 +566,7 @@ That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
 | Day/Time | Task Name | What It Does |
 |----------|-----------|-------------|
+| Saturday 22:00 | AnkaETFReoptimize | Reoptimize ETF weights with Indian data (Karpathy) | CRITICAL |
 | Sunday 22:00 | AnkaWeeklyAgg | Aggregate weekly spread statistics |
 | Friday 16:00 | AnkaWeeklyReport | Weekly performance report → Telegram |
 
@@ -695,12 +699,16 @@ DAILY 09:25 — Morning Scan (already works)
   Technicals + OI/PCR accentuate conviction
 ```
 
-**Fix needed (in priority order):**
-1. Add Indian market data (FII, PCR, VIX, sectors) as inputs to the ETF optimizer
-2. Extend Karpathy optimizer to output per-spread sizing multipliers per regime
-3. Schedule weekly reoptimization: Saturday night (AnkaETFReoptimize)
-4. Schedule daily signal computation: 04:45 (AnkaETFSignal)
-5. Forward test loop: compare weekly predictions to actual outcomes, iterate
+**FIXED (2026-04-18, Golden Goose Plan 1):**
+1. Indian market data (FII, VIX, Nifty, PCR) added as inputs to ETF optimizer
+2. AnkaETFReoptimize scheduled Saturday 22:00 IST (weekly reoptimization)
+3. AnkaETFSignal scheduled daily 04:45 IST (fresh signal computation)
+4. 8 tests passing, end-to-end pipeline verified
+
+**Still TODO (Plans 2-5):**
+- Extend optimizer to output per-spread sizing multipliers
+- Unified backtest (Sunday night) for continuous validation
+- Forward test loop: compare weekly predictions to actual outcomes
 
 ### Gap 2: Trust Scores Don't Auto-Refresh
 Trust scores are batch-computed and stored as static JSON files. When a company
