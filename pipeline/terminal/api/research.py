@@ -135,7 +135,7 @@ def _build_backtest_validation(regime: dict) -> list:
             "regime": zone,
             "best_period": f"{period}d",
             "win_rate": round(win_pct / 100, 4),
-            "avg_return": round(avg_ret / 100, 6) if abs(avg_ret) > 1 else round(avg_ret, 6),
+            "avg_return": round(avg_ret / 100, 6),
             "status": status,
         })
     return out
