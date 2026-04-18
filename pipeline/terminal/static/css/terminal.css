@@ -534,6 +534,10 @@ h3 { font-size: 1.125rem; }
 }
 
 /* ── Responsive ── */
+@media (max-width: 900px) {
+  .digest-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 1024px) {
   .app-shell { grid-template-columns: var(--sidebar-collapsed) 1fr; }
   .sidebar__item span { display: none; }

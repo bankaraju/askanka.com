@@ -188,14 +188,25 @@ async function renderResearch(el) {
   }
 }
 
+function _esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function _istHour() {
+  const h = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false });
+  return parseInt(h, 10);
+}
+
 function _isStale(isoTimestamp) {
   if (!isoTimestamp) return false;
-  const now = new Date();
-  const hours = now.getHours();
+  const hours = _istHour();
   const inMarket = hours >= 9 && hours < 16;
   if (!inMarket) return false;
   const genDate = new Date(isoTimestamp);
-  const ageMinutes = (now - genDate) / 60000;
+  const ageMinutes = (Date.now() - genDate) / 60000;
   return ageMinutes > 30;
 }
 
@@ -396,18 +407,18 @@ function _wireBreakClicks(container) {
 
         const newsHtml = (newsData.items || []).slice(0, 10).map(n => `
           <div style="padding: var(--spacing-xs) 0; border-bottom: 1px solid rgba(30,41,59,0.3); font-size: 0.8125rem;">
-            ${n.headline || n.title || '--'}
-            <div class="text-muted" style="font-size: 0.6875rem;">${n.timestamp || n.date || ''}</div>
+            ${_esc(n.headline || n.title || '--')}
+            <div class="text-muted" style="font-size: 0.6875rem;">${_esc(n.timestamp || n.date || '')}</div>
           </div>`).join('');
 
         content.innerHTML = `
           <div class="card" style="margin-bottom: var(--spacing-md);">
             <div class="text-muted" style="font-size: 0.75rem;">TRUST SCORE</div>
             <div style="display: flex; align-items: baseline; gap: var(--spacing-sm);">
-              <span class="mono" style="font-size: 2rem; color: var(--accent-gold);">${trustData.trust_grade || '?'}</span>
+              <span class="badge ${gradeCls}" style="font-size: 2rem;">${_esc(trustData.trust_grade || '?')}</span>
               <span class="mono">${trustData.trust_score ?? '--'}</span>
             </div>
-            <div style="font-size: 0.8125rem; margin-top: var(--spacing-sm); line-height: 1.6;">${trustData.thesis || 'No thesis'}</div>
+            <div style="font-size: 0.8125rem; margin-top: var(--spacing-sm); line-height: 1.6;">${_esc(trustData.thesis || 'No thesis')}</div>
           </div>
           <div class="card">
             <div class="text-muted" style="font-size: 0.75rem; margin-bottom: var(--spacing-sm);">RECENT NEWS</div>
@@ -424,8 +435,7 @@ let _refreshTimer = null;
 
 function _scheduleRefresh(container) {
   if (_refreshTimer) clearInterval(_refreshTimer);
-  const now = new Date();
-  const hours = now.getHours();
+  const hours = _istHour();
   const inMarket = hours >= 9 && hours < 16;
   if (!inMarket) return;
   _refreshTimer = setInterval(() => {

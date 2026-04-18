@@ -159,6 +159,10 @@ def _apply_caution_badges(spread_theses: list, backtest: list, breaks: list) -> 
             if bt["status"] == "OUTSIDE_CI":
                 badges.append({"type": "blocked", "label": "OUTSIDE CI",
                                "detail": f"Win rate {bt['win_rate']:.0%} outside confidence interval"})
+        for ticker, brk in break_tickers.items():
+            if ticker.upper() in s["name"].upper():
+                badges.append({"type": "caution", "label": f"BREAK: {ticker}",
+                               "detail": f"{ticker} z={brk['z_score']:.1f}σ CONFIRMED WARNING"})
         s["caution_badges"] = badges
     return spread_theses
 
