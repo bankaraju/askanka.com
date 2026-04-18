@@ -825,6 +825,17 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "04:45 IST daily. etf_daily_signal.py \u2014 compute today_zone using stored weights. Must run AFTER AnkaDailyDump (04:30)."
+    },
+    {
+      "task_name": "AnkaUnifiedBacktest",
+      "tier": "critical",
+      "cadence_class": "weekly",
+      "outputs": [
+        "pipeline/autoresearch/backtest_results.json",
+        "pipeline/autoresearch/backtest_summary.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "Sunday 00:00 IST. unified_backtest.py \u2014 777-day historical replay. Golden Goose Plan 2."
     }
   ]
 }
