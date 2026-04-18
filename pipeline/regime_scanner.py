@@ -176,12 +176,18 @@ def scan_regime() -> dict:
     current_regime = etf_regime
 
     # ---- 2. Compute MSI (SECONDARY — context only, not for regime classification) ----
-    log.info("Computing MSI (secondary context)...")
-    from macro_stress import compute_msi
-    msi = compute_msi()
-    msi_score = msi["msi_score"]
-    msi_regime = msi["regime"]
-    log.info("MSI: %.1f (%s) — ETF regime: %s", msi_score, msi_regime, current_regime)
+    msi_score = 0.0
+    msi_regime = "UNAVAILABLE"
+    msi = {}
+    try:
+        log.info("Computing MSI (secondary context)...")
+        from macro_stress import compute_msi
+        msi = compute_msi()
+        msi_score = msi["msi_score"]
+        msi_regime = msi["regime"]
+        log.info("MSI: %.1f (%s) — ETF regime: %s", msi_score, msi_regime, current_regime)
+    except Exception as exc:
+        log.warning("MSI computation failed (non-fatal, ETF regime is primary): %s", exc)
 
     # ---- 3. Hysteresis ----
     prev_state = _load_prev_regime()
