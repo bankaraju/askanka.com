@@ -109,3 +109,32 @@ def test_optimize_weights_beats_baseline():
     features = pd.DataFrame({"signal": signal, "noise": np.random.randn(200)}, index=dates)
     result = optimize_weights(features, target, n_iterations=100)
     assert result["best_accuracy"] > result["baseline"]
+
+
+def test_run_reoptimize_saves_files(tmp_path):
+    from pipeline.autoresearch.etf_reoptimize import run_reoptimize
+    weights_path = tmp_path / "etf_optimal_weights.json"
+    trade_map_path = tmp_path / "regime_trade_map.json"
+    existing_map = {
+        "results": {"NEUTRAL": {"Defence vs IT": {"spread": "Defence vs IT", "1d_win": 57.0, "1d_avg": 0.24, "3d_win": 58.0, "3d_avg": 0.66, "5d_win": 59.0, "5d_avg": 1.03, "best_period": 5, "best_win": 59.0}}},
+        "today_zone": "NEUTRAL",
+        "transitions": 266,
+    }
+    trade_map_path.write_text(json.dumps(existing_map))
+    result = run_reoptimize(weights_path=weights_path, trade_map_path=trade_map_path, n_iterations=50, dry_run=False)
+    assert result["status"] == "saved"
+    assert weights_path.exists()
+    saved = json.loads(weights_path.read_text())
+    assert "optimal_weights" in saved
+    assert "timestamp" in saved
+    assert "indian_inputs" in saved
+
+
+def test_run_reoptimize_dry_run_does_not_save(tmp_path):
+    from pipeline.autoresearch.etf_reoptimize import run_reoptimize
+    weights_path = tmp_path / "etf_optimal_weights.json"
+    trade_map_path = tmp_path / "regime_trade_map.json"
+    trade_map_path.write_text(json.dumps({"results": {}, "today_zone": "NEUTRAL"}))
+    result = run_reoptimize(weights_path=weights_path, trade_map_path=trade_map_path, n_iterations=50, dry_run=True)
+    assert result["status"] == "dry_run"
+    assert not weights_path.exists()

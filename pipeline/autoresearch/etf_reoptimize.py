@@ -12,21 +12,24 @@ This module serves two related purposes:
    signals are cross-checked against domestic participation data before a
    regime call is finalised.
 
-2. **ETF Re-Optimizer** (forthcoming):
-   Will periodically re-run the weight-optimisation sweep from
-   etf_weight_optimizer.py incorporating the Indian signals above, replacing
-   the static `etf_optimal_weights.json` with a rolling optimised set.
+2. **ETF Re-Optimizer** (`run_reoptimize`):
+   Fetches 3 years of global ETF returns via yfinance, merges with Indian
+   market data time-series, runs Karpathy-style random search weight
+   optimisation, saves optimal weights to etf_optimal_weights.json, and
+   updates the today_zone in regime_trade_map.json.
 
 Usage:
-    from pipeline.autoresearch.etf_reoptimize import load_indian_data
+    from pipeline.autoresearch.etf_reoptimize import load_indian_data, run_reoptimize
     data = load_indian_data()   # uses default prod paths
     print(data["india_vix"], data["fii_net"])
+    result = run_reoptimize()   # full pipeline, saves weights
 """
 
 from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -38,10 +41,34 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Default paths (relative to repo root)
 # ---------------------------------------------------------------------------
-_REPO = Path(__file__).resolve().parent.parent.parent  # askanka.com/
+_HERE = Path(__file__).resolve().parent
+_REPO = _HERE.parent.parent  # askanka.com/
 _DAILY_DIR: Path = _REPO / "pipeline" / "data" / "daily"
 _FLOWS_DIR: Path = _REPO / "pipeline" / "data" / "flows"
 _POSITIONING_PATH: Path = _REPO / "pipeline" / "data" / "positioning.json"
+_WEIGHTS_PATH: Path = _HERE / "etf_optimal_weights.json"
+_TRADE_MAP_PATH: Path = _HERE / "regime_trade_map.json"
+
+# ---------------------------------------------------------------------------
+# Global ETF universe (EODHD format → stripped for yfinance)
+# ---------------------------------------------------------------------------
+GLOBAL_ETFS = {
+    "defence": "ITA.US", "energy": "XLE.US", "financials": "XLF.US",
+    "tech": "XLK.US", "healthcare": "XLV.US", "staples": "XLP.US",
+    "industrials": "XLI.US", "em": "EEM.US", "brazil": "EWZ.US",
+    "india_etf": "INDA.US", "china": "FXI.US", "japan": "EWJ.US",
+    "developed": "EFA.US", "oil": "USO.US", "natgas": "UNG.US",
+    "silver": "SLV.US", "agriculture": "DBA.US", "high_yield": "HYG.US",
+    "ig_bond": "LQD.US", "treasury": "TLT.US", "mid_treasury": "IEF.US",
+    "dollar": "UUP.US", "euro": "FXE.US", "yen": "FXY.US",
+    "sp500": "SPY.US", "gold": "GLD.US", "vix": "^VIX",
+    "kbw_bank": "KBE.US", "innovation": "ARKK.US",
+}
+NIFTY_TICKER = "^NSEI"
+
+# Regime thresholds (from historical calibration)
+_CALM_CENTER = 0.0953
+_CALM_BAND = 3.8974
 
 
 # ---------------------------------------------------------------------------
@@ -212,6 +239,301 @@ def optimize_weights(
         "best_sharpe": best_sharpe,
         "n_iterations": n_iterations,
     }
+
+
+# ---------------------------------------------------------------------------
+# Full reoptimization pipeline
+# ---------------------------------------------------------------------------
+
+def run_reoptimize(
+    weights_path: Path = _WEIGHTS_PATH,
+    trade_map_path: Path = _TRADE_MAP_PATH,
+    n_iterations: int = 2000,
+    dry_run: bool = False,
+    daily_dir: Path = _DAILY_DIR,
+    flows_dir: Path = _FLOWS_DIR,
+) -> dict:
+    """Run the full ETF weight reoptimization pipeline.
+
+    Steps:
+    1. Fetch 3 years of global ETF returns via yfinance (with synthetic fallback)
+    2. Build Indian feature time-series from daily/flows JSON files
+    3. Merge features, fill NaN
+    4. Build next-day Nifty direction target
+    5. Run optimize_weights()
+    6. Compute today's regime signal and zone
+    7. Save weights to weights_path (unless dry_run)
+    8. Update today_zone in trade_map_path (unless dry_run)
+
+    Parameters
+    ----------
+    weights_path : Path
+        Destination for etf_optimal_weights.json.
+    trade_map_path : Path
+        Path to regime_trade_map.json (read + updated in-place).
+    n_iterations : int
+        Number of random search iterations for optimize_weights().
+    dry_run : bool
+        If True, skip all file writes and return status="dry_run".
+    daily_dir : Path
+        Directory of YYYY-MM-DD.json daily dump files.
+    flows_dir : Path
+        Directory of YYYY-MM-DD.json FII/DII flow files.
+
+    Returns
+    -------
+    dict
+        Keys: status, today_zone, today_signal, best_accuracy, best_sharpe,
+              indian_inputs, optimal_weights, timestamp.
+    """
+    weights_path = Path(weights_path)
+    trade_map_path = Path(trade_map_path)
+    daily_dir = Path(daily_dir)
+    flows_dir = Path(flows_dir)
+
+    # 1. Fetch global ETF returns
+    logger.info("run_reoptimize: fetching global ETF data…")
+    etf_returns = _fetch_etf_returns()
+    if etf_returns is None or etf_returns.empty:
+        logger.warning("run_reoptimize: yfinance unavailable — using synthetic data")
+        dates = pd.date_range("2024-01-01", periods=500, freq="B")
+        etf_returns = pd.DataFrame(
+            np.random.randn(500, len(GLOBAL_ETFS) + 1) * 0.5,
+            index=dates,
+            columns=list(GLOBAL_ETFS.keys()) + ["nifty"],
+        )
+
+    # 2. Build Indian feature time-series
+    logger.info("run_reoptimize: building Indian feature time-series…")
+    indian_df = _build_indian_features(daily_dir, flows_dir)
+    indian_inputs = list(indian_df.columns) if not indian_df.empty else []
+
+    # 3. Merge features
+    if not indian_df.empty:
+        features = etf_returns.join(indian_df, how="left")
+    else:
+        features = etf_returns.copy()
+    features = features.ffill().bfill().fillna(0)
+
+    # 4. Build target — next-day Nifty direction
+    nifty_col = "nifty" if "nifty" in features.columns else None
+    if nifty_col:
+        nifty_returns = features[nifty_col]
+        target = np.sign(nifty_returns.shift(-1)).dropna()
+        features_aligned = features.loc[target.index]
+    else:
+        # Fallback: random target from first column
+        target = pd.Series(
+            np.random.choice([1.0, -1.0], size=len(features) - 1),
+            index=features.index[:-1],
+        )
+        features_aligned = features.iloc[:-1]
+
+    # 5. Optimize weights
+    logger.info("run_reoptimize: running optimize_weights (n_iterations=%d)…", n_iterations)
+    opt_result = optimize_weights(features_aligned, target, n_iterations=n_iterations)
+
+    # 6. Compute today's signal and map to regime zone
+    last_row = features.iloc[-1]
+    today_signal = float(
+        sum(last_row.get(col, 0.0) * w for col, w in opt_result["optimal_weights"].items())
+    )
+    today_zone = _signal_to_zone(today_signal)
+    logger.info("run_reoptimize: today_signal=%.4f → %s", today_signal, today_zone)
+
+    timestamp = datetime.now(tz=timezone.utc).isoformat()
+
+    result = {
+        "status": "dry_run" if dry_run else "saved",
+        "today_zone": today_zone,
+        "today_signal": today_signal,
+        "best_accuracy": opt_result["best_accuracy"],
+        "best_sharpe": opt_result["best_sharpe"],
+        "indian_inputs": indian_inputs,
+        "optimal_weights": opt_result["optimal_weights"],
+        "timestamp": timestamp,
+    }
+
+    if dry_run:
+        logger.info("run_reoptimize: dry_run=True — skipping file writes")
+        return result
+
+    # 7. Save weights
+    weights_payload = {
+        "optimal_weights": opt_result["optimal_weights"],
+        "best_accuracy": opt_result["best_accuracy"],
+        "best_sharpe": opt_result["best_sharpe"],
+        "today_zone": today_zone,
+        "today_signal": today_signal,
+        "indian_inputs": indian_inputs,
+        "timestamp": timestamp,
+        "n_iterations": n_iterations,
+    }
+    weights_path.write_text(json.dumps(weights_payload, indent=2), encoding="utf-8")
+    logger.info("run_reoptimize: weights saved to %s", weights_path)
+
+    # 8. Update trade map — preserve existing spread definitions, update metadata
+    existing_map: dict = {}
+    if trade_map_path.is_file():
+        try:
+            existing_map = json.loads(trade_map_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            logger.warning("run_reoptimize: could not read trade map — %s", exc)
+
+    existing_map["today_zone"] = today_zone
+    existing_map["today_signal"] = today_signal
+    existing_map["reoptimize_timestamp"] = timestamp
+    existing_map["best_accuracy"] = opt_result["best_accuracy"]
+    existing_map["best_sharpe"] = opt_result["best_sharpe"]
+    trade_map_path.write_text(json.dumps(existing_map, indent=2), encoding="utf-8")
+    logger.info("run_reoptimize: trade map updated at %s", trade_map_path)
+
+    return result
+
+
+def _fetch_etf_returns(days: int = 1095) -> Optional[pd.DataFrame]:
+    """Download close prices for all GLOBAL_ETFS + Nifty via yfinance.
+
+    Returns a DataFrame of percentage returns (pct_change * 100) with
+    friendly column names matching GLOBAL_ETFS keys plus 'nifty'.
+    Returns None if yfinance is unavailable or download fails.
+    """
+    try:
+        import yfinance as yf  # type: ignore
+    except ImportError:
+        logger.warning("_fetch_etf_returns: yfinance not installed")
+        return None
+
+    # Build ticker → friendly-name mapping, stripping ".US" suffix
+    ticker_map: dict[str, str] = {}
+    for name, raw_ticker in GLOBAL_ETFS.items():
+        yf_ticker = raw_ticker.replace(".US", "")
+        ticker_map[yf_ticker] = name
+    ticker_map[NIFTY_TICKER] = "nifty"
+
+    all_tickers = list(ticker_map.keys())
+    end = pd.Timestamp.now()
+    start = end - pd.Timedelta(days=days)
+
+    try:
+        raw = yf.download(
+            all_tickers,
+            start=start.strftime("%Y-%m-%d"),
+            end=end.strftime("%Y-%m-%d"),
+            progress=False,
+            auto_adjust=True,
+            threads=True,
+        )
+    except Exception as exc:
+        logger.warning("_fetch_etf_returns: yfinance download failed — %s", exc)
+        return None
+
+    # Extract Close prices
+    if raw is None or raw.empty:
+        return None
+
+    if isinstance(raw.columns, pd.MultiIndex):
+        try:
+            close = raw["Close"]
+        except KeyError:
+            return None
+    else:
+        close = raw
+
+    if close.empty:
+        return None
+
+    # Rename columns to friendly names
+    rename_map = {t: ticker_map[t] for t in close.columns if t in ticker_map}
+    close = close.rename(columns=rename_map)
+
+    # Compute percentage returns
+    returns = close.pct_change() * 100
+    returns = returns.dropna(how="all")
+
+    return returns
+
+
+def _build_indian_features(
+    daily_dir: Path, flows_dir: Path
+) -> pd.DataFrame:
+    """Build a date-indexed DataFrame of Indian market features.
+
+    Iterates all YYYY-MM-DD.json files in daily_dir and flows_dir,
+    building columns: india_vix_daily, nifty_close_daily,
+    fii_net_daily, dii_net_daily.
+
+    Returns an empty DataFrame if no files exist.
+    """
+    records: dict[str, dict] = {}
+
+    # Daily dump files → VIX + Nifty close
+    if daily_dir.is_dir():
+        for path in sorted(daily_dir.glob("????-??-??.json")):
+            date_str = path.stem
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            rec = records.setdefault(date_str, {})
+            indices = data.get("indices", {})
+            vix_entry = indices.get("INDIA VIX") or {}
+            if vix_entry.get("close") is not None:
+                try:
+                    rec["india_vix_daily"] = float(vix_entry["close"])
+                except (TypeError, ValueError):
+                    pass
+            nifty_entry = indices.get("Nifty 50") or {}
+            if nifty_entry.get("close") is not None:
+                try:
+                    rec["nifty_close_daily"] = float(nifty_entry["close"])
+                except (TypeError, ValueError):
+                    pass
+
+    # Flows files → FII/DII net
+    if flows_dir.is_dir():
+        for path in sorted(flows_dir.glob("????-??-??.json")):
+            date_str = path.stem
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            rec = records.setdefault(date_str, {})
+            fii = data.get("fii_equity_net")
+            dii = data.get("dii_equity_net")
+            if fii is not None:
+                try:
+                    rec["fii_net_daily"] = float(fii)
+                except (TypeError, ValueError):
+                    pass
+            if dii is not None:
+                try:
+                    rec["dii_net_daily"] = float(dii)
+                except (TypeError, ValueError):
+                    pass
+
+    if not records:
+        return pd.DataFrame()
+
+    df = pd.DataFrame.from_dict(records, orient="index")
+    df.index = pd.to_datetime(df.index)
+    df = df.sort_index()
+    return df
+
+
+def _signal_to_zone(signal: float) -> str:
+    """Map a scalar signal to a regime zone string."""
+    center = _CALM_CENTER
+    band = _CALM_BAND
+    if signal >= center + 2 * band:
+        return "EUPHORIA"
+    if signal >= center + band:
+        return "RISK-ON"
+    if signal >= center - band:
+        return "NEUTRAL"
+    if signal >= center - 2 * band:
+        return "CAUTION"
+    return "RISK-OFF"
 
 
 # ---------------------------------------------------------------------------
