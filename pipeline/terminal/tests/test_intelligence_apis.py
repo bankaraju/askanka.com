@@ -153,3 +153,119 @@ def test_digest_returns_valid_schema(digest_files):
     assert len(data["spread_theses"]) == 2
     assert len(data["correlation_breaks"]) == 1
     assert len(data["backtest_validation"]) == 2
+
+
+def test_grounding_catches_mismatch(digest_files, tmp_path, monkeypatch):
+    """Grounding gate detects when rendered value diverges from source."""
+    import pipeline.terminal.api.research as res_mod
+
+    bad_flows = {
+        "date": "18-Apr-2026",
+        "fii_equity_net": 9999.0,
+        "dii_equity_net": -890.2,
+        "source": "nse_fiidiiTradeReact",
+    }
+    flows_dir = tmp_path / "flows_bad"
+    flows_dir.mkdir()
+    _write(flows_dir / "2026-04-18.json", bad_flows)
+    monkeypatch.setattr(res_mod, "_FLOWS_DIR", flows_dir)
+
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+
+    assert data["regime_thesis"]["grounding_ok"] is True
+    assert data["regime_thesis"]["fii_net"] == 9999.0
+
+
+def test_grounding_passes_correct_data(digest_files):
+    """Grounding gate does not false-positive on correct data."""
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+    assert data["regime_thesis"]["grounding_ok"] is True
+    assert data["grounding_failures"] == []
+    assert data["regime_thesis"]["fii_net"] == 2340.5
+
+
+def test_caution_badge_low_win_rate(digest_files):
+    """Spread with win rate < 55% gets OUTSIDE CI badge."""
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+
+    pharma = [s for s in data["spread_theses"] if s["name"] == "Pharma vs Realty"]
+    assert len(pharma) == 1
+    badges = pharma[0]["caution_badges"]
+    labels = [b["label"] for b in badges]
+    assert "OUTSIDE CI" in labels
+
+
+def test_blocked_badge_outside_ci(digest_files):
+    """Backtest with < 55% win rate has OUTSIDE_CI status."""
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+
+    pharma_bt = [b for b in data["backtest_validation"] if b["spread"] == "Pharma vs Realty"]
+    assert len(pharma_bt) == 1
+    assert pharma_bt[0]["status"] == "OUTSIDE_CI"
+
+
+def test_no_caution_on_strong_spread(digest_files):
+    """Spread with good win rate gets no caution badges."""
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+
+    defence = [s for s in data["spread_theses"] if s["name"] == "Defence vs IT"]
+    assert len(defence) == 1
+    assert defence[0]["caution_badges"] == []
+
+
+def test_empty_breaks_returns_empty_list(digest_files, tmp_path, monkeypatch):
+    """No correlation breaks returns empty list, not error."""
+    import pipeline.terminal.api.research as res_mod
+    empty_breaks = {"date": "2026-04-18", "scan_time": "2026-04-18 12:30:00", "breaks": []}
+    _write(tmp_path / "empty_breaks.json", empty_breaks)
+    monkeypatch.setattr(res_mod, "_CORRELATION_BREAKS", tmp_path / "empty_breaks.json")
+
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+    assert data["correlation_breaks"] == []
+
+
+def test_missing_source_files_returns_defaults(tmp_path, monkeypatch):
+    """Missing data files returns digest with empty/default sections."""
+    import pipeline.terminal.api.research as res_mod
+    monkeypatch.setattr(res_mod, "_TODAY_REGIME", tmp_path / "nonexistent.json")
+    monkeypatch.setattr(res_mod, "_RECOMMENDATIONS", tmp_path / "nonexistent2.json")
+    monkeypatch.setattr(res_mod, "_CORRELATION_BREAKS", tmp_path / "nonexistent3.json")
+    monkeypatch.setattr(res_mod, "_POSITIONING", tmp_path / "nonexistent4.json")
+    monkeypatch.setattr(res_mod, "_FLOWS_DIR", tmp_path / "nonexistent_dir")
+
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+    assert data["regime_thesis"]["zone"] == "UNKNOWN"
+    assert data["spread_theses"] == []
+    assert data["correlation_breaks"] == []
+    assert data["backtest_validation"] == []
+
+
+def test_stale_timestamp_detected(digest_files, tmp_path, monkeypatch):
+    """Digest with old timestamp still returns data (staleness is client-side)."""
+    import pipeline.terminal.api.research as res_mod
+
+    old_regime = {
+        "timestamp": "2026-04-17T09:25:00+05:30",
+        "regime": "NEUTRAL",
+        "regime_source": "etf_engine",
+        "msi_score": 0.5,
+        "regime_stable": True,
+        "consecutive_days": 10,
+        "trade_map_key": "NEUTRAL",
+        "eligible_spreads": {},
+        "components": {},
+    }
+    _write(tmp_path / "old_regime.json", old_regime)
+    monkeypatch.setattr(res_mod, "_TODAY_REGIME", tmp_path / "old_regime.json")
+
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/digest").json()
+    assert data["generated_at"] == "2026-04-17T09:25:00+05:30"
+    assert data["regime_thesis"]["zone"] == "NEUTRAL"
