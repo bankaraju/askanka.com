@@ -15,6 +15,7 @@ from pipeline.terminal.api.ta import router as ta_router
 from pipeline.terminal.api.news import router as news_router
 from pipeline.terminal.api.trust_scores import router as trust_scores_router
 from pipeline.terminal.api.research import router as research_router
+from pipeline.terminal.api.tickers import router as tickers_router
 from pipeline.terminal.api.track_record import router as track_record_router
 
 app = FastAPI(title="Anka Terminal", version="0.1.0")
@@ -29,6 +30,7 @@ app.include_router(ta_router, prefix="/api")
 app.include_router(news_router, prefix="/api")
 app.include_router(trust_scores_router, prefix="/api")
 app.include_router(research_router, prefix="/api")
+app.include_router(tickers_router, prefix="/api")
 app.include_router(track_record_router, prefix="/api")
 
 _STATIC_DIR = Path(__file__).parent / "static"

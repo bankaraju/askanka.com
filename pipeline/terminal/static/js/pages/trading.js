@@ -3,6 +3,70 @@ import { get } from '../lib/api.js';
 let currentSubTab = 'signals';
 let chartInstance = null;
 let refreshTimer = null;
+let _tickerCache = null;
+
+async function _loadTickers() {
+  if (_tickerCache) return _tickerCache;
+  try {
+    const data = await get('/tickers');
+    _tickerCache = data.tickers || [];
+  } catch { _tickerCache = []; }
+  return _tickerCache;
+}
+
+function _setupTickerSearch(inputId, onSelect) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  const listId = inputId + '-list';
+  let dropdown = document.getElementById(listId);
+  if (!dropdown) {
+    dropdown = document.createElement('div');
+    dropdown.id = listId;
+    dropdown.style.cssText = 'position:absolute;z-index:50;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);max-height:240px;overflow-y:auto;width:350px;display:none;';
+    input.parentElement.style.position = 'relative';
+    input.parentElement.appendChild(dropdown);
+  }
+
+  input.addEventListener('input', async () => {
+    const q = input.value.trim().toLowerCase();
+    if (q.length < 1) { dropdown.style.display = 'none'; return; }
+    const tickers = await _loadTickers();
+    const matches = tickers.filter(t =>
+      t.symbol.toLowerCase().includes(q) || t.name.toLowerCase().includes(q)
+    ).slice(0, 15);
+
+    if (matches.length === 0) { dropdown.style.display = 'none'; return; }
+
+    dropdown.innerHTML = matches.map(t => `
+      <div class="ticker-option" data-sym="${t.symbol}" style="padding:6px 12px;cursor:pointer;font-size:0.8125rem;display:flex;justify-content:space-between;">
+        <span class="mono" style="color:var(--accent-gold);">${t.symbol}</span>
+        <span class="text-muted">${t.name}</span>
+      </div>`).join('');
+    dropdown.style.display = 'block';
+
+    dropdown.querySelectorAll('.ticker-option').forEach(opt => {
+      opt.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        const sym = opt.dataset.sym;
+        input.value = sym;
+        dropdown.style.display = 'none';
+        onSelect(sym);
+      });
+      opt.addEventListener('mouseenter', () => { opt.style.background = 'var(--bg-card)'; });
+      opt.addEventListener('mouseleave', () => { opt.style.background = 'none'; });
+    });
+  });
+
+  input.addEventListener('blur', () => { setTimeout(() => { dropdown.style.display = 'none'; }, 200); });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      dropdown.style.display = 'none';
+      const ticker = input.value.trim().toUpperCase();
+      if (ticker) onSelect(ticker);
+    }
+  });
+}
 
 export async function render(container) {
   container.innerHTML = `
@@ -158,23 +222,18 @@ async function renderSpreads(el) {
 async function renderCharts(el) {
   el.innerHTML = `
     <div style="margin-bottom: var(--spacing-md);">
-      <input type="text" id="chart-ticker-input" class="filter-search" placeholder="Enter ticker (e.g., HAL)" style="width: 250px;">
+      <input type="text" id="chart-ticker-input" class="filter-search" placeholder="Search ticker or company name..." style="width: 350px;" autocomplete="off">
       <button id="chart-load-btn" class="filter-toggle filter-toggle--active" style="margin-left: 8px;">Load Chart</button>
     </div>
     <div id="chart-container" style="height: 400px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border);"></div>
     <div id="chart-volume" style="height: 100px; margin-top: 4px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border);"></div>`;
 
-  const input = document.getElementById('chart-ticker-input');
-  const btn = document.getElementById('chart-load-btn');
+  _setupTickerSearch('chart-ticker-input', (ticker) => createChart(ticker));
 
-  const loadChart = async () => {
-    const ticker = input.value.trim().toUpperCase();
-    if (!ticker) return;
-    await createChart(ticker);
-  };
-
-  btn.addEventListener('click', loadChart);
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') loadChart(); });
+  document.getElementById('chart-load-btn').addEventListener('click', () => {
+    const ticker = document.getElementById('chart-ticker-input').value.trim().toUpperCase();
+    if (ticker) createChart(ticker);
+  });
 }
 
 async function createChart(ticker) {
@@ -260,22 +319,17 @@ async function createChart(ticker) {
 async function renderTA(el) {
   el.innerHTML = `
     <div style="margin-bottom: var(--spacing-md);">
-      <input type="text" id="ta-ticker-input" class="filter-search" placeholder="Enter ticker (e.g., RELIANCE)" style="width: 250px;">
+      <input type="text" id="ta-ticker-input" class="filter-search" placeholder="Search ticker or company name..." style="width: 350px;" autocomplete="off">
       <button id="ta-load-btn" class="filter-toggle filter-toggle--active" style="margin-left: 8px;">Load TA</button>
     </div>
     <div id="ta-content"><div class="empty-state"><p>Enter a ticker to view technical analysis fingerprint</p></div></div>`;
 
-  const input = document.getElementById('ta-ticker-input');
-  const btn = document.getElementById('ta-load-btn');
+  _setupTickerSearch('ta-ticker-input', (ticker) => renderTAData(ticker));
 
-  const loadTA = async () => {
-    const ticker = input.value.trim().toUpperCase();
-    if (!ticker) return;
-    await renderTAData(ticker);
-  };
-
-  btn.addEventListener('click', loadTA);
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') loadTA(); });
+  document.getElementById('ta-load-btn').addEventListener('click', () => {
+    const ticker = document.getElementById('ta-ticker-input').value.trim().toUpperCase();
+    if (ticker) renderTAData(ticker);
+  });
 }
 
 async function renderTAData(ticker) {

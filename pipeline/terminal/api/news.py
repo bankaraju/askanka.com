@@ -23,7 +23,10 @@ def _read_json(path: Path, default=None):
 @router.get("/news/macro")
 def news_macro():
     raw = _read_json(_FNO_NEWS_FILE, default=[])
-    items = raw if isinstance(raw, list) else raw.get("items", raw.get("news", []))
+    items = raw if isinstance(raw, list) else raw.get("headlines", raw.get("items", raw.get("news", [])))
+    for item in items:
+        if "headline" not in item and "title" in item:
+            item["headline"] = item["title"]
     return {"items": items[:50], "total": len(items)}
 
 
@@ -31,7 +34,7 @@ def news_macro():
 def news_stock(ticker: str):
     ticker = ticker.upper()
     raw = _read_json(_FNO_NEWS_FILE, default=[])
-    items = raw if isinstance(raw, list) else raw.get("items", raw.get("news", []))
+    items = raw if isinstance(raw, list) else raw.get("headlines", raw.get("items", raw.get("news", [])))
 
     filtered = [item for item in items if _matches_ticker(item, ticker)]
     return {"ticker": ticker, "items": filtered[:20], "total": len(filtered)}
