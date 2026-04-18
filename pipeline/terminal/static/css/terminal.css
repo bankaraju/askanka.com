@@ -533,6 +533,28 @@ h3 { font-size: 1.125rem; }
   font-weight: 600;
 }
 
+/* ── Chart Toggles ── */
+.chart-toggles {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+}
+
+.chart-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.chart-toggle input[type="checkbox"] {
+  accent-color: var(--accent-gold);
+  cursor: pointer;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .digest-grid { grid-template-columns: 1fr; }

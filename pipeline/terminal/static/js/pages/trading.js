@@ -218,12 +218,83 @@ async function renderSpreads(el) {
   }
 }
 
+// ── Bollinger Bands (20, 2) ──
+function _computeBollinger(candles, period = 20, mult = 2) {
+  const sma = [], upper = [], lower = [];
+  for (let i = 0; i < candles.length; i++) {
+    if (i < period - 1) { sma.push(null); upper.push(null); lower.push(null); continue; }
+    const slice = candles.slice(i - period + 1, i + 1).map(c => c.close);
+    const mean = slice.reduce((a, b) => a + b, 0) / period;
+    const variance = slice.reduce((a, b) => a + (b - mean) ** 2, 0) / period;
+    const std = Math.sqrt(variance);
+    sma.push({ time: candles[i].time, value: mean });
+    upper.push({ time: candles[i].time, value: mean + mult * std });
+    lower.push({ time: candles[i].time, value: mean - mult * std });
+  }
+  return { sma: sma.filter(Boolean), upper: upper.filter(Boolean), lower: lower.filter(Boolean) };
+}
+
+function _detectPatterns(candles) {
+  const markers = [];
+  const recent = candles.slice(-60);
+  for (let i = 1; i < recent.length; i++) {
+    const c = recent[i];
+    const p = recent[i - 1];
+    const body = Math.abs(c.close - c.open);
+    const range = c.high - c.low;
+    const upperShadow = c.high - Math.max(c.open, c.close);
+    const lowerShadow = Math.min(c.open, c.close) - c.low;
+    const isGreen = c.close >= c.open;
+    const pBody = Math.abs(p.close - p.open);
+    const pGreen = p.close >= p.open;
+
+    if (range > 0 && body < range * 0.1) {
+      markers.push({ time: c.time, position: 'aboveBar', color: '#94a3b8', shape: 'diamond', text: 'Doji' });
+    } else if (range > 0 && lowerShadow > body * 2 && upperShadow < range * 0.3 && (Math.min(c.open, c.close) - c.low) > range * 0.5) {
+      markers.push({ time: c.time, position: 'belowBar', color: '#10b981', shape: 'arrowUp', text: 'Hammer' });
+    } else if (range > 0 && upperShadow > body * 2 && lowerShadow < range * 0.3 && (c.high - Math.max(c.open, c.close)) > range * 0.5) {
+      markers.push({ time: c.time, position: 'aboveBar', color: '#ef4444', shape: 'arrowDown', text: 'Inv Hammer' });
+    }
+    if (!pGreen && isGreen && c.open <= p.close && c.close >= p.open && body > pBody) {
+      markers.push({ time: c.time, position: 'belowBar', color: '#10b981', shape: 'arrowUp', text: 'Bull Engulf' });
+    }
+    if (pGreen && !isGreen && c.open >= p.close && c.close <= p.open && body > pBody) {
+      markers.push({ time: c.time, position: 'aboveBar', color: '#ef4444', shape: 'arrowDown', text: 'Bear Engulf' });
+    }
+  }
+  return markers;
+}
+
+function _detectBBBreakouts(candles, bb) {
+  const markers = [];
+  const upperMap = new Map(bb.upper.map(d => [d.time, d.value]));
+  const lowerMap = new Map(bb.lower.map(d => [d.time, d.value]));
+  const recent = candles.slice(-60);
+  for (let i = 1; i < recent.length; i++) {
+    const c = recent[i], p = recent[i - 1];
+    const uCurr = upperMap.get(c.time), lCurr = lowerMap.get(c.time);
+    const uPrev = upperMap.get(p.time), lPrev = lowerMap.get(p.time);
+    if (!uCurr || !lCurr || !uPrev || !lPrev) continue;
+    if (c.close > uCurr && p.close <= uPrev) {
+      markers.push({ time: c.time, position: 'aboveBar', color: '#3b82f6', shape: 'arrowUp', text: 'BB Up' });
+    }
+    if (c.close < lCurr && p.close >= lPrev) {
+      markers.push({ time: c.time, position: 'belowBar', color: '#d97706', shape: 'arrowDown', text: 'BB Down' });
+    }
+  }
+  return markers;
+}
+
 // ── Charts Sub-Tab ──
 async function renderCharts(el) {
   el.innerHTML = `
-    <div style="margin-bottom: var(--spacing-md);">
+    <div style="margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-md); flex-wrap: wrap;">
       <input type="text" id="chart-ticker-input" class="filter-search" placeholder="Search ticker or company name..." style="width: 350px;" autocomplete="off">
       <button id="chart-load-btn" class="filter-toggle filter-toggle--active" style="margin-left: 8px;">Load Chart</button>
+      <div class="chart-toggles">
+        <label class="chart-toggle"><input type="checkbox" id="toggle-bb" checked> Bollinger</label>
+        <label class="chart-toggle"><input type="checkbox" id="toggle-patterns" checked> Patterns</label>
+      </div>
     </div>
     <div id="chart-container" style="height: 400px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border);"></div>
     <div id="chart-volume" style="height: 100px; margin-top: 4px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border);"></div>`;
@@ -280,6 +351,51 @@ async function createChart(ticker) {
     candleSeries.setData(data.candles.map(c => ({
       time: c.time, open: c.open, high: c.high, low: c.low, close: c.close,
     })));
+
+    // Bollinger Bands overlay
+    const bb = _computeBollinger(data.candles);
+    const showBB = document.getElementById('toggle-bb')?.checked !== false;
+    const showPatterns = document.getElementById('toggle-patterns')?.checked !== false;
+
+    const smaSeries = chartInstance.addLineSeries({
+      color: '#f59e0b', lineWidth: 1, priceLineVisible: false,
+      lastValueVisible: false, visible: showBB,
+    });
+    smaSeries.setData(bb.sma);
+
+    const upperSeries = chartInstance.addLineSeries({
+      color: 'rgba(59, 130, 246, 0.5)', lineWidth: 1, lineStyle: 2,
+      priceLineVisible: false, lastValueVisible: false, visible: showBB,
+    });
+    upperSeries.setData(bb.upper);
+
+    const lowerSeries = chartInstance.addLineSeries({
+      color: 'rgba(59, 130, 246, 0.5)', lineWidth: 1, lineStyle: 2,
+      priceLineVisible: false, lastValueVisible: false, visible: showBB,
+    });
+    lowerSeries.setData(bb.lower);
+
+    // Pattern markers (last 60 candles)
+    const candlePatterns = _detectPatterns(data.candles);
+    const bbBreakouts = _detectBBBreakouts(data.candles, bb);
+    const allMarkers = [...candlePatterns, ...bbBreakouts]
+      .sort((a, b) => a.time < b.time ? -1 : a.time > b.time ? 1 : 0);
+
+    if (showPatterns && allMarkers.length > 0) {
+      candleSeries.setMarkers(allMarkers);
+    }
+
+    // Toggle wiring
+    document.getElementById('toggle-bb')?.addEventListener('change', (e) => {
+      const vis = e.target.checked;
+      smaSeries.applyOptions({ visible: vis });
+      upperSeries.applyOptions({ visible: vis });
+      lowerSeries.applyOptions({ visible: vis });
+    });
+
+    document.getElementById('toggle-patterns')?.addEventListener('change', (e) => {
+      candleSeries.setMarkers(e.target.checked ? allMarkers : []);
+    });
 
     // Volume chart
     volContainer.innerHTML = '';
