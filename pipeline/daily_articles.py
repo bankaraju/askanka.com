@@ -77,6 +77,27 @@ def _load_yesterday_example(segment: str) -> dict | None:
     return None
 
 
+def _load_recent_headlines(segment: str, max_days: int = 5) -> list[tuple[str, str]]:
+    """Return [(date_str, headline), ...] for the last max_days articles of this segment."""
+    articles_dir = GIT_REPO / "articles"
+    if not articles_dir.exists():
+        return []
+    today = datetime.now(IST).date()
+    results = []
+    for days_back in range(1, max_days + 1):
+        check_date = (today - timedelta(days=days_back)).strftime("%Y-%m-%d")
+        candidate = articles_dir / f"{check_date}-{segment}.html"
+        if candidate.exists():
+            try:
+                html = candidate.read_text(encoding="utf-8")
+                h1 = re.search(r"<h1>(.*?)</h1>", html, re.DOTALL)
+                if h1:
+                    results.append((check_date, h1.group(1).strip()))
+            except Exception:
+                continue
+    return results
+
+
 def scrape_today_sources(segment: str, days_back: int = 1) -> list:
     """Get today's relevant YouTube videos for a segment."""
     from video_pipeline import scrape_weekly_sources
@@ -217,30 +238,58 @@ article failures.
             "tone": "Investigative. Direct. Not neutral — we have a view. "
                     "Connect events to Indian market impact. Name names. "
                     "Quote specific sources. Ask hard questions the mainstream won't.",
-            "framing": "America's resource grab, Hormuz as leverage, oil as weapon, "
-                      "defence stocks as the tell, FII flows as the scoreboard.",
+            "framing": "Let today's sources drive your angle. Find the FRESHEST "
+                      "development — a new escalation, a diplomatic shift, a supply "
+                      "chain disruption, a policy reversal — and build the thesis "
+                      "around THAT. Connect to Indian markets via the panel numbers.",
         },
         "epstein": {
             "title_style": "investigative journalism",
             "tone": "Forensic. Relentless. Connect dots across documents. "
                     "This is a cover-up and we say so. Name the players. "
                     "Quote court filings. Ask why the mainstream is silent.",
-            "framing": "Mossad connections, DOJ complicity, billionaire impunity, "
-                      "the victims' perspective, Indian names and what it means.",
+            "framing": "Let today's sources drive your angle. Find the FRESHEST "
+                      "revelation — a new document release, a witness development, "
+                      "a political reaction — and build the thesis around THAT.",
         },
     }
 
     cfg = seg_config.get(segment, seg_config["war"])
 
+    # Diversify sources: max 2 per channel, prefer videos near top of each
+    # channel's list (most recent, since yt-dlp returns newest-first).
+    seen_channels: dict[str, int] = {}
+    diverse_sources = []
+    for s in sources:
+        ch = s["channel"]
+        if seen_channels.get(ch, 0) >= 2:
+            continue
+        seen_channels[ch] = seen_channels.get(ch, 0) + 1
+        diverse_sources.append(s)
+        if len(diverse_sources) >= 15:
+            break
     source_text = "\n".join(
         f"- [{s['channel']}] {s['title']} ({s['url']})"
-        for s in sources[:15]
+        for s in diverse_sources
     )
 
-    # Load yesterday's article as a style reference (if it exists).
-    # SKIP for market-grounded topics: yesterday's thesis is likely
-    # stale vs today's panel direction and transmits the stale frame
-    # (e.g. "oil surging" narrative copied onto a day when oil dropped).
+    # Load recent headlines so the LLM can avoid repeating the same angle.
+    recent_headlines = _load_recent_headlines(segment, max_days=5)
+    novelty_block = ""
+    if recent_headlines:
+        hl_lines = "\n".join(f"  - {d}: {h}" for d, h in recent_headlines)
+        novelty_block = f"""
+# NOVELTY — DO NOT REPEAT
+These are our RECENT headlines for this segment. Your article MUST take a
+DIFFERENT angle, thesis, or focus. Do NOT rehash the same framing.
+{hl_lines}
+
+Find a NEW development, a fresh angle, a different market implication, or a
+contrarian take. If the sources are similar to yesterday, dig deeper into a
+specific sub-topic rather than writing the same overview again.
+"""
+
+    # Load yesterday's article as a style reference for non-market topics.
     yesterday_example = None if market_grounded else _load_yesterday_example(segment)
     example_section = ""
     if yesterday_example:
@@ -279,6 +328,7 @@ REQUIREMENTS:
 10. Reference specific stocks or sectors where actionable
 
 {template_excerpt}
+{novelty_block}
 {regime_block}
 {grounding_block}
 OUTPUT FORMAT:

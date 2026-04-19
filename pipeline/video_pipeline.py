@@ -368,14 +368,14 @@ def fetch_youtube_feed(channel_id: str, max_entries: int = 15) -> list[dict]:
         return []
 
 
-def scrape_weekly_sources(segment_name: str, days_back: int = 7) -> list[dict]:
-    """Scrape YouTube RSS feeds for a segment, filter by keywords and recency."""
+def scrape_weekly_sources(segment_name: str, days_back: int = 7, max_per_channel: int = 5) -> list[dict]:
+    """Scrape YouTube channels for a segment, filter by keywords and recency."""
     channels = YOUTUBE_SOURCES.get(segment_name, {})
     cutoff = datetime.now() - timedelta(days=days_back)
     relevant = []
 
     for channel_name, cfg in channels.items():
-        entries = fetch_youtube_feed(cfg["channel_id"])
+        entries = fetch_youtube_feed(cfg["channel_id"], max_entries=max_per_channel)
         keywords = [k.lower() for k in cfg["keywords"]]
 
         for entry in entries:
