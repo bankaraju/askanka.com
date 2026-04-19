@@ -24,7 +24,7 @@ function clearActiveTicker() {
 function _renderTickerBadge() {
   const badge = document.getElementById('active-ticker-badge');
   if (!badge) return;
-  if (!_activeTicker) { badge.style.display = 'none'; badge.innerHTML = ''; return; }
+  if (!_activeTicker || currentSubTab === 'scanner') { badge.style.display = 'none'; badge.innerHTML = ''; return; }
   const name = _tickerCache ? (_tickerCache.find(t => t.symbol === _activeTicker) || {}).name || '' : '';
   badge.style.display = 'flex';
   badge.innerHTML = `
@@ -132,6 +132,7 @@ async function switchSubTab(tab) {
   currentSubTab = tab;
   if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
   if (chartInstance) { chartInstance.remove(); chartInstance = null; }
+  _renderTickerBadge();
 
   const content = document.getElementById('trading-content');
   if (!content) return;
