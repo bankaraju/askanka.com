@@ -610,3 +610,73 @@ h3 { font-size: 1.125rem; }
   outline: 2px solid var(--accent-gold);
   outline-offset: 2px;
 }
+
+/* ── Scanner ─────────────────────────────────────── */
+.scanner-filters {
+  display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;
+  padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.scanner-filter-group { display: flex; flex-direction: column; gap: 4px; }
+.scanner-filter-label {
+  font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.scanner-filter-btns { display: flex; gap: 4px; }
+.scanner-filter-btn {
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 4px 10px; font-size: 0.75rem; color: var(--text-muted); cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.scanner-filter-btn:hover { border-color: var(--accent-gold); color: var(--text-primary); }
+.scanner-filter-btn--active {
+  border-color: var(--accent-gold); color: var(--accent-gold);
+  background: rgba(212, 168, 85, 0.1); font-weight: 600;
+}
+.scanner-count {
+  margin-left: auto; font-size: 0.8125rem; color: var(--text-secondary); font-weight: 600;
+}
+.scanner-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+@media (max-width: 768px) { .scanner-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .scanner-grid { grid-template-columns: 1fr; } }
+.scanner-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px; cursor: pointer; transition: border-color 0.2s;
+}
+.scanner-card:hover { border-color: var(--accent-gold); }
+.scanner-card__header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+}
+.scanner-card__symbol { color: var(--accent-gold); font-weight: 700; font-size: 0.9375rem; }
+.scanner-card__badge {
+  font-size: 0.625rem; padding: 2px 8px; border-radius: 3px; font-weight: 600;
+}
+.scanner-card__badge--long { background: rgba(34, 197, 94, 0.12); color: var(--green); }
+.scanner-card__badge--short { background: rgba(239, 68, 68, 0.12); color: var(--red); }
+.scanner-card__badge--mixed { background: rgba(212, 168, 85, 0.12); color: var(--accent-gold); }
+.scanner-card__patterns {
+  font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-secondary);
+  line-height: 1.8;
+}
+.scanner-card__pattern-row { display: flex; justify-content: space-between; }
+.scanner-card__footer {
+  color: var(--text-muted); font-size: 0.625rem; margin-top: 6px;
+}
+.ticker-badge {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; margin: 8px 0;
+  background: var(--bg-card); border: 1px solid var(--accent-gold);
+  border-radius: var(--radius); width: fit-content;
+}
+.ticker-badge__label {
+  font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.ticker-badge__symbol { color: var(--accent-gold); font-weight: 700; font-size: 0.9375rem; }
+.ticker-badge__name { color: var(--text-muted); font-size: 0.6875rem; }
+.ticker-badge__clear {
+  color: var(--text-muted); font-size: 0.875rem; cursor: pointer; margin-left: 4px;
+  padding: 0 4px; line-height: 1;
+}
+.ticker-badge__clear:hover { color: var(--text-primary); }

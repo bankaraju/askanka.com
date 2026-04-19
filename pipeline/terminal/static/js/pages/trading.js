@@ -5,6 +5,36 @@ let chartInstance = null;
 let refreshTimer = null;
 let _tickerCache = null;
 
+let _activeTicker = null;
+let _activeContainer = null;
+let _scannerFilters = { min_win: 60, direction: 'ALL', min_occ: 10, sort: 'win_rate' };
+
+function setActiveTicker(symbol) {
+  _activeTicker = symbol ? symbol.toUpperCase() : null;
+  _renderTickerBadge();
+}
+
+function getActiveTicker() { return _activeTicker; }
+
+function clearActiveTicker() {
+  _activeTicker = null;
+  _renderTickerBadge();
+}
+
+function _renderTickerBadge() {
+  const badge = document.getElementById('active-ticker-badge');
+  if (!badge) return;
+  if (!_activeTicker) { badge.style.display = 'none'; badge.innerHTML = ''; return; }
+  const name = _tickerCache ? (_tickerCache.find(t => t.symbol === _activeTicker) || {}).name || '' : '';
+  badge.style.display = 'flex';
+  badge.innerHTML = `
+    <span class="ticker-badge__label">Viewing</span>
+    <span class="ticker-badge__symbol">${_activeTicker}</span>
+    ${name ? `<span class="ticker-badge__name">${name}</span>` : ''}
+    <span class="ticker-badge__clear" id="ticker-badge-clear">&times;</span>`;
+  document.getElementById('ticker-badge-clear')?.addEventListener('click', () => { clearActiveTicker(); switchSubTab(currentSubTab); });
+}
+
 async function _loadTickers() {
   if (_tickerCache) return _tickerCache;
   try {
@@ -69,13 +99,16 @@ function _setupTickerSearch(inputId, onSelect) {
 }
 
 export async function render(container) {
+  _activeContainer = container;
   container.innerHTML = `
     <div class="main__subtabs">
-      <button class="subtab subtab--active" data-subtab="signals">Signals</button>
+      <button class="subtab subtab--active" data-subtab="scanner">Scanner</button>
+      <button class="subtab" data-subtab="signals">Signals</button>
       <button class="subtab" data-subtab="spreads">Spreads</button>
       <button class="subtab" data-subtab="charts">Charts</button>
       <button class="subtab" data-subtab="ta">TA</button>
     </div>
+    <div id="active-ticker-badge" class="ticker-badge" style="display:none;"></div>
     <div id="trading-content"></div>`;
 
   container.querySelectorAll('.subtab').forEach(btn => {
@@ -86,7 +119,8 @@ export async function render(container) {
     });
   });
 
-  await switchSubTab('signals');
+  await _loadTickers();
+  await switchSubTab('scanner');
 }
 
 export function destroy() {
@@ -103,10 +137,145 @@ async function switchSubTab(tab) {
   if (!content) return;
 
   switch (tab) {
+    case 'scanner': await renderScanner(content); break;
     case 'signals': await renderSignals(content); break;
     case 'spreads': await renderSpreads(content); break;
-    case 'charts': await renderCharts(content); break;
-    case 'ta': await renderTA(content); break;
+    case 'charts':
+      await renderCharts(content);
+      if (_activeTicker) createChart(_activeTicker);
+      break;
+    case 'ta':
+      await renderTA(content);
+      if (_activeTicker) renderTAData(_activeTicker);
+      break;
+  }
+}
+
+// ── Scanner Sub-Tab ──
+async function renderScanner(el) {
+  el.innerHTML = `
+    <div class="scanner-filters">
+      <div class="scanner-filter-group">
+        <div class="scanner-filter-label">Min Win Rate</div>
+        <div class="scanner-filter-btns" data-filter="min_win">
+          <button class="scanner-filter-btn" data-val="50">≥50%</button>
+          <button class="scanner-filter-btn" data-val="60">≥60%</button>
+          <button class="scanner-filter-btn" data-val="70">≥70%</button>
+          <button class="scanner-filter-btn" data-val="80">≥80%</button>
+        </div>
+      </div>
+      <div class="scanner-filter-group">
+        <div class="scanner-filter-label">Direction</div>
+        <div class="scanner-filter-btns" data-filter="direction">
+          <button class="scanner-filter-btn" data-val="ALL">ALL</button>
+          <button class="scanner-filter-btn" data-val="LONG">LONG</button>
+          <button class="scanner-filter-btn" data-val="SHORT">SHORT</button>
+        </div>
+      </div>
+      <div class="scanner-filter-group">
+        <div class="scanner-filter-label">Min Occurrences</div>
+        <div class="scanner-filter-btns" data-filter="min_occ">
+          <button class="scanner-filter-btn" data-val="10">≥10</button>
+          <button class="scanner-filter-btn" data-val="25">≥25</button>
+          <button class="scanner-filter-btn" data-val="50">≥50</button>
+        </div>
+      </div>
+      <div class="scanner-filter-group">
+        <div class="scanner-filter-label">Sort By</div>
+        <div class="scanner-filter-btns" data-filter="sort">
+          <button class="scanner-filter-btn" data-val="win_rate">Win Rate</button>
+          <button class="scanner-filter-btn" data-val="avg_return">Avg Return</button>
+          <button class="scanner-filter-btn" data-val="occurrences">Occurrences</button>
+        </div>
+      </div>
+      <div class="scanner-count" id="scanner-count"></div>
+    </div>
+    <div id="scanner-grid" class="scanner-grid"></div>`;
+
+  // Set active state on filter buttons from _scannerFilters
+  el.querySelectorAll('.scanner-filter-btns').forEach(group => {
+    const filterKey = group.dataset.filter;
+    group.querySelectorAll('.scanner-filter-btn').forEach(btn => {
+      if (String(_scannerFilters[filterKey]) === btn.dataset.val) {
+        btn.classList.add('scanner-filter-btn--active');
+      }
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.scanner-filter-btn').forEach(b => b.classList.remove('scanner-filter-btn--active'));
+        btn.classList.add('scanner-filter-btn--active');
+        _scannerFilters[filterKey] = isNaN(btn.dataset.val) ? btn.dataset.val : Number(btn.dataset.val);
+        _fetchAndRenderScanner();
+      });
+    });
+  });
+
+  await _fetchAndRenderScanner();
+}
+
+async function _fetchAndRenderScanner() {
+  const grid = document.getElementById('scanner-grid');
+  const countEl = document.getElementById('scanner-count');
+  if (!grid) return;
+
+  grid.innerHTML = '<div class="skeleton skeleton--card"></div>';
+  const params = new URLSearchParams({
+    min_win: _scannerFilters.min_win,
+    direction: _scannerFilters.direction,
+    min_occ: _scannerFilters.min_occ,
+    sort: _scannerFilters.sort,
+  });
+
+  try {
+    const data = await get(`/scanner?${params}`);
+    if (countEl) countEl.textContent = `${data.total_stocks} stocks · ${data.total_patterns} patterns`;
+
+    if (data.stocks.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><p>No patterns match these filters.</p><p class="text-muted">Try lowering the win rate threshold.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = data.stocks.map(stock => {
+      const dirs = new Set(stock.patterns.map(p => p.direction));
+      const badgeClass = dirs.size > 1 ? 'mixed' : dirs.has('SHORT') ? 'short' : 'long';
+      const badgeLabel = dirs.size > 1 ? `${stock.pattern_count} patterns` : `${stock.pattern_count} ${[...dirs][0].toLowerCase()}`;
+
+      const patternRows = stock.patterns.map(p => {
+        const winCls = p.win_rate_5d >= 0.65 ? 'color:var(--green)' : p.win_rate_5d >= 0.55 ? 'color:var(--accent-gold)' : 'color:var(--red)';
+        const sign = p.avg_return_5d >= 0 ? '+' : '';
+        const dir = p.direction === 'SHORT' ? ' <span style="color:var(--red)">▼</span>' : '';
+        return `<div class="scanner-card__pattern-row">
+          <span>${p.pattern}${dir}</span>
+          <span><span style="${winCls};font-weight:600">${Math.round(p.win_rate_5d * 100)}%</span> · ${sign}${p.avg_return_5d.toFixed(1)}% · ${p.occurrences}×</span>
+        </div>`;
+      }).join('');
+
+      const bestP = stock.patterns[0];
+      const lastDate = bestP.last_occurrence ? new Date(bestP.last_occurrence).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : '—';
+
+      return `<div class="scanner-card" data-symbol="${stock.symbol}">
+        <div class="scanner-card__header">
+          <span class="scanner-card__symbol">${stock.symbol}</span>
+          <span class="scanner-card__badge scanner-card__badge--${badgeClass}">${badgeLabel}</span>
+        </div>
+        <div class="scanner-card__patterns">${patternRows}</div>
+        <div class="scanner-card__footer">Best: ${bestP.pattern} · Last fired ${lastDate}</div>
+      </div>`;
+    }).join('');
+
+    grid.querySelectorAll('.scanner-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const sym = card.dataset.symbol;
+        setActiveTicker(sym);
+        const chartsBtn = _activeContainer?.querySelector('[data-subtab="charts"]');
+        if (chartsBtn) {
+          _activeContainer.querySelectorAll('.subtab').forEach(b => b.classList.remove('subtab--active'));
+          chartsBtn.classList.add('subtab--active');
+        }
+        switchSubTab('charts');
+      });
+    });
+
+  } catch (err) {
+    grid.innerHTML = `<div class="empty-state"><p>Error loading scanner data.</p><p class="text-muted">${err.message}</p></div>`;
   }
 }
 
@@ -299,11 +468,11 @@ async function renderCharts(el) {
     <div id="chart-container" style="height: 400px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border);"></div>
     <div id="chart-volume" style="height: 100px; margin-top: 4px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border);"></div>`;
 
-  _setupTickerSearch('chart-ticker-input', (ticker) => createChart(ticker));
+  _setupTickerSearch('chart-ticker-input', (sym) => { setActiveTicker(sym); createChart(sym); });
 
   document.getElementById('chart-load-btn').addEventListener('click', () => {
     const ticker = document.getElementById('chart-ticker-input').value.trim().toUpperCase();
-    if (ticker) createChart(ticker);
+    if (ticker) { setActiveTicker(ticker); createChart(ticker); }
   });
 }
 
@@ -440,11 +609,11 @@ async function renderTA(el) {
     </div>
     <div id="ta-content"><div class="empty-state"><p>Enter a ticker to view technical analysis fingerprint</p></div></div>`;
 
-  _setupTickerSearch('ta-ticker-input', (ticker) => renderTAData(ticker));
+  _setupTickerSearch('ta-ticker-input', (sym) => { setActiveTicker(sym); renderTAData(sym); });
 
   document.getElementById('ta-load-btn').addEventListener('click', () => {
     const ticker = document.getElementById('ta-ticker-input').value.trim().toUpperCase();
-    if (ticker) renderTAData(ticker);
+    if (ticker) { setActiveTicker(ticker); renderTAData(ticker); }
   });
 }
 
