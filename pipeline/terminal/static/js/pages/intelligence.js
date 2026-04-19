@@ -62,18 +62,26 @@ async function renderTrustScores(el) {
   try {
     const [data, sectorsData] = await Promise.all([
       get('/trust-scores'),
-      get('/trust-scores/sectors').catch(() => ({ sectors: [] })),
+      get('/trust-scores/sectors').catch(() => ({ sectors: {} })),
     ]);
     const stocks = data.stocks || [];
-    const sectors = sectorsData.sectors || [];
+    const sectorsRaw = sectorsData.sectors || {};
+    const sectors = Array.isArray(sectorsRaw)
+      ? sectorsRaw
+      : Object.entries(sectorsRaw).map(([id, v]) => ({
+          id,
+          display_name: v.name || id,
+          count: v.count || 0,
+        }));
 
     if (stocks.length === 0) {
       el.innerHTML = '<div class="empty-state"><p>No trust scores available</p></div>';
       return;
     }
 
+    sectors.sort((a, b) => (b.count || 0) - (a.count || 0));
     const sectorOptions = sectors.map(sec =>
-      `<option value="${_esc(sec.id)}">${_esc(sec.display_name)}</option>`
+      `<option value="${_esc(sec.id)}">${_esc(sec.display_name)} (${sec.count})</option>`
     ).join('');
 
     el.innerHTML = `
