@@ -1,0 +1,347 @@
+{
+  "version": "2.0",
+  "sectors": {
+    "Banks": {
+      "display_name": "Banks (Private & PSU)",
+      "industries": ["Regional Banks"],
+      "composite_weights": {"financial": 0.70, "management": 0.30},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "NIM_proxy", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "ROA", "direction": "higher", "weight": 0.15, "source": "indianapi"},
+        {"name": "Cost_to_Income", "direction": "lower", "weight": 0.10, "source": "derived"},
+        {"name": "ROE", "direction": "higher", "weight": 0.15, "source": "screener"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.10, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.15, "source": "derived"}
+      ]
+    },
+    "NBFC_HFC": {
+      "display_name": "NBFC & Housing Finance",
+      "industries": ["Consumer Financial Services"],
+      "composite_weights": {"financial": 0.65, "management": 0.35},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "IT_Services": {
+      "display_name": "IT Services & Software",
+      "industries": ["Software & Programming", "Computer Services"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Capital_Markets": {
+      "display_name": "Capital Markets & Broking",
+      "industries": ["Investment Services", "Misc. Financial Services"],
+      "composite_weights": {"financial": 0.65, "management": 0.35},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Pharma": {
+      "display_name": "Pharmaceuticals & Biotech",
+      "industries": ["Biotechnology & Drugs", "Major Drugs"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Power_Utilities": {
+      "display_name": "Power & Utilities",
+      "industries": ["Electric Utilities", "Natural Gas Utilities", "Coal"],
+      "composite_weights": {"financial": 0.65, "management": 0.35},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "FMCG": {
+      "display_name": "FMCG & Consumer Staples",
+      "industries": ["Personal & Household Prods.", "Tobacco", "Food Processing", "Beverages (Alcoholic)", "Beverages (Nonalcoholic)"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Metals_Mining": {
+      "display_name": "Metals & Mining",
+      "industries": ["Iron & Steel", "Metal Mining", "Misc. Fabricated Products"],
+      "composite_weights": {"financial": 0.65, "management": 0.35},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Capital_Goods": {
+      "display_name": "Capital Goods & Engineering",
+      "industries": ["Electronic Instr. & Controls", "Misc. Capital Goods", "Appliance & Tool", "Semiconductors"],
+      "composite_weights": {"financial": 0.55, "management": 0.45},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Chemicals": {
+      "display_name": "Chemicals & Specialty",
+      "industries": ["Chemical Manufacturing", "Fabricated Plastic & Rubber"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Insurance": {
+      "display_name": "Insurance",
+      "industries": ["Insurance (Life)", "Insurance (Prop. & Casualty)", "Insurance (Accident & Health)"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Infra_EPC": {
+      "display_name": "Infrastructure & EPC",
+      "industries": ["Construction Services"],
+      "composite_weights": {"financial": 0.50, "management": 0.50},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Oil_Gas": {
+      "display_name": "Oil & Gas",
+      "industries": ["Oil & Gas Operations", "Oil & Gas - Integrated"],
+      "composite_weights": {"financial": 0.65, "management": 0.35},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Consumer_Discretionary": {
+      "display_name": "Consumer Discretionary & Retail",
+      "industries": ["Recreational Products", "Audio & Video Equipment", "Jewelry & Silverware", "Retail (Specialty)", "Retail (Grocery)", "Retail (Apparel)", "Retail (Department & Discount)", "Apparel/Accessories"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Cement_Building": {
+      "display_name": "Cement & Building Materials",
+      "industries": ["Construction - Raw Materials"],
+      "composite_weights": {"financial": 0.65, "management": 0.35},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Autos": {
+      "display_name": "Automobiles",
+      "industries": ["Auto & Truck Manufacturers"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Auto_Ancillaries": {
+      "display_name": "Auto Ancillaries & Components",
+      "industries": ["Auto & Truck Parts"],
+      "composite_weights": {"financial": 0.55, "management": 0.45},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Logistics_Transport": {
+      "display_name": "Logistics & Transportation",
+      "industries": ["Water Transportation", "Misc. Transportation", "Railroads", "Airline"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Hospitals_Diagnostics": {
+      "display_name": "Hospitals & Diagnostics",
+      "industries": ["Healthcare Facilities"],
+      "composite_weights": {"financial": 0.55, "management": 0.45},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Defence": {
+      "display_name": "Defence & Aerospace",
+      "industries": ["Aerospace & Defense"],
+      "composite_weights": {"financial": 0.50, "management": 0.50},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Telecom": {
+      "display_name": "Telecom",
+      "industries": ["Communications Services"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Real_Estate_Hotels": {
+      "display_name": "Real Estate, Hotels & Restaurants",
+      "industries": ["Real Estate Operations", "Hotels & Motels", "Restaurants"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Business_Services": {
+      "display_name": "Business Services",
+      "industries": ["Business Services"],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    },
+    "Unmapped": {
+      "display_name": "Unmapped / Unknown",
+      "industries": [],
+      "composite_weights": {"financial": 0.60, "management": 0.40},
+      "min_peer_count": 5,
+      "kpis": [
+        {"name": "ROE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "ROCE", "direction": "higher", "weight": 0.20, "source": "screener"},
+        {"name": "EBITDA_Margin", "direction": "higher", "weight": 0.20, "source": "derived"},
+        {"name": "Revenue_Growth_3Y", "direction": "higher", "weight": 0.15, "source": "derived"},
+        {"name": "Debt_to_Equity", "direction": "lower", "weight": 0.15, "source": "derived"},
+        {"name": "CFO_PAT", "direction": "higher", "weight": 0.10, "source": "derived"}
+      ]
+    }
+  },
+  "overrides": {
+    "RELIANCE": "Oil_Gas",
+    "ADANIENT": "Capital_Goods"
+  },
+  "common_kpis": ["ROE", "ROCE", "Revenue_Growth_3Y", "Debt_to_Equity", "CFO_PAT"]
+}
