@@ -488,14 +488,14 @@ def build_article_html(segment: str, article: dict, date: str) -> str:
     body_html = re.sub(r'\[Source:\s*([^\]]+)\]', _footnote_ref, body_html)
 
     if channel_order:
-        items = "\n".join(
-            f'  <li id="fn-{channel_num[c]}">{channel_num[c]}. {c}</li>'
+        items = " ".join(
+            f'<span class="src-item" id="fn-{channel_num[c]}">[{channel_num[c]}] {c}</span>'
             for c in channel_order
         )
         body_html += (
             '\n<section class="sources">'
-            '<h3 class="sources-title">Sources</h3>'
-            f'<ol class="sources-list">\n{items}\n</ol>'
+            '<div class="sources-title">Sources</div>'
+            f'<div class="sources-inline">{items}</div>'
             '</section>'
         )
 
@@ -537,11 +537,11 @@ body {{ background: var(--bg); color: var(--text); font-family: 'Inter', sans-se
 .fn-ref {{ font-size:10px; vertical-align:super; line-height:0; }}
 .fn-ref a {{ color:#d4a855; text-decoration:none; padding:0 1px; }}
 .fn-ref a:hover {{ text-decoration:underline; }}
-.sources {{ margin-top:40px; padding-top:20px; border-top:1px solid #2a2a2a; }}
-.sources-title {{ font-family:'Inter',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:#9c9c9c; margin-bottom:12px; font-weight:600; }}
-.sources-list {{ list-style:none; padding:0; counter-reset:none; }}
-.sources-list li {{ color:#9c9c9c; font-size:12px; line-height:1.7; margin-bottom:4px; padding-left:4px; }}
-.sources-list li:target {{ color:#d4a855; background:rgba(212,168,85,0.05); }}
+.sources {{ margin-top:40px; padding-top:16px; border-top:1px solid #2a2a2a; }}
+.sources-title {{ font-family:'Inter',sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:#6e6e6e; margin-bottom:8px; font-weight:600; }}
+.sources-inline {{ display:flex; flex-wrap:wrap; gap:4px 12px; }}
+.src-item {{ color:#9c9c9c; font-size:11px; white-space:nowrap; }}
+.src-item:target {{ color:#d4a855; }}
 </style>
 </head>
 <body>
