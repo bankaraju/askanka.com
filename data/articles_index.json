@@ -1,6 +1,15 @@
 {
   "articles": [
     {
+      "date": "2026-04-20",
+      "segment": "epstein",
+      "filename": "2026-04-20-epstein.html",
+      "headline": "Melania's Silent Signal: The Epstein Files, Trump's Cash Grab, and India's DeFi Ascent",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 20, 2026"
+    },
+    {
       "date": "2026-04-19",
       "segment": "war",
       "filename": "2026-04-19-war.html",
