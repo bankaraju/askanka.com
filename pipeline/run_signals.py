@@ -329,6 +329,31 @@ def _run_once_inner(send_telegram=False):
                         print(f"  📊 Shadow trade created: {spread_name} (sizing {risk_gate['sizing_factor']:.0%})")
                     except Exception as e:
                         print(f"  Shadow trade creation failed: {e}")
+                    # ── Synthetic options shadow ──
+                    try:
+                        from pipeline.synthetic_options import build_leverage_matrix, record_shadow_entry
+                        import json as _json
+                        profile_path = Path(__file__).parent / "autoresearch" / "reverse_regime_profile.json"
+                        profiles = _json.loads(profile_path.read_text(encoding="utf-8")) if profile_path.exists() else {}
+                        positioning_path = Path(__file__).parent / "data" / "positioning.json"
+                        oi_data = _json.loads(positioning_path.read_text(encoding="utf-8")) if positioning_path.exists() else {}
+                        opt_signal = {
+                            "signal_id": trackable["signal_id"],
+                            "spread_name": spread_name,
+                            "conviction": spread.get("hit_rate", 0) * 100,
+                            "long_legs": spread.get("long_leg", []),
+                            "short_legs": spread.get("short_leg", []),
+                        }
+                        matrix = build_leverage_matrix(opt_signal, profiles, oi_data=oi_data)
+                        entry = record_shadow_entry(opt_signal, matrix, regime)
+                        if entry:
+                            print(f"  🎯 Synthetic options shadow: {entry['shadow_id']}")
+                        elif matrix.get("grounding_ok"):
+                            print(f"  ⚪ Synthetic options: all tiers negative carry")
+                        else:
+                            print(f"  ⚪ Synthetic options: {matrix.get('reason', 'vol unavailable')}")
+                    except Exception as e:
+                        print(f"  Synthetic options shadow failed: {e}")
                 # Only send the main overview card if new spreads were registered
                 print(card)
                 sent_count += 1
