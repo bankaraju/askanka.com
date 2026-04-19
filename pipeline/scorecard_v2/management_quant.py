@@ -118,6 +118,8 @@ def _cfo_pat_consistency_score(cfo_pat: Union[float, list[float]]) -> float:
         # Penalise each negative year: subtract 1 point per negative year (min 0)
         negative_years = sum(1 for v in cfo_pat if v < 0)
         penalty = negative_years * 1.0
+    elif cfo_pat is None:
+        return 10.0
     else:
         avg = float(cfo_pat)
         penalty = 0.0
@@ -201,8 +203,10 @@ def compute_management_quant(metrics: dict) -> float:
     # Resolve CFO/PAT average for cap check
     if isinstance(cfo_pat, list):
         cfo_avg = statistics.mean(cfo_pat) if cfo_pat else 0.5
-    else:
+    elif cfo_pat is not None:
         cfo_avg = float(cfo_pat)
+    else:
+        cfo_avg = 0.5
 
     if cfo_avg < 0.3:
         score = min(score, 50.0)

@@ -65,7 +65,14 @@ def _year_columns(row: dict, exclude_ttm: bool = True) -> list[str]:
             if k.startswith("Mar "):
                 cols.append(k)
     # Sort chronologically
-    cols.sort(key=lambda c: int(c.split()[1]))
+    def _year_key(col: str) -> int:
+        parts = col.split()
+        if len(parts) >= 2:
+            digits = "".join(ch for ch in parts[1] if ch.isdigit())
+            if digits:
+                return int(digits[:4])
+        return 0
+    cols.sort(key=_year_key)
     return cols
 
 
