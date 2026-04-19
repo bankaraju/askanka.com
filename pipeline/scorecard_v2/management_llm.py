@@ -125,9 +125,9 @@ def score_stock_llm(
     kpis: list[str],
     artifacts_dir: Path,
     client: Any = None,
-    model: str = "claude-sonnet-4-6-20250514",
+    model: str = "claude-haiku-4-5-20251001",
 ) -> dict:
-    """Score one stock using Sonnet. Returns parsed JSON response.
+    """Score one stock using LLM. Returns parsed JSON response.
 
     Args:
         symbol:        NSE ticker symbol (e.g. "RELIANCE")
@@ -221,7 +221,7 @@ def score_sector_llm(
     kpis: list[str],
     artifacts_dir: Path,
     client: Any = None,
-    model: str = "claude-sonnet-4-6-20250514",
+    model: str = "claude-haiku-4-5-20251001",
     delay: float = 1.0,
 ) -> dict[str, dict]:
     """Score all stocks in a sector via Sonnet.

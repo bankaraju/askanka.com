@@ -78,9 +78,15 @@ def run_scorecard_v2(
             quant = mgmt_quant_scores.get(s, 50)
             llm = mgmt_llm_scores.get(s, quant)  # fallback to quant if no LLM
             mgmt_score = 0.5 * quant + 0.5 * llm
+            m = all_metrics.get(s, {})
             all_scores[s] = {
                 "financial_score": round(fin_scores.get(s, 50), 1),
                 "management_score": round(mgmt_score, 1),
+                "management_quant_score": round(quant, 1),
+                "management_llm_score": round(llm, 1) if s in mgmt_llm_scores else None,
+                "biggest_strength": m.get("biggest_strength", ""),
+                "biggest_red_flag": m.get("biggest_red_flag", ""),
+                "what_street_misses": m.get("what_street_misses", ""),
                 "sector": sector,
                 "display_name": stock_map[s]["display_name"],
             }
