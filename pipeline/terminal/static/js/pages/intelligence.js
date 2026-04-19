@@ -50,74 +50,198 @@ const GRADE_COLORS = {
 async function renderTrustScores(el) {
   el.innerHTML = '<div class="skeleton skeleton--card"></div>';
 
+  function _heatmapBg(score) {
+    if (score == null) return '';
+    if (score >= 80) return 'background: rgba(34,197,94,0.25)';
+    if (score >= 60) return 'background: rgba(34,197,94,0.12)';
+    if (score >= 40) return 'background: rgba(245,158,11,0.15)';
+    if (score >= 20) return 'background: rgba(249,115,22,0.15)';
+    return 'background: rgba(239,68,68,0.15)';
+  }
+
   try {
-    const data = await get('/trust-scores');
+    const [data, sectorsData] = await Promise.all([
+      get('/trust-scores'),
+      get('/trust-scores/sectors').catch(() => ({ sectors: [] })),
+    ]);
     const stocks = data.stocks || [];
+    const sectors = sectorsData.sectors || [];
 
     if (stocks.length === 0) {
       el.innerHTML = '<div class="empty-state"><p>No trust scores available</p></div>';
       return;
     }
 
+    const sectorOptions = sectors.map(sec =>
+      `<option value="${_esc(sec.id)}">${_esc(sec.display_name)}</option>`
+    ).join('');
+
     el.innerHTML = `
-      <div class="filter-bar">
-        <input type="text" id="trust-search" class="filter-search" placeholder="Search ticker...">
-        <span class="text-muted" style="font-size: 0.75rem;">${stocks.length} stocks scored</span>
+      <div class="filter-bar" style="display:flex; align-items:center; gap: var(--spacing-sm); flex-wrap:wrap; margin-bottom: var(--spacing-sm);">
+        <input type="text" id="trust-search" class="filter-search" placeholder="Search ticker..." style="min-width:140px;">
+        <select id="trust-sector" class="filter-search" style="min-width:160px;">
+          <option value="">All Sectors</option>
+          ${sectorOptions}
+        </select>
+        <span id="trust-count" class="text-muted" style="font-size: 0.75rem;">${stocks.length} stocks scored</span>
       </div>
       <div id="trust-table-wrap"></div>`;
 
-    const renderTable = (filter = '') => {
-      const filtered = filter
-        ? stocks.filter(s => (s.symbol || '').toUpperCase().includes(filter.toUpperCase()))
-        : stocks;
+    let sortCol = 'composite_score';
+    let sortDir = -1; // -1 = desc
 
-      const sorted = [...filtered].sort((a, b) => {
-        const gradeOrder = {'A+':0,'A':1,'B+':2,'B':3,'C':4,'D':5,'F':6,'?':7};
-        return (gradeOrder[a.trust_grade] || 7) - (gradeOrder[b.trust_grade] || 7);
+    const renderTable = () => {
+      const tickerFilter = (document.getElementById('trust-search')?.value || '').toUpperCase();
+      const sectorFilter = document.getElementById('trust-sector')?.value || '';
+
+      let filtered = stocks.filter(s => {
+        const matchTicker = !tickerFilter || (s.symbol || '').toUpperCase().includes(tickerFilter);
+        const matchSector = !sectorFilter || (s.sector || '') === sectorFilter;
+        return matchTicker && matchSector;
       });
 
-      const rows = sorted.map(s => {
-        const badgeCls = GRADE_COLORS[s.trust_grade] || 'badge--muted';
-        return `<tr class="clickable" data-ticker="${s.symbol}">
-          <td style="font-family: var(--font-body);">${s.symbol}</td>
-          <td><span class="badge ${badgeCls}">${s.trust_grade || '?'}</span></td>
-          <td class="mono">${s.trust_score != null ? s.trust_score : '--'}</td>
-          <td class="text-muted" style="font-size: 0.75rem; max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${s.thesis || '--'}</td>
+      filtered = [...filtered].sort((a, b) => {
+        let av = a[sortCol];
+        let bv = b[sortCol];
+        if (av == null) av = sortDir === -1 ? -Infinity : Infinity;
+        if (bv == null) bv = sortDir === -1 ? -Infinity : Infinity;
+        if (typeof av === 'string') return sortDir * av.localeCompare(bv);
+        return sortDir * (av - bv);
+      });
+
+      document.getElementById('trust-count').textContent = `${filtered.length} / ${stocks.length} stocks`;
+
+      const colDefs = [
+        { key: 'symbol',            label: 'Ticker' },
+        { key: 'display_name',      label: 'Sector' },
+        { key: 'sector_grade',      label: 'Grade' },
+        { key: 'composite_score',   label: 'Composite' },
+        { key: 'financial_score',   label: 'Fin' },
+        { key: 'management_score',  label: 'Mgmt' },
+        { key: 'sector_rank',       label: 'Rank' },
+        { key: 'grade_reason',      label: 'Remark' },
+      ];
+
+      const thHtml = colDefs.map(col => {
+        const active = col.key === sortCol ? 'style="color:var(--accent-gold);"' : '';
+        return `<th class="sortable" data-col="${col.key}" ${active}>${col.label}</th>`;
+      }).join('');
+
+      const rows = filtered.map(s => {
+        const grade = s.sector_grade || s.trust_grade || '?';
+        const badgeCls = GRADE_COLORS[grade] || 'badge--muted';
+        const composite = s.composite_score ?? s.trust_score;
+        const fin = s.financial_score;
+        const mgmt = s.management_score;
+        const rank = (s.sector_rank != null && s.sector_total != null)
+          ? `${s.sector_rank}/${s.sector_total}` : '--';
+        const remarkFull = s.grade_reason || s.thesis || '';
+        const remarkShort = remarkFull.length > 80 ? remarkFull.slice(0, 80) + '…' : remarkFull;
+        const sectorDisplay = (s.display_name || s.sector || '').slice(0, 20);
+
+        return `<tr class="clickable" data-ticker="${_esc(s.symbol)}">
+          <td style="font-family: var(--font-mono); font-weight:600;">${_esc(s.symbol)}</td>
+          <td class="text-muted" style="font-size:0.75rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;" title="${_esc(s.display_name || s.sector || '')}">${_esc(sectorDisplay)}</td>
+          <td><span class="badge ${badgeCls}">${_esc(grade)}</span></td>
+          <td class="mono" style="${_heatmapBg(composite)}">${composite != null ? composite : '--'}</td>
+          <td class="mono" style="${_heatmapBg(fin)}">${fin != null ? fin : '--'}</td>
+          <td class="mono" style="${_heatmapBg(mgmt)}">${mgmt != null ? mgmt : '--'}</td>
+          <td class="mono" style="font-size:0.75rem;">${_esc(rank)}</td>
+          <td class="text-muted" style="font-size:0.75rem; max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${_esc(remarkFull)}">${_esc(remarkShort)}</td>
         </tr>`;
       }).join('');
 
       document.getElementById('trust-table-wrap').innerHTML = `
         <table class="data-table">
-          <thead><tr><th>Ticker</th><th>Grade</th><th>Score</th><th>Thesis</th></tr></thead>
+          <thead><tr>${thHtml}</tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
 
+      // Sort header click
+      document.querySelectorAll('#trust-table-wrap th.sortable').forEach(th => {
+        th.style.cursor = 'pointer';
+        th.addEventListener('click', () => {
+          const col = th.dataset.col;
+          if (sortCol === col) {
+            sortDir *= -1;
+          } else {
+            sortCol = col;
+            sortDir = -1;
+          }
+          renderTable();
+        });
+      });
+
+      // Row click — context panel
       document.querySelectorAll('#trust-table-wrap tr.clickable').forEach(row => {
         row.addEventListener('click', () => {
           const panel = document.getElementById('context-panel');
           const title = document.getElementById('context-panel-title');
           const content = document.getElementById('context-panel-content');
           const ticker = row.dataset.ticker;
-          if (panel && title && content) {
-            title.textContent = ticker;
-            const stock = stocks.find(s => s.symbol === ticker);
-            content.innerHTML = `
-              <div class="card" style="margin-bottom: var(--spacing-md);">
-                <div class="text-muted" style="font-size: 0.75rem;">TRUST SCORE</div>
-                <div class="mono" style="font-size: 2rem; color: var(--accent-gold);">${stock?.trust_grade || '?'}</div>
-                <div class="mono" style="font-size: 1rem;">${stock?.trust_score ?? '--'}</div>
+          if (!(panel && title && content)) return;
+
+          const s = stocks.find(st => st.symbol === ticker);
+          if (!s) return;
+
+          title.textContent = ticker;
+          const grade = s.sector_grade || s.trust_grade || '?';
+          const badgeCls = GRADE_COLORS[grade] || 'badge--muted';
+          const composite = s.composite_score ?? s.trust_score;
+          const fin = s.financial_score;
+          const mgmt = s.management_score;
+          const conf = s.confidence || '';
+          const confBadge = conf ? `<span class="badge badge--muted" style="margin-left:var(--spacing-xs);">${_esc(conf)}</span>` : '';
+          const rankLine = (s.sector_rank != null && s.sector_total != null && s.display_name)
+            ? `<div class="text-muted" style="font-size:0.8rem; margin-bottom:var(--spacing-sm);">Rank <strong>${s.sector_rank}/${s.sector_total}</strong> in ${_esc(s.display_name)}${s.sector_leader ? `. Leader: <strong>${_esc(s.sector_leader)}</strong>${s.sector_leader_composite != null ? ` (${s.sector_leader_composite})` : ''}.` : '.'}</div>`
+            : '';
+          const strengthHtml = s.biggest_strength
+            ? `<div style="margin-top:var(--spacing-sm);"><span class="text-muted" style="font-size:0.75rem;">STRENGTH</span><div style="font-size:0.8125rem; color:var(--color-green);">${_esc(s.biggest_strength)}</div></div>`
+            : '';
+          const redFlagHtml = s.biggest_red_flag
+            ? `<div style="margin-top:var(--spacing-sm);"><span class="text-muted" style="font-size:0.75rem;">RED FLAG</span><div style="font-size:0.8125rem; color:var(--color-red);">${_esc(s.biggest_red_flag)}</div></div>`
+            : '';
+          const reasonHtml = (s.grade_reason || s.thesis)
+            ? `<div style="margin-top:var(--spacing-sm);"><span class="text-muted" style="font-size:0.75rem;">GRADE REASON</span><div style="font-size:0.8125rem; line-height:1.6; margin-top:2px;">${_esc(s.grade_reason || s.thesis)}</div></div>`
+            : '';
+
+          content.innerHTML = `
+            ${rankLine}
+            <div class="card" style="margin-bottom: var(--spacing-md);">
+              <div style="display:flex; align-items:center; gap:var(--spacing-sm); margin-bottom:var(--spacing-xs);">
+                <span class="badge ${badgeCls}" style="font-size:1.1rem; padding: 4px 10px;">${_esc(grade)}</span>
+                ${confBadge}
               </div>
-              <div style="font-size: 0.8125rem; line-height: 1.6;">${stock?.thesis || 'No thesis available'}</div>`;
-            panel.classList.add('context-panel--open');
-          }
+              <div style="display:flex; gap:var(--spacing-md); flex-wrap:wrap; margin-top:var(--spacing-xs);">
+                <div>
+                  <div class="text-muted" style="font-size:0.7rem;">COMPOSITE</div>
+                  <div class="mono" style="font-size:1.5rem; color:var(--accent-gold);">${composite != null ? composite : '--'}</div>
+                </div>
+                <div>
+                  <div class="text-muted" style="font-size:0.7rem;">FINANCIAL</div>
+                  <div class="mono" style="font-size:1.25rem;">${fin != null ? fin : '--'}</div>
+                </div>
+                <div>
+                  <div class="text-muted" style="font-size:0.7rem;">MANAGEMENT</div>
+                  <div class="mono" style="font-size:1.25rem;">${mgmt != null ? mgmt : '--'}</div>
+                </div>
+              </div>
+            </div>
+            ${reasonHtml}
+            ${strengthHtml}
+            ${redFlagHtml}`;
+
+          panel.classList.add('context-panel--open');
         });
       });
     };
 
     renderTable();
-    document.getElementById('trust-search').addEventListener('input', (e) => renderTable(e.target.value));
 
-  } catch {
+    document.getElementById('trust-search').addEventListener('input', renderTable);
+    document.getElementById('trust-sector').addEventListener('change', renderTable);
+
+  } catch (err) {
     el.innerHTML = '<div class="empty-state"><p>Failed to load trust scores</p></div>';
   }
 }
