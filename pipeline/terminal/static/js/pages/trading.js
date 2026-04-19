@@ -656,6 +656,9 @@ async function renderTAData(ticker) {
             Events: <span class="mono">${p.occurrences || '--'}</span>
             ${p.last_occurrence ? `| Last: <span class="mono">${p.last_occurrence}</span>` : ''}
           </div>
+          <div style="font-size:0.6875rem;color:var(--text-muted);margin-top:6px;line-height:1.5;">
+            Fired ${p.occurrences || '?'}× in 5 years. Won ${winRate} over 5 days. Avg ${p.avg_return_5d >= 0 ? '+' : ''}${avgReturn}, worst ${(p.avg_drawdown || 0).toFixed(1)}%.${p.avg_return_10d ? ` 10d avg: ${p.avg_return_10d >= 0 ? '+' : ''}${p.avg_return_10d.toFixed(1)}%` : ''}
+          </div>
         </div>`;
     }).join('');
 
