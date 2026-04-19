@@ -33,6 +33,10 @@ export function renderLeverageCard(matrix) {
     ? `<span class="badge badge--green">${matrix.conviction_score}</span>`
     : `<span class="badge badge--amber">${matrix.conviction_score}</span>`;
 
+  const calBadge = matrix.vol_scalar_applied != null && matrix.vol_scalar_applied !== 1.0
+    ? `<span class="badge badge--green" title="Vol scalar: ${matrix.vol_scalar_applied}">CALIBRATED</span>`
+    : `<span class="badge badge--amber">UNCALIBRATED</span>`;
+
   const tierRows = (matrix.tiers || []).map(t => {
     const v = VERDICT_STYLES[t.classification] || { cls: 'badge--muted', label: t.classification };
     const edgeCls = t.net_edge_pct > 0 ? 'text-green' : 'text-red';
@@ -63,7 +67,7 @@ export function renderLeverageCard(matrix) {
     <div class="digest-card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div class="digest-card__title">${esc(matrix.spread_name)}</div>
-        ${convBadge}
+        <span style="display: flex; gap: 4px;">${convBadge} ${calBadge}</span>
       </div>
       <div class="digest-card__subtitle">Drift vs Rent — Leverage Matrix</div>
       <table class="data-table" style="margin-top: var(--spacing-sm);">

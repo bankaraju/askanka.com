@@ -19,6 +19,17 @@ TIERS = [
 
 _DATA = Path(__file__).resolve().parent / "data"
 _SHADOW_PATH = _DATA / "signals" / "synthetic_options_shadow.json"
+_BACKTEST_RESULTS = _DATA / "vol_backtest_results.json"
+
+
+def _load_vol_scalar() -> float:
+    if not _BACKTEST_RESULTS.exists():
+        return 1.0
+    try:
+        data = json.loads(_BACKTEST_RESULTS.read_text(encoding="utf-8"))
+        return data.get("aggregate", {}).get("vol_scalar", 1.0)
+    except Exception:
+        return 1.0
 
 
 def classify_tier(net_edge: float, tier_name: str) -> str:
@@ -53,14 +64,14 @@ def build_caution_badges(tiers: list[dict], oi_data: dict | None) -> list[str]:
     return badges
 
 
-def _weighted_vol(legs: list[dict], vol_fn) -> float | None:
+def _weighted_vol(legs: list[dict], vol_fn, scalar: float = 1.0) -> float | None:
     vols = []
     weights = []
     for leg in legs:
         v = vol_fn(leg["ticker"])
         if v is None:
             return None
-        vols.append(v)
+        vols.append(v * scalar)
         weights.append(leg.get("weight", 1.0))
     total_w = sum(weights)
     if total_w == 0:
@@ -81,8 +92,10 @@ def build_leverage_matrix(signal: dict, regime_profiles: dict, oi_data: dict | N
     long_legs = signal.get("long_legs", [])
     short_legs = signal.get("short_legs", [])
 
-    long_vol = _weighted_vol(long_legs, vol_engine.get_stock_vol)
-    short_vol = _weighted_vol(short_legs, vol_engine.get_stock_vol)
+    vol_scalar = _load_vol_scalar()
+
+    long_vol = _weighted_vol(long_legs, vol_engine.get_stock_vol, scalar=vol_scalar)
+    short_vol = _weighted_vol(short_legs, vol_engine.get_stock_vol, scalar=vol_scalar)
 
     if long_vol is None or short_vol is None:
         missing = []
@@ -99,6 +112,7 @@ def build_leverage_matrix(signal: dict, regime_profiles: dict, oi_data: dict | N
             "caution_badges": [],
             "long_side_vol": None,
             "short_side_vol": None,
+            "vol_scalar_applied": 1.0,
         }
 
     avg_vol = (long_vol + short_vol) / 2.0
@@ -138,6 +152,7 @@ def build_leverage_matrix(signal: dict, regime_profiles: dict, oi_data: dict | N
         "caution_badges": badges,
         "long_side_vol": round(long_vol, 4),
         "short_side_vol": round(short_vol, 4),
+        "vol_scalar_applied": round(vol_scalar, 4),
     }
 
 
