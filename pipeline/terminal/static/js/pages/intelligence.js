@@ -438,9 +438,9 @@ async function renderOptions(el) {
   el.innerHTML = '<div class="skeleton skeleton--card"></div>';
 
   try {
-    const [digestData, shadowData] = await Promise.all([
+    const [digestData, shadows] = await Promise.all([
       get('/research/digest'),
-      get('/research/options-shadow').catch(() => ({ shadows: [] })),
+      get('/research/options-shadow').catch(() => []),
     ]);
 
     const genTime = digestData.generated_at || '';
@@ -449,36 +449,29 @@ async function renderOptions(el) {
     const staleBadge = isStale ? ' <span class="badge badge--stale">STALE</span>' : '';
 
     const matrices = digestData.leverage_matrices || [];
-    const shadows = shadowData.shadows || [];
 
     const matrixCards = matrices.length > 0
       ? matrices.map(m => renderLeverageCard(m)).join('')
-      : '<div class="digest-card"><p class="text-muted">No leverage matrices available — run the synthetic options pricer</p></div>';
+      : '<div class="digest-card"><p class="text-muted">No spreads with 65+ conviction — leverage matrix requires qualifying signals</p></div>';
 
     el.innerHTML = `
       <div class="digest-header">
         <h2 class="digest-header__title">Synthetic Options — Drift vs Rent</h2>
-        <span class="digest-header__time">Last computed: ${timeStr}${staleBadge}</span>
+        <span class="digest-header__time">Vol data: ${timeStr}${staleBadge}</span>
       </div>
-      <div class="digest-grid">
-        <div>
-          <div class="digest-column-header">Leverage Matrix — Per Spread</div>
-          ${matrixCards}
-        </div>
-        <div>
-          <div class="digest-column-header">Forward Test — Shadow P&L</div>
-          ${renderShadowStrip(shadows)}
-        </div>
+      <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+        ${matrixCards}
+        ${renderShadowStrip(shadows)}
       </div>`;
 
-    _wireOptionsTickers(el);
+    _wireOptionsTickers(el, matrices);
 
   } catch (err) {
     el.innerHTML = '<div class="empty-state"><p>Failed to load options intelligence</p></div>';
   }
 }
 
-function _wireOptionsTickers(container) {
+function _wireOptionsTickers(container, matrices) {
   container.querySelectorAll('.clickable-ticker[data-ticker]').forEach(span => {
     span.addEventListener('click', async () => {
       const ticker = span.dataset.ticker;
@@ -503,23 +496,28 @@ function _wireOptionsTickers(container) {
           'C': 'badge--amber', 'D': 'badge--red', 'F': 'badge--red',
         }[trustData.trust_grade] || 'badge--muted';
 
-        // Find vol data for this ticker from the leverage matrices in the digest
         const volBlock = (() => {
-          const matrices = (trustData._leverage_matrices || []);
-          const found = matrices.find(m =>
-            (m.long_legs || []).some(l => l.ticker === ticker) ||
-            (m.short_legs || []).some(l => l.ticker === ticker)
-          );
-          if (!found) return '';
-          const isLong = (found.long_legs || []).some(l => l.ticker === ticker);
-          const vol = isLong ? found.long_side_vol : found.short_side_vol;
-          if (vol == null) return '';
-          return `
-            <div class="card" style="margin-bottom: var(--spacing-md);">
-              <div class="text-muted" style="font-size: 0.75rem;">SYNTHETIC VOL</div>
-              <div class="mono" style="font-size: 1.5rem;">${(vol * 100).toFixed(1)}%</div>
-              <div class="text-muted" style="font-size: 0.6875rem;">${isLong ? 'Long leg' : 'Short leg'} — EWMA 30d</div>
-            </div>`;
+          if (!matrices || matrices.length === 0) return '';
+          for (const m of matrices) {
+            if (!m.grounding_ok) continue;
+            if (m.long_side_vol != null) {
+              return `
+                <div class="card" style="margin-bottom: var(--spacing-md);">
+                  <div class="text-muted" style="font-size: 0.75rem;">SYNTHETIC VOL</div>
+                  <div style="display: flex; gap: var(--spacing-lg); margin-top: var(--spacing-xs);">
+                    <div>
+                      <div class="text-muted" style="font-size: 0.6875rem;">Long Side</div>
+                      <div class="mono">${(m.long_side_vol * 100).toFixed(1)}%</div>
+                    </div>
+                    <div>
+                      <div class="text-muted" style="font-size: 0.6875rem;">Short Side</div>
+                      <div class="mono">${(m.short_side_vol * 100).toFixed(1)}%</div>
+                    </div>
+                  </div>
+                </div>`;
+            }
+          }
+          return '';
         })();
 
         const newsHtml = (newsData.items || []).slice(0, 10).map(n => `
