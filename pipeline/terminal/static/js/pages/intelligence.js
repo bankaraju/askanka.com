@@ -1,4 +1,5 @@
 import { get } from '../lib/api.js';
+import { renderLeverageCard, renderShadowStrip } from '../components/leverage-matrix.js';
 
 let currentSubTab = 'trust-scores';
 
@@ -8,6 +9,7 @@ export async function render(container) {
       <button class="subtab subtab--active" data-subtab="trust-scores">Trust Scores</button>
       <button class="subtab" data-subtab="news">News</button>
       <button class="subtab" data-subtab="research">Research</button>
+      <button class="subtab" data-subtab="options">Options</button>
     </div>
     <div id="intel-content"></div>`;
 
@@ -33,6 +35,7 @@ async function loadSubTab(tab) {
     case 'trust-scores': await renderTrustScores(el); break;
     case 'news': await renderNews(el); break;
     case 'research': await renderResearch(el); break;
+    case 'options': await renderOptions(el); break;
   }
 }
 
@@ -420,6 +423,121 @@ function _wireBreakClicks(container) {
             </div>
             <div style="font-size: 0.8125rem; margin-top: var(--spacing-sm); line-height: 1.6;">${_esc(trustData.thesis || 'No thesis')}</div>
           </div>
+          <div class="card">
+            <div class="text-muted" style="font-size: 0.75rem; margin-bottom: var(--spacing-sm);">RECENT NEWS</div>
+            ${newsHtml || '<p class="text-muted">No news</p>'}
+          </div>`;
+      } catch {
+        content.innerHTML = '<div class="empty-state"><p>Failed to load context</p></div>';
+      }
+    });
+  });
+}
+
+async function renderOptions(el) {
+  el.innerHTML = '<div class="skeleton skeleton--card"></div>';
+
+  try {
+    const [digestData, shadowData] = await Promise.all([
+      get('/research/digest'),
+      get('/research/options-shadow').catch(() => ({ shadows: [] })),
+    ]);
+
+    const genTime = digestData.generated_at || '';
+    const isStale = _isStale(genTime);
+    const timeStr = genTime ? new Date(genTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : '--';
+    const staleBadge = isStale ? ' <span class="badge badge--stale">STALE</span>' : '';
+
+    const matrices = digestData.leverage_matrices || [];
+    const shadows = shadowData.shadows || [];
+
+    const matrixCards = matrices.length > 0
+      ? matrices.map(m => renderLeverageCard(m)).join('')
+      : '<div class="digest-card"><p class="text-muted">No leverage matrices available — run the synthetic options pricer</p></div>';
+
+    el.innerHTML = `
+      <div class="digest-header">
+        <h2 class="digest-header__title">Synthetic Options — Drift vs Rent</h2>
+        <span class="digest-header__time">Last computed: ${timeStr}${staleBadge}</span>
+      </div>
+      <div class="digest-grid">
+        <div>
+          <div class="digest-column-header">Leverage Matrix — Per Spread</div>
+          ${matrixCards}
+        </div>
+        <div>
+          <div class="digest-column-header">Forward Test — Shadow P&L</div>
+          ${renderShadowStrip(shadows)}
+        </div>
+      </div>`;
+
+    _wireOptionsTickers(el);
+
+  } catch (err) {
+    el.innerHTML = '<div class="empty-state"><p>Failed to load options intelligence</p></div>';
+  }
+}
+
+function _wireOptionsTickers(container) {
+  container.querySelectorAll('.clickable-ticker[data-ticker]').forEach(span => {
+    span.addEventListener('click', async () => {
+      const ticker = span.dataset.ticker;
+      const panel = document.getElementById('context-panel');
+      const title = document.getElementById('context-panel-title');
+      const content = document.getElementById('context-panel-content');
+      if (!panel || !title || !content) return;
+
+      title.textContent = ticker;
+      content.innerHTML = '<div class="skeleton skeleton--card"></div>';
+      panel.classList.add('context-panel--open');
+
+      try {
+        const [trustData, newsData] = await Promise.all([
+          get(`/trust-scores/${ticker}`),
+          get(`/news/${ticker}`),
+        ]);
+
+        const gradeCls = {
+          'A+': 'badge--green', 'A': 'badge--green',
+          'B+': 'badge--blue', 'B': 'badge--blue',
+          'C': 'badge--amber', 'D': 'badge--red', 'F': 'badge--red',
+        }[trustData.trust_grade] || 'badge--muted';
+
+        // Find vol data for this ticker from the leverage matrices in the digest
+        const volBlock = (() => {
+          const matrices = (trustData._leverage_matrices || []);
+          const found = matrices.find(m =>
+            (m.long_legs || []).some(l => l.ticker === ticker) ||
+            (m.short_legs || []).some(l => l.ticker === ticker)
+          );
+          if (!found) return '';
+          const isLong = (found.long_legs || []).some(l => l.ticker === ticker);
+          const vol = isLong ? found.long_side_vol : found.short_side_vol;
+          if (vol == null) return '';
+          return `
+            <div class="card" style="margin-bottom: var(--spacing-md);">
+              <div class="text-muted" style="font-size: 0.75rem;">SYNTHETIC VOL</div>
+              <div class="mono" style="font-size: 1.5rem;">${(vol * 100).toFixed(1)}%</div>
+              <div class="text-muted" style="font-size: 0.6875rem;">${isLong ? 'Long leg' : 'Short leg'} — EWMA 30d</div>
+            </div>`;
+        })();
+
+        const newsHtml = (newsData.items || []).slice(0, 10).map(n => `
+          <div style="padding: var(--spacing-xs) 0; border-bottom: 1px solid rgba(30,41,59,0.3); font-size: 0.8125rem;">
+            ${_esc(n.headline || n.title || '--')}
+            <div class="text-muted" style="font-size: 0.6875rem;">${_esc(n.timestamp || n.date || '')}</div>
+          </div>`).join('');
+
+        content.innerHTML = `
+          <div class="card" style="margin-bottom: var(--spacing-md);">
+            <div class="text-muted" style="font-size: 0.75rem;">TRUST SCORE</div>
+            <div style="display: flex; align-items: baseline; gap: var(--spacing-sm);">
+              <span class="badge ${gradeCls}" style="font-size: 2rem;">${_esc(trustData.trust_grade || '?')}</span>
+              <span class="mono">${trustData.trust_score ?? '--'}</span>
+            </div>
+            <div style="font-size: 0.8125rem; margin-top: var(--spacing-sm); line-height: 1.6;">${_esc(trustData.thesis || 'No thesis')}</div>
+          </div>
+          ${volBlock}
           <div class="card">
             <div class="text-muted" style="font-size: 0.75rem; margin-bottom: var(--spacing-sm);">RECENT NEWS</div>
             ${newsHtml || '<p class="text-muted">No news</p>'}
