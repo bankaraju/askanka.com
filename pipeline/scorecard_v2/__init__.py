@@ -62,7 +62,16 @@ def run_scorecard_v2(
         # Management LLM scores (skip_llm = use quant only)
         mgmt_llm_scores = {}
         if not skip_llm:
-            pass  # Task 7 adds LLM scoring here
+            from .management_llm import score_sector_llm
+            llm_results = score_sector_llm(sector, peers, kpis, artifacts_dir)
+            for s, r in llm_results.items():
+                mgmt_llm_scores[s] = r.get("management_llm_score", 50)
+                all_metrics.setdefault(s, {}).update({
+                    "biggest_strength": r.get("biggest_strength", ""),
+                    "biggest_red_flag": r.get("biggest_red_flag", ""),
+                    "what_street_misses": r.get("what_street_misses", ""),
+                    "llm_breakdown": r,
+                })
 
         # Blend management
         for s in peers:
