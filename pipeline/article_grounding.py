@@ -141,7 +141,18 @@ def load_market_context(date_str: str) -> dict:
     """
     dump_path = DAILY_DUMP_DIR / f"{date_str}.json"
     if not dump_path.exists():
-        raise MarketDataMissing(f"daily dump not found: {dump_path}")
+        # Weekends/holidays: fall back to most recent trading day
+        try:
+            anchor = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            raise MarketDataMissing(f"daily dump not found: {dump_path}")
+        for n in range(1, 4):
+            fallback = DAILY_DUMP_DIR / f"{(anchor - timedelta(days=n)).isoformat()}.json"
+            if fallback.exists():
+                dump_path = fallback
+                break
+        else:
+            raise MarketDataMissing(f"daily dump not found: {dump_path} (checked 3 days back)")
     ctx = json.loads(dump_path.read_text(encoding="utf-8"))
 
     flows_path = FLOWS_DIR / f"{date_str}.json"
