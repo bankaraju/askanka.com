@@ -44,6 +44,29 @@ def load_trust_scores(path: Path = TRUST_PATH) -> Dict[str, Dict]:
     """
     result: Dict[str, Dict] = {}
 
+    # Prefer V2 scores if available (only when using the default path — not in tests)
+    v2_path = _REPO_ROOT / "data" / "trust_scores_v2.json"
+    if path == TRUST_PATH and v2_path.exists():
+        try:
+            v2 = json.loads(v2_path.read_text(encoding="utf-8"))
+            if v2.get("version") == "2.0":
+                for s in v2.get("stocks", []):
+                    sym = s.get("symbol")
+                    if not sym:
+                        continue
+                    grade = s.get("sector_grade", "?")
+                    if grade in ("?", ""):
+                        continue
+                    result[sym] = {
+                        "trust_grade": grade,
+                        "trust_score": s.get("composite_score", 0),
+                        "opus_side": None,
+                        "thesis": s.get("grade_reason", ""),
+                    }
+                logger.info("load_trust_scores: loaded %d V2 scores", len(result))
+        except Exception as exc:
+            logger.warning("load_trust_scores: V2 load failed — %s, falling back", exc)
+
     # Primary: scan per-stock trust_score.json files
     try:
         for sym_dir in TRUST_SCORES_DIR.iterdir():

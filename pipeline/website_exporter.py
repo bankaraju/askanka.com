@@ -476,7 +476,17 @@ def export_track_record(limit: int = 20) -> dict:
 
 
 def export_trust_scores() -> dict:
-    """Export all OPUS trust scores as a standalone JSON for the website."""
+    """Export trust scores — prefer V2 if available."""
+    v2_path = Path(__file__).resolve().parent.parent / "data" / "trust_scores_v2.json"
+    if v2_path.exists():
+        try:
+            v2 = json.loads(v2_path.read_text(encoding="utf-8"))
+            if v2.get("version") == "2.0":
+                return v2
+        except Exception:
+            pass
+
+    # Fallback to V1 (existing code below)
     try:
         from signal_enrichment import load_trust_scores
         scores = load_trust_scores()
