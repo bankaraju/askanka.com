@@ -237,9 +237,28 @@ async function renderTrustScores(el) {
             </div>
             ${reasonHtml}
             ${strengthHtml}
-            ${redFlagHtml}`;
+            ${redFlagHtml}
+            <div id="oi-panel-${_esc(ticker)}" style="margin-top:var(--spacing-md);">
+              <div class="text-muted" style="font-size:0.75rem;">Loading OI…</div>
+            </div>`;
 
           panel.classList.add('context-panel--open');
+
+          // Lazy-load live OI snapshot for this ticker
+          (async () => {
+            const mount = document.getElementById(`oi-panel-${ticker}`);
+            if (!mount) return;
+            try {
+              const oi = await get(`/oi/${encodeURIComponent(ticker)}`);
+              if (!oi || oi.found === false) {
+                mount.innerHTML = '<div class="text-muted" style="font-size:0.75rem;">No OI snapshot (stock not in F&O scan universe).</div>';
+                return;
+              }
+              mount.innerHTML = _renderOiPanel(oi);
+            } catch (e) {
+              mount.innerHTML = '<div class="text-muted" style="font-size:0.75rem;">OI fetch failed.</div>';
+            }
+          })();
         });
       });
     };
@@ -324,10 +343,71 @@ async function renderResearch(el) {
 }
 
 function _esc(s) {
-  if (!s) return '';
+  if (s == null) return '';
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
+}
+
+// ---- OI panel (live positioning data) ---------------------------------------
+const PIN_COLORS = {
+  STRONG_PIN: 'color:var(--color-red); font-weight:600;',
+  MILD_PIN:   'color:var(--color-amber);',
+  FAR:        'color:var(--text-muted);',
+  UNRELIABLE: 'color:var(--text-muted); font-style:italic;',
+};
+
+const PCR_COLORS = {
+  BULLISH:   'color:var(--color-green);',
+  MILD_BULL: 'color:var(--color-green);',
+  NEUTRAL:   'color:var(--text-muted);',
+  MILD_BEAR: 'color:var(--color-amber);',
+  BEARISH:   'color:var(--color-red);',
+};
+
+function _renderOiExpiryBlock(label, block, ltp) {
+  if (!block || !block.expiry) return '';
+  const pin = block.pinning || {};
+  const pinStyle = PIN_COLORS[pin.pin_label] || '';
+  const pcrStyle = PCR_COLORS[block.sentiment] || '';
+  const cw = (block.call_walls || []).slice(0, 3).map(w => `${w.strike}=${(w.oi/1000).toFixed(0)}K`).join(', ');
+  const pw = (block.put_walls || []).slice(0, 3).map(w => `${w.strike}=${(w.oi/1000).toFixed(0)}K`).join(', ');
+  const dteLabel = pin.days_to_expiry != null ? `${pin.days_to_expiry}d` : '--';
+  return `
+    <div style="border-left:2px solid var(--border-subtle); padding-left:var(--spacing-sm); margin-top:var(--spacing-xs);">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+        <span style="font-size:0.7rem; color:var(--text-muted); letter-spacing:0.05em;">${_esc(label.toUpperCase())}</span>
+        <span class="mono" style="font-size:0.75rem; color:var(--text-muted);">${_esc(block.expiry)} · ${_esc(dteLabel)}</span>
+      </div>
+      <div style="display:flex; gap:var(--spacing-md); flex-wrap:wrap; font-size:0.8125rem;">
+        <span>PCR <strong class="mono">${block.pcr != null ? block.pcr.toFixed(2) : '--'}</strong> <span style="${pcrStyle}">${_esc(block.sentiment || '')}</span></span>
+        <span>Max pain <strong class="mono">${pin.pin_strike != null ? pin.pin_strike : '--'}</strong> <span style="${pinStyle}">${_esc(pin.pin_label || '')}</span>${pin.pin_distance_pct != null ? ` <span class="text-muted" style="font-size:0.75rem;">(${pin.pin_distance_pct > 0 ? '+' : ''}${pin.pin_distance_pct}%)</span>` : ''}</span>
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+        <div>CE walls: <span class="mono">${_esc(cw) || '--'}</span></div>
+        <div>PE walls: <span class="mono">${_esc(pw) || '--'}</span></div>
+      </div>
+    </div>`;
+}
+
+function _renderOiPanel(oi) {
+  const ts = oi.timestamp ? new Date(oi.timestamp).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : '';
+  const rollover = oi.rollover_ratio;
+  let rolloverLine = '';
+  if (rollover != null) {
+    const rolloverColor = rollover > 0.5 ? 'color:var(--color-amber);' : 'color:var(--text-muted);';
+    rolloverLine = `<div style="font-size:0.75rem; ${rolloverColor} margin-top:4px;">Rollover next/near: <strong class="mono">${rollover.toFixed(2)}</strong>${rollover > 0.5 ? ' — active roll' : ''}</div>`;
+  }
+  return `
+    <div class="card" style="padding:var(--spacing-sm);">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--spacing-xs);">
+        <span style="font-size:0.8125rem; font-weight:600; letter-spacing:0.03em;">POSITIONING (LIVE)</span>
+        <span class="text-muted" style="font-size:0.7rem;">${_esc(ts)}</span>
+      </div>
+      ${_renderOiExpiryBlock('Near', oi.near, oi.ltp)}
+      ${_renderOiExpiryBlock('Next', oi.next, oi.ltp)}
+      ${rolloverLine}
+    </div>`;
 }
 
 function _istHour() {

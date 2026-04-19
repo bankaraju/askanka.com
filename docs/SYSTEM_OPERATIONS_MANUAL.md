@@ -282,7 +282,7 @@ is not refreshing.
 | Scanner | What it reads | What it produces |
 |---------|--------------|-----------------|
 | `technical_scanner.py` | Price history | Chart patterns, breakouts, support/resistance levels |
-| `oi_scanner.py` | Kite API (Zerodha) | Options open interest, put-call ratio, gamma bands |
+| `oi_scanner.py` | Kite API (Zerodha) | OI, PCR, max-pain, pinning + CE/PE walls for all 215 F&O stocks, both near + next-month expiries. Runs every 15 min via `intraday_scan.bat`; EOD snapshot archived by `eod_review.bat --archive-only`. Terminal consumer: `/api/oi/{ticker}`. |
 | `news_scanner.py` | News APIs | Corporate announcements, global events |
 | `news_intelligence.py` | News + history | Impact classification (high/medium/low) |
 
@@ -581,7 +581,8 @@ That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 | `today_regime.json` | regime_scanner | spread_intel, ranker, signals | Today's regime zone |
 | `prev_regime.json` | regime_scanner | regime_scanner (next day) | Hysteresis state |
 | `technicals.json` | technical_scanner | spread_intel, signals | Chart patterns |
-| `positioning.json` | oi_scanner | spread_intel, signals | OI/PCR state |
+| `positioning.json` | oi_scanner | spread_intel, signals, terminal | Per-stock OI/PCR/max-pain/pinning (215 F&O stocks) |
+| `oi_history_stocks/YYYY-MM-DD.json` | oi_scanner --archive-only (eod_review.bat) | future backtests | Daily EOD snapshot of positioning.json |
 | `oi_anomalies.json` | oi_scanner | signal_enrichment | Unusual OI activity |
 | `news.json` | news_scanner | spread_intel, signals | Today's events |
 | `news_verdicts.json` | news_backtest | next-day news_intel | Event outcome grading |
