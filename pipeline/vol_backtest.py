@@ -47,7 +47,19 @@ def _load_closes(csv_path: Path) -> list[dict]:
                 rows.append({"date": row["Date"].strip(), "close": close})
             except (KeyError, ValueError):
                 continue
-    rows.sort(key=lambda r: r["date"])
+    def _date_sort_key(date_str: str) -> str:
+        """Normalize date to YYYY-MM-DD string for reliable lexicographic sort.
+
+        Real CSVs use ISO format; test data may use pseudo-dates — in all cases
+        the string comparison is correct because the format is YYYY-MM-DD (or
+        similarly left-zero-padded) so lexicographic == chronological order.
+        """
+        try:
+            return datetime.strptime(date_str, "%Y-%m-%d").strftime("%Y-%m-%d")
+        except ValueError:
+            return date_str  # Already a comparable string (e.g. YYYYMMDD)
+
+    rows.sort(key=lambda r: _date_sort_key(r["date"]))
     return rows
 
 

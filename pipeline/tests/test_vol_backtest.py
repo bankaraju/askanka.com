@@ -3,8 +3,6 @@ Tests for pipeline/vol_backtest.py — retrospective vol model validation.
 
 Run: pytest pipeline/tests/test_vol_backtest.py -v
 """
-import pytest
-import math
 import csv
 import tempfile
 from pathlib import Path
@@ -100,6 +98,8 @@ class TestRunFullBacktest:
             assert "sigma_band_hit_rate" in agg
             assert "vol_scalar" in agg
             assert 0.0 < agg["sigma_band_hit_rate"] < 1.0
+            assert agg["vol_scalar"] is not None
+            assert 0.1 < agg["vol_scalar"] < 5.0
 
     def test_per_stock_present(self):
         from pipeline.vol_backtest import run_full_backtest
