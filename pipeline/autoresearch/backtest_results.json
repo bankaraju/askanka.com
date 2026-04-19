@@ -1,22 +1,22 @@
 {
-  "period_start": "2023-04-20",
+  "period_start": "2023-04-21",
   "period_end": "2026-04-17",
-  "trading_days": 777,
+  "trading_days": 776,
   "weights_file": "etf_optimal_weights.json",
-  "weights_timestamp": "2026-04-18T05:25:02.998372+00:00",
+  "weights_timestamp": "2026-04-18T16:30:15.743656+00:00",
   "regime_distribution": {
-    "EUPHORIA": 321,
-    "RISK-OFF": 251,
-    "NEUTRAL": 125,
-    "CAUTION": 43,
-    "RISK-ON": 37
+    "EUPHORIA": 338,
+    "RISK-OFF": 308,
+    "NEUTRAL": 79,
+    "RISK-ON": 28,
+    "CAUTION": 23
   },
-  "regime_accuracy": 0.5092,
-  "total_trades": 4620,
-  "win_rate": 0.5463,
-  "avg_return_per_trade": 0.009392,
-  "sharpe": 13.4779,
-  "max_drawdown": -0.302,
+  "regime_accuracy": 0.5222,
+  "total_trades": 4616,
+  "win_rate": 0.5366,
+  "avg_return_per_trade": 0.009332,
+  "sharpe": 13.7156,
+  "max_drawdown": -0.2725,
   "confidence_interval_95": [
     0.0084,
     0.0103
@@ -24,67 +24,67 @@
   "per_spread": {
     "Defence vs IT": {
       "trades": 770,
-      "win_rate": 0.8494,
-      "avg_return": 3.4594,
-      "sharpe": 17.4822
+      "win_rate": 0.8455,
+      "avg_return": 3.3515,
+      "sharpe": 17.0532
     },
     "Upstream vs Downstream": {
       "trades": 769,
-      "win_rate": 0.2965,
-      "avg_return": -0.8522,
-      "sharpe": -6.4806
+      "win_rate": 0.2757,
+      "avg_return": -0.9078,
+      "sharpe": -7.1841
     },
     "Coal vs OMCs": {
       "trades": 769,
-      "win_rate": 0.2926,
-      "avg_return": -0.9435,
-      "sharpe": -6.0081
+      "win_rate": 0.2575,
+      "avg_return": -1.0669,
+      "sharpe": -6.8514
     },
     "Pharma vs Banks": {
-      "trades": 769,
-      "win_rate": 0.8257,
-      "avg_return": 2.312,
-      "sharpe": 15.0905
+      "trades": 768,
+      "win_rate": 0.8333,
+      "avg_return": 2.3626,
+      "sharpe": 15.5588
     },
     "Banks vs IT": {
-      "trades": 771,
-      "win_rate": 0.8353,
-      "avg_return": 3.1325,
-      "sharpe": 15.927
+      "trades": 769,
+      "win_rate": 0.8336,
+      "avg_return": 3.3324,
+      "sharpe": 16.6327
     },
     "Reliance vs OMCs": {
-      "trades": 772,
-      "win_rate": 0.1788,
-      "avg_return": -1.4727,
-      "sharpe": -14.9454
+      "trades": 771,
+      "win_rate": 0.1751,
+      "avg_return": -1.4679,
+      "sharpe": -15.3126
     }
   },
   "per_regime": {
     "RISK-OFF": {
-      "days": 251,
-      "accuracy": 0.4821,
-      "avg_nifty_return": -0.0377
+      "days": 308,
+      "accuracy": 0.4838,
+      "avg_nifty_return": -0.0137
     },
     "CAUTION": {
-      "days": 43,
-      "accuracy": 0.3953,
-      "avg_nifty_return": 0.057
+      "days": 23,
+      "accuracy": 0.4783,
+      "avg_nifty_return": -0.0725
     },
     "NEUTRAL": {
-      "days": 125,
+      "days": 79,
       "accuracy": null,
-      "avg_nifty_return": 0.0695
+      "avg_nifty_return": 0.0802
     },
     "RISK-ON": {
-      "days": 37,
-      "accuracy": 0.5676,
-      "avg_nifty_return": 0.1002
+      "days": 28,
+      "accuracy": 0.6429,
+      "avg_nifty_return": 0.3268
     },
     "EUPHORIA": {
-      "days": 321,
-      "accuracy": 0.5421,
-      "avg_nifty_return": 0.0917
+      "days": 338,
+      "accuracy": 0.5503,
+      "avg_nifty_return": 0.0746
     }
   },
-  "computed_at": "2026-04-18T05:35:25.121329+00:00"
+  "computed_at": "2026-04-18T18:30:16.485814+00:00"
 }

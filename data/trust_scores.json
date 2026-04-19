@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-18T12:37:58.135594+05:30",
-  "total_scored": 182,
+  "updated_at": "2026-04-18T21:55:34.492641+05:30",
+  "total_scored": 210,
   "stocks": [
     {
       "symbol": "360ONE",
@@ -55,6 +55,12 @@
       "trust_grade": "D",
       "trust_score": 35.1,
       "thesis": "A notable strength is the company's performance in energy consumption reduction, achieving an 11.46% electricity consumption reduction in FY2023-24 (FY2023-2024 AR, other_key_numbers) against a long-t"
+    },
+    {
+      "symbol": "AMBER",
+      "trust_grade": "C",
+      "trust_score": 53.5,
+      "thesis": "Consumer Durable division delivered +27% YoY revenue growth (\u20b91,971 Cr in Q3 FY26 vs \u20b91,555 Cr in Q3 FY25) against guidance of 13-15% for full-year FY26, representing a 93% beat of mid-point guidance."
     },
     {
       "symbol": "AMBUJACEM",
@@ -117,6 +123,18 @@
       "thesis": "The bank's significant over-achievement in 'incremental financing under Wholesale Banking to sectors with positive social and environmental outcomes', reaching \u20b948,412 crores by March 31, 2025, agains"
     },
     {
+      "symbol": "BAJAJ-AUTO",
+      "trust_grade": "B",
+      "trust_score": 61.5,
+      "thesis": "The sustained achievement of 20%+ EBITDA margins through multiple investment cycles and structural business mix shifts. Q1 FY25 achieved 20.2% (3 consecutive quarters of 20%+ margin), and Q3 FY26 hit "
+    },
+    {
+      "symbol": "BAJAJFINSV",
+      "trust_grade": "A+",
+      "trust_score": 97.7,
+      "thesis": "Consolidated PAT growth trajectory and multi-subsidiary operational excellence. Management delivered 32% consolidated PAT growth in Q3 FY26 (before exceptions) vs. street's ~18-22% CAGR expectation, d"
+    },
+    {
       "symbol": "BAJFINANCE",
       "trust_grade": "D",
       "trust_score": 25.5,
@@ -139,6 +157,12 @@
       "trust_grade": "F",
       "trust_score": 6.0,
       "thesis": "The bank's ability to exceed its target for new digital products launched (25 products live vs 20 targeted for FY24-25) demonstrates a strong capability in product development and platform implementat"
+    },
+    {
+      "symbol": "BDL",
+      "trust_grade": "C",
+      "trust_score": 56.8,
+      "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This "
     },
     {
       "symbol": "BEL",
@@ -231,6 +255,12 @@
       "thesis": "The company's consistent delivery on key financial metrics like AUM growth (20% in Q3 FY26, meeting FY26 guidance of 20-25%), NIM improvement (33 bps in Q3 FY26, exceeding FY26 guidance of 12-15 bps),"
     },
     {
+      "symbol": "CIPLA",
+      "trust_grade": "B",
+      "trust_score": 62.5,
+      "thesis": "EBITDA margin resilience and operational execution: Despite 6.9% revenue growth in FY25 (below consensus), Cipla expanded operating margins to 25.9% (OPM Mar 2025, Screener) vs. 24.4% in FY24 (+150 bp"
+    },
+    {
       "symbol": "COALINDIA",
       "trust_grade": "D",
       "trust_score": 22.1,
@@ -259,6 +289,18 @@
       "trust_grade": "C",
       "trust_score": 58.7,
       "thesis": "CONCOR's biggest strength lies in its precise and consistent delivery on dividend commitments. For FY23, the total dividend payment of Rs.670.22 Crores and its percentage of net profit and PAT were ex"
+    },
+    {
+      "symbol": "CROMPTON",
+      "trust_grade": "B+",
+      "trust_score": 72.4,
+      "thesis": "New category incubation and market entry execution is exceptional. Appliances segment grew 99% in Q1 FY22 from a near-zero base in FY21, with specific sub-category traction (geysers +205%, air coolers"
+    },
+    {
+      "symbol": "CUMMINSIND",
+      "trust_grade": "A+",
+      "trust_score": 91.2,
+      "thesis": "Revenue growth and profitability execution in FY2024-25 EXCEEDED near-term guidance: FY2025 revenue Rs 10,391 Cr (+15.5% YoY vs FY2024 Rs 9,000 Cr) and PBT Rs 2,593 Cr (+17.6% vs FY2024 Rs 2,205 Cr) d"
     },
     {
       "symbol": "DABUR",
@@ -325,6 +367,18 @@
       "trust_grade": "D",
       "trust_score": 21.9,
       "thesis": "The company's significant equity investment of Rs 2,852 crore in the lithium-ion cell manufacturing facility as of Oct 2024, which is ahead of the pro-rata target for FY2025-26 (Rs 2,000 crore for a R"
+    },
+    {
+      "symbol": "FEDERALBNK",
+      "trust_grade": "B",
+      "trust_score": 62.0,
+      "thesis": "CASA ratio expansion and liability franchise: CASA ratio improved 191 bps YoY to 32.07% in Q3 FY'26, described by MD as 'among one of the best in terms of CASA growth in the industry.' Deposits grew 1"
+    },
+    {
+      "symbol": "FORCEMOT",
+      "trust_grade": "B",
+      "trust_score": 60.0,
+      "thesis": "GHG Scope 1+2 emission intensity reduction of 22% in FY24-25 substantially outpaces the pro-rata trajectory (19.2% for this year toward 50% by 2030), and waste diversion of 97% is within 3% of the 100"
     },
     {
       "symbol": "FORTIS",
@@ -465,6 +519,12 @@
       "thesis": "The company's consistent delivery on Return on Equity (ROE) targets, achieving 19.5% (1/n basis) and 19.8% (excluding wage code impact) in 9M FY2026, which is well within the guided range of 18-20%. T"
     },
     {
+      "symbol": "ICICIPRULI",
+      "trust_grade": "A",
+      "trust_score": 86.7,
+      "thesis": "ICICI Prudential achieved its stated critical objective of DOUBLING FY2019 VNB by FY2023, reaching \u20b927.65 billion at 32% margin, and has MAINTAINED VNB MARGINS at 24.4% in 9M-FY2026 despite absorbing "
+    },
+    {
       "symbol": "IDEA",
       "trust_grade": "C",
       "trust_score": 46.0,
@@ -487,6 +547,12 @@
       "trust_grade": "B",
       "trust_score": 61.7,
       "thesis": "IHCL's ability to consistently exceed its portfolio expansion targets is a major strength. The total hotel portfolio reached 617 (operating + pipeline) by Q3 FY26, significantly exceeding the 300 hote"
+    },
+    {
+      "symbol": "INDIANB",
+      "trust_grade": "A",
+      "trust_score": 84.7,
+      "thesis": "Net NPA at 0.15% (15 bps) as of Q3 FY26, best-in-class for Indian banking system. This achievement comes after: (1) Gross NPA reduction from 3.01% (Q2 FY26) to 2.23% (Q3 FY26) \u2014 78 bps quarterly impro"
     },
     {
       "symbol": "INDIGO",
@@ -597,6 +663,12 @@
       "thesis": "The bank's consistent delivery on Net Interest Margin (NIM), exceeding its 'north of 5%' guidance for FY24 with a consolidated NIM of 5.3%, demonstrates strong financial management and profitability i"
     },
     {
+      "symbol": "KPITTECH",
+      "trust_grade": "B",
+      "trust_score": 60.5,
+      "thesis": "**Fixed-price revenue model transition de-risking long-term margins**: Despite organic growth weakness, fixed-price revenue mix increased to 66% vs. 59% prior year (Concall, Page 3), signaling success"
+    },
+    {
       "symbol": "LAURUSLABS",
       "trust_grade": "F",
       "trust_score": 0.0,
@@ -621,6 +693,12 @@
       "thesis": "The company's biggest strength lies in its consistent pre-sales growth, achieving ~20% year-on-year, and its exceptional performance in reducing net debt, with a Net Debt/Equity ratio of 0.17x in FY24"
     },
     {
+      "symbol": "LT",
+      "trust_grade": "B+",
+      "trust_score": 73.9,
+      "thesis": "Order inflow execution is exceptional. Management guided >10% growth; actuals show 30% YoY growth (9M FY26) and 17% in Q3 (vs 7% in Q3 FY25). Order book grew 30% YoY to Rs 7.33 trillion (December 2025"
+    },
+    {
       "symbol": "LTF",
       "trust_grade": "C",
       "trust_score": 50.0,
@@ -639,10 +717,28 @@
       "thesis": "Lupin's consistent outperformance on EBITDA margins (31.1% in Q3 FY26 vs. FY26 guidance of 27-28%) and accurate R&D spend guidance (7.5-8.5% range, with 7.7% for 9M FY26) demonstrates strong financial"
     },
     {
+      "symbol": "M&M",
+      "trust_grade": "A",
+      "trust_score": 82.8,
+      "thesis": "OPERATIONAL DELIVERY ON MARGIN AND MARKET SHARE EXPANSION: M&M achieved 180 bps auto margin improvement in Q1FY25 (vs prior year Q1), full-year OPM of 19% (up 100 bps from 18%), and gained 130 bps in "
+    },
+    {
+      "symbol": "MANAPPURAM",
+      "trust_grade": "D",
+      "trust_score": 30.4,
+      "thesis": "Cost of borrowing reduction has exceeded guidance meaningfully: Q3 FY26 standalone cost of borrowing fell by 30 basis points (vs 12 bps guidance), representing a 150% beat. This demonstrates managemen"
+    },
+    {
       "symbol": "MANKIND",
       "trust_grade": "B",
       "trust_score": 61.3,
       "thesis": "Mankind Pharma's biggest strength lies in its consistent delivery of operating and EBITDA margins within the guided 24-26% range, even amidst business transformations and acquisitions. This financial "
+    },
+    {
+      "symbol": "MARICO",
+      "trust_grade": "B",
+      "trust_score": 60.4,
+      "thesis": "Management has delivered exceptional execution on digital-first personal care portfolio, with Beardo achieving 5x revenue growth post-100% acquisition (2020 onwards) and Plix delivering 6x growth in j"
     },
     {
       "symbol": "MARUTI",
@@ -663,6 +759,12 @@
       "thesis": "The most impressive delivery is the significant outperformance on revenue growth for FY24 (20.8% actual vs. 'around 10%' guidance) and exceeding the FY25 revenue target for an 'excellent rating' (11,4"
     },
     {
+      "symbol": "MCX",
+      "trust_grade": "C",
+      "trust_score": 55.8,
+      "thesis": "Q3 FY26 execution across all product segments with no execution misses. Revenue growth 121% YoY (vs street 25-30% expectations), PAT growth 151% YoY, ADTV 7.5L crores (220% YoY growth from 2L crores F"
+    },
+    {
       "symbol": "MFSL",
       "trust_grade": "D",
       "trust_score": 37.3,
@@ -673,6 +775,12 @@
       "trust_grade": "D",
       "trust_score": 27.0,
       "thesis": "Motherson's biggest strength lies in its disciplined financial management, particularly in maintaining a healthy net debt to EBITDA ratio. The company consistently operates well below its stated polic"
+    },
+    {
+      "symbol": "MOTILALOFS",
+      "trust_grade": "A+",
+      "trust_score": 93.3,
+      "thesis": "Exceptional execution on CRITICAL profitability and AUM growth metrics. In FY2024-25, consolidated ROE delivered 25% (vs 20%+ target) with PAT of \u20b92,508 Cr (+2.5% YoY). AMC AUM surged 72% YoY to \u20b91,23"
     },
     {
       "symbol": "MPHASIS",
@@ -765,6 +873,12 @@
       "thesis": "The company's progress in increasing its overall renewable energy capacity to 2.5 GW by FY2024-25, which is ahead of the pro-rata trajectory needed to achieve the 10 GW target by 2030, demonstrates a "
     },
     {
+      "symbol": "PAGEIND",
+      "trust_grade": "F",
+      "trust_score": 5.3,
+      "thesis": "Operational efficiency and profitability protection despite growth headwinds: Despite only 4.1% revenue growth over 9M FY2025-26 (subdued market), company maintained 22.3% EBITDA margin (9M) and 22.9%"
+    },
+    {
       "symbol": "PATANJALI",
       "trust_grade": "F",
       "trust_score": 6.7,
@@ -811,6 +925,12 @@
       "trust_grade": "A+",
       "trust_score": 94.0,
       "thesis": "Pidilite's biggest strength lies in its consistent delivery and even exceeding of critical financial metrics, particularly its EBITDA margin. The company committed to an EBITDA corridor of 20-24% for "
+    },
+    {
+      "symbol": "PIIND",
+      "trust_grade": "D",
+      "trust_score": 37.5,
+      "thesis": "The delivery on new product commercialization and pharma CDMO platform building despite macro headwinds. (1) AgChem new products: H1 FY26 shows 38% growth in newly commercialized products (Q2 concall,"
     },
     {
       "symbol": "PNB",
@@ -915,6 +1035,12 @@
       "thesis": "The company's ability to consistently deliver on key operational metrics such as digital proposal submission (99.7%), automated underwriting (58%), death claim settlement (99.3%), and mis-selling rati"
     },
     {
+      "symbol": "SBIN",
+      "trust_grade": "A",
+      "trust_score": 86.0,
+      "thesis": "Return on Assets (ROA) has EXCEEDED guidance across FY24-FY25: 1.04% in FY24 and 1.10% in FY25 vs 1%+ target. Gross NPA ratio has improved to 1.82% in FY25 (from 2.24% in FY24 and 2.76% in Q1FY24) \u2014 s"
+    },
+    {
       "symbol": "SHREECEM",
       "trust_grade": "D",
       "trust_score": 31.8,
@@ -963,6 +1089,12 @@
       "thesis": "The company's ability to exceed its piping product export value target for FY25 (US$ 27.0 million actual vs US$ 10.0 million target) and its consistent progress in increasing captive solar power capac"
     },
     {
+      "symbol": "SUZLON",
+      "trust_grade": "B",
+      "trust_score": 65.7,
+      "thesis": "Suzlon's operational execution and financial turnaround are genuinely strong. Q1 FY26 delivered 444 MW (62% YoY growth, highest in 30 years), revenue grew 62% to \u20b93,117 Cr, EBITDA grew 62% to \u20b9599 Cr "
+    },
+    {
       "symbol": "SWIGGY",
       "trust_grade": "D",
       "trust_score": 34.1,
@@ -973,6 +1105,12 @@
       "trust_grade": "D",
       "trust_score": 32.7,
       "thesis": "The consistent delivery on distribution expansion, reaching 4 million outlets by 2023 (FY22-23 AR, Page 02) and maintaining a strong dividend payout ratio (64% in FY2024-25, within 50-75% guidance), d"
+    },
+    {
+      "symbol": "TATAELXSI",
+      "trust_grade": "C",
+      "trust_score": 50.6,
+      "thesis": "**Automotive/Transportation vertical has achieved demonstrable ramp-up of large SDV-led deals with sustainable momentum.** Transportation revenue grew 13.8% YoY in 9M FY26 (Rs 1,961.9 Cr) and accelera"
     },
     {
       "symbol": "TATAPOWER",
@@ -1023,10 +1161,22 @@
       "thesis": "The biggest strength is the successful financial turnaround and consistent improvement in profitability, particularly for JLR, achieving EBIT margins over 6% for six consecutive quarters and strong co"
     },
     {
+      "symbol": "TORNTPHARM",
+      "trust_grade": "C",
+      "trust_score": 56.0,
+      "thesis": "India business is the true engine of growth and margin accretion. Q3 FY26 saw 14% revenue growth (vs 10% market) with 5.5% volume outperformance, 5.8% pricing (vs 5.6% market), and 2.7% new product co"
+    },
+    {
       "symbol": "TORNTPOWER",
       "trust_grade": "C",
       "trust_score": 56.7,
       "thesis": "The company's ability to exceed its 'renewable capacity under development' target of 736 MW (FY23 AR, Page 6) by reporting ~3 GWp under construction in FY24 (FY24 AR, other_key_numbers) demonstrates s"
+    },
+    {
+      "symbol": "TRENT",
+      "trust_grade": "A+",
+      "trust_score": 100.0,
+      "thesis": "Perfect execution on FY2024-25 stated targets across all critical and routine categories: (1) **Profitability targets met exactly**: EBIT Rs 1,822 Cr, PBT Rs 2,077 Cr, EPS Rs 44.58, ROCE 37.2%\u2014all con"
     },
     {
       "symbol": "TVSMOTOR",
@@ -1077,10 +1227,28 @@
       "thesis": "The company's ability to achieve record operational and financial performance, including 'highest ever quarterly EBITDA of Rs.15,171 crores' and 'lifetime high revenue and PAT of Rs.7,807 crores' in Q"
     },
     {
+      "symbol": "VMM",
+      "trust_grade": "A",
+      "trust_score": 82.3,
+      "thesis": "Sustained 10.3% adjusted same-store sales growth (9M FY26) despite documented macro headwinds (Durga Puja shift, delayed winter onset, air quality issues, broader consumption softness acknowledged by "
+    },
+    {
       "symbol": "VOLTAS",
       "trust_grade": "D",
       "trust_score": 38.3,
       "thesis": "Voltas' ability to exceed its capex commitment (Rs 600 crores spent by FY2024-25 against a guidance of Rs 450-500 crores over 18-24 months from FY2022-23 AR) demonstrates strong financial commitment a"
+    },
+    {
+      "symbol": "WAAREEENER",
+      "trust_grade": "B",
+      "trust_score": 69.2,
+      "thesis": "Order book surged 50% YoY to \u20b960K+ Crores (from \u20b940K Cr stated at FY start) despite unprecedented tariff volatility (50% \u2192 126% India CVD in Feb 2026). This demonstrates: (1) Waaree has genuine, irrep"
+    },
+    {
+      "symbol": "WIPRO",
+      "trust_grade": "A",
+      "trust_score": 83.7,
+      "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operati"
     },
     {
       "symbol": "YESBANK",

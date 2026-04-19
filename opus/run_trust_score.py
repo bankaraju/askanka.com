@@ -1382,8 +1382,8 @@ def calculate_trust_score(scoring: dict, financials: dict) -> dict:
     total = summary.get("total_guidance_items", summary.get("total_scoreable", 0))
     scoreable = total - summary.get("too_early", 0) - summary.get("unverifiable", 0)
 
-    # Need minimum 5 scoreable items for a reliable grade
-    MIN_SCOREABLE = 5
+    # Need minimum 3 scoreable items for a grade (relaxed from 5 for broader coverage)
+    MIN_SCOREABLE = 3
     if scoreable < MIN_SCOREABLE:
         return {
             "trust_score_pct": 0.0,
