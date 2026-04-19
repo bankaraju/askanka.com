@@ -77,8 +77,8 @@ def _load_yesterday_example(segment: str) -> dict | None:
     return None
 
 
-def _load_recent_headlines(segment: str, max_days: int = 5) -> list[tuple[str, str]]:
-    """Return [(date_str, headline), ...] for the last max_days articles of this segment."""
+def _load_recent_articles(segment: str, max_days: int = 5) -> list[dict]:
+    """Return [{date, headline, opening, themes}, ...] for recent articles."""
     articles_dir = GIT_REPO / "articles"
     if not articles_dir.exists():
         return []
@@ -91,8 +91,17 @@ def _load_recent_headlines(segment: str, max_days: int = 5) -> list[tuple[str, s
             try:
                 html = candidate.read_text(encoding="utf-8")
                 h1 = re.search(r"<h1>(.*?)</h1>", html, re.DOTALL)
-                if h1:
-                    results.append((check_date, h1.group(1).strip()))
+                body = re.search(r'<div class="body">(.*?)</div>', html, re.DOTALL)
+                opening = ""
+                if body:
+                    paras = re.findall(r"<p>(.*?)</p>", body.group(1), re.DOTALL)
+                    if paras:
+                        opening = re.sub(r"<[^>]+>", "", paras[0]).strip()[:300]
+                results.append({
+                    "date": check_date,
+                    "headline": h1.group(1).strip() if h1 else "",
+                    "opening": opening,
+                })
             except Exception:
                 continue
     return results
@@ -273,20 +282,37 @@ article failures.
         for s in diverse_sources
     )
 
-    # Load recent headlines so the LLM can avoid repeating the same angle.
-    recent_headlines = _load_recent_headlines(segment, max_days=5)
+    # Load recent articles so the LLM can avoid repeating content.
+    recent_articles = _load_recent_articles(segment, max_days=5)
     novelty_block = ""
-    if recent_headlines:
-        hl_lines = "\n".join(f"  - {d}: {h}" for d, h in recent_headlines)
+    if recent_articles:
+        prior_lines = []
+        for a in recent_articles:
+            prior_lines.append(f"  DATE: {a['date']}")
+            prior_lines.append(f"  HEADLINE: {a['headline']}")
+            if a["opening"]:
+                prior_lines.append(f"  OPENING: {a['opening']}")
+            prior_lines.append("")
+        prior_text = "\n".join(prior_lines)
         novelty_block = f"""
-# NOVELTY — DO NOT REPEAT
-These are our RECENT headlines for this segment. Your article MUST take a
-DIFFERENT angle, thesis, or focus. Do NOT rehash the same framing.
-{hl_lines}
+# MANDATORY NOVELTY — HARD CONSTRAINT
+We have been writing the SAME article for days. This MUST stop.
 
-Find a NEW development, a fresh angle, a different market implication, or a
-contrarian take. If the sources are similar to yesterday, dig deeper into a
-specific sub-topic rather than writing the same overview again.
+Here are our recent articles — read them carefully:
+{prior_text}
+
+RULES (violation = article rejected):
+1. Your opening paragraph MUST NOT mention {recent_articles[0]['headline'].split(':')[0] if recent_articles else 'the same topic'}.
+   Find a DIFFERENT entry point — a specific person, a specific event, a specific
+   number that changed.
+2. Your article structure MUST differ. If recent articles went
+   "big picture → India impact → military → diplomacy → what to watch",
+   try: "specific incident → who benefits → who loses → historical parallel → prediction".
+3. Pick ONE specific source video from today's list and build the article
+   around its SPECIFIC claim or revelation — not a general overview.
+4. Do NOT use phrases that appeared in recent headlines above.
+5. If you cannot find genuinely new content, write about WHY nothing has
+   changed and what that stagnation itself means for markets.
 """
 
     # Load yesterday's article as a style reference for non-market topics.
@@ -318,14 +344,21 @@ TODAY'S SOURCES FROM OUR CHANNEL NETWORK:
 REQUIREMENTS:
 1. Write 500-700 words (longer is better if substantive)
 2. Start with a punchy headline (no "Week X" numbering, no clickbait)
-3. Open with the most provocative development
-4. Connect EVERY paragraph back to Indian markets or subscribers' positioning
-5. End with concrete "What to watch tomorrow" bullet points
-6. Attribute claims with [Source: channel name] — place AT THE END of the sentence that uses the claim. These are post-processed into numbered footnotes (^1, ^2) with a Sources list at the bottom; keep each attribution compact and factual (no inline editorial, no repeated attributions for the same channel in the same paragraph).
+3. Open with a SPECIFIC development from today's sources — not a sweeping overview.
+   Name a person, quote a claim, cite a number. Drop the reader into a scene.
+4. At least 2 paragraphs must connect to Indian markets or positioning, but NOT every
+   paragraph. Some paragraphs should develop the story on its own terms.
+5. End with 3-5 concrete, specific things to watch — not generic categories.
+   Bad: "Oil price movements". Good: "Whether Iran reopens the eastern Hormuz lane by Monday."
+6. Attribute claims with [Source: channel name] — place AT THE END of the sentence.
+   Post-processed into footnotes. Keep compact, no repeated attributions per paragraph.
 7. Be opinionated — this is analysis, not news
 8. NO disclaimers, NO "alleged", NO "reportedly" — state your view clearly
 9. Include at least ONE specific number or data point per paragraph
 10. Reference specific stocks or sectors where actionable
+11. VARY your article structure. Try: Q&A format, timeline, "winners and losers",
+    "what the market is missing", character profile, or contrarian take.
+    Do NOT default to "overview → India impact → military → diplomacy → watch list".
 
 {template_excerpt}
 {novelty_block}
