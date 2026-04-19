@@ -18,3 +18,4 @@ export async function getTA(ticker) { return get(`/ta/${ticker}`); }
 export async function getNewsStock(ticker) { return get(`/news/${ticker}`); }
 export async function getRiskGates() { return get('/risk-gates'); }
 export async function getDigest() { return get('/research/digest'); }
+export async function getOptionsShadow() { return get('/research/options-shadow'); }

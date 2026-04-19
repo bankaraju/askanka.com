@@ -1,8 +1,11 @@
 """GET /api/research/digest — intelligence digest with grounding enforcement."""
 import json
+import logging
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from fastapi import APIRouter
+
+log = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -13,6 +16,9 @@ _RECOMMENDATIONS = _DATA / "recommendations.json"
 _CORRELATION_BREAKS = _DATA / "correlation_breaks.json"
 _POSITIONING = _DATA / "positioning.json"
 _FLOWS_DIR = _DATA / "flows"
+_REGIME_PROFILE = _HERE.parent / "autoresearch" / "reverse_regime_profile.json"
+_OPEN_SIGNALS = _DATA / "signals" / "open_signals.json"
+_OPTIONS_SHADOW = _DATA / "signals" / "synthetic_options_shadow.json"
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
@@ -197,6 +203,41 @@ def _grounding_check(thesis: dict, flows_raw: dict, regime_raw: dict) -> list:
     return failures
 
 
+def _build_leverage_matrices(spread_theses: list, positioning: dict) -> list:
+    try:
+        from pipeline.synthetic_options import build_leverage_matrix
+    except ImportError:
+        return []
+
+    profiles = _read_json(_REGIME_PROFILE)
+    signals = _read_json(_OPEN_SIGNALS, default=[])
+    if not isinstance(signals, list):
+        signals = []
+
+    matrices = []
+    for s in spread_theses:
+        if s.get("score", 0) < 65:
+            continue
+        matching_signal = next(
+            (sig for sig in signals if sig.get("spread_name") == s["name"] and sig.get("status") == "OPEN"),
+            None,
+        )
+        if not matching_signal:
+            matching_signal = {
+                "signal_id": f"DIGEST-{s['name'].replace(' ', '_')}",
+                "spread_name": s["name"],
+                "conviction": s.get("score", 0),
+                "long_legs": [],
+                "short_legs": [],
+            }
+        try:
+            matrix = build_leverage_matrix(matching_signal, profiles, oi_data=positioning)
+            matrices.append(matrix)
+        except Exception as exc:
+            log.warning("Leverage matrix failed for %s: %s", s["name"], exc)
+    return matrices
+
+
 @router.get("/research/digest")
 def research_digest():
     regime_raw = _read_json(_TODAY_REGIME)
@@ -216,6 +257,8 @@ def research_digest():
     if grounding_failures:
         thesis["grounding_ok"] = False
 
+    leverage_matrices = _build_leverage_matrices(spread_theses, positioning_raw)
+
     return {
         "generated_at": regime_raw.get("timestamp", datetime.now(IST).isoformat()),
         "regime_thesis": thesis,
@@ -223,4 +266,13 @@ def research_digest():
         "correlation_breaks": corr_breaks,
         "backtest_validation": backtest,
         "grounding_failures": grounding_failures,
+        "leverage_matrices": leverage_matrices,
     }
+
+
+@router.get("/research/options-shadow")
+def options_shadow():
+    data = _read_json(_OPTIONS_SHADOW, default=[])
+    if not isinstance(data, list):
+        data = []
+    return data
