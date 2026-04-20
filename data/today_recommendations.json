@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-20T13:17:36.551186+05:30",
+  "updated_at": "2026-04-20T13:33:04.368480+05:30",
   "regime_zone": "RISK-OFF",
   "regime_source_timestamp": "2026-04-20T10:14:36.721327+05:30",
   "spreads": [],
@@ -11,7 +11,7 @@
       "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-20 09:30:34",
-      "is_stale": false,
+      "is_stale": true,
       "hit_rate": 1.0,
       "episodes": 1,
       "hit_rate_meaningful": false
@@ -23,7 +23,7 @@
       "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-20 09:30:34",
-      "is_stale": false,
+      "is_stale": true,
       "hit_rate": 1.0,
       "episodes": 1,
       "hit_rate_meaningful": false
@@ -35,7 +35,7 @@
       "trigger": "CAUTION",
       "source": "ranker",
       "source_timestamp": "2026-04-20 09:30:34",
-      "is_stale": false,
+      "is_stale": true,
       "hit_rate": 1.0,
       "episodes": 1,
       "hit_rate_meaningful": false
