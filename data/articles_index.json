@@ -2,9 +2,18 @@
   "articles": [
     {
       "date": "2026-04-20",
+      "segment": "war",
+      "filename": "2026-04-20-war.html",
+      "headline": "Kharg Island's Bloody Nose: Iran's Missile Response Shatters US Dominance, Indian Markets Brace",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 20, 2026"
+    },
+    {
+      "date": "2026-04-20",
       "segment": "epstein",
       "filename": "2026-04-20-epstein.html",
-      "headline": "Melania's Silent Signal: The Epstein Files, Trump's Cash Grab, and India's DeFi Ascent",
+      "headline": "Melania Trump's Unscripted Move: The Epstein Files and the Unraveling Cover-up",
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 20, 2026"
