@@ -17,18 +17,23 @@
       "tier": "warn",
       "cadence_class": "daily",
       "outputs": [
-        "data/articles_index.json"
+        "data/articles_index.json",
+        "articles/{yesterday}-war.html",
+        "articles/{yesterday}-epstein.html"
       ],
       "grace_multiplier": 1.5,
-      "notes": "04:45 IST daily. daily_articles.py \u00e2\u20ac\u201d writes war + epstein articles and data/articles_index.json."
+      "notes": "04:45 IST daily. daily_articles.py \u2014 writes war + epstein articles and data/articles_index.json. Watchdog verifies YESTERDAY's pair (war + epstein) landed \u2014 catches silent LLM-rejection / grounding failures in either pillar."
     },
     {
       "task_name": "AnkaDailyDump",
       "tier": "critical",
       "cadence_class": "daily",
-      "outputs": [],
+      "outputs": [
+        "pipeline/data/daily/{prev_biz_day}.json",
+        "pipeline/data/daily/{prev_biz_day}_fundamentals.json"
+      ],
       "grace_multiplier": 1.5,
-      "notes": "04:30 IST. run_daily.py \u00e2\u20ac\u201d prices/fundamentals/FII flows. Writes date-stamped files in data/daily/; freshness judged on task-liveness only (file-freshness would need glob support)."
+      "notes": "04:30 IST Mon-Fri. run_daily.py \u2014 prices/fundamentals/FII flows. Writes date-stamped files in pipeline/data/daily/. Watchdog checks the PREVIOUS business day's files so alerts are robust against being run before today's 04:30 firing."
     },
     {
       "task_name": "AnkaEODNews",

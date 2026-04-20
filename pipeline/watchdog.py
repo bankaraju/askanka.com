@@ -35,6 +35,7 @@ from pipeline.watchdog_freshness import (
     IST,
     FreshnessResult,
     check_file_freshness,
+    expand_output_template,
 )
 from pipeline.watchdog_inventory import (
     InventoryError,
@@ -89,14 +90,18 @@ def _eval_task(task: dict, live_by_name: dict, now: datetime) -> list:
     cadence = task["cadence_class"]
     grace = task["grace_multiplier"]
 
-    # File checks
+    # File checks — `outputs` entries may contain {today} / {last_biz_day}
+    # templates which are resolved against `now` before checking the file.
+    # The displayed `output_path` in any alert is the EXPANDED path so an
+    # operator can copy-paste it, rather than the raw template.
     for output_path_str in task["outputs"]:
-        path = REPO_ROOT / output_path_str
+        expanded = expand_output_template(output_path_str, now)
+        path = REPO_ROOT / expanded
         result = check_file_freshness(path, cadence, grace, now)
         if result == FreshnessResult.OUTPUT_MISSING:
             issues.append(Issue(
                 kind=IssueKind.OUTPUT_MISSING, task_name=task_name,
-                output_path=output_path_str, detail="file does not exist",
+                output_path=expanded, detail="file does not exist",
                 tier=tier,
             ))
         elif result == FreshnessResult.OUTPUT_STALE:
@@ -108,7 +113,7 @@ def _eval_task(task: dict, live_by_name: dict, now: datetime) -> list:
                 detail = "stale (mtime unavailable)"
             issues.append(Issue(
                 kind=IssueKind.OUTPUT_STALE, task_name=task_name,
-                output_path=output_path_str,
+                output_path=expanded,
                 detail=detail,
                 tier=tier,
             ))

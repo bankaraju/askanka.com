@@ -53,6 +53,75 @@ class FreshnessResult(enum.Enum):
     OUTPUT_MISSING = "OUTPUT_MISSING"
 
 
+def _last_business_day(now: datetime) -> str:
+    """Return the most recent Mon-Fri date in IST as YYYY-MM-DD.
+
+    If `now` is a weekend, walks back to the previous Friday. Otherwise
+    returns today's IST date.
+    """
+    if now.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+    d = now.astimezone(IST).date()
+    while d.weekday() >= 5:  # 5=Sat, 6=Sun
+        d = d - timedelta(days=1)
+    return d.isoformat()
+
+
+def _previous_business_day(now: datetime) -> str:
+    """Return the most recent Mon-Fri date *strictly before* today in IST.
+
+    Use this for tasks whose completion we verify against yesterday's
+    output, so the check is robust to being invoked before today's task
+    has fired. Monday resolves to Friday; Saturday/Sunday resolve to the
+    previous Friday.
+    """
+    if now.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+    d = now.astimezone(IST).date() - timedelta(days=1)
+    while d.weekday() >= 5:
+        d = d - timedelta(days=1)
+    return d.isoformat()
+
+
+def _yesterday(now: datetime) -> str:
+    """Return yesterday's calendar date in IST. No business-day skipping."""
+    if now.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+    return (now.astimezone(IST).date() - timedelta(days=1)).isoformat()
+
+
+def expand_output_template(template: str, now: datetime) -> str:
+    """Substitute supported tokens in an inventory `outputs` path.
+
+    Supported tokens (IST-anchored):
+      {today}        → today's date YYYY-MM-DD
+      {yesterday}    → today - 1 day (calendar; no weekend skipping)
+      {last_biz_day} → most recent Mon-Fri (today on weekdays,
+                       previous Friday on weekends)
+      {prev_biz_day} → most recent Mon-Fri STRICTLY BEFORE today
+                       (Monday→Friday, Tuesday→Monday, weekends→Friday)
+
+    ``{prev_biz_day}`` and ``{yesterday}`` are the right choice when the
+    watchdog is expected to run before today's task has fired — they
+    validate that yesterday's output landed without false-alarming on the
+    absence of today's (not-yet-produced) output.
+
+    Unknown tokens are left in place — the resulting path will simply fail
+    `exists()` and the watchdog will report OUTPUT_MISSING. Plain paths
+    pass through unchanged.
+    """
+    if now.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+    today = now.astimezone(IST).date().isoformat()
+    return (
+        template
+        .replace("{today}", today)
+        .replace("{yesterday}", _yesterday(now))
+        .replace("{last_biz_day}", _last_business_day(now))
+        .replace("{prev_biz_day}", _previous_business_day(now))
+    )
+
+
 def check_file_freshness(
     output_path: Path,
     cadence_class: str,
