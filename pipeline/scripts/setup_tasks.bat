@@ -15,6 +15,7 @@ REM ── PRE-MARKET (09:00-09:25) ──
 schtasks /create /tn "AnkaRefreshKite" /tr "%SCRIPTS%\refresh_kite.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 09:00 /f
 schtasks /create /tn "AnkaPreMarket" /tr "%SCRIPTS%\premarket.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 09:15 /f
 schtasks /create /tn "AnkaMorningScan" /tr "%SCRIPTS%\morning_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 09:25 /f
+schtasks /create /tn "AnkaPhaseCShadowOpen" /tr "%SCRIPTS%\phase_c_shadow_open.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 09:25 /f
 
 REM ── INTRADAY (09:30-15:30 every 15 min) ──
 schtasks /create /tn "AnkaIntraday0930" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 09:30 /f
@@ -38,6 +39,7 @@ schtasks /create /tn "AnkaIntraday1345" /tr "%SCRIPTS%\intraday_scan.bat" /sc WE
 schtasks /create /tn "AnkaIntraday1400" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 14:00 /f
 schtasks /create /tn "AnkaIntraday1415" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 14:15 /f
 schtasks /create /tn "AnkaIntraday1430" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 14:30 /f
+schtasks /create /tn "AnkaPhaseCShadowClose" /tr "%SCRIPTS%\phase_c_shadow_close.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 14:30 /f
 schtasks /create /tn "AnkaIntraday1445" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 14:45 /f
 schtasks /create /tn "AnkaIntraday1500" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 15:00 /f
 schtasks /create /tn "AnkaIntraday1515" /tr "%SCRIPTS%\intraday_scan.bat" /sc WEEKLY /d MON,TUE,WED,THU,FRI /st 15:15 /f
