@@ -106,9 +106,12 @@ def test_h1_verdict_fails_when_dd_too_deep():
 
 
 def test_informational_verdict_passes_with_hits_and_p():
-    result = stats.informational_verdict(hits=70, n=120, alpha=0.01)
+    # 145/240 = 60.4% hits; binomial two-sided p≈0.0015 < 0.01, hit_rate > 0.53 — both gates pass
+    result = stats.informational_verdict(hits=145, n=240, alpha=0.01)
     assert result["passes"] is True
-    assert result["hit_rate"] == pytest.approx(70 / 120, abs=0.001)
+    assert result["hit_rate"] == pytest.approx(145 / 240, abs=0.001)
+    assert result["p_value"] is not None
+    assert result["p_value"] <= 0.01
 
 
 def test_informational_verdict_fails_with_thin_sample():

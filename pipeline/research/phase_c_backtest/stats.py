@@ -128,10 +128,7 @@ def informational_verdict(hits: int, n: int, alpha: float = 0.01) -> dict:
         }
     p = binomial_p(hits, n, p_null=0.5)
     hit_rate = hits / n
-    # Informational class: verdict gates on hit_rate threshold (>=0.53) alone.
-    # p-value is computed and surfaced for reference but does not gate the verdict,
-    # because H2-H5 are informational signals, not tradeable opportunity claims.
-    passes = hit_rate >= 0.53
+    passes = (p <= alpha) and (hit_rate >= 0.53)
     return {
         "passes": passes,
         "reason": "passes" if passes else f"p={p:.4f} alpha={alpha}, hit={hit_rate:.2%}",
