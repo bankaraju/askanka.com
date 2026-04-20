@@ -17,6 +17,8 @@ export function render(container, candidates) {
     return;
   }
 
+  const _uid = Math.random().toString(36).slice(2, 8);
+
   const sorted = [...candidates].sort((a, b) => {
     let av = a[_sortCol], bv = b[_sortCol];
     if (av == null) av = _sortDir === -1 ? -Infinity : Infinity;
@@ -63,7 +65,7 @@ export function render(container, candidates) {
       <td class="mono">${_esc(c.horizon_days)}d</td>
     </tr>
     <tr class="drawer-row" data-drawer-for="${i}" style="display: none;">
-      <td colspan="6"><div id="drawer-content-${i}"></div></td>
+      <td colspan="6"><div id="drawer-content-${_uid}-${i}"></div></td>
     </tr>`).join('');
 
   container.innerHTML = `
@@ -90,7 +92,7 @@ export function render(container, candidates) {
       container.querySelectorAll('tr.drawer-row').forEach(d => { d.style.display = 'none'; });
       if (!isOpen) {
         drawerRow.style.display = 'table-row';
-        const mount = document.getElementById(`drawer-content-${idx}`);
+        const mount = container.querySelector(`#drawer-content-${_uid}-${idx}`);
         if (mount) drawer.render(mount, sorted[idx]);
       }
     });
