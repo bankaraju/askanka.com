@@ -83,18 +83,40 @@ def render_verdict_section(
     verdicts: dict[str, dict],
     out_path: Path | str,
 ) -> None:
-    """Render the per-hypothesis PASS/FAIL verdict markdown."""
+    """Render the per-hypothesis verdict markdown with supporting stats.
+
+    Emits hit_rate and p_value alongside the PASS/FAIL outcome so a reader
+    can audit the test statistic behind the call. If any hypothesis carries
+    a non-empty ``failed_criteria`` list, a "Failed criteria detail" section
+    is appended.
+    """
     out_path = Path(out_path)
-    md = [
-        "# Verdict\n",
-        "| Hypothesis | Outcome | Reason |",
-        "|---|:---:|---|",
+    lines = [
+        "# Verdict",
+        "",
+        "| Hypothesis | Outcome | Hit rate | p-value | Reason |",
+        "|---|:---:|---:|---:|---|",
     ]
     for hname, v in verdicts.items():
         outcome = "PASS" if v.get("passes") else "FAIL"
-        md.append(f"| {hname} | **{outcome}** | {v.get('reason', '')} |")
+        hit = v.get("hit_rate")
+        pval = v.get("p_value")
+        hit_str = f"{hit:.1%}" if isinstance(hit, (int, float)) else "—"
+        pval_str = f"{pval:.4f}" if isinstance(pval, (int, float)) else "—"
+        lines.append(
+            f"| {hname} | **{outcome}** | {hit_str} | {pval_str} | {v.get('reason', '')} |"
+        )
+    # Per-hypothesis failed_criteria detail (only if any exist)
+    details = [(h, v) for h, v in verdicts.items() if v.get("failed_criteria")]
+    if details:
+        lines.extend(["", "## Failed criteria detail", ""])
+        for hname, v in details:
+            lines.append(f"**{hname}:**")
+            for crit in v["failed_criteria"]:
+                lines.append(f"- {crit}")
+            lines.append("")
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(md), encoding="utf-8")
+    out_path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def render_regime_breakdown(
