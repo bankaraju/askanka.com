@@ -640,15 +640,35 @@ python -m pipeline.terminal --no-open    # don't auto-open browser
 - **Data flow:** Pipeline scheduled tasks → JSON files → FastAPI → Browser
 - **No database:** reads directly from `pipeline/data/` and `data/`
 
-### Tabs
+### Tabs (post 2026-04-20 restructure)
 
-| Tab | Content | Data Sources |
-|-----|---------|-------------|
-| Dashboard | Regime, KPIs, signals summary | global_regime.json, today_regime.json, today_recommendations.json |
-| Trading | Signals, spreads, charts, TA | open_signals.json, regime_trade_map.json, OHLCV data |
-| Intelligence | Trust scores, news, research | trust_scores.json, fno_news.json, articles_index.json |
-| Track Record | P&L, equity curve, trades | track_record.json, closed_signals.json |
-| Settings | Broker, alerts, display | Local config file |
+10 visible tabs in the sidebar, each answering one question with one feed. Keyboard shortcuts `1`–`9` map to the first nine; `0` jumps to Track Record. Settings is mouse-only.
+
+| # | Tab | Question it answers | Feed |
+|---|-----|--------------------|------|
+| 1 | Dashboard | What's open right now? (live positions, stops, targets, P&L) | `/api/signals` (positions array) |
+| 2 | Trading | What's tradeable today? (browser over `tradeable_candidates[]`, filter chips, expandable narration drawer) | `/api/candidates` (tradeable_candidates) |
+| 3 | Regime | Where is the market? (ETF zone + score, MSI secondary, Phase A/B/C) | `/api/regime` + `/api/research/digest` + `/api/candidates` |
+| 4 | Scanner | What anomalies fired? (read-only events: TA fingerprints, OI spikes, correlation breaks) | `/api/candidates` (signals array) |
+| 5 | Trust | Which managements pass? | `/api/trust-scores` |
+| 6 | News | What just happened? | `/api/news/macro` |
+| 7 | Options | What's the synthetic leverage? | `/api/research/digest` leverage_matrices |
+| 8 | Risk | Am I within bounds? | `/api/risk-gates` |
+| 9 | Research | Full intelligence digest | `/api/research/digest` |
+| 0 | Track Record | Realised P&L, equity curve, closed trades | `/api/track-record` |
+|   | Settings | Broker, alerts, display | local config |
+
+The old `Intelligence` tab (Trust + News + Research + Options sub-tabs) was deleted; each sub-tab is now a top-level page. The old `Trading` page also lost its Charts/TA sub-tabs — the candidate drawer absorbs the narration role; standalone Charts/TA can be re-homed in a follow-up.
+
+#### `/api/candidates` (new endpoint)
+
+Composes a dual-array schema from existing files (no new pipeline writers, no scheduled tasks):
+
+- `tradeable_candidates[]` — things you could open today: `static_config` spreads (`today_regime.eligible_spreads`), `dynamic_pair_engine` (forward-compat — file doesn't exist yet), `regime_engine` Phase B picks (`today_recommendations.json`). Each carries legs, conviction, score, sizing basis, horizon, narration.
+- `signals[]` — events that fired but aren't directly tradeable: `ta_scanner` fingerprint hits, `correlation_break` Phase C events, future `oi_anomaly` items. Each carries ticker, event_type, source, fired_at, context dict.
+- `updated_at` — provenance timestamp from `today_regime.timestamp`.
+
+Source: `pipeline/terminal/api/candidates.py`. Trading consumes `tradeable_candidates`; Scanner consumes `signals`; Regime uses both for snapshot panes.
 
 ### Design System
 
