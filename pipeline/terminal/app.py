@@ -19,6 +19,7 @@ from pipeline.terminal.api.tickers import router as tickers_router
 from pipeline.terminal.api.track_record import router as track_record_router
 from pipeline.terminal.api.scanner import router as scanner_router
 from pipeline.terminal.api.oi import router as oi_router
+from pipeline.terminal.api.candidates import router as candidates_router
 
 app = FastAPI(title="Anka Terminal", version="0.1.0")
 
@@ -36,6 +37,7 @@ app.include_router(tickers_router, prefix="/api")
 app.include_router(track_record_router, prefix="/api")
 app.include_router(scanner_router, prefix="/api")
 app.include_router(oi_router, prefix="/api")
+app.include_router(candidates_router, prefix="/api")
 
 _STATIC_DIR = Path(__file__).parent / "static"
 
