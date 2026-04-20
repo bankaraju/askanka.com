@@ -37,9 +37,9 @@ async function loadData() {
         { key: 'conviction', label: 'Conviction', options: convictions },
         { key: 'horizon_basis', label: 'Horizon', options: horizons },
       ],
-    }, applyFilters);
+    }, applyFilters, 'trading');
 
-    applyFilters(filterChips.getState());
+    applyFilters(filterChips.getState('trading'));
   } catch (err) {
     document.getElementById('trading-table').innerHTML =
       `<div class="empty-state"><p>Failed to load candidates: ${err.message}</p></div>`;

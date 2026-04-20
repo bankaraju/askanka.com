@@ -4,8 +4,10 @@ import * as positionsTable from '../components/positions-table.js';
 import * as scenarioStrip from '../components/scenario-strip.js';
 
 let refreshTimer = null;
+let _mounted = false;
 
 export async function render(container) {
+  _mounted = true;
   container.innerHTML = `
     <div id="dash-regime"></div>
     <div id="dash-mode-badge" style="margin: var(--spacing-sm) 0;"></div>
@@ -13,10 +15,13 @@ export async function render(container) {
     <div id="dash-scenarios"></div>`;
 
   await loadData();
+  if (!_mounted) return;
+  if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = setInterval(loadData, 30000);
 }
 
 export function destroy() {
+  _mounted = false;
   if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
 }
 

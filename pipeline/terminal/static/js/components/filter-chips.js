@@ -7,10 +7,15 @@
 //       { key: 'source', label: 'Source', options: ['static_config', 'regime_engine'] },
 //       { key: 'conviction', label: 'Conviction', options: ['HIGH', 'MEDIUM', 'LOW'] },
 //     ],
-//   }, onChange);
+//   }, onChange, 'trading');
 //
 // State helper:
-//   getState() → { source: ['static_config'], conviction: ['HIGH'] }
+//   getState('trading') → { source: ['static_config'], conviction: ['HIGH'] }
+//
+// Namespace: each page passes a namespace string (e.g. 'trading', 'scanner').
+// Hash keys are stored as `namespace.key=value` so multiple pages can coexist
+// in the same URL hash without colliding. Keys belonging to OTHER namespaces
+// are preserved when one page writes its own state.
 
 function _esc(s) {
   if (s == null) return '';
@@ -19,22 +24,40 @@ function _esc(s) {
   return d.innerHTML;
 }
 
-export function getState() {
+export function getState(namespace = '') {
+  const prefix = namespace ? `${namespace}.` : '';
   const hash = window.location.hash.slice(1);
   if (!hash) return {};
   const params = new URLSearchParams(hash);
   const out = {};
   for (const [k, v] of params.entries()) {
-    out[k] = v ? v.split(',').filter(Boolean) : [];
+    if (prefix && !k.startsWith(prefix)) continue;
+    const bareKey = prefix ? k.slice(prefix.length) : k;
+    out[bareKey] = v ? v.split(',').filter(Boolean) : [];
   }
   return out;
 }
 
-function setState(state) {
-  const params = new URLSearchParams();
-  for (const [k, v] of Object.entries(state)) {
-    if (v && v.length > 0) params.set(k, v.join(','));
+function setState(state, namespace = '') {
+  const prefix = namespace ? `${namespace}.` : '';
+  // Read current hash and preserve keys belonging to OTHER namespaces.
+  const hash = window.location.hash.slice(1);
+  const params = new URLSearchParams(hash);
+
+  // Remove all keys belonging to this namespace.
+  for (const k of [...params.keys()]) {
+    if (prefix ? k.startsWith(prefix) : !k.includes('.')) {
+      params.delete(k);
+    }
   }
+
+  // Write this namespace's new state.
+  for (const [k, v] of Object.entries(state)) {
+    if (v && v.length > 0) {
+      params.set(`${prefix}${k}`, v.join(','));
+    }
+  }
+
   const next = params.toString();
   const newHash = next ? `#${next}` : '';
   if (window.location.hash !== newHash) {
@@ -42,8 +65,8 @@ function setState(state) {
   }
 }
 
-export function render(container, config, onChange) {
-  const state = getState();
+export function render(container, config, onChange, namespace = '') {
+  const state = getState(namespace);
   for (const g of config.groups) {
     if (!state[g.key]) state[g.key] = [];
   }
@@ -70,7 +93,7 @@ export function render(container, config, onChange) {
       } else {
         state[group] = [...current, val];
       }
-      setState({ ...state });
+      setState({ ...state }, namespace);
       btn.classList.toggle('filter-chip--active');
       onChange({ ...state });
     });

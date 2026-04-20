@@ -11,6 +11,7 @@ import * as filterChips from '../components/filter-chips.js';
 let _allSignals = [];
 let _refreshTimer = null;
 let _container = null;  // closure capture for loadData / applyFilters
+let _mounted = false;
 
 function _esc(s) {
   if (s == null) return '';
@@ -20,6 +21,7 @@ function _esc(s) {
 }
 
 export async function render(container) {
+  _mounted = true;
   _container = container;
   container.innerHTML = `
     <div style="margin-bottom: var(--spacing-md);">
@@ -31,11 +33,13 @@ export async function render(container) {
     <div id="scanner-feed"></div>`;
 
   await loadData();
+  if (!_mounted) return;
   if (_refreshTimer) clearInterval(_refreshTimer);
   _refreshTimer = setInterval(loadData, 60000);
 }
 
 export function destroy() {
+  _mounted = false;
   if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null; }
   _container = null;
 }
@@ -49,9 +53,9 @@ async function loadData() {
     if (filterEl) {
       filterChips.render(filterEl, {
         groups: [{ key: 'source', label: 'Source', options: sources }],
-      }, applyFilters);
+      }, applyFilters, 'scanner');
     }
-    applyFilters(filterChips.getState());
+    applyFilters(filterChips.getState('scanner'));
   } catch (err) {
     const feedEl = _container?.querySelector('#scanner-feed');
     if (feedEl) {
