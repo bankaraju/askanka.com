@@ -1,7 +1,7 @@
 from __future__ import annotations
 import pandas as pd
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 @pytest.fixture
