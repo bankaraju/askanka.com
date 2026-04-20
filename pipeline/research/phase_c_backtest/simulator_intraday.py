@@ -80,6 +80,11 @@ def simulate_trade(
         exit_reason, side, notional_inr, pnl_gross_inr, pnl_net_inr`` —
         or ``None`` when no entry is possible (e.g. signal at/after the
         last bar, or signal at/after ``exit_time``).
+
+    Policy: on bars whose [low, high] range straddles BOTH the stop and the
+    target, the stop is taken (pessimistic first-touch assumption). We do
+    not have intra-bar price path, so this is conservative for win-rate
+    estimates.
     """
     sig_ts = pd.Timestamp(signal_time)
     cutoff = _parse_exit_time(exit_time)
@@ -158,6 +163,10 @@ def simulate_trade(
         exit_px = float(last["close"])
         exit_reason = "EOD"
         exit_bar = last
+        log.warning(
+            "EOD fallback: no 14:30 bar found for %s (last bar %s). Data truncated?",
+            signal_time, last["date"],
+        )
 
     direction = 1 if side == "LONG" else -1
     signed_return = (exit_px - entry_px) / entry_px * direction
@@ -221,7 +230,7 @@ def run_simulation(
     for _, sig in df.iterrows():
         try:
             bars = minute_bars_loader(sig["symbol"], sig["date"])
-        except Exception as exc:
+        except (FileNotFoundError, IOError, ValueError, KeyError) as exc:
             log.warning(
                 "minute bars unavailable: %s %s — %s",
                 sig["symbol"], sig["date"], exc,
