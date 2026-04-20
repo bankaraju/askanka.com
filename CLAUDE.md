@@ -57,14 +57,13 @@ The system runs automatically via Windows Scheduled Tasks:
 - AnkaTrustIntra####: OPUS ANKA model portfolio intraday monitor
 
 **Post-Close:**
-- 15:35 — AnkaCloseCapture: capture official closing prices (CRITICAL)
-- 15:35 — AnkaTAScanner: TA fingerprint scan (info)
-- 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL)
-- 16:15 — AnkaEODTrackRecord: write official track record (warn)
+- 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL); also runs `oi_scanner --archive-only` and `website_exporter.py`
+- 16:15 — AnkaEODTrackRecord: write official track record + run `website_exporter.py` (warn)
 - 16:20 — AnkaEODNews: backtest news predictions (warn)
-- 16:30 — AnkaWebExport: push data to website (warn)
 - 16:35 — AnkaTrustEOD: OPUS ANKA EOD review + next-day outlook (warn)
 - 16:45 — AnkaWatchdogGate: watchdog gate run, check everything (warn)
+
+Note: website_exporter.py is invoked from morning_scan (09:25), every intraday cycle (09:30–15:30), eod_review (16:00), eod_track_record (16:15), and daily_dump (04:30) — it is NOT a standalone scheduled task. It auto-deploys data/*.json to the GitHub Pages branch.
 
 **Weekly:**
 - Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)

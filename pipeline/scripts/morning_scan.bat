@@ -8,3 +8,4 @@ python -X utf8 news_scanner.py >> logs\morning_scan.log 2>&1
 python -X utf8 news_intelligence.py --full >> logs\morning_scan.log 2>&1
 python -X utf8 spread_intelligence.py --morning >> logs\morning_scan.log 2>&1
 python -X utf8 autoresearch\reverse_regime_ranker.py >> logs\morning_scan.log 2>&1
+python -X utf8 website_exporter.py >> logs\website_exporter.log 2>&1

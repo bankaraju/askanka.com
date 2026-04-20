@@ -136,29 +136,30 @@ All of this runs automatically on a Windows PC via scheduled tasks. The outputs 
     POST-CLOSE (15:30-16:45 IST)
     =============================
 
-    +------------------+    +------------------+    +------------------+
-    | AnkaCloseCapture |    | AnkaEODReview    |    | AnkaEODTrackRec  |
-    | (15:35)          |    | (16:00)          |    | (16:15)          |
-    |                  |    |                  |    |                  |
-    | Captures closing |    | Dashboard of     |    | Official P&L     |
-    | prices for all   |--->| today's signals  |--->| calculation      |
-    | 213 stocks       |    | win/loss/open    |    | Writes track     |
-    |                  |    | Sends to Telegram|    | record JSON      |
-    +------------------+    +------------------+    +------------------+
-                                                             |
-                                                             v
-    +------------------+                            track_record.json
-    | AnkaEODNews      |                            (feeds website +
-    | (16:20)          |                             next day)
-    |                  |
-    | Backtest today's |    +------------------+
-    | news events:     |    | AnkaWebExport    |
-    | did the stock    |    | (16:30)          |
-    | move as expected?|    |                  |
-    |                  |    | Export all data   |
-    | Writes:          |    | to website JSONs |
-    | news_verdicts    |    | for askanka.com  |
     +------------------+    +------------------+
+    | AnkaEODReview    |    | AnkaEODTrackRec  |
+    | (16:00)          |    | (16:15)          |
+    |                  |    |                  |
+    | Dashboard of     |    | Official P&L     |
+    | today's signals  |--->| calculation      |
+    | win/loss/open    |    | Writes track     |
+    | Sends to Telegram|    | record JSON      |
+    | + website_export |    | + website_export |
+    +------------------+    +------------------+
+                                     |
+                                     v
+    +------------------+    track_record.json
+    | AnkaEODNews      |    (feeds website +
+    | (16:20)          |     next day)
+    |                  |
+    | Backtest today's |    Note: website_exporter.py
+    | news events:     |    runs from morning_scan, every
+    | did the stock    |    intraday cycle, eod_review,
+    | move as expected?|    eod_track_record, and
+    |                  |    daily_dump — not a separate
+    | Writes:          |    scheduled task.
+    | news_verdicts    |
+    +------------------+
 
 
     OVERNIGHT AGAIN (04:30 IST next day)
@@ -347,11 +348,9 @@ get sent to Telegram.
 
 | Time | Task | Purpose |
 |------|------|---------|
-| 15:35 | AnkaCloseCapture | Capture official closing prices |
-| 16:00 | AnkaEODReview | Dashboard: wins/losses/open positions → Telegram |
-| 16:15 | AnkaEODTrackRecord | Calculate P&L, write `track_record.json` |
+| 16:00 | AnkaEODReview | Dashboard → Telegram, archive OI, run website_exporter |
+| 16:15 | AnkaEODTrackRecord | Calculate P&L, write `track_record.json`, run website_exporter |
 | 16:20 | AnkaEODNews | Backtest news events: did the stock react as expected? |
-| 16:30 | AnkaWebExport | Push all data to website JSON files |
 
 **What carries forward to tomorrow:**
 - `data/track_record.json` — cumulative performance history
@@ -554,13 +553,13 @@ That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
 | Time (IST) | Task Name | What It Does | Critical? |
 |------------|-----------|-------------|-----------|
-| 15:35 | AnkaCloseCapture | Capture official closing prices | CRITICAL |
-| 15:35 | AnkaTAScanner | Run TA fingerprint scan | info |
-| 16:00 | AnkaEODReview | P&L dashboard → Telegram | CRITICAL |
-| 16:15 | AnkaEODTrackRecord | Write official track record | warn |
+| 16:00 | AnkaEODReview | P&L dashboard → Telegram, archive OI, push website JSONs | CRITICAL |
+| 16:15 | AnkaEODTrackRecord | Write official track record, push website JSONs | warn |
 | 16:20 | AnkaEODNews | Backtest news predictions | warn |
-| 16:30 | AnkaWebExport | Push data to website | warn |
+| 16:35 | AnkaTrustEOD | OPUS ANKA EOD review + next-day outlook | warn |
 | 16:45 | AnkaWatchdogGate | Watchdog gate run — check everything | warn |
+
+Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, eod_review, eod_track_record, and daily_dump — it is not a standalone scheduled task. Auto-pushes data/*.json to the GitHub Pages branch.
 
 ### Weekly
 
