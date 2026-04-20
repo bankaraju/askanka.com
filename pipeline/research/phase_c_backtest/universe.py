@@ -45,7 +45,7 @@ def _download_mktlots_csv() -> str:
 def _parse_symbols(csv_text: str) -> set[str]:
     """Parse the first non-header column as the SYMBOL set."""
     reader = csv.reader(io.StringIO(csv_text))
-    header = next(reader, None)
+    next(reader, None)  # skip header row
     syms: set[str] = set()
     for row in reader:
         if not row:
