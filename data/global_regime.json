@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-04-20T10:02:29.538060+05:30",
+  "updated_at": "2026-04-20T10:17:18.495626+05:30",
   "zone": "RISK-OFF",
-  "score": 36.7,
+  "score": 36.1,
   "regime_source": "etf_engine",
   "stable": true,
-  "consecutive_days": 2,
+  "consecutive_days": 3,
   "components": {
     "inst_flow": {
       "raw": null,
@@ -13,26 +13,26 @@
       "contribution": 15.0
     },
     "india_vix": {
-      "raw": 17.82,
+      "raw": 17.83,
       "norm": 0.382,
       "weight": 0.25,
-      "contribution": 9.5
+      "contribution": 9.6
     },
     "usdinr": {
-      "raw": -0.52,
-      "norm": 0.295,
+      "raw": -0.69,
+      "norm": 0.262,
       "weight": 0.2,
-      "contribution": 5.9
+      "contribution": 5.2
     },
     "nifty_30d": {
-      "raw": 3.45,
-      "norm": 0.385,
+      "raw": 3.34,
+      "norm": 0.389,
       "weight": 0.15,
       "contribution": 5.8
     },
     "crude_5d": {
-      "raw": -8.96,
-      "norm": 0.052,
+      "raw": -8.95,
+      "norm": 0.053,
       "weight": 0.1,
       "contribution": 0.5
     }
@@ -40,7 +40,7 @@
   "top_drivers": [
     "inst_flow",
     "india_vix",
-    "usdinr"
+    "nifty_30d"
   ],
-  "source_timestamp": "2026-04-20T09:25:08.727472+05:30"
+  "source_timestamp": "2026-04-20T10:14:36.721327+05:30"
 }
