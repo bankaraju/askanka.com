@@ -16,9 +16,11 @@ Idempotency:
 """
 from __future__ import annotations
 
-import logging
-from pathlib import Path
 import json
+import logging
+import os
+import tempfile
+from pathlib import Path
 
 import pandas as pd
 
@@ -35,18 +37,28 @@ _DEFAULT_TARGET_PCT = 0.01
 
 
 def _load() -> list[dict]:
-    """Return ledger contents or ``[]`` if file does not yet exist."""
+    """Return ledger contents or ``[]`` if file is missing or corrupt."""
     path = Path(_LEDGER_PATH)
     if not path.is_file():
         return []
-    return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        log.warning("corrupt live_paper ledger, starting fresh: %s", exc)
+        return []
 
 
 def _save(ledger: list[dict]) -> None:
-    """Write the ledger to disk, creating parent dirs as needed."""
-    path = Path(_LEDGER_PATH)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(ledger, indent=2), encoding="utf-8")
+    """Atomic write via tempfile + os.replace (POSIX & Windows safe)."""
+    target = Path(_LEDGER_PATH)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        mode="w", encoding="utf-8", delete=False,
+        dir=target.parent, prefix=target.name + ".", suffix=".tmp",
+    ) as tmp:
+        tmp.write(json.dumps(ledger, indent=2))
+        tmp_path = Path(tmp.name)
+    os.replace(tmp_path, target)
 
 
 def _make_tag(date_str: str, n: int) -> str:
@@ -65,19 +77,23 @@ def record_opens(signals: pd.DataFrame) -> int:
     Returns:
         Number of newly inserted entries.
     """
+    if signals.empty:
+        return 0
     ledger = _load()
     seen = {(e["date"], e["symbol"]) for e in ledger}
     new = 0
     for _, sig in signals.iterrows():
-        key = (sig["date"], sig["symbol"])
+        date = str(sig["date"])
+        symbol = str(sig["symbol"])
+        key = (date, symbol)
         if key in seen:
             continue
         ledger.append({
-            "tag": _make_tag(sig["date"], len(ledger) + 1),
-            "date": sig["date"],
-            "signal_time": sig["signal_time"],
-            "symbol": sig["symbol"],
-            "side": sig["side"],
+            "tag": _make_tag(date, len(ledger) + 1),
+            "date": date,
+            "signal_time": str(sig["signal_time"]),
+            "symbol": symbol,
+            "side": str(sig["side"]),
             "z_score": float(sig["z_score"]),
             "entry_px": float(sig.get("entry_px", 0.0)),
             "stop_pct": float(sig.get("stop_pct", _DEFAULT_STOP_PCT)),
