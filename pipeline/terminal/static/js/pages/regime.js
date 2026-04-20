@@ -5,6 +5,7 @@
 import { get } from '../lib/api.js';
 
 let _refreshTimer = null;
+let _inflight = false;
 
 function _esc(s) {
   if (s == null) return '';
@@ -14,7 +15,11 @@ function _esc(s) {
 }
 
 export async function render(container) {
-  container.innerHTML = '<div class="skeleton skeleton--card"></div>';
+  if (_inflight) return;
+  _inflight = true;
+  if (!container.hasChildNodes()) {
+    container.innerHTML = '<div class="skeleton skeleton--card"></div>';
+  }
   try {
     const [regime, digest, candidates] = await Promise.allSettled([
       get('/regime'), get('/research/digest'), get('/candidates'),
@@ -23,18 +28,24 @@ export async function render(container) {
     const d = digest.status === 'fulfilled' ? digest.value : {};
     const c = candidates.status === 'fulfilled' ? candidates.value : { tradeable_candidates: [] };
 
-    const driversHtml = (r.top_drivers || []).slice(0, 8).map(drv => `
-      <div class="digest-row">
+    const driversHtml = (r.top_drivers ?? []).slice(0, 8).map(drv => {
+      const cv = drv.contribution;
+      const hasC = typeof cv === 'number' && !isNaN(cv);
+      const colourCls = hasC ? (cv >= 0 ? 'text-green' : 'text-red') : 'text-muted';
+      const sign = hasC && cv >= 0 ? '+' : '';
+      const valStr = hasC ? `${sign}${cv.toFixed(3)}` : '--';
+      return `<div class="digest-row">
         <span class="digest-row__label">${_esc(drv.symbol || drv.name || '--')}</span>
-        <span class="digest-row__value mono ${drv.contribution >= 0 ? 'text-green' : 'text-red'}">${drv.contribution >= 0 ? '+' : ''}${(drv.contribution || 0).toFixed(3)}</span>
-      </div>`).join('');
+        <span class="digest-row__value mono ${colourCls}">${valStr}</span>
+      </div>`;
+    }).join('');
 
     const phaseBHtml = c.tradeable_candidates
       .filter(x => x.source === 'regime_engine')
       .slice(0, 8)
       .map(p => `<div class="digest-row">
         <span class="digest-row__label">${_esc(p.name)}</span>
-        <span class="digest-row__value">${p.conviction} (${p.score})</span>
+        <span class="digest-row__value">${_esc(p.conviction)} (${_esc(p.score)})</span>
       </div>`).join('') || '<p class="text-muted" style="font-size: 0.8125rem;">No Phase B picks today</p>';
 
     const eligibleHtml = c.tradeable_candidates
@@ -42,7 +53,7 @@ export async function render(container) {
       .slice(0, 8)
       .map(s => `<div class="digest-row">
         <span class="digest-row__label">${_esc(s.name)}</span>
-        <span class="digest-row__value">${s.conviction} (${s.score})</span>
+        <span class="digest-row__value">${_esc(s.conviction)} (${_esc(s.score)})</span>
       </div>`).join('') || '<p class="text-muted" style="font-size: 0.8125rem;">No eligible spreads</p>';
 
     const stableLabel = r.stable ? 'LOCKED' : 'UNSTABLE';
@@ -60,7 +71,7 @@ export async function render(container) {
             <div class="digest-row"><span class="digest-row__label">Source</span>
               <span class="digest-row__value">${_esc(r.regime_source || '--')}</span></div>
             <div class="digest-row"><span class="digest-row__label">Stability</span>
-              <span class="digest-row__value ${stableCls}">${stableLabel} (${r.consecutive_days || 0}d)</span></div>
+              <span class="digest-row__value ${stableCls}">${stableLabel} (${r.consecutive_days ?? 0}d)</span></div>
             <div class="digest-row"><span class="digest-row__label">Updated</span>
               <span class="digest-row__value mono">${_esc(r.updated_at || '--')}</span></div>
           </div>
@@ -98,8 +109,11 @@ export async function render(container) {
 
     if (_refreshTimer) clearInterval(_refreshTimer);
     _refreshTimer = setInterval(() => render(container), 60000);
-  } catch {
+  } catch (e) {
+    console.error('regime render failed', e);
     container.innerHTML = '<div class="empty-state"><p>Failed to load regime data</p></div>';
+  } finally {
+    _inflight = false;
   }
 }
 
