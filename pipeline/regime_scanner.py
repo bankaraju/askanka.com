@@ -165,6 +165,19 @@ def scan_regime() -> dict:
             if etf_regime in trade_map:
                 trade_map_key = etf_regime
                 eligible_spreads = trade_map[etf_regime]
+                # Enrich each spread with its long/short leg constituents from
+                # the static INDIA_SPREAD_PAIRS config so the dashboard can show
+                # what tickers a spread actually trades, not just its win rate.
+                try:
+                    from config import INDIA_SPREAD_PAIRS
+                    legs_by_name = {p["name"]: p for p in INDIA_SPREAD_PAIRS}
+                    for name, stats in eligible_spreads.items():
+                        cfg = legs_by_name.get(name)
+                        if cfg and isinstance(stats, dict):
+                            stats["long_legs"] = cfg.get("long", [])
+                            stats["short_legs"] = cfg.get("short", [])
+                except Exception as exc:
+                    log.warning("Could not enrich eligible_spreads with legs: %s", exc)
                 log.info("ETF regime '%s' → %d eligible spreads", etf_regime, len(eligible_spreads))
             else:
                 log.warning("ETF regime '%s' not in trade map (keys: %s)", etf_regime, list(trade_map.keys()))

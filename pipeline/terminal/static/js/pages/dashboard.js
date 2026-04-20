@@ -58,8 +58,26 @@ async function loadData() {
   if (quickEl) {
     const spreads = regimeData.eligible_spreads || {};
     const topSpreads = Object.entries(spreads).sort((a, b) => (b[1].best_win || 0) - (a[1].best_win || 0)).slice(0, 5);
-    const spreadRows = topSpreads.map(([name, s]) => `
-      <tr><td style="font-family: var(--font-body); font-size: 0.8125rem;">${name}</td><td class="mono text-green">${s.best_win || 0}%</td></tr>`).join('');
+    const convClass = (conv) => {
+      if (conv === 'HIGH') return 'text-green';
+      if (conv === 'MEDIUM') return 'text-amber';
+      if (conv === 'LOW' || conv === 'NONE') return 'text-muted';
+      return '';
+    };
+    const spreadRows = topSpreads.map(([name, s]) => {
+      const longs = (s.long_legs || []).join(', ');
+      const shorts = (s.short_legs || []).join(', ');
+      const legsHtml = (longs || shorts)
+        ? `<div style="font-size: 0.7rem; line-height: 1.3; margin-top: 2px;"><span class="text-green">L: ${longs || '—'}</span> &nbsp;<span class="text-red">S: ${shorts || '—'}</span></div>`
+        : '';
+      const conv = s.conviction || 'NONE';
+      const score = (s.score !== undefined && s.score !== null) ? s.score : '—';
+      return `
+      <tr><td style="font-family: var(--font-body); font-size: 0.8125rem;">
+        <div>${name}</div>${legsHtml}
+      </td><td class="mono text-green" style="vertical-align: top;">${s.best_win || 0}%</td>
+      <td class="mono ${convClass(conv)}" style="vertical-align: top;">${conv}<br><span style="font-size: 0.7rem; opacity: 0.7;">${score}</span></td></tr>`;
+    }).join('');
 
     const recRows = (signalsData.recommendations || []).slice(0, 5).map(r => {
       const dirClass = r.direction === 'LONG' ? 'text-green' : 'text-red';
@@ -72,8 +90,8 @@ async function loadData() {
     quickEl.innerHTML = `
       <div class="card" style="margin-bottom: var(--spacing-md);">
         <h3 style="margin-bottom: var(--spacing-sm); font-size: 0.875rem;">Top Eligible Spreads</h3>
-        <table class="data-table"><thead><tr><th>Spread</th><th>Win%</th></tr></thead>
-          <tbody>${spreadRows || '<tr><td colspan="2" class="text-muted">None eligible</td></tr>'}</tbody></table>
+        <table class="data-table"><thead><tr><th>Spread / Legs</th><th>Win%</th><th>Today</th></tr></thead>
+          <tbody>${spreadRows || '<tr><td colspan="3" class="text-muted">None eligible</td></tr>'}</tbody></table>
       </div>
       <div class="card">
         <h3 style="margin-bottom: var(--spacing-sm); font-size: 0.875rem;">Stock Recommendations</h3>
