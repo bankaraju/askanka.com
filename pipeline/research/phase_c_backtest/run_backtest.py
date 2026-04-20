@@ -19,6 +19,7 @@ import logging
 import pandas as pd
 
 from . import (
+    bhavcopy,
     classifier,
     fetcher,
     paths,
@@ -103,12 +104,15 @@ def _classify_window(
             r = regime._daily_return_at(bars, d)  # noqa: SLF001 (intentional reuse)
             if r is not None:
                 actuals[sym] = r
+        # PCR comes from the NSE F&O bhavcopy archive (per-symbol, per-day).
+        # Empty dict on missing days; classifier treats missing PCR as NEUTRAL.
+        pcr_today = bhavcopy.pcr_by_symbol(d)
         labels = classifier.classify_universe(
             symbols=list(actuals.keys()),
             regime=regime_today,
             profile=prof,
             actual_returns=actuals,
-            pcr_by_symbol={},
+            pcr_by_symbol=pcr_today,
             oi_anomaly_by_symbol={},
         )
         for sym, info in labels.items():
@@ -309,13 +313,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--trade-label",
-        default="POSSIBLE_OPPORTUNITY",
+        default="OPPORTUNITY",
         choices=["OPPORTUNITY", "POSSIBLE_OPPORTUNITY"],
         help=(
-            "Classification label that triggers entry. Default POSSIBLE_OPPORTUNITY "
-            "since historical PCR/OI data is unavailable — the backtest effectively "
-            "tests the degraded ablation variant. Use OPPORTUNITY only when PCR/OI "
-            "snapshots are supplied upstream."
+            "Classification label that triggers entry. Default OPPORTUNITY now "
+            "that NSE F&O bhavcopy provides historical per-symbol PCR. Use "
+            "POSSIBLE_OPPORTUNITY to replicate the prior degraded run."
         ),
     )
     args = parser.parse_args(argv)
