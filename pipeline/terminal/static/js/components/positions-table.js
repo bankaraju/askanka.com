@@ -48,7 +48,7 @@ export function render(container, positions) {
     </tr>`;
   }).join('');
 
-  const totalPnl = positions.reduce((sum, p) => sum + (p.spread_pnl_pct || p.pnl_pct || 0), 0);
+  const totalPnl = positions.reduce((sum, p) => sum + (p.spread_pnl_pct ?? p.pnl_pct ?? 0), 0);
   const headerCls = totalPnl >= 0 ? 'text-green' : 'text-red';
 
   container.innerHTML = `
