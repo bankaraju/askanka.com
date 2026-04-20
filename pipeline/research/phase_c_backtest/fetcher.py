@@ -40,14 +40,35 @@ def _to_df(rows: list[dict]) -> pd.DataFrame:
 def fetch_daily(symbol: str, days: int = 1500) -> pd.DataFrame:
     """Fetch daily OHLCV for `symbol` covering the last `days` calendar days.
 
-    Cached at daily_bars/<symbol>.parquet. If cache exists and covers the
-    requested span, returns it; otherwise fetches and writes.
+    Cached at daily_bars/<symbol>.parquet. The cache is permanent (never expires
+    on time alone) but is refetched if existing coverage spans fewer than ~90%
+    of the requested `days`. To force a refetch, delete the cache file.
     """
     cache_path = Path(_DAILY_DIR) / f"{symbol}.parquet"
     if cache_path.is_file():
-        df = pd.read_parquet(cache_path)
-        log.debug("cache hit: %s daily (%d rows)", symbol, len(df))
-        return df
+        try:
+            df = pd.read_parquet(cache_path)
+        except Exception as exc:
+            log.warning("corrupt cache, re-fetching %s: %s", cache_path.name, exc)
+            cache_path.unlink(missing_ok=True)
+            df = None
+        if df is not None:
+            # Cache-coverage check: refetch if cache spans fewer business days
+            # than requested. We compare against `days * 5/7` business-day estimate.
+            if not df.empty:
+                cache_span_days = (pd.Timestamp.now().normalize() - df["date"].min()).days
+                requested_span_days = days
+                # Allow 10% slack for weekends/holidays
+                if cache_span_days < requested_span_days * 0.9:
+                    log.info("cache coverage too short for %s (%d < %d days), refetching",
+                             symbol, cache_span_days, requested_span_days)
+                    cache_path.unlink(missing_ok=True)
+                else:
+                    log.debug("cache hit: %s daily (%d rows)", symbol, len(df))
+                    return df
+            else:
+                log.debug("cache hit (empty): %s", symbol)
+                return df
     rows = _kite_fetch(symbol, interval="day", days=days)
     df = _to_df(rows)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
@@ -59,18 +80,27 @@ def fetch_daily(symbol: str, days: int = 1500) -> pd.DataFrame:
 def fetch_minute(symbol: str, trade_date: str) -> pd.DataFrame:
     """Fetch 1-minute bars for `symbol` on `trade_date` (YYYY-MM-DD).
 
-    Cached at minute_bars/<symbol>_<trade_date>.parquet.
+    Cached at minute_bars/<symbol>_<trade_date>.parquet. Permanent cache.
+    Empty results (e.g. Kite minute-bar retention exceeded) are still cached
+    to avoid repeated retries; check len(df) on the caller side.
     """
     cache_path = Path(_MINUTE_DIR) / f"{symbol}_{trade_date}.parquet"
     if cache_path.is_file():
-        df = pd.read_parquet(cache_path)
-        log.debug("cache hit: %s minute %s (%d rows)", symbol, trade_date, len(df))
-        return df
+        try:
+            df = pd.read_parquet(cache_path)
+            log.debug("cache hit: %s minute %s (%d rows)", symbol, trade_date, len(df))
+            return df
+        except Exception as exc:
+            log.warning("corrupt cache, re-fetching %s: %s", cache_path.name, exc)
+            cache_path.unlink(missing_ok=True)
     # Days back from today to cover trade_date
     days_back = max(1, (pd.Timestamp.now().normalize() - pd.Timestamp(trade_date)).days + 2)
     rows = _kite_fetch(symbol, interval="minute", days=days_back)
     df = _to_df(rows)
     df = df[df["date"].dt.strftime("%Y-%m-%d") == trade_date].copy()
+    if df.empty:
+        log.warning("no minute bars returned for %s on %s — possible Kite retention limit or delisted",
+                    symbol, trade_date)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(cache_path, index=False)
     log.info("fetched + cached: %s minute %s (%d rows)", symbol, trade_date, len(df))

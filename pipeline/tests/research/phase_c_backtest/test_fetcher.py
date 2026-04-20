@@ -58,3 +58,21 @@ def test_fetch_daily_returns_pandas_with_datetime_index(tmp_path, monkeypatch):
     with patch("pipeline.research.phase_c_backtest.fetcher._kite_fetch", side_effect=_fake_kite_response):
         df = fetcher.fetch_daily("RELIANCE", days=30)
     assert pd.api.types.is_datetime64_any_dtype(df["date"])
+
+
+def test_fetch_daily_corrupt_cache_refetches(tmp_path, monkeypatch):
+    monkeypatch.setattr(fetcher, "_DAILY_DIR", tmp_path)
+    # Write a zero-byte file to simulate corrupt cache
+    (tmp_path / "RELIANCE.parquet").write_bytes(b"")
+    with patch("pipeline.research.phase_c_backtest.fetcher._kite_fetch", side_effect=_fake_kite_response) as m:
+        df = fetcher.fetch_daily("RELIANCE", days=30)
+    assert m.call_count == 1, "corrupt cache should have triggered re-fetch"
+    assert len(df) == 30
+
+
+def test_fetch_daily_short_cache_refetches_on_longer_request(tmp_path, monkeypatch):
+    monkeypatch.setattr(fetcher, "_DAILY_DIR", tmp_path)
+    with patch("pipeline.research.phase_c_backtest.fetcher._kite_fetch", side_effect=_fake_kite_response) as m:
+        fetcher.fetch_daily("RELIANCE", days=30)        # writes 30-row cache
+        fetcher.fetch_daily("RELIANCE", days=365)       # should refetch
+    assert m.call_count == 2, "longer request should bypass short cache"
