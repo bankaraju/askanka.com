@@ -52,12 +52,22 @@ def _fetch_universe_bars(symbols: list[str], days: int = 1500) -> dict[str, pd.D
     return {sym: fetcher.fetch_daily(sym, days=days) for sym in symbols}
 
 
-def _backfill_regime(in_sample_start: str, forward_end: str) -> dict[str, str]:
+def _backfill_regime(
+    in_sample_start: str, forward_end: str, lookback_years: int = 2,
+) -> dict[str, str]:
+    """Backfill regime labels covering profile training lookback + entire backtest window.
+
+    The profile trainer needs regime labels going ~lookback_years before the
+    in_sample_start so that the first walk-forward cutoff has labelled data.
+    """
     if paths.REGIME_BACKFILL.is_file():
         return json.loads(paths.REGIME_BACKFILL.read_text(encoding="utf-8"))
     etf_syms = _load_etf_list()
     etf_bars = _fetch_universe_bars(etf_syms)
-    dates = pd.bdate_range(start=in_sample_start, end=forward_end).strftime("%Y-%m-%d").tolist()
+    backfill_start = (
+        pd.Timestamp(in_sample_start) - pd.DateOffset(years=lookback_years)
+    ).strftime("%Y-%m-%d")
+    dates = pd.bdate_range(start=backfill_start, end=forward_end).strftime("%Y-%m-%d").tolist()
     return regime.backfill_regime(dates, WEIGHTS_PATH, etf_bars, paths.REGIME_BACKFILL)
 
 
@@ -155,6 +165,7 @@ def _run_in_sample(
         notional_inr=50_000,
         slippage_bps=5.0,
         top_n=5,
+        label_filter=args.trade_label,
     )
     return ledger, classifications
 
@@ -174,7 +185,7 @@ def _run_forward(
         universe_bars, regime_by_date, profiles_by_cutoff,
         args.forward_start, args.forward_end,
     )
-    opp = classifications[classifications["label"] == "OPPORTUNITY"].copy()
+    opp = classifications[classifications["label"] == args.trade_label].copy()
     if opp.empty:
         return pd.DataFrame()
 
@@ -296,6 +307,17 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Optional explicit symbol list (default: full F&O universe at --forward-end)",
     )
+    parser.add_argument(
+        "--trade-label",
+        default="POSSIBLE_OPPORTUNITY",
+        choices=["OPPORTUNITY", "POSSIBLE_OPPORTUNITY"],
+        help=(
+            "Classification label that triggers entry. Default POSSIBLE_OPPORTUNITY "
+            "since historical PCR/OI data is unavailable — the backtest effectively "
+            "tests the degraded ablation variant. Use OPPORTUNITY only when PCR/OI "
+            "snapshots are supplied upstream."
+        ),
+    )
     args = parser.parse_args(argv)
 
     paths.ensure_cache()
@@ -326,18 +348,25 @@ def main(argv: list[str] | None = None) -> int:
     log.info("Writing artifacts to %s ...", docs_dir)
     in_sample_ledger.to_parquet(docs_dir / "in_sample_ledger.parquet", index=False)
     forward_ledger.to_parquet(docs_dir / "forward_ledger.parquet", index=False)
+    # Normalise intraday ledger columns for the report renderers, which
+    # expect the EOD schema (entry_date).
+    forward_for_report = forward_ledger.copy()
+    if "entry_date" not in forward_for_report.columns and "entry_time" in forward_for_report.columns:
+        forward_for_report["entry_date"] = (
+            forward_for_report["entry_time"].astype(str).str[:10]
+        )
     report.render_pnl_table(
         in_sample_ledger,
         docs_dir / "04-results-in-sample.md",
         title="In-sample trades (4yr EOD)",
     )
     report.render_pnl_table(
-        forward_ledger,
+        forward_for_report,
         docs_dir / "05-results-forward.md",
         title="Forward trades (60d intraday)",
     )
     report.render_equity_curve(in_sample_ledger, docs_dir / "in_sample_equity.png")
-    report.render_equity_curve(forward_ledger, docs_dir / "forward_equity.png")
+    report.render_equity_curve(forward_for_report, docs_dir / "forward_equity.png")
     report.render_verdict_section(verdicts, docs_dir / "07-verdict.md")
     log.info("Done. Verdict: %s", verdicts)
     return 0
