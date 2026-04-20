@@ -680,3 +680,31 @@ h3 { font-size: 1.125rem; }
   padding: 0 4px; line-height: 1;
 }
 .ticker-badge__clear:hover { color: var(--text-primary); }
+
+.filter-chip-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-right: var(--spacing-md);
+}
+.filter-chip-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: var(--spacing-xs);
+}
+.filter-chip {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.filter-chip:hover { background: var(--bg-elevated); }
+.filter-chip--active {
+  background: var(--accent-gold);
+  color: var(--bg-base);
+  border-color: var(--accent-gold);
+}
