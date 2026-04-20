@@ -1,0 +1,29 @@
+## Forward trades (60d intraday)
+
+- N trades: **21**
+- Total net P&L: **₹3,852.54**
+- Win rate: **76.2%** (16/21)
+
+| entry_date | symbol | side | pnl_net_inr |
+|---|---|---|---:|
+| 2026-04-02 | RELIANCE | SHORT | 421.43 |
+| 2026-04-02 | SBIN | SHORT | 421.43 |
+| 2026-04-06 | RELIANCE | SHORT | 421.43 |
+| 2026-04-07 | KOTAKBANK | LONG | -43.93 |
+| 2026-04-09 | HDFCBANK | SHORT | 421.43 |
+| 2026-04-09 | ICICIBANK | SHORT | 421.43 |
+| 2026-04-09 | LT | SHORT | 421.43 |
+| 2026-04-09 | INFY | SHORT | -169.13 |
+| 2026-04-09 | RELIANCE | SHORT | 421.43 |
+| 2026-04-10 | TCS | SHORT | 421.43 |
+| 2026-04-10 | KOTAKBANK | LONG | -431.43 |
+| 2026-04-13 | MARUTI | SHORT | 421.43 |
+| 2026-04-13 | HDFCBANK | SHORT | -589.36 |
+| 2026-04-13 | TCS | SHORT | 88.69 |
+| 2026-04-13 | LT | SHORT | -950.34 |
+| 2026-04-15 | ICICIBANK | SHORT | 421.43 |
+| 2026-04-16 | BAJFINANCE | SHORT | 421.43 |
+| 2026-04-16 | SBIN | SHORT | 421.43 |
+| 2026-04-16 | RELIANCE | SHORT | 48.02 |
+| 2026-04-16 | HCLTECH | SHORT | 421.43 |
+| 2026-04-17 | LT | SHORT | 421.43 |
