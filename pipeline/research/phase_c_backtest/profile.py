@@ -47,6 +47,8 @@ def train_profile(
     result: dict[str, dict[str, dict]] = {}
 
     for symbol, bars in symbol_bars.items():
+        if bars.empty:
+            continue
         df = _next_day_returns(bars)
         df = df[df["date"] >= start_ts].copy()
         df = df.dropna(subset=["next_ret"])
