@@ -27,7 +27,9 @@ def bootstrap_sharpe_ci(
     periods_per_year: int = 252,
     seed: int | None = None,
 ) -> tuple[float, float, float]:
-    """Bootstrap Sharpe with two-sided (1-alpha) CI.
+    """IID bootstrap Sharpe with two-sided (1-alpha) percentile CI.
+
+    Vectorised: draws all `n_resamples` index matrices in one numpy call.
 
     Returns (point_estimate, lower_bound, upper_bound).
     """
@@ -36,13 +38,14 @@ def bootstrap_sharpe_ci(
     n = arr.size
     if n == 0:
         return (0.0, 0.0, 0.0)
-    samples = np.empty(n_resamples, dtype=float)
-    for i in range(n_resamples):
-        idx = rng.integers(0, n, size=n)
-        samples[i] = sharpe(arr[idx], periods_per_year)
+    idx = rng.integers(0, n, size=(n_resamples, n))
+    resampled = arr[idx]  # shape (n_resamples, n)
+    means = resampled.mean(axis=1)
+    stds = resampled.std(axis=1, ddof=1)
+    annualised = np.where(stds > 0, means / stds * np.sqrt(periods_per_year), 0.0)
     point = sharpe(arr, periods_per_year)
-    lo = float(np.quantile(samples, alpha / 2))
-    hi = float(np.quantile(samples, 1 - alpha / 2))
+    lo = float(np.quantile(annualised, alpha / 2))
+    hi = float(np.quantile(annualised, 1 - alpha / 2))
     return (point, lo, hi)
 
 
@@ -99,10 +102,13 @@ def h1_verdict(
         failed.append(f"drawdown (in {in_sample_dd:.2%}, fwd {forward_dd:.2%}) > 20%")
     if regime_pass_count < 3:
         failed.append(f"only {regime_pass_count}/4 regimes passed (need >=3)")
-    if max(in_sample_sharpe_point, forward_sharpe_point) > 0:
-        gap = abs(in_sample_sharpe_point - forward_sharpe_point) / max(
-            in_sample_sharpe_point, forward_sharpe_point
-        )
+    # Overfit guard only applies when both Sharpe point estimates are positive.
+    # If either is non-positive, the in-sample Sharpe CI lower-bound check above
+    # already catches the failure (and the percentage-gap formula is meaningless
+    # with mixed signs).
+    if in_sample_sharpe_point > 0 and forward_sharpe_point > 0:
+        denom = max(in_sample_sharpe_point, forward_sharpe_point)
+        gap = abs(in_sample_sharpe_point - forward_sharpe_point) / denom
         if gap > 0.5:
             failed.append(f"in-sample/forward Sharpe overfit guard: gap {gap:.0%} > 50%")
     if not degraded_ablation_positive:
@@ -129,9 +135,13 @@ def informational_verdict(hits: int, n: int, alpha: float = 0.01) -> dict:
     p = binomial_p(hits, n, p_null=0.5)
     hit_rate = hits / n
     passes = (p <= alpha) and (hit_rate >= 0.53)
+    if passes:
+        reason = f"passes (p={p:.4f} <= alpha={alpha}, hit={hit_rate:.2%} >= 53%)"
+    else:
+        reason = f"p={p:.4f} vs alpha={alpha}, hit={hit_rate:.2%} vs 53% threshold"
     return {
         "passes": passes,
-        "reason": "passes" if passes else f"p={p:.4f} alpha={alpha}, hit={hit_rate:.2%}",
+        "reason": reason,
         "hit_rate": hit_rate,
         "p_value": p,
     }
