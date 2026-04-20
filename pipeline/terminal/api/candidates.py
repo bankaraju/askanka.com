@@ -1,5 +1,6 @@
 """GET /api/candidates — composed tradeable_candidates[] + signals[]."""
 import json
+import sys
 from pathlib import Path
 from fastapi import APIRouter
 
@@ -33,7 +34,7 @@ def _build_static_spreads(today_regime: dict) -> list:
             "long_legs": list(stats.get("long_legs") or []),
             "short_legs": list(stats.get("short_legs") or []),
             "conviction": stats.get("conviction", "NONE"),
-            "score": stats.get("score", 0),
+            "score": stats.get("best_win", 0),
             "horizon_days": stats.get("best_period", 5),
             "horizon_basis": "mean_reversion",
             "sizing_basis": None,
@@ -52,7 +53,7 @@ def _build_dynamic_pairs() -> list:
     for p in pairs:
         if not isinstance(p, dict) or not p.get("name"):
             continue
-        p.setdefault("source", "dynamic_pair_engine")
+        p = {**p, "source": p.get("source", "dynamic_pair_engine")}
         out.append(p)
     return out
 
@@ -82,14 +83,9 @@ def _build_regime_picks(today_recs: dict) -> list:
 
 
 def _build_ta_signals() -> list:
+    from pipeline.terminal.api import scanner as scanner_mod
     out = []
-    if not _FINGERPRINTS_DIR.exists():
-        return out
-    for f in _FINGERPRINTS_DIR.glob("*.json"):
-        try:
-            raw = json.loads(f.read_text(encoding="utf-8"))
-        except Exception:
-            continue
+    for raw in scanner_mod._load_fingerprints():
         ticker = raw.get("symbol")
         if not ticker:
             continue
@@ -118,7 +114,7 @@ def _build_correlation_break_signals() -> list:
         raw = raw.get("breaks", [])
     out = []
     for b in raw:
-        ticker = b.get("ticker")
+        ticker = b.get("ticker") or b.get("symbol")
         if not ticker:
             continue
         out.append({
@@ -130,6 +126,8 @@ def _build_correlation_break_signals() -> list:
             "context": {
                 "z_score": b.get("z_score"),
                 "oi_confirmation": b.get("oi_confirmation"),
+                "action": b.get("action"),
+                "regime": b.get("regime"),
             },
             "suggests_pair_with": None,
         })
@@ -151,4 +149,5 @@ def candidates():
             + _build_correlation_break_signals()
         ),
         "regime_zone": today_regime.get("regime"),
+        "updated_at": today_regime.get("timestamp"),
     }

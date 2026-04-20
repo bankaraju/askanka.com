@@ -1,5 +1,6 @@
 """GET /api/scanner — filterable TA pattern scanner across all stocks."""
 import json
+import sys
 import time
 from pathlib import Path
 from fastapi import APIRouter, Query
@@ -25,7 +26,8 @@ def _load_fingerprints() -> list[dict]:
         try:
             raw = json.loads(f.read_text(encoding="utf-8"))
             stocks.append(raw)
-        except Exception:
+        except Exception as exc:
+            print(f"candidates: skipping corrupt fingerprint {f.name}: {exc}", file=sys.stderr)
             continue
     _cache["data"] = stocks
     _cache["ts"] = now

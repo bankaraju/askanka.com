@@ -7,9 +7,11 @@ from fastapi.testclient import TestClient
 @pytest.fixture
 def mock_candidates(tmp_path, monkeypatch):
     import pipeline.terminal.api.candidates as cand_mod
+    import pipeline.terminal.api.scanner as scanner_mod
 
     today_regime = {
         "regime": "NEUTRAL",
+        "timestamp": "2026-04-20T10:14:36.721327+05:30",
         "eligible_spreads": {
             "Pharma vs Banks": {
                 "best_win": 70, "best_period": 5,
@@ -17,7 +19,6 @@ def mock_candidates(tmp_path, monkeypatch):
                 "long_legs": ["SUNPHARMA", "DRREDDY"],
                 "short_legs": ["HDFCBANK", "ICICIBANK"],
                 "conviction": "HIGH",
-                "score": 87,
             },
         },
     }
@@ -29,10 +30,14 @@ def mock_candidates(tmp_path, monkeypatch):
         ],
         "spreads": [],
     }
-    correlation_breaks = [
-        {"ticker": "TATAMOTORS", "z_score": -2.3,
-         "classification": "CONFIRMED_WARNING", "oi_confirmation": "yes"},
-    ]
+    # Use "symbol" key — matching production correlation_breaks.json shape
+    correlation_breaks = {
+        "breaks": [
+            {"symbol": "TATAMOTORS", "z_score": -2.3,
+             "classification": "CONFIRMED_WARNING", "oi_confirmation": "yes",
+             "action": "SHORT", "regime": "CAUTION"},
+        ]
+    }
     fingerprints_dir = tmp_path / "ta_fingerprints"
     fingerprints_dir.mkdir()
     (fingerprints_dir / "APLAPOLLO.json").write_text(json.dumps({
@@ -54,7 +59,9 @@ def mock_candidates(tmp_path, monkeypatch):
     monkeypatch.setattr(cand_mod, "_TODAY_REGIME_FILE", rfile)
     monkeypatch.setattr(cand_mod, "_RECOMMENDATIONS_FILE", recfile)
     monkeypatch.setattr(cand_mod, "_BREAKS_FILE", breaksfile)
-    monkeypatch.setattr(cand_mod, "_FINGERPRINTS_DIR", fingerprints_dir)
+    # Fix 5: monkeypatch scanner's _FINGERPRINTS_DIR + clear cache so _load_fingerprints re-reads
+    monkeypatch.setattr(scanner_mod, "_FINGERPRINTS_DIR", fingerprints_dir)
+    scanner_mod._cache.clear()
 
 
 def test_candidates_returns_dual_arrays(mock_candidates):
@@ -62,6 +69,7 @@ def test_candidates_returns_dual_arrays(mock_candidates):
     data = TestClient(app).get("/api/candidates").json()
     assert "tradeable_candidates" in data
     assert "signals" in data
+    assert "updated_at" in data
 
 
 def test_candidates_includes_static_spread(mock_candidates):
@@ -74,7 +82,7 @@ def test_candidates_includes_static_spread(mock_candidates):
     assert c["long_legs"] == ["SUNPHARMA", "DRREDDY"]
     assert c["short_legs"] == ["HDFCBANK", "ICICIBANK"]
     assert c["conviction"] == "HIGH"
-    assert c["score"] == 87
+    assert c["score"] == 70  # Fix 2: score comes from best_win
     assert c["horizon_basis"] == "mean_reversion"
     assert c["sizing_basis"] is None
 
@@ -104,14 +112,20 @@ def test_candidates_signals_includes_correlation_break(mock_candidates):
     breaks = [s for s in data["signals"] if s["source"] == "correlation_break"]
     assert len(breaks) == 1
     assert breaks[0]["ticker"] == "TATAMOTORS"
+    # Fix 1 regression: verify z_score + new action/regime fields are present
+    assert breaks[0]["context"]["z_score"] == -2.3
+    assert breaks[0]["context"]["action"] == "SHORT"
+    assert breaks[0]["context"]["regime"] == "CAUTION"
 
 
 def test_candidates_missing_files_returns_empty_arrays(tmp_path, monkeypatch):
     import pipeline.terminal.api.candidates as cand_mod
+    import pipeline.terminal.api.scanner as scanner_mod
     monkeypatch.setattr(cand_mod, "_TODAY_REGIME_FILE", tmp_path / "nope1.json")
     monkeypatch.setattr(cand_mod, "_RECOMMENDATIONS_FILE", tmp_path / "nope2.json")
     monkeypatch.setattr(cand_mod, "_BREAKS_FILE", tmp_path / "nope3.json")
-    monkeypatch.setattr(cand_mod, "_FINGERPRINTS_DIR", tmp_path / "nope_dir")
+    monkeypatch.setattr(scanner_mod, "_FINGERPRINTS_DIR", tmp_path / "nope_dir")
+    scanner_mod._cache.clear()
     from pipeline.terminal.app import app
     data = TestClient(app).get("/api/candidates").json()
     assert data["tradeable_candidates"] == []
