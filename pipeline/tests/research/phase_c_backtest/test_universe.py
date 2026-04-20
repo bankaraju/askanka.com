@@ -36,3 +36,32 @@ def test_universe_raises_with_clear_message_on_download_failure(tmp_path, monkey
         with pytest.raises(universe.UniverseUnavailable) as exc:
             universe.universe_for_date("2026-04-15")
         assert "2026-04" in str(exc.value)
+
+
+def test_parse_symbols_filters_underlying_and_symbol_rows():
+    csv_text = """SYMBOL,UNDERLYING,2026-APR
+UNDERLYING,UNDERLYING,250
+RELIANCE,RELIANCE,250
+SYMBOL,extra,extra
+TCS,TCS,150
+"""
+    syms = universe._parse_symbols(csv_text)
+    assert syms == {"RELIANCE", "TCS"}
+    assert "UNDERLYING" not in syms
+    assert "SYMBOL" not in syms
+
+
+def test_universe_raises_when_csv_has_no_symbols(tmp_path, monkeypatch):
+    monkeypatch.setattr(universe, "_UNIVERSE_DIR", tmp_path)
+    only_header = "SYMBOL,UNDERLYING,2026-APR\n"
+    with patch("pipeline.research.phase_c_backtest.universe._download_mktlots_csv", return_value=only_header):
+        with pytest.raises(universe.UniverseUnavailable, match="returned empty"):
+            universe.universe_for_date("2026-04-15")
+
+
+def test_month_key_validates_input():
+    with pytest.raises(ValueError, match="YYYY-MM-DD"):
+        universe._month_key("bad")
+    with pytest.raises(ValueError, match="YYYY-MM-DD"):
+        universe._month_key("2026/04/15")  # wrong separator
+    assert universe._month_key("2026-04-15") == "2026-04"
