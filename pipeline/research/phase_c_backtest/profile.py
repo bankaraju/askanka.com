@@ -48,8 +48,14 @@ def train_profile(
 
     for symbol, bars in symbol_bars.items():
         df = _next_day_returns(bars)
-        df = df[(df["date"] >= start_ts) & (df["date"] < cutoff_ts)].copy()
+        df = df[df["date"] >= start_ts].copy()
         df = df.dropna(subset=["next_ret"])
+        # Strict no-lookahead: drop the last bar in window because its next_ret
+        # would be computed from the close on/after cutoff_date. Filtering on
+        # the t+1 date (rather than `date < cutoff - 1 BD`) is robust to
+        # weekend/holiday calendar quirks.
+        df["next_date"] = df["date"].shift(-1)
+        df = df[df["next_date"] < cutoff_ts]
         df["regime"] = df["date"].dt.strftime("%Y-%m-%d").map(regime_by_date)
         df = df.dropna(subset=["regime"])
 
@@ -82,7 +88,11 @@ def train_and_cache(
     """Train and write to phase_a_profiles/profile_<cutoff>.json. Cached."""
     cache = Path(_PROFILES_DIR) / f"profile_{cutoff_date}.json"
     if cache.is_file():
-        return json.loads(cache.read_text(encoding="utf-8"))
+        try:
+            return json.loads(cache.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            log.warning("corrupt profile cache, re-training %s: %s", cache.name, exc)
+            cache.unlink(missing_ok=True)
 
     prof = train_profile(symbol_bars, regime_by_date, cutoff_date, lookback_years)
     cache.parent.mkdir(parents=True, exist_ok=True)
@@ -96,6 +106,16 @@ def cutoff_dates_for_walk_forward(
     end_date: str,
     refit_months: int = 3,
 ) -> list[str]:
-    """Quarterly cutoff dates within [start, end] (each is the first business day of a quarter-month)."""
+    """Walk-forward refit cutoffs at month-start cadence.
+
+    Returns the first calendar day of every ``refit_months``-th month within
+    ``[start_date, end_date]`` (inclusive). Dates not on a month-start are
+    snapped forward to the next month-start (pandas ``MS`` freq behaviour),
+    so e.g. ``start_date="2024-01-15"`` yields cutoffs beginning at
+    ``"2024-02-01"``.
+
+    Returned dates may fall on weekends/holidays — the caller is responsible
+    for snapping to a trading day if needed.
+    """
     starts = pd.date_range(start=start_date, end=end_date, freq=f"{refit_months}MS")
     return [d.strftime("%Y-%m-%d") for d in starts]
