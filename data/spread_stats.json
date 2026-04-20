@@ -2,7 +2,7 @@
   "Upstream vs Downstream": {
     "name": "Upstream vs Downstream",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:30:50.448092+05:30",
+    "computed_at": "2026-04-20T11:46:16.199408+05:30",
     "daily_mean": 0.6081,
     "daily_std": 3.1132,
     "daily_min": -9.5994,
@@ -25,7 +25,7 @@
   "Defence vs IT": {
     "name": "Defence vs IT",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:00.025402+05:30",
+    "computed_at": "2026-04-20T11:46:24.996448+05:30",
     "daily_mean": 0.2414,
     "daily_std": 2.1021,
     "daily_min": -4.5931,
@@ -48,7 +48,7 @@
   "Reliance vs OMCs": {
     "name": "Reliance vs OMCs",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:04.951788+05:30",
+    "computed_at": "2026-04-20T11:46:29.410327+05:30",
     "daily_mean": 0.4383,
     "daily_std": 2.5542,
     "daily_min": -3.7062,
@@ -71,7 +71,7 @@
   "Coal vs OMCs": {
     "name": "Coal vs OMCs",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:09.946074+05:30",
+    "computed_at": "2026-04-20T11:46:33.815599+05:30",
     "daily_mean": 0.6335,
     "daily_std": 3.3381,
     "daily_min": -9.9874,
@@ -94,7 +94,7 @@
   "Pharma vs Cyclicals": {
     "name": "Pharma vs Cyclicals",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:16.273185+05:30",
+    "computed_at": "2026-04-20T11:46:39.734203+05:30",
     "daily_mean": 0.0198,
     "daily_std": 2.7043,
     "daily_min": -7.899,
@@ -117,7 +117,7 @@
   "PSU Commodity vs Banks": {
     "name": "PSU Commodity vs Banks",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:22.491232+05:30",
+    "computed_at": "2026-04-20T11:46:45.645801+05:30",
     "daily_mean": 0.2996,
     "daily_std": 2.5903,
     "daily_min": -7.1622,
@@ -140,7 +140,7 @@
   "Defence vs Auto": {
     "name": "Defence vs Auto",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:28.933722+05:30",
+    "computed_at": "2026-04-20T11:46:51.395041+05:30",
     "daily_mean": 0.4658,
     "daily_std": 2.05,
     "daily_min": -5.275,
@@ -163,7 +163,7 @@
   "PSU Energy vs Private": {
     "name": "PSU Energy vs Private",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:36.976714+05:30",
+    "computed_at": "2026-04-20T11:46:58.583232+05:30",
     "daily_mean": 0.0747,
     "daily_std": 2.6296,
     "daily_min": -8.6625,
@@ -186,7 +186,7 @@
   "Pharma vs Banks": {
     "name": "Pharma vs Banks",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:43.350523+05:30",
+    "computed_at": "2026-04-20T11:47:04.350773+05:30",
     "daily_mean": 0.1022,
     "daily_std": 2.1075,
     "daily_min": -5.7721,
@@ -209,7 +209,7 @@
   "Banks vs IT": {
     "name": "Banks vs IT",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:51.110963+05:30",
+    "computed_at": "2026-04-20T11:47:11.598010+05:30",
     "daily_mean": -0.2834,
     "daily_std": 2.0457,
     "daily_min": -3.1185,
@@ -255,7 +255,7 @@
   "EV Plays vs ICE Auto": {
     "name": "EV Plays vs ICE Auto",
     "n_days": 33,
-    "computed_at": "2026-04-20T11:31:58.731320+05:30",
+    "computed_at": "2026-04-20T11:47:18.862964+05:30",
     "daily_mean": 0.1514,
     "daily_std": 1.2983,
     "daily_min": -2.0685,
