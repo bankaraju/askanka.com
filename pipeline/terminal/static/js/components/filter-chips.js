@@ -12,6 +12,13 @@
 // State helper:
 //   getState() → { source: ['static_config'], conviction: ['HIGH'] }
 
+function _esc(s) {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
 export function getState() {
   const hash = window.location.hash.slice(1);
   if (!hash) return {};
@@ -44,12 +51,12 @@ export function render(container, config, onChange) {
   function chipHtml(groupKey, opt) {
     const selected = state[groupKey].includes(opt);
     return `<button class="filter-chip ${selected ? 'filter-chip--active' : ''}"
-      data-group="${groupKey}" data-val="${opt}">${opt}</button>`;
+      data-group="${_esc(groupKey)}" data-val="${_esc(opt)}">${_esc(opt)}</button>`;
   }
 
   container.innerHTML = config.groups.map(g => `
     <div class="filter-chip-group">
-      <span class="filter-chip-label">${g.label}</span>
+      <span class="filter-chip-label">${_esc(g.label)}</span>
       ${g.options.map(o => chipHtml(g.key, o)).join('')}
     </div>`).join('');
 
@@ -63,9 +70,9 @@ export function render(container, config, onChange) {
       } else {
         state[group] = [...current, val];
       }
-      setState(state);
+      setState({ ...state });
       btn.classList.toggle('filter-chip--active');
-      onChange(state);
+      onChange({ ...state });
     });
   });
 }
