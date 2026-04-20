@@ -47,6 +47,39 @@ def test_classify_at_date_handles_missing_pcr_as_neutral():
     assert label in {"POSSIBLE_OPPORTUNITY", "OPPORTUNITY"}
 
 
+def test_classify_at_date_opposite_with_oi_anomaly_is_confirmed_warning():
+    # Expected +2%, actual -1% (opposite direction, magnitude > 30% of expected).
+    # PCR=0.5 -> BEARISH -> agrees with the BREAK direction (negative actual).
+    # oi_anomaly=True -> CONFIRMED_WARNING / EXIT.
+    profile = {"X": {"NEUTRAL": {"expected_return": 0.02, "std_return": 0.01, "n": 100}}}
+    label, action, z = classifier.classify_at_date(
+        symbol="X",
+        regime="NEUTRAL",
+        actual_return=-0.01,
+        profile=profile,
+        pcr=0.5,
+        oi_anomaly=True,
+    )
+    assert label == "CONFIRMED_WARNING"
+    assert action == "EXIT"
+
+
+def test_classify_at_date_lagging_with_oi_anomaly_is_warning():
+    # Expected +2%, actual +0.001 (lagging - same direction, |actual| < 30% of |expected|).
+    # PCR=1.2 -> MILD_BULL -> agrees with expected, BUT oi_anomaly=True -> WARNING / REDUCE.
+    profile = {"X": {"NEUTRAL": {"expected_return": 0.02, "std_return": 0.01, "n": 100}}}
+    label, action, z = classifier.classify_at_date(
+        symbol="X",
+        regime="NEUTRAL",
+        actual_return=0.001,
+        profile=profile,
+        pcr=1.2,
+        oi_anomaly=True,
+    )
+    assert label == "WARNING"
+    assert action == "REDUCE"
+
+
 def test_classify_universe_returns_one_label_per_symbol():
     profile = {
         "A": {"NEUTRAL": {"expected_return": 0.02, "std_return": 0.01, "n": 100}},

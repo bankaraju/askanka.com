@@ -9,7 +9,13 @@ from pipeline.autoresearch.reverse_regime_breaks import classify_break, classify
 
 
 def _z_score(actual: float, expected: float, std: float) -> float:
-    if std <= 0:
+    """Z-score with noise-floor guard.
+
+    Mirrors `reverse_regime_breaks.py:370` which uses `expected_std > 0.1` in
+    PERCENT space. Our profile stores returns in fractional space, so the
+    unit-equivalent threshold here is 0.001 (= 0.1% = 10 bps daily std).
+    """
+    if std <= 0.001:
         return 0.0
     return (actual - expected) / std
 
