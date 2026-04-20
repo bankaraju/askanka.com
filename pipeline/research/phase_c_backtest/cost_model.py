@@ -40,6 +40,8 @@ def round_trip_cost_inr(notional_inr: float, side: str, slippage_bps: float = 5.
     """
     if side not in ("LONG", "SHORT"):
         raise ValueError(f"side must be LONG or SHORT, got {side!r}")
+    # side is validated above but does not change the result: both LONG and SHORT
+    # round trips include exactly one BUY leg and one SELL leg.
     fixed = _leg_cost_inr(notional_inr, "BUY") + _leg_cost_inr(notional_inr, "SELL")
     slippage = notional_inr * (slippage_bps / 10_000.0)
     return fixed + slippage

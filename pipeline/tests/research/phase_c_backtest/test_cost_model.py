@@ -43,3 +43,8 @@ def test_apply_to_pnl_subtracts_cost():
     pnl_net = cost_model.apply_to_pnl(pnl_gross_inr=500, notional_inr=50000, side="LONG", slippage_bps=5.0)
     expected = pnl_gross - cost_model.round_trip_cost_inr(50000, "LONG", 5.0)
     assert pnl_net == pytest.approx(expected, abs=0.01)
+
+
+def test_invalid_side_raises():
+    with pytest.raises(ValueError, match="side must be LONG or SHORT"):
+        cost_model.round_trip_cost_inr(50000, "BUY", 5.0)
