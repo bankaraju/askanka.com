@@ -13,8 +13,8 @@ export function render(container, positions, regimeData) {
   const avgPnl = totalPnl / positions.length;
 
   const regimeFlipPct = -2.0;
-  const allTargetsPct = positions.reduce((s, p) => s + (p.target_pct || 0), 0);
-  const allStopsPct = positions.reduce((s, p) => s + (p.stop_pct || 0), 0);
+  const allTargetsPct = positions.reduce((s, p) => s + (p.target_pct ?? 0), 0);
+  const allStopsPct = positions.reduce((s, p) => s + (p.stop_pct ?? 0), 0);
 
   const cls = (v) => v >= 0 ? 'text-green' : 'text-red';
   const fmt = (v) => `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`;
