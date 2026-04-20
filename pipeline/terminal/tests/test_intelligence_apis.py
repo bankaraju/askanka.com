@@ -17,12 +17,13 @@ def mock_trust(tmp_path, monkeypatch):
     import pipeline.terminal.api.trust_scores as ts_mod
     trust = {"updated_at": "2026-04-18T12:00:00+05:30", "total_scored": 2,
              "stocks": [
-                 {"symbol": "HAL", "trust_grade": "A", "trust_score": 85, "thesis": "Strong defence play"},
-                 {"symbol": "TCS", "trust_grade": "B+", "trust_score": 72, "thesis": "IT bellwether"},
+                 {"symbol": "HAL", "sector_grade": "A", "composite_score": 85, "grade_reason": "Strong defence play"},
+                 {"symbol": "TCS", "sector_grade": "B+", "composite_score": 72, "grade_reason": "IT bellwether"},
              ]}
     f = tmp_path / "trust.json"
     f.write_text(json.dumps(trust))
-    monkeypatch.setattr(ts_mod, "_TRUST_FILE", f)
+    monkeypatch.setattr(ts_mod, "_V2_FILE", f)
+    monkeypatch.setattr(ts_mod, "_V1_FILE", f)
 
 
 @pytest.fixture
@@ -129,14 +130,14 @@ def test_trust_scores_returns_list(mock_trust):
 def test_trust_score_detail(mock_trust):
     from pipeline.terminal.app import app
     data = TestClient(app).get("/api/trust-scores/HAL").json()
-    assert data["trust_grade"] == "A"
-    assert data["trust_score"] == 85
+    assert data["sector_grade"] == "A"
+    assert data["composite_score"] == 85
 
 
 def test_trust_score_missing():
     from pipeline.terminal.app import app
     data = TestClient(app).get("/api/trust-scores/NONEXISTENT").json()
-    assert data["trust_grade"] == "?"
+    assert data["sector_grade"] == "?"
 
 
 def test_digest_returns_valid_schema(digest_files):
