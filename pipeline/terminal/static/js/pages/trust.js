@@ -64,22 +64,29 @@ export async function render(container) {
     let sortCol = 'composite_score';
     let sortDir = -1;
 
+    const STRING_COLS = new Set(['symbol', 'display_name', 'sector_grade', 'grade_reason']);
+
     const renderTable = () => {
-      const tickerFilter = (document.getElementById('trust-search')?.value || '').toUpperCase();
-      const sectorFilter = document.getElementById('trust-sector')?.value || '';
+      const tickerFilter = (container.querySelector('#trust-search')?.value || '').toUpperCase();
+      const sectorFilter = container.querySelector('#trust-sector')?.value || '';
       let filtered = stocks.filter(s => {
         const matchTicker = !tickerFilter || (s.symbol || '').toUpperCase().includes(tickerFilter);
         const matchSector = !sectorFilter || (s.sector || '') === sectorFilter;
         return matchTicker && matchSector;
       });
+      const isStringCol = STRING_COLS.has(sortCol);
       filtered = [...filtered].sort((a, b) => {
+        if (isStringCol) {
+          const av = a[sortCol] != null ? String(a[sortCol]) : '';
+          const bv = b[sortCol] != null ? String(b[sortCol]) : '';
+          return sortDir * av.localeCompare(bv);
+        }
         let av = a[sortCol], bv = b[sortCol];
         if (av == null) av = sortDir === -1 ? -Infinity : Infinity;
         if (bv == null) bv = sortDir === -1 ? -Infinity : Infinity;
-        if (typeof av === 'string') return sortDir * av.localeCompare(bv);
         return sortDir * (av - bv);
       });
-      document.getElementById('trust-count').textContent = `${filtered.length} / ${stocks.length} stocks`;
+      container.querySelector('#trust-count').textContent = `${filtered.length} / ${stocks.length} stocks`;
 
       const colDefs = [
         { key: 'symbol', label: 'Ticker' },
@@ -118,13 +125,13 @@ export async function render(container) {
         </tr>`;
       }).join('');
 
-      document.getElementById('trust-table-wrap').innerHTML = `
+      container.querySelector('#trust-table-wrap').innerHTML = `
         <table class="data-table">
           <thead><tr>${thHtml}</tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
 
-      document.querySelectorAll('#trust-table-wrap th.sortable').forEach(th => {
+      container.querySelectorAll('#trust-table-wrap th.sortable').forEach(th => {
         th.style.cursor = 'pointer';
         th.addEventListener('click', () => {
           const col = th.dataset.col;
@@ -135,8 +142,8 @@ export async function render(container) {
     };
 
     renderTable();
-    document.getElementById('trust-search').addEventListener('input', renderTable);
-    document.getElementById('trust-sector').addEventListener('change', renderTable);
+    container.querySelector('#trust-search').addEventListener('input', renderTable);
+    container.querySelector('#trust-sector').addEventListener('change', renderTable);
   } catch {
     container.innerHTML = '<div class="empty-state"><p>Failed to load trust scores</p></div>';
   }

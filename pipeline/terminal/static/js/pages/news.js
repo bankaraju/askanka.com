@@ -1,5 +1,19 @@
 import { get } from '../lib/api.js';
 
+function _esc(s) {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+// Whitelist for sentiment CSS class fragment — never interpolate raw values into class names
+const SENTIMENT_CLASS = {
+  bullish: 'blue', positive: 'blue',
+  bearish: 'red', negative: 'red', HIGH: 'red',
+  neutral: 'muted', MEDIUM: 'amber',
+};
+
 export async function render(container) {
   container.innerHTML = '<div class="skeleton skeleton--card"></div>';
   try {
@@ -14,14 +28,14 @@ export async function render(container) {
       const time = item.timestamp || item.date || '';
       const sentiment = item.sentiment || item.impact || '';
       const sentBadge = sentiment
-        ? `<span class="badge badge--${sentiment === 'HIGH' || sentiment === 'negative' ? 'red' : sentiment === 'MEDIUM' ? 'amber' : 'blue'}">${sentiment}</span>`
+        ? `<span class="badge badge--${SENTIMENT_CLASS[sentiment] || 'muted'}">${_esc(sentiment)}</span>`
         : '';
       return `<div style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border);">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-          <div style="font-size: 0.875rem;">${headline}</div>
+          <div style="font-size: 0.875rem;">${_esc(headline)}</div>
           ${sentBadge}
         </div>
-        <div class="text-muted" style="font-size: 0.6875rem; margin-top: 2px;">${time}</div>
+        <div class="text-muted" style="font-size: 0.6875rem; margin-top: 2px;">${_esc(time)}</div>
       </div>`;
     }).join('');
     container.innerHTML = `<div class="card">${newsHtml}</div>`;

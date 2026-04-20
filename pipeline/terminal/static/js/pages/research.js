@@ -15,11 +15,12 @@ function _istHour() {
 }
 
 function _isStale(isoTimestamp) {
-  if (!isoTimestamp) return false;
+  if (!isoTimestamp) return true;
   const hours = _istHour();
   const inMarket = hours >= 9 && hours < 16;
   if (!inMarket) return false;
   const ageMinutes = (Date.now() - new Date(isoTimestamp)) / 60000;
+  if (Number.isNaN(ageMinutes)) return true;
   return ageMinutes > 30;
 }
 
@@ -50,9 +51,9 @@ function _regimeCard(r) {
     <div class="digest-row"><span class="digest-row__label">Source</span>
       <span class="digest-row__value">${_esc(r.regime_source || '--')}</span></div>
     <div class="digest-row"><span class="digest-row__label">FII Net</span>
-      <span class="digest-row__value ${r.fii_net >= 0 ? 'text-green' : 'text-red'}">₹${_fmt(r.fii_net)}cr</span></div>
+      <span class="digest-row__value ${r.fii_net != null ? (r.fii_net >= 0 ? 'text-green' : 'text-red') : 'text-muted'}">₹${_fmt(r.fii_net)}cr</span></div>
     <div class="digest-row"><span class="digest-row__label">DII Net</span>
-      <span class="digest-row__value ${r.dii_net >= 0 ? 'text-green' : 'text-red'}">₹${_fmt(r.dii_net)}cr</span></div>
+      <span class="digest-row__value ${r.dii_net != null ? (r.dii_net >= 0 ? 'text-green' : 'text-red') : 'text-muted'}">₹${_fmt(r.dii_net)}cr</span></div>
     <div class="digest-row"><span class="digest-row__label">MSI Score</span>
       <span class="digest-row__value">${r.msi_score != null ? r.msi_score.toFixed(2) : '--'}</span></div>
     <div class="digest-row"><span class="digest-row__label">Stability</span>
@@ -102,17 +103,20 @@ function _breaksCard(breaks) {
     </div>`;
   }
   const rows = breaks.map(b => {
-    const dir = b.z_score < 0 ? '▼' : '▲';
-    const cls = b.classification === 'CONFIRMED_WARNING' ? 'text-red'
-      : b.classification === 'CONFIRMED_OPPORTUNITY' ? 'text-green' : 'text-secondary';
+    const zScore = b.z_score != null ? b.z_score : null;
+    const dir = zScore == null ? '' : zScore < 0 ? '▼' : '▲';
+    const zStr = zScore != null ? `${zScore > 0 ? '+' : ''}${zScore.toFixed(1)}σ ${dir}` : '--';
+    const classification = b.classification || '';
+    const cls = classification === 'CONFIRMED_WARNING' ? 'text-red'
+      : classification === 'CONFIRMED_OPPORTUNITY' ? 'text-green' : 'text-secondary';
     return `<div class="digest-break-row">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span class="mono" style="font-size: 0.875rem;">${_esc(b.ticker)}</span>
-        <span class="mono ${cls}">${b.z_score > 0 ? '+' : ''}${b.z_score.toFixed(1)}σ ${dir}</span>
+        <span class="mono ${cls}">${zStr}</span>
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
         <span>OI: ${_esc(b.oi_confirmation)}</span>
-        <span class="badge ${b.classification === 'CONFIRMED_WARNING' ? 'badge--red' : b.classification === 'CONFIRMED_OPPORTUNITY' ? 'badge--green' : 'badge--muted'}">${_esc(b.classification.replace(/_/g, ' '))}</span>
+        <span class="badge ${classification === 'CONFIRMED_WARNING' ? 'badge--red' : classification === 'CONFIRMED_OPPORTUNITY' ? 'badge--green' : 'badge--muted'}">${_esc(classification.replace(/_/g, ' '))}</span>
       </div>
     </div>`;
   }).join('');
@@ -131,18 +135,22 @@ function _backtestCard(backtest) {
     </div>`;
   }
   const rows = backtest.map(b => {
-    const statusCls = b.status === 'WITHIN_CI' ? 'badge--green'
-      : b.status === 'EDGE_CI' ? 'badge--amber' : 'badge--red';
-    const winPct = (b.win_rate * 100).toFixed(0);
+    const status = b.status || '';
+    const statusCls = status === 'WITHIN_CI' ? 'badge--green'
+      : status === 'EDGE_CI' ? 'badge--amber' : 'badge--red';
+    const winPct = b.win_rate != null ? (b.win_rate * 100).toFixed(0) + '%' : '--';
+    const avgStr = b.avg_return != null
+      ? `${b.avg_return >= 0 ? '+' : ''}${(b.avg_return * 100).toFixed(2)}%`
+      : '--';
     return `<div style="padding: var(--spacing-sm) 0; border-bottom: 1px solid rgba(30, 41, 59, 0.3);">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.875rem;">${_esc(b.spread)}</span>
-        <span class="badge ${statusCls}">${_esc(b.status.replace(/_/g, ' '))}</span>
+        <span class="badge ${statusCls}">${_esc(status.replace(/_/g, ' '))}</span>
       </div>
       <div style="display: flex; gap: var(--spacing-lg); font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
-        <span>Win: <span class="mono">${winPct}%</span></span>
+        <span>Win: <span class="mono">${winPct}</span></span>
         <span>Period: <span class="mono">${_esc(b.best_period)}</span></span>
-        <span>Avg: <span class="mono">${b.avg_return >= 0 ? '+' : ''}${(b.avg_return * 100).toFixed(2)}%</span></span>
+        <span>Avg: <span class="mono">${avgStr}</span></span>
       </div>
     </div>`;
   }).join('');
