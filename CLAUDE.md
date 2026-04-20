@@ -48,6 +48,7 @@ The system runs automatically via Windows Scheduled Tasks:
 - 09:00 — AnkaRefreshKite: refresh Zerodha broker session (CRITICAL)
 - 09:16 — AnkaOpenCapture: capture today's opening prices (CRITICAL)
 - 09:25 — AnkaMorningScan: regime + technicals + OI + news + spread intelligence + Phase B ranker (CRITICAL)
+- 09:25 — AnkaPhaseCShadowOpen: F3 live shadow ledger — OPEN rows for today's Phase C OPPORTUNITY signals (info)
 
 **Market Hours (09:30-15:30, every 15 min):**
 - AnkaIntraday####: re-scan technicals, OI, news, spreads, correlation breaks
@@ -55,6 +56,9 @@ The system runs automatically via Windows Scheduled Tasks:
 - AnkaCorrelationBreaks: Phase C regime-stock divergence detection
 - AnkaWatchdogIntraday: critical task freshness check
 - AnkaTrustIntra####: OPUS ANKA model portfolio intraday monitor
+- 14:30 — AnkaPhaseCShadowClose: F3 live shadow ledger — mechanical TIME_STOP close at live LTP (info)
+
+**F3 Phase C live shadow:** purpose is forward-test the H1 OPPORTUNITY hypothesis from `docs/research/phase-c-validation/`. Records paper trades at Kite LTP, flattens at 14:30. After ~100 forward trades (≈3–5 months) the binomial test becomes statistically decisive.
 
 **Post-Close:**
 - 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL); also runs `oi_scanner --archive-only` and `website_exporter.py`

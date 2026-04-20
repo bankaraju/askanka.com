@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-04-18",
+  "updated": "2026-04-21",
   "tasks": [
     {
       "task_name": "AnkaCorrelationBreaks",
@@ -836,6 +836,26 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "Sunday 00:00 IST. unified_backtest.py \u2014 777-day historical replay. Golden Goose Plan 2."
+    },
+    {
+      "task_name": "AnkaPhaseCShadowOpen",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/research/phase_c/live_paper_ledger.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "09:25 IST daily. phase_c_shadow_open.bat \u2014 F3 live shadow ledger: filters today's OPPORTUNITY Phase C signals, records OPEN rows at live Kite LTP. Purpose: forward-test the H1 OPPORTUNITY hypothesis (see docs/research/phase-c-validation/)."
+    },
+    {
+      "task_name": "AnkaPhaseCShadowClose",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/research/phase_c/live_paper_ledger.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "14:30 IST daily. phase_c_shadow_close.bat \u2014 mechanical time-stop: transitions all OPEN rows to CLOSED at live Kite LTP. Realized net P&L via cost_model (\u20b950k notional, 5 bps slippage)."
     }
   ]
 }

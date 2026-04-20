@@ -1,0 +1,191 @@
+"""Phase C F3 live shadow ledger driver.
+
+Two subcommands:
+
+    python -m pipeline.phase_c_shadow open
+        Read pipeline/data/correlation_breaks.json, filter OPPORTUNITY
+        classifications, fetch live LTP via Kite, append OPEN rows to
+        the live_paper ledger at
+        pipeline/data/research/phase_c/live_paper_ledger.json.
+        Idempotent: re-running in the same session is a no-op.
+
+    python -m pipeline.phase_c_shadow close
+        Find today's OPEN ledger entries, fetch live LTP for each,
+        transition OPEN -> CLOSED with a TIME_STOP reason (14:30 IST).
+
+Scheduled from:
+    pipeline/scripts/phase_c_shadow_open.bat   (daily 09:25 IST)
+    pipeline/scripts/phase_c_shadow_close.bat  (daily 14:30 IST)
+
+Rationale: the backtest (docs/research/phase-c-validation/) established
+that the H1 OPPORTUNITY claim cannot be ruled in from 21 forward trades.
+This script is the six-month accumulation leg that will grow that
+sample to 100+ trades, at which point the binomial test becomes
+statistically decisive at the Bonferroni-corrected alpha.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+from datetime import date as _date
+from pathlib import Path
+
+import pandas as pd
+
+log = logging.getLogger(__name__)
+
+_PIPELINE_DIR = Path(__file__).resolve().parent
+_BREAKS_PATH = _PIPELINE_DIR / "data" / "correlation_breaks.json"
+
+
+def _setup_logging() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    )
+
+
+def _load_breaks() -> dict:
+    """Return parsed correlation_breaks.json or an empty dict if absent."""
+    if not _BREAKS_PATH.is_file():
+        log.warning("correlation_breaks.json not found at %s", _BREAKS_PATH)
+        return {}
+    try:
+        return json.loads(_BREAKS_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        log.error("correlation_breaks.json is not valid JSON: %s", exc)
+        return {}
+
+
+def _filter_opportunity(breaks: list[dict]) -> list[dict]:
+    """Return only rows whose classification is OPPORTUNITY (the full label)."""
+    return [b for b in breaks if b.get("classification") == "OPPORTUNITY"]
+
+
+def _side_from_expected(expected_return: float) -> str:
+    """Backtest convention: LONG if expected_return >= 0, else SHORT."""
+    return "LONG" if float(expected_return) >= 0 else "SHORT"
+
+
+def _fetch_ltp(symbols: list[str]) -> dict[str, float]:
+    """Wrapper around pipeline.kite_client.fetch_ltp (lazy import).
+
+    Lazy import keeps unit tests from triggering Kite auth on collection.
+    """
+    if not symbols:
+        return {}
+    from pipeline.kite_client import fetch_ltp
+    return fetch_ltp(symbols)
+
+
+def build_open_signals(breaks_doc: dict, ltp: dict[str, float]) -> pd.DataFrame:
+    """Convert the breaks doc + LTP snapshot into the live_paper signals schema.
+
+    Args:
+        breaks_doc: parsed correlation_breaks.json — {date, scan_time, breaks: [...]}
+        ltp: {symbol: live_price}; symbols missing from this dict are skipped.
+
+    Returns:
+        DataFrame with columns:
+            date, signal_time, symbol, side, z_score, stop_pct, target_pct, entry_px
+        Empty DataFrame if no OPPORTUNITY entries have both a price and a
+        well-formed expected_return.
+    """
+    breaks = breaks_doc.get("breaks", []) or []
+    date_str = breaks_doc.get("date") or _date.today().isoformat()
+    scan_time = breaks_doc.get("scan_time") or f"{date_str} 09:25:00"
+    opps = _filter_opportunity(breaks)
+    rows: list[dict] = []
+    for b in opps:
+        sym = b.get("symbol")
+        if not sym:
+            continue
+        if sym not in ltp:
+            log.warning("no LTP for %s — skipping", sym)
+            continue
+        expected = b.get("expected_return")
+        if expected is None:
+            log.warning("no expected_return on break for %s — skipping", sym)
+            continue
+        rows.append({
+            "date": date_str,
+            "signal_time": scan_time,
+            "symbol": sym,
+            "side": _side_from_expected(expected),
+            "z_score": float(b.get("z_score", 0.0)),
+            "stop_pct": 0.02,
+            "target_pct": 0.01,
+            "entry_px": float(ltp[sym]),
+        })
+    return pd.DataFrame(rows)
+
+
+def cmd_open() -> int:
+    """Append OPEN rows to the live_paper ledger. Returns process exit code."""
+    from pipeline.research.phase_c_backtest import live_paper
+    doc = _load_breaks()
+    if not doc:
+        log.info("no breaks doc; nothing to open")
+        return 0
+    breaks = doc.get("breaks", []) or []
+    opps = _filter_opportunity(breaks)
+    if not opps:
+        log.info("no OPPORTUNITY signals in today's breaks (%d total breaks)", len(breaks))
+        return 0
+    syms = [b["symbol"] for b in opps if "symbol" in b]
+    log.info("fetching LTP for %d OPPORTUNITY symbols", len(syms))
+    ltp = _fetch_ltp(syms)
+    signals = build_open_signals(doc, ltp)
+    if signals.empty:
+        log.info("no signals had both a Kite LTP and a valid expected_return; nothing to record")
+        return 0
+    n = live_paper.record_opens(signals)
+    log.info("live_paper ledger: %d new OPEN entries recorded", n)
+    return 0
+
+
+def cmd_close(date_override: str | None = None) -> int:
+    """Close today's OPEN rows at live LTP (14:30 IST mechanical)."""
+    from pipeline.research.phase_c_backtest import live_paper
+    date_str = date_override or _date.today().isoformat()
+    ledger = live_paper._load()  # noqa: SLF001 — intentional reuse
+    open_syms = sorted({e["symbol"] for e in ledger
+                        if e["date"] == date_str and e["status"] == "OPEN"})
+    if not open_syms:
+        log.info("no OPEN entries for %s; nothing to close", date_str)
+        return 0
+    log.info("fetching LTP for %d OPEN symbols at 14:30", len(open_syms))
+    ltp = _fetch_ltp(open_syms)
+    if not ltp:
+        log.error("LTP fetch returned nothing; leaving ledger untouched")
+        return 1
+    n = live_paper.close_at_1430(date_str, ltp)
+    log.info("live_paper ledger: %d entries transitioned OPEN -> CLOSED", n)
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    _setup_logging()
+    parser = argparse.ArgumentParser(
+        description="Phase C F3 live shadow ledger driver",
+    )
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("open", help="Append OPEN rows for today's OPPORTUNITY signals")
+    p_close = sub.add_parser("close", help="Close today's OPEN rows at live LTP")
+    p_close.add_argument(
+        "--date",
+        default=None,
+        help="Override the trade date (YYYY-MM-DD). Defaults to today IST.",
+    )
+    args = parser.parse_args(argv)
+    if args.cmd == "open":
+        return cmd_open()
+    if args.cmd == "close":
+        return cmd_close(args.date)
+    parser.error(f"unknown cmd: {args.cmd}")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

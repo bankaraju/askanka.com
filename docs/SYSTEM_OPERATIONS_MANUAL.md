@@ -535,6 +535,7 @@ When the watchdog finds issues:
 | 09:00 | AnkaRefreshKite | Refresh Zerodha broker session | CRITICAL |
 | 09:16 | AnkaOpenCapture | Capture today's opening prices | CRITICAL |
 | 09:25 | AnkaMorningScan | THE BIG ONE — regime + tech + OI + news + signals | CRITICAL |
+| 09:25 | AnkaPhaseCShadowOpen | F3 live shadow: record OPEN rows for today's OPPORTUNITY signals | info |
 
 ### Market Hours (09:30-15:30)
 
@@ -546,6 +547,7 @@ Every 15 minutes, two tasks run as a pair:
 | AnkaSignal#### | Score signals, apply gates, send Telegram alerts |
 | AnkaWatchdogIntraday | (every 15 min) Check critical task freshness |
 | AnkaCorrelationBreaks | (every 15 min) Phase C: detect regime-stock divergence |
+| AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) |
 
 That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
