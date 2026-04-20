@@ -169,9 +169,15 @@ Rules:
 1. Every market number you cite (oil, gold, indices, currencies, yields) must match
    the panel within ±2%.
 2. If a number you want to cite is NOT in the panel, OMIT it. Do not invent.
-3. Non-market figures (population %, retail prices ₹/liter, forecasts) are allowed
+3. Non-market figures (population %, retail prices ₹/liter) are allowed
    but should not contradict the panel direction.
-4. Articles whose numbers contradict the panel are REJECTED and not published.
+4. DO NOT make quantitative forecasts. Never write "could fall 5-10%", "may rise
+   by 8%", "outperforming by 3-5%", "potentially gaining 12%", or any range/point
+   prediction. Use qualitative language for predictions: "could weaken further",
+   "likely to underperform", "downside risk", "upside skew". Numbers are only for
+   what HAS happened (per the panel), never for what MIGHT happen.
+5. Articles whose numbers contradict the panel — or that contain quantitative
+   forecasts — are REJECTED and not published.
 """
     else:
         grounding_block = ""

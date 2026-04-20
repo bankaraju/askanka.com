@@ -7,6 +7,7 @@ Run after each signal cycle or on-demand:
     python website_exporter.py
 """
 
+import hashlib
 import json
 import os
 import subprocess
@@ -284,7 +285,11 @@ _CRYPTIC_NAMES = {
 
 
 def _cryptic_name(spread_name: str) -> str:
-    return _CRYPTIC_NAMES.get(spread_name, f"Strategy {abs(hash(spread_name)) % 900 + 100}")
+    if spread_name in _CRYPTIC_NAMES:
+        return _CRYPTIC_NAMES[spread_name]
+    # md5 for stable IDs across process restarts (Python's hash() is randomized).
+    digest = hashlib.md5(spread_name.encode("utf-8")).hexdigest()
+    return f"Strategy {int(digest[:8], 16) % 900 + 100}"
 
 
 def _refresh_trust(sig: dict, fresh_trust: dict) -> dict:

@@ -4,6 +4,18 @@ export function render(container, signals, positions) {
     return;
   }
 
+  function renderLegs(item) {
+    const longs = (item.long_legs || []).map(l => l.ticker);
+    const shorts = (item.short_legs || []).map(l => l.ticker);
+    if (longs.length && !shorts.length) {
+      return `<span class="text-green"><b>LONG</b> ${longs.join(', ')}</span>`;
+    }
+    if (shorts.length && !longs.length) {
+      return `<span class="text-red"><b>SHORT</b> ${shorts.join(', ')}</span>`;
+    }
+    return `<span class="text-green">L: ${longs.join(', ')}</span><br><span class="text-red">S: ${shorts.join(', ')}</span>`;
+  }
+
   const rows = (positions || []).map(pos => {
     const pnl = pos.spread_pnl_pct || 0;
     const pnlClass = pnl >= 0 ? 'text-green' : 'text-red';
@@ -11,12 +23,10 @@ export function render(container, signals, positions) {
     const tierBadge = pos.tier === 'SIGNAL'
       ? '<span class="badge badge--gold">SIGNAL</span>'
       : '<span class="badge badge--amber">EXPLORING</span>';
-    const longTickers = (pos.long_legs || []).map(l => l.ticker).join(', ');
-    const shortTickers = (pos.short_legs || []).map(l => l.ticker).join(', ');
     return `
       <tr class="clickable">
         <td>${pos.spread_name || pos.signal_id}</td>
-        <td><span class="text-green">L: ${longTickers}</span><br><span class="text-red">S: ${shortTickers}</span></td>
+        <td>${renderLegs(pos)}</td>
         <td>${tierBadge}</td>
         <td>${pos.open_date || '--'}</td>
         <td class="${pnlClass} mono">${pnlIcon} ${pnl.toFixed(2)}%</td>
@@ -29,13 +39,11 @@ export function render(container, signals, positions) {
     const tierBadge = sig.tier === 'SIGNAL'
       ? '<span class="badge badge--gold">SIGNAL</span>'
       : '<span class="badge badge--amber">EXPLORING</span>';
-    const longTickers = (sig.long_legs || []).map(l => l.ticker).join(', ');
-    const shortTickers = (sig.short_legs || []).map(l => l.ticker).join(', ');
     const hitRate = sig.hit_rate ? `${(sig.hit_rate * 100).toFixed(0)}%` : '--';
     return `
       <tr class="clickable">
         <td>${sig.spread_name || sig.signal_id}</td>
-        <td><span class="text-green">L: ${longTickers}</span><br><span class="text-red">S: ${shortTickers}</span></td>
+        <td>${renderLegs(sig)}</td>
         <td>${tierBadge}</td>
         <td>${sig.open_timestamp ? sig.open_timestamp.split('T')[0] : '--'}</td>
         <td class="mono">${hitRate}</td>
