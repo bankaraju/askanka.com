@@ -18,7 +18,7 @@ import math
 TRAIL_STOP_ENABLED   = True
 TRAIL_BUDGET_MULT    = 1.0     # budget = avg_favorable_move * mult * sqrt(days)
 TRAIL_ARM_FACTOR     = 1.0     # arm when peak >= budget * arm_factor
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
