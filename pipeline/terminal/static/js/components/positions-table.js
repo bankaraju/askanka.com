@@ -29,14 +29,20 @@ export function render(container, positions) {
 
   const rows = positions.map(p => {
     const pnl = p.spread_pnl_pct ?? p.pnl_pct ?? 0;
-    // Per-spread stop levels are computed by signal_tracker.check_signal_status
-    // and stored on each signal under _data_levels. See:
+    // Per-spread stop levels — computed by signal_tracker.check_signal_status,
+    // exported flat by website_exporter.export_live_status. Some fields may be
+    // nested under _data_levels for legacy callers; fall back to that shape.
+    // Reference:
     //   docs/superpowers/plans/2026-04-15-trailing-stop-and-replay.md
     //   pipeline/signal_tracker.py:10-20  (live trail config + backtest cite)
     const lvl = p._data_levels || {};
-    const stop = lvl.daily_stop != null ? fmtPct(lvl.daily_stop) : '--';
-    const trail = lvl.trail_stop != null ? fmtPct(lvl.trail_stop) : '--';
-    const peak = lvl.peak != null ? fmtPct(lvl.peak) : '--';
+    const dailyStop = p.daily_stop ?? lvl.daily_stop;
+    const trailStop = p.trail_stop ?? lvl.trail_stop;
+    const peakPnl = p.peak_pnl ?? lvl.peak;
+
+    const stop = dailyStop != null ? fmtPct(dailyStop) : '--';
+    const trail = trailStop != null ? fmtPct(trailStop) : '--';
+    const peak = peakPnl != null ? fmtPct(peakPnl) : '--';
     const opened = p.open_date || (p.open_timestamp ? p.open_timestamp.split('T')[0] : '--');
     const days = p.days_held != null ? `${p.days_held}d` : '--';
     const source = p.source || p.source_signal || p.tier || '--';
@@ -48,7 +54,7 @@ export function render(container, positions) {
       <td class="mono">${opened}</td>
       <td class="mono ${pnlClass(pnl)}">${fmtPct(pnl)}</td>
       <td class="mono text-red" title="Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.">${stop}</td>
-      <td class="mono ${pnlClass(lvl.trail_stop)}" title="Trail stop = peak - (avg_favorable × sqrt(days_since_check)). Arms when peak ≥ budget.">${trail}</td>
+      <td class="mono ${pnlClass(trailStop)}" title="Trail stop = peak - (avg_favorable × sqrt(days_since_check)). Arms when peak ≥ budget.">${trail}</td>
       <td class="mono text-green" title="Running peak P&L since entry — trail stop ratchets off this.">${peak}</td>
       <td class="mono">${days}</td>
       <td><span class="badge badge--gold">${source}</span>${exitTrigger ? ` <span class="badge badge--amber">${exitTrigger}</span>` : ''}</td>
