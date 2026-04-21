@@ -198,12 +198,14 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
                     if rt and rt.get("open"):
                         open_price = float(rt["open"])
 
-                # 2. Fallback: yfinance
+                # 2. Fallback: yfinance (timeout-bounded — see _yf_history_with_timeout)
                 if open_price is None:
                     try:
-                        hist = yf.Ticker(yf_sym).history(period="1d")
-                        if not hist.empty:
+                        hist = _yf_history_with_timeout(yf_sym)
+                        if hist is not None and not hist.empty:
                             open_price = float(hist["Open"].iloc[-1])
+                        elif hist is None:
+                            log.warning("yfinance snap timeout for %s", yf_sym)
                     except Exception as e:
                         log.error("yfinance snap error for %s: %s", yf_sym, e)
 
