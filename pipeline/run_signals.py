@@ -57,13 +57,52 @@ _LOCK_FILE = Path(__file__).parent / "logs" / "signals.lock"
 _LOCK_MAX_AGE_MINUTES = 25  # if lock is older than this, it's stale (previous run crashed)
 
 
+def _pid_alive(pid: int) -> bool:
+    """Cross-platform: True if process with `pid` exists. False on any error."""
+    if pid <= 0:
+        return False
+    if os.name == "nt":
+        try:
+            import ctypes
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            handle = ctypes.windll.kernel32.OpenProcess(
+                PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if not handle:
+                return False
+            exit_code = ctypes.c_ulong()
+            ctypes.windll.kernel32.GetExitCodeProcess(handle, ctypes.byref(exit_code))
+            ctypes.windll.kernel32.CloseHandle(handle)
+            STILL_ACTIVE = 259
+            return exit_code.value == STILL_ACTIVE
+        except Exception:
+            return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except (OSError, ProcessLookupError):
+        return False
+
+
 def _acquire_lock() -> bool:
-    """Return True if lock acquired (safe to run), False if another instance is running."""
+    """Return True if lock acquired (safe to run), False if another instance is running.
+
+    The lock is considered stale (and removed) if EITHER of:
+      * file age exceeds _LOCK_MAX_AGE_MINUTES, OR
+      * the PID written inside the file no longer corresponds to a live process.
+
+    Checking PID liveness is critical — a hung run that gets killed externally
+    (Windows Task Scheduler, manual kill) leaves the lockfile behind without
+    releasing it, blocking every subsequent cycle until the age threshold passes.
+    """
     if _LOCK_FILE.exists():
         age_seconds = time.time() - _LOCK_FILE.stat().st_mtime
-        if age_seconds < _LOCK_MAX_AGE_MINUTES * 60:
-            return False  # fresh lock — another instance is running
-        # Stale lock — previous run crashed; remove and continue
+        try:
+            held_pid = int(_LOCK_FILE.read_text(encoding="utf-8").strip())
+        except (ValueError, OSError):
+            held_pid = -1
+        if age_seconds < _LOCK_MAX_AGE_MINUTES * 60 and _pid_alive(held_pid):
+            return False  # fresh lock + holder is alive — another instance running
+        # Stale lock: either age exceeded, or PID is dead. Reclaim.
         _LOCK_FILE.unlink(missing_ok=True)
     try:
         _LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -765,6 +804,36 @@ def run_monitor(send_telegram=False):
         time.sleep(POLL_INTERVAL_MINUTES * 60)
 
 
+_HARD_TIMEOUT_S = 480  # 8 min — beyond this, the cycle is unhealthy and must be killed
+                        # so the next scheduled cycle can proceed without a stale lock.
+
+
+def _arm_hard_timeout(seconds: int = _HARD_TIMEOUT_S) -> None:
+    """Schedule a process-wide os._exit() after `seconds`.
+
+    Last-resort defence so a hung downstream call (slow EODHD, hung
+    yfinance, Telegram retry storm, etc.) cannot leave the scheduled
+    task running for tens of minutes and block subsequent cycles via
+    the stale lockfile. Uses a daemon Timer so it does not delay clean
+    exits.
+    """
+    import threading
+
+    def _kill():
+        # Release the lock so the next cycle can run.
+        try:
+            _release_lock()
+        except Exception:
+            pass
+        print(f"  [HARD TIMEOUT] {_ist_now():%H:%M IST} — killing process after {seconds}s")
+        sys.stdout.flush()
+        os._exit(2)
+
+    t = threading.Timer(seconds, _kill)
+    t.daemon = True
+    t.start()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Anka Signal Monitor V2")
     parser.add_argument("--telegram", action="store_true", help="Send signals to Telegram")
@@ -772,6 +841,11 @@ def main():
     parser.add_argument("--leaderboard", action="store_true", help="Midday leaderboard only")
     parser.add_argument("--eod", action="store_true", help="End-of-day review only")
     args = parser.parse_args()
+
+    # Continuous --monitor mode is intentionally long-lived; only arm the
+    # hard timeout for one-shot scheduled cycles.
+    if not args.monitor:
+        _arm_hard_timeout()
 
     if args.leaderboard:
         try:

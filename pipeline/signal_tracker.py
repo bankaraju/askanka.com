@@ -227,11 +227,33 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
 # Price fetching
 # ---------------------------------------------------------------------------
 
+def _yf_history_with_timeout(yf_sym: str, timeout_s: float = 8.0):
+    """yfinance history call with a hard wall-clock timeout.
+
+    yfinance has no first-class timeout on .history(); a hung remote can
+    block the whole signals cycle indefinitely. Submitting via a 1-worker
+    ThreadPoolExecutor lets us cap the call. The thread is abandoned on
+    timeout (no thread.kill in CPython), but daemon=True ensures it does
+    not block process exit.
+    """
+    import concurrent.futures
+
+    def _call():
+        return yf.Ticker(yf_sym).history(period="1d")
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1, thread_name_prefix="yf") as ex:
+        future = ex.submit(_call)
+        try:
+            return future.result(timeout=timeout_s)
+        except concurrent.futures.TimeoutError:
+            return None
+
+
 def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     """Fetch current prices for Indian stock tickers.
 
     Primary: EODHD real-time API (eodhd_client.fetch_realtime).
-    Fallback: yfinance .history(period="1d").
+    Fallback: yfinance .history(period="1d") with hard 8s timeout.
 
     Tickers are plain names like "HAL", "BPCL" — resolved via INDIA_SIGNAL_STOCKS.
     """
@@ -252,15 +274,17 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                 price = float(rt["close"])
                 log.debug("Price %s = %.2f (EODHD RT)", ticker, price)
 
-        # 2. Fallback: yfinance
+        # 2. Fallback: yfinance with 8s hard timeout (cross-platform)
         if price is None:
             try:
-                hist = yf.Ticker(yf_sym).history(period="1d")
-                if not hist.empty:
+                hist = _yf_history_with_timeout(yf_sym, timeout_s=8.0)
+                if hist is None:
+                    log.warning("yfinance timed out for %s after 8s — skipping", yf_sym)
+                elif not hist.empty:
                     price = float(hist["Close"].iloc[-1])
                     log.debug("Price %s = %.2f (yfinance fallback)", ticker, price)
                 else:
-                    log.warning("No price data for %s (yfinance also empty)", ticker)
+                    log.warning("No price data for %s (yfinance returned empty)", ticker)
             except Exception as e:
                 log.error("yfinance error for %s: %s", yf_sym, e)
 
