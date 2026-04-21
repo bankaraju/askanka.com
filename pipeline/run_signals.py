@@ -436,6 +436,7 @@ def _run_once_inner(send_telegram=False):
                 send_message(heartbeat, parse_mode=None)
             except Exception:
                 pass
+        print(f"  [trace] heartbeat done @ {_ist_now().strftime('%H:%M:%S')}", flush=True)
 
     # 1b. Phase C break → standalone signal candidates
     try:
@@ -456,9 +457,11 @@ def _run_once_inner(send_telegram=False):
     except Exception as e:
         import logging
         logging.getLogger(__name__).warning("break_signal_generator failed: %s", e)
+    print(f"  [trace] break_gen done @ {_ist_now().strftime('%H:%M:%S')}", flush=True)
 
     # 2. Check existing open signals for stop-outs / expiry
     closed_results = run_signal_monitor()
+    print(f"  [trace] monitor done @ {_ist_now().strftime('%H:%M:%S')} ({len(closed_results) if closed_results else 0} closes)", flush=True)
     if closed_results:
         for closed_sig, reason, pnl in closed_results:
             pnl_pct = pnl.get("spread_pnl_pct", 0.0)
@@ -527,7 +530,9 @@ def _run_once_inner(send_telegram=False):
             all_tickers = list(set(all_tickers))
 
             from signal_tracker import fetch_current_prices, compute_signal_pnl
+            print(f"  [trace] snapshot fetch start ({len(all_tickers)} tickers) @ {_ist_now().strftime('%H:%M:%S')}", flush=True)
             prices = fetch_current_prices(all_tickers)
+            print(f"  [trace] snapshot fetch done @ {_ist_now().strftime('%H:%M:%S')}", flush=True)
 
             now = _ist_now()
             lines = [

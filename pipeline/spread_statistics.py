@@ -610,6 +610,15 @@ def save_stats(stats: Dict[str, Dict[str, Any]]) -> None:
 
 
 def load_stats() -> Dict[str, Dict[str, Any]]:
+    """Return cached spread stats, dropping any individual entry that is
+    stale or missing a ``computed_at`` timestamp.
+
+    A single bad entry must NOT invalidate the whole cache — that turned
+    every signal cycle into a fresh EODHD recompute storm (one 502 from
+    a single ticker would then hang the cycle for tens of minutes). The
+    nightly aggregator and weekly recompute are responsible for keeping
+    entries fresh; the hot read path stays fast.
+    """
     if not STATS_FILE.exists():
         return {}
     try:
@@ -617,17 +626,19 @@ def load_stats() -> Dict[str, Dict[str, Any]]:
     except (json.JSONDecodeError, IOError):
         return {}
     now = datetime.now(IST)
+    fresh: Dict[str, Dict[str, Any]] = {}
     for name, s in stats.items():
         computed = s.get("computed_at")
         if not computed:
-            return {}
+            continue
         try:
             ts = datetime.fromisoformat(computed)
             if (now - ts).total_seconds() > _CACHE_TTL_HOURS * 3600:
-                return {}
+                continue
         except (ValueError, TypeError):
-            return {}
-    return stats
+            continue
+        fresh[name] = s
+    return fresh
 
 
 def get_spread_stats(force_refresh: bool = False) -> Dict[str, Dict[str, Any]]:

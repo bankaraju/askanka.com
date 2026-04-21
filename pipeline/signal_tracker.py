@@ -805,11 +805,14 @@ def run_signal_monitor() -> List[Tuple[Dict[str, Any], str, Dict[str, Any]]]:
         log.info("No open signals to monitor")
         return []
 
+    print(f"  [trace.mon] start ({len(open_sigs)} sigs)", flush=True)
+
     # Snap entry prices to today's open for signals generated outside
     # market hours (only runs once per signal, idempotent)
     if snap_entry_to_market_open(open_sigs):
         save_open_signals(open_sigs)
         log.info("Entry prices snapped to today's open")
+    print(f"  [trace.mon] snap done", flush=True)
 
     # Collect all tickers across open signals
     all_tickers: List[str] = []
@@ -821,16 +824,20 @@ def run_signal_monitor() -> List[Tuple[Dict[str, Any], str, Dict[str, Any]]]:
     all_tickers = list(set(all_tickers))
 
     log.info(f"Fetching prices for {len(all_tickers)} tickers")
+    print(f"  [trace.mon] fetch start ({len(all_tickers)} tickers)", flush=True)
     try:
         current_prices = fetch_current_prices(all_tickers)
     except Exception as e:
         log.error(f"Price fetch failed, skipping monitor cycle: {e}")
         return []
+    print(f"  [trace.mon] fetch done", flush=True)
 
     closed_results: List[Tuple[Dict[str, Any], str, Dict[str, Any]]] = []
     peaks_updated = False
 
     for sig in open_sigs:
+        sid = sig.get("signal_id", "?")
+        print(f"  [trace.mon] check {sid}", flush=True)
         try:
             old_peak = sig.get("peak_spread_pnl_pct", 0.0)
             status, pnl = check_signal_status(sig, current_prices)
