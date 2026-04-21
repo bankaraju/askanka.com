@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T12:00:52.451418+05:30",
+  "updated_at": "2026-04-21T12:02:40.851406+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,40 +11,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4374.9,
-          "pnl_pct": 2.1
+          "current": 4376.2,
+          "pnl_pct": 2.13
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 455.15,
-          "pnl_pct": 1.18
+          "current": 455.3,
+          "pnl_pct": 1.21
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1383.2,
-          "pnl_pct": 0.65
+          "current": 1382.7,
+          "pnl_pct": 0.62
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2599.0,
-          "pnl_pct": -1.05
+          "current": 2599.2,
+          "pnl_pct": -1.06
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1318.0,
-          "pnl_pct": 0.31
+          "current": 1322.0,
+          "pnl_pct": 0.01
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 205.12,
-          "pnl_pct": 3.69
+          "current": 205.16,
+          "pnl_pct": 3.67
         }
       ],
       "spread_pnl_pct": 2.53,
@@ -183,8 +183,8 @@
         {
           "ticker": "TMPV",
           "entry": 357.3,
-          "current": 357.0,
-          "pnl_pct": 0.08
+          "current": 357.25,
+          "pnl_pct": 0.01
         }
       ],
       "spread_pnl_pct": 0.04,
@@ -218,8 +218,8 @@
         {
           "ticker": "PATANJALI",
           "entry": 468.95,
-          "current": 460.9,
-          "pnl_pct": 1.72
+          "current": 460.5,
+          "pnl_pct": 1.8
         }
       ],
       "spread_pnl_pct": 1.8,
@@ -253,8 +253,8 @@
         {
           "ticker": "YESBANK",
           "entry": 20.64,
-          "current": 19.78,
-          "pnl_pct": 4.17
+          "current": 19.79,
+          "pnl_pct": 4.12
         }
       ],
       "spread_pnl_pct": 4.46,
@@ -288,8 +288,8 @@
         {
           "ticker": "IEX",
           "entry": 132.89,
-          "current": 126.38,
-          "pnl_pct": 4.9
+          "current": 126.28,
+          "pnl_pct": 4.97
         }
       ],
       "spread_pnl_pct": 5.0,
@@ -322,8 +322,8 @@
         {
           "ticker": "BHEL",
           "entry": 318.53,
-          "current": 330.29,
-          "pnl_pct": 3.69
+          "current": 329.94,
+          "pnl_pct": 3.58
         }
       ],
       "short_legs": [],
