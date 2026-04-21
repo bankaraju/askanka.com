@@ -60,9 +60,22 @@ def fetch_daily(symbol: str, days: int = 1500) -> pd.DataFrame:
                 requested_span_days = days
                 # Allow 10% slack for weekends/holidays
                 if cache_span_days < requested_span_days * 0.9:
-                    log.info("cache coverage too short for %s (%d < %d days), refetching",
+                    log.info("cache coverage too short for %s (%d < %d days), attempting refetch",
                              symbol, cache_span_days, requested_span_days)
-                    cache_path.unlink(missing_ok=True)
+                    # Try to extend via Kite. If Kite is unavailable (e.g. outside
+                    # scheduled-task hours), keep the existing cache rather than
+                    # deleting it and returning nothing.
+                    try:
+                        rows = _kite_fetch(symbol, interval="day", days=days)
+                        new_df = _to_df(rows)
+                        cache_path.parent.mkdir(parents=True, exist_ok=True)
+                        new_df.to_parquet(cache_path, index=False)
+                        log.info("refetched + cached: %s daily (%d rows)", symbol, len(new_df))
+                        return new_df
+                    except Exception as exc:
+                        log.warning("refetch failed for %s (%s) — using existing cache (%d rows)",
+                                    symbol, exc, len(df))
+                        return df
                 else:
                     log.debug("cache hit: %s daily (%d rows)", symbol, len(df))
                     return df

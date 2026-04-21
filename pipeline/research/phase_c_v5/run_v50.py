@@ -100,13 +100,61 @@ def _unique_candidate_symbols(ranker_df: pd.DataFrame) -> list[str]:
     return sorted(set(ranker_df["symbol"].tolist()))
 
 
+def _yfinance_fetch(symbol: str, years: int = 4) -> pd.DataFrame | None:
+    """Fetch daily OHLCV via yfinance as a last-resort fallback.
+
+    Returns a DataFrame with V4 schema (date, open, high, low, close, volume)
+    or None if unavailable.
+    """
+    from datetime import date, timedelta
+    try:
+        import yfinance as yf
+        end = date.today().strftime("%Y-%m-%d")
+        start = (date.today() - timedelta(days=years * 366)).strftime("%Y-%m-%d")
+        raw = yf.download(f"{symbol}.NS", start=start, end=end,
+                          progress=False, auto_adjust=True)
+        if raw is None or raw.empty:
+            return None
+        if isinstance(raw.columns, pd.MultiIndex):
+            raw.columns = raw.columns.droplevel(1)
+        raw = raw.reset_index()
+        raw.columns = [c.lower() for c in raw.columns]
+        required = {"date", "open", "high", "low", "close", "volume"}
+        if not required.issubset(set(raw.columns)):
+            return None
+        df = raw[["date", "open", "high", "low", "close", "volume"]].copy()
+        df["date"] = pd.to_datetime(df["date"]).dt.tz_localize(None)
+        df = df.sort_values("date").reset_index(drop=True)
+        return df if not df.empty else None
+    except Exception as exc:
+        log.warning("yfinance fallback failed for %s: %s", symbol, exc)
+        return None
+
+
 def _load_bars_bulk(symbols: list[str], days: int = 1500) -> dict[str, pd.DataFrame]:
+    """Load daily bars for all candidate symbols.
+
+    Primary: V4 fetcher (reads from parquet cache; falls back to Kite when
+    cache coverage is stale but Kite may be unavailable outside schedule hours).
+    Secondary: yfinance with .NS suffix — used when the fetcher raises any
+    exception (e.g. Kite auth missing).
+    """
     out: dict[str, pd.DataFrame] = {}
     for sym in symbols:
         try:
             out[sym] = fetcher.fetch_daily(sym, days=days)
         except Exception as exc:
-            log.warning("bar fetch failed for %s: %s", sym, exc)
+            log.warning("V4 fetcher failed for %s (%s) — trying yfinance fallback", sym, exc)
+            yf_df = _yfinance_fetch(sym)
+            if yf_df is not None and not yf_df.empty:
+                # Write to cache so the simulator can use it and future runs are fast
+                cache_path = fetcher._DAILY_DIR / f"{sym}.parquet"
+                cache_path.parent.mkdir(parents=True, exist_ok=True)
+                yf_df.to_parquet(cache_path, index=False)
+                log.info("yfinance fallback seeded cache for %s (%d rows)", sym, len(yf_df))
+                out[sym] = yf_df
+            else:
+                log.warning("yfinance fallback also failed for %s — symbol will be skipped", sym)
     return out
 
 
