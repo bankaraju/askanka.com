@@ -1,9 +1,22 @@
 {
-  "updated_at": "2026-04-21T11:47:42.538096+05:30",
-  "total_closed": 3,
-  "win_rate_pct": 33.3,
-  "avg_pnl_pct": 1.01,
+  "updated_at": "2026-04-21T12:00:52.493997+05:30",
+  "total_closed": 4,
+  "win_rate_pct": 25.0,
+  "avg_pnl_pct": 0.43,
   "recent": [
+    {
+      "signal_id": "BRK-2026-04-20-KAYNES",
+      "spread_name": "Strategy 324",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "event_headline": "Phase C break on KAYNES: z=-1.56, expected=-0.45, actual=-1.68",
+      "open_date": "2026-04-20",
+      "close_date": "2026-04-21",
+      "days_open": 0,
+      "peak_pnl_pct": 1.41,
+      "final_pnl_pct": -1.33,
+      "close_reason": "Trailing stop: today -1.33% <= stop -1.00%"
+    },
     {
       "signal_id": "SIG-2026-03-31-003-Defence_vs_IT",
       "spread_name": "Sovereign Shield Alpha",

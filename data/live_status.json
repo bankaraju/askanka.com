@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T11:47:42.490165+05:30",
+  "updated_at": "2026-04-21T12:00:52.451418+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,54 +11,54 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4382.9,
-          "pnl_pct": 2.29
+          "current": 4374.9,
+          "pnl_pct": 2.1
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 455.4,
-          "pnl_pct": 1.23
+          "current": 455.15,
+          "pnl_pct": 1.18
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1385.5,
-          "pnl_pct": 0.82
+          "current": 1383.2,
+          "pnl_pct": 0.65
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2587.0,
-          "pnl_pct": -0.58
+          "current": 2599.0,
+          "pnl_pct": -1.05
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1316.7,
-          "pnl_pct": 0.41
+          "current": 1318.0,
+          "pnl_pct": 0.31
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 204.8,
-          "pnl_pct": 3.84
+          "current": 205.12,
+          "pnl_pct": 3.69
         }
       ],
-      "spread_pnl_pct": 2.82,
-      "todays_move": 2.82,
+      "spread_pnl_pct": 2.53,
+      "todays_move": 2.53,
       "daily_stop": -0.97,
-      "two_day_stop": -1.94,
+      "two_day_stop": -1.93,
       "peak_pnl": 3.4,
       "source": "SPREAD",
       "trust_scores": {
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "WIPRO": {
           "trust_grade": "A",
@@ -66,29 +66,29 @@
           "opus_side": null,
           "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
-        },
         "BEL": {
           "trust_grade": "C",
           "trust_score": 55.0,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        "BDL": {
+          "trust_grade": "C",
+          "trust_score": 56.8,
+          "opus_side": null,
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
         },
         "INFY": {
           "trust_grade": "F",
           "trust_score": 17.5,
           "opus_side": null,
           "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
+        },
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         }
       },
       "regime_rank": {
@@ -183,12 +183,12 @@
         {
           "ticker": "TMPV",
           "entry": 357.3,
-          "current": 357.15,
-          "pnl_pct": 0.04
+          "current": 357.0,
+          "pnl_pct": 0.08
         }
       ],
-      "spread_pnl_pct": 0.24,
-      "todays_move": 0.24,
+      "spread_pnl_pct": 0.04,
+      "todays_move": 0.04,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
       "peak_pnl": 0.83,
@@ -218,12 +218,12 @@
         {
           "ticker": "PATANJALI",
           "entry": 468.95,
-          "current": 461.0,
-          "pnl_pct": 1.7
+          "current": 460.9,
+          "pnl_pct": 1.72
         }
       ],
-      "spread_pnl_pct": 1.99,
-      "todays_move": 1.99,
+      "spread_pnl_pct": 1.8,
+      "todays_move": 1.8,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
       "peak_pnl": 2.14,
@@ -253,15 +253,15 @@
         {
           "ticker": "YESBANK",
           "entry": 20.64,
-          "current": 19.81,
-          "pnl_pct": 4.02
+          "current": 19.78,
+          "pnl_pct": 4.17
         }
       ],
-      "spread_pnl_pct": 3.63,
-      "todays_move": 3.63,
+      "spread_pnl_pct": 4.46,
+      "todays_move": 4.46,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
-      "peak_pnl": 3.63,
+      "peak_pnl": 4.46,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "YESBANK": {
@@ -288,12 +288,12 @@
         {
           "ticker": "IEX",
           "entry": 132.89,
-          "current": 126.24,
-          "pnl_pct": 5.0
+          "current": 126.38,
+          "pnl_pct": 4.9
         }
       ],
-      "spread_pnl_pct": 5.67,
-      "todays_move": 5.67,
+      "spread_pnl_pct": 5.0,
+      "todays_move": 5.0,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
       "peak_pnl": 5.67,
@@ -313,41 +313,6 @@
       "gate_reason": null
     },
     {
-      "signal_id": "BRK-2026-04-20-KAYNES",
-      "spread_name": "Strategy 324",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-20",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "KAYNES",
-          "entry": 4220.0,
-          "current": 4281.0,
-          "pnl_pct": -1.45
-        }
-      ],
-      "spread_pnl_pct": -0.47,
-      "todays_move": -0.47,
-      "daily_stop": -1.0,
-      "two_day_stop": -2.0,
-      "peak_pnl": 1.41,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "KAYNES": {
-          "trust_grade": "B",
-          "trust_score": 68.1,
-          "opus_side": null,
-          "thesis": "The successful commissioning of the OSAT facility at Sanand by end of 2025 and securing FSA approval, along with the progress on the HDI PCB facility, demonstrates strong execution on critical strategic backward integration initiatives. This positions the company for future growth in high-value segments and reduces reliance on external suppliers, enhancing control over the electronics value chain."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null
-    },
-    {
       "signal_id": "BRK-2026-04-20-BHEL",
       "spread_name": "Strategy 606",
       "category": "phase_c",
@@ -357,16 +322,16 @@
         {
           "ticker": "BHEL",
           "entry": 318.53,
-          "current": 330.88,
-          "pnl_pct": 3.88
+          "current": 330.29,
+          "pnl_pct": 3.69
         }
       ],
       "short_legs": [],
-      "spread_pnl_pct": 2.31,
-      "todays_move": 2.31,
+      "spread_pnl_pct": 3.63,
+      "todays_move": 3.63,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
-      "peak_pnl": 3.48,
+      "peak_pnl": 3.79,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "BHEL": {
