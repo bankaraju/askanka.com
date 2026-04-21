@@ -2,13 +2,15 @@
 
 **Date:** 2026-04-21
 **Author:** Anka Research
-**Status:** Draft, pending user approval
+**Status:** Draft v2 — added V5.0 Regime-ranker pair (the MOAT)
 
 ## Problem
 
 Phase C v1 validated 162 OPPORTUNITY signals as **single-stock futures trades** (intraday open → 14:30 close). Verdict: FAIL — 43.5% hit rate, Sharpe CI [-3.59, -0.35], binomial p=0.0012 against random.
 
-But that validated the wrong unit. Anka's edge framework is **regime-anchored basket trades**, not single-stock punts. The Spread Intelligence Engine already proves baskets work where stocks don't (Banks Pvt vs PSU, Refiners vs Upstream). Phase C OPPORTUNITY signals were never tested as:
+But that validated the wrong unit. Anka's edge framework is **regime-anchored basket trades**, not single-stock punts. The Spread Intelligence Engine already proves baskets work where stocks don't (Banks Pvt vs PSU, Refiners vs Upstream). The **regime ranker** (Phase B, `pipeline/autoresearch/reverse_regime_ranker.py`) already maintains per-regime LONG-leader and SHORT-laggard lists with hit-rates and 5-day expected drift — but those pairs have **never been backtested** as a standalone trading strategy. That is the MOAT, and V5.0 below validates it head-on.
+
+Phase C OPPORTUNITY signals were never tested as:
 
 1. Pairs/triplets emerging from same-regime, same-sector co-firings
 2. Stock vs sector-index hedges (long HDFCBANK fut / short BANKNIFTY fut)
@@ -22,10 +24,11 @@ The book-growth motivation: stock futures absorb ~₹50k/leg today but degrade a
 
 ## Goals
 
-1. **Determine whether basket-level Phase C edge exists** that single-stock validation missed.
-2. **Test options structures** (long ATM call / long ATM put) as alternative to futures, using existing Station 6.5 pricer (MAPE 0.95% validated).
-3. **Test hold-horizon sensitivity** — is the 14:30 mechanical exit even the right horizon?
-4. **Identify the index-routing path** for book scaling (when stock signal effectively IS the index, route through the index).
+1. **Validate the MOAT** — backtest the regime-ranker leader/laggard pair engine (V5.0) as a standalone strategy. If this passes, it becomes the production product regardless of Phase C outcome.
+2. **Determine whether basket-level Phase C edge exists** that single-stock validation missed.
+3. **Test options structures** (long ATM call / long ATM put) as alternative to futures, using existing Station 6.5 pricer (MAPE 0.95% validated).
+4. **Test hold-horizon sensitivity** — is the 14:30 mechanical exit even the right horizon?
+5. **Identify the index-routing path** for book scaling (when stock signal effectively IS the index, route through the index).
 
 Single research output, comparable cost model across variants, single verdict per variant. Same publication-grade rigor as Phase C v1.
 
@@ -45,6 +48,7 @@ pipeline/research/phase_c_v5/
 │   ├── concentration.py             # build sector_concentration.json
 │   └── tradeable_indices.py         # NSE live-quote check; which sectorals have F&O
 ├── variants/
+│   ├── v50_regime_pair.py           # MOAT: regime-ranker top-N long / bot-N short
 │   ├── v51_sector_pair.py           # long top-OPP / short bot-OPP in same sector
 │   ├── v52_stock_vs_index.py        # long stock fut / short sector index fut
 │   ├── v53_nifty_overlay.py         # every Phase C trade + NIFTY beta hedge
@@ -93,6 +97,31 @@ Each variant emits its own ledger to `data/research/phase_c_v5/<variant>_ledger.
 The `top_n_threshold` defines when "stock signal effectively IS the index" (e.g., signal on a name in the top-70%-weight bucket).
 
 ## Variants
+
+### V5.0 — Regime-ranker pair engine (THE MOAT)
+
+**Source:** `pipeline/data/regime_ranker_state.json` — already populated daily by `pipeline/autoresearch/reverse_regime_ranker.py`. For each ETF regime zone (PANIC / CAUTION / NEUTRAL / OPTIMISM / EUPHORIA), the ranker emits ranked LONG-leader and SHORT-laggard candidates with `drift_5d_mean`, `hit_rate`, `episodes`, and a 7-day expiry.
+
+**Trade rule:** On each trading day where the regime is stable for ≥1 day:
+1. Take the top-N (N=3) LONG-leader candidates for the active regime → equal-weight long basket
+2. Take the top-N SHORT-laggard candidates for the active regime → equal-weight short basket
+3. Equal notional per side (sector-neutral; no index hedge)
+4. Hold for `H` days (sweep H ∈ {1, 2, 3, 5, 7})
+5. Exit at H-day close OR daily-stop / trail-stop (per `signal_tracker` config)
+
+**Hypothesis:** The regime-ranker's per-regime drift edge that shows up at the single-name level (positive `drift_5d_mean`, hit-rate ≥ 0.6 over ≥4 episodes) survives transaction costs when packaged as a long/short basket trade. If yes, this is the production strategy and the marketing MOAT — it's the only signal in the system whose entry rule is *fully derivable from publicly explained components* (ETF regime → 4-year regime episodes → leader/laggard ranks).
+
+**Universe constraint:** All legs must be in F&O (215-stock universe). Skip days where either leg has fewer than N qualifying candidates in the active regime.
+
+**Sub-variants tested:**
+- V5.0a — N=3, all 5 regimes pooled
+- V5.0b — N=5, all 5 regimes pooled
+- V5.0c — N=3, EUPHORIA + OPTIMISM only (positive-regime subset; user-flagged that the MOAT story reads cleanest in up-trending regimes)
+- V5.0d — N=3, regime must be ≥3 days old (avoids day-1 regime-flip noise)
+
+The strongest sub-variant (highest Sharpe lower bound after Bonferroni) becomes the V5.0 verdict.
+
+**Why this is the MOAT:** Phase C explains as "stock diverged from peers, fade it" — even the code contradicts that (it's actually trend-continuation). V5.0 explains as "in this regime, history says these stocks lead and these lag — pair them." Plain English, defensible, hard to replicate without 4 years of regime-labeled history.
 
 ### V5.1 — Sector-neutral pair
 
@@ -161,26 +190,27 @@ Options P&L computed via Station 6.5 pricer at entry and exit times — no Greek
 3. Walk-forward — rolling 2y train / 3mo OOS quarterly refit (in-sample only — forward window is too short for walk-forward)
 
 **Cross-variant comparison:**
-- Bonferroni correction across 7 variants (α = 0.01 / 7 = 0.00143 per test)
-- Variant passes only if Sharpe CI lower bound > 0 AND hit rate p < 0.00143
+- Bonferroni correction across 8 primary variants + 4 V5.0 sub-variants = 12 tests (α = 0.01 / 12 ≈ 0.000833 per test)
+- Variant passes only if Sharpe CI lower bound > 0 AND hit rate p < 0.000833
 
-This is harder to pass than v1 (which used α/5). That's deliberate — we're testing 7 hypotheses and want to control multiple-comparisons error.
+This is harder to pass than v1 (which used α/5). That's deliberate — we're testing 12 hypotheses and want to control multiple-comparisons error. V5.0 sub-variants share a hypothesis family but each gets its own test at the corrected level (no within-V5.0 nesting credit).
 
 ## Output
 
-`docs/research/phase-c-v5-baskets/` — 11 sections:
+`docs/research/phase-c-v5-baskets/` — 12 sections:
 
 1. Executive summary (per-variant verdict table)
-2. Strategy description (basket framing rationale)
+2. Strategy description (basket framing rationale + MOAT framing for V5.0)
 3. Methodology
-4. Results — V5.1 sector pair
-5. Results — V5.2 stock vs sector index
-6. Results — V5.3 NIFTY overlay
-7. Results — V5.4 BANKNIFTY dispersion
-8. Results — V5.5 leader routing
-9. Results — V5.6 horizon sweep
-10. Results — V5.7 options overlay
-11. Verdict + production recommendation
+4. **Results — V5.0 regime-ranker pair (the MOAT)** — 4 sub-variants
+5. Results — V5.1 sector pair
+6. Results — V5.2 stock vs sector index
+7. Results — V5.3 NIFTY overlay
+8. Results — V5.4 BANKNIFTY dispersion
+9. Results — V5.5 leader routing
+10. Results — V5.6 horizon sweep
+11. Results — V5.7 options overlay
+12. Verdict + production recommendation (with explicit retire/keep call on Phase C)
 
 Each variant section auto-generated from its parquet ledger by `report.py` — same template, same statistics, same plots. Comparable across variants.
 
