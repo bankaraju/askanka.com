@@ -17,6 +17,26 @@ export function render(container, positions) {
     return `<span class="text-green">L: ${longs}</span><br><span class="text-red">S: ${shorts}</span>`;
   }
 
+  function fmtPrice(v) {
+    if (v == null) return '--';
+    return Number(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // Single-leg trades (Phase C breaks etc.) get entry → LTP inline.
+  // Multi-leg baskets show '—' here; the per-leg entry/current is in the
+  // signal payload but rendering it tabularly is deferred.
+  function priceCell(item) {
+    const longs = item.long_legs || [];
+    const shorts = item.short_legs || [];
+    if (longs.length + shorts.length !== 1) {
+      return '<span class="text-muted" title="Multi-leg basket — per-leg prices in detail view">—</span>';
+    }
+    const leg = longs[0] || shorts[0];
+    if (!leg || typeof leg !== 'object') return '--';
+    const dir = leg.pnl_pct != null ? pnlClass(leg.pnl_pct) : '';
+    return `<span class="mono">₹${fmtPrice(leg.entry)} → <span class="${dir}">₹${fmtPrice(leg.current)}</span></span>`;
+  }
+
   function fmtPct(v) {
     if (v == null) return '--';
     return `${v >= 0 ? '+' : ''}${Number(v).toFixed(2)}%`;
@@ -51,6 +71,7 @@ export function render(container, positions) {
     return `<tr>
       <td>${p.spread_name || p.signal_id || '--'}</td>
       <td>${legsHtml(p)}</td>
+      <td>${priceCell(p)}</td>
       <td class="mono">${opened}</td>
       <td class="mono ${pnlClass(pnl)}">${fmtPct(pnl)}</td>
       <td class="mono text-red" title="Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.">${stop}</td>
@@ -71,7 +92,9 @@ export function render(container, positions) {
     </div>
     <table class="data-table">
       <thead><tr>
-        <th>Name</th><th>Legs</th><th>Opened</th><th>P&L</th>
+        <th>Name</th><th>Legs</th>
+        <th title="Entry price → Last traded price (single-leg trades only; basket spreads in detail view)">Entry → LTP</th>
+        <th>Opened</th><th>P&L</th>
         <th title="Daily stop level — per-spread, from 1mo favorable-move history">Stop</th>
         <th title="Trailing stop level — locks in profit as peak ratchets up">Trail</th>
         <th title="Running peak P&L since entry">Peak</th>
