@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T10:17:40.773852+05:30",
+  "updated_at": "2026-04-21T10:33:05.411850+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,40 +11,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4385.8,
-          "pnl_pct": 2.36
+          "current": 4388.3,
+          "pnl_pct": 2.42
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 461.25,
-          "pnl_pct": 2.53
+          "current": 459.6,
+          "pnl_pct": 2.17
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1391.9,
-          "pnl_pct": 1.29
+          "current": 1390.4,
+          "pnl_pct": 1.18
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2581.6,
-          "pnl_pct": -0.37
+          "current": 2587.3,
+          "pnl_pct": -0.59
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1309.6,
-          "pnl_pct": 0.95
+          "current": 1312.2,
+          "pnl_pct": 0.75
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 203.61,
-          "pnl_pct": 4.4
+          "current": 203.82,
+          "pnl_pct": 4.3
         }
       ],
       "spread_pnl_pct": 2.82,
@@ -54,6 +54,18 @@
       "peak_pnl": 3.4,
       "source": "SPREAD",
       "trust_scores": {
+        "BEL": {
+          "trust_grade": "C",
+          "trust_score": 55.0,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "BDL": {
+          "trust_grade": "C",
+          "trust_score": 56.8,
+          "opus_side": null,
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        },
         "INFY": {
           "trust_grade": "F",
           "trust_score": 17.5,
@@ -66,27 +78,15 @@
           "opus_side": null,
           "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
         "TCS": {
           "trust_grade": "B+",
           "trust_score": 72.4,
           "opus_side": null,
           "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         },
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
-        "BEL": {
-          "trust_grade": "C",
-          "trust_score": 55.0,
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         }
@@ -218,8 +218,8 @@
         {
           "ticker": "PATANJALI",
           "entry": 468.95,
-          "current": 461.8,
-          "pnl_pct": 1.52
+          "current": 461.1,
+          "pnl_pct": 1.67
         }
       ],
       "spread_pnl_pct": 1.99,
@@ -253,8 +253,8 @@
         {
           "ticker": "YESBANK",
           "entry": 20.64,
-          "current": 19.91,
-          "pnl_pct": 3.54
+          "current": 19.9,
+          "pnl_pct": 3.59
         }
       ],
       "spread_pnl_pct": 3.63,
@@ -288,8 +288,8 @@
         {
           "ticker": "IEX",
           "entry": 132.89,
-          "current": 126.77,
-          "pnl_pct": 4.61
+          "current": 126.69,
+          "pnl_pct": 4.67
         }
       ],
       "spread_pnl_pct": 5.67,
@@ -323,8 +323,8 @@
         {
           "ticker": "KAYNES",
           "entry": 4220.0,
-          "current": 4266.4,
-          "pnl_pct": -1.1
+          "current": 4253.8,
+          "pnl_pct": -0.8
         }
       ],
       "spread_pnl_pct": -0.47,
@@ -357,8 +357,8 @@
         {
           "ticker": "BHEL",
           "entry": 318.53,
-          "current": 328.83,
-          "pnl_pct": 3.23
+          "current": 329.9,
+          "pnl_pct": 3.57
         }
       ],
       "short_legs": [],
