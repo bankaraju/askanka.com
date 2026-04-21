@@ -87,7 +87,11 @@ def run(signals: pd.DataFrame, symbol_bars: dict[str, pd.DataFrame],
         stock_gross = (stock_exit / stock_entry - 1.0) * notional
         index_gross = (index_entry / index_exit - 1.0) * notional  # short index
         stock_cost = round_trip_cost("stock_future", notional, "LONG")
-        index_cost = round_trip_cost("nifty_future", notional, "SHORT")
+        # BANKNIFTY lives in the NIFTY cost tier (cheapest index future);
+        # NIFTYIT in the sectoral tier — mirror v52's branching for consistency.
+        index_instrument = "nifty_future" if idx in {"NIFTY", "BANKNIFTY"} \
+                           else "sectoral_index_future"
+        index_cost = round_trip_cost(index_instrument, notional, "SHORT")
         gross = stock_gross + index_gross
         cost = stock_cost + index_cost
         rows.append({
