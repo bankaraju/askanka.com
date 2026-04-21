@@ -100,7 +100,7 @@ The `top_n_threshold` defines when "stock signal effectively IS the index" (e.g.
 
 ### V5.0 — Regime-ranker pair engine (THE MOAT)
 
-**Source:** `pipeline/data/regime_ranker_state.json` — already populated daily by `pipeline/autoresearch/reverse_regime_ranker.py`. For each ETF regime zone (PANIC / CAUTION / NEUTRAL / OPTIMISM / EUPHORIA), the ranker emits ranked LONG-leader and SHORT-laggard candidates with `drift_5d_mean`, `hit_rate`, `episodes`, and a 7-day expiry.
+**Source:** `pipeline/data/regime_ranker_state.json` — already populated daily by `pipeline/autoresearch/reverse_regime_ranker.py`. For each ETF regime zone (RISK-OFF / CAUTION / NEUTRAL / RISK-ON / EUPHORIA), the ranker emits ranked LONG-leader and SHORT-laggard candidates with `drift_5d_mean`, `hit_rate`, `episodes`, and a 7-day expiry.
 
 **Trade rule:** On each trading day where the regime is stable for ≥1 day:
 1. Take the top-N (N=3) LONG-leader candidates for the active regime → equal-weight long basket
@@ -116,7 +116,7 @@ The `top_n_threshold` defines when "stock signal effectively IS the index" (e.g.
 **Sub-variants tested:**
 - V5.0a — N=3, all 5 regimes pooled
 - V5.0b — N=5, all 5 regimes pooled
-- V5.0c — N=3, EUPHORIA + OPTIMISM only (positive-regime subset; user-flagged that the MOAT story reads cleanest in up-trending regimes)
+- V5.0c — N=3, EUPHORIA + RISK-ON only (positive-regime subset; user-flagged that the MOAT story reads cleanest in up-trending regimes)
 - V5.0d — N=3, regime must be ≥3 days old (avoids day-1 regime-flip noise)
 
 The strongest sub-variant (highest Sharpe lower bound after Bonferroni) becomes the V5.0 verdict.

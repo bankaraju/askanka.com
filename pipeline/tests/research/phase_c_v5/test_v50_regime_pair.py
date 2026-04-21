@@ -58,8 +58,8 @@ def test_v50_sub_variant_a_pools_all_regimes(synth_ranker_df, bars_for_v50):
     assert (ledger["sub_variant"] == "a").all()
 
 
-def test_v50_sub_variant_c_filters_to_euphoria_optimism_only(synth_ranker_df, bars_for_v50):
-    """Sub-variant c: only EUPHORIA + OPTIMISM days. Synthetic fixture has
+def test_v50_sub_variant_c_filters_to_euphoria_riskon_only(synth_ranker_df, bars_for_v50):
+    """Sub-variant c: only EUPHORIA + RISK-ON days. Synthetic fixture has
     only EUPHORIA, so should match a (no filter effect)."""
     ledger_c = v50.run(ranker_df=synth_ranker_df, symbol_bars=bars_for_v50,
                        sub_variant="c", hold_days=3)

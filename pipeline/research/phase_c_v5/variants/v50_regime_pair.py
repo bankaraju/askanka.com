@@ -3,7 +3,7 @@
 Sub-variants:
   a: N=3, all 5 regimes pooled
   b: N=5, all 5 regimes pooled
-  c: N=3, EUPHORIA + OPTIMISM only
+  c: N=3, EUPHORIA + RISK-ON only
   d: N=3, regime_age_days >= 3
 """
 from __future__ import annotations
@@ -16,7 +16,7 @@ from pipeline.research.phase_c_v5.basket_simulator import simulate_basket_trade
 _SUB_VARIANT_PARAMS = {
     "a": {"top_n": 3, "zone_filter": None,              "min_regime_age": 1},
     "b": {"top_n": 5, "zone_filter": None,              "min_regime_age": 1},
-    "c": {"top_n": 3, "zone_filter": {"EUPHORIA", "OPTIMISM"}, "min_regime_age": 1},
+    "c": {"top_n": 3, "zone_filter": {"EUPHORIA", "RISK-ON"}, "min_regime_age": 1},
     "d": {"top_n": 3, "zone_filter": None,              "min_regime_age": 3},
 }
 
