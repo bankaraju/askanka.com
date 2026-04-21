@@ -85,7 +85,10 @@ TOP_FNO_NAMES = {
 
 def fetch_google_news(query: str, max_items: int = 5) -> list[dict]:
     """Fetch news from Google News RSS for a query. Free, no API key."""
-    url = f"https://news.google.com/rss/search?q={quote(query)}+India+stock&hl=en-IN&gl=IN&ceid=IN:en"
+    url = (
+        f"https://news.google.com/rss/search?q={quote(query)}+India+stock+when:1d"
+        "&hl=en-IN&gl=IN&ceid=IN:en"
+    )
     try:
         resp = requests.get(url, timeout=8, headers={
             "User-Agent": "Mozilla/5.0 (compatible; AnkaResearch/1.0)"
