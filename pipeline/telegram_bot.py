@@ -804,41 +804,91 @@ import requests as _requests
 
 _TELEGRAM_API = "https://api.telegram.org"
 _SEND_TIMEOUT = 15  # seconds
+# Telegram hard-caps a single sendMessage at 4096 chars. Leave headroom for
+# UTF-8 multi-byte expansion on the API side — 3800 keeps us safe.
+_MAX_TELEGRAM_CHARS = 3800
 
 
-def _send_to_chat_http(chat_id: str, text: str, parse_mode: Optional[str] = None) -> bool:
-    """Send a message to a single chat/channel via Telegram HTTP API."""
-    if not BOT_TOKEN:
-        log.warning("TELEGRAM_BOT_TOKEN not set")
-        return False
+def _chunk_text(text: str, limit: int = _MAX_TELEGRAM_CHARS) -> list[str]:
+    """Split text into Telegram-safe chunks at line boundaries.
 
+    Falls back to hard-cut mid-line only if a single line exceeds the limit.
+    Preserves order and never produces empty chunks.
+    """
+    if len(text) <= limit:
+        return [text]
+    chunks: list[str] = []
+    buf: list[str] = []
+    buf_len = 0
+    for line in text.split("\n"):
+        # +1 for the newline we'll rejoin with
+        line_len = len(line) + 1
+        if line_len > limit:
+            # flush current buffer first
+            if buf:
+                chunks.append("\n".join(buf))
+                buf, buf_len = [], 0
+            # hard-cut the over-long line
+            for i in range(0, len(line), limit):
+                chunks.append(line[i:i + limit])
+            continue
+        if buf_len + line_len > limit:
+            chunks.append("\n".join(buf))
+            buf, buf_len = [line], line_len
+        else:
+            buf.append(line)
+            buf_len += line_len
+    if buf:
+        chunks.append("\n".join(buf))
+    return [c for c in chunks if c]
+
+
+def _post_single(chat_id: str, text: str, parse_mode: Optional[str]) -> bool:
+    """Single sendMessage POST with parse-mode-fallback retry."""
     url = f"{_TELEGRAM_API}/bot{BOT_TOKEN}/sendMessage"
     payload: Dict[str, Any] = {"chat_id": chat_id, "text": text}
     if parse_mode:
         payload["parse_mode"] = parse_mode
-
     try:
         resp = _requests.post(url, json=payload, timeout=_SEND_TIMEOUT)
         if resp.ok:
             log.info(f"Sent to {chat_id} ({len(text)} chars)")
             return True
-        else:
-            # If parse_mode failed, retry without it
-            if parse_mode:
-                log.warning(f"Send to {chat_id} failed ({resp.status_code}), retrying without parse_mode")
-                payload.pop("parse_mode", None)
-                resp2 = _requests.post(url, json=payload, timeout=_SEND_TIMEOUT)
-                if resp2.ok:
-                    log.info(f"Sent to {chat_id} (no parse_mode, {len(text)} chars)")
-                    return True
-            log.error(f"Send to {chat_id} failed: {resp.status_code} {resp.text[:200]}")
-            return False
+        if parse_mode:
+            log.warning(f"Send to {chat_id} failed ({resp.status_code}), retrying without parse_mode")
+            payload.pop("parse_mode", None)
+            resp2 = _requests.post(url, json=payload, timeout=_SEND_TIMEOUT)
+            if resp2.ok:
+                log.info(f"Sent to {chat_id} (no parse_mode, {len(text)} chars)")
+                return True
+        log.error(f"Send to {chat_id} failed: {resp.status_code} {resp.text[:200]}")
+        return False
     except _requests.Timeout:
         log.error(f"Send to {chat_id} timed out after {_SEND_TIMEOUT}s")
         return False
     except Exception as e:
         log.error(f"Send to {chat_id} error: {e}")
         return False
+
+
+def _send_to_chat_http(chat_id: str, text: str, parse_mode: Optional[str] = None) -> bool:
+    """Send a message to a chat, auto-chunking if over Telegram's 4096-char cap.
+
+    Returns True only if every chunk lands — partial sends return False so the
+    caller knows the digest was incomplete.
+    """
+    if not BOT_TOKEN:
+        log.warning("TELEGRAM_BOT_TOKEN not set")
+        return False
+    chunks = _chunk_text(text)
+    if len(chunks) == 1:
+        return _post_single(chat_id, chunks[0], parse_mode)
+    all_ok = True
+    for i, chunk in enumerate(chunks, 1):
+        prefix = f"[part {i}/{len(chunks)}]\n"
+        ok = _post_single(chat_id, prefix + chunk, parse_mode)
+        all_ok = all_ok and ok
+    return all_ok
 
 
 def send_message(text: str, parse_mode: str = "Markdown") -> bool:
