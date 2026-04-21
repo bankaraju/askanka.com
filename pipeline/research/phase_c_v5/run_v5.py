@@ -23,6 +23,7 @@ from pipeline.research.phase_c_v5 import paths, ablation, report
 from pipeline.research.phase_c_v5 import run_v50
 from pipeline.research.phase_c_v5 import basket_builder
 from pipeline.research.phase_c_v5 import intraday_basket_simulator
+from pipeline.research.phase_c_v5 import v4_adapter
 from pipeline.research.phase_c_v5.variants import (
     v51_sector_pair, v52_stock_vs_index, v53_nifty_overlay,
     v54_banknifty_dispersion, v55_leader_routing,
@@ -41,9 +42,16 @@ PHASE_C_V4_LEDGER = paths.PIPELINE_DIR / "data" / "research" / "phase_c" / "oppo
 
 def _load_phase_c_signals() -> pd.DataFrame:
     if not PHASE_C_V4_LEDGER.is_file():
-        log.warning("Phase C V4 ledger missing at %s — V5.1-V5.7 will be skipped",
-                    PHASE_C_V4_LEDGER)
-        return pd.DataFrame()
+        log.info("Phase C V4 ledger missing — attempting v4_adapter build...")
+        try:
+            v4_adapter.build_v5_signals_from_v4(out_path=PHASE_C_V4_LEDGER)
+        except Exception as exc:
+            log.warning(
+                "v4_adapter failed (%s) — Phase C V4 ledger still missing at %s"
+                " — V5.1-V5.7 will be skipped",
+                exc, PHASE_C_V4_LEDGER,
+            )
+            return pd.DataFrame()
     return pd.read_parquet(PHASE_C_V4_LEDGER)
 
 
@@ -82,10 +90,18 @@ def main(force: bool = False) -> None:
         extras = ["NIFTY", "BANKNIFTY", "NIFTYIT", "FINNIFTY"]
         bars = _load_all_bars(symbols + extras)
 
-        # V5.1 needs 1-min bars per signal-day — skip at this pass if not cached
+        # V5.1 needs 1-min bars per signal-day — Kite unavailable outside market
+        # hours so we catch the error and write an empty ledger rather than
+        # crashing the whole run.
         pairs = basket_builder.build_sector_pairs(signals)
         log.info("v51 pair candidates: %d", len(pairs))
-        _run_variant("v51", intraday_basket_simulator.run, force, pairs=pairs)
+        try:
+            _run_variant("v51", intraday_basket_simulator.run, force, pairs=pairs)
+        except Exception as exc:
+            log.warning("v51 skipped — Kite minute bars unavailable: %s", exc)
+            empty = pd.DataFrame(columns=["date", "symbol", "pnl_net_inr"])
+            empty.to_parquet(paths.LEDGERS_DIR / "v51.parquet", index=False)
+            log.info("v51: wrote empty ledger (pending Kite minute bars)")
 
         _run_variant("v52", v52_stock_vs_index.run, force,
                      signals=signals, symbol_bars=bars, hold_days=1)
