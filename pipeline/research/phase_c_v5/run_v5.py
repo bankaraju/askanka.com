@@ -22,6 +22,7 @@ import pandas as pd
 from pipeline.research.phase_c_v5 import paths, ablation, report
 from pipeline.research.phase_c_v5 import run_v50
 from pipeline.research.phase_c_v5 import basket_builder
+from pipeline.research.phase_c_v5 import intraday_basket_simulator
 from pipeline.research.phase_c_v5.variants import (
     v51_sector_pair, v52_stock_vs_index, v53_nifty_overlay,
     v54_banknifty_dispersion, v55_leader_routing,
@@ -84,7 +85,7 @@ def main(force: bool = False) -> None:
         # V5.1 needs 1-min bars per signal-day — skip at this pass if not cached
         pairs = basket_builder.build_sector_pairs(signals)
         log.info("v51 pair candidates: %d", len(pairs))
-        _run_variant("v51", lambda: pd.DataFrame(), force=force)  # stub; fill in Task 22
+        _run_variant("v51", intraday_basket_simulator.run, force, pairs=pairs)
 
         _run_variant("v52", v52_stock_vs_index.run, force,
                      signals=signals, symbol_bars=bars, hold_days=1)
