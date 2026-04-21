@@ -431,8 +431,8 @@ def _derive_close_reason(sig: dict) -> str:
         tm = dl.get("todays_move")
         ds = dl.get("daily_stop")
         if tm is not None and ds is not None:
-            return f"Trailing stop: today {tm:+.2f}% <= stop {ds:+.2f}%"
-        return "Trailing stop hit"
+            return f"Daily stop: today {tm:+.2f}% <= stop {ds:+.2f}%"
+        return "Daily stop hit"
     if status == "STOPPED_OUT_2DAY":
         return "2-day running stop hit (two consecutive losing days)"
     if status == "EXPIRED":
