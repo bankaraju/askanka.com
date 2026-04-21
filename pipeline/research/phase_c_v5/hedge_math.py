@@ -24,8 +24,8 @@ def ols_beta(y: np.ndarray, x: np.ndarray) -> float:
 def rolling_ols_beta(stock: pd.Series, index: pd.Series, window: int = 60) -> pd.Series:
     """Rolling OLS beta using pct-change returns. Both series must share an index.
     Result has same length as input; first (window - 1) values are NaN."""
-    stock_ret = stock.pct_change()
-    index_ret = index.pct_change()
+    stock_ret = stock.pct_change(fill_method=None)
+    index_ret = index.pct_change(fill_method=None)
     betas: list[float] = []
     for i in range(len(stock_ret)):
         if i < window:
