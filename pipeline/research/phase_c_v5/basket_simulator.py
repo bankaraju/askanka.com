@@ -82,7 +82,7 @@ def simulate_basket_trade(
             if side == "LONG":
                 leg_gross = (exit_px / entry_px - 1.0) * leg_notional
             else:
-                leg_gross = (1.0 - exit_px / entry_px) * leg_notional
+                leg_gross = (entry_px / exit_px - 1.0) * leg_notional
             leg_cost = round_trip_cost_inr(leg_notional, side, slippage_bps)
             gross_pnl += leg_gross
             cost_total += leg_cost
