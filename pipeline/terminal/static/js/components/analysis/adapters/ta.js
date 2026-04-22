@@ -1,8 +1,6 @@
 // pipeline/terminal/static/js/components/analysis/adapters/ta.js
 import { makeEnvelope } from '../envelope.js';
 
-const PILOT = 'RELIANCE';
-
 function _verdict(score) {
   if (score == null) return 'UNAVAILABLE';
   if (score >= 60) return 'LONG';
@@ -11,21 +9,23 @@ function _verdict(score) {
 }
 
 export function adapt(ticker, raw) {
-  const isPilot = String(ticker || '').toUpperCase() === PILOT;
-  if (!isPilot) {
+  if (!raw || typeof raw !== 'object') {
     return makeEnvelope({
       engine: 'ta', ticker, verdict: 'UNAVAILABLE',
-      empty_state_reason: 'TA pilot — RELIANCE only, 212 tickers await v2 rollout.',
+      empty_state_reason: 'No TA model yet — awaiting fit run.',
       calibration: 'walk_forward',
       health: { band: 'UNAVAILABLE', detail: 'daily bars, EOD cadence' },
     });
   }
-  if (!raw || typeof raw !== 'object') {
+  if (raw.score == null || raw.health === 'RED' || raw.health === 'UNAVAILABLE') {
+    const reason = raw.health === 'RED'
+      ? 'Model health RED — mean AUC below calibration threshold.'
+      : 'Model not calibrated — insufficient history or unstable folds.';
     return makeEnvelope({
       engine: 'ta', ticker, verdict: 'UNAVAILABLE',
-      empty_state_reason: 'TA model not yet fitted — awaiting Sunday 01:30 run.',
+      empty_state_reason: reason,
       calibration: 'walk_forward',
-      health: { band: 'UNAVAILABLE', detail: 'daily bars, EOD cadence' },
+      health: { band: raw.health || 'UNAVAILABLE', detail: 'daily bars, EOD cadence' },
     });
   }
   const score = Number.isFinite(raw.score) ? raw.score : null;

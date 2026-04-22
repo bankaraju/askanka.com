@@ -217,7 +217,7 @@ def test_ta_adapter_reliance_green():
     assert "daily bars" in env["health"]["detail"]
 
 
-def test_ta_adapter_non_pilot_ticker_unavailable():
+def test_ta_adapter_missing_raw_unavailable():
     uri = _js_uri("adapters/ta.js")
     src = f"""
     import {{ adapt }} from '{uri}';
@@ -226,8 +226,20 @@ def test_ta_adapter_non_pilot_ticker_unavailable():
     """
     env = _run(src)
     assert env["verdict"] == "UNAVAILABLE"
-    assert "RELIANCE only" in env["empty_state_reason"]
-    assert "212" in env["empty_state_reason"]
+    assert "no ta model" in env["empty_state_reason"].lower()
+
+
+def test_ta_adapter_red_health_unavailable():
+    uri = _js_uri("adapters/ta.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const raw = {{score: null, band: 'UNAVAILABLE', health: 'RED', source: 'own'}};
+    const env = adapt('ITC', raw);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["verdict"] == "UNAVAILABLE"
+    assert "RED" in env["empty_state_reason"] or "below" in env["empty_state_reason"].lower()
 
 
 def test_spread_adapter_pass_high():

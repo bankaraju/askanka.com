@@ -28,7 +28,7 @@ def build_interaction_columns(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def fit_logistic(X: pd.DataFrame, y, C: float = 1.0, max_iter: int = 500,
+def fit_logistic(X: pd.DataFrame, y, C: float = 1.0, max_iter: int = 2000,
                  random_state: int = 42) -> LogisticRegression:
     """Fit logistic regression with specified regularization and solver."""
     clf = LogisticRegression(C=C, max_iter=max_iter, solver="lbfgs",

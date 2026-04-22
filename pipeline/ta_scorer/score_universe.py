@@ -1,7 +1,8 @@
-"""Daily 16:00 IST — apply cached RELIANCE TA model to today's close."""
+"""Daily 16:00 IST — apply cached TA models across the F&O universe."""
 from __future__ import annotations
 import logging
 import math
+import os
 from datetime import datetime
 from pathlib import Path
 import pandas as pd
@@ -16,8 +17,7 @@ _INDEX_HISTORICAL_DIR = _PIPELINE_DIR / "data" / "india_historical" / "indices"
 _MODELS_IN = _PIPELINE_DIR / "data" / "ta_feature_models.json"
 _SCORES_OUT = _PIPELINE_DIR / "data" / "ta_attractiveness_scores.json"
 
-_PILOT_TICKER = "RELIANCE"
-_SECTOR_INDEX = "NIFTYENERGY"
+_INTERCEPT_KEY = "__intercept__"
 
 
 def _band(score: int) -> str:
@@ -33,9 +33,6 @@ def _load_csv(path: Path) -> pd.DataFrame | None:
     df = pd.read_csv(path)
     df.columns = [c.lower() for c in df.columns]
     return df
-
-
-_INTERCEPT_KEY = "__intercept__"
 
 
 def _score_one(coefs: dict, enriched: dict) -> tuple[int, list[dict]]:
@@ -57,57 +54,67 @@ def _score_one(coefs: dict, enriched: dict) -> tuple[int, list[dict]]:
     return int(round(prob * 100)), top
 
 
-def main() -> int:
-    models = storage.read_models(path=_MODELS_IN).get("models", {})
-    meta = models.get(_PILOT_TICKER) or {}
-    ts = datetime.now().isoformat()
-    payload_empty = {"updated_at": ts, "scores": {_PILOT_TICKER: {
-        "ticker": _PILOT_TICKER, "score": None, "band": "UNAVAILABLE",
+def _empty_entry(ticker: str, meta: dict, ts: str) -> dict:
+    return {
+        "ticker": ticker, "score": None, "band": "UNAVAILABLE",
         "health": meta.get("health", "UNAVAILABLE"),
         "source": "own", "top_features": [], "computed_at": ts,
-    }}}
-    if meta.get("health") not in ("GREEN", "AMBER"):
-        storage.write_scores(payload_empty, out=_SCORES_OUT)
-        log.info("skip scoring — model health=%s", meta.get("health"))
-        return 0
-    coefs = meta.get("coefficients") or {}
-    if not coefs:
-        storage.write_scores(payload_empty, out=_SCORES_OUT)
-        return 0
+    }
 
-    prices = _load_csv(_STOCK_HISTORICAL_DIR / f"{_PILOT_TICKER}.csv")
-    sector = _load_csv(_INDEX_HISTORICAL_DIR / f"{_SECTOR_INDEX}_daily.csv")
+
+def main() -> int:
+    models = storage.read_models(path=_MODELS_IN).get("models", {})
     nifty = _load_csv(_INDEX_HISTORICAL_DIR / "NIFTY_daily.csv")
-    if sector is None and nifty is not None:
-        log.warning("sector CSV %s_daily.csv missing — falling back to NIFTY proxy",
-                    _SECTOR_INDEX)
-        sector = nifty
-    if prices is None or sector is None or nifty is None:
-        storage.write_scores(payload_empty, out=_SCORES_OUT)
-        return 0
-
-    as_of = str(prices["date"].iloc[-1])
-    vec = features.build_feature_vector(
-        prices=prices, sector=sector, nifty=nifty,
-        as_of=as_of, regime="NEUTRAL", sector_breadth=0.5,
-    )
-    if not vec:
-        storage.write_scores(payload_empty, out=_SCORES_OUT)
-        return 0
-    enriched = model.build_interaction_columns(pd.DataFrame([vec])).iloc[0].to_dict()
-    score, top = _score_one(coefs, enriched)
-    storage.write_scores({"updated_at": ts, "scores": {_PILOT_TICKER: {
-        "ticker": _PILOT_TICKER, "horizon": "1d",
-        "score": score, "band": _band(score),
-        "health": meta["health"], "source": "own",
-        "p_hat": round(score / 100, 3),
-        "mean_auc": meta.get("mean_auc"),
-        "min_fold_auc": meta.get("min_fold_auc"),
-        "top_features": top, "computed_at": ts,
-    }}}, out=_SCORES_OUT)
-    log.info("scored %s: %d", _PILOT_TICKER, score)
+    ts = datetime.now().isoformat()
+    scores: dict[str, dict] = {}
+    counts = {"scored": 0, "unavailable": 0}
+    for ticker, meta in models.items():
+        if meta.get("health") not in ("GREEN", "AMBER"):
+            scores[ticker] = _empty_entry(ticker, meta, ts)
+            counts["unavailable"] += 1
+            continue
+        coefs = meta.get("coefficients") or {}
+        if not coefs:
+            scores[ticker] = _empty_entry(ticker, meta, ts)
+            counts["unavailable"] += 1
+            continue
+        prices = _load_csv(_STOCK_HISTORICAL_DIR / f"{ticker}.csv")
+        if prices is None or nifty is None:
+            scores[ticker] = _empty_entry(ticker, meta, ts)
+            counts["unavailable"] += 1
+            continue
+        try:
+            as_of = str(prices["date"].iloc[-1])
+            vec = features.build_feature_vector(
+                prices=prices, sector=nifty, nifty=nifty,
+                as_of=as_of, regime="NEUTRAL", sector_breadth=0.5,
+            )
+            if not vec:
+                scores[ticker] = _empty_entry(ticker, meta, ts)
+                counts["unavailable"] += 1
+                continue
+            enriched = model.build_interaction_columns(pd.DataFrame([vec])).iloc[0].to_dict()
+            score, top = _score_one(coefs, enriched)
+            scores[ticker] = {
+                "ticker": ticker, "horizon": meta.get("horizon", "5d"),
+                "score": score, "band": _band(score),
+                "health": meta["health"], "source": "own",
+                "p_hat": round(score / 100, 3),
+                "mean_auc": meta.get("mean_auc"),
+                "min_fold_auc": meta.get("min_fold_auc"),
+                "top_features": top, "computed_at": ts,
+            }
+            counts["scored"] += 1
+        except Exception as exc:
+            log.warning("score failed for %s: %s", ticker, exc)
+            scores[ticker] = _empty_entry(ticker, meta, ts)
+            counts["unavailable"] += 1
+    storage.write_scores({"updated_at": ts, "scores": scores}, out=_SCORES_OUT)
+    log.info("done — scored=%d unavailable=%d", counts["scored"], counts["unavailable"])
     return 0
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=os.environ.get("TA_LOG_LEVEL", "INFO"),
+                        format="%(asctime)s %(levelname)s %(message)s")
     raise SystemExit(main())
