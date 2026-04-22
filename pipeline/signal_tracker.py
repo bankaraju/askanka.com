@@ -549,8 +549,19 @@ def check_signal_status(
     daily_std = levels["daily_std"]
     avg_favorable = levels["avg_favorable_move"]
 
-    # Data-driven stop levels
-    daily_stop = -(avg_favorable * 0.50)           # single-day stop
+    # Per-ticker ATR stop for correlation-break single-ticker trades.
+    # Pair spreads continue using spread_statistics; the ATR stop is only
+    # applied when it was computed for real (source != 'fallback').
+    atr_stop = signal.get("_atr_stop") or {}
+    use_atr = (
+        signal.get("source") == "CORRELATION_BREAK"
+        and atr_stop.get("stop_source", "").startswith("atr_")
+        and atr_stop.get("stop_pct") is not None
+    )
+    if use_atr:
+        daily_stop = atr_stop["stop_pct"]          # ATR-derived single-day stop
+    else:
+        daily_stop = -(avg_favorable * 0.50)       # spread-stats single-day stop
     two_day_stop = daily_stop * 2                  # 2-day stop = 2 × daily stop
 
     # Track consecutive losing days
