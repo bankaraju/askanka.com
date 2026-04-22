@@ -640,10 +640,20 @@ def check_signal_status(
     from datetime import datetime as _dt2
     signal["_last_trail_check"] = _dt2.now().isoformat()
 
+    # ── STOP HIERARCHY GATE ────────────────────────────────
+    # B9 fix (2026-04-22): once the trail is armed, daily stop becomes inert.
+    # Trail "arms" when peak exceeds the trail budget threshold — same arm
+    # condition used inside trail_stop_triggered().  Before arming, daily
+    # stop is the sole floor protecting fresh entries.
+    #
+    # Hierarchy:
+    #   peak <= |daily_stop|          → daily is floor (pre-profit)
+    #   peak >  |daily_stop| (armed)  → trail dominates; daily is INERT
+    af = TRAIL_ARM_FACTOR
+    trail_armed = (trail_budget > 0) and (peak_pnl >= trail_budget * af)
+
     # ── EXIT 0: TRAIL STOP ─────────────────────────────────
     # Peak-relative give-back using historic favorable-move distribution.
-    # Gated behind TRAIL_STOP_ENABLED — off by default until parameters
-    # are validated on a real backtest sample. See module-level comment.
     if TRAIL_STOP_ENABLED and trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget):
         log.info(
             f"Signal {signal.get('signal_id')}: TRAIL STOP "
@@ -654,12 +664,15 @@ def check_signal_status(
 
     # ── EXIT 1: DAILY STOP ──────────────────────────────────
     # Today's spread move breaches 50% of avg daily favorable move.
-    # Flat-trade safety net — fires when peak hasn't accumulated yet.
-    if todays_move <= daily_stop:
+    # Flat-trade safety net — fires ONLY when trail is not yet armed.
+    # Once trail arms, a single bad day cannot close a profitable position;
+    # only retracing past the trail_stop can.  Fixes Sovereign Shield Alpha
+    # pattern: +11.11% peak killed on a single -1.10% day.
+    if not trail_armed and todays_move <= daily_stop:
         log.info(
             f"Signal {signal.get('signal_id')}: DAILY STOP "
             f"(today {todays_move:+.2f}% <= stop {daily_stop:+.2f}%, "
-            f"cumulative {cumulative_spread:+.2f}%)"
+            f"cumulative {cumulative_spread:+.2f}%, trail_armed=False)"
         )
         return ("STOPPED_OUT", pnl)
 
