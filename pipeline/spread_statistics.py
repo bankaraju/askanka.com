@@ -44,6 +44,16 @@ load_dotenv(Path(__file__).parent / ".env")
 from config import INDIA_SIGNAL_STOCKS, INDIA_SPREAD_PAIRS
 from eodhd_client import fetch_eod_series
 
+# Minimum-sample floor — single source of truth is spread_bootstrap.
+# Import the constant lazily here to avoid a circular import (spread_bootstrap
+# imports from spread_statistics, not the other way around).
+def _get_min_samples_provisional() -> int:
+    try:
+        from spread_bootstrap import MIN_SAMPLES_PROVISIONAL
+        return MIN_SAMPLES_PROVISIONAL
+    except ImportError:
+        return 15  # hard fallback if spread_bootstrap not yet on path
+
 log = logging.getLogger("anka.spread_statistics")
 
 IST = timezone(timedelta(hours=5, minutes=30))

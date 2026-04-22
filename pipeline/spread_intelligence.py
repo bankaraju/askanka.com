@@ -51,6 +51,25 @@ _NORM = NormalDist(0, 1)
 
 
 # =============================================================================
+# Defensive bootstrap helper (lazy import — does not run at module load)
+# =============================================================================
+
+
+def _maybe_bootstrap(spread_name: str, long_legs: list, short_legs: list) -> None:
+    """Attempt same-day bootstrap for *spread_name* if it is missing from
+    spread_stats.  Called defensively from apply_gates() before returning
+    INSUFFICIENT_DATA.  Failures are swallowed — gate return shape is unchanged.
+    """
+    if not long_legs and not short_legs:
+        return
+    try:
+        import spread_bootstrap as _sb  # lazy — EODHD calls live inside
+        _sb.ensure(spread_name, long_legs, short_legs)
+    except Exception as exc:
+        log.debug("_maybe_bootstrap failed for %r: %s", spread_name, exc)
+
+
+# =============================================================================
 # Gate logic
 # =============================================================================
 
@@ -87,6 +106,11 @@ def apply_gates(
         # INACTIVE is expected/muted; INSUFFICIENT_DATA is a warning.
         if spread_name not in eligible:
             return {"status": "INACTIVE", "reason": "not in eligible spreads"}
+        # Attempt same-day bootstrap before giving up (non-blocking, swallows errors)
+        spread_info = eligible.get(spread_name, {})
+        long_legs  = spread_info.get("long_legs",  []) if isinstance(spread_info, dict) else []
+        short_legs = spread_info.get("short_legs", []) if isinstance(spread_info, dict) else []
+        _maybe_bootstrap(spread_name, long_legs, short_legs)
         return {"status": "INSUFFICIENT_DATA"}
 
     regimes = spread_entry.get("regimes", spread_entry)

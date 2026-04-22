@@ -261,6 +261,8 @@ Everything downstream reads this to decide what to recommend.
 
 **Schema note (2026-04-22):** `today_regime.json` emits two equivalent keys: `zone` (canonical — read by all UI/API consumers including regime-banner.js, scenario-strip.js, `/api/regime`, `/api/candidates`) and `regime` (legacy alias retained for one release cycle for backward compat). Both always carry the same ETF-derived regime string (e.g., `"RISK-OFF"`). New consumers should read `.zone`; old consumers reading `.regime` are safe.
 
+**Same-day spread bootstrap (added 2026-04-22):** After `eligible_spreads` is assembled, `regime_scanner.scan_regime()` calls `spread_bootstrap.ensure()` for each spread not already present in `pipeline/data/spread_stats.json`. This prevents the `INSUFFICIENT_DATA` stall that previously required waiting until Sunday 22:00 `AnkaWeeklyStats` to populate a new spread's historical stats. Bootstrap result (status / tier) is stored under each `eligible_spreads[name]["_bootstrap_result"]` for downstream consumers (e.g., Task B1 conviction annotator). See `pipeline/spread_bootstrap.py`.
+
 ### Station 3: Regime-to-Trades Mapping
 
 **What it does:** Given today's regime, which spread trades are eligible?
@@ -308,6 +310,8 @@ is not refreshing.
 3. Check the Z-score — has the spread stretched far enough from its mean?
 4. Apply modifiers from technicals, OI, and news
 5. Score each spread → action (ENTER / HOLD / EXIT) + conviction (1-5)
+
+`apply_gates()` now calls `_maybe_bootstrap()` defensively when a spread's regime bucket is missing from `spread_stats`. This gives the same-day bootstrap a second chance within the intraday cycle. On-disk schema for each bucket stays `{count, mean, std, …}` — the `tier` label (FULL/PROVISIONAL/DROPPED) is derived read-time via `spread_bootstrap.tier_from_n(count)` and is never written to disk. Cross-reference: Sunday 22:00 `AnkaWeeklyStats` remains the authoritative full-history recompute.
 
 **Reverse Regime Ranker** (`reverse_regime_ranker.py`):
 1. Load overnight regime profile (which stocks drift up/down in each regime)
