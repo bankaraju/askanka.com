@@ -41,7 +41,7 @@ def test_fno_news_missing_source_returns_zero(tmp_path):
     out = tmp_path / "fno.json"
     n = export_fno_news(source=missing, out=out)
     assert n == 0
-    assert not out.exists() or out.read_text(encoding="utf-8") == "[]"
+    assert not out.exists()
 
 
 def test_fno_news_sort_high_impact_before_moderate(tmp_path):

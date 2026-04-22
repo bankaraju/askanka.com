@@ -529,18 +529,14 @@ def export_trust_scores() -> dict:
 def export_fno_news(source: Path | None = None, out: Path | None = None) -> int:
     """Derive data/fno_news.json from pipeline/data/news_verdicts.json.
 
-    HIGH_IMPACT + MODERATE verdicts with ADD / CUT recommendations are
-    included. Other rows (NO_ACTION, LOW impact, NO_IMPACT, etc.) are dropped.
+    Filters to HIGH_IMPACT + MODERATE verdicts with ADD or CUT recommendations.
+    Other rows (NO_ACTION, LOW impact) are dropped.
 
-    Sort order: HIGH_IMPACT first, then by |historical_avg_5d| descending so
-    strong CUT signals (negative hit_rate) surface alongside strong ADDs.
-    The spec draft used -(hit_rate) which would bury valid CUT signals at the
-    bottom; -abs(...) is correct and intentionally deviates from that draft.
+    Args:
+        source: path to news_verdicts.json (defaults to NEWS_VERDICTS_FILE).
+        out: path to fno_news.json (defaults to WEBSITE_DIR/fno_news.json).
 
-    Constant names: module uses NEWS_VERDICTS_FILE (not VERDICTS_FILE) and
-    WEBSITE_DIR (not DATA_OUT) — spec names adapted accordingly.
-
-    Returns: count of rows written (0 if source missing).
+    Returns: count of rows written.
     """
     source = source or NEWS_VERDICTS_FILE
     out = out or (WEBSITE_DIR / "fno_news.json")
@@ -564,12 +560,13 @@ def export_fno_news(source: Path | None = None, out: Path | None = None) -> int:
             "title": v.get("event_title", ""),
             "hit_rate": v.get("historical_avg_5d"),
         })
-    # HIGH_IMPACT first, then by absolute hit_rate descending
+    # Sort HIGH_IMPACT first, then |hit_rate| desc — strong CUT signals
+    # (negative hit_rate) rank alongside strong ADDs.
     rows_out.sort(key=lambda r: (
         r.get("impact") != "HIGH_IMPACT",
         -abs(r.get("hit_rate") or 0),
     ))
-    out.write_text(json.dumps(rows_out, indent=2, ensure_ascii=False),
+    out.write_text(json.dumps(rows_out, indent=2, default=str, ensure_ascii=False),
                    encoding="utf-8")
     return len(rows_out)
 
