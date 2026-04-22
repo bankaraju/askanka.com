@@ -243,6 +243,8 @@ but that file was last computed on April 14. So every morning since then, the sy
 has been using April 14's regime determination. The MSI runs live but only provides
 context — it does NOT override the ETF regime.
 
+**MSI intraday refresh (added 2026-04-22)** — Morning `regime_scanner.py` persists raw FII flow into `today_regime.json.msi_cached_inputs`. Each 15-min intraday cycle calls `pipeline/msi_refresh.py`, which reuses the cached FII and re-fetches live VIX, USD/INR, Nifty 30d return, and crude to recompute MSI. On any failure the script exits 2 and leaves `today_regime.json` untouched — morning MSI is held and the watchdog flags `today_regime.json` as stale after `grace_multiplier × 15 min`. The `/api/regime` response now returns two timestamps: `updated_at` for the ETF regime and `msi_updated_at` for MSI specifically.
+
 **Regime zones:**
 - EUPHORIA (markets too calm, reversal risk)
 - RISK-ON (bullish)
@@ -338,6 +340,8 @@ get sent to Telegram.
 2. Checks if existing signals hit their targets or stop-losses
 3. Detects new correlation breaks (Phase C)
 4. Sends updates to Telegram
+
+The sequence inside `intraday_scan.bat` is: technicals → OI → news → fno_news → news_intel → spread_intel → **msi_refresh** → correlation_breaks → website_exporter. MSI refresh is soft: its exit code 2 on partial-fetch failure does not stop downstream scanners. A visible amber dot next to the MSI value in the terminal banner signals >30-min staleness.
 
 **Files updated every 15 min:**
 - `data/open_signals.json` — currently active signals
