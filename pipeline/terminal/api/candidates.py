@@ -4,6 +4,11 @@ import sys
 from pathlib import Path
 from fastapi import APIRouter
 
+# Phase B tiering constants (B1.5)
+_MIN_EPISODES_FULL = 30
+_MIN_EPISODES_PROVISIONAL = 15
+_PROVISIONAL_SCORE_FLOOR = 20
+
 router = APIRouter()
 
 _HERE = Path(__file__).resolve().parent.parent
@@ -69,13 +74,33 @@ def _build_regime_picks(today_recs: dict) -> list:
         direction = (s.get("direction") or "").upper()
         long_legs = [ticker] if direction == "LONG" else []
         short_legs = [ticker] if direction == "SHORT" else []
+        episodes = int(s.get("episodes") or 0)
+        hit_rate = float(s.get("hit_rate") or 0.0)
+        raw_conviction = (s.get("conviction") or "NONE").upper()
+
+        # Tier downgrade — dishonest labels when n is small
+        if episodes < _MIN_EPISODES_PROVISIONAL:
+            conviction = "PROVISIONAL"
+        elif episodes < _MIN_EPISODES_FULL and raw_conviction in ("HIGH", "MEDIUM"):
+            conviction = "MEDIUM"  # still data-limited, don't let HIGH through under 30
+        else:
+            conviction = raw_conviction
+
+        # Sample-size-penalized score. Even a PROVISIONAL pick deserves a visible score.
+        # Formula: hit_rate × 100 × min(episodes, _MIN_EPISODES_FULL) / _MIN_EPISODES_FULL
+        base = hit_rate * 100.0 * (min(episodes, _MIN_EPISODES_FULL) / _MIN_EPISODES_FULL)
+        if conviction == "PROVISIONAL":
+            score = max(_PROVISIONAL_SCORE_FLOOR, round(base))
+        else:
+            score = round(base)
+
         out.append({
             "source": "regime_engine",
             "name": f"Phase B: {ticker}",
             "long_legs": long_legs,
             "short_legs": short_legs,
-            "conviction": s.get("conviction", "NONE"),
-            "score": s.get("score") or 0,
+            "conviction": conviction,
+            "score": score,
             "horizon_days": s.get("horizon_days", 3),
             "horizon_basis": "event_decay",
             "sizing_basis": None,

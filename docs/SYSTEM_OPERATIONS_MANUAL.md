@@ -456,6 +456,8 @@ Confidence levels:
 
 **Output:** `data/regime_ranker_state.json`
 
+**Conviction downgrade (B1.5):** Phase B picks exposed in the terminal via `pipeline/terminal/api/candidates.py::_build_regime_picks` apply episode-based label honesty before display. Raw ranker output can carry "HIGH" on a single-episode signal — that label is dishonest. The API layer applies: `episodes < 15 → PROVISIONAL`, `15 ≤ episodes < 30 → MEDIUM` (even if ranker said HIGH), `episodes ≥ 30 → pass through raw label`. Score is recalculated as `hit_rate × 100 × min(episodes, 30) / 30` with a floor of 20 for PROVISIONAL so it is never displayed as zero. Constants `_MIN_EPISODES_FULL=30`, `_MIN_EPISODES_PROVISIONAL=15`, `_PROVISIONAL_SCORE_FLOOR=20` live at the top of `candidates.py`.
+
 ### Phase C — Intraday Correlation Breaks (every 15 min)
 
 **Script:** `autoresearch/reverse_regime_breaks.py`
