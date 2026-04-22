@@ -715,3 +715,10 @@ h3 { font-size: 1.125rem; }
 .attract-amber { color: var(--accent-gold); opacity: 0.65; }
 .attract-red { color: var(--text-muted); }
 .attract-none { color: var(--text-muted); opacity: 0.4; }
+
+/* Feature Coincidence Scorer — Positions trajectory badge (Task 14).
+   Session-memoized ±2 dead-zone arrow; see components/attractiveness-badge.js. */
+.attract-badge { font-size: 0.75rem; margin-left: 8px; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono); }
+.attract-rising { color: var(--accent-green); background: rgba(16, 185, 129, 0.08); }
+.attract-falling { color: var(--accent-red); background: rgba(239, 68, 68, 0.08); }
+.attract-flat { color: var(--text-muted); background: rgba(100, 116, 139, 0.08); }

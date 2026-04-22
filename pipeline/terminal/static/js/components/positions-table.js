@@ -1,6 +1,8 @@
 // Renders the Open Positions table for Dashboard.
 // Shows entry, current, P&L, stop, target, exit triggers, days held, source signal.
 
+import { renderBadge as renderAttractBadge } from './attractiveness-badge.js';
+
 export function render(container, positions) {
   if (!positions || positions.length === 0) {
     container.innerHTML = `
@@ -129,13 +131,19 @@ export function render(container, positions) {
     // without rewriting live_status.json. Single-leg only.
     const pnlTicker = rowTicker(p);
     const pnlLiveAttr = pnlTicker ? ` data-live-pnl-ticker="${pnlTicker}"` : '';
+    // Attractiveness trajectory badge — single-leg rows only (rowTicker
+    // returns '' for multi-leg baskets, which short-circuits renderBadge).
+    // p.attractiveness is attached upstream by pages/dashboard.js after the
+    // /api/attractiveness fetch; absent → renderBadge returns '' and no
+    // badge markup is emitted.
+    const attractBadge = renderAttractBadge(pnlTicker, p.attractiveness);
 
     return `<tr${whyTooltip ? ` title="${whyTooltip}"` : ''}>
       <td>${p.spread_name || p.signal_id || '--'}</td>
       <td>${legsHtml(p)}</td>
       <td>${priceCell(p)}</td>
       <td class="mono">${opened}</td>
-      <td class="mono ${pnlClass(pnl)}"${pnlLiveAttr}>${fmtPct(pnl)}</td>
+      <td class="mono ${pnlClass(pnl)}"${pnlLiveAttr}>${fmtPct(pnl)}${attractBadge ? ' ' + attractBadge : ''}</td>
       <td class="mono text-red" title="Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.">${stop}${fallbackDot}</td>
       <td class="mono ${pnlClass(trailStop)}" title="Trail stop = peak - (avg_favorable × sqrt(days_since_check)). Arms when peak ≥ budget.">${trail}</td>
       <td class="mono text-green" title="Running peak P&L since entry — trail stop ratchets off this.">${peak}</td>

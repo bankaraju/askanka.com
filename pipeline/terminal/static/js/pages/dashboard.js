@@ -2,6 +2,7 @@ import { get } from '../lib/api.js';
 import * as regimeBanner from '../components/regime-banner.js';
 import * as positionsTable from '../components/positions-table.js';
 import * as scenarioStrip from '../components/scenario-strip.js';
+import * as attractiveness from '../components/attractiveness-cell.js';
 import { startLivePolling } from '../components/live-ticker.js';
 
 let refreshTimer = null;
@@ -38,8 +39,14 @@ export function destroy() {
 }
 
 async function loadData() {
-  const [regime, signals] = await Promise.allSettled([
-    get('/regime'), get('/signals'),
+  // Fetch regime + signals + attractiveness in parallel. Attractiveness is a
+  // soft dependency — if it fails (stale fixture, endpoint down), we still
+  // render positions; the per-row badge simply won't appear. Same pattern
+  // as trading.js:39-44.
+  const [regime, signals, scores] = await Promise.allSettled([
+    get('/regime'),
+    get('/signals'),
+    attractiveness.fetchAll(),
   ]);
 
   const regimeData = regime.status === 'fulfilled'
@@ -50,6 +57,17 @@ async function loadData() {
   const positions = signals.status === 'fulfilled'
     ? (signals.value.positions || [])
     : [];
+
+  // Attach per-position attractiveness so positions-table can render the
+  // trajectory badge synchronously (see components/attractiveness-badge.js).
+  // Multi-leg baskets don't get a per-ticker score — positions-table skips
+  // those rows anyway, but we still leave .attractiveness undefined for them.
+  const scoreMap = (scores.status === 'fulfilled' && scores.value && scores.value.scores) || {};
+  for (const p of positions) {
+    const raw = p.long_legs?.[0]?.ticker || p.short_legs?.[0]?.ticker || p.ticker;
+    if (!raw) { p.attractiveness = undefined; continue; }
+    p.attractiveness = scoreMap[String(raw).toUpperCase()];
+  }
 
   const regimeEl = document.getElementById('dash-regime');
   if (regimeEl) regimeBanner.render(regimeEl, regimeData);
