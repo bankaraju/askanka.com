@@ -407,8 +407,13 @@ def _norm_crude(change_5d: Optional[float]) -> float:
 # MSI computation
 # ---------------------------------------------------------------------------
 
-def compute_msi() -> dict:
+def compute_msi(*, cached_fii: dict | None = None) -> dict:
     """Compute today's Macro Sentiment Index.
+
+    Args:
+        cached_fii: Optional dict with keys {fii_net, dii_net, combined_flow}.
+            If provided, skip the NSE HTTP fetch and use these values. Used by
+            the intraday refresh because NSE publishes FII flows EOD only.
 
     Returns dict:
       msi_score: float 0-100
@@ -416,10 +421,10 @@ def compute_msi() -> dict:
       components: {input: {raw_value, normalised, weight, contribution}}
       timestamp: ISO string (IST)
     """
-    inst      = _fetch_institutional_flow()
+    inst      = cached_fii if cached_fii is not None else _fetch_institutional_flow()
     fii_net   = inst.get("fii_net")
     dii_net   = inst.get("dii_net", 0.0)
-    combined  = inst.get("combined")
+    combined  = inst.get("combined_flow") if cached_fii is not None else inst.get("combined")
     vix       = _fetch_india_vix()
     vix_avg   = _fetch_india_vix_90d_avg()
     usdinr    = _fetch_usdinr_change_5d()
