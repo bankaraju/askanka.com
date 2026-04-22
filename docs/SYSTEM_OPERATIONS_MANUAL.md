@@ -453,6 +453,61 @@ Pending observation (not blocking):
 
 ---
 
+### Station 10: Unified Analysis Panel (UAP) v1
+
+Added 2026-04-23. One shared terminal component renders all four analysis
+engines (FCS, TA, Spread, Correlation Break) through a single envelope:
+Verdict + Conviction (0–100) + Evidence + Model Health + Freshness +
+Calibration tag. Replaces the engine-specific panels that preceded it.
+
+**Data flow.** `pages/trading.js` parallel-fetches `/api/attractiveness`,
+`/api/ta_attractiveness`, `/api/research/digest`, `/api/correlation_breaks`
+via `Promise.allSettled`. Raw responses attach to each candidate as
+`analyses_raw`. Drawer open → `components/analysis/panel.js` renders four
+cards in frozen order `FCS → TA → Spread → Corr Break` via per-engine
+adapters.
+
+**Calibration tag.** `walk_forward` scores render gold; `heuristic` scores
+render muted with dotted underline. Makes the no-hallucination mandate
+visible: FCS/TA earn their scores via walk-forward AUC; Spread (gate
+mapping) and Correlation Break (σ × 25) are asserted heuristics with no
+calibration in v1.
+
+**TA scorer inputs.**
+`pipeline/data/fno_historical/RELIANCE.csv` +
+`pipeline/data/india_historical/indices/NIFTYENERGY_daily.csv` +
+`NIFTY_daily.csv`
+→ `fit_universe.py` (Sunday 01:30 `AnkaTAScorerFit`)
+→ `pipeline/data/ta_feature_models.json`
+→ `score_universe.py` (daily 16:00 `AnkaTAScorerScore`)
+→ `pipeline/data/ta_attractiveness_scores.json`.
+Surfaced by `GET /api/ta_attractiveness` + `/ta_attractiveness/{ticker}`.
+
+**Freshness contract.** Watchdog tracks `ta_feature_models.json` (weekly
+warn, grace 2.0) and `ta_attractiveness_scores.json` (daily warn, grace
+2.0). TA card in the UI shows previous-session 16:00 timestamp during
+market hours — this is correct by design (daily bars, not intraday).
+
+**Scope boundary.** v1 is ranking/research only — does NOT gate trades or
+set size. RELIANCE-only TA pilot; 212/213 tickers show UNAVAILABLE card
+until v2 rollout after 60-day forward uplift audit.
+
+**Register the tasks (one-time manual step):**
+```
+schtasks /create /tn "AnkaTAScorerFit"   /tr "C:\Users\Claude_Anka\askanka.com\pipeline\scripts\fit_ta_scorer.bat"   /sc weekly /d SUN /st 01:30
+schtasks /create /tn "AnkaTAScorerScore" /tr "C:\Users\Claude_Anka\askanka.com\pipeline\scripts\score_ta_scorer.bat" /sc daily /st 16:00
+```
+
+**Files of interest.**
+- Backend: `pipeline/ta_scorer/*.py`, `pipeline/terminal/api/ta_attractiveness.py`
+- Frontend: `pipeline/terminal/static/js/components/analysis/{panel,envelope,health}.js`, `adapters/{fcs,ta,spread,corr}.js`
+- Design: `docs/superpowers/specs/2026-04-23-unified-analysis-panel-design.md`
+- Plan: `docs/superpowers/plans/2026-04-23-unified-analysis-panel.md`
+
+**Status (2026-04-23): WIRED — awaiting first `AnkaTAScorerFit` Sunday run.**
+
+---
+
 ## 3b. The Reverse Regime Engine — How Stock Picks Are Made
 
 The "reverse regime" engine is a 3-phase system that turns regime changes into
@@ -656,6 +711,7 @@ That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 | Time (IST) | Task Name | What It Does | Critical? |
 |------------|-----------|-------------|-----------|
 | 16:00 | AnkaEODReview | P&L dashboard → Telegram, archive OI, push website JSONs | CRITICAL |
+| 16:00 | AnkaTAScorerScore | TA Coincidence Scorer daily apply — writes `ta_attractiveness_scores.json` (RELIANCE pilot) | warn |
 | 16:15 | AnkaEODTrackRecord | Write official track record, push website JSONs | warn |
 | 16:20 | AnkaEODNews | Backtest news predictions | warn |
 | 16:35 | AnkaTrustEOD | OPUS ANKA EOD review + next-day outlook | warn |
@@ -668,6 +724,7 @@ Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, e
 | Day/Time | Task Name | What It Does |
 |----------|-----------|-------------|
 | Saturday 22:00 | AnkaETFReoptimize | Reoptimize ETF weights with Indian data (Karpathy) | CRITICAL |
+| Sunday 01:30 | AnkaTAScorerFit | RELIANCE TA model walk-forward fit — writes `ta_feature_models.json` |
 | Sunday 22:00 | AnkaWeeklyAgg | Aggregate weekly spread statistics |
 | Sunday 22:00 | AnkaWeeklyStats | Compute per-regime spread distributions via spread_statistics.py → pipeline/data/spread_stats.json |
 | Friday 16:00 | AnkaWeeklyReport | Weekly performance report → Telegram |

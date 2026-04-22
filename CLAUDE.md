@@ -62,6 +62,7 @@ The system runs automatically via Windows Scheduled Tasks:
 
 **Post-Close:**
 - 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL); also runs `oi_scanner --archive-only` and `website_exporter.py`
+- 16:00 — AnkaTAScorerScore: TA Coincidence Scorer daily apply — writes `ta_attractiveness_scores.json` (warn)
 - 16:15 — AnkaEODTrackRecord: write official track record + run `website_exporter.py` (warn)
 - 16:20 — AnkaEODNews: backtest news predictions (warn)
 - 16:35 — AnkaTrustEOD: OPUS ANKA EOD review + next-day outlook (warn)
@@ -73,10 +74,11 @@ Note: website_exporter.py is invoked from morning_scan (09:25), every intraday c
 - Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)
 - Sunday 00:00 — AnkaUnifiedBacktest: 777-day historical replay backtest (CRITICAL)
 - Sunday 01:00 — AnkaFeatureScorerFit: weekly run of quarterly walk-forward Feature Coincidence Scorer fit (warn)
+- Sunday 01:30 — AnkaTAScorerFit: RELIANCE TA model walk-forward fit — writes `ta_feature_models.json` (warn)
 - Sunday 22:00 — AnkaWeeklyAgg + AnkaWeeklyStats: weekly spread statistics (warn)
 - Friday 16:00 — AnkaWeeklyReport: weekly performance report → Telegram (warn)
 
-Total: 75+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
+Total: 77+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
 
 ## Scheduler Inventory (Canonical)
 
