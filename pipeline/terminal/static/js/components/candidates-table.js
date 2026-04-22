@@ -1,6 +1,6 @@
 // Sortable table of tradeable_candidates with click-to-expand row drawer.
 import * as drawer from './candidate-drawer.js';
-import { renderCellHtml as renderAttractCell, bandClass as attractBandClass, tooltipText as attractTooltip } from './attractiveness-cell.js';
+import { renderCellHtml as renderAttractCell } from './attractiveness-cell.js';
 
 let _sortCol = 'score';
 let _sortDir = -1;
@@ -113,7 +113,3 @@ export function render(container, candidates) {
     });
   });
 }
-
-// Re-export helpers so other modules (Positions badge, TA panel) can reuse
-// without depending on the attractiveness module directly.
-export { attractBandClass, attractTooltip };

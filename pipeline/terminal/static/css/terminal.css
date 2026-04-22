@@ -710,8 +710,8 @@ h3 { font-size: 1.125rem; }
 }
 
 /* Feature Coincidence Scorer — Attractiveness cell (Trading tab + future reuse). */
-.attract { font-family: monospace; font-weight: 600; padding: 2px 6px; border-radius: 3px; }
-.attract-green { color: #c9a864; }                /* gold */
-.attract-amber { color: #c9a864; opacity: 0.65; } /* gold dim */
-.attract-red { color: #888; }                     /* muted */
-.attract-none { color: #444; }                    /* em-dash / no model */
+.attract { font-family: var(--font-mono); font-weight: 600; padding: 2px 6px; border-radius: 3px; }
+.attract-green { color: var(--accent-gold); }
+.attract-amber { color: var(--accent-gold); opacity: 0.65; }
+.attract-red { color: var(--text-muted); }
+.attract-none { color: var(--text-muted); opacity: 0.4; }
