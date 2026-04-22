@@ -151,3 +151,48 @@ def test_panel_calibration_styling():
     # The class attribute looks like: class="analysis-card__conviction analysis-card__conviction--heuristic"
     # Check for the modifier class substring (tightened from the original spec assertion).
     assert "analysis-card__conviction--heuristic" in out["heuristic"]
+
+
+def test_fcs_adapter_green_long():
+    uri = _js_uri("adapters/fcs.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const raw = {{score: 72, band: 'HIGH', health: 'GREEN', source: 'own',
+      computed_at: '2026-04-23T14:00:00+05:30',
+      mean_auc: 0.61, min_fold_auc: 0.54, n_folds: 6,
+      top_features: [{{name: 'rs_10d', contribution: 0.38}},
+                     {{name: 'sec5d', contribution: 0.22}},
+                     {{name: 'vol60', contribution: -0.11}}]}};
+    const env = adapt('RELIANCE', raw);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["engine"] == "fcs"
+    assert env["verdict"] == "LONG"
+    assert env["conviction_0_100"] == 72
+    assert env["calibration"] == "walk_forward"
+    assert len(env["evidence"]) == 3
+
+
+def test_fcs_adapter_short_on_low_score():
+    uri = _js_uri("adapters/fcs.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const env = adapt('X', {{score: 30, health: 'GREEN',
+      top_features: [], computed_at: 'x'}});
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["verdict"] == "SHORT"
+
+
+def test_fcs_adapter_missing_returns_unavailable():
+    uri = _js_uri("adapters/fcs.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const env = adapt('X', null);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["verdict"] == "UNAVAILABLE"
+    assert env["empty_state_reason"]
