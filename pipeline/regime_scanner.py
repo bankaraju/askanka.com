@@ -43,6 +43,49 @@ MSI_TO_TRADE_MAP = {
     "MACRO_EASY":    "RISK-ON",
 }
 
+# ETF zone → MSI name mapping used when looking up regime buckets in spread_stats
+_ETF_TO_MSI = {
+    "RISK-OFF": "MACRO_STRESS",
+    "CAUTION":  "MACRO_STRESS",
+    "NEUTRAL":  "MACRO_NEUTRAL",
+    "RISK-ON":  "MACRO_EASY",
+    "EUPHORIA": "MACRO_EASY",
+}
+
+
+def _classify_conviction(entry: dict, gate_result: dict, tier: str) -> str:
+    """Map gate output + tier to a human-readable conviction label.
+
+    Thresholds (applied in priority order):
+      1. tier == "PROVISIONAL"     → "PROVISIONAL"  (< 15 samples, label honestly)
+      2. gate status INSUFFICIENT_DATA or INACTIVE → "NONE"  (no data or not in regime)
+      3. |z_score| >= 2.0 AND best_win >= 65        → "HIGH"
+      4. |z_score| >= 1.5 AND best_win >= 55        → "MEDIUM"
+      5. gate status ACTIVE or AT_MEAN              → "LOW"   (in-gate but below thresholds)
+      6. fallback                                   → "NONE"
+
+    Note: 'ACTIVE' is the spread_intelligence gate status meaning the spread IS
+    diverging (z > 1.0). 'AT_MEAN' means z <= 1.0 but still within regime gate.
+    The spec's 'DIVERGENT' label maps to 'ACTIVE' in the actual implementation.
+    """
+    if tier == "PROVISIONAL":
+        return "PROVISIONAL"
+
+    status = gate_result.get("status", "")
+    if status in ("INSUFFICIENT_DATA", "INACTIVE"):
+        return "NONE"
+
+    z = abs(gate_result.get("z_score") or 0)
+    best_win = float(entry.get("best_win") or 0)
+
+    if z >= 2.0 and best_win >= 65:
+        return "HIGH"
+    if z >= 1.5 and best_win >= 55:
+        return "MEDIUM"
+    if status in ("ACTIVE", "AT_MEAN"):
+        return "LOW"   # in-gate but below threshold
+    return "NONE"
+
 
 def _resolve_regime_key(regime: str, trade_map: dict) -> str | None:
     """Return the key into trade_map that best matches this MSI regime.
@@ -237,6 +280,85 @@ def scan_regime() -> dict:
                     log.info("Bootstrap %r: %s", spread_name, bootstrap_result.get("status"))
                 except Exception as _be:
                     log.warning("Bootstrap failed for %r: %s", spread_name, _be)
+
+    # ---- 3c. Annotate each eligible spread with gate output ----
+    # Load spread_stats once; annotation uses apply_gates from spread_intelligence.
+    if eligible_spreads:
+        try:
+            from spread_intelligence import apply_gates as _apply_gates
+            from spread_bootstrap import tier_from_n as _tier_from_n
+
+            # Load spread_stats.json for gate computation
+            _stats_file = _DATA / "spread_stats.json"
+            try:
+                _spread_stats: dict = json.loads(_stats_file.read_text(encoding="utf-8"))
+            except Exception as _se:
+                log.warning("Could not load spread_stats.json for gate annotation: %s", _se)
+                _spread_stats = {}
+
+            # Build a minimal regime_data dict for Gate 1 check
+            _regime_data_for_gate = {"eligible_spreads": dict(eligible_spreads)}
+
+            for _sname, _sinfo in eligible_spreads.items():
+                if not isinstance(_sinfo, dict):
+                    continue
+
+                # --- Determine tier from spread_stats bucket sample count ---
+                _bucket_count = 0
+                _stats_entry = _spread_stats.get(_sname, {})
+                # Try ETF zone name first, then MSI-mapped name
+                _msi_key = _ETF_TO_MSI.get(current_regime, "")
+                _regime_bucket = (
+                    _stats_entry.get(current_regime)
+                    or _stats_entry.get(_msi_key)
+                    or {}
+                )
+                _bucket_count = int(_regime_bucket.get("count") or 0)
+
+                # Fall back to bootstrap result if spread_stats has no data
+                _bootstrap = _sinfo.get("_bootstrap_result", {})
+                if _bucket_count == 0 and isinstance(_bootstrap, dict):
+                    _bucket_count = int(_bootstrap.get("n") or 0)
+
+                _tier = _tier_from_n(_bucket_count)
+                # DROPPED tier (< 15 samples) → treat as PROVISIONAL for UI purposes
+                if _tier == "DROPPED":
+                    _tier = "PROVISIONAL"
+
+                # --- Call apply_gates; pass None for today's return (pre-close) ---
+                # today_spread_return=None signals "no live price yet".
+                # We catch any failure so annotation never breaks the regime scan.
+                try:
+                    _gate = _apply_gates(
+                        _sname,
+                        _regime_data_for_gate,
+                        _spread_stats,
+                        None,          # today_spread_return — unavailable pre-market
+                        current_regime,
+                    )
+                except Exception as _ge:
+                    log.warning("apply_gates failed for %r: %s — using NO_TODAY_RETURN", _sname, _ge)
+                    _gate = {"status": "NO_TODAY_RETURN", "z_score": None}
+
+                _conviction = _classify_conviction(_sinfo, _gate, _tier)
+
+                # Persist annotation fields into the entry dict (mutates in-place)
+                _sinfo["conviction"]   = _conviction
+                _sinfo["z_score"]      = _gate.get("z_score")
+                _sinfo["gate_status"]  = _gate.get("status", "UNKNOWN")
+                _sinfo["tier"]         = _tier
+
+                log.debug(
+                    "Annotate %r: conviction=%s z=%.2f gate=%s tier=%s",
+                    _sname,
+                    _conviction,
+                    _gate.get("z_score") or 0.0,
+                    _gate.get("status"),
+                    _tier,
+                )
+
+        except Exception as _ae:
+            log.error("Spread annotation block failed: %s — eligible_spreads will lack conviction fields", _ae)
 
     # ---- 4. Build and save output ----
     timestamp = datetime.now(IST).isoformat()

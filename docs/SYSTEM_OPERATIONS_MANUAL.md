@@ -263,6 +263,14 @@ Everything downstream reads this to decide what to recommend.
 
 **Same-day spread bootstrap (added 2026-04-22):** After `eligible_spreads` is assembled, `regime_scanner.scan_regime()` calls `spread_bootstrap.ensure()` for each spread not already present in `pipeline/data/spread_stats.json`. This prevents the `INSUFFICIENT_DATA` stall that previously required waiting until Sunday 22:00 `AnkaWeeklyStats` to populate a new spread's historical stats. Bootstrap result (status / tier) is stored under each `eligible_spreads[name]["_bootstrap_result"]` for downstream consumers (e.g., Task B1 conviction annotator). See `pipeline/spread_bootstrap.py`.
 
+**Gate annotation (added 2026-04-22, Task B1):** After bootstrap, each entry in `eligible_spreads` is annotated with four additional fields before `today_regime.json` is written:
+- `conviction`: HIGH / MEDIUM / LOW / PROVISIONAL / NONE — classified by `_classify_conviction()` in `regime_scanner.py`. HIGH requires |z| >= 2.0 and best_win >= 65%; MEDIUM requires |z| >= 1.5 and best_win >= 55%; LOW is in-gate but below thresholds; PROVISIONAL means fewer than 30 regime-matched samples; NONE is returned for INSUFFICIENT_DATA / INACTIVE / no-return states.
+- `z_score`: float or None — z-score of today's spread return vs the regime distribution, from `spread_intelligence.apply_gates()`. None before market close (no live price yet).
+- `gate_status`: string from `apply_gates()` — ACTIVE (diverging), AT_MEAN (within 1σ), INSUFFICIENT_DATA, INACTIVE, NO_TODAY_RETURN (pre-close).
+- `tier`: FULL (>= 30 samples) or PROVISIONAL (< 30 samples) — derived from the spread_stats regime bucket count.
+
+Downstream consumers (`pipeline/terminal/api/candidates.py`) read these fields directly, ending the "Conviction: NONE" default in the Trading tab.
+
 ### Station 3: Regime-to-Trades Mapping
 
 **What it does:** Given today's regime, which spread trades are eligible?
