@@ -52,7 +52,7 @@ export function renderCardHtml(env, nowIso) {
   const emptyHtml = (env.verdict === 'UNAVAILABLE' && env.empty_state_reason)
     ? `<div class="analysis-card__empty">${_esc(env.empty_state_reason)}</div>` : '';
 
-  const stale = isStale(env.computed_at, env.engine, nowIso);
+  const stale = env.verdict !== 'UNAVAILABLE' && isStale(env.computed_at, env.engine, nowIso);
   const stalePill = stale ? `<span class="analysis-card__stale" title="Older than 2× expected cadence">●</span>` : '';
 
   return `

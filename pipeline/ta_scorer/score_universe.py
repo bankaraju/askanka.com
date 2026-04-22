@@ -35,10 +35,15 @@ def _load_csv(path: Path) -> pd.DataFrame | None:
     return df
 
 
+_INTERCEPT_KEY = "__intercept__"
+
+
 def _score_one(coefs: dict, enriched: dict) -> tuple[int, list[dict]]:
-    logit = 0.0
+    logit = float(coefs.get(_INTERCEPT_KEY, 0.0))
     contribs: list[tuple[str, float]] = []
     for name, coef in coefs.items():
+        if name == _INTERCEPT_KEY:
+            continue
         v = float(enriched.get(name, 0.0) or 0.0)
         c = coef * v
         logit += c

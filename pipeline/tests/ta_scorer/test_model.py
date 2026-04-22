@@ -45,4 +45,5 @@ def test_coefficients_dict_roundtrip():
     y = (X["f1"] + X["f2"] > 0).astype(int)
     clf = model.fit_logistic(X, y)
     d = model.coefficients_dict(clf, ["f1", "f2"])
-    assert set(d.keys()) == {"f1", "f2"}
+    assert set(d.keys()) == {"f1", "f2", "__intercept__"}
+    assert d["__intercept__"] == float(clf.intercept_[0])

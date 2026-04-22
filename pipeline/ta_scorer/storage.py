@@ -9,8 +9,13 @@ _DATA = Path(__file__).resolve().parent.parent / "data"
 _MODELS = _DATA / "ta_feature_models.json"
 _SCORES = _DATA / "ta_attractiveness_scores.json"
 
-_EMPTY_MODELS = {"version": "1.0", "models": {}}
-_EMPTY_SCORES = {"updated_at": None, "scores": {}}
+
+def _empty_models() -> dict[str, Any]:
+    return {"version": "1.0", "models": {}}
+
+
+def _empty_scores() -> dict[str, Any]:
+    return {"updated_at": None, "scores": {}}
 
 
 def write_models(data: dict[str, Any], out: Path | None = None) -> None:
@@ -22,7 +27,7 @@ def write_models(data: dict[str, Any], out: Path | None = None) -> None:
 def read_models(path: Path | None = None) -> dict[str, Any]:
     p = Path(path) if path else _MODELS
     if not p.exists():
-        return dict(_EMPTY_MODELS)
+        return _empty_models()
     return json.loads(p.read_text(encoding="utf-8"))
 
 
@@ -35,5 +40,5 @@ def write_scores(data: dict[str, Any], out: Path | None = None) -> None:
 def read_scores(path: Path | None = None) -> dict[str, Any]:
     p = Path(path) if path else _SCORES
     if not p.exists():
-        return dict(_EMPTY_SCORES)
+        return _empty_scores()
     return json.loads(p.read_text(encoding="utf-8"))

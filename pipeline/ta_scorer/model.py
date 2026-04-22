@@ -42,6 +42,13 @@ def predict_proba(clf: LogisticRegression, X: pd.DataFrame) -> np.ndarray:
     return clf.predict_proba(X.values)[:, 1]
 
 
+_INTERCEPT_KEY = "__intercept__"
+
+
 def coefficients_dict(clf: LogisticRegression, columns: list[str]) -> dict[str, float]:
-    """Extract coefficients as ordered dict keyed by column names."""
-    return {c: float(v) for c, v in zip(columns, clf.coef_[0])}
+    """Extract coefficients as ordered dict keyed by column names. Includes the
+    fitted intercept under the reserved key `__intercept__` so downstream
+    scorers can reconstruct the logit without the sklearn estimator."""
+    out = {c: float(v) for c, v in zip(columns, clf.coef_[0])}
+    out[_INTERCEPT_KEY] = float(clf.intercept_[0])
+    return out
