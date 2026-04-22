@@ -47,6 +47,31 @@ DATA_DIR = _HERE / "data"
 EVENTS_TODAY = DATA_DIR / "news_events_today.json"
 EVENTS_HISTORY = DATA_DIR / "news_events_history.json"
 
+ALIASES_FILE = Path(__file__).parent / "config" / "news_aliases.json"
+_ALIASES_CACHE: dict | None = None
+
+
+def _load_aliases() -> dict:
+    if not ALIASES_FILE.exists():
+        return {}
+    try:
+        return json.loads(ALIASES_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _alias_match_stocks(title: str, universe: list[str]) -> list[str]:
+    global _ALIASES_CACHE
+    if _ALIASES_CACHE is None:
+        _ALIASES_CACHE = _load_aliases()
+    title_lower = title.lower()
+    matches: list[str] = []
+    for phrase, ticker in _ALIASES_CACHE.items():
+        if phrase.lower() in title_lower and ticker in universe and ticker not in matches:
+            matches.append(ticker)
+    return matches
+
+
 BSE_RSS = "https://www.bseindia.com/xml-data/corpfiling/rss_corp.xml"
 
 MARKET_RSS = [
@@ -222,6 +247,9 @@ def fetch_market_rss() -> list[dict]:
 def classify_event(item: dict, universe: list[str]) -> dict | None:
     title = item["title"]
     matched_stocks = _name_match_stocks(title, universe)
+    matched_stocks.extend(
+        t for t in _alias_match_stocks(title, universe) if t not in matched_stocks
+    )
     if item.get("symbol_hint") and item["symbol_hint"] not in matched_stocks:
         matched_stocks.append(item["symbol_hint"])
     policy_matches = _policy_match(title)
