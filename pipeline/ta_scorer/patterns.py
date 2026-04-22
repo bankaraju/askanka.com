@@ -54,6 +54,8 @@ def is_bullish_engulfing(prev: Mapping, cur: Mapping) -> bool:
 
 
 def is_bearish_engulfing(prev: Mapping, cur: Mapping) -> bool:
+    """Prev is green (close>open); cur is red (close<open) and
+    cur body fully engulfs prev body."""
     prev_green = prev["close"] > prev["open"]
     cur_red = cur["close"] < cur["open"]
     engulfs = cur["open"] >= prev["close"] and cur["close"] <= prev["open"]

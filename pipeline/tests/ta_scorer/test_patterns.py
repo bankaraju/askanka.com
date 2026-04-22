@@ -43,3 +43,14 @@ def test_bearish_engulfing_true():
     prev = _bar(100.0, 101.0, 99.8, 100.8)  # green
     cur = _bar(101.0, 101.2, 99.0, 99.2)    # red, engulfs prev body
     assert patterns.is_bearish_engulfing(prev, cur) is True
+
+
+def test_shooting_star_false_long_lower_shadow():
+    # Long lower shadow, small upper — should NOT be shooting-star
+    assert patterns.is_shooting_star(_bar(100.0, 100.2, 98.0, 99.9)) is False
+
+
+def test_bearish_engulfing_false_when_not_engulfed():
+    prev = _bar(100.0, 101.0, 99.8, 100.8)   # green
+    cur = _bar(100.9, 101.2, 100.5, 100.7)   # red, does NOT engulf prev body
+    assert patterns.is_bearish_engulfing(prev, cur) is False
