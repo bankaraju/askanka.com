@@ -25,6 +25,11 @@ export function render(container, positions) {
   // Single-leg trades (Phase C breaks etc.) get entry → LTP inline.
   // Multi-leg baskets show '—' here; the per-leg entry/current is in the
   // signal payload but rendering it tabularly is deferred.
+  //
+  // The inner <span> rendering the current price carries data-live-ltp-*
+  // attributes so the 5s live-ticker poller (components/live-ticker.js)
+  // can patch textContent in place between the 15-min backend snapshots.
+  // Multi-leg rows stay un-annotated — no per-leg polling for baskets yet.
   function priceCell(item) {
     const longs = item.long_legs || [];
     const shorts = item.short_legs || [];
@@ -34,7 +39,22 @@ export function render(container, positions) {
     const leg = longs[0] || shorts[0];
     if (!leg || typeof leg !== 'object') return '--';
     const dir = leg.pnl_pct != null ? pnlClass(leg.pnl_pct) : '';
-    return `<span class="mono">₹${fmtPrice(leg.entry)} → <span class="${dir}">₹${fmtPrice(leg.current)}</span></span>`;
+    const ticker = leg.ticker || '';
+    const side = longs.length === 1 ? 'long' : 'short';
+    const entryAttr = leg.entry != null ? leg.entry : '';
+    const liveAttrs = ticker
+      ? ` data-live-ltp-ticker="${ticker}" data-live-ltp-entry="${entryAttr}" data-live-ltp-side="${side}"`
+      : '';
+    return `<span class="mono">₹${fmtPrice(leg.entry)} → <span class="${dir}"${liveAttrs}>₹${fmtPrice(leg.current)}</span></span>`;
+  }
+
+  // Ticker for the P&L cell pairing (single-leg only). Multi-leg: no ticker.
+  function rowTicker(item) {
+    const longs = item.long_legs || [];
+    const shorts = item.short_legs || [];
+    if (longs.length + shorts.length !== 1) return '';
+    const leg = longs[0] || shorts[0];
+    return leg && typeof leg === 'object' ? (leg.ticker || '') : '';
   }
 
   function fmtPct(v) {
@@ -104,13 +124,18 @@ export function render(container, positions) {
     const source = p.source || p.source_signal || p.tier || '--';
     const exitTrigger = p.exit_trigger || (p.is_stale ? 'STALE' : '');
     const whyTooltip = (p.event_headline || '').replace(/"/g, '&quot;');
+    // data-live-pnl-ticker pairs this P&L cell with the priceCell LTP span
+    // so live-ticker.js can recompute +X.XX%/-X.XX% between snapshots
+    // without rewriting live_status.json. Single-leg only.
+    const pnlTicker = rowTicker(p);
+    const pnlLiveAttr = pnlTicker ? ` data-live-pnl-ticker="${pnlTicker}"` : '';
 
     return `<tr${whyTooltip ? ` title="${whyTooltip}"` : ''}>
       <td>${p.spread_name || p.signal_id || '--'}</td>
       <td>${legsHtml(p)}</td>
       <td>${priceCell(p)}</td>
       <td class="mono">${opened}</td>
-      <td class="mono ${pnlClass(pnl)}">${fmtPct(pnl)}</td>
+      <td class="mono ${pnlClass(pnl)}"${pnlLiveAttr}>${fmtPct(pnl)}</td>
       <td class="mono text-red" title="Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.">${stop}${fallbackDot}</td>
       <td class="mono ${pnlClass(trailStop)}" title="Trail stop = peak - (avg_favorable × sqrt(days_since_check)). Arms when peak ≥ budget.">${trail}</td>
       <td class="mono text-green" title="Running peak P&L since entry — trail stop ratchets off this.">${peak}</td>

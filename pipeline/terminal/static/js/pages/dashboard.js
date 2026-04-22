@@ -2,9 +2,14 @@ import { get } from '../lib/api.js';
 import * as regimeBanner from '../components/regime-banner.js';
 import * as positionsTable from '../components/positions-table.js';
 import * as scenarioStrip from '../components/scenario-strip.js';
+import { startLivePolling } from '../components/live-ticker.js';
 
 let refreshTimer = null;
 let _mounted = false;
+// 5s LTP poller stop handle. The live-ticker patches Dashboard LTP + P&L
+// cells in-place between the 15-min backend snapshots; it's purely a
+// presentation-layer loop and does not rewrite live_status.json.
+let _stopLiveTicker = null;
 
 export async function render(container) {
   _mounted = true;
@@ -18,11 +23,18 @@ export async function render(container) {
   if (!_mounted) return;
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = setInterval(loadData, 30000);
+
+  // Start the 5s LTP poller after the first render so annotated cells exist.
+  // live-ticker re-scans the DOM on each tick, so it naturally survives the
+  // 30s loadData() re-render that replaces the positions-table innerHTML.
+  if (_stopLiveTicker) { _stopLiveTicker(); _stopLiveTicker = null; }
+  _stopLiveTicker = startLivePolling(5000);
 }
 
 export function destroy() {
   _mounted = false;
   if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+  if (_stopLiveTicker) { _stopLiveTicker(); _stopLiveTicker = null; }
 }
 
 async function loadData() {
