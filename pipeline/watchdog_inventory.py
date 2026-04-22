@@ -27,7 +27,7 @@ def load_inventory(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise InventoryError(f"inventory file not found: {path}")
     try:
-        with path.open() as f:
+        with path.open(encoding="utf-8") as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
         raise InventoryError(f"malformed JSON in {path}: {e}") from e
