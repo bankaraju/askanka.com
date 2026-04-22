@@ -506,6 +506,26 @@ def trail_stop_triggered(
     return cumulative <= (peak - trail_budget)
 
 
+def _same_direction(trade_rec, direction: str) -> bool:
+    """trade_rec may be 'LONG' / 'SHORT' / dict with 'direction' key."""
+    if isinstance(trade_rec, dict):
+        return trade_rec.get("direction") == direction
+    return trade_rec == direction
+
+
+def _load_current_breaks_for_zcross() -> dict:
+    """Load today's correlation_breaks.json for the Z_CROSS exit check.
+    Factored into a named helper so tests can monkeypatch at module level."""
+    try:
+        from signal_enrichment import BREAKS_PATH
+        import json
+        if not BREAKS_PATH.exists():
+            return {"breaks": []}
+        return json.loads(BREAKS_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {"breaks": []}
+
+
 def check_signal_status(
     signal: Dict[str, Any],
     current_prices: Dict[str, Optional[float]],
@@ -653,6 +673,43 @@ def check_signal_status(
                 f"cumulative {cumulative_spread:+.2f}%)"
             )
             return ("STOPPED_OUT_2DAY", pnl)
+
+    # ── EXIT 3: CONVICTION DECAY ────────────────────────────
+    # Thesis has measurably degraded. Requires BOTH absolute (score<45)
+    # AND relative (drop>20pts) to fire — prevents noise flicker.
+    rescore = signal.get("rescore") or {}
+    current_score = rescore.get("current_score")
+    score_delta = rescore.get("score_delta")
+    entry_score = signal.get("entry_score") or signal.get("conviction_score") or 0
+    if (current_score is not None and score_delta is not None
+            and current_score < 45 and score_delta > 20 and entry_score > 0):
+        log.info(
+            f"Signal {signal.get('signal_id')}: CONVICTION DECAY "
+            f"(entry {entry_score} -> current {current_score}, delta {score_delta})"
+        )
+        return ("STOPPED_OUT_CONVICTION", pnl)
+
+    # ── EXIT 4: Z_CROSS (CORRELATION_BREAK only) ────────────
+    # The thesis for a correlation-break trade is "the regime-stock gap
+    # will close." If the symbol no longer appears as a same-direction
+    # actionable break in today's correlation_breaks.json, the thesis has
+    # closed -- exit.
+    if signal.get("source") == "CORRELATION_BREAK":
+        direction = "LONG" if signal.get("long_legs") else "SHORT"
+        legs = signal.get("long_legs") or signal.get("short_legs") or [{}]
+        symbol = legs[0].get("ticker") if legs else None
+        if symbol:
+            current_breaks = _load_current_breaks_for_zcross()
+            still_active = any(
+                b.get("symbol") == symbol and _same_direction(b.get("trade_rec"), direction)
+                for b in current_breaks.get("breaks", [])
+            )
+            if not still_active:
+                log.info(
+                    f"Signal {signal.get('signal_id')}: Z_CROSS "
+                    f"({symbol} no longer an actionable {direction} break)"
+                )
+                return ("STOPPED_OUT_ZCROSS", pnl)
 
     return ("OPEN", None)
 
