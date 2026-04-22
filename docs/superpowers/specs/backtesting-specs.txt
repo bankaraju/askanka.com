@@ -1,0 +1,175 @@
+1. Slippage stress grid specification
+Objective: Measure how robust each strategy and each Phase C class (especially OPPORTUNITY) is under increasingly pessimistic execution costs.
+
+1.1 Slippage levels (bps, one‑way)
+Define a grid of additional slippage per side (bps = basis points of traded notional):
+
+Level S0 (Base):
+
+Exchange + broker + taxes as currently modeled
+
+5 bps slippage per side (10 bps round‑trip).
+
+Level S1 (Moderate stress):
+
+Base costs as above
+
+10 bps extra slippage per side (total ~30 bps round‑trip including base).
+
+Level S2 (High stress):
+
+Base costs
+
+20 bps extra slippage per side (total ~50 bps round‑trip including base).
+
+Level S3 (Extreme stress – optional):
+
+Base costs
+
+30 bps extra slippage per side (total ~70 bps round‑trip).
+
+Implementation hint:
+
+In your fill simulator, inject an extra price haircut/markup on each trade:
+
+For buys: effective price = mid/last + slippage_bps × price.
+
+For sells: effective price = mid/last − slippage_bps × price.
+
+Make slippage_bps a parameter; run all tests over [0.0005, 0.0010, 0.0020, 0.0030].
+
+2. Metrics to compute at each slippage level
+For each slippage level S0–S3, compute metrics:
+
+2.1 Per‑strategy and portfolio metrics
+For each strategy and for the combined portfolio:
+
+Annualized Sharpe (net of all costs).
+
+Annualized volatility.
+
+Max drawdown (%).
+
+Calmar (CAGR / max DD).
+
+Hit rate (winning trades / total trades).
+
+Average R multiple (avg win, avg loss, win/loss ratio).
+
+Trade count and turnover (notional per day).
+
+2.2 Per Phase C class (especially OPPORTUNITY)
+For each Phase C label: OPPORTUNITY, POSSIBLE_OPPORTUNITY, WARNING, CONFIRMED_WARNING, UNCERTAIN:
+
+Mean next‑bar (and next‑N‑bars) return.
+
+Hit rate for direction (where applicable).
+
+Annualized Sharpe for trades originating from that label.
+
+Contribution to total P&L and drawdown.
+
+At minimum, you want per‑slippage Sharpe and DD for OPPORTUNITY only, but computing for all labels gives you the informational value picture.
+
+3. Pass / fail criteria under stress
+Use your Moderate bar as baseline (Sharpe ≥ 1, DD ≤ 20%, hit ≥ 55%, etc.). Then define per‑level conditions:
+
+3.1 At S0 (Base) – current assumption
+OPPORTUNITY must satisfy (per your spec):
+
+Sharpe (net) ≥ 1.0.
+
+Hit rate ≥ 55%.
+
+Max DD ≤ 20%.
+
+Positive P&L and Sharpe ≥ 0.5 in at least 3 of 4 regimes.
+
+p‑value ≤ 0.05 (Bonferroni‑adjusted) for its edge.
+
+If it fails here, strategy is not deployable.
+
+3.2 At S1 (Moderate stress: +10 bps per side)
+For OPPORTUNITY trades:
+
+Sharpe (net) ≥ 0.8 (you’re allowing some degradation).
+
+Max DD still ≤ 25% (slightly looser than base).
+
+Edge present (Sharpe ≥ 0.5) in at least 2 of 4 regimes.
+
+Still positive cumulative P&L over the full backtest horizon.
+
+If it fails S1, strategy is flagged “fragile to realistic slippage”; you can still research it but not size it aggressively.
+
+3.3 At S2 (High stress: +20 bps per side)
+For OPPORTUNITY trades:
+
+Sharpe can drop, but must remain > 0.5.
+
+Max DD should not exceed 30%.
+
+Still positive cumulative P&L overall (no full inversion into a losing strategy).
+
+If it fails S2 (Sharpe < 0.5 or negative P&L), that’s a hard signal that your edge is dependent on tight execution; strategy can be run only in the most liquid contexts and with conservative sizing.
+
+3.4 At S3 (Extreme – optional)
+This level is mostly for information:
+
+No strict bar; use it to see how the edge behaves in “really bad day / illiquid conditions.”
+
+Useful to understand tail risk and to communicate resilience to investors.
+
+4. Reporting / dashboard spec
+You already have a Track Record / Proof tab. Extend it with a Slippage Resilience section.
+
+4.1 Per‑strategy resilience table
+For each strategy:
+
+Columns: S0, S1, S2, (S3).
+
+Rows: Sharpe, Max DD, CAGR, Hit Rate, Net P&L.
+
+Example row for OPPORTUNITY strategy:
+
+Metric	S0	S1	S2	S3
+Sharpe	5.0	3.2	1.4	0.6
+Max DD	12%	15%	21%	28%
+CAGR	30%	23%	12%	5%
+(Values illustrative.)
+
+4.2 Per‑label informational value
+For Phase C labels, a small table or heatmap:
+
+Rows: labels.
+
+Columns: mean next‑bar return, Sharpe, hit rate at S0 and S2.
+
+This lets you show that even when you crank slippage, OPPORTUNITY remains unique, while WARNING / CONFIRMED_WARNING still have predictive informational value (even if not directly tradable).
+
+5. Integration into Sunday Unified Backtest
+Implementation checklist:
+
+Parameterize slippage in your Unified Backtest.
+
+For each weekly Sunday run:
+
+Run the full walk‑forward once per slippage level (S0–S2/S3).
+
+Persist metrics per strategy and per Phase C label.
+
+Apply pass/fail logic:
+
+If a strategy fails S0 → mark as “Not Deployable.”
+
+If passes S0 but fails S1 → mark as “Fragile,” enforce low cap / research only.
+
+If passes S1 but fails S2 → mark as “Execution‑Sensitive.”
+
+If passes S2 → mark as “Robust.”
+
+Display current classification and last‑run metrics on the Track Record / Proof tab.
+
+If you wire this in, your Sunday referee will not only ensure no look‑ahead, but also continuously answer the question: “Is this edge still strong after realistic and stressed execution?” – which is exactly what a practitioner‑grade system should do.
+
+If you’d like, next step can be: define the exact labels (“Robust / Execution‑Sensitive / Fragile / Not Deployable”) and caps (max capital or leverage) tied to each classification so risk management also becomes rule‑based, not intuitive.

@@ -195,6 +195,7 @@ def _build_stock_recs() -> list:
     ))
     for card in out:
         card.pop("_abs_drift", None)
+        card.pop("hit_rate_meaningful", None)
     return out[:3]
 
 
@@ -264,6 +265,8 @@ def _build_news_recs() -> list:
         -int(n["hit_rate_meaningful"]),
         -(n.get("historical_hit_rate") or 0),
     ))
+    for card in out:
+        card.pop("hit_rate_meaningful", None)
     return out[:3]
 
 

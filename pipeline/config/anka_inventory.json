@@ -83,7 +83,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "09:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -98,7 +98,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "09:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -113,7 +113,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "10:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -128,7 +128,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "10:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -143,7 +143,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "10:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -158,7 +158,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "10:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -173,7 +173,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "11:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -188,7 +188,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "11:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -203,7 +203,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "11:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -218,7 +218,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "11:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -233,7 +233,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "12:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -248,7 +248,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "12:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -263,7 +263,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "12:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -278,7 +278,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "12:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -293,7 +293,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "13:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -308,7 +308,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "13:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -323,7 +323,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "13:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -338,7 +338,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "13:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -353,7 +353,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "14:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -368,7 +368,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "14:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -383,7 +383,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "14:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -398,7 +398,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "14:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -413,7 +413,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "15:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -428,7 +428,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "15:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -443,7 +443,7 @@
         "pipeline/data/oi_anomalies.json",
         "pipeline/data/news.json",
         "pipeline/data/recommendations.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
       "notes": "15:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
@@ -463,7 +463,7 @@
       "outputs": [
         "data/global_regime.json",
         "data/live_status.json",
-        "pipeline/data/fno_news.json"
+        "data/fno_news.json"
       ],
       "grace_multiplier": 1.5,
       "notes": "09:25 IST. Regime + technicals + OI + news + spread + Phase B ranker."

@@ -34,7 +34,10 @@ log = logging.getLogger("fno_news")
 PIPELINE_DIR = Path(__file__).parent
 DATA_DIR = PIPELINE_DIR / "data"
 FNO_FILE = PIPELINE_DIR.parent / "opus" / "config" / "fno_stocks.json"
-OUTPUT_FILE = DATA_DIR / "fno_news.json"
+# Terminal + website read from repo-root data/, not pipeline/data/. The docstring
+# above ("Outputs data/fno_news.json") is the correct intent; the pipeline-local
+# path left the public reader 5 days stale until this was fixed (2026-04-22).
+OUTPUT_FILE = PIPELINE_DIR.parent / "data" / "fno_news.json"
 IST = timezone(timedelta(hours=5, minutes=30))
 
 # Top liquid F&O names that generate the most news
