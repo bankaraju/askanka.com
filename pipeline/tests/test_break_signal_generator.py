@@ -74,10 +74,14 @@ def empty_breaks_file(tmp_path: Path) -> Path:
 # Tests
 # ---------------------------------------------------------------------------
 
-def test_generate_break_candidates_only_emits_actionable(breaks_file: Path) -> None:
+def test_generate_break_candidates_only_emits_actionable(breaks_file: Path, monkeypatch) -> None:
     """3 breaks (2 actionable, 1 None trade_rec) → returns exactly 2 candidates."""
+    from pipeline import break_signal_generator as bsg
     from pipeline.break_signal_generator import generate_break_candidates
 
+    monkeypatch.setattr(bsg, "compute_atr_stop",
+                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                                                    "atr_14": 7.1, "stop_source": "atr_14"})
     candidates = generate_break_candidates(breaks_path=breaks_file)
 
     assert len(candidates) == 2
@@ -87,10 +91,14 @@ def test_generate_break_candidates_only_emits_actionable(breaks_file: Path) -> N
     assert not any(c["_break_metadata"]["symbol"] == "PIIND" for c in candidates)
 
 
-def test_candidate_has_required_signal_fields(breaks_file: Path) -> None:
+def test_candidate_has_required_signal_fields(breaks_file: Path, monkeypatch) -> None:
     """LONG candidate must have all required signal schema fields."""
+    from pipeline import break_signal_generator as bsg
     from pipeline.break_signal_generator import generate_break_candidates
 
+    monkeypatch.setattr(bsg, "compute_atr_stop",
+                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                                                    "atr_14": 7.1, "stop_source": "atr_14"})
     candidates = generate_break_candidates(breaks_path=breaks_file)
     hal = next(c for c in candidates if c["_break_metadata"]["symbol"] == "HAL")
 
@@ -122,10 +130,14 @@ def test_candidate_has_required_signal_fields(breaks_file: Path) -> None:
     assert hal["_break_metadata"]["oi_anomaly"] is True
 
 
-def test_short_candidate_uses_short_legs(breaks_file: Path) -> None:
+def test_short_candidate_uses_short_legs(breaks_file: Path, monkeypatch) -> None:
     """trade_rec=SHORT → long_legs empty, short_legs populated with correct ticker."""
+    from pipeline import break_signal_generator as bsg
     from pipeline.break_signal_generator import generate_break_candidates
 
+    monkeypatch.setattr(bsg, "compute_atr_stop",
+                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                                                    "atr_14": 7.1, "stop_source": "atr_14"})
     candidates = generate_break_candidates(breaks_path=breaks_file)
     bel = next(c for c in candidates if c["_break_metadata"]["symbol"] == "BEL")
 
@@ -151,3 +163,30 @@ def test_missing_file_returns_empty_list(tmp_path: Path) -> None:
     missing = tmp_path / "does_not_exist.json"
     candidates = generate_break_candidates(breaks_path=missing)
     assert candidates == []
+
+
+def test_generated_signal_carries_atr_stop(tmp_path, monkeypatch):
+    """Every actionable break → the signal dict must include _atr_stop with
+    stop_pct, stop_price, atr_14, stop_source — even when the underlying
+    yfinance call fails (fallback must still populate the dict)."""
+    import json
+    breaks_file = tmp_path / "breaks.json"
+    breaks_file.write_text(json.dumps({
+        "date": "2026-04-22", "scan_time": "2026-04-22T10:00:00+05:30",
+        "breaks": [
+            {"symbol": "BHEL", "trade_rec": "LONG", "classification": "REGIME_LAG",
+             "z_score": 2.1, "expected_return": 1.5, "actual_return": 0.2},
+        ],
+    }))
+
+    # Force a deterministic result so the test never hits the network.
+    from pipeline import break_signal_generator as bsg
+    monkeypatch.setattr(bsg, "compute_atr_stop",
+                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                                                    "atr_14": 7.1, "stop_source": "atr_14"})
+    sigs = bsg.generate_break_candidates(breaks_file)
+    assert len(sigs) == 1
+    s = sigs[0]
+    assert "_atr_stop" in s
+    assert s["_atr_stop"]["stop_source"] == "atr_14"
+    assert s["_atr_stop"]["stop_pct"] == -2.3

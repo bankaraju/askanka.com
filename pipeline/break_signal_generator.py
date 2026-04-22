@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from signal_enrichment import BREAKS_PATH
+from atr_stops import compute_atr_stop
 
 logger = logging.getLogger(__name__)
 
@@ -106,6 +107,7 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
                 "oi_anomaly": oi_anomaly,
             },
         }
+        signal["_atr_stop"] = compute_atr_stop(symbol, direction=trade_rec)
         candidates.append(signal)
         logger.debug(
             "generate_break_candidates: %s %s → signal %s",
