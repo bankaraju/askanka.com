@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-22T12:03:59.889114+05:30",
+  "updated_at": "2026-04-22T12:18:48.759375+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,70 +11,52 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4410.1,
-          "pnl_pct": 2.92
+          "current": 4400.1,
+          "pnl_pct": 2.69
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 448.9,
-          "pnl_pct": -0.21
+          "current": 449.0,
+          "pnl_pct": -0.19
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1386.3,
-          "pnl_pct": 0.88
+          "current": 1385.6,
+          "pnl_pct": 0.83
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2534.2,
-          "pnl_pct": 1.47
+          "current": 2529.8,
+          "pnl_pct": 1.64
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1258.8,
-          "pnl_pct": 4.79
+          "current": 1258.5,
+          "pnl_pct": 4.81
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 203.12,
-          "pnl_pct": 4.63
+          "current": 203.52,
+          "pnl_pct": 4.44
         }
       ],
-      "spread_pnl_pct": 4.27,
-      "todays_move": 4.27,
+      "spread_pnl_pct": 4.88,
+      "todays_move": 4.88,
       "daily_stop": -0.97,
       "two_day_stop": -1.95,
-      "trail_stop": 2.32,
+      "trail_stop": 2.93,
       "trail_budget": 1.95,
       "avg_favorable": 1.95,
-      "peak_pnl": 4.27,
+      "peak_pnl": 4.88,
       "source": "SPREAD",
       "trust_scores": {
-        "INFY": {
-          "trust_grade": "F",
-          "trust_score": 17.5,
-          "opus_side": null,
-          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
-        },
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
         "TCS": {
           "trust_grade": "B+",
           "trust_score": 72.4,
@@ -92,6 +74,24 @@
           "trust_score": 55.0,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "BDL": {
+          "trust_grade": "C",
+          "trust_score": 56.8,
+          "opus_side": null,
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        },
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "INFY": {
+          "trust_grade": "F",
+          "trust_score": 17.5,
+          "opus_side": null,
+          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
         }
       },
       "regime_rank": {
@@ -186,8 +186,8 @@
         {
           "ticker": "YESBANK",
           "entry": 20.64,
-          "current": 20.07,
-          "pnl_pct": 2.76
+          "current": 20.02,
+          "pnl_pct": 3.0
         }
       ],
       "spread_pnl_pct": 2.86,
@@ -224,12 +224,12 @@
         {
           "ticker": "IEX",
           "entry": 132.89,
-          "current": 126.14,
-          "pnl_pct": 5.08
+          "current": 126.07,
+          "pnl_pct": 5.13
         }
       ],
-      "spread_pnl_pct": 5.03,
-      "todays_move": 5.03,
+      "spread_pnl_pct": 5.1,
+      "todays_move": 5.1,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
       "trail_stop": 3.67,
@@ -261,13 +261,13 @@
         {
           "ticker": "BHEL",
           "entry": 318.53,
-          "current": 332.23,
-          "pnl_pct": 4.3
+          "current": 332.92,
+          "pnl_pct": 4.52
         }
       ],
       "short_legs": [],
-      "spread_pnl_pct": 4.05,
-      "todays_move": 4.05,
+      "spread_pnl_pct": 4.46,
+      "todays_move": 4.46,
       "daily_stop": -1.0,
       "two_day_stop": -2.0,
       "trail_stop": 2.9,
