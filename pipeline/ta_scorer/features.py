@@ -53,11 +53,30 @@ def _atr(df: pd.DataFrame, window: int = 20) -> float:
 def build_feature_vector(*, prices: pd.DataFrame, sector: pd.DataFrame,
                           nifty: pd.DataFrame, as_of: str, regime: str,
                           sector_breadth: float) -> Optional[dict]:
+    """Compute point-in-time TA features as of `as_of` (inclusive).
+
+    Args:
+        prices: OHLCV DataFrame with 'date' column (YYYY-MM-DD strings).
+        sector: Sector index OHLCV DataFrame, same schema.
+        nifty:  NIFTY index OHLCV DataFrame, same schema.
+        as_of:  Date string; features use bars with date ≤ as_of.
+        regime: One of RISK_OFF/NEUTRAL/RISK_ON/EUPHORIA/CRISIS (hyphen form also OK).
+        sector_breadth: Float in [0, 1] — fraction of sector constituents above 20DMA.
+
+    Returns:
+        Dict of 30 features, or None if prices has < 200 rows after slicing
+        to as_of, or sector/nifty are empty after slicing.
+    """
+    regime = str(regime).upper().replace("-", "_")
+    if regime not in _REGIME_VALUES:
+        raise ValueError(f"regime={regime!r} not in {_REGIME_VALUES}")
     prices = _slice_up_to(prices, as_of).sort_values("date").reset_index(drop=True)
     if len(prices) < _MIN_HISTORY:
         return None
     sector = _slice_up_to(sector, as_of).sort_values("date").reset_index(drop=True)
     nifty = _slice_up_to(nifty, as_of).sort_values("date").reset_index(drop=True)
+    if len(sector) == 0 or len(nifty) == 0:
+        return None
 
     row = prices.iloc[-1].to_dict()
     prev = prices.iloc[-2].to_dict()

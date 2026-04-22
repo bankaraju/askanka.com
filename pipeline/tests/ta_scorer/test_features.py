@@ -46,7 +46,7 @@ def test_vector_has_all_v1_keys():
         "regime_RISK_OFF", "regime_NEUTRAL", "regime_RISK_ON",
         "regime_EUPHORIA", "regime_CRISIS",
     }
-    assert expected.issubset(set(vec.keys()))
+    assert set(vec.keys()) == expected
 
 
 def test_regime_one_hots_sum_to_one():
@@ -94,6 +94,48 @@ def test_insufficient_history_returns_none():
     res = features.build_feature_vector(
         prices=short, sector=sector, nifty=sector,
         as_of=short["date"].iloc[-1], regime="NEUTRAL",
+        sector_breadth=0.5,
+    )
+    assert res is None
+
+
+def test_invalid_regime_raises():
+    prices = _synthetic_prices()
+    sector = _synthetic_sector()
+    with pytest.raises(ValueError):
+        features.build_feature_vector(
+            prices=prices, sector=sector, nifty=sector,
+            as_of=prices["date"].iloc[-1], regime="BOGUS_REGIME",
+            sector_breadth=0.5,
+        )
+
+
+def test_hyphenated_regime_accepted():
+    prices = _synthetic_prices()
+    sector = _synthetic_sector()
+    vec = features.build_feature_vector(
+        prices=prices, sector=sector, nifty=sector,
+        as_of=prices["date"].iloc[-1], regime="RISK-OFF",
+        sector_breadth=0.5,
+    )
+    assert vec is not None
+    assert vec["regime_RISK_OFF"] == 1
+    assert vec["regime_NEUTRAL"] == 0
+
+
+def test_empty_sector_returns_none():
+    prices = _synthetic_prices()
+    empty = pd.DataFrame({
+        "date": pd.Series([], dtype="object"),
+        "open": pd.Series([], dtype="float64"),
+        "high": pd.Series([], dtype="float64"),
+        "low": pd.Series([], dtype="float64"),
+        "close": pd.Series([], dtype="float64"),
+        "volume": pd.Series([], dtype="float64"),
+    })
+    res = features.build_feature_vector(
+        prices=prices, sector=empty, nifty=empty,
+        as_of=prices["date"].iloc[-1], regime="NEUTRAL",
         sector_breadth=0.5,
     )
     assert res is None
