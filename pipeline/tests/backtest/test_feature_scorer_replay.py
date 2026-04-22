@@ -82,3 +82,54 @@ def test_feature_scorer_universe_fit_coverage():
     if n_total < 50:
         pytest.skip(f"universe too small ({n_total}) to judge coverage")
     assert coverage >= 0.70, f"coverage {coverage:.1%} below 70% target"
+
+
+@pytest.mark.slow
+def test_green_model_picks_beat_base_rate_by_5pp():
+    """Spec §14 success criterion 2: over the last 60 days of forward data,
+    GREEN-model tickers chosen with score >= 60 must have produced winning
+    simulated positions at a rate >= 5pp above the universe base rate.
+
+    This test is intentionally a stub until the snapshot ledger has
+    accumulated ~60 days of history post-deploy. At that point the
+    implementation walks attractiveness_snapshots.jsonl, re-labels each
+    (ticker, date, score) via pipeline.feature_scorer.labels, and asserts
+    the 5pp lift.
+
+    Rationale for shipping it skipped: the stub is the durable record of
+    the success criterion. When a future session comes back to "check if
+    the scorer is paying its way", pytest surfaces this skip as a prompt
+    to the human, instead of silently never running.
+    """
+    snaps = Path("pipeline/data/attractiveness_snapshots.jsonl")
+    if not snaps.exists() or snaps.stat().st_size == 0:
+        pytest.skip("no historical snapshots yet — revisit 60 days after first fit")
+
+    # Count snapshot days so we don't evaluate a 5-day window as "60 days forward".
+    # Snapshot format (from storage.append_snapshots): one JSON object per line
+    # with keys: ts, ticker, score, band, features. We only need the ts set.
+    days_seen = set()
+    with snaps.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except Exception:
+                continue
+            ts = rec.get("ts") or ""
+            if len(ts) >= 10:
+                days_seen.add(ts[:10])
+
+    if len(days_seen) < 60:
+        pytest.skip(
+            f"snapshot history only {len(days_seen)} days — need 60. "
+            f"Revisit ~60 trading days after first fit run."
+        )
+
+    # --- TODO: when the skip condition is gone, implement the actual replay.
+    # Walk snapshots, pair each (ticker, date, score) with labels.simulated_pnl_label
+    # using pipeline/data/fno_historical/{TICKER}.csv, compute GREEN+score>=60 win
+    # rate vs universe base rate, assert lift >= 5pp.
+    pytest.skip("replay implementation deferred — see docstring")
