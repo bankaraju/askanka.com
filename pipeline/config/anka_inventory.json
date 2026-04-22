@@ -43,7 +43,7 @@
         "pipeline/data/news_verdicts.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "16:20 IST. news_backtest.py â€” verdicts on detected news events."
+      "notes": "16:20 IST. news_backtest.py — verdicts on detected news events."
     },
     {
       "task_name": "AnkaEODReview",
@@ -51,7 +51,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "16:00 IST. Runs run_signals.py --eod â€” prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
+      "notes": "16:00 IST. Runs run_signals.py --eod — prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
     },
     {
       "task_name": "AnkaEODTrackRecord",
@@ -71,7 +71,7 @@
         "data/gap_risk.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "08:30 IST. autoresearch/gap_predictor.py â€” overnight gap risk analysis."
+      "notes": "08:30 IST. autoresearch/gap_predictor.py — overnight gap risk analysis."
     },
     {
       "task_name": "AnkaIntraday0930",
@@ -86,7 +86,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "09:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "09:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday0945",
@@ -101,7 +101,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "09:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "09:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1000",
@@ -116,7 +116,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1015",
@@ -131,7 +131,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1030",
@@ -146,7 +146,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1045",
@@ -161,7 +161,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1100",
@@ -176,7 +176,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1115",
@@ -191,7 +191,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1130",
@@ -206,7 +206,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1145",
@@ -221,7 +221,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1200",
@@ -236,7 +236,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1215",
@@ -251,7 +251,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1230",
@@ -266,7 +266,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1245",
@@ -281,7 +281,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1300",
@@ -296,7 +296,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1315",
@@ -311,7 +311,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1330",
@@ -326,7 +326,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1345",
@@ -341,7 +341,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1400",
@@ -356,7 +356,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1415",
@@ -371,7 +371,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1430",
@@ -386,7 +386,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1445",
@@ -401,7 +401,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:45 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1500",
@@ -416,7 +416,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "15:00 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1515",
@@ -431,7 +431,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "15:15 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1530",
@@ -446,7 +446,7 @@
         "data/fno_news.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "15:30 IST. intraday_scan.bat — technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaMorningBrief0730",
@@ -454,7 +454,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "07:30 IST Mon-Fri. arcbe_brief.bat -> morning_brief.py â€” reads correlation_report (generated by AnkaCorrelationScan) and sends Telegram; no file outputs."
+      "notes": "07:30 IST Mon-Fri. arcbe_brief.bat -> morning_brief.py — reads correlation_report (generated by AnkaCorrelationScan) and sends Telegram; no file outputs."
     },
     {
       "task_name": "AnkaMorningScan",
@@ -494,7 +494,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "Daily lifecycle. article_lifecycle.py â€” archives articles >7 days old. Modifies articles/index.json but is not the owner."
+      "notes": "Daily lifecycle. article_lifecycle.py — archives articles >7 days old. Modifies articles/index.json but is not the owner."
     },
     {
       "task_name": "AnkaRefreshKite",
@@ -792,7 +792,7 @@
       "cadence_class": "weekly",
       "outputs": [],
       "grace_multiplier": 1.25,
-      "notes": "Weekly. weekly_aggregator.py â€” writes date-stamped weekly/week-NNN.json; file-freshness not checked (would need glob)."
+      "notes": "Weekly. weekly_aggregator.py — writes date-stamped weekly/week-NNN.json; file-freshness not checked (would need glob)."
     },
     {
       "task_name": "AnkaWeeklyReport",
@@ -818,7 +818,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "09:20 + 16:45 IST. Watchdog gate pass â€” all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift."
+      "notes": "09:20 + 16:45 IST. Watchdog gate pass — all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift."
     },
     {
       "task_name": "AnkaWatchdogIntraday",
@@ -826,7 +826,7 @@
       "cadence_class": "intraday",
       "outputs": [],
       "grace_multiplier": 2.0,
-      "notes": "Every 15 min Mon-Fri 09:30-15:30 IST. Watchdog intraday pass â€” critical tier only. Registered 2026-04-16. Inventoried to eliminate self-drift."
+      "notes": "Every 15 min Mon-Fri 09:30-15:30 IST. Watchdog intraday pass — critical tier only. Registered 2026-04-16. Inventoried to eliminate self-drift."
     },
     {
       "task_name": "AnkaCorrelationScan",
