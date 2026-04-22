@@ -72,10 +72,11 @@ Note: website_exporter.py is invoked from morning_scan (09:25), every intraday c
 **Weekly:**
 - Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)
 - Sunday 00:00 — AnkaUnifiedBacktest: 777-day historical replay backtest (CRITICAL)
+- Sunday 01:00 — AnkaFeatureScorerFit: weekly walk-forward fit of Feature Coincidence Scorer models per ticker (warn)
 - Sunday 22:00 — AnkaWeeklyAgg + AnkaWeeklyStats: weekly spread statistics (warn)
 - Friday 16:00 — AnkaWeeklyReport: weekly performance report → Telegram (warn)
 
-Total: 74+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
+Total: 75+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
 
 ## Scheduler Inventory (Canonical)
 

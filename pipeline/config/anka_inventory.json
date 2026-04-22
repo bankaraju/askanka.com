@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-04-21",
+  "updated": "2026-04-22",
   "tasks": [
     {
       "task_name": "AnkaCorrelationBreaks",
@@ -62,6 +62,16 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "16:15 IST. run_eod_report.py + website_exporter.py. Authoritative writer of data/track_record.json (website_exporter.py line 430)."
+    },
+    {
+      "task_name": "AnkaFeatureScorerFit",
+      "tier": "warn",
+      "cadence_class": "weekly",
+      "outputs": [
+        "pipeline/data/ticker_feature_models.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Sunday 01:00 IST. fit_feature_scorer.bat \u2014 quarterly walk-forward fit of Feature Coincidence Scorer logistic-regression models per ticker over the F&O universe. Consumed intraday by score_universe."
     },
     {
       "task_name": "AnkaGapPredictor",

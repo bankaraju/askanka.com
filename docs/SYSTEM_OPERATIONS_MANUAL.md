@@ -409,6 +409,36 @@ The sequence inside `intraday_scan.bat` is: technicals → OI → news → fno_n
 - `data/regime_ranker_state.json` — active stock positions
 - `data/recommendations.json` — active spread positions
 
+### Station 9: Feature Coincidence Scorer (2026-04-22)
+
+A 0-100 per-ticker attractiveness score that ranks candidates within
+conviction bands. Does NOT gate trades.
+
+**Schedule:**
+- Weekly fit — `AnkaFeatureScorerFit`, Sunday 01:00 IST. Runs quarterly
+  walk-forward validation on the F&O universe, writes
+  `pipeline/data/ticker_feature_models.json` (models + metadata per ticker).
+- Intraday apply — part of every `AnkaIntradayNNNN` cycle. Reads cached
+  models, builds live feature vectors, writes `attractiveness_scores.json`
+  and appends to `attractiveness_snapshots.jsonl`.
+
+**Surfaces:** three UI surfaces reading the scores file via
+`GET /api/attractiveness`:
+- Trading tab — Attractiveness column between Score and Horizon
+- Dashboard Positions table — "Attract NN ↑/↓/→" badge next to P&L
+- Candidate drawer — feature contribution bar chart
+
+**Health bands:** GREEN (mean AUC ≥ 0.55, min ≥ 0.50) / AMBER (≥ 0.52) /
+RED / UNAVAILABLE. Tickers with <3 walk-forward folds fall back to
+sector-cohort models.
+
+**Register the task (one-time manual step):**
+```
+schtasks /create /tn "AnkaFeatureScorerFit" /tr "C:\Users\Claude_Anka\askanka.com\pipeline\scripts\fit_feature_scorer.bat" /sc weekly /d SUN /st 01:00
+```
+
+**Spec:** `docs/superpowers/specs/2026-04-22-feature-coincidence-scorer-design.md`
+
 ---
 
 ## 3b. The Reverse Regime Engine — How Stock Picks Are Made
