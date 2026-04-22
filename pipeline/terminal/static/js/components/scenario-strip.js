@@ -6,22 +6,25 @@ import { get } from '../lib/api.js';
 const _flipCache = new Map();
 const _inflight = new Map();
 
-function _fetchFlip(zone, container) {
+function _fetchFlip(zone, container, fmt, cls) {
   if (_inflight.get(zone)) return;
   _inflight.set(zone, true);
   get(`/risk/regime-flip?to_zone=${encodeURIComponent(zone)}`)
     .then((data) => {
+      // Only cache successful responses, so a transient failure doesn't
+      // pin a broken state until zone changes or the page reloads.
       _flipCache.set(zone, data);
-      _patchRow(container, zone, data);
+      _patchRow(container, zone, data, fmt, cls);
     })
     .catch(() => {
-      _flipCache.set(zone, { __error: true });
-      _patchRow(container, zone, { __error: true });
+      // Render the fallback row, but do NOT pollute the cache — the next
+      // 30s re-render should retry the fetch cleanly.
+      _patchRow(container, zone, { __error: true }, fmt, cls);
     })
     .finally(() => { _inflight.delete(zone); });
 }
 
-function _flipRowContent(zone, data, positionCount) {
+function _flipRowContent(zone, data, positionCount, fmt, cls) {
   const nFlips = data?.n_flips ?? 0;
   const worst = data?.worst_drawdown_pct;
   const hasData = !data?.__error && nFlips > 0 && typeof worst === 'number';
@@ -39,17 +42,17 @@ function _flipRowContent(zone, data, positionCount) {
   return {
     label: `Regime flip into ${zone} (p${pct} of N=${nFlips} historical flips)`,
     labelCls: '',
-    value: `${agg >= 0 ? '+' : ''}${agg.toFixed(2)}%`,
-    valueCls: `mono ${agg >= 0 ? 'text-green' : 'text-red'}`,
+    value: fmt(agg),
+    valueCls: `mono ${cls(agg)}`,
     title: `p${pct} worst Nifty 5d-after across ${nFlips} historical flips into ${zone}. Proxy: Nifty index return, not per-position. Aggregate = per-flip × ${positionCount} positions.`,
   };
 }
 
-function _patchRow(container, zone, data) {
+function _patchRow(container, zone, data, fmt, cls) {
   const row = container.querySelector('#scen-regime-flip');
   if (!row) return;
   const posCount = Number(row.getAttribute('data-pos-count') || '0');
-  const content = _flipRowContent(zone, data, posCount);
+  const content = _flipRowContent(zone, data, posCount, fmt, cls);
   const tds = row.querySelectorAll('td');
   if (tds.length >= 2) {
     tds[0].textContent = content.label;
@@ -87,7 +90,7 @@ export function render(container, positions, regimeData) {
   const zone = (zoneRaw && zoneRaw !== 'UNKNOWN') ? zoneRaw : 'RISK-OFF';
   const cached = _flipCache.get(zone);
   const initial = cached
-    ? _flipRowContent(zone, cached, positions.length)
+    ? _flipRowContent(zone, cached, positions.length, fmt, cls)
     : { label: `Regime flip into ${zone}`, labelCls: 'text-muted', value: 'computing…', valueCls: 'mono text-muted', title: `Fetching p95 worst Nifty 5d-after for flips into ${zone}.` };
 
   container.innerHTML = `
@@ -132,5 +135,5 @@ export function render(container, positions, regimeData) {
 
   // Always refresh in background on re-render — cached value is shown instantly,
   // network update lands when it arrives.
-  _fetchFlip(zone, container);
+  _fetchFlip(zone, container, fmt, cls);
 }
