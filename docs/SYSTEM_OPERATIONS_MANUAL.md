@@ -285,7 +285,8 @@ is not refreshing.
 | `technical_scanner.py` | Price history | Chart patterns, breakouts, support/resistance levels |
 | `oi_scanner.py` | Kite API (Zerodha) | OI, PCR, max-pain, pinning + CE/PE walls for all 215 F&O stocks, both near + next-month expiries. Runs every 15 min via `intraday_scan.bat`; EOD snapshot archived by `eod_review.bat --archive-only`. Terminal consumer: `/api/oi/{ticker}`. |
 | `news_scanner.py` | News APIs | Corporate announcements, global events |
-| `news_intelligence.py` | News + history | Impact classification (high/medium/low) |
+| `news_intelligence.py` | News + history | Impact classification (high/medium/low). Attributes stocks via (a) literal ticker match in title, (b) alias lookup against `pipeline/config/news_aliases.json` so subsidiaries/common names (`"HDB Financial Services"`, `"Dr Reddy's"`, `"Hindustan Aeronautics"`) resolve to the parent F&O ticker. Added 2026-04-22 after 99% of events were writing `matched_stocks: []`. |
+| `news_backtest.py` | `news_events_today.json` + history | Writes `news_verdicts.json`. Events without a `categories` list are dropped at verdict-write time (added 2026-04-22): `website_exporter._build_news_recs` joins on `(symbol, category)`, so verdicts with empty category silently fail the join and blank the News panel. |
 
 **Output files:**
 - `data/technicals.json`
@@ -655,7 +656,7 @@ python -m pipeline.terminal --no-open    # don't auto-open browser
 | 5 | Trust | Which managements pass? | `/api/trust-scores` |
 | 6 | News | What just happened? | `/api/news/macro` |
 | 7 | Options | What's the synthetic leverage? | `/api/research/digest` leverage_matrices |
-| 8 | Risk | Am I within bounds? | `/api/risk-gates` |
+| 8 | Risk | Am I within bounds? | `/api/risk-gates` + `/api/risk/regime-flip` (p95 drawdown from historical calm_breaks; replaced the hardcoded `-2%/position` placeholder on 2026-04-22) |
 | 9 | Research | Full intelligence digest | `/api/research/digest` |
 | 0 | Track Record | Realised P&L, equity curve, closed trades | `/api/track-record` |
 |   | Settings | Broker, alerts, display | local config |
@@ -671,6 +672,18 @@ Composes a dual-array schema from existing files (no new pipeline writers, no sc
 - `updated_at` — provenance timestamp from `today_regime.timestamp`.
 
 Source: `pipeline/terminal/api/candidates.py`. Trading consumes `tradeable_candidates`; Scanner consumes `signals`; Regime uses both for snapshot panes.
+
+#### `/api/live_ltp` (new 2026-04-22)
+
+`GET /api/live_ltp?tickers=HAL,BEL,TCS` → `{"HAL": 4284.30, "BEL": 449.85, "TCS": 2576.70}`.
+
+Backend for a future 5s poll that patches the Dashboard's `current` column between 15-min batches. Backed by `signal_tracker.fetch_current_prices` (same Kite session the batch uses). Unknown tickers return `null` so the frontend falls back to the `live_status.json` snapshot rather than painting a fake `₹0.00`. Input is capped at 50 tickers per request. Frontend JS poller is a deferred follow-up. Source: `pipeline/terminal/api/live.py`.
+
+#### `/api/risk/regime-flip` (new 2026-04-22)
+
+`GET /api/risk/regime-flip?to_zone=RISK-OFF&percentile=95` → `{n_flips, worst_drawdown_pct, median_drawdown_pct, sample_returns, percentile, source, data_file}`.
+
+Replaces the hardcoded `-2%/position` placeholder on the Risk tab with a real percentile computed from `pipeline/autoresearch/regime_persistence_results.json`'s `calm_breaks` list. Data is `nifty_5d_after` (Nifty-index proxy, clearly labelled in the `source` field); per-spread P&L replacement awaits a daily portfolio series from `unified_backtest`. Source: `pipeline/terminal/api/risk.py` + `pipeline/autoresearch/regime_flip_analyzer.py`.
 
 ### Design System
 
