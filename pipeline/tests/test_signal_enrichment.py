@@ -444,3 +444,29 @@ def test_gate_missing_enrichment_does_not_block():
     blocked, reason, score = gate_signal(signal)
     assert blocked is False
     assert score == pytest.approx(50.0)
+
+
+def test_rescore_signal_returns_current_score_without_mutating_input(isolated_trust_dir):
+    """rescore_signal must return a dict with current_score / score_delta /
+    rescored_at / gate_reason_current, and must NOT mutate the input signal."""
+    from pipeline.signal_enrichment import rescore_signal
+    sig = {
+        "signal_id": "BRK-TEST",
+        "source": "CORRELATION_BREAK",
+        "spread_name": "Phase C: BHEL REGIME_LAG",
+        "long_legs": [{"ticker": "BHEL", "yf": "BHEL.NS", "price": 318.5, "weight": 1.0}],
+        "short_legs": [],
+        "conviction_score": 78,
+        "entry_score": 78,
+    }
+    frozen_before = dict(sig)
+    result = rescore_signal(sig, trust={}, breaks={}, profile={}, oi={})
+    # Contract
+    assert "current_score" in result
+    assert "score_delta" in result
+    assert "rescored_at" in result
+    assert "gate_reason_current" in result
+    # Non-mutation
+    assert sig == frozen_before, "rescore_signal must not mutate its input"
+    # score_delta sign convention: entry - current. Positive means thesis decayed.
+    assert result["score_delta"] == 78 - result["current_score"]

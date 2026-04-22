@@ -488,3 +488,49 @@ def gate_signal(
     score = max(0.0, min(100.0, score))
 
     return False, None, score
+
+
+# ---------------------------------------------------------------------------
+# Task 4: rescore_signal — live recompute for open signals (thesis-decay exit)
+# ---------------------------------------------------------------------------
+
+def rescore_signal(
+    signal: Dict[str, Any],
+    trust: Dict,
+    breaks: Dict,
+    profile: Dict,
+    oi: Dict,
+) -> Dict[str, Any]:
+    """Recompute the conviction score for an already-open signal using
+    today's enrichment inputs. Returns a rescore payload without mutating
+    the input signal.
+
+    Use case: every 15 min intraday, compare the live score to the frozen
+    entry score to detect thesis decay (conviction-decay auto-exit).
+    """
+    from datetime import datetime, timezone, timedelta
+    ist = timezone(timedelta(hours=5, minutes=30))
+    # Work on a copy so no mutation leaks back
+    working = {**signal}
+    working.pop("rescore", None)  # drop any prior rescore so enrich sees a clean slate
+
+    try:
+        enriched = enrich_signal(working, trust, breaks, profile, oi)
+        blocked, reason, score = gate_signal(enriched)
+    except Exception as exc:
+        return {
+            "current_score": None,
+            "score_delta": None,
+            "gate_reason_current": f"rescore_failed: {exc.__class__.__name__}",
+            "gate_blocked_current": False,
+            "rescored_at": datetime.now(ist).isoformat(),
+        }
+
+    entry_score = signal.get("entry_score") or signal.get("conviction_score") or 0
+    return {
+        "current_score": int(round(score)),
+        "score_delta": int(round(entry_score - score)),
+        "gate_reason_current": reason,
+        "gate_blocked_current": blocked,
+        "rescored_at": datetime.now(ist).isoformat(),
+    }
