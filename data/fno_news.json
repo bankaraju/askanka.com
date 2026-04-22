@@ -1,7 +1,39 @@
 {
-  "updated_at": "2026-04-22T14:31:51.732311+05:30",
-  "count": 112,
+  "updated_at": "2026-04-22T14:46:22.744776+05:30",
+  "count": 110,
   "headlines": [
+    {
+      "title": "SpiceJet hits upper circuit again today, VAT relief hopes lifts sentiment; IndiGo pares losses - Moneycontrol.com",
+      "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxPUXpOaFNydnNwZDdfXzFfLXFZTzI3YlFLa3N5LURkNExNMlZuaUV4aWlqckJRQXlKREY3QWlRQVBLNjdWWW5LaEoxRW96cE5VazJDS2xsa29fazZIbTFsRGVNeGo2eU9zcEtMYUw4cTFxTnV0OWhBVTFTb1BxaXE2M1E5ZHVRNG9mdTNGYnI5TkJSWXJmY3p6aUI5dWpJaFRYTDFVZUxrSEtHYWdFdW5feFFENHlGQTk5blJnWTZOODdEaUpWY09rSkdOSzFDenVsOFNkZTNQRTVGM19icktwbERaZ1dzSUlnUjRRbtIB8gFBVV95cUxQMUtxNmNPaFB2ZEgwOW5hcFJhazlvMjFvNjAzTzNuQmYzVS1mOUNTR05FLXlHSTByamJnb1R1eVY1LVhFaHZpQWZBR1hOTmhqc1d5TEFpSlhMV1JwTkFFcnk5VndTbHVRaWpOV2NaR0VZR292Vk9MQ29Hdmg0bFNlaEp5TGdRRllFQTVQRDVWemR5RVFVV2RmRzVwSF9TVmppa2FVT3JFU0FNdGpZSVQ0dGtjZkpFelJEamY0V2NNb3UyWVVNa0dJd0JnNC05ZzdMWjU2UXM1VV9qblM1SkpwSVRVZ2lxTnBwS0pyN2pCdGg4dw?oc=5",
+      "source": "Moneycontrol.com",
+      "published_at": "Wed, 22 Apr 2026 09:04:24 GMT",
+      "symbol": "INDIGO",
+      "stock_name": "IndiGo Airlines"
+    },
+    {
+      "title": "Tech Mahindra swings sharply after Q4: stock rebounds 7% from lows, but stays under pressure - Fortune India",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOOVh1Z2dUYlV5ZmNpdE5LVnRMZWtILUtUT1czWDRIX0hJVmF3SVo0YXVfM1J6cXFzYTFOOC0xNlFVZWM4emRtWHY3cjJKbVNITnk1U08yNXF5VU1BWElJRlY5Nk9tZzRBLU5JZGpQLUNJMUh6NmJmWEZ5d1FKZkhsOVRzQUFEXzdyVkJfUUN6YmNEVzdUdlpJc0FoMlFLUkgtWXlfMXd6NzdDQVhsbDJiZ2UtZ3NyWXZsQVU4UkZDWlktUjdmcWN2eDZDQk1xUdIB2wFBVV95cUxQY005cXNKdzFnWi0wSjRjd3AycHl1SzlHNGJRNElaQjJiRU1fYks5aWk1V3BiUjhCQVptWWdXdXBvUkFFQWdhVXJTa2d4ZUNMWTA2VmtkbDdCY2NQS2w1dl85MjRIRnlOOGlpc25qWExVMTkyN0hpay1iLTA3M2Y4bF9yMzRmejRuWnV1ZzdYNVc1QjdzVGNicHdOdzZ0S2VvMHZRUmZnU2JyYWtKV0pLZGhlSGxEdGlzNHZpZTFKZFhQZjNvTFdBd3dycGs3X3pjVFk3cnliVWJ2QlU?oc=5",
+      "source": "Fortune India",
+      "published_at": "Wed, 22 Apr 2026 09:02:46 GMT",
+      "symbol": "M&M",
+      "stock_name": "Mahindra"
+    },
+    {
+      "title": "Nifty 50 Falls 0.63%, Sensex Drops 671 Points as IT Stocks Drag; Volatility Jumps 6.9% - Dalal Street Investment Journal",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNS19fWTBKTWQ1LVZDNmswNzlqcnVKWWlHN05kVmx5UTNlYnFQcjNIbVZvQ1lydW9xd0pxOUJoeEJZYlBEQml6bnVKZmZMZG54R1BHejdVRHI2ZVljY2JkcUx2OWxickFSZDhlc09vNk5vckJZZ3ZBSFZSaVhfVG5ZZTc5XzBTV0Z2MjR0RUdacFlqOC1aSGVMcldQeWJzX0J0V1k2NEhqZDdOc2FjVFhUY29xWkNpZWpQTVJtWHJyT0doZw?oc=5",
+      "source": "Dalal Street Investment Journal",
+      "published_at": "Wed, 22 Apr 2026 08:59:38 GMT",
+      "symbol": "LT",
+      "stock_name": "Larsen Toubro"
+    },
+    {
+      "title": "Buy, Sell Or Hold: HCL Tech, TARIL, ICICI Bank, Doms, Emcure Pharma, Bharat Coking, And More — Ask Profit - NDTV Profit",
+      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxPemhuR2xmRjFiUzUtWnJUUHZSZHZIQUNHN0l5WlVjWXMzeFdYUF96T0dSbzdaQWc0aHhZUnlnWlpYTXo4V2Fwd19KaEFXNVkwOU9sUE9OZ2tKeEpFM1l4MHFnZ1JOQmE3SlVTVkVsZnZ0aWpUTmI1Y2k4bG9LVlprNjJiYldXY0pJckNUeVBJbnJ6TXpINjNmUWRkWHhieE9EZHVOS3RYdkxLX2J0WjNaRjlrdlNIMGwyZHVSTDh0SXZ6NDBkR1hhYVJxb0N2MVRKMzNGczlB0gHeAUFVX3lxTE9JeThvT29hWkNNcE5tZFNpaTFTUkt0MFgyMktUdDlMRzZCRzk4cjVKc3BLTmw4QW1NeG5IdEZjVElGVDB5OXVYUlVILWdETEx4c2ZXekNkbGdIVlNtMDZUbGJ1T2lzMVR2Sy1DYkVIQTlkZmNlLURwYUdrb3JBUkZ0c0hEVGZqZ0wzOGFISW96SFRzOXhhTmc1N1J1all0RnhHd3B3UVdYTGJfejVvdUlpdXlQWFRSM0xwR0NlUWc0NjNiNnpraWNOZnZIZVhGekE5VDVQOTlGTmszT0ctUQ?oc=5",
+      "source": "NDTV Profit",
+      "published_at": "Wed, 22 Apr 2026 08:55:47 GMT",
+      "symbol": "ICICIBANK",
+      "stock_name": "ICICI Bank"
+    },
     {
       "title": "Coal India arm Central Mine Planning shares fall 4% after reporting 32% decline in Q4 net profit - Moneycontrol.com",
       "url": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxPcU5MeG9BTGRSNHhoTXRxem9fb0dGaGNJRXdnNGVBWlVQNlFCN0RTUmlmMndmYjdCY1dpT2FjUFpZQW5UU3hoV1k3bURKT1RzakozZzRNNGRNQlRVOHFMcGpkTThEdXR0T3VSdG1Ob0EzbXdtZkE4LUh5ZUlqTnJFVmV0UFpyYkkyRHFZbUtySDBpcF82MUt4N1I3aXI0ZDV4c3UtT3BKS3dyTzFZZjExaFZlM1dEb2ItU2RvdVRUQm1hZm1lY19GeVBQcFZOTnk4d05lb2hhUTdUSXZIZXhJNEdXWnJjSU8zTFZ3YnhzSXLSAfYBQVVfeXFMUC1RUDZQdnpBd3FiSmhuTU9LZ0hYb09BWUFqUHppRFEtUUs4WElMT0FpRVNfOS1veDNYeUhDTkx1a1VkRzg2TTZVekhaTXRSekdnWHdOVHMtZWl4NWFEb0QyLU1rX05mVGJTLVpiWTk5X1NQZFZjTXFVZmp5NnpuZGJJWHl2dnZjU1REOF9VcW1VbTdRU01oMTRTRk5pZTBHWEJzS1BMcWdRWURkaUktOHNkajRqSmNVRkR3eGJ5QWFraWlUaEtIMXRGaTBJNzc1SGRjMFZXUEhhWDFaS3BnSjVZNGNQMnhiVWQ1VGgxLUlEWDRJeEV3?oc=5",
@@ -27,14 +59,6 @@
       "stock_name": "GAIL India"
     },
     {
-      "title": "Tech Mahindra Shares Bounce After In-Line Q4 Results, Dividend - NDTV Profit",
-      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOcHEtZmI4aXE2UGVGaVYtc1RyNUZCYVMzV01pZ0F1R1B1Wklqd0p4MElGNjBha0RzSzBWOEsyak8ydndaNU9jNi1Fd3BqZ1Eyaks2VXJ0UE9sNjlpWkt2M2ljMHIyYXNRTUNuMUk2d2Z6ejB1LWQ2S25vcWV5Z2R2N0ZDRWphd0kxVmctckNEX3FVSTNWNEpaNE9lSzhncjltWnpIWkZHY2V0Smd3SFh0Q3k1RlYzUGRwZm5feUpUMNIBxwFBVV95cUxOanZmX080UFlibE14Sl9BTnFlLUQwa0VXY0pGWHRNOG9pMTh2TzU2b2FXZWd3RkxYY0dBQy1HVEZkRWFVNkhJWW5SU0F1UnRDaXhOX3dyOHJwZXdEeENKMGNWQk1Ca2kxeXFUSU5tYXhQZGFmcUtVZk00d254X3E2SFBTQWZmd0gyMFlvV1VlaXBYMzlYNmlIUnA5ejhjNWlXSHl4ZWpwOWhYeXh0eXloVnFuQ1JpQWpyeklXeUJjZklWeF9FdzZJ?oc=5",
-      "source": "NDTV Profit",
-      "published_at": "Wed, 22 Apr 2026 08:39:09 GMT",
-      "symbol": "TECHM",
-      "stock_name": "Tech Mahindra"
-    },
-    {
       "title": "Jack-up rigs tender cancelled due to steep price escalation, clarifies ONGC - Business Standard",
       "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxORk1IaDRJNU5ha2djSHRnbERZQk5fT2NKazE5OFlWazhCeHFhSmdVcTZBblM3d0RCeHJjTDNjSUlNcXpFTmN4SFg4UHdwWEs2a3hYRUMyUzRGTGUwQzJOVi1PQmlzSXRDZVVXQXlTWUk2cUF5ZHNxUllkU0s1Q01SbUtNeUZicEhhSlJ0QWZaWlc1Y0IzQzRHRmU0dmxHUnBHVXdndlJncXNjRDMwakdlb3VLMDJ5LWFPaWRfeldHQXd1RGFmRVlDZ0l0QktCd2tlODRmQVdBYWM1UzTSAeABQVVfeXFMTlA5R1dBbS1jbnV0a0JVcFFNRkduSkY3MFk5Ml9hZnZEazZ2d1F1TmdIb09zUXB0YmxsSzBsWHJvNFc4dk1RNWdSSmdCcU1jZklCc2VCZEdLdFktZHhORlVCVV9kM1E0V01pc3h5T0VSMjJ6NU9nd3hDU0xUYzZNek1zajlKc3NMQWpJZVFFV2hncWNNendKU0NQeVVzMnozWXFFYXczb1ZtZ1RqOC1KLUJLcEViV3FtMkFKc3JRM2J1eGt5Q2tDWi1hejI2a3NFSGNCNjVXV0taY2phS3Fzd2o?oc=5",
       "source": "Business Standard",
@@ -43,20 +67,20 @@
       "stock_name": "ONGC"
     },
     {
-      "title": "Tech Mahindra Q4 Results: Cons profit rises 16% YoY to Rs 1,354 crore, revenue up 13%; co declares Rs 36/s - The Economic Times",
-      "url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxQNmV0c2dNREIyM3RFallSekZPMjBwZDEwd2VreUtrcEYtVS0zSVN1N1BwVFNtUW5HZHpqX0JHWGlFdVdHWjBVMWF3eWpwY1d5SXRac1ZMa2Yzcm5RNXF0UWNsdk83ZzBoWlNNd3o5UHBHa2FCdkVGemdDZFZ5NUk5cTdVSjJKYjBPaGtmaFdNeUxjYUFOYi1MdDB2WVN5aWhlNVJpYVdlYk91UjdzZ3dZUWlOelRkSFptLVlOdlJMZ1BVWWVFVXJOeEFlbS1ZMmRRQzNmWHliQ05ZbnBXVkZRTE9UVWtaeENJUEVlNVNla9IB9AFBVV95cUxQOGhSYkphNElfZFdsQjl0YmJoSlFiZXNkU3lJX3FKT1J3MUxfRHJncGQtZmhZUldiWUwzUHA4QUV3bnRoSzZhTDRoeHJ6OE5icnFMLW1JYlVWT04xZWlfdzBiQ2lWMUo5QWNtR1lmWml4RzZNMWVJalBUZkR5NlJkenhPTlJobnBtMFp0SnRwZXRMSXdVZktmZ0tqQl96d25iNU9hRWdWdDNldzMyMGVEM2RYTVNvQ2JMemNScjFXY0VLa01XbkJaMTVCVG9KQXhRYm1UUV9CdU5COGZqMXdOS1gtTkhiUVVjczNmb2VJSGp2dVQ1?oc=5",
-      "source": "The Economic Times",
-      "published_at": "Wed, 22 Apr 2026 08:32:11 GMT",
-      "symbol": "M&M",
-      "stock_name": "Mahindra"
-    },
-    {
       "title": "India targets green hydrogen output five times the size of today's entire global market - Moneycontrol.com",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPVlVsZ2xQa2VyY2oyRkZIZVozRW5KMVRZWmpndk1McHJLRkIybGhfWVQ2SVlmZTc5RW9BOVdKMjVMV0ppUEdCQ1Z2R2NnUzdYX0RvRV9aNmdKel8xU3BMdl90MG83Q3hLMVNNUVBOLXNhRHNaUlFoWHdJVVA0X0lqNnlaYTRsazJjcDBJUTNKZExtU0FPSjdnTWV5WHZzM05ndVFDQm1qVlhpZVZZMC1hQkdJNXQ0aWRCRmk2MUZTWTFVbU3SAcgBQVVfeXFMUHVPR2lfM1NLT2I5OGtHZzB4eGpMNjJtcUQ2WmhOa2ZvNEFQX0xreEkwVTB6Vlp5dUgzaWZiTjFIcVlHOUo0UnNoaWc4OGZVaHduMDlpVEtLbFg4Q1VjMm96N3hsZzlhSFhBcVVNdVhVRlpMQ1FFLVJIcnlRNkZBUDZ1LXR4ZXlxTW9HZGttcExrek9TeUh0WE5TMzBUSTNUNUVQb1Z2dlNWbGR5UHA0MFJWM0hZYWNLWnltNHpIa1RvbHlzYllnOWY?oc=5",
       "source": "Moneycontrol.com",
       "published_at": "Wed, 22 Apr 2026 08:29:43 GMT",
       "symbol": "BPCL",
       "stock_name": "BPCL"
+    },
+    {
+      "title": "ASL Industries Yearly results, Financial Summary - The Economic Times",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQSUJqM0xMcGFmb1owaXdTOElpSy1qeWgxSndkdnRSU0NCZGhzYko1NU1VWndIQnJGdVhncHl5dUR6RE9TenRsQkZwcjNIejRmeVFXRWw2bFl3U0lGc0NXYzBtOHJBYURYZkF2QmlBNEhPR0RnZkt6SWxVSnBuQ0NZb05n?oc=5",
+      "source": "The Economic Times",
+      "published_at": "Wed, 22 Apr 2026 08:19:04 GMT",
+      "symbol": "BAJFINANCE",
+      "stock_name": "Bajaj Finance"
     },
     {
       "title": "IT slump drags indices lower as HCLTech fallout weighs; broader market shows resilience - Fortune India",
@@ -97,6 +121,14 @@
       "published_at": "Wed, 22 Apr 2026 07:53:23 GMT",
       "symbol": "WIPRO",
       "stock_name": "Wipro"
+    },
+    {
+      "title": "HCLTech, Infosys, TCS down sharply: Why are top IT stocks falling today? - MSN",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQWWJCelNZXzJHeUZXNmRDMkxpdDgzNkNMSk90UktTOWE4aG51MW1BdUpNdHN4enZkX3VlTnhWeVo0aHBWSXJJbFVEOHNlSVNxdHNHLTdlSG90LU85QkRFaHFVaXlvUFBhUXByOHdkQ241cTZIRksyWWlaQUE5cEFmVjVLdjBtSlEwOXlmNWI0c09PaVFQTk9uMDdvc29XMTFIZUVaRmtOWWVFS3JHcWN5N2hTYzdNbW9aNWZobA?oc=5",
+      "source": "MSN",
+      "published_at": "Wed, 22 Apr 2026 07:50:17 GMT",
+      "symbol": "INFY",
+      "stock_name": "Infosys"
     },
     {
       "title": "Pahalgam anniversary: How the 2025 terror attack triggered Rs 3 lakh crore defence boom and created 3 mult - The Economic Times",
@@ -155,20 +187,12 @@
       "stock_name": "Hindustan Unilever"
     },
     {
-      "title": "Larsen & Toubro Subsidiary Signs Long-Term Green Ammonia Supply Deal with Japan’s ITOCHU - Dalal Street Investment Journal",
-      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOWkk5Z3g4blJ1UzNvMng4eEQ5ZjNqNW5fOURfNGltTHV3VGk3YkhYVzVqeUNrNUhYNXR6ck1XNFFqSDk4cmRCWkdOa0pkVVktS1pIVU9OUERERWpZSzZtVmJPM2J3aWh4OGVZZkN6NDh5aS1xWlZFRV9BTW9nSW9KcWd3SjdXdF9idlA0LV9SWWVLUVZ1Z0FRS3V2RjF3NDBEMjZ0QXdlai1SRFJ6aUdBTHBuZE9BeXdhUVM0UmdSUGxjNmRDdlRNTmJPWEVURGFQ?oc=5",
-      "source": "Dalal Street Investment Journal",
-      "published_at": "Wed, 22 Apr 2026 06:46:06 GMT",
-      "symbol": "LT",
-      "stock_name": "Larsen Toubro"
-    },
-    {
       "title": "JSW Steel, Coal India, Paytm, Sammaan Capital, Thermax among stocks in focus next week; here's why - MSN",
       "url": "https://news.google.com/rss/articles/CBMi9wJBVV95cUxPQ1dvNDJtc0NENXBIaGJWT0pQZktyUnhtWEItWVdGRHhVZExzUjA0OHF4S2hzcGh5TGhVTWRmdkY3X21HemtVT0I1a2JWZ2lnS013YnlzRElUalRpU3kteEc2bXpFUXdPY0sxMV90Y201NWhOZXM5aDVtT1E1OEpzTmVXaW1nLXNzQVltWjlSTEtXOVFSRUxZbEd6SGUydWFTVklYYkc0Y3owMklmNkk3MW1Xd2hBVFo4YUtpa21OX095WDNLQXdFSEhVdXJidER2U045S3F0cTFZcThwOWZYU0N0aXlsUUw1X1lMSHRhTkVGYjJLdk5oWW1WS3dXZXFfRHF1aDJ1ckZXZHhiYmVGTnRwRnFBR29ZczZveUE2TG1GZnFDbWtwSWpSREVNTmZoLWgtckRxWndNWkRQa0Y5X0hKTHF5WDNJU2lVc3ZLbktFX3FJM1BtdDF5OXQ4SE5fTlp3dVNNWGFfdFd4dzVzdkZRQXh1cFk?oc=5",
       "source": "MSN",
       "published_at": "Wed, 22 Apr 2026 06:44:19 GMT",
-      "symbol": "COALINDIA",
-      "stock_name": "Coal India"
+      "symbol": "JSWSTEEL",
+      "stock_name": "JSW Steel"
     },
     {
       "title": "GAIL (India) Ltd Rallies 3.42% and Approaches 200 DMA Resistance — A Key Technical Test Ahead - Markets Mojo",
@@ -323,6 +347,14 @@
       "stock_name": "NTPC Power"
     },
     {
+      "title": "Sun Pharmaceutical Industries Ltd Technical Momentum Shifts Amid Mixed Market Signals - Markets Mojo",
+      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOdDV0aVBZdzVSREdXU3VWT3UwY0RpZTB6YnphcXRFQlpqQ3NVQ053TTZUZ0tvYjU2TEF1LWFKanVNMjJtNXNUZ3FBelVuUTkzUE9fNVJlOElGZG1vMjN0c1ZfdFpJa0xWZmIxSFRBZ29aRXFQQWNEY1lOc3hsRWh2MjNteEV4WkQ0enNEX3JRTlhYNXNJWldHSXp2cVFLQnFpdjhtcW16SXUzTzYyS0l3SzlYaGdfSEsxNGc3WU5qaGE5S0RPSUE1VUt6cWdZZk9oa3R1eXVvRWc2eTA?oc=5",
+      "source": "Markets Mojo",
+      "published_at": "Wed, 22 Apr 2026 05:27:39 GMT",
+      "symbol": "SUNPHARMA",
+      "stock_name": "Sun Pharma"
+    },
+    {
       "title": "Jefferies forecasts 18% upside in this Aditya Birla Group stock; calls it ‘India’s Global Cement Titan’ - financialexpress.com",
       "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxNTG5MZGMyS3VhSlR5R3hPRFU1UlpoZXdRakVPLUxFTFhnQ2F0OWhJUGVaZWF3SF85TnBQdVFMT2x1Wkd2WEVPY0hpQ2NteVIxdGZLM2hYaUQwc1AyckhnX0R2VEQwZnVSMFRTUmlpbUZsbzFXdVN5d2Yxajd0SFY0b1k2ZWhXRmpGLWwyRVoxRlV5NDd6ekJJZXMtbGFEMDQ0RnFDMnVzX2dLd3BuVVdnNDdabTBnWEVuaTNweHdwenBzbHNqa2NsVTVGdEo2ZW5hNUpSZ0NHQnlOUHU0Skt2N29XbVJLd9IB7AFBVV95cUxPdnN2S0dSTW1WcW1uSHoxQldRbXJmb05MendmTXpvc1RfWlB6Tzlkel82dTMxV1VaMjg2VUxRblppYURTdG9GVVZ5MVBnZGlPZnJxa1ZYWE90TW1VemIxd3kxdnlsR1k5TGRUb0lRcTc4Qm55WkM4bTJSY0w4Q0hkY1ZXY0N6TjN2MUMtQXlkMlNuNHZKbWVFTlduUU41dFNlV05NMjB2SU91clBiSEJRNEJiSUpkUG5JajlfZ2lPeW1vQ2lQNEFuOTNHQl83NGl4OWVfSGlYdkpjYjhOWVhSbG1UZjdCcUxDY056cA?oc=5",
       "source": "financialexpress.com",
@@ -459,14 +491,6 @@
       "stock_name": "IndiGo Airlines"
     },
     {
-      "title": "Five stocks to buy today: RIL, Bajaj Finance, Balrampur Chini and more | April 21, 2026 - MSN",
-      "url": "https://news.google.com/rss/articles/CBMi6wJBVV95cUxQa0Z0WWpuLTFSM0t1NnpNRjZTSjgxZ3g4ZGUxTGJ1SkVVUjU3ek5VNkNMTzdIZmRvZWJEMEZiaUdMU1JSR3lsOE5ybGtQT1FfR3A0cHNBN0JGZUdCT1VONjVMWjl4MHh0cGduWkJWNlVZLTlQTjcwYXlUX2NNNG9NWElXQVJTbTVFVm51RVNnbVQ3akQ0aWg3SEFkWkJud2o5YzdlT3g1LVQ0SVl0Tklta0hYdDFpZjlRMkNfMWxpcGh5UEptcy1HNTZjR2VIUGlib3dmQkNKckphVFhfUmczbXNGc0lrNUhQdzBhTFRJOS1VZHp0aWFGQm1VT0hRbmRvUDR3R3I4dW0zX1dEZjM5Y0dBMzRwdk1uLTdseElTLUpCOTVfR28ydjVQX0wxX0ZyM1BzNkd0RU5wcGJTR3Z0N25xNkNFSjZjNG9uX0x0Y2YzYUpfMmE3NVhZT0Fld19uamR5d0JoUnpTY2s?oc=5",
-      "source": "MSN",
-      "published_at": "Wed, 22 Apr 2026 03:29:20 GMT",
-      "symbol": "BAJFINANCE",
-      "stock_name": "Bajaj Finance"
-    },
-    {
       "title": "Stock market today: Gift Nifty hints gap-down start; US-Iran, India VIX to gold, silver rates — 8 stocks to buy or sell - Mint",
       "url": "https://news.google.com/rss/articles/CBMilwJBVV95cUxORVcweWFQalJhVDRNQzE2M3J1WlNRcENsOWd4TXYzdW84S2p0YTBqbVo2eFd5NzBsTVFDSXRJMmFwd2llLW9rcFJFNEhqWG1TTGdjbE56b05jWW9qY1lPQ2tOY1pRclZHQkU3Qi16RHQ3alZsVHVuXzhINnM2RDNpN1ZFVXVqNjk4QVlvX2VYaEx2WHpPQWd2WVljNkJ0cDBoUDBrRzJMc0hkMHJQdDFvcHROY1BYbE56aXV1WmJDZnF5cHhNVjZ2cjhJZElpLXZTNWg4Y05tUXFidGl1Y1F4VVRPMXc3WEJVQ3NjRHpyTGRqVlJnWTBjeHR0TFdiZThZbWpYVlU0NVBaYWl5b245Z25aamlaamvSAZwCQVVfeXFMTUhhTkYxbEtrc2E2d1lNTnIzZlIzcm9VX0pfMVdtU2NpV1ZvdlNZVk1tY3JUS2kwWThrVTlpWmNxTW9tYmxmdkVqanpyMTFlc0dsWi1PZ1NOTWN3RDNRM21BXzQ5dVRmRUpKSG1XOFBlT25HR0lJam43RlN4QXd1OEJMVDB3WXpxZkc5STFfQ2RoQW16c21TaFpxWUI1TDNwYUVraHdwclJ5RjZSYlFMTUl4X0thYl9YSWg2ekp3dmtyWFBROWlmakZYZVppVnR3dlVWUUhjVmh4cWlkSTRaLU1kNE1yeEV0X2NhUTl3dVIyc2dRNlRPUnV5bEJaTnNFWmY3YTAxRWZxMWNIaWxlVUlnNWtuN2NOazhBdWY?oc=5",
       "source": "Mint",
@@ -489,14 +513,6 @@
       "published_at": "Wed, 22 Apr 2026 03:10:49 GMT",
       "symbol": "SUNPHARMA",
       "stock_name": "Sun Pharma"
-    },
-    {
-      "title": "Pahalgam — a year after, Indian aviation is still facing headwinds - Mint",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNSW9wZWJZakU5RW11Sks4MkxwM09HeklOTm1BMWdleC16YjNKS21YdVVFSjJOdTBQcmtrdldtZ3NBd0kzdnN2dU9laVROdnNDdHV0RHp1bF9kc3FXZl9JazRuMU5ub2NLQ0h1a1pVa0NCXzVuNGQxVmZpVHBTZC15WFMtRWhqNDBBQVp1Rjc2dHBfWVdMbkNJb2ljNzA0dW1WX2R5a1VZTlY5Q2t5Wmd4RGxGcHcxNjI0WWJ3ZzJn0gG-AUFVX3lxTE1Jb3BlYllqRTlFbXVKSzgyTHAzT0d6SU5ObUExZ2V4LXpiM0pLbVh1VUVKMk51MFBya2t2V21nc0F3STN2c3Z1T2VpVE52c0N0dXREenVsX2RzcVdmX0lrNG4xTm5vY0tDSHVrWlVrQ0JfNW40ZDFWZmlUcFNkLXlYUy1FaGo0MEFBWnVGNzZ0cF9ZV0xuQ0lvaWM3MDR1bVZfZHlrVVlOVjlDa3laZ3hEbEZwdzE2MjRZYndnMmc?oc=5",
-      "source": "Mint",
-      "published_at": "Wed, 22 Apr 2026 03:10:37 GMT",
-      "symbol": "INDIGO",
-      "stock_name": "IndiGo Airlines"
     },
     {
       "title": "Q4 results 2026: Tech Mahindra, Trent, SBI Life among companies to declare earnings today; check full list here - Mint",
@@ -531,28 +547,12 @@
       "stock_name": "ITC"
     },
     {
-      "title": "Infosys Q4 preview: PAT may slip 2% QoQ; Iran war, GenAI impact eyed - Business Standard",
-      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQQ0lDeDlLV0Zuckw3eHZYOHE4dzhXM1ZqdS1KU3lFRktYa0JFV3lLZ2JabnpBQ01tRV95X2wxb0Q0ZXAtN1VRR2FObUNuQUdUYUY4b0J6UC1DN0VFOFh0eWZvdnBTQzlyYnNicHNkRVVlZHJIV1NlSmlXOHNrZ3VLSDBSel9XaGw1eWN1OWxDTEN3T21jUFFfRjVVb000S205bnAyb0UxZTRJRjVreFdoS0pMR2Jad29LdFNFbmJNM1dpN2w1VjYxeVRDSFY2Q0RYOHJoREln0gHbAUFVX3lxTE5NLXgtamtxZE9KV0MtaERoMDFrVVU0N1N2Tk8wRE11azBGYy13SVhJa2M0T3FvYUZyYmdtSjJHaEVZdWp1emN3cnppOEt1NFNvbGxIR19yVWhMTk1OanoyZG5oZTBWS0IzQXV6QkpTci0xY1p0ZXJTR3BtZl9CZE0tbjh3WG9udlpQQkI3QUlUTDVCVlY4MUJxb29xR3JXQ09PRWItQWUzNUUxOHRpQnY4azAwbVlMQlZqMVI0X29ZRmZvY01BZmRZb3lDN3VURlo2aTd1QWJxZmdxVQ?oc=5",
-      "source": "Business Standard",
-      "published_at": "Wed, 22 Apr 2026 02:56:00 GMT",
-      "symbol": "INFY",
-      "stock_name": "Infosys"
-    },
-    {
       "title": "Cipla Ltd. Sees Sharp Open Interest Surge Amid Bearish Price Action - Markets Mojo",
       "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNeE5RVU5MQm5SMmdLWjNZRlhsOENDT0F3VklfNEp1dkM0THJTVTV6ME1RYkxDTUNsQ3V3Z1VVU1R3aFlDa2U3RjVnOWxxa25ZZHZpMGY5ZmhqR0tJRjhDeHNDQmJZUmR1X3poU0RKT3dGc0pkajdJUlZoWVJyUkJwQ19nMEc2dGY0QXpWQkRCcHQxekxkV0hZNXRZb0hnZHNIcXVadDNOUVN6LU9CUXZUYWJrUURWYWwtRk03ZHRxWnU4QQ?oc=5",
       "source": "Markets Mojo",
       "published_at": "Wed, 22 Apr 2026 02:49:33 GMT",
       "symbol": "CIPLA",
       "stock_name": "Cipla"
-    },
-    {
-      "title": "Top 3 Sensex stocks: Up to 56% returns in 1 year - Do you own? Book profit or more gains ahead? - MSN",
-      "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNYk9HZmw1cmpBc0ZRUzBzMHhKeTRBYVZ1clBEY2IwQXhrZ0ZOMHJURHh1ek5JTWYxRy1BSEpUeER4NkQ3X3JIdDFLVVczQlNFaENHR3c3VWFITngtakZxbndBU0RFNE9sWGk3LTRCUUdjTnNrY1VWNzZ6aEVKU2UtNmlHVm9FaXhkNE9TUGF0OGUweHBvZzM4SGJKdTRGNFlqVzgybXBDM2V1S0FjZHloWmYtOWlFVy1IMlFqR1I4M1ZtRkVnT0JYejRyRlJybXR0VlM2RG1fUTAwNmF2cGc?oc=5",
-      "source": "MSN",
-      "published_at": "Wed, 22 Apr 2026 02:38:19 GMT",
-      "symbol": "TITAN",
-      "stock_name": "Titan Company"
     },
     {
       "title": "Stocks to Watch today, Apr 22: HCLTech, IHCL, SBI Life, Swiggy, BEML - Business Standard",
@@ -615,8 +615,8 @@
       "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNMUZqa2djS0VlYVpGdC1vTVB4YlVvdTFSUEcyWEVINDdYNkY5RTlZejFiNnh4Nm13ZXlkaDA3UEVKa2dSTVQ1VW9LckpZX2dsZjJoS1J5Q2lPTUsyZlVVUmZUNVNhSFJnUktSU01sNWpHaDdJaFZHOW9JRnRoVzE5TzJJSi1IazhPZzVLTHFJWmpOSnYwb0VGcUtWbVRYbWlvVFBCUUlhel9GbzZ3NW1OaGdMVTRFS1JWWURmeWNuYWtQS2RBdnRKNUotTUZ2SUdCbmZlcmhLQnXSAd4BQVVfeXFMUGFNSGZxdEp3eG42UEthdW9YelRmaUpzX0l1dkhoUXBkN1JnajduM2RENmdUT1BGV3Z4M2xDX1FlbEh5U0p5NVJOUm0wVnoxejBOVUd3RE9zMmp1TDhVTktGaTJKT1pRV3NSNktkOUtDN0pMZUdoWUdKUXUxZzQ1WlVOWWR2TzJqVi1rLTRCQzZHcEZ6Tkxac3IyZWNsbWtKa0VrQWk1UkxDTWJPRjN0aHNEUzFMeFBkQWNxNDY1MC12eFRfRnRWZkxYNWJqdXRzZEFKVXlfdGdYbWxCVzdB?oc=5",
       "source": "Mint",
       "published_at": "Wed, 22 Apr 2026 00:30:40 GMT",
-      "symbol": "DRREDDY",
-      "stock_name": "Dr Reddys"
+      "symbol": "TITAN",
+      "stock_name": "Titan Company"
     },
     {
       "title": "India’s IndiGo appoints head of IATA as new CEO - MSN",
@@ -699,14 +699,6 @@
       "stock_name": "Wipro"
     },
     {
-      "title": "ICICI Bank Sees Heavy Put Option Activity Amid Bearish Market Sentiment - Markets Mojo",
-      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPLUJia1FDUEFjdDFOdHo1UEk4RkpfOWJGYTdhMHlxNTdJekpXdlN2aXdBRldSQjM3Qjc5eDVpbEZWS21FZ3VQN1lueUwzY2Nwbk5rOGtUandIcl9fSXRMMDhhcFVELWplNmlUU2ZlZXBwSEY2WnVid3ZsQThOOXdmcG5uaTFyZ3hxazRaZkl5aktJdTZXOTdpY19zbU5PZVpPMDctcXYxWjdSTm1hYWdUaUpEUk1SUk4xNk9SZjNfVG5ITjdSWmF4dA?oc=5",
-      "source": "Markets Mojo",
-      "published_at": "Tue, 21 Apr 2026 21:33:22 GMT",
-      "symbol": "ICICIBANK",
-      "stock_name": "ICICI Bank"
-    },
-    {
       "title": "Adani Ports Completes Amalgamation with Wholly Owned Subsidiary Adani Harbour Services - scanx.trade",
       "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPS2FweEg3Vi1nX0Q1RnZTN0JqcE90MWlXbjVPdmpVd3JDc3ZRVmV6a21HS2xPdDFyZkIzS2NJaFg2RGlCSVVHQlNkRnphdmluVkY0d2ZqdnhJeERUNGNHbjEtX3RWUHp4RTZCeFhfbUxuVGRQNGVDZ2R5Zlh3ekdzYklCLXItLVVacVRZZ0ZtRHpLR3FEdWJHLWc5RzJja201dktJTFlUWXdpUFZGcGJodHNlQXV4Y1VRelcxTHpHRWluN29idkl6Zms5NFhZME5WNWt6dDBOSnMyM3M?oc=5",
       "source": "scanx.trade",
@@ -721,14 +713,6 @@
       "published_at": "Tue, 21 Apr 2026 21:21:11 GMT",
       "symbol": "BPCL",
       "stock_name": "BPCL"
-    },
-    {
-      "title": "Sun Pharma Advanced Research Company Ltd is Rated Strong Sell - Markets Mojo",
-      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOSHhQYW9oMzR3YnlTN0JVRXZGd3laUTVsaXVzYVZaa25lWTJUTHFpZVA0VUpwUUZEdXh2NmRycTVhWFlrYW1YeDdUallEVHdiRmZjUDNKdnhNbVdYa0dYR0hnUUR2TUZjV29CT1V3cW1GOC03RERES0NWYlhydE1RaHM5dXZ1T25sWmVRQU1DdVZEbkZiTlhrY2paaEs1N2x4eVVqMU1wdXdCUEFESTR4eVh2OFdoUEJLX05vY0xoOWc?oc=5",
-      "source": "Markets Mojo",
-      "published_at": "Tue, 21 Apr 2026 21:09:41 GMT",
-      "symbol": "SUNPHARMA",
-      "stock_name": "Sun Pharma"
     },
     {
       "title": "ONGC Sees Robust Call Option Activity as Shares Hit New 52-Week High - Markets Mojo",
