@@ -196,3 +196,35 @@ def test_fcs_adapter_missing_returns_unavailable():
     env = _run(src)
     assert env["verdict"] == "UNAVAILABLE"
     assert env["empty_state_reason"]
+
+
+def test_ta_adapter_reliance_green():
+    uri = _js_uri("adapters/ta.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const raw = {{score: 72, band: 'HIGH', health: 'GREEN', source: 'own',
+      computed_at: '2026-04-23T16:00:00+05:30',
+      mean_auc: 0.58, min_fold_auc: 0.53, n_folds: 5,
+      top_features: [{{name: 'doji_flag', sign: '+', magnitude: 24,
+                       contribution: 0.24}}]}};
+    const env = adapt('RELIANCE', raw);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["engine"] == "ta"
+    assert env["verdict"] == "LONG"
+    assert env["calibration"] == "walk_forward"
+    assert "daily bars" in env["health"]["detail"]
+
+
+def test_ta_adapter_non_pilot_ticker_unavailable():
+    uri = _js_uri("adapters/ta.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const env = adapt('ITC', null);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["verdict"] == "UNAVAILABLE"
+    assert "RELIANCE only" in env["empty_state_reason"]
+    assert "212" in env["empty_state_reason"]
