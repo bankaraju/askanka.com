@@ -1,10 +1,13 @@
+// pipeline/terminal/static/js/components/candidate-drawer.js
 // Renders the expandable inline drawer beneath a candidate row.
-// For static_config + dynamic_pair_engine spreads, fetches the 5-layer narration
-// (regime gate → scorecard delta → technicals → news → composer) from
-// /api/research/digest spread_theses where available; falls back to the basic
-// reason field for other sources.
-import { get } from '../lib/api.js';
-import { renderPanel as renderAttractPanel } from './attractiveness-panel.js';
+// v1 of Unified Analysis Panel: loops over candidate.analyses_raw, runs each
+// through its adapter, renders the shared panel. Replaces the hardcoded
+// 5-layer narration block.
+import { renderPanel } from './analysis/panel.js';
+import { adapt as adaptFcs } from './analysis/adapters/fcs.js';
+import { adapt as adaptTa } from './analysis/adapters/ta.js';
+import { adapt as adaptSpread } from './analysis/adapters/spread.js';
+import { adapt as adaptCorr } from './analysis/adapters/corr.js';
 
 function _esc(s) {
   if (s == null) return '';
@@ -14,51 +17,28 @@ function _esc(s) {
 }
 
 export async function render(container, candidate) {
-  container.innerHTML = '<div class="skeleton skeleton--card"></div>';
-  let narration = candidate.reason || '';
-  let layers = null;
-
-  if (candidate.source === 'static_config' || candidate.source === 'dynamic_pair_engine') {
-    try {
-      const digest = await get('/research/digest');
-      const match = (digest.spread_theses || []).find(s => s.name === candidate.name);
-      if (match) layers = match;
-    } catch { /* fall through */ }
-  }
-
-  const sizingLine = candidate.sizing_basis
-    ? `<div><span class="text-muted">Sizing basis:</span> <span class="mono">${_esc(candidate.sizing_basis)}</span></div>`
-    : '';
-
-  const horizonLine = `<div><span class="text-muted">Horizon:</span> <span class="mono">${_esc(candidate.horizon_days)}d (${_esc(candidate.horizon_basis)})</span></div>`;
-
-  let layersHtml = '';
-  if (layers) {
-    layersHtml = `
-      <div style="margin-top: var(--spacing-md);">
-        <div class="text-muted" style="font-size: 0.6875rem; margin-bottom: 4px;">5-LAYER NARRATION</div>
-        <div class="mono" style="font-size: 0.75rem; line-height: 1.6;">
-          <div>1. Regime gate: <strong>${layers.regime_fit ? 'PASS' : 'FAIL'}</strong></div>
-          <div>2. Scorecard / Conviction: <strong>${_esc(layers.conviction ?? '--')} (${_esc(layers.score ?? '--')})</strong></div>
-          <div>3. Z-score: <strong>${layers.z_score != null ? layers.z_score.toFixed(2) + 'σ' : '--'}</strong></div>
-          <div>4. Action: <strong>${_esc(layers.action ?? '--')}</strong></div>
-          <div>5. Gate status: <strong>${_esc(layers.gate_status ?? '--')}</strong></div>
-        </div>
-      </div>`;
-  }
-
-  // Target ticker for the Feature Contributions panel. Prefers the first
-  // long-leg ticker, then first short leg, then the candidate ticker field.
-  // Uppercased to match attractiveness_scores.json key convention.
   const tkr = String(
     (candidate.long_legs && candidate.long_legs[0]) ||
     (candidate.short_legs && candidate.short_legs[0]) ||
     candidate.ticker || ''
   ).toUpperCase();
 
-  // Unique-per-drawer mount id so two concurrent drawers don't collide.
-  const _uid = Math.random().toString(36).slice(2, 8);
-  const mountId = `attract-panel-mount-${_uid}`;
+  const raw = candidate.analyses_raw || {};
+  // Frozen render order: FCS → TA → Spread → Corr Break.
+  const envelopes = [
+    adaptFcs(tkr, raw.fcs),
+    adaptTa(tkr, raw.ta),
+    adaptSpread(tkr, raw.spread),
+    adaptCorr(tkr, raw.corr),
+  ];
+
+  const narration = candidate.reason || '';
+  const sizingLine = candidate.sizing_basis
+    ? `<div><span class="text-muted">Sizing basis:</span> <span class="mono">${_esc(candidate.sizing_basis)}</span></div>`
+    : '';
+  const horizonLine = `<div><span class="text-muted">Horizon:</span> <span class="mono">${_esc(candidate.horizon_days)}d (${_esc(candidate.horizon_basis)})</span></div>`;
+
+  const panelMountId = `uap-${Math.random().toString(36).slice(2, 8)}`;
 
   container.innerHTML = `
     <div style="padding: var(--spacing-md); background: var(--bg-elevated); border-left: 3px solid var(--accent-gold);">
@@ -69,15 +49,11 @@ export async function render(container, candidate) {
         <div><span class="text-muted">Source:</span> <span class="mono">${_esc(candidate.source)}</span></div>
         <div><span class="text-muted">Conviction:</span> <span class="mono">${_esc(candidate.conviction)}</span></div>
       </div>
-      ${layersHtml}
-      <div id="${mountId}"></div>
+      <div id="${panelMountId}" style="margin-top: var(--spacing-md);"></div>
     </div>`;
 
-  // Feature Contributions panel (Task 15). Reuses candidate.attractiveness when
-  // trading.js (Task 13) already attached it; falls back to a fetch otherwise.
-  // Uses container.querySelector per project convention (scanner.js comment ref).
-  const mount = container.querySelector(`#${mountId}`);
-  if (mount && tkr) {
-    await renderAttractPanel(mount, tkr, candidate.attractiveness);
+  const mount = container.querySelector(`#${panelMountId}`);
+  if (mount) {
+    renderPanel(mount, envelopes, new Date().toISOString());
   }
 }
