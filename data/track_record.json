@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-04-21T14:18:33.479786+05:30",
-  "total_closed": 4,
-  "win_rate_pct": 25.0,
-  "avg_pnl_pct": 0.43,
+  "updated_at": "2026-04-22T11:48:56.938588+05:30",
+  "total_closed": 6,
+  "win_rate_pct": 16.7,
+  "avg_pnl_pct": -0.01,
   "recent": [
     {
       "signal_id": "BRK-2026-04-20-KAYNES",
