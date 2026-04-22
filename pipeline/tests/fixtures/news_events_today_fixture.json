@@ -3,9 +3,9 @@
   "last_scan": "2026-04-15T08:21:00.000+05:30",
   "scan_type": "morning",
   "events": [
-    {"symbol": "RELIANCE", "title": "Q4 results beat estimates by 8%", "category": "earnings"},
-    {"symbol": "TCS", "title": "Wins $500M deal with European bank", "category": "deal_win"},
-    {"symbol": "HDFCBANK", "title": "RBI fines bank Rs 5 crore", "category": "regulatory_action"}
+    {"matched_stocks": ["RELIANCE"], "title": "Q4 results beat estimates by 8%", "categories": ["earnings"]},
+    {"matched_stocks": ["TCS"], "title": "Wins $500M deal with European bank", "categories": ["deal_win"]},
+    {"matched_stocks": ["HDFCBANK"], "title": "RBI fines bank Rs 5 crore", "categories": ["regulatory_action"]}
   ],
   "summary": {"total": 3}
 }

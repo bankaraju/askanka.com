@@ -61,7 +61,8 @@ def test_live_status_only_positions_and_fragility(tmp_path, monkeypatch):
     assert set(out.keys()) == {"updated_at", "positions", "fragility"}
     assert len(out["positions"]) == 1
     pos = out["positions"][0]
-    assert pos["spread_name"] == "Defence vs IT"
+    # Production renders cryptic names (see _CRYPTIC_NAMES in website_exporter)
+    assert pos["spread_name"] == "Sovereign Shield Alpha"
     assert pos["spread_pnl_pct"] == 11.14
 
 
@@ -261,5 +262,6 @@ def test_daily_stop_reason_unchanged():
         "_data_levels": {"todays_move": -1.10, "daily_stop": -0.98},
     }
     reason = _derive_close_reason(sig)
-    assert "Trailing stop" in reason
+    # signal_tracker renders cumulative-move stop as "Daily stop: today ..."
+    assert "Daily stop" in reason
     assert "-1.10" in reason
