@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-22T04:45:49.504154+05:30",
+  "updated_at": "2026-04-22T09:32:11.421407+05:30",
   "regime_zone": "RISK-OFF",
-  "regime_source_timestamp": "2026-04-22T04:45:28.944006+05:30",
+  "regime_source_timestamp": "2026-04-22T09:25:10.575638+05:30",
   "spreads": [],
   "stocks": [
     {
@@ -10,8 +10,8 @@
       "conviction": "HIGH",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-21 11:58:41",
-      "is_stale": true,
+      "source_timestamp": "2026-04-22 09:31:35",
+      "is_stale": false,
       "hit_rate": 1.0,
       "episodes": 1,
       "hit_rate_meaningful": false
@@ -22,8 +22,8 @@
       "conviction": "HIGH",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-21 11:58:41",
-      "is_stale": true,
+      "source_timestamp": "2026-04-22 09:31:35",
+      "is_stale": false,
       "hit_rate": 1.0,
       "episodes": 1,
       "hit_rate_meaningful": false
@@ -34,8 +34,8 @@
       "conviction": "MEDIUM",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-21 11:58:41",
-      "is_stale": true,
+      "source_timestamp": "2026-04-22 09:31:35",
+      "is_stale": false,
       "hit_rate": 1.0,
       "episodes": 1,
       "hit_rate_meaningful": false
