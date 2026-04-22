@@ -1,5 +1,6 @@
 // Sortable table of tradeable_candidates with click-to-expand row drawer.
 import * as drawer from './candidate-drawer.js';
+import { renderCellHtml as renderAttractCell, bandClass as attractBandClass, tooltipText as attractTooltip } from './attractiveness-cell.js';
 
 let _sortCol = 'score';
 let _sortDir = -1;
@@ -11,6 +12,14 @@ function _esc(s) {
   return d.innerHTML;
 }
 
+function _sortValue(c, col) {
+  if (col === 'attractiveness_score') {
+    const s = c.attractiveness?.score;
+    return (typeof s === 'number' && Number.isFinite(s)) ? s : null;
+  }
+  return c[col];
+}
+
 export function render(container, candidates) {
   if (!candidates || candidates.length === 0) {
     container.innerHTML = '<div class="empty-state"><p>No candidates match these filters</p></div>';
@@ -20,7 +29,7 @@ export function render(container, candidates) {
   const _uid = Math.random().toString(36).slice(2, 8);
 
   const sorted = [...candidates].sort((a, b) => {
-    let av = a[_sortCol], bv = b[_sortCol];
+    let av = _sortValue(a, _sortCol), bv = _sortValue(b, _sortCol);
     if (av == null) av = _sortDir === -1 ? -Infinity : Infinity;
     if (bv == null) bv = _sortDir === -1 ? -Infinity : Infinity;
     if (typeof av === 'string') return _sortDir * av.localeCompare(bv);
@@ -41,12 +50,17 @@ export function render(container, candidates) {
     return 'badge--muted';
   }
 
+  function attractCell(c) {
+    return renderAttractCell(c.attractiveness);
+  }
+
   const cols = [
     { key: 'name', label: 'Name' },
     { key: 'source', label: 'Source' },
     { key: 'long_legs', label: 'Legs' },
     { key: 'conviction', label: 'Conviction' },
     { key: 'score', label: 'Score' },
+    { key: 'attractiveness_score', label: 'Attractiveness' },
     { key: 'horizon_days', label: 'Horizon' },
   ];
 
@@ -62,10 +76,11 @@ export function render(container, candidates) {
       <td>${legsCell(c)}</td>
       <td><span class="badge ${convClass(c.conviction)}">${_esc(c.conviction)}</span></td>
       <td class="mono">${_esc(c.score)}</td>
+      <td class="mono">${attractCell(c)}</td>
       <td class="mono">${_esc(c.horizon_days)}d</td>
     </tr>
     <tr class="drawer-row" data-drawer-for="${i}" style="display: none;">
-      <td colspan="6"><div id="drawer-content-${_uid}-${i}"></div></td>
+      <td colspan="${cols.length}"><div id="drawer-content-${_uid}-${i}"></div></td>
     </tr>`).join('');
 
   container.innerHTML = `
@@ -98,3 +113,7 @@ export function render(container, candidates) {
     });
   });
 }
+
+// Re-export helpers so other modules (Positions badge, TA panel) can reuse
+// without depending on the attractiveness module directly.
+export { attractBandClass, attractTooltip };

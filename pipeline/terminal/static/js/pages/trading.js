@@ -3,6 +3,7 @@
 import { get } from '../lib/api.js';
 import * as filterChips from '../components/filter-chips.js';
 import * as candidatesTable from '../components/candidates-table.js';
+import * as attractiveness from '../components/attractiveness-cell.js';
 
 let _allCandidates = [];
 
@@ -21,10 +22,26 @@ export async function render(container) {
 
 export function destroy() {}
 
+function _attachAttractiveness(candidates, scores) {
+  const map = (scores && scores.scores) || {};
+  for (const c of candidates) {
+    const raw = c.long_legs?.[0] || c.short_legs?.[0] || c.ticker;
+    if (!raw) { c.attractiveness = undefined; continue; }
+    const key = String(raw).toUpperCase();
+    c.attractiveness = map[key];
+  }
+}
+
 async function loadData() {
   try {
-    const data = await get('/candidates');
+    // Fetch candidates + attractiveness in parallel. Attractiveness is a soft
+    // dependency: if it fails, we still render candidates (each will show em-dash).
+    const [data, scores] = await Promise.all([
+      get('/candidates'),
+      attractiveness.fetchAll().catch(() => ({ scores: {} })),
+    ]);
     _allCandidates = data.tradeable_candidates || [];
+    _attachAttractiveness(_allCandidates, scores);
 
     const sources = [...new Set(_allCandidates.map(c => c.source).filter(Boolean))];
     const convictions = [...new Set(_allCandidates.map(c => c.conviction).filter(Boolean))];
