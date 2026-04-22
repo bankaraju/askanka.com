@@ -40,6 +40,12 @@ def rigour_env(tmp_path, monkeypatch):
     monkeypatch.setattr(se, "BREAKS_PATH", breaks)
     monkeypatch.setattr(se, "REGIME_PROFILE_PATH", profile)
     monkeypatch.setattr(se, "OI_ANOMALIES_PATH", oi)
+    # load_trust_scores ALSO scans TRUST_SCORES_DIR unconditionally; isolate
+    # from real opus/artifacts so fixture trust_grade "A" isn't overwritten
+    # by production per-stock scores.
+    empty_dir = tmp_path / "empty_artifacts"
+    empty_dir.mkdir()
+    monkeypatch.setattr(se, "TRUST_SCORES_DIR", empty_dir)
 
     # Redirect signal output to tmp
     import signal_tracker as st

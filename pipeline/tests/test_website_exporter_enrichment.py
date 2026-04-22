@@ -36,6 +36,31 @@ def test_export_live_status_includes_enrichment(tmp_path, monkeypatch):
     fake_st.fetch_current_prices = lambda tickers: {}
     monkeypatch.setitem(__import__("sys").modules, "signal_tracker", fake_st)
 
+    # Isolate from production trust scores: website_exporter calls
+    # load_trust_scores() which reads (a) TRUST_SCORES_DIR, (b) TRUST_PATH,
+    # and (c) the derived v2_path = _REPO_ROOT/data/trust_scores_v2.json.
+    # website_exporter does `from signal_enrichment import ...` inside a
+    # function (bare import, not pipeline.), so force both import paths
+    # into sys.modules NOW and patch both — they can be distinct objects.
+    empty_trust_dir = tmp_path / "empty_artifacts"
+    empty_trust_dir.mkdir()
+    missing_mp = tmp_path / "missing_model_portfolio.json"
+    isolated_repo = tmp_path / "isolated_repo"
+    isolated_repo.mkdir()
+    import sys as _sys
+    sys_path_patched = False
+    if str(Path(__file__).parent.parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).parent.parent))
+        sys_path_patched = True
+    import pipeline.signal_enrichment  # noqa: F401
+    import signal_enrichment  # noqa: F401
+    for mod_name in ("signal_enrichment", "pipeline.signal_enrichment"):
+        mod = _sys.modules.get(mod_name)
+        if mod is not None:
+            monkeypatch.setattr(mod, "TRUST_SCORES_DIR", empty_trust_dir)
+            monkeypatch.setattr(mod, "TRUST_PATH", missing_mp)
+            monkeypatch.setattr(mod, "_REPO_ROOT", isolated_repo)
+
     result = we.export_live_status()
     pos = result["positions"][0]
 
@@ -70,6 +95,31 @@ def test_export_live_status_works_without_enrichment(tmp_path, monkeypatch):
     fake_st = types.ModuleType("signal_tracker")
     fake_st.fetch_current_prices = lambda tickers: {}
     monkeypatch.setitem(__import__("sys").modules, "signal_tracker", fake_st)
+
+    # Isolate from production trust scores: website_exporter calls
+    # load_trust_scores() which reads (a) TRUST_SCORES_DIR, (b) TRUST_PATH,
+    # and (c) the derived v2_path = _REPO_ROOT/data/trust_scores_v2.json.
+    # website_exporter does `from signal_enrichment import ...` inside a
+    # function (bare import, not pipeline.), so force both import paths
+    # into sys.modules NOW and patch both — they can be distinct objects.
+    empty_trust_dir = tmp_path / "empty_artifacts"
+    empty_trust_dir.mkdir()
+    missing_mp = tmp_path / "missing_model_portfolio.json"
+    isolated_repo = tmp_path / "isolated_repo"
+    isolated_repo.mkdir()
+    import sys as _sys
+    sys_path_patched = False
+    if str(Path(__file__).parent.parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).parent.parent))
+        sys_path_patched = True
+    import pipeline.signal_enrichment  # noqa: F401
+    import signal_enrichment  # noqa: F401
+    for mod_name in ("signal_enrichment", "pipeline.signal_enrichment"):
+        mod = _sys.modules.get(mod_name)
+        if mod is not None:
+            monkeypatch.setattr(mod, "TRUST_SCORES_DIR", empty_trust_dir)
+            monkeypatch.setattr(mod, "TRUST_PATH", missing_mp)
+            monkeypatch.setattr(mod, "_REPO_ROOT", isolated_repo)
 
     result = we.export_live_status()
     pos = result["positions"][0]

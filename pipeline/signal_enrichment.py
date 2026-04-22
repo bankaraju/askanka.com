@@ -32,7 +32,7 @@ OI_ANOMALIES_PATH = _REPO_ROOT / "pipeline" / "data" / "oi_anomalies.json"
 # Loaders
 # ---------------------------------------------------------------------------
 
-def load_trust_scores(path: Path = TRUST_PATH) -> Dict[str, Dict]:
+def load_trust_scores(path: Path | None = None) -> Dict[str, Dict]:
     """
     Load OPUS Trust Scores from per-stock trust_score.json files.
 
@@ -42,6 +42,11 @@ def load_trust_scores(path: Path = TRUST_PATH) -> Dict[str, Dict]:
     Returns a dict keyed by symbol:
         {trust_grade, trust_score, opus_side, thesis}
     """
+    # Resolve the default at call time, not def time, so tests that
+    # monkeypatch TRUST_PATH actually take effect.
+    if path is None:
+        path = TRUST_PATH
+
     result: Dict[str, Dict] = {}
 
     # Prefer V2 scores if available (only when using the default path — not in tests)
