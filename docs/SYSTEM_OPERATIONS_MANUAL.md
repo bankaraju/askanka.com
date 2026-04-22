@@ -582,7 +582,10 @@ Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, e
 |----------|-----------|-------------|
 | Saturday 22:00 | AnkaETFReoptimize | Reoptimize ETF weights with Indian data (Karpathy) | CRITICAL |
 | Sunday 22:00 | AnkaWeeklyAgg | Aggregate weekly spread statistics |
+| Sunday 22:00 | AnkaWeeklyStats | Compute per-regime spread distributions via spread_statistics.py → pipeline/data/spread_stats.json |
 | Friday 16:00 | AnkaWeeklyReport | Weekly performance report → Telegram |
+
+**Path fix note (2026-04-22):** `spread_statistics.py` previously resolved `_DATA_DIR` to `askanka.com/data/` (wrong). Canonicalised to `pipeline/data/` to match `macro_stress.py` (writes `msi_history.json`) and `spread_intelligence.py` (reads `spread_stats.json`). Root `data/msi_history.json` was removed in commit `bb91a27`, so AnkaWeeklyStats had been silently running with an empty regime_map since that commit. Fix unblocks A2 bootstrap in the Anka Terminal Coherence plan.
 
 ---
 

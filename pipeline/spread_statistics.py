@@ -60,7 +60,7 @@ IST = timezone(timedelta(hours=5, minutes=30))
 
 # Paths
 _PIPELINE_DIR = Path(__file__).parent
-_DATA_DIR     = _PIPELINE_DIR.parent / "data"
+_DATA_DIR     = _PIPELINE_DIR / "data"
 DATA_DIR      = _DATA_DIR          # legacy alias used by save_stats / load_stats
 _MSI_HISTORY  = _DATA_DIR / "msi_history.json"
 _OUTPUT_FILE  = _DATA_DIR / "spread_stats.json"
