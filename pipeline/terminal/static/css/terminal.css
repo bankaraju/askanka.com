@@ -723,5 +723,101 @@ h3 { font-size: 1.125rem; }
 .attract-falling { color: var(--accent-red); background: rgba(239, 68, 68, 0.08); }
 .attract-flat { color: var(--text-muted); background: rgba(100, 116, 139, 0.08); }
 
-/* `.attract-panel` rules removed with attractiveness-panel.js (Task 20).
-   Unified Analysis Panel rules follow in Task 21. */
+/* Unified Analysis Panel (UAP) v1 */
+.analysis-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.analysis-card {
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent-gold);
+  padding: var(--spacing-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.analysis-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+.analysis-card__engine {
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  margin-right: 6px;
+}
+.analysis-card__ticker {
+  font-weight: 600;
+}
+.analysis-card__verdict {
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+.analysis-card__conviction {
+  font-weight: 700;
+  font-size: 1.25rem;
+  min-width: 2.5em;
+  text-align: right;
+}
+.analysis-card__body {
+  margin-top: var(--spacing-xs);
+}
+.analysis-card__empty {
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 6px 0;
+}
+.analysis-card__evidence {
+  margin: 6px 0;
+}
+.analysis-card__bar-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 140px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 3px;
+}
+.analysis-card__bar-label {
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+}
+.analysis-card__bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+}
+.analysis-card__bar { height: 6px; }
+.analysis-card__bar-pos { background: var(--accent-gold); }
+.analysis-card__bar-neg { background: var(--text-muted); }
+.analysis-card__bar-name { font-size: 0.6875rem; color: var(--text-muted); }
+.analysis-card__health {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.6875rem;
+}
+.analysis-card__dot {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.analysis-card__health-detail { color: var(--text-muted); }
+.analysis-card__footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+}
+.analysis-card__stale { color: var(--accent-gold); margin-left: 4px; }
+
+/* Responsive: at ≥480px, header + 2-col body */
+@media (min-width: 480px) {
+  .analysis-card__body {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--spacing-sm);
+  }
+  .analysis-card__evidence { grid-column: 1; }
+  .analysis-card__health { grid-column: 2; align-self: start; }
+}
