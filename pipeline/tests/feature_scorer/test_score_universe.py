@@ -83,3 +83,33 @@ def test_score_universe_appends_snapshots(tmp_path, monkeypatch):
     score_universe.main()
     lines = snapshots_path.read_text(encoding="utf-8").strip().split("\n")
     assert any('"ticker": "KAYNES"' in l for l in lines)
+
+
+def test_live_feature_builder_returns_all_keys(monkeypatch, tmp_path):
+    """_build_live_features on a known ticker returns all 16 expected feature keys."""
+    import pandas as pd
+    from pipeline.feature_scorer import score_universe
+
+    monkeypatch.setattr(score_universe, "_load_today_regime",
+                         lambda: {"zone": "NEUTRAL"}, raising=False)
+    monkeypatch.setattr(score_universe, "_load_positioning",
+                         lambda: {"KAYNES": {"pcr": 0.9, "days_to_expiry": 6}}, raising=False)
+    monkeypatch.setattr(score_universe, "_load_trust_scores",
+                         lambda: {"KAYNES": "B"}, raising=False)
+    monkeypatch.setattr(score_universe, "_load_ticker_bars",
+                         lambda t: pd.DataFrame({"date": pd.date_range("2026-01-01", periods=80, freq="B"),
+                                                  "close": [100 + i * 0.1 for i in range(80)]}), raising=False)
+    monkeypatch.setattr(score_universe, "_load_sector_bars",
+                         lambda c: pd.DataFrame({"date": pd.date_range("2026-01-01", periods=80, freq="B"),
+                                                  "close": [1000 + i * 0.5 for i in range(80)]}), raising=False)
+    monkeypatch.setattr(score_universe, "_nifty_breadth_5d", lambda: 0.55, raising=False)
+
+    v = score_universe._build_live_features("KAYNES")
+    assert v is not None
+    expected = {"sector_5d_return", "sector_20d_return", "ticker_rs_10d",
+                "ticker_3d_momentum", "nifty_breadth_5d", "pcr_z_score",
+                "trust_grade_ordinal", "realized_vol_60d",
+                "regime_RISK-OFF", "regime_NEUTRAL", "regime_RISK-ON",
+                "regime_EUPHORIA", "regime_CRISIS",
+                "dte_0_5", "dte_6_15", "dte_16_plus"}
+    assert set(v.keys()) == expected
