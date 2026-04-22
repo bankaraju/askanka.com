@@ -55,9 +55,3 @@ export function renderBadge(ticker, row) {
 export function resetPositionMemo(ticker) {
   if (ticker) _openAttractMemo.delete(String(ticker).toUpperCase());
 }
-
-// Test-only escape hatch. Not used by production code. Lets unit tests assert
-// the memo starts clean across cases without needing to reload the module.
-export function _clearMemoForTests() {
-  _openAttractMemo.clear();
-}
