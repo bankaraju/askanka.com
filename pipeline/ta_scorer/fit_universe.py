@@ -33,21 +33,28 @@ def _load_csv(path: Path) -> pd.DataFrame | None:
 def _build_training_frame(prices: pd.DataFrame, sector: pd.DataFrame,
                           nifty: pd.DataFrame) -> pd.DataFrame | None:
     rows: list[dict] = []
+    skipped_errors = 0
     for i, d in enumerate(prices["date"]):
         if i < 210:
             continue
-        vec = features.build_feature_vector(
-            prices=prices, sector=sector, nifty=nifty,
-            as_of=d, regime="NEUTRAL", sector_breadth=0.5,
-        )
-        if not vec:
-            continue
-        lbl = labels.make_label(prices, entry_date=d, horizon_days=1)
-        if not lbl:
-            continue
-        vec["date"] = d
-        vec["y"] = lbl["y"]
-        rows.append(vec)
+        try:
+            vec = features.build_feature_vector(
+                prices=prices, sector=sector, nifty=nifty,
+                as_of=d, regime="NEUTRAL", sector_breadth=0.5,
+            )
+            if not vec:
+                continue
+            lbl = labels.make_label(prices, entry_date=d, horizon_days=1)
+            if not lbl:
+                continue
+            vec["date"] = d
+            vec["y"] = lbl["y"]
+            rows.append(vec)
+        except Exception as exc:
+            skipped_errors += 1
+            log.debug("row %s: skip on exception %s", d, exc)
+    if skipped_errors:
+        log.info("training frame built with %d row-level skips", skipped_errors)
     if not rows:
         return None
     return pd.DataFrame(rows)
