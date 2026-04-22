@@ -68,3 +68,33 @@ def test_monitor_ignores_atr_for_non_correlation_sources():
     # Falls back to spread default: -(2.0 * 0.5) = -1.0. -0.9 > -1.0 → OPEN.
     assert status == "OPEN"
     assert sig["_data_levels"]["daily_stop"] == -1.0
+
+
+def test_data_levels_carries_stop_source_for_atr():
+    """check_signal_status must record stop_source in _data_levels so the UI
+    can distinguish real ATR stops from fallback defaults."""
+    sig = _mk_signal(stop_pct=-2.3, atr_source="atr_14")
+    with patch.object(signal_tracker, "compute_signal_pnl",
+                      return_value={"spread_pnl_pct": 0.0}), \
+         patch.object(signal_tracker, "_compute_todays_spread_move", return_value=0.0), \
+         patch.object(signal_tracker, "get_levels_for_spread",
+                      return_value={"daily_std": 2.0, "avg_favorable_move": 2.0,
+                                    "entry_level": 0.0, "stop_level": -1.5,
+                                    "cum_percentile": 50.0, "cum_peak": 5.0, "cum_trough": -2.0}):
+        signal_tracker.check_signal_status(sig, current_prices={"BHEL": 318.5})
+    assert sig["_data_levels"]["stop_source"] == "atr_14"
+
+
+def test_data_levels_carries_stop_source_fallback_for_spread():
+    """Non-ATR paths label stop_source as 'spread_stats' (not fallback) —
+    fallback indicator is reserved for ATR-attempted-but-failed only."""
+    sig = _mk_signal(stop_pct=-1.0, source="SPREAD", atr_source="atr_14")
+    with patch.object(signal_tracker, "compute_signal_pnl",
+                      return_value={"spread_pnl_pct": 0.0}), \
+         patch.object(signal_tracker, "_compute_todays_spread_move", return_value=0.0), \
+         patch.object(signal_tracker, "get_levels_for_spread",
+                      return_value={"daily_std": 2.0, "avg_favorable_move": 2.0,
+                                    "entry_level": 0.0, "stop_level": -1.5,
+                                    "cum_percentile": 50.0, "cum_peak": 5.0, "cum_trough": -2.0}):
+        signal_tracker.check_signal_status(sig, current_prices={"BHEL": 318.5})
+    assert sig["_data_levels"]["stop_source"] == "spread_stats"

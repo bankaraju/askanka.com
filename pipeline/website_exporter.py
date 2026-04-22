@@ -391,6 +391,11 @@ def export_live_status() -> dict:
             "trail_stop": dl.get("trail_stop"),
             "trail_budget": dl.get("trail_budget"),
             "avg_favorable": dl.get("avg_favorable"),
+            # Provenance for the Stop cell. "fallback" → muted dot in the UI
+            # (ATR was attempted but unavailable, so we're using spread-stats
+            # defaults that aren't volatility-calibrated for this ticker).
+            # Default to "spread_stats" for legacy rows without the key.
+            "stop_source": dl.get("stop_source", "spread_stats"),
             "peak_pnl": peak,
             "source": sig.get("source", "SPREAD"),
             "trust_scores": _refresh_trust(sig, _fresh_trust),

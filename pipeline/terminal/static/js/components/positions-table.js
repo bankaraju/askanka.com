@@ -88,6 +88,14 @@ export function render(container, positions) {
     const peakPnl = p.peak_pnl ?? lvl.peak;
 
     const stop = dailyStop != null ? fmtPct(dailyStop) : '--';
+    // Muted dot when the stop came from the fallback path (ATR requested
+    // for a Phase C break but unavailable → using spread-stats default,
+    // which isn't volatility-calibrated for this ticker). Tooltip explains
+    // the degradation so the viewer doesn't have to guess.
+    const stopSource = p.stop_source ?? lvl.stop_source;
+    const fallbackDot = stopSource === 'fallback'
+      ? ' <span title="using fallback stop — ATR unavailable" style="color: var(--colour-muted, #888); font-size: 0.7em;">◦</span>'
+      : '';
     const trail = trailStop != null ? fmtPct(trailStop) : '--';
     const peak = peakPnl != null ? fmtPct(peakPnl) : '--';
     const opened = p.open_date || (p.open_timestamp ? p.open_timestamp.split('T')[0] : '--');
@@ -103,7 +111,7 @@ export function render(container, positions) {
       <td>${priceCell(p)}</td>
       <td class="mono">${opened}</td>
       <td class="mono ${pnlClass(pnl)}">${fmtPct(pnl)}</td>
-      <td class="mono text-red" title="Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.">${stop}</td>
+      <td class="mono text-red" title="Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.">${stop}${fallbackDot}</td>
       <td class="mono ${pnlClass(trailStop)}" title="Trail stop = peak - (avg_favorable × sqrt(days_since_check)). Arms when peak ≥ budget.">${trail}</td>
       <td class="mono text-green" title="Running peak P&L since entry — trail stop ratchets off this.">${peak}</td>
       <td class="mono">${days}</td>

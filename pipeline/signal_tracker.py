@@ -604,6 +604,16 @@ def check_signal_status(
         "avg_favorable": round(avg_favorable, 2),
         "consecutive_losses": 2 if (is_today_loss and was_yesterday_loss) else (1 if is_today_loss else 0),
         "two_day_combined": round(two_day_combined, 2) if two_day_combined is not None else None,
+        # Provenance tag for the UI fallback indicator.
+        #   "atr_14"       → ATR-derived single-ticker stop (Phase C / correlation break)
+        #   "fallback"     → ATR was attempted but unavailable; using spread-stats default
+        #                    (UI renders a muted dot next to the Stop cell)
+        #   "spread_stats" → Spread trade; classic avg_favorable × 0.50 stop. No ATR attempt.
+        "stop_source": (
+            atr_stop.get("stop_source", "atr_14") if use_atr
+            else ("fallback" if signal.get("source") == "CORRELATION_BREAK" and atr_stop
+                  else "spread_stats")
+        ),
     }
 
     # Stamp the trail-check timestamp for the next invocation
