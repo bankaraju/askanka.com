@@ -81,6 +81,12 @@ def apply_gates(
     # Gate 2: divergence check
     spread_entry = spread_stats.get(spread_name)
     if not spread_entry:
+        # No stats AND regime explicitly excluded this spread → INACTIVE
+        # (distinct from INSUFFICIENT_DATA, which is for stats-fetch failure on
+        # a spread the regime DOES allow). UI renders the two differently:
+        # INACTIVE is expected/muted; INSUFFICIENT_DATA is a warning.
+        if spread_name not in eligible:
+            return {"status": "INACTIVE", "reason": "not in eligible spreads"}
         return {"status": "INSUFFICIENT_DATA"}
 
     regimes = spread_entry.get("regimes", spread_entry)
