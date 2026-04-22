@@ -20,7 +20,7 @@ _REPO_ROOT = Path(__file__).parent.parent.parent
 _PIPELINE_DIR = Path(__file__).parent.parent
 _FNO_UNIVERSE_FILE = _REPO_ROOT / "opus" / "config" / "fno_stocks.json"
 _STOCK_HISTORICAL_DIR = _PIPELINE_DIR / "data" / "fno_historical"
-_INDEX_HISTORICAL_DIR = _PIPELINE_DIR / "data" / "india_historical"
+_INDEX_HISTORICAL_DIR = _PIPELINE_DIR / "data" / "india_historical" / "indices"
 
 
 def _ticker_universe() -> list[str]:
@@ -34,11 +34,18 @@ def _ticker_universe() -> list[str]:
 
 
 def _load_ticker_prices(ticker: str) -> pd.DataFrame | None:
-    """Load a single ticker's daily price history from pipeline/data/fno_historical/."""
+    """Load a single ticker's daily price history from pipeline/data/fno_historical/.
+
+    yfinance CSVs ship with capitalized headers (Date, Close, ...); the rest of
+    the pipeline expects lowercase (date, close, ...) to match the sector
+    indices. Normalize here so callers don't have to care.
+    """
     p = _STOCK_HISTORICAL_DIR / f"{ticker}.csv"
     if not p.exists():
         return None
-    return pd.read_csv(p)
+    df = pd.read_csv(p)
+    df.columns = [c.lower() for c in df.columns]
+    return df
 
 
 def _load_sector_bars(cohort: str) -> pd.DataFrame | None:

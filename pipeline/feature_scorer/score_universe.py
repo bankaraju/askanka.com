@@ -23,7 +23,7 @@ _PIPELINE_DIR = Path(__file__).parent.parent
 _REPO_ROOT = _PIPELINE_DIR.parent
 _DATA_DIR = _PIPELINE_DIR / "data"
 _STOCK_HISTORICAL_DIR = _DATA_DIR / "fno_historical"
-_INDEX_HISTORICAL_DIR = _DATA_DIR / "india_historical"
+_INDEX_HISTORICAL_DIR = _DATA_DIR / "india_historical" / "indices"
 
 
 # --- Live data loaders ---
@@ -59,7 +59,11 @@ def _load_trust_scores() -> dict:
 
 def _load_ticker_bars(ticker: str) -> pd.DataFrame | None:
     p = _STOCK_HISTORICAL_DIR / f"{ticker}.csv"
-    return pd.read_csv(p) if p.exists() else None
+    if not p.exists():
+        return None
+    df = pd.read_csv(p)
+    df.columns = [c.lower() for c in df.columns]
+    return df
 
 
 def _load_sector_bars(cohort: str) -> pd.DataFrame | None:

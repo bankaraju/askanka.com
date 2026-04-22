@@ -1,0 +1,127 @@
+<h2>Scanner Layout: How should the filter + results look?</h2>
+<p class="subtitle">The Scanner is a new sub-tab in Trading. Filter → list → click → detail. Three layout approaches:</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Filter Bar + Table</h3>
+      <p><strong>Spreadsheet-style — dense, scannable, sortable</strong></p>
+      <div style="margin-top:12px; background:#0a0e1a; border:1px solid #1e293b; border-radius:6px; padding:12px; font-family:'JetBrains Mono',monospace; font-size:11px;">
+        <div style="display:flex; gap:12px; margin-bottom:12px; align-items:center;">
+          <span style="color:#6e6e6e; font-size:10px;">MIN WIN RATE</span>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#d4a855;">≥ 70%</div>
+          <span style="color:#6e6e6e; font-size:10px;">DIRECTION</span>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#e5e7eb;">ALL</div>
+          <span style="color:#6e6e6e; font-size:10px;">SIGNIFICANCE</span>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#e5e7eb;">STRONG + MOD</div>
+          <span style="color:#9ca3af; margin-left:auto;">47 matches</span>
+        </div>
+        <table style="width:100%; border-collapse:collapse; color:#d1d5db;">
+          <tr style="color:#6e6e6e; font-size:10px; text-transform:uppercase; border-bottom:1px solid #1e293b;">
+            <td style="padding:6px 8px;">STOCK</td>
+            <td style="padding:6px 8px;">PATTERN</td>
+            <td style="padding:6px 8px;">DIR</td>
+            <td style="padding:6px 8px;">WIN 5D</td>
+            <td style="padding:6px 8px;">AVG RET</td>
+            <td style="padding:6px 8px;">FIRED</td>
+            <td style="padding:6px 8px;">LAST</td>
+          </tr>
+          <tr style="border-bottom:1px solid #111827; cursor:pointer;">
+            <td style="padding:6px 8px; color:#d4a855; font-weight:600;">RELIANCE</td>
+            <td style="padding:6px 8px;">ATR_COMPRESSION</td>
+            <td style="padding:6px 8px; color:#22c55e;">LONG</td>
+            <td style="padding:6px 8px; color:#22c55e; font-weight:600;">72%</td>
+            <td style="padding:6px 8px;">+2.1%</td>
+            <td style="padding:6px 8px;">45</td>
+            <td style="padding:6px 8px; color:#6e6e6e;">Apr 14</td>
+          </tr>
+          <tr style="border-bottom:1px solid #111827; cursor:pointer;">
+            <td style="padding:6px 8px; color:#d4a855; font-weight:600;">HDFCBANK</td>
+            <td style="padding:6px 8px;">MACD_CROSS_UP</td>
+            <td style="padding:6px 8px; color:#22c55e;">LONG</td>
+            <td style="padding:6px 8px; color:#22c55e; font-weight:600;">71%</td>
+            <td style="padding:6px 8px;">+1.8%</td>
+            <td style="padding:6px 8px;">38</td>
+            <td style="padding:6px 8px; color:#6e6e6e;">Apr 16</td>
+          </tr>
+          <tr style="border-bottom:1px solid #111827; cursor:pointer;">
+            <td style="padding:6px 8px; color:#d4a855; font-weight:600;">TCS</td>
+            <td style="padding:6px 8px;">BB_SQUEEZE</td>
+            <td style="padding:6px 8px; color:#ef4444;">SHORT</td>
+            <td style="padding:6px 8px; color:#22c55e; font-weight:600;">75%</td>
+            <td style="padding:6px 8px;">-1.9%</td>
+            <td style="padding:6px 8px;">22</td>
+            <td style="padding:6px 8px; color:#6e6e6e;">Apr 12</td>
+          </tr>
+        </table>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:8px; text-align:center;">Click row → loads stock in Charts + TA</div>
+      </div>
+      <div class="pros-cons" style="margin-top:12px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Most information density</li><li>Sortable by any column</li><li>Familiar spreadsheet feel</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Dry — no visual weight to strong signals</li><li>Every row looks the same importance</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Filter Bar + Card Grid</h3>
+      <p><strong>Visual cards — grouped by stock, patterns as badges inside</strong></p>
+      <div style="margin-top:12px; background:#0a0e1a; border:1px solid #1e293b; border-radius:6px; padding:12px;">
+        <div style="display:flex; gap:12px; margin-bottom:12px; align-items:center; font-family:'JetBrains Mono',monospace; font-size:11px;">
+          <span style="color:#6e6e6e; font-size:10px;">MIN WIN RATE</span>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#d4a855;">≥ 70%</div>
+          <span style="color:#9ca3af; margin-left:auto;">12 stocks, 47 patterns</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+          <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:10px; cursor:pointer;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="color:#d4a855; font-weight:700; font-size:14px;">RELIANCE</span>
+              <span style="background:rgba(34,197,94,0.15); color:#22c55e; font-size:10px; padding:2px 6px; border-radius:3px;">3 patterns</span>
+            </div>
+            <div style="font-size:11px; color:#9ca3af; line-height:1.6;">
+              <div>ATR_COMPRESS <span style="color:#22c55e">72%</span> · +2.1% · 45×</div>
+              <div>MACD_CROSS <span style="color:#22c55e">70%</span> · +1.5% · 31×</div>
+              <div>BB_SQUEEZE <span style="color:#22c55e">71%</span> · +1.8% · 28×</div>
+            </div>
+          </div>
+          <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:10px; cursor:pointer;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="color:#d4a855; font-weight:700; font-size:14px;">HDFCBANK</span>
+              <span style="background:rgba(34,197,94,0.15); color:#22c55e; font-size:10px; padding:2px 6px; border-radius:3px;">2 patterns</span>
+            </div>
+            <div style="font-size:11px; color:#9ca3af; line-height:1.6;">
+              <div>MACD_CROSS <span style="color:#22c55e">71%</span> · +1.8% · 38×</div>
+              <div>RSI_BOUNCE <span style="color:#22c55e">70%</span> · +1.4% · 25×</div>
+            </div>
+          </div>
+          <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:10px; cursor:pointer;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="color:#d4a855; font-weight:700; font-size:14px;">TCS</span>
+              <span style="background:rgba(239,68,68,0.15); color:#ef4444; font-size:10px; padding:2px 6px; border-radius:3px;">1 pattern</span>
+            </div>
+            <div style="font-size:11px; color:#9ca3af; line-height:1.6;">
+              <div>BB_SQUEEZE <span style="color:#22c55e">75%</span> · -1.9% · 22× <span style="color:#ef4444">SHORT</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:8px; text-align:center;">Click card → loads stock in Charts + TA</div>
+      </div>
+      <div class="pros-cons" style="margin-top:12px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Grouped by stock — see all patterns at once</li><li>Visual weight — stocks with more patterns stand out</li><li>Compact stat lines per pattern</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Harder to sort across stocks</li><li>Cards take more space than table rows</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:24px; padding:16px; background:rgba(212,168,85,0.08); border:1px solid rgba(212,168,85,0.2); border-radius:8px;">
+  <p style="color:#d4a855; font-size:13px; font-weight:600; margin-bottom:6px;">MY RECOMMENDATION: B (Card Grid)</p>
+  <p style="color:#9ca3af; font-size:13px;">
+    The table (A) is familiar but treats every pattern-stock combination as equal — 47 flat rows. The card grid (B) groups by stock, which is how you'll actually use it: "I want to research RELIANCE" not "I want to research ATR_COMPRESSION." The compact stat line you approved (A from the previous question) fits perfectly inside each card.
+    <br><br>
+    Also: cards match the terminal's existing design language (spread cards, trust score cards, correlation break cards).
+  </p>
+</div>

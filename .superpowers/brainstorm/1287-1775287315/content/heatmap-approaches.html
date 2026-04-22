@@ -1,0 +1,168 @@
+<h2>Signal Universe: 3 Approaches</h2>
+<p class="subtitle">Which direction feels right for your crown jewel? Click to select.</p>
+
+<div class="cards">
+
+  <!-- APPROACH A: Interactive Explorer -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0e1a; padding:20px; min-height:340px;">
+      <!-- Mini mockup of Approach A -->
+      <div style="text-align:center; margin-bottom:16px;">
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#d4a855; margin-bottom:6px;">Signal Universe Explorer</div>
+        <div style="font-size:22px; font-weight:800; color:#f1f5f9;">Pick a Scenario. See the Edge.</div>
+        <div style="font-size:12px; color:#6b7280; margin-top:4px;">Select an event to see which spreads have historically outperformed</div>
+      </div>
+      <!-- Event pills -->
+      <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:16px;">
+        <span style="background:rgba(239,68,68,0.2); color:#ef4444; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:600;">ESCALATION</span>
+        <span style="background:rgba(212,168,85,0.25); color:#d4a855; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:600; border:1px solid rgba(212,168,85,0.4);">HORMUZ</span>
+        <span style="background:rgba(59,130,246,0.15); color:#3b82f6; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:600;">FII SELLING</span>
+        <span style="background:rgba(16,185,129,0.15); color:#10b981; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:600;">DIPLOMACY</span>
+        <span style="background:rgba(255,255,255,0.05); color:#6b7280; padding:4px 10px; border-radius:12px; font-size:10px;">OIL +</span>
+        <span style="background:rgba(255,255,255,0.05); color:#6b7280; padding:4px 10px; border-radius:12px; font-size:10px;">SANCTIONS</span>
+        <span style="background:rgba(255,255,255,0.05); color:#6b7280; padding:4px 10px; border-radius:12px; font-size:10px;">+ 12 more</span>
+      </div>
+      <!-- Result cards when "HORMUZ" selected -->
+      <div style="font-size:10px; color:#d4a855; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">When HORMUZ is triggered:</div>
+      <div style="display:flex; gap:8px;">
+        <div style="flex:1; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:10px;">
+          <div style="font-size:13px; font-weight:700; color:#10b981;">78%</div>
+          <div style="font-size:10px; color:#9ca3af;">Upstream vs Downstream</div>
+          <div style="font-size:9px; color:#6b7280;">n=9 | +2.1% avg</div>
+        </div>
+        <div style="flex:1; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:10px;">
+          <div style="font-size:13px; font-weight:700; color:#10b981;">73%</div>
+          <div style="font-size:10px; color:#9ca3af;">Defence vs IT</div>
+          <div style="font-size:9px; color:#6b7280;">n=8 | +1.8% avg</div>
+        </div>
+        <div style="flex:1; background:rgba(212,168,85,0.1); border:1px solid rgba(212,168,85,0.2); border-radius:8px; padding:10px;">
+          <div style="font-size:13px; font-weight:700; color:#d4a855;">85%</div>
+          <div style="font-size:10px; color:#9ca3af;">Coal vs OMCs</div>
+          <div style="font-size:9px; color:#6b7280;">n=7 | +3.2% avg</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A: Interactive Explorer</h3>
+      <p>Kill the grid. Replace with clickable event pills at the top. When you click an event (e.g., "HORMUZ"), it reveals ranked spread cards showing which trades historically worked best. The heatmap becomes a <strong>story you explore</strong>, not a spreadsheet you decode.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Instantly understandable</li><li>Mobile-friendly</li><li>Tells a narrative</li><li>Uses all the rich data (spread_1d, spread_5d, n)</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Loses the "all data at once" overview</li><li>More JS complexity</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROACH B: Focused Grid + Spotlight -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0e1a; padding:20px; min-height:340px;">
+      <div style="text-align:center; margin-bottom:16px;">
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#d4a855; margin-bottom:6px;">Signal Universe</div>
+        <div style="font-size:22px; font-weight:800; color:#f1f5f9;">The Edge at a Glance</div>
+      </div>
+      <!-- Top 10 grid only -->
+      <div style="font-size:10px; color:#6b7280; margin-bottom:8px;">TOP 10 SPREADS BY BEST HIT RATE</div>
+      <table style="width:100%; border-collapse:separate; border-spacing:2px; font-size:9px;">
+        <tr>
+          <td style="text-align:right; padding:4px 8px; color:#9ca3af; font-size:10px; font-weight:600;">UPSTREAM vs DOWN</td>
+          <td style="background:rgba(212,168,85,0.3); color:#d4a855; text-align:center; padding:4px; border-radius:4px; font-weight:700;">67</td>
+          <td style="background:rgba(16,185,129,0.3); color:#10b981; text-align:center; padding:4px; border-radius:4px;">55</td>
+          <td style="text-align:center; padding:4px;"></td>
+          <td style="background:rgba(16,185,129,0.15); color:#10b981; text-align:center; padding:4px; border-radius:4px;">44</td>
+          <td style="background:rgba(16,185,129,0.3); color:#10b981; text-align:center; padding:4px; border-radius:4px;">67</td>
+        </tr>
+        <tr>
+          <td style="text-align:right; padding:4px 8px; color:#9ca3af; font-size:10px; font-weight:600;">DEFENCE vs IT</td>
+          <td style="background:rgba(16,185,129,0.3); color:#10b981; text-align:center; padding:4px; border-radius:4px; font-weight:700;">56</td>
+          <td style="background:rgba(16,185,129,0.15); color:#10b981; text-align:center; padding:4px; border-radius:4px;">42</td>
+          <td style="background:rgba(212,168,85,0.3); color:#d4a855; text-align:center; padding:4px; border-radius:4px; font-weight:700;">83</td>
+          <td style="background:rgba(16,185,129,0.3); color:#10b981; text-align:center; padding:4px; border-radius:4px;">73</td>
+          <td style="background:rgba(16,185,129,0.15); color:#10b981; text-align:center; padding:4px; border-radius:4px;">44</td>
+        </tr>
+        <tr>
+          <td style="text-align:right; padding:4px 8px; color:#9ca3af; font-size:10px; font-weight:600;">COAL vs OMCs</td>
+          <td style="text-align:center; padding:4px;"></td>
+          <td style="background:rgba(212,168,85,0.3); color:#d4a855; text-align:center; padding:4px; border-radius:4px; font-weight:700;">67</td>
+          <td style="text-align:center; padding:4px;"></td>
+          <td style="background:rgba(16,185,129,0.15); color:#10b981; text-align:center; padding:4px; border-radius:4px;">53</td>
+          <td style="background:rgba(212,168,85,0.3); color:#d4a855; text-align:center; padding:4px; border-radius:4px; font-weight:700;">67</td>
+        </tr>
+      </table>
+      <div style="text-align:center; margin-top:12px; font-size:10px; color:#6b7280;">+ 15 more spreads (expandable)</div>
+      <!-- Spotlight callout -->
+      <div style="margin-top:14px; background:rgba(212,168,85,0.08); border-left:3px solid #d4a855; padding:10px 14px; border-radius:0 8px 8px 0;">
+        <div style="font-size:10px; color:#d4a855; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Spotlight: Strongest Setup This Week</div>
+        <div style="font-size:12px; color:#d1d5db; margin-top:4px;">Defence vs Auto on ESCALATION — 88% hit rate across 8 events. Currently active.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B: Focused Grid + Spotlight</h3>
+      <p>Keep the grid but <strong>show only top 10 spreads by default</strong>. Below the compact grid, add a "Spotlight" callout highlighting the strongest active setup. Full 25-row grid available via "Show All" toggle. Less noise, same data.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Familiar grid format</li><li>Much less overwhelming</li><li>Spotlight adds narrative</li><li>Easy to implement</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Still a grid at heart</li><li>Column headers still rotated</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROACH C: Hybrid — Explorer + Collapsed Grid -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0e1a; padding:20px; min-height:340px;">
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#d4a855; margin-bottom:6px;">Signal Universe</div>
+        <div style="font-size:22px; font-weight:800; color:#f1f5f9;">Explore the Edge</div>
+      </div>
+      <!-- Tab toggle -->
+      <div style="display:flex; justify-content:center; gap:2px; margin-bottom:16px; background:rgba(255,255,255,0.05); border-radius:8px; padding:3px; width:fit-content; margin-left:auto; margin-right:auto;">
+        <span style="background:#d4a855; color:#0a0e1a; padding:6px 16px; border-radius:6px; font-size:11px; font-weight:700;">Explorer</span>
+        <span style="color:#6b7280; padding:6px 16px; border-radius:6px; font-size:11px;">Full Grid</span>
+      </div>
+      <!-- Explorer view active -->
+      <div style="display:flex; gap:12px;">
+        <!-- Left: Event list -->
+        <div style="flex:0 0 140px;">
+          <div style="font-size:9px; color:#6b7280; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Events</div>
+          <div style="display:flex; flex-direction:column; gap:3px;">
+            <div style="background:rgba(212,168,85,0.15); border:1px solid rgba(212,168,85,0.3); padding:5px 8px; border-radius:6px; font-size:10px; color:#d4a855; font-weight:600;">Escalation</div>
+            <div style="background:rgba(255,255,255,0.03); padding:5px 8px; border-radius:6px; font-size:10px; color:#9ca3af;">Hormuz</div>
+            <div style="background:rgba(255,255,255,0.03); padding:5px 8px; border-radius:6px; font-size:10px; color:#9ca3af;">FII Selling</div>
+            <div style="background:rgba(255,255,255,0.03); padding:5px 8px; border-radius:6px; font-size:10px; color:#9ca3af;">Oil Negative</div>
+            <div style="background:rgba(255,255,255,0.03); padding:5px 8px; border-radius:6px; font-size:10px; color:#6b7280;">Sanctions</div>
+            <div style="background:rgba(255,255,255,0.03); padding:5px 8px; border-radius:6px; font-size:10px; color:#6b7280;">+ 13 more</div>
+          </div>
+        </div>
+        <!-- Right: Results -->
+        <div style="flex:1;">
+          <div style="font-size:9px; color:#d4a855; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">When ESCALATION fires &mdash; ranked by hit rate</div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; align-items:center; background:rgba(212,168,85,0.08); border-radius:6px; padding:6px 10px;">
+              <div style="width:40px; font-size:16px; font-weight:800; color:#d4a855;">88%</div>
+              <div style="flex:1;"><div style="font-size:11px; color:#f1f5f9; font-weight:600;">Defence vs Auto</div><div style="font-size:9px; color:#6b7280;">n=8 | +2.4% avg 5d</div></div>
+              <div style="width:50px; height:20px; background:linear-gradient(90deg, rgba(16,185,129,0.3) 88%, rgba(255,255,255,0.05) 88%); border-radius:3px;"></div>
+            </div>
+            <div style="display:flex; align-items:center; background:rgba(16,185,129,0.05); border-radius:6px; padding:6px 10px;">
+              <div style="width:40px; font-size:16px; font-weight:800; color:#10b981;">73%</div>
+              <div style="flex:1;"><div style="font-size:11px; color:#f1f5f9; font-weight:600;">Defence vs IT</div><div style="font-size:9px; color:#6b7280;">n=11 | +1.8% avg 5d</div></div>
+              <div style="width:50px; height:20px; background:linear-gradient(90deg, rgba(16,185,129,0.3) 73%, rgba(255,255,255,0.05) 73%); border-radius:3px;"></div>
+            </div>
+            <div style="display:flex; align-items:center; background:rgba(16,185,129,0.05); border-radius:6px; padding:6px 10px;">
+              <div style="width:40px; font-size:16px; font-weight:800; color:#10b981;">70%</div>
+              <div style="flex:1;"><div style="font-size:11px; color:#f1f5f9; font-weight:600;">Metals vs IT</div><div style="font-size:9px; color:#6b7280;">n=10 | +1.5% avg 5d</div></div>
+              <div style="width:50px; height:20px; background:linear-gradient(90deg, rgba(16,185,129,0.3) 70%, rgba(255,255,255,0.05) 70%); border-radius:3px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C: Hybrid — Explorer + Grid Toggle</h3>
+      <p>Best of both worlds. <strong>Default view is the Explorer</strong> (event list on left, ranked results on right). Tab to "Full Grid" for the complete heatmap when you want the raw data. The explorer becomes the hero; the grid becomes the reference appendix.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Explorer is the wow moment</li><li>Full grid still accessible</li><li>Shows spread_5d, n — richer than just %</li><li>Progress bars add visual punch</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Most complex to build</li><li>Two views to maintain</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px; text-align:center;">My recommendation: <strong>C (Hybrid)</strong> — the Explorer gives you the wow factor, while the Grid tab keeps the data purists happy. The Gamma-style clean fonts and flow you liked can be applied to the Explorer view perfectly.</p>

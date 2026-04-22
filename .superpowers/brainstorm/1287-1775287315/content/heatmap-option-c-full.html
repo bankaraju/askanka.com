@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Universe — Option C Full Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg: #0a0e1a; --card: #111827; --border: #1e293b; --text: #f1f5f9; --text2: #9ca3af; --muted: #6b7280; --gold: #d4a855; --green: #10b981; --red: #ef4444; --blue: #3b82f6; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; padding: 40px 24px; }
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* Section header */
+.section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-left: 16px; position: relative; }
+.section-header::before { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 3px; background: linear-gradient(180deg, var(--gold), rgba(212,168,85,0.2)); border-radius: 2px; }
+.section-header h2 { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #f1f5f9, #c9cdd4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.badge { font-size: 11px; padding: 4px 12px; border-radius: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; background: rgba(16,185,129,0.15); color: var(--green); }
+
+/* Main container */
+.signal-container {
+    background: linear-gradient(160deg, #0f1629, #111827);
+    border: 1px solid rgba(212,168,85,0.12);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+.signal-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(212,168,85,0.4), transparent);
+}
+
+/* Intro */
+.signal-intro {
+    text-align: center;
+    padding: 32px 32px 0;
+}
+.signal-intro h3 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.signal-intro p { font-size: 13px; color: var(--muted); max-width: 600px; margin: 0 auto; }
+
+/* Tab toggle */
+.tab-toggle {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+.tab-group {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 4px;
+}
+.tab-btn {
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+}
+.tab-btn.active {
+    background: var(--gold);
+    color: var(--bg);
+    box-shadow: 0 2px 8px rgba(212,168,85,0.3);
+}
+.tab-btn:hover:not(.active) { color: var(--text2); }
+
+/* Explorer view */
+.explorer {
+    display: flex;
+    gap: 0;
+    padding: 0 0 24px;
+    min-height: 500px;
+}
+
+/* Left: Event list */
+.event-sidebar {
+    flex: 0 0 220px;
+    padding: 0 20px 0 28px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+.event-sidebar-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.event-item {
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.event-item:hover {
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+}
+.event-item.active {
+    background: rgba(212,168,85,0.12);
+    border: 1px solid rgba(212,168,85,0.25);
+    color: var(--gold);
+    font-weight: 700;
+}
+.event-item .event-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: auto;
+}
+.event-item.active .event-count { color: var(--gold); opacity: 0.7; }
+.event-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+}
+.event-item.active .event-dot { background: var(--gold); box-shadow: 0 0 6px rgba(212,168,85,0.4); }
+
+/* Right: Results */
+.results-panel {
+    flex: 1;
+    padding: 0 28px 0 24px;
+}
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.results-title {
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.results-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Result row */
+.result-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    transition: all 0.25s;
+    cursor: default;
+}
+.result-row:hover {
+    transform: translateX(4px);
+}
+.result-rank {
+    width: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.result-hit {
+    width: 64px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+.result-info {
+    flex: 1;
+    padding: 0 16px;
+}
+.result-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+.result-meta {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+.result-bar-wrap {
+    width: 120px;
+    flex-shrink: 0;
+}
+.result-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+    position: relative;
+}
+.result-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease-out;
+}
+.result-tickers {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* Color tiers */
+.tier-elite .result-hit { color: var(--gold); }
+.tier-elite { background: rgba(212,168,85,0.06); }
+.tier-elite:hover { background: rgba(212,168,85,0.1); }
+.tier-elite .result-bar-fill { background: linear-gradient(90deg, var(--gold), rgba(212,168,85,0.5)); }
+
+.tier-high .result-hit { color: var(--green); }
+.tier-high { background: rgba(16,185,129,0.04); }
+.tier-high:hover { background: rgba(16,185,129,0.08); }
+.tier-high .result-bar-fill { background: linear-gradient(90deg, var(--green), rgba(16,185,129,0.4)); }
+
+.tier-mid .result-hit { color: var(--text2); }
+.tier-mid { background: rgba(255,255,255,0.02); }
+.tier-mid:hover { background: rgba(255,255,255,0.04); }
+.tier-mid .result-bar-fill { background: rgba(255,255,255,0.2); }
+
+.tier-low .result-hit { color: var(--red); opacity: 0.7; }
+.tier-low { background: rgba(239,68,68,0.03); }
+.tier-low .result-bar-fill { background: rgba(239,68,68,0.3); }
+
+/* No results message */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* Grid tab (placeholder) */
+.grid-tab {
+    display: none;
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+    min-height: 400px;
+    align-items: center;
+    justify-content: center;
+}
+.grid-tab.active { display: flex; }
+.explorer.active { display: flex; }
+.explorer { display: flex; }
+
+/* Footer */
+.signal-footer {
+    padding: 16px 28px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.signal-footer-note {
+    font-size: 11px;
+    color: var(--muted);
+}
+.signal-footer-stats {
+    display: flex;
+    gap: 20px;
+}
+.signal-footer-stat {
+    text-align: center;
+}
+.signal-footer-stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+}
+.signal-footer-stat-label {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Legend */
+.legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    padding: 12px;
+    font-size: 11px;
+    color: var(--muted);
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- Section Header -->
+<div class="section-header">
+    <h2>Signal Universe</h2>
+    <span class="badge">Live</span>
+</div>
+
+<!-- Signal Container -->
+<div class="signal-container">
+
+    <!-- Intro -->
+    <div class="signal-intro">
+        <h3>Explore the Edge</h3>
+        <p>Select an event scenario to see which spread trades have historically outperformed. Ranked by hit rate from 4 years of backtesting across 90+ events.</p>
+    </div>
+
+    <!-- Tab Toggle -->
+    <div class="tab-toggle">
+        <div class="tab-group">
+            <button class="tab-btn active" onclick="showTab('explorer')">Explorer</button>
+            <button class="tab-btn" onclick="showTab('grid')">Full Grid</button>
+        </div>
+    </div>
+
+    <!-- Explorer View -->
+    <div class="explorer active" id="explorer-view">
+        <!-- Event Sidebar -->
+        <div class="event-sidebar">
+            <div class="event-sidebar-label">Event Scenarios</div>
+            <div id="event-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel" id="results-panel">
+            <div class="no-results">Select an event scenario to see ranked results</div>
+        </div>
+    </div>
+
+    <!-- Grid Tab -->
+    <div class="grid-tab" id="grid-view">
+        <div style="padding:40px;">
+            <p style="font-size:16px; color:var(--text2); margin-bottom:8px;">Full 25 x 18 heatmap grid</p>
+            <p style="font-size:13px; color:var(--muted);">The complete backtest matrix would render here — same data, traditional grid format.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="signal-footer">
+        <div class="signal-footer-note">Backtested across 4 years of market data. Only setups with 3+ precedents shown.</div>
+        <div class="signal-footer-stats">
+            <div class="signal-footer-stat">
+                <div class="signal-footer-stat-val" id="stat-total">--</div>
+                <div class="signal-footer-stat-label">Tested</div>
+            </div>
+            <div class="signal-footer-stat">
+                <div class="signal-footer-stat-val" id="stat-elite">--</div>
+                <div class="signal-footer-stat-label">Elite (80%+)</div>
+            </div>
+            <div class="signal-footer-stat">
+                <div class="signal-footer-stat-val" id="stat-high">--</div>
+                <div class="signal-footer-stat-label">High (65%+)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(212,168,85,0.4);"></div> 80%+ Elite</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.4);"></div> 65-79% High</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.15);"></div> 50-64%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.3);"></div> Below 50%</div>
+    </div>
+
+</div>
+</div>
+
+<script>
+// Simulated data matching the real spread_universe.json structure
+const DATA = {
+    events: [
+        { name: 'Escalation', id: 'escalation', icon: 'red' },
+        { name: 'Hormuz', id: 'hormuz', icon: 'red' },
+        { name: 'FII Selling', id: 'fii_selling', icon: 'blue' },
+        { name: 'India Stress', id: 'india_stress', icon: 'blue' },
+        { name: 'Oil Negative', id: 'oil_negative', icon: 'red' },
+        { name: 'Oil Positive', id: 'oil_positive', icon: 'green' },
+        { name: 'De-Escalation', id: 'de_escalation', icon: 'green' },
+        { name: 'Defence Spend', id: 'defense_spend', icon: 'gold' },
+        { name: 'Sanctions', id: 'sanctions', icon: 'red' },
+        { name: 'Trump Threat', id: 'trump_threat', icon: 'red' },
+        { name: 'Diplomacy', id: 'diplomacy', icon: 'green' },
+        { name: 'RBI Rate Hike', id: 'rbi_rate_hike', icon: 'blue' },
+        { name: 'RBI Rate Cut', id: 'rbi_rate_cut', icon: 'green' },
+        { name: 'FII Buying', id: 'fii_buying', icon: 'green' },
+        { name: 'Ceasefire', id: 'ceasefire', icon: 'green' },
+        { name: 'Strong Dollar', id: 'strong_dollar', icon: 'blue' },
+        { name: 'Weak Dollar', id: 'weak_dollar', icon: 'blue' },
+        { name: 'US Recession', id: 'us_recession', icon: 'red' },
+    ],
+    // Sample results for each event (would come from real data)
+    results: {
+        escalation: [
+            { name: 'Defence vs Auto', hit: 88, n: 8, spread5d: 2.4, long: ['HAL','BEL'], short: ['TATAMOTORS','M&M'] },
+            { name: 'Defence vs IT', hit: 73, n: 11, spread5d: 1.8, long: ['HAL','BEL','BDL'], short: ['TCS','INFY','WIPRO'] },
+            { name: 'Metals vs IT', hit: 70, n: 10, spread5d: 1.5, long: ['HINDALCO','TATASTEEL'], short: ['TCS','INFY'] },
+            { name: 'Upstream vs Downstream', hit: 67, n: 9, spread5d: 2.1, long: ['ONGC','OIL'], short: ['IOC','BPCL','HPCL'] },
+            { name: 'Coal vs OMCs', hit: 53, n: 7, spread5d: 0.9, long: ['COALINDIA'], short: ['BPCL','HPCL'] },
+            { name: 'PSU Commodity vs Banks', hit: 50, n: 6, spread5d: 0.4, long: ['HINDALCO','NMDC'], short: ['SBI','BANKBARODA'] },
+            { name: 'Pharma vs Cyclicals', hit: 45, n: 8, spread5d: -0.2, long: ['SUNPHARMA','DRREDDY'], short: ['TATAMOTORS','M&M'] },
+        ],
+        hormuz: [
+            { name: 'Coal vs OMCs', hit: 85, n: 7, spread5d: 3.2, long: ['COALINDIA'], short: ['BPCL','HPCL'] },
+            { name: 'Upstream vs Downstream', hit: 78, n: 9, spread5d: 2.8, long: ['ONGC','OIL'], short: ['IOC','BPCL'] },
+            { name: 'Defence vs IT', hit: 73, n: 8, spread5d: 1.8, long: ['HAL','BEL'], short: ['TCS','INFY'] },
+            { name: 'Reliance Pivot', hit: 70, n: 6, spread5d: 1.4, long: ['RELIANCE'], short: ['HPCL','IOC'] },
+            { name: 'IT Exporters vs Auto', hit: 54, n: 5, spread5d: 0.5, long: ['TCS','INFY'], short: ['TATAMOTORS'] },
+        ],
+        fii_selling: [
+            { name: 'Pharma vs Cyclicals', hit: 90, n: 10, spread5d: 2.6, long: ['SUNPHARMA','DRREDDY'], short: ['TATAMOTORS','M&M'] },
+            { name: 'FMCG vs Cyclicals', hit: 90, n: 8, spread5d: 2.1, long: ['HUL','ITC'], short: ['TATAMOTORS','MARUTI'] },
+            { name: 'Defence vs IT', hit: 53, n: 15, spread5d: 0.8, long: ['HAL','BEL'], short: ['TCS','INFY'] },
+            { name: 'PSU Banks vs Private', hit: 48, n: 12, spread5d: -0.3, long: ['SBI','BANKBARODA'], short: ['HDFCBANK','ICICIBANK'] },
+            { name: 'FII Exit Canary', hit: 42, n: 7, spread5d: -0.8, long: ['RELIANCE'], short: ['HDFCBANK'] },
+        ],
+        india_stress: [
+            { name: 'IT Exporters vs Private Banks', hit: 88, n: 8, spread5d: 2.2, long: ['TCS','INFY'], short: ['HDFCBANK','ICICIBANK'] },
+            { name: 'Defence vs IT', hit: 73, n: 8, spread5d: 1.5, long: ['HAL','BEL'], short: ['TCS','INFY'] },
+            { name: 'Upstream vs Downstream', hit: 44, n: 9, spread5d: 0.1, long: ['ONGC','OIL'], short: ['IOC','BPCL'] },
+        ],
+        oil_negative: [
+            { name: 'Upstream vs Downstream', hit: 55, n: 11, spread5d: 1.2, long: ['ONGC','OIL'], short: ['IOC','BPCL','HPCL'] },
+            { name: 'Coal vs OMCs', hit: 67, n: 6, spread5d: 1.8, long: ['COALINDIA'], short: ['BPCL','HPCL'] },
+            { name: 'Reliance Pivot', hit: 33, n: 6, spread5d: -0.4, long: ['RELIANCE'], short: ['HPCL','IOC'] },
+        ],
+    }
+};
+
+// Populate event list
+const eventList = document.getElementById('event-list');
+const colors = { red: '#ef4444', blue: '#3b82f6', green: '#10b981', gold: '#d4a855' };
+
+let totalTested = 0, totalElite = 0, totalHigh = 0;
+
+DATA.events.forEach((evt, i) => {
+    const results = DATA.results[evt.id] || [];
+    const count = results.length;
+    results.forEach(r => {
+        if (r.hit >= 50) totalTested++;
+        if (r.hit >= 80) totalElite++;
+        else if (r.hit >= 65) totalHigh++;
+    });
+
+    const div = document.createElement('div');
+    div.className = 'event-item' + (i === 0 ? ' active' : '');
+    div.innerHTML = `
+        <div class="event-dot" style="background:${colors[evt.icon]}"></div>
+        <span>${evt.name}</span>
+        <span class="event-count">${count || ''}</span>
+    `;
+    div.addEventListener('click', () => selectEvent(evt, div));
+    eventList.appendChild(div);
+});
+
+document.getElementById('stat-total').textContent = totalTested;
+document.getElementById('stat-elite').textContent = totalElite;
+document.getElementById('stat-high').textContent = totalHigh;
+
+// Select first event by default
+selectEvent(DATA.events[0], eventList.children[0]);
+
+function selectEvent(evt, el) {
+    // Update active state
+    document.querySelectorAll('.event-item').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+
+    const results = DATA.results[evt.id] || [];
+    const panel = document.getElementById('results-panel');
+
+    if (results.length === 0) {
+        panel.innerHTML = '<div class="no-results">No tested setups for this scenario yet</div>';
+        return;
+    }
+
+    // Sort by hit rate desc
+    results.sort((a, b) => b.hit - a.hit);
+
+    let html = `
+        <div class="results-header">
+            <div class="results-title">When ${evt.name} fires</div>
+            <div class="results-subtitle">${results.length} spreads tested</div>
+        </div>
+    `;
+
+    results.forEach((r, i) => {
+        let tier = 'tier-low';
+        if (r.hit >= 80) tier = 'tier-elite';
+        else if (r.hit >= 65) tier = 'tier-high';
+        else if (r.hit >= 50) tier = 'tier-mid';
+
+        const sign = r.spread5d >= 0 ? '+' : '';
+
+        html += `
+        <div class="result-row ${tier}">
+            <div class="result-rank">#${i + 1}</div>
+            <div class="result-hit">${r.hit}%</div>
+            <div class="result-info">
+                <div class="result-name">${r.name}</div>
+                <div class="result-meta">n=${r.n} &nbsp;|&nbsp; ${sign}${r.spread5d}% avg 5d</div>
+            </div>
+            <div class="result-bar-wrap">
+                <div class="result-bar">
+                    <div class="result-bar-fill" style="width:${r.hit}%"></div>
+                </div>
+                <div class="result-tickers">
+                    <span style="color:${r.hit >= 65 ? '#10b981' : '#6b7280'}">L:</span> ${r.long.join(', ')}
+                    <span style="color:${r.hit < 50 ? '#ef4444' : '#6b7280'}; margin-left:6px;">S:</span> ${r.short.join(', ')}
+                </div>
+            </div>
+        </div>
+        `;
+    });
+
+    panel.innerHTML = html;
+
+    // Animate bars
+    setTimeout(() => {
+        panel.querySelectorAll('.result-bar-fill').forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => { bar.style.width = width; });
+            });
+        });
+    }, 50);
+}
+
+function showTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (tab === 'explorer') {
+        document.getElementById('explorer-view').style.display = 'flex';
+        document.getElementById('grid-view').style.display = 'none';
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    } else {
+        document.getElementById('explorer-view').style.display = 'none';
+        document.getElementById('grid-view').style.display = 'flex';
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    }
+}
+</script>
+
+</body>
+</html>

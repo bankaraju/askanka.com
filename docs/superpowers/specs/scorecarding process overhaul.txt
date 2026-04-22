@@ -1,0 +1,1435 @@
+You can do this in three layers: (1) get a stable sector‑wise list of F&O stocks, (2) define a small set of “sector‑critical” ratios per sector, and (3) build a forced‑ranking rubric for management quality within each sector.
+
+Below is a concrete way to set it up in your own pipeline (Screener/Capitaline + your own DB).
+
+1. Getting F&O companies by sector
+Base list of F&O stocks
+
+Use NSE’s “Individual Securities F&O” list as your ground truth universe and refresh it periodically (NSE CSV / webpage).
+
+Broker sites like Dhan, 5Paisa, m.Stock also provide downloadable or copy‑able lists of all NSE F&O stocks.
+
+Map each stock to a sector
+
+Either:
+
+Use the sector classification on Moneycontrol (they give NSE stocks grouped by sectors and industries), as suggested by Zerodha Varsity.
+
+Or use your data provider’s “Industry / Sector” field (e.g., in your fundamental DB or via Screener export).
+
+You can standardize sectors into a controlled taxonomy like:
+
+Banks, NBFCs, Insurance
+
+IT/ITES
+
+FMCG, Discretionary (consumer durables, autos, retail)
+
+Pharma/Healthcare
+
+Metals & Mining, Cement & Building Materials
+
+Oil & Gas, Utilities
+
+Infra/Capital Goods, Telecom, Media, etc.
+
+Implementation sketch
+
+Build a table like:
+symbol	name	sector	subsector
+HDFCBANK	HDFC Bank	Banks	Private Bank
+BAJFINANCE	Bajaj Fin	NBFC	Retail NBFC
+TCS	TCS	IT Services	Large-cap IT
+
+Populate:
+
+Start with F&O universe from NSE.
+
+Left join on a sector source (Moneycontrol CSV/HTML or your provider’s export).
+
+Once you have this table, everything else is just sector‑grouped ranking logic.
+
+2. Sector‑specific “most important” ratios
+You want 3–6 core ratios/metrics per sector that you can easily compute and compare across that sector. Zerodha’s sector‑analysis note makes the key point: each sector has its own KPIs (NPAs and NIM for banks, solvency/claims for insurance, etc.). For generic ratios, Zerodha’s financial‑ratio chapter is a good base (ROE, ROA, margins, leverage).
+
+Below is a practical shortlist.
+
+2.1 Banks (private & PSU)
+Core ratios/metrics:
+
+CET1 / Capital Adequacy Ratio (CAR)
+
+Gross NPA %, Net NPA %
+
+Provision coverage ratio (PCR)
+
+Net interest margin (NIM)
+
+Cost‑to‑income ratio
+
+ROA, ROE
+
+Interpretation (for scoring): relative to sector median/quantiles:
+
+Better: higher CAR, higher PCR, higher NIM, higher ROA/ROE; lower NPAs, lower cost‑to‑income.
+
+2.2 NBFCs and HFCs
+GNPA, NNPA (or Stage 3 assets)
+
+Net interest margin / spread
+
+Cost of funds
+
+Leverage (Debt/Equity)
+
+ROA, ROE
+
+ALM gaps (short‑term negative gaps penalized)
+
+2.3 Insurance
+Zerodha notes: solvency ratio, claims settlement ratio, expense ratio, persistency ratio as key KPIs.
+
+For listed insurers:
+
+Solvency ratio
+
+Claim settlement ratio
+
+Combined ratio / Claims + Expenses to premium
+
+Persistency (13th / 61st month for life insurance)
+
+Value of new business (VNB) margin
+
+Embedded value growth
+
+2.4 IT services / SaaS
+Revenue growth (3–5Y CAGR)
+
+EBIT/EBITDA margin
+
+ROE, ROIC
+
+Client concentration (top‑5 share)
+
+Employee cost as % sales, attrition
+
+Free cash flow / Net income
+
+2.5 FMCG, Consumer staples
+Volume growth vs price‑led growth
+
+Gross margin, EBITDA margin
+
+ROE, ROIC
+
+Working capital days (inventory + receivables – payables)
+
+Market share trends (if you have external data)
+
+2.6 Autos & Auto ancillaries
+Volume growth (units) vs peers
+
+EBITDA margin
+
+ROCE/ROIC
+
+Net debt/EBITDA
+
+Capacity utilization / asset turns
+
+2.7 Pharma & Healthcare
+Revenue growth, especially ex‑one‑offs
+
+EBITDA margin
+
+R&D as % of sales
+
+Export vs domestic mix (regulatory risk)
+
+USFDA observations / warning letters (qualitative flag)
+
+2.8 Metals, Cement, Commodities
+EBITDA/ton, cash cost/ton
+
+Capacity utilization
+
+Net debt/EBITDA
+
+ROCE through cycle (5–10Y)
+
+Cost curve position if you can estimate
+
+2.9 Oil & Gas, Utilities
+For upstream: lifting cost per BOE, reserve replacement
+
+For refiners: GRM (gross refining margin)
+
+For utilities: regulated RoE vs allowed, PLF, AT&C losses (for power discoms)
+
+Net debt/EBITDA, interest coverage
+
+2.10 Real estate
+Net debt/Equity, net debt to operating cash flow
+
+Sales bookings growth, collections
+
+Construction progress vs committed delivery
+
+Land bank quality (city, location)
+
+You can start with generic profitability (ROE, ROA, ROCE), leverage (Debt/Equity), liquidity (current ratio), and margins from a ratio source and then layer sector‑specific KPIs where you have data.
+
+3. Turning ratios into a sector scoring system
+3.1 Normalize within each sector
+Per sector, per metric:
+
+Compute sector distribution for each ratio (median, 25th, 75th percentile).
+
+For each stock, convert raw ratios to standardized scores:
+
+Option A: z‑scores ( 
+(
+x
+−
+μ
+)
+/
+σ
+(x−μ)/σ ), clipped to, say, ±2.
+
+Option B (simpler and interpretable): bucket into deciles/quantiles within the sector.
+
+Example: Bank sector, NIM:
+
+Rank all banks by NIM.
+
+Assign 1–10 score by decile; higher NIM → higher score.
+
+Do the same for all metrics, reversing direction for “bad” metrics (e.g., GNPA).
+
+3.2 Metric weights by sector
+You can hand‑engineer weights or learn them later from excess returns. For a starting Bayesian‑ish setup:
+
+Banks:
+
+GNPA/NNPA + PCR: 30%
+
+NIM: 20%
+
+ROA: 20%
+
+Cost-to-income: 15%
+
+CAR: 15%
+
+IT:
+
+Revenue growth: 30%
+
+Margin: 25%
+
+ROIC: 25%
+
+FCF/NI and client concentration: 20%
+
+Then:
+
+FinancialScore
+i
+=
+∑
+j
+w
+j
+⋅
+MetricScore
+i
+j
+FinancialScore 
+i
+​
+ =∑ 
+j
+​
+ w 
+j
+​
+ ⋅MetricScore 
+ij
+​
+ 
+
+where MetricScore is 0–10 and weights sum to 1.
+
+This gives you a purely financial‑quality score per stock, comparable only within that sector.
+
+4. Grading management within each sector
+You’re really after a management quality score that you can then forcibly rank inside each sector.
+
+4.1 Define management dimensions
+Think of 4–5 dimensions you can partially quantify or proxy:
+
+Capital allocation
+
+ROE/ROIC relative to sector median over 5–10 years.
+
+History of value‑accretive/dilutive actions (dilution, large goodwill write‑offs, mispriced acquisitions).
+
+Governance & alignment
+
+Pledging of promoter shareholding.
+
+Related‑party transactions and auditor changes (if you have structured data).
+
+Promoter share change trends.
+
+Transparency & conservatism
+
+Frequency and clarity of communication (con‑call transcripts, presentations) – hard to automate but you can start with: “does the company publish detailed quarterly decks?”
+
+Aggressiveness of accounting (big other income contribution, frequent one‑off adjustments).
+
+Execution consistency
+
+Volatility of margins vs peers.
+
+Track record of meeting stated guidance (once you have a guidance DB).
+
+Skin in the game
+
+Promoter/insider holding, ESOP structure.
+
+You can map some of these to simple signals initially and leave the rest as manually scored flags you update occasionally.
+
+4.2 Quant proxies you can implement now
+A workable first‑cut for India F&O names:
+
+Capital allocation:
+
+5Y ROE and ROIC vs sector median.
+
+Capital raising history: equity dilution %, large debt run‑up vs asset growth.
+
+Governance:
+
+Promoter pledge % (bucket into 0, low, high).
+
+Auditor tenure and frequency of change (if you can parse ARs).
+
+Execution:
+
+Std‑dev of EBITDA margin over 5Y vs sector median.
+
+Revenue and PAT CAGR vs guidance or vs sector.
+
+Turn each of these into 1–5 scores:
+
+Example: 5Y ROE:
+
+Top quartile in sector: 5
+
+50–75%: 4
+
+25–50%: 3
+
+10–25%: 2
+
+Bottom 10%: 1
+
+Do similar for pledging:
+
+0%: 5
+
+0–10%: 4
+
+10–30%: 3
+
+30–50%: 2
+
+>50%: 1
+
+Then compute:
+
+MgmtScore
+i
+=
+∑
+k
+v
+k
+⋅
+DimensionScore
+i
+k
+MgmtScore 
+i
+​
+ =∑ 
+k
+​
+ v 
+k
+​
+ ⋅DimensionScore 
+ik
+​
+ 
+
+with weights v_k (maybe 30% capital allocation, 30% governance, 25% execution, 15% transparency where you can quantify).
+
+4.3 Forced ranking inside each sector
+Once you have MgmtScore:
+
+For each sector, sort stocks by MgmtScore descending.
+
+Convert to:
+
+A rank: 1 = best in that sector.
+
+A percentile: MgmtPercentile = Rank / (N+1).
+
+A letter grade per sector:
+
+A: top 20%
+
+B: 20–50%
+
+C: 50–80%
+
+D: bottom 20%
+
+You can also combine FinancialScore and MgmtScore:
+
+CompositeScore
+i
+=
+α
+⋅
+FinancialScore
+i
++
+(
+1
+−
+α
+)
+⋅
+MgmtScore
+i
+CompositeScore 
+i
+​
+ =α⋅FinancialScore 
+i
+​
+ +(1−α)⋅MgmtScore 
+i
+​
+ 
+
+with 
+α
+α around 0.6–0.7, depending on whether you want to overweight hard numbers.
+
+Then run the same forced ranking on CompositeScore.
+
+5. How this looks in practice
+Here’s how your DB level schema could look:
+
+field	meaning
+symbol	NSE symbol
+sector	Internal standardized sector
+fin_score	0–100 financial quality score (sector‑rel)
+mgmt_score	0–100 management score (sector‑rel)
+comp_score	blended 0–100 score
+sector_rank	rank within sector by comp_score
+sector_grade	A/B/C/D based on sector percentile
+You’d refresh:
+
+Quarterly: ratios, financial scores, execution metrics.
+
+Annually: governance flags from ARs, pledging, big capital allocation events.
+
+Back‑test: you can bucket by sector_grade and comp_score deciles and see whether higher scores have historically outperformed in each sector.
+
+6. Short example: Banks sector rubric
+Suppose you have 15 F&O bank stocks.
+
+Metrics:
+
+GNPA (lower better), NNPA, PCR, NIM, ROA, cost‑to‑income, CAR.
+
+FinancialScore:
+
+For each metric, compute sector decile score (1–10).
+
+Weighted sum → 0–100.
+
+MgmtScore:
+
+Capital allocation: 5Y ROE decile, 5Y loan growth vs sector.
+
+Governance: promoter pledge decile, large fraud/penalty flags.
+
+Execution: NPA volatility, margin stability.
+
+Rank:
+
+CompositeScore = 0.6 * FinancialScore + 0.4 * MgmtScore.
+
+Sort; top 3 = A, next 4 = B, next 5 = C, bottom 3 = D.
+
+You now have a forced ranking of bank management quality relative to their peers, not in absolute vacuum.
+
+If you tell me which data sources you already have wired up (Screener exports, Capitaline/Xpressfeed, manual AR parsing with LLMs, etc.), I can help design exact table schemas and some concrete Python / SQL for the sector‑wise scoring and ranking engine.
+
+What’s the primary data source you want to build this on top of right now (e.g., Screener CSV export, NSE + your own fundamentals DB, or a commercial API)?
+
+have you covered all the sectors of the 211 F& o Stocks --? cn u make it an detailed spec and implmentation guide for calude to execute it ..upgrading this screen -- you can also add more colums
+
+Attachment
+image.jpg
+
+No—I did not cover all sectors of the 211 F&O stocks in a production-spec sense; I gave a framework plus major sector examples, but a full implementation should explicitly support the complete NSE F&O universe and map every symbol into a controlled sector/subsector taxonomy sourced from the NSE F&O list plus a sector classification source. The right next step is to define a sector-complete data model, scoring spec, ranking logic, UI schema, refresh cadence, and an execution brief that Claude can implement directly.
+
+Scope
+Your system should treat the F&O universe as a dynamic eligible-stock universe, not a hardcoded “211 forever” list, because the official F&O securities list is maintained by NSE and can change over time. Sector grouping should be normalized from your own mapping layer, because the raw F&O list gives the universe, while sector/industry classification usually comes from a secondary source such as your fundamentals provider or a market-data site.
+
+Sector coverage
+A robust sector schema for Indian F&O names should cover, at minimum, these top-level sectors: Banks, NBFCs, Insurance, Financial Services/Capital Markets, IT Services, Telecom, FMCG, Consumer Durables, Retail, Autos, Auto Ancillaries, Pharma, Hospitals/Diagnostics, Chemicals, Specialty Chemicals, Fertilizers/Agri Inputs, Oil & Gas, Power/Utilities, Metals & Mining, Cement/Building Materials, Capital Goods, Infrastructure/EPC, Real Estate, Logistics, Media, Textiles, and Diversified Conglomerates. You can keep an Other/Hybrid bucket temporarily, but the spec should force manual resolution of unmapped names so every active F&O stock ultimately lands in exactly one sector and one subsector.
+
+Ratio design
+Zerodha’s sector-analysis guidance is the key design principle here: each sector needs its own KPIs, so your scorecard should combine a common core with a sector-specific layer rather than using the same ratios for everything. A practical common core is profitability, growth, leverage, cash conversion, valuation, and governance flags, while sector modules add metrics like NIM and GNPA for banks, solvency and persistency for insurers, EBITDA/ton for metals, and attrition plus FCF conversion for IT services.
+
+Full spec
+Below is a detailed implementation guide you can hand to Claude.
+
+Goal
+Build an “F&O Intelligence” screen for the full NSE F&O stock universe that:
+
+Ingests all current F&O-eligible stocks from NSE.
+
+Maps every stock to sector and subsector.
+
+Computes sector-aware financial quality scores.
+
+Computes management quality scores using quantitative and semi-structured governance proxies.
+
+Produces forced ranks and grades within sector, not across unrelated sectors.
+
+Exposes all of this in a sortable dashboard with drill-down notes.
+
+Universe rules
+universe_date: date of NSE F&O universe snapshot.
+
+is_active_fno: boolean from current NSE list.
+
+effective_from, effective_to: if you want historical membership.
+
+exchange_symbol, isin, company_name, series.
+
+lot_size, freeze_qty, if useful for derivatives context.
+
+Master taxonomy
+Create a controlled mapping table:
+
+column	type	meaning
+symbol	text	NSE symbol
+company_name	text	Canonical name
+sector	text	Top-level sector
+subsector	text	Narrow business group
+industry	text	Provider-native label
+sector_source	text	Mapping source
+mapping_confidence	int	1-5
+mapping_status	text	auto/manual/review
+Rules:
+
+One symbol maps to exactly one sector and one subsector.
+
+If a company spans many businesses, map by dominant revenue/profit driver.
+
+Maintain a review queue for ambiguous names.
+
+Common factor library
+Compute these for all companies where relevant:
+
+Revenue CAGR: 1Y, 3Y, 5Y.
+
+EBITDA margin, EBIT margin, PAT margin.
+
+ROE, ROA, ROCE, ROIC.
+
+Debt/Equity, Net debt/EBITDA, Interest coverage.
+
+CFO/PAT, FCF/PAT, CFO/EBITDA.
+
+Working capital days, inventory days, receivable days, payable days.
+
+EV/EBITDA, P/E, P/B, dividend payout, market cap.
+
+Volatility measures: std dev of margins, std dev of ROCE, drawdown from 52W high.
+
+Ownership/governance: promoter holding, promoter pledge, FII/DII trend if available.
+
+These are standard ratio categories and fit the financial-ratio base recommended in general equity analysis.
+
+Sector modules
+Banks
+NIM
+
+GNPA
+
+NNPA
+
+PCR
+
+CAR/CET1
+
+CASA ratio
+
+Cost-to-income
+
+ROA
+
+Credit growth
+
+Slippage ratio
+
+NBFC/HFC
+AUM growth
+
+Spread/NIM
+
+Cost of funds
+
+Stage 3/GNPA
+
+Provision coverage
+
+Debt/Equity
+
+ROA
+
+ROE
+
+Borrowing mix
+
+ALM risk flag
+
+Insurance
+Solvency ratio
+
+Claim settlement ratio
+
+Persistency
+
+VNB margin
+
+Embedded value growth
+
+Expense ratio
+
+Combined ratio for general insurance
+
+Zerodha explicitly highlights solvency ratio, claims settlement ratio, expense ratio, and persistency ratio as sector-relevant metrics for insurers.
+
+AMCs / brokers / capital markets
+AUM growth
+
+Yield on AUM
+
+EBITDA margin
+
+Client additions
+
+Active clients
+
+Cash share / derivatives share
+
+ROE
+
+Cash conversion
+
+IT services
+Revenue CAGR
+
+EBIT margin
+
+FCF conversion
+
+Attrition
+
+Utilization
+
+Client concentration
+
+Large-deal wins
+
+ROIC
+
+FMCG / staples
+Volume growth
+
+Gross margin
+
+EBITDA margin
+
+Brand spend as % sales
+
+ROIC
+
+Working capital efficiency
+
+Consumer durables / retail
+SSSG if available
+
+Inventory turns
+
+Gross margin
+
+EBITDA margin
+
+ROCE
+
+Store growth / distribution expansion
+
+Autos
+Volume growth
+
+Realization growth
+
+EBITDA margin
+
+ROCE
+
+Net debt/EBITDA
+
+Export mix
+
+Capacity utilization
+
+Auto ancillaries
+Asset turns
+
+EBITDA margin
+
+ROCE
+
+Customer concentration
+
+EV mix exposure
+
+Export share
+
+Pharma
+EBITDA margin
+
+ROCE
+
+R&D intensity
+
+US share
+
+Regulatory warning flags
+
+Product concentration
+
+Cash conversion
+
+Hospitals / diagnostics
+ARPOB / occupancy where available
+
+EBITDA margin
+
+ROCE
+
+Bed additions
+
+Cash generation
+
+Debt/EBITDA
+
+Metals & mining
+EBITDA/ton
+
+Cash cost/ton
+
+Net debt/EBITDA
+
+ROCE through cycle
+
+Capacity utilization
+
+Cement
+EBITDA/ton
+
+Cost per ton
+
+Realization per ton
+
+Net debt/EBITDA
+
+Capacity utilization
+
+ROCE
+
+Chemicals / specialty chemicals
+EBITDA margin
+
+Asset turns
+
+ROCE
+
+Export share
+
+Customer concentration
+
+Working capital
+
+Capex intensity
+
+Oil & gas
+Segment-specific profitability, GRM for refiners, transmission/utilization for gas infra
+
+Net debt/EBITDA
+
+ROCE
+
+Cash conversion
+
+Utilities / power
+PLF for generators
+
+AT&C losses for discom-linked names where relevant
+
+Regulated return metrics
+
+Debt service coverage
+
+ROE / ROCE
+
+Capital goods / infra / EPC
+Order book/revenue
+
+Order inflow growth
+
+EBITDA margin
+
+Working capital days
+
+CFO conversion
+
+ROCE
+
+Real estate
+Net debt/equity
+
+Presales growth
+
+Collections
+
+Cash flow conversion
+
+Completion/delivery ratio
+
+Inventory overhang
+
+Telecom
+ARPU
+
+Subscriber growth
+
+EBITDA margin
+
+Net debt/EBITDA
+
+Capex intensity
+
+Scoring framework
+Use three layers:
+
+financial_score = sector-relative score on hard financial metrics.
+
+management_score = sector-relative score on governance, capital allocation, execution consistency.
+
+composite_score = weighted blend.
+
+Use percentile or decile scoring within each sector:
+
+For “higher is better” metrics, top decile = 10, bottom decile = 1.
+
+For “lower is better” metrics, reverse the score.
+
+Winsorize extreme outliers before ranking.
+
+Require minimum data coverage; otherwise mark metric as NA and renormalize weights.
+
+Weighting
+Set weights by sector. Example:
+
+Banks: asset quality 30, profitability 25, capital 15, operating efficiency 15, growth 15.
+
+IT: growth 30, margin 25, cash conversion 20, return ratios 15, concentration risk 10.
+
+Metals: cost position 30, leverage 20, cyclical ROCE 25, utilization 15, cash generation 10.
+
+Management grading
+Forced ranking works well inside sector if you make management score multi-dimensional.
+
+Use these components:
+
+Capital allocation quality.
+
+Governance/alignment.
+
+Execution consistency.
+
+Communication/transparency.
+
+Accounting conservatism.
+
+Suggested columns:
+
+mgmt_cap_alloc_score
+
+mgmt_governance_score
+
+mgmt_execution_score
+
+mgmt_disclosure_score
+
+mgmt_accounting_score
+
+Suggested proxies:
+
+5Y ROE/ROIC vs sector median.
+
+Equity dilution history.
+
+Promoter pledge.
+
+Auditor changes.
+
+Related-party transaction flag.
+
+Margin stability.
+
+CFO/PAT consistency.
+
+Exceptional-item dependence.
+
+Frequency of missed guidance or missed internal targets if you track it.
+
+Forced ranking method
+For each sector:
+
+Compute each management sub-score as 0-100.
+
+Weighted sum to management_score.
+
+Rank descending.
+
+Assign percentile.
+
+Assign grade bands:
+
+A = top 15%
+
+B = next 20%
+
+C = middle 30%
+
+D = next 20%
+
+E = bottom 15%
+
+This is cleaner than raw “forced ranking??” because it preserves comparability within the economic structure of the sector.
+
+Column design for your screen
+Based on the screenshot, you should add many more columns and make the visible table configurable.
+
+Recommended core columns:
+
+Symbol
+
+Company
+
+Sector
+
+Subsector
+
+Market Cap
+
+F&O Active
+
+Financial Score
+
+Management Score
+
+Composite Score
+
+Sector Rank
+
+Sector Percentile
+
+Sector Grade
+
+Valuation Score
+
+Growth Score
+
+Quality Score
+
+Risk Score
+
+Governance Flag
+
+Promoter Pledge
+
+Earnings Revision Trend
+
+Last Result Date
+
+Trailing 1Y Return
+
+Relative Strength vs Sector
+
+Key Metric 1
+
+Key Metric 2
+
+Key Metric 3
+
+“Best reason”
+
+“Biggest risk”
+
+Last updated
+
+Recommended hidden/expandable columns:
+
+Weight schema name
+
+Data coverage %
+
+Score confidence
+
+Notes source
+
+Analyst override
+
+Watchlist flag
+
+Theme / narrative tags
+
+Event flags, e.g. demerger, regulatory issue, capital raise
+
+Better screen layout
+Your current screen appears to show:
+
+name
+
+grade badge
+
+score
+
+one explanatory sentence
+
+That is useful, but too compressed for analytical ranking. The upgraded screen should support:
+
+sticky left columns for Symbol and Sector
+
+sticky right summary note
+
+column chooser
+
+sector filter
+
+grade filter
+
+top/bottom percentile filter
+
+search
+
+sort by any score
+
+row expansion for detailed factor breakdown
+
+heatmap coloring by percentile
+
+hover tooltip for metric definitions
+
+drill-through to company page
+
+Detailed row-expansion view
+Each expanded row should show:
+
+sector definition
+
+sector-specific metrics and peer percentile
+
+management breakdown
+
+5Y trend snippets
+
+latest quarterly deltas
+
+concerns / red flags
+
+machine-generated summary
+
+“why score changed this quarter”
+
+Suggested backend schema
+fno_universe
+symbol
+
+isin
+
+company_name
+
+lot_size
+
+universe_date
+
+is_active
+
+company_classification
+symbol
+
+sector
+
+subsector
+
+industry
+
+source
+
+reviewed_by
+
+reviewed_at
+
+factor_values
+symbol
+
+as_of_date
+
+metric_code
+
+metric_value
+
+metric_period
+
+source
+
+quality_flag
+
+factor_scores
+symbol
+
+as_of_date
+
+sector
+
+metric_code
+
+raw_value
+
+percentile_score
+
+weight
+
+weighted_score
+
+management_flags
+symbol
+
+as_of_date
+
+promoter_pledge
+
+dilution_5y
+
+auditor_change_3y
+
+rpt_flag
+
+exceptional_item_ratio
+
+cfo_pat_5y
+
+notes
+
+company_scores
+symbol
+
+as_of_date
+
+financial_score
+
+management_score
+
+composite_score
+
+valuation_score
+
+risk_score
+
+score_confidence
+
+sector_rank
+
+sector_percentile
+
+sector_grade
+
+Calculation pipeline
+Load current F&O universe from NSE.
+
+Map symbols to sector/subsector.
+
+Pull raw fundamentals and market data.
+
+Compute common factors.
+
+Compute sector-specific factors.
+
+Normalize within sector.
+
+Apply sector weights.
+
+Compute management sub-scores.
+
+Compute composite score.
+
+Assign forced ranks and grades.
+
+Generate summaries and explanation fields.
+
+Push to UI cache.
+
+Refresh cadence
+Daily: price, return, valuation, relative strength, F&O status if needed.
+
+Quarterly: financial metrics, sector scores.
+
+Event-driven: governance flags, pledging, auditor changes, capital raising.
+
+Annual: deeper management review, sector schema refresh.
+
+Claude brief
+Use this directly as a build prompt for Claude:
+
+Build a sector-aware Indian NSE F&O intelligence module for the full active F&O stock universe. Use the NSE individual securities F&O list as the ground-truth universe input and keep universe membership date-versioned. Map every symbol to exactly one sector and one subsector using a controlled taxonomy.
+
+Create a factor engine with two layers: common metrics across all companies and sector-specific metrics. Common metrics include growth, margins, ROE/ROCE/ROIC, leverage, cash conversion, working-capital efficiency, valuation, volatility, promoter holding, and promoter pledge. Sector-specific metrics must be supported for banks, NBFCs, insurance, brokers/AMCs, IT, FMCG, retail, autos, auto ancillaries, pharma, hospitals, metals, cement, chemicals, oil & gas, utilities, capital goods/EPC, real estate, telecom, logistics, media, and diversified names.
+
+Score every company relative to peers within its sector only. Use percentile or decile scoring, with direction-aware reversal for bad metrics and winsorization for outliers. Produce financial_score, management_score, valuation_score, risk_score, and composite_score.
+
+Build management_score from capital allocation, governance, execution consistency, disclosure quality, and accounting conservatism. Use quantitative proxies such as 5Y ROE/ROIC vs sector, dilution history, promoter pledge, auditor changes, related-party flags, margin stability, CFO/PAT consistency, and exceptional-item dependence.
+
+Add forced ranking within sector and assign sector grades A/B/C/D/E by percentile bucket.
+
+Build a dashboard table optimized for dense research workflow. Required visible columns: Symbol, Company, Sector, Subsector, Financial Score, Management Score, Composite Score, Sector Rank, Sector Grade, Risk Score, Valuation Score, Key Metric 1, Key Metric 2, Key Metric 3, Best Reason, Biggest Risk, Last Updated. Support sticky columns, sort, filters, search, heatmap-style score coloring, row expansion, and tooltip definitions.
+
+Expanded row view must show metric breakdown, peer percentiles, management components, recent score deltas, key flags, and a generated explanation of why the name ranks where it does within the sector.
+
+Design the schema so the user can add manual overrides, notes, watchlist flags, and analyst tags.
+
+Output: SQL schema, Python factor-engine skeleton, scoring config in JSON/YAML, and a frontend column schema for the intelligence screen.
+
+Extra columns worth adding
+You mentioned “you can also add more columns,” so these are especially high-value:
+
+sector_median_gap: company score minus sector median.
+
+valuation_vs_quality_gap: cheap-but-low-quality vs expensive-but-high-quality clue.
+
+score_momentum_1q: quarter-on-quarter score delta.
+
+score_momentum_1y: one-year score delta.
+
+estimate_revision_score: if you later add analyst estimate revisions.
+
+balance_sheet_stress_flag.
+
+accounting_aggression_flag.
+
+capital_allocation_flag.
+
+cyclicality_flag.
+
+data_completeness_score.
+
+override_reason.
+
+thesis_status: candidate / tracking / investable / avoid.
+
+risk_bucket: low / medium / high.
+
+ownership_quality_score.
+
+event_risk_next_90d.
+
+What’s missing
+I still have not enumerated the actual current 211 names sector-by-sector in this reply, and I also have not extracted your screenshot contents programmatically from the attached image, so this is a complete implementation spec but not yet a symbol-by-symbol sector inventory. If you want, next I can turn this into a Claude-ready markdown spec file plus a JSON column configuration and a starter SQL schema you can paste directly into your project
+
+
+Yes—the architecture is directionally right, and the core principle of sector-relative grading is exactly how this should be built. The main refinements I’d make are: keep financial score fully deterministic, make management score partly quant and partly LLM-assisted but with hard audit trails, and make the composite weighting configurable by sector instead of fixed at 0.6/0.4 forever.
+
+What works
+Your three-layer structure is clean and matches how sector analysis should work, because general ratio analysis gives the common base while sector-specific KPIs differentiate businesses like banks, insurers, hospitals, and retailers. Keeping grades relative to sector peers is also correct, since Zerodha’s sector framework explicitly notes that no two sectors should be analyzed the same way and that peer comparison must use sector-relevant operating metrics.
+
+Best changes
+I would keep this architecture, but tighten it in five places:
+
+Add a separate data_confidence_score, because your coverage is uneven across Screener, IndianAPI, and management inputs, and users should see whether a rank is based on full or partial evidence.
+
+Split management into management_quant_score and management_llm_score, so the LLM is a contributor rather than the whole layer.
+
+Make composite weights sector-configurable, because sectors with strong hard KPIs like banks may deserve more quant weight than sectors where execution commentary matters more.
+
+Add minimum peer-count rules, because percentile ranking becomes noisy in tiny sub-sectors.
+
+Add “coverage-aware renormalization,” so missing sector KPIs do not automatically punish a stock when the data source simply lacks them.
+
+Suggested revision
+A better production version would be:
+
+Layer 1: financial_score
+
+Common metrics + sector KPIs.
+
+Pure quant.
+
+Sector-normalized 0-100.
+
+Layer 2A: management_quant_score
+
+Capital allocation, pledge, dilution, CFO/PAT, exceptional items, auditor churn.
+
+Pure quant.
+
+Sector-normalized 0-100.
+
+Layer 2B: management_llm_score
+
+Delivery vs guidance, strategic coherence, capital allocation narrative, disclosure quality.
+
+Evidence-based and re-scored from structured prompts.
+
+Layer 2: management_score
+
+Weighted blend of 2A and 2B.
+
+Layer 3: composite_score
+
+Sector-configurable weighted blend.
+
+This preserves your design while reducing the risk that an LLM narrative overwhelms hard evidence.
+
+Weighting view
+Your default 0.6 × financial + 0.4 × management is a solid starting prior, especially for a first release. But I would store weights in config like sector_weight_profiles, because banks and insurance already have rich operating KPIs, while sectors like capital goods or hospitals may benefit more from execution overlays and commentary scoring.
+
+Example:
+
+Banks: 0.70 financial, 0.30 management.
+
+Insurance: 0.65 financial, 0.35 management.
+
+IT: 0.60 financial, 0.40 management.
+
+Hospitals: 0.55 financial, 0.45 management, because execution quality around expansion and occupancy can matter a lot relative to static ratios.
+
+Management layer
+This is the part most likely to drift, so I’d make it very explicit that the LLM does not “judge management” freely; it scores against a fixed rubric. For each stock, the LLM should receive only structured evidence, return sub-scores plus a reason, and every reason should map to a cited input item such as guidance delivered, capex completed, pledge unchanged, or cash conversion deterioration.
+
+A clean rubric is:
+
+Execution delivery.
+
+Capital allocation.
+
+Governance/alignment.
+
+Accounting conservatism.
+
+Disclosure quality.
+
+Then define a hard cap rule: if key quant red flags exist, the LLM cannot assign a high overall management score even if commentary sounds strong.
+
+Ranking logic
+Your grade bands are good and intuitive, and the “A in banking is not A in metals” explanation is exactly the right framing for users. I’d add one more output field—sector_gap_to_leader—because it tells you whether rank 2 is almost tied with rank 1 or far behind, which is often more informative than the letter grade alone.
+
+Useful output fields:
+
+sector_rank
+
+sector_percentile
+
+sector_grade
+
+sector_gap_to_median
+
+sector_gap_to_leader
+
+coverage_pct
+
+score_confidence
+
+Coverage rules
+Given your coverage numbers, you should define hard operating rules before moving to sector KPIs.
+
+Recommended rules:
+
+If Screener and IndianAPI both exist, use blended metric source with source priority by metric family.
+
+If only Screener exists, compute everything possible from raw statements and mark derived coverage.
+
+If only IndianAPI exists, use keyMetrics but reduce confidence if raw historical statements are missing.
+
+If sector classification is missing, assign sector = UNMAPPED and exclude from sector ranking until mapped.
+
+If peer count in a sector is below 5, rank but mark low_peer_count = true.
+
+If metric coverage for a company is below a threshold, still score using renormalized available weights, but show low confidence.
+
+Those rules make the score usable instead of silently biased.
+
+The “wow” remark
+The example is good, but I would slightly change its format so it never confuses users.
+
+Better structure:
+
+Rank position.
+
+Sector context.
+
+Financial vs sector median.
+
+Management bottleneck.
+
+Leader benchmark.
+
+Confidence/coverage.
+
+Example:
+“APOLLOHOSP ranks 3/3 in Healthcare Facilities. Financial score is 45/100, helped by ROCE of 16.6% versus sector median 14.2%, but management score is 18/100 because critical execution milestones were missed and expansion timelines slipped. Sector leader is MAXHEALTH at composite 52. Confidence: medium due to partial KPI coverage.”
+
+That reads more like an investment workbench and less like a casual summary.
+
+My verdict
+So yes: the architecture is right enough to proceed. Before you move to sector KPI definitions, I’d lock in four things: coverage-aware scoring, sector-configurable weights, a split management layer with quant plus LLM components, and explicit confidence fields.
+
+If you want, send Section 2 and I’ll review the sector KPI definitions one sector at a time and help trim them down to the minimum set that actually matters.
+
+Go deeper with Computer
+
+Map 216 F&O stocks by sector with Screener and IndianAPI coverage gaps in an Excel pivot table
+
+Compare F&O sector metrics availability across banking, insurance, IT in an interactive dashboard
+
+Spot the 33 missing IndianAPI stocks and fill data gaps with a sector analysis PDF report
+
+Track NSE F&O list updates and coverage changes with daily alerts on new gaps

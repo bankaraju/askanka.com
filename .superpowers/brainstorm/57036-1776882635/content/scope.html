@@ -1,0 +1,33 @@
+<h2>Unified Analysis Panel — what shape are we building?</h2>
+<p class="subtitle">Terminal currently: Spreads renders a 5-layer drawer, FCS adds a mini-panel underneath, Correlation Breaks lives on Scanner/Regime pages, TA is a design on paper. They do not share a visual template — so the terminal "feels broken." Two possible unifications:</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Shared anatomy, same surfaces</h3>
+      <p><strong>Keep current locations.</strong> Spreads stay in candidate drawer. FCS stays in drawer. TA gets the same drawer treatment. Correlation Breaks keep their Scanner/Regime pages. But every analysis — wherever it lives — renders as the <em>same component template</em>: header band → verdict tile → contribution bars → health strip. One CSS file, one JS shape, four consumers.</p>
+      <p class="subtitle" style="margin-top:8px;">Smaller lift. Feels coherent because the micro-layout repeats. No routing or tab changes.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Convergence point — "Ticker Brief"</h3>
+      <p><strong>New location.</strong> One dedicated panel per ticker that stacks ALL four analyses (Spread presence, TA verdict, FCS score, Correlation Break status) in a single card. Opened from any row click, any page. The spreads tab, scanner, trading tab all point to this one brief.</p>
+      <p class="subtitle" style="margin-top:8px;">Bigger lift. Feels coherent because there is literally one place. But it collapses trade-centric (spreads) and ticker-centric (TA/FCS) into one — needs a schema reconciliation first.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Both — shared anatomy AND a ticker brief</h3>
+      <p>Build A first (cheap, immediate cohesion). Then in v2 introduce the Ticker Brief as a roll-up view that reuses the same anatomy. The brief becomes an additional surface, not a replacement.</p>
+      <p class="subtitle" style="margin-top:8px;">Two phases, but v1 ships value in days, not weeks.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;">Pick in the browser or answer in the terminal — whichever is easier.</p>

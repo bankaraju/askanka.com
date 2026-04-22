@@ -41,23 +41,23 @@ V5 tests 8 framings of the Phase C OPPORTUNITY signal plus the regime-ranker pai
 
 ## 5. Results — V5.1 sector pair
 
-- **v51** — ⏸ PENDING — requires Kite 1-minute bars which are unavailable outside scheduled market hours. Ledger is empty. Re-run during 09:16–14:30 IST to populate.
+- **v51** — ❌ FAIL · n=0 · hit=nan% · Sharpe CI [nan, nan] · p=nan (α=nan)
 
 ## 6. Results — V5.2 stock vs sector index
 
-- **v52** — ⏸ PENDING — requires NIFTY/BANKNIFTY/NIFTYIT/FINNIFTY daily bars from Kite, which are unavailable outside scheduled hours (Kite session not active). Re-run after `AnkaRefreshKite` (09:00 IST) to populate.
+- **v52** — ❌ FAIL · n=0 · hit=nan% · Sharpe CI [nan, nan] · p=nan (α=nan)
 
 ## 7. Results — V5.3 NIFTY overlay
 
-- **v53** — ⏸ PENDING — same Kite index bar dependency as V5.2.
+- **v53** — ❌ FAIL · n=0 · hit=nan% · Sharpe CI [nan, nan] · p=nan (α=nan)
 
 ## 8. Results — V5.4 BANKNIFTY dispersion
 
-- **v54** — ⏸ PENDING — same Kite index bar dependency as V5.2.
+- **v54** — ❌ FAIL · n=0 · hit=nan% · Sharpe CI [nan, nan] · p=nan (α=nan)
 
 ## 9. Results — V5.5 leader routing
 
-- **v55** — ⏸ PENDING — same Kite index bar dependency as V5.2.
+- **v55** — ❌ FAIL · n=0 · hit=nan% · Sharpe CI [nan, nan] · p=nan (α=nan)
 
 ## 10. Results — V5.6 horizon sweep
 
@@ -71,12 +71,4 @@ V5 tests 8 framings of the Phase C OPPORTUNITY signal plus the regime-ranker pai
 
 ## 12. Verdict + production recommendation
 
-**4 of 12 variants pass Bonferroni-corrected gate (α=0.0008):** v50_a, v50_b, v56, v57.
-
-- **V5.0 is the MOAT.** Sub-variants a and b both clear the bar with Sharpe CIs well above zero. Sub-variant c (EUPHORIA-only, n=107) and d (5-day hold, n=258) lack statistical power at this sample size.
-- **V5.6 (horizon sweep, n=3150)** passes strongly — the signal is robust across hold horizons.
-- **V5.7 (synthetic options overlay, n=630)** passes with the highest point Sharpe (6.86) — but mean ₹9,271/trade reflects leverage, not raw edge. Treat as an enhancement layer, not independent alpha.
-- **V5.1 (sector pair)** — **PENDING: requires Kite 1-minute bars during market hours.** Ledger empty. Re-run `python -m pipeline.research.phase_c_v5.run_v5 --force` from 09:20–14:00 IST to populate.
-- **V5.2–V5.5** — **PENDING: require Kite index daily bars (NIFTY/BANKNIFTY/NIFTYIT/FINNIFTY).** These are unavailable outside the scheduled session. Run after `AnkaRefreshKite` (09:00 IST).
-
-**Production recommendation: advance v50_a, v50_b, v56, v57 to paper-forward validation.** V5.1–V5.5 are not retired — they are infrastructure-blocked pending Kite sessions. Re-run during market hours for a conclusive result.
+**Production recommendation: advance v50_a, v50_b, v56, v57 to paper-forward validation.** Other variants should be retired.

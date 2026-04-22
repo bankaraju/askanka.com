@@ -1,0 +1,31 @@
+1. Cadence: Every Intraday Cycle (15-min, 26x/day)
+Decision: Approved.
+Rationale: The system already operates on a high-fidelity 15-minute IST clockwork schedule for Stations 7 and 8
+. Standardising the MSI refresh to match the intraday cycle (26 times per day) ensures the "Brain" remains synchronized without introducing new, asynchronous moving parts
+.
+2. Partial-Failure Policy: Hold Morning MSI and Show Stale Dot
+Decision: Approved (Option b).
+Rationale: Displaying a partial or potentially skewed MSI number violates the core principle of Truth-Anchored Integrity
+. In line with the Staleness Awareness UX pattern, if any of the 4 intraday APIs fail, the system must hold the validated morning MSI and trigger the Watchdog amber alert to signal that the intraday recompute is not fresh
+.
+3. Hysteresis: No Intraday Re-evaluation
+Decision: Approved.
+Rationale: The 2-day Hysteresis Rule is structurally designed as a 2-session (day-over-day) cycle to prevent "whipsawing" caused by temporary noise
+. Since MSI is currently treated as secondary context to the primary ETF-derived regime, allowing it to trigger intraday resets of the "Stable" count would undermine the system's operational discipline
+.
+4. Scope Boundary: Strict MSI Refresh + Banner Honesty
+Decision: Approved.
+Rationale: The primary goal of this task is to ensure that the numbers shown to the practitioner are "honest" and live
+. Expanding the scope to include intraday updates for eligible_spreads or Phase B picks represents a major shift in the "Regime-to-Trades Mapping" logic, which currently relies on a frozen trade map
+. That change deserves its own specialized research and validation spec
+.
+Implementation Path
+You are clear to proceed with Wiring Option #1: calling compute_msi() inside intraday_scan.py each cycle. This ensures that the msi_ fields in today_regime.json are the only intraday writers, keeping the updated_at timestamp accurate for the operator without requiring a new cron entry
+.
+Summary of Approved Configuration:
+Primary Trigger: Reuses the 26 intraday scheduled tasks.
+Anchor: FII flows are cached from the morning scan (Station 2c)
+.
+Inputs: Live HTTP fetches for NSE VIX, USD-INR, Nifty, and crude.
+Safety: Stale dot on any API failure; hysteresis remains locked to the morning session
+.

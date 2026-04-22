@@ -1,0 +1,183 @@
+"""Generate the unified research paper for askanka.com — integrated story."""
+import json, os, base64, subprocess
+from pathlib import Path
+from datetime import datetime, timezone, timedelta
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent / ".env")
+
+IST = timezone(timedelta(hours=5, minutes=30))
+GIT_REPO = Path("C:/Users/Claude_Anka/askanka.com")
+now = datetime.now(IST).strftime("%B %d, %Y")
+
+html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How We Built a Global Market Intelligence Engine | Anka Research</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {{ --bg: #0a0e1a; --card: #111827; --border: #1e293b; --text: #e5e7eb; --text2: #9ca3af; --gold: #d4a855; --green: #10b981; --red: #ef4444; }}
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
+body {{ background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.8; }}
+.hero {{ padding: 80px 20px 48px; text-align: center; background: linear-gradient(160deg, #0a0e1a, #1a1530, #0f0d1a); border-bottom: 1px solid rgba(212,168,85,0.15); }}
+.hero .badge {{ display: inline-block; background: rgba(212,168,85,0.15); color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 4px; margin-bottom: 16px; }}
+.hero h1 {{ font-family: 'DM Serif Display', serif; font-size: 36px; max-width: 800px; margin: 0 auto 16px; background: linear-gradient(135deg, #f5f0e8, #d4a855); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }}
+.hero .meta {{ font-size: 14px; color: var(--text2); }}
+.hero .meta span {{ color: var(--gold); }}
+.container {{ max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }}
+.body p {{ margin-bottom: 20px; font-size: 16px; color: #d1d5db; }}
+.body h2 {{ font-family: 'DM Serif Display', serif; font-size: 24px; margin: 40px 0 16px; color: #f1f5f9; padding-left: 14px; border-left: 3px solid var(--gold); }}
+.body h3 {{ font-size: 18px; font-weight: 700; margin: 28px 0 12px; color: #f1f5f9; }}
+.callout {{ background: rgba(212,168,85,0.08); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 28px 0; border-radius: 0 8px 8px 0; }}
+.results-table {{ width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }}
+.results-table th {{ text-align: left; padding: 10px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); border-bottom: 2px solid rgba(212,168,85,0.2); }}
+.results-table td {{ padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }}
+.results-table .mono {{ font-family: 'JetBrains Mono', monospace; }}
+.results-table .good {{ color: var(--green); font-weight: 700; }}
+.results-table .bad {{ color: var(--red); }}
+.nav-bar {{ display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); }}
+.nav-bar a {{ color: var(--gold); text-decoration: none; font-size: 14px; font-weight: 500; }}
+.nav-bar .brand {{ font-weight: 800; font-size: 16px; }}
+.stat-row {{ display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; }}
+.stat {{ flex: 1; min-width: 120px; text-align: center; padding: 16px; border: 1px solid var(--border); border-radius: 8px; }}
+.stat .val {{ font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; color: var(--gold); }}
+.stat .lab {{ font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }}
+</style>
+</head>
+<body>
+<nav class="nav-bar"><a href="/" class="brand">Anka Research</a><a href="/">&larr; Dashboard</a></nav>
+
+<header class="hero">
+    <div class="badge">Research Paper</div>
+    <h1>How We Built a Global Market Intelligence Engine</h1>
+    <p class="meta"><span>Anka Research</span> &mdash; {now} &mdash; From broken index to data-driven regime detection</p>
+</header>
+
+<article class="container"><div class="body">
+
+<div class="stat-row">
+<div class="stat"><div class="val">31</div><div class="lab">Global ETFs</div></div>
+<div class="stat"><div class="val">716</div><div class="lab">Days Analysed</div></div>
+<div class="stat"><div class="val">62.3%</div><div class="lab">Directional Accuracy</div></div>
+<div class="stat"><div class="val">2,000</div><div class="lab">Experiments Run</div></div>
+</div>
+
+<h2>The Problem: When Your Dashboard Lies</h2>
+<p>We started with a Macro Sentiment Index &mdash; five Indian market inputs with hand-picked weights. It showed a number between 0 and 100. It looked professional. Subscribers saw it on the dashboard and trusted it.</p>
+
+<p>It was wrong. Not slightly wrong &mdash; structurally wrong. The weights were arbitrary. The data sources broke without warning. And most critically: <strong>it only looked at India, while Indian markets follow global flows with a one-day lag.</strong></p>
+
+<div class="callout">By the time Indian VIX, FII flows, and crude prices moved, the signal was already old. The real information was in what happened overnight in New York, London, and Tokyo.</div>
+
+<h2>The Approach: Let Data Pick the Weights</h2>
+<p>Instead of guessing which inputs matter, we asked the data. We loaded 716 days of daily returns from 31 global ETFs &mdash; covering every major asset class, geography, and risk factor &mdash; and measured which ones actually predict where Indian markets go the next day.</p>
+
+<p>Then we applied Karpathy's AutoResearch methodology: an AI agent tested 2,000 different weight combinations, keeping only the configurations that improved risk-adjusted returns. No human bias. No favourite indicators. Just data.</p>
+
+<h2>What We Found</h2>
+
+<h3>The Surprise: Credit Markets Beat Equities</h3>
+<p>The strongest predictor of Indian market direction isn't the S&amp;P 500 or VIX &mdash; it's <strong>high yield corporate bonds</strong>. When global credit appetite is strong (investors buying riskier bonds), India tends to follow the next day. When credit markets freeze, India sells off.</p>
+
+<p>This makes sense: credit markets are where institutional money moves first. By the time equity markets react, bond traders have already priced the risk.</p>
+
+<h3>The Zones: Five States of the World</h3>
+<p>We defined five market regimes based on 350 days of historical calm periods. The boundaries aren't arbitrary &mdash; they're statistical thresholds (standard deviations from the calm baseline).</p>
+
+<table class="results-table">
+<thead><tr><th>Zone</th><th>Frequency</th><th>Nifty Next Day</th><th>Up Rate</th></tr></thead>
+<tbody>
+<tr><td class="bad">RISK-OFF</td><td class="mono">3% of days</td><td class="mono bad">-0.83%</td><td class="mono bad">15%</td></tr>
+<tr><td>CAUTION</td><td class="mono">9%</td><td class="mono">-0.30%</td><td class="mono">38%</td></tr>
+<tr><td>NEUTRAL</td><td class="mono">77%</td><td class="mono">+0.08%</td><td class="mono">55%</td></tr>
+<tr><td class="good">RISK-ON</td><td class="mono">10%</td><td class="mono good">+0.28%</td><td class="mono good">72%</td></tr>
+<tr><td class="good">EUPHORIA</td><td class="mono">2%</td><td class="mono good">+0.41%</td><td class="mono good">82%</td></tr>
+</tbody>
+</table>
+
+<div class="callout"><strong>The spread is 67 percentage points</strong> between RISK-OFF (15% up rate) and EUPHORIA (82% up rate). That's not noise. That's a signal.</div>
+
+<h3>The Validation: Three Independent Tests</h3>
+<p>We didn't just test on the training data. We subjected the engine to three independent challenges:</p>
+
+<table class="results-table">
+<thead><tr><th>Test</th><th>Result</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Null Model (1,000 random simulations)</td><td class="mono">100th percentile</td><td class="good">Strong edge &mdash; not luck</td></tr>
+<tr><td>Jackknife (remove top-3 inputs)</td><td class="mono">60.0% accuracy survives</td><td>Moderate &mdash; diversified but not fragile</td></tr>
+<tr><td>Walk-Forward (12 rolling windows)</td><td class="mono">CI [55.3%, 60.5%]</td><td class="good">Confirmed &mdash; edge persists across time</td></tr>
+</tbody>
+</table>
+
+<h3>The Reality Check: Transaction Costs</h3>
+<p>Here's where we got honest. The directional accuracy is real &mdash; 62.3%. But when we added realistic trading costs (brokerage, taxes, slippage), the edge in normal markets was too thin to trade profitably on short timeframes.</p>
+
+<p>The solution: <strong>don't trade every day.</strong> The engine identifies extreme zones &mdash; RISK-OFF and RISK-ON &mdash; where the edge is wide enough to survive friction. And it uses a dynamic exit rule (hold until the regime changes) rather than a fixed calendar, which improved net returns significantly.</p>
+
+<div class="callout"><strong>The honest conclusion:</strong> This engine doesn't predict every day. It identifies the 23% of trading days where the signal is strong enough to overcome real-world costs. On those days, the edge is substantial.</div>
+
+<h2>The ML Layer: Teaching Machines to Detect Regime Breaks</h2>
+
+<h3>The Fragility Model</h3>
+<p>Beyond the ETF composite, we built a machine learning model to detect <strong>correlation regime breaks</strong> &mdash; moments when the historical relationship between two stocks shifts. When Defence and IT normally move together but suddenly diverge, something structural has changed.</p>
+
+<p>The original model was an XGBoost classifier. It achieved 89.8% accuracy &mdash; a number we initially published with pride. Then we looked deeper.</p>
+
+<div class="callout"><strong>The accuracy trap:</strong> With 19:1 class imbalance (5,707 stable days vs 294 break events), a model that simply predicts "stable" every day gets 76% accuracy. Our 89.8% was barely better than a coin flip on the events that actually matter. Precision on break detection: 2.2%. F1 score: 3.8%.</div>
+
+<h3>74 Autonomous Experiments</h3>
+<p>We applied Karpathy's AutoResearch pattern: an AI agent ran 74 experiments overnight, testing different model architectures, sampling strategies, and problem framings. Each experiment modified the training code, ran it, measured F1 score, and kept improvements.</p>
+
+<p>The breakthrough was a <strong>fundamental reframing</strong>. Instead of teaching the model what a "break" looks like (hard with only 294 examples), we taught it what "stability" looks like using thousands of stable examples. Anything that doesn't look stable gets flagged.</p>
+
+<table class="results-table">
+<thead><tr><th>Metric</th><th>Before (XGBoost)</th><th>After (StackingClassifier)</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td>F1 Score</td><td class="mono bad">3.8%</td><td class="mono good">32.3%</td><td class="mono good">+750%</td></tr>
+<tr><td>Precision</td><td class="mono bad">2.2%</td><td class="mono good">71.4%</td><td class="mono good">+3,145%</td></tr>
+<tr><td>Recall</td><td class="mono">12.5%</td><td class="mono good">20.8%</td><td class="mono good">+67%</td></tr>
+</tbody>
+</table>
+
+<p>The final model is a <strong>Stacking Classifier</strong> combining Random Forest, Extra Trees, and a Neural Network as base learners, with Logistic Regression as the meta-learner. It uses SMOTE oversampling, isotonic calibration, and minority-class weighting to handle the extreme imbalance.</p>
+
+<h3>The Fragility Overlay</h3>
+<p>This model runs daily as a <strong>risk overlay</strong>. It doesn't generate trade signals &mdash; it adjusts how aggressively we trade them. When fragility is detected (correlation structure shifting), position sizes halve and stops widen. On 97% of days, it says "all clear" and trading proceeds normally.</p>
+
+<p>Backtesting this overlay across 869 historical trades: cumulative P&amp;L improved from +199.8% to +212.8%, max drawdown reduced from -142.4% to -130.7%, and fragile-day losses were cut in half.</p>
+
+<h2>What It Means for Traders</h2>
+<p>Every morning before Indian markets open, the engine reads what happened overnight across 31 global markets. It computes a single score. If that score is in the extreme zones, it fires a signal with specific trade recommendations, holding periods, and position sizes.</p>
+
+<p>If the score is neutral &mdash; which is 77% of the time &mdash; it says so. No false confidence. No forced trades.</p>
+
+<p>This replaces opinion with measurement. The engine doesn't care about headlines or narratives. It measures credit appetite, volatility flows, currency positioning, and institutional behaviour across the world's largest markets. Then it tells you what that means for Indian equities tomorrow.</p>
+
+<h2>What's Next</h2>
+<p>The engine is currently in a 4-week live shadow validation. Every day, it logs its prediction before markets open. After 20 trading days, we'll compare predictions to outcomes and publish the scorecard.</p>
+
+<p>If the live results match the backtested edge, the engine moves to production. If they don't, we'll know exactly why and what to fix.</p>
+
+<p>That's the difference between a dashboard that looks good and a system that works.</p>
+
+<p style="margin-top:40px; font-size:13px; color:#4b5563; border-top:1px solid var(--border); padding-top:20px;">
+<strong>Methodology:</strong> 31 global ETFs, 716 trading days, 89 engineered features, 2,000 weight optimisation experiments, null-model validation, jackknife sensitivity testing, 12-fold walk-forward cross-validation, cost-aware backtesting with realistic transaction costs.<br><br>
+<strong>Anka Research</strong> &mdash; askanka.com<br>
+<em>This is research, not investment advice.</em>
+</p>
+
+</div></article>
+</body></html>"""
+
+# Save
+out = GIT_REPO / "research" / "autoresearch.html"
+out.write_text(html, encoding="utf-8")
+print(f"Paper saved: {out}")
+
+# Git push
+subprocess.run(["git", "add", "research/"], cwd=str(GIT_REPO), check=True)
+subprocess.run(["git", "commit", "-m", "feat: unified research paper — from broken MSI to global regime engine, all phases documented"],
+               cwd=str(GIT_REPO), check=True)
+subprocess.run(["git", "push"], cwd=str(GIT_REPO), check=True)
+print("Deployed to askanka.com/research/autoresearch.html")

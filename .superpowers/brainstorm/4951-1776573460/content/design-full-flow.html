@@ -1,0 +1,247 @@
+<h2>Full Design: Scanner + Shared Ticker State</h2>
+<p class="subtitle">Two features working together. Review each section — does this match what you want?</p>
+
+<!-- SECTION 1: Trading Tab Layout -->
+<div class="section">
+  <h3>1. Trading Tab — New Sub-Tab Order</h3>
+  <div style="background:#0a0e1a; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-top:8px;">
+    <div style="display:flex; gap:2px; margin-bottom:16px; background:#111827; border-radius:6px; padding:3px;">
+      <div style="padding:8px 16px; border-radius:4px; background:rgba(212,168,85,0.15); color:#d4a855; font-size:13px; font-weight:600;">Scanner</div>
+      <div style="padding:8px 16px; color:#9ca3af; font-size:13px;">Signals</div>
+      <div style="padding:8px 16px; color:#9ca3af; font-size:13px;">Spreads</div>
+      <div style="padding:8px 16px; color:#9ca3af; font-size:13px;">Charts</div>
+      <div style="padding:8px 16px; color:#9ca3af; font-size:13px;">TA</div>
+    </div>
+    <div style="color:#9ca3af; font-size:12px;">
+      <strong style="color:#d4a855;">Scanner</strong> becomes the first sub-tab — the natural entry point. "What's interesting today?" → filter → pick a stock → Charts/TA auto-load it.
+    </div>
+
+    <!-- Shared ticker badge -->
+    <div style="margin-top:16px; display:flex; align-items:center; gap:8px; padding:8px 12px; background:#111827; border:1px solid #d4a855; border-radius:6px; width:fit-content;">
+      <span style="color:#6e6e6e; font-size:10px; text-transform:uppercase; letter-spacing:0.08em;">Viewing</span>
+      <span style="color:#d4a855; font-weight:700; font-size:15px;">RELIANCE</span>
+      <span style="color:#6e6e6e; font-size:11px;">Reliance Industries</span>
+      <span style="color:#6e6e6e; font-size:14px; cursor:pointer; margin-left:4px;" title="Clear selection">✕</span>
+    </div>
+    <div style="color:#6e6e6e; font-size:11px; margin-top:6px;">
+      This badge appears at the top of the Trading tab when a stock is selected. Persists across all sub-tabs. Click ✕ or pick a different stock to change.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: Scanner Screen -->
+<div class="section">
+  <h3>2. Scanner Sub-Tab — Filter + Card Grid</h3>
+  <div style="background:#0a0e1a; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-top:8px;">
+
+    <!-- Filter bar -->
+    <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #1e293b;">
+      <div>
+        <div style="color:#6e6e6e; font-size:10px; text-transform:uppercase; margin-bottom:4px;">Min Win Rate</div>
+        <div style="display:flex; gap:4px;">
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">≥50%</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">≥60%</div>
+          <div style="background:rgba(212,168,85,0.2); border:1px solid #d4a855; padding:4px 10px; border-radius:4px; color:#d4a855; font-size:12px; font-weight:600;">≥70%</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">≥80%</div>
+        </div>
+      </div>
+      <div>
+        <div style="color:#6e6e6e; font-size:10px; text-transform:uppercase; margin-bottom:4px;">Direction</div>
+        <div style="display:flex; gap:4px;">
+          <div style="background:rgba(212,168,85,0.2); border:1px solid #d4a855; padding:4px 10px; border-radius:4px; color:#d4a855; font-size:12px; font-weight:600;">ALL</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#22c55e; font-size:12px; cursor:pointer;">LONG</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#ef4444; font-size:12px; cursor:pointer;">SHORT</div>
+        </div>
+      </div>
+      <div>
+        <div style="color:#6e6e6e; font-size:10px; text-transform:uppercase; margin-bottom:4px;">Min Occurrences</div>
+        <div style="display:flex; gap:4px;">
+          <div style="background:rgba(212,168,85,0.2); border:1px solid #d4a855; padding:4px 10px; border-radius:4px; color:#d4a855; font-size:12px; font-weight:600;">≥10</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">≥25</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">≥50</div>
+        </div>
+      </div>
+      <div>
+        <div style="color:#6e6e6e; font-size:10px; text-transform:uppercase; margin-bottom:4px;">Sort By</div>
+        <div style="display:flex; gap:4px;">
+          <div style="background:rgba(212,168,85,0.2); border:1px solid #d4a855; padding:4px 10px; border-radius:4px; color:#d4a855; font-size:12px; font-weight:600;">Win Rate</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">Avg Return</div>
+          <div style="background:#1e293b; padding:4px 10px; border-radius:4px; color:#6e6e6e; font-size:12px; cursor:pointer;">Occurrences</div>
+        </div>
+      </div>
+      <div style="margin-left:auto; color:#9ca3af; font-size:13px; font-weight:600;">
+        12 stocks · 47 patterns
+      </div>
+    </div>
+
+    <!-- Card grid -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+      <!-- Card 1: RELIANCE -->
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:12px; cursor:pointer; transition:border-color 0.2s;" onmouseover="this.style.borderColor='#d4a855'" onmouseout="this.style.borderColor='#1e293b'">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="color:#d4a855; font-weight:700; font-size:15px;">RELIANCE</span>
+          <span style="background:rgba(34,197,94,0.12); color:#22c55e; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">3 strong</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#9ca3af; line-height:1.8;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>ATR_COMPRESS</span>
+            <span><span style="color:#22c55e; font-weight:600;">72%</span> · +2.1% · 45×</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>MACD_CROSS_UP</span>
+            <span><span style="color:#22c55e; font-weight:600;">70%</span> · +1.5% · 31×</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>BB_SQUEEZE</span>
+            <span><span style="color:#22c55e; font-weight:600;">71%</span> · +1.8% · 28×</span>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:6px;">Best: ATR_COMPRESS · Last fired Apr 14</div>
+      </div>
+
+      <!-- Card 2: TCS -->
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:12px; cursor:pointer;" onmouseover="this.style.borderColor='#d4a855'" onmouseout="this.style.borderColor='#1e293b'">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="color:#d4a855; font-weight:700; font-size:15px;">TCS</span>
+          <span style="background:rgba(239,68,68,0.12); color:#ef4444; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">1 short</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#9ca3af; line-height:1.8;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>BB_SQUEEZE <span style="color:#ef4444;">▼</span></span>
+            <span><span style="color:#22c55e; font-weight:600;">75%</span> · -1.9% · 22×</span>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:6px;">Best: BB_SQUEEZE · Last fired Apr 12</div>
+      </div>
+
+      <!-- Card 3: HDFCBANK -->
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:12px; cursor:pointer;" onmouseover="this.style.borderColor='#d4a855'" onmouseout="this.style.borderColor='#1e293b'">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="color:#d4a855; font-weight:700; font-size:15px;">HDFCBANK</span>
+          <span style="background:rgba(34,197,94,0.12); color:#22c55e; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">2 strong</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#9ca3af; line-height:1.8;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>MACD_CROSS_UP</span>
+            <span><span style="color:#22c55e; font-weight:600;">71%</span> · +1.8% · 38×</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>RSI_OVERSOLD</span>
+            <span><span style="color:#22c55e; font-weight:600;">70%</span> · +1.4% · 25×</span>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:6px;">Best: MACD_CROSS_UP · Last fired Apr 16</div>
+      </div>
+
+      <!-- Card 4: INFY -->
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:12px; cursor:pointer;" onmouseover="this.style.borderColor='#d4a855'" onmouseout="this.style.borderColor='#1e293b'">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="color:#d4a855; font-weight:700; font-size:15px;">INFY</span>
+          <span style="background:rgba(34,197,94,0.12); color:#22c55e; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">1 strong</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#9ca3af; line-height:1.8;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>CANDLE_HAMMER</span>
+            <span><span style="color:#22c55e; font-weight:600;">73%</span> · +2.4% · 19×</span>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:6px;">Best: CANDLE_HAMMER · Last fired Apr 10</div>
+      </div>
+
+      <!-- Card 5 -->
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:12px; cursor:pointer;" onmouseover="this.style.borderColor='#d4a855'" onmouseout="this.style.borderColor='#1e293b'">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="color:#d4a855; font-weight:700; font-size:15px;">BAJFINANCE</span>
+          <span style="background:rgba(34,197,94,0.12); color:#22c55e; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">2 strong</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#9ca3af; line-height:1.8;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>ATR_COMPRESS</span>
+            <span><span style="color:#22c55e; font-weight:600;">74%</span> · +2.8% · 33×</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>VOL_BREAKOUT</span>
+            <span><span style="color:#22c55e; font-weight:600;">70%</span> · +2.0% · 27×</span>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:6px;">Best: ATR_COMPRESS · Last fired Apr 15</div>
+      </div>
+
+      <!-- Card 6 -->
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:12px; cursor:pointer;" onmouseover="this.style.borderColor='#d4a855'" onmouseout="this.style.borderColor='#1e293b'">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="color:#d4a855; font-weight:700; font-size:15px;">SBIN</span>
+          <span style="background:rgba(34,197,94,0.12); color:#22c55e; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:600;">1 strong</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#9ca3af; line-height:1.8;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>RSI_OVERSOLD</span>
+            <span><span style="color:#22c55e; font-weight:600;">72%</span> · +1.6% · 41×</span>
+          </div>
+        </div>
+        <div style="color:#6e6e6e; font-size:10px; margin-top:6px;">Best: RSI_OVERSOLD · Last fired Apr 13</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: Click Flow -->
+<div class="section">
+  <h3>3. Click Flow: Scanner → Charts + TA</h3>
+  <div style="background:#0a0e1a; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-top:8px;">
+    <div style="display:flex; align-items:center; gap:12px; font-size:13px;">
+      <div style="background:#111827; border:1px solid #d4a855; border-radius:6px; padding:8px 14px; color:#d4a855; font-weight:600;">
+        Click RELIANCE card
+      </div>
+      <span style="color:#6e6e6e; font-size:18px;">→</span>
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:8px 14px; color:#9ca3af;">
+        Shared ticker = RELIANCE
+      </div>
+      <span style="color:#6e6e6e; font-size:18px;">→</span>
+      <div style="background:#111827; border:1px solid #1e293b; border-radius:6px; padding:8px 14px; color:#9ca3af;">
+        Auto-switch to Charts tab
+      </div>
+    </div>
+    <div style="margin-top:12px; color:#9ca3af; font-size:12px; line-height:1.8;">
+      <strong style="color:#e5e7eb;">Then freely navigate:</strong><br>
+      · Switch to TA → RELIANCE TA already loaded, no retyping<br>
+      · Switch back to Charts → still RELIANCE, chart intact<br>
+      · Switch to Scanner → filter is preserved, RELIANCE card highlighted<br>
+      · Type a different ticker in Charts or TA search → shared state updates to new ticker<br>
+      · Click ✕ on the badge → clears selection, sub-tabs show their empty/search state
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: Backend -->
+<div class="section">
+  <h3>4. Backend: New API Endpoint</h3>
+  <div style="background:#0a0e1a; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-top:8px; font-family:'JetBrains Mono',monospace; font-size:12px;">
+    <div style="color:#d4a855; margin-bottom:8px;">GET /api/scanner?min_win=70&direction=ALL&min_occ=10&sort=win_rate</div>
+    <div style="color:#9ca3af; line-height:1.8;">
+      Reads all 213 fingerprint files from <span style="color:#e5e7eb;">/data/ta_fingerprints/</span><br>
+      Filters patterns by win_rate, direction, significance, occurrences<br>
+      Groups by stock, sorts by best pattern's metric<br>
+      Returns: <span style="color:#e5e7eb;">{ stocks: [{symbol, patterns: [...], best_win, pattern_count}], total_stocks, total_patterns }</span>
+    </div>
+  </div>
+  <div style="color:#6e6e6e; font-size:11px; margin-top:8px;">
+    Single endpoint. No new data files needed — reads existing TA fingerprints. Filtering happens server-side to keep the response lean.
+  </div>
+</div>
+
+<div style="margin-top:24px; padding:16px; background:rgba(212,168,85,0.08); border:1px solid rgba(212,168,85,0.2); border-radius:8px;">
+  <p style="color:#d4a855; font-size:13px; font-weight:600; margin-bottom:6px;">SCOPE SUMMARY</p>
+  <p style="color:#9ca3af; font-size:13px; line-height:1.8;">
+    <strong>Build:</strong><br>
+    · 1 new API endpoint: <code>/api/scanner</code><br>
+    · 1 new sub-tab: Scanner (first position in Trading)<br>
+    · Shared ticker state across Charts/TA/Scanner sub-tabs<br>
+    · Compact stat narration per pattern (template, not LLM-generated)<br><br>
+    <strong>Don't build:</strong><br>
+    · No spread filtering (stays in Spreads tab as-is)<br>
+    · No LLM-generated narration (just formatted stats)<br>
+    · No new data pipeline (reads existing fingerprints)<br>
+    · No changes to Signals or Spreads sub-tabs
+  </p>
+</div>

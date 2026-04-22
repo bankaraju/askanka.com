@@ -1,0 +1,56 @@
+<h2>What kind of "conviction" are we filtering?</h2>
+<p class="subtitle">Your system has two very different conviction metrics. They answer different questions.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>TA Pattern Win Rates</h3>
+      <p><strong>"Show me stocks where a pattern fires with >70% historical win rate"</strong></p>
+      <p style="color:#9ca3af; font-size:13px; margin-top:8px;">
+        Example: RELIANCE — ATR_COMPRESSION has 72% win rate over 5 days, occurred 45 times in 5 years, avg return +2.1%.
+        <br><br>
+        This is what you described: click a stock → see the chart with pattern markers → narration says "this happened 5 times in 4 years and usually made X% returns."
+        <br><br>
+        <strong>Data available:</strong> 213 stocks × 15 patterns each, with win_rate_5d, avg_return_5d, occurrences, significance, direction.
+      </p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Spread / Regime Conviction</h3>
+      <p><strong>"Show me spreads where regime win rate is >70% right now"</strong></p>
+      <p style="color:#9ca3af; font-size:13px; margin-top:8px;">
+        Example: Defence vs IT — 73% win rate in EUPHORIA over 5 days. This is the regime engine output.
+        <br><br>
+        Fewer items (~10-15 eligible spreads), changes daily with regime shifts. More about "what to trade today" than stock exploration.
+        <br><br>
+        <strong>Data available:</strong> eligible_spreads from today_regime.json with 1d/3d/5d win rates.
+      </p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Both — Unified Scanner</h3>
+      <p><strong>"Show me everything above a threshold, any source"</strong></p>
+      <p style="color:#9ca3af; font-size:13px; margin-top:8px;">
+        Combines TA patterns + spread conviction into one filterable list. Ambitious but potentially confusing — apples and oranges in one basket.
+        <br><br>
+        Risk: a 70% TA win rate on a single pattern (backward-looking) is NOT the same as a 70% spread conviction (regime-conditional, forward-looking). Mixing them could mislead.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:24px; padding:16px; background:rgba(212,168,85,0.08); border:1px solid rgba(212,168,85,0.2); border-radius:8px;">
+  <p style="color:#d4a855; font-size:13px; font-weight:600; margin-bottom:6px;">MY PUSH-BACK</p>
+  <p style="color:#9ca3af; font-size:13px;">
+    Option C sounds appealing but mixes two fundamentally different signals. A stock with a 75% TA win rate hammer pattern doesn't mean "buy it" — it means that specific pattern has historically worked. The spread conviction is regime-dependent and changes daily. Putting them in one list with a single threshold slider creates false equivalence.
+    <br><br>
+    <strong>My recommendation: Option A</strong> — it matches what you described (click stock → chart → narration) and we have rich data for all 213 stocks. Spread conviction already lives in the Trading → Spreads tab where it belongs.
+  </p>
+</div>

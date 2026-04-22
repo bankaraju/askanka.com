@@ -1,0 +1,79 @@
+<h2>What's the shared anatomy?</h2>
+<p class="subtitle">Every analysis (Spreads, TA, FCS, Correlation Breaks) emits the same 5 primitives — Verdict, Conviction, Evidence, Model Health, Freshness. The question is how to arrange them visually so all four feel like siblings.</p>
+
+<div class="split">
+
+  <div class="mockup">
+    <div class="mockup-header">A — Stacked rows (vertical)</div>
+    <div class="mockup-body" style="padding:12px; background:#0c1020; color:#e8e8f0; font-family:ui-monospace,monospace; font-size:11px;">
+      <div style="border-left:3px solid #10b981; padding:8px 10px; background:#0f1530; margin-bottom:6px;">
+        <div style="color:#64748b; font-size:9px; letter-spacing:1px;">FCS · RELIANCE</div>
+        <div style="font-size:15px; font-weight:600; margin-top:2px;">LONG  ·  <span style="color:#f59e0b">72</span></div>
+      </div>
+      <div style="padding:6px 10px; background:#0b1128; margin-bottom:6px;">
+        <div style="color:#64748b; font-size:9px; letter-spacing:1px;">EVIDENCE</div>
+        <div style="margin-top:4px;">
+          <div>ticker_rs_10d &nbsp;━━━━━━━━━━ +0.38</div>
+          <div>sector_5d_return &nbsp;━━━━━━ +0.22</div>
+          <div>realized_vol_60d &nbsp;━━━ −0.11</div>
+        </div>
+      </div>
+      <div style="padding:6px 10px; background:#0b1128; margin-bottom:6px;">
+        <div style="color:#64748b; font-size:9px; letter-spacing:1px;">MODEL HEALTH</div>
+        <div style="margin-top:2px;"><span style="color:#10b981;">● GREEN</span> &nbsp; mean AUC 0.61  ·  min 0.54  ·  6 folds</div>
+      </div>
+      <div style="padding:6px 10px; color:#64748b; font-size:10px;">computed 14:42 · source: own</div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">B — Header band + 2-col detail</div>
+    <div class="mockup-body" style="padding:12px; background:#0c1020; color:#e8e8f0; font-family:ui-monospace,monospace; font-size:11px;">
+      <div style="background:#1a2340; padding:10px 12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="color:#64748b; font-size:9px; letter-spacing:1px;">FCS · RELIANCE</div>
+          <div style="font-size:15px; font-weight:600; margin-top:2px;">LONG</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:22px; font-weight:700; color:#f59e0b;">72</div>
+          <div style="color:#10b981; font-size:9px;">● GREEN</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:8px; padding-top:8px;">
+        <div>
+          <div style="color:#64748b; font-size:9px; letter-spacing:1px;">EVIDENCE</div>
+          <div style="margin-top:4px;">
+            <div>rs_10d ━━━━━━ +0.38</div>
+            <div>sector ━━━━ +0.22</div>
+            <div>vol_60d ━━ −0.11</div>
+          </div>
+        </div>
+        <div>
+          <div style="color:#64748b; font-size:9px; letter-spacing:1px;">HEALTH</div>
+          <div style="margin-top:4px;">mean AUC 0.61</div>
+          <div>min AUC 0.54</div>
+          <div>6 folds</div>
+          <div style="margin-top:6px; color:#64748b; font-size:10px;">14:42 · own</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:20px;">Both render the same 5 primitives. A reads top-down — good for narrow contexts (drawer, side panel). B front-loads the verdict+score — good for wider contexts (full-width cards, brief view).</p>
+
+<div class="options" style="margin-top:12px;">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Stacked rows</h3><p>Narrow-friendly. Fits today's drawer.</p></div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Header band + 2-col</h3><p>Front-loads verdict. Scales to wider views.</p></div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content"><h3>Both responsive</h3><p>Same component, stacks at narrow widths, header+2col at ≥480px. One CSS grid rule.</p></div>
+  </div>
+</div>

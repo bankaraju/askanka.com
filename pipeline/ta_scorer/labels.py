@@ -20,10 +20,12 @@ def make_label(prices: pd.DataFrame, *, entry_date: str, horizon_days: int = 1,
         return None
     entry = float(df["close"].iloc[i])
     exit_close = float(df["close"].iloc[exit_i])
+    exit_low = float(df["low"].iloc[exit_i])
+    if pd.isna(entry) or pd.isna(exit_close) or pd.isna(exit_low):
+        return None
     realized = (exit_close - entry) / entry
     # Daily stop — if low on exit day pierced stop, realize at stop
     stop_px = entry * (1.0 + daily_stop_pct)
-    exit_low = float(df["low"].iloc[exit_i])
     if exit_low <= stop_px:
         realized = daily_stop_pct
     return {
