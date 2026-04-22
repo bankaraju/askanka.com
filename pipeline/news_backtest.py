@@ -170,6 +170,11 @@ def run_backtest(target_date: str = None):
         categories = event.get("categories", [])
         if not stocks:
             continue
+        if not categories:
+            # Verdict needs category for (symbol, category) join in website_exporter.
+            # Uncategorized events are dropped rather than stored with empty category,
+            # which would silently fail the downstream match.
+            continue
         for symbol in stocks[:3]:
             df = load_stock_prices(symbol)
             price_reaction = compute_forward_returns(df, target_date) if df is not None else None
