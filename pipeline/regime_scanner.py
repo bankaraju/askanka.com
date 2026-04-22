@@ -222,6 +222,12 @@ def scan_regime() -> dict:
         "regime_source": "etf_engine",
         "msi_score": msi_score,
         "msi_regime": msi_regime,
+        "msi_updated_at": msi.get("timestamp") if msi else None,
+        "msi_cached_inputs": {
+            "fii_net":       msi.get("fii_net") if msi else None,
+            "dii_net":       msi.get("dii_net") if msi else None,
+            "combined_flow": msi.get("combined_flow") if msi else None,
+        } if msi else None,
         "regime_stable": regime_stable,
         "consecutive_days": consecutive_days,
         "trade_map_key": trade_map_key,
