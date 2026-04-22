@@ -269,3 +269,52 @@ def test_spread_adapter_missing_returns_unavailable():
     """
     env = _run(src)
     assert env["verdict"] == "UNAVAILABLE"
+
+
+def test_corr_adapter_long_on_negative_sigma():
+    uri = _js_uri("adapters/corr.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const raw = {{sigma: -2.4, sector_divergence: -1.2, volume_anomaly: 0.3,
+                  trust_delta: 0.1, computed_at: '2026-04-23T13:57:00+05:30'}};
+    const env = adapt('HAL', raw);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["engine"] == "corr_break"
+    assert env["verdict"] == "LONG"
+    assert env["conviction_0_100"] == 60  # 2.4 × 25 = 60
+    assert env["calibration"] == "heuristic"
+
+
+def test_corr_adapter_short_on_positive_sigma():
+    uri = _js_uri("adapters/corr.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    console.log(JSON.stringify(adapt('X', {{sigma: 3.0, sector_divergence: 2,
+      volume_anomaly: 0, trust_delta: 0, computed_at: 'x'}})));
+    """
+    env = _run(src)
+    assert env["verdict"] == "SHORT"
+    assert env["conviction_0_100"] == 75
+
+
+def test_corr_adapter_neutral_when_small_sigma():
+    uri = _js_uri("adapters/corr.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    console.log(JSON.stringify(adapt('X', {{sigma: 0.8, sector_divergence: 0,
+      volume_anomaly: 0, trust_delta: 0, computed_at: 'x'}})));
+    """
+    env = _run(src)
+    assert env["verdict"] == "NEUTRAL"
+
+
+def test_corr_adapter_missing():
+    uri = _js_uri("adapters/corr.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    console.log(JSON.stringify(adapt('X', null)));
+    """
+    env = _run(src)
+    assert env["verdict"] == "UNAVAILABLE"
