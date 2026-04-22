@@ -628,7 +628,7 @@ Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, e
 | `live_status.json` | System health status |
 | `track_record.json` | Performance history |
 | `trust_scores.json` | Stock trust grades |
-| `fno_news.json` | F&O news feed |
+| `fno_news.json` | F&O news feed — derived by `website_exporter.export_fno_news()` from `pipeline/data/news_verdicts.json`; only HIGH_IMPACT + MODERATE verdicts with ADD/CUT recommendations are included, sorted by impact tier then \|hit_rate\| descending. |
 
 ---
 
