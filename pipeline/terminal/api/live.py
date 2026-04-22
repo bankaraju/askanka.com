@@ -24,12 +24,8 @@ def fetch_ltps(tickers: list[str]) -> dict[str, float]:
     Split out as a module-level shim so tests can monkeypatch without
     reaching into signal_tracker internals.
     """
-    try:
-        from signal_tracker import fetch_current_prices
-    except ImportError:
-        from pipeline.signal_tracker import fetch_current_prices
-    result = fetch_current_prices(tickers) or {}
-    return result
+    from pipeline.signal_tracker import fetch_current_prices
+    return fetch_current_prices(tickers) or {}
 
 
 _MAX_TICKERS = 50
@@ -43,4 +39,7 @@ def live_ltp(tickers: str = Query(...)):
     if len(requested) > _MAX_TICKERS:
         raise HTTPException(400, f"max {_MAX_TICKERS} tickers per request (got {len(requested)})")
     prices = fetch_ltps(requested)
-    return {t: float(prices.get(t, 0.0)) for t in requested}
+    # Unknown tickers return null (not 0.0) so the frontend falls back to
+    # the live_status.json snapshot value instead of painting a fake ₹0.00.
+    return {t: (float(prices[t]) if t in prices and prices[t] is not None else None)
+            for t in requested}

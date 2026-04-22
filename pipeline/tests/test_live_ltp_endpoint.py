@@ -43,9 +43,21 @@ def test_caps_request_size(monkeypatch):
     assert r.status_code == 400
 
 
-def test_returns_zero_for_missing_tickers(monkeypatch):
+def test_returns_null_for_missing_tickers(monkeypatch):
+    """Unknown tickers must not render ₹0.00 in the UI. Return null so
+    the frontend falls back to the live_status.json snapshot."""
     monkeypatch.setattr(live_module, "fetch_ltps", lambda tickers: {"HAL": 4200.0})
     client = TestClient(app)
     r = client.get("/api/live_ltp?tickers=HAL,UNKNOWN")
     assert r.status_code == 200
-    assert r.json() == {"HAL": 4200.0, "UNKNOWN": 0.0}
+    assert r.json() == {"HAL": 4200.0, "UNKNOWN": None}
+
+
+def test_returns_null_for_explicit_none(monkeypatch):
+    """If Kite returns a ticker with value None, pass the None through."""
+    monkeypatch.setattr(live_module, "fetch_ltps",
+                        lambda tickers: {"HAL": None, "BEL": 450.0})
+    client = TestClient(app)
+    r = client.get("/api/live_ltp?tickers=HAL,BEL")
+    assert r.status_code == 200
+    assert r.json() == {"HAL": None, "BEL": 450.0}
