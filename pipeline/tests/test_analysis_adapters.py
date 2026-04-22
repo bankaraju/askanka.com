@@ -228,3 +228,44 @@ def test_ta_adapter_non_pilot_ticker_unavailable():
     assert env["verdict"] == "UNAVAILABLE"
     assert "RELIANCE only" in env["empty_state_reason"]
     assert "212" in env["empty_state_reason"]
+
+
+def test_spread_adapter_pass_high():
+    uri = _js_uri("adapters/spread.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const thesis = {{name: 'Defence vs IT', conviction: 'HIGH',
+      regime_fit: true, gate_status: 'PASS', score: 85, z_score: 2.1,
+      action: 'LONG', long_legs: ['HAL'], short_legs: ['INFY']}};
+    const env = adapt('HAL', thesis);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["engine"] == "spread"
+    assert env["verdict"] == "LONG"
+    assert env["conviction_0_100"] == 80
+    assert env["calibration"] == "heuristic"
+
+
+def test_spread_adapter_gate_fail_watch():
+    uri = _js_uri("adapters/spread.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    const t = {{name: 'X', conviction: 'LOW', gate_status: 'FAIL',
+      regime_fit: false, long_legs: ['X'], short_legs: []}};
+    const env = adapt('X', t);
+    console.log(JSON.stringify(env));
+    """
+    env = _run(src)
+    assert env["verdict"] == "WATCH"
+    assert env["conviction_0_100"] == 20
+
+
+def test_spread_adapter_missing_returns_unavailable():
+    uri = _js_uri("adapters/spread.js")
+    src = f"""
+    import {{ adapt }} from '{uri}';
+    console.log(JSON.stringify(adapt('X', null)));
+    """
+    env = _run(src)
+    assert env["verdict"] == "UNAVAILABLE"
