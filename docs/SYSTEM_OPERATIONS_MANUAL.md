@@ -439,6 +439,18 @@ schtasks /create /tn "AnkaFeatureScorerFit" /tr "C:\Users\Claude_Anka\askanka.co
 
 **Spec:** `docs/superpowers/specs/2026-04-22-feature-coincidence-scorer-design.md`
 
+**Status (2026-04-22): WIRED — awaiting first production fit.**
+
+End-to-end smoke completed 2026-04-22:
+- Unit tests: 45 passed across `pipeline/tests/feature_scorer` + `test_watchdog_feature_scorer` (2 slow-tagged tests skipped: universe-fit coverage until `download_fno_history --days 1825` extends depth to 5y, and 60-day forward validation until the snapshot ledger accumulates ~60 sessions).
+- `/api/attractiveness` + `/api/attractiveness/{ticker}` respond with 200 on seeded scores and 404 on unknown tickers.
+- Three UI surfaces (Trading column, Positions badge, Candidate drawer feature-contribution panel) render correctly against the seeded fixture.
+
+Pending observation (not blocking):
+- First `AnkaFeatureScorerFit` Sunday 01:00 run — will populate `ticker_feature_models.json`. Review coverage distribution afterward; rerun the `test_feature_scorer_universe_fit_coverage` test.
+- Arrow-movement in the Positions badge across two adjacent intraday cycles (visual confirmation during market hours).
+- `test_green_model_picks_beat_base_rate_by_5pp` stays skipped until snapshot history ≥ 60 days.
+
 ---
 
 ## 3b. The Reverse Regime Engine — How Stock Picks Are Made
