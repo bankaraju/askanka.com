@@ -57,3 +57,33 @@ def test_regime_missing_files(tmp_path, monkeypatch):
     from pipeline.terminal.app import app
     data = TestClient(app).get("/api/regime").json()
     assert data["zone"] == "UNKNOWN"
+
+
+def test_regime_endpoint_returns_msi_updated_at(tmp_path, monkeypatch):
+    """/api/regime must expose msi_updated_at distinct from updated_at,
+    so the banner can show when MSI was last recomputed (not when ETF
+    regime was last refreshed)."""
+    import pipeline.terminal.api.regime as mod
+    from fastapi.testclient import TestClient
+    from pipeline.terminal.app import app
+
+    today = tmp_path / "today_regime.json"
+    today.write_text(json.dumps({
+        "regime": "RISK-OFF",
+        "msi_score": 48.2,
+        "msi_regime": "MACRO_NEUTRAL",
+        "msi_updated_at": "2026-04-22T11:30:00+05:30",
+        "regime_stable": True,
+        "consecutive_days": 2,
+        "eligible_spreads": {},
+        "timestamp": "2026-04-22T09:25:00+05:30",
+    }))
+    monkeypatch.setattr(mod, "_TODAY_REGIME_FILE", today)
+    # Blank out the global file so the endpoint falls back to today_regime fields
+    monkeypatch.setattr(mod, "_GLOBAL_REGIME_FILE", tmp_path / "missing_global.json")
+    monkeypatch.setattr(mod, "_RECOMMENDATIONS_FILE", tmp_path / "missing_recs.json")
+
+    body = TestClient(app).get("/api/regime").json()
+    assert body["msi_updated_at"] == "2026-04-22T11:30:00+05:30"
+    # updated_at is still the global regime timestamp, here fallen back to today's
+    assert body["updated_at"] == "2026-04-22T09:25:00+05:30"

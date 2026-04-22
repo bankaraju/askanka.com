@@ -49,6 +49,7 @@ def regime():
         "consecutive_days": consecutive,
         "msi_score": today_data.get("msi_score", 0.0),
         "msi_regime": today_data.get("msi_regime", "UNAVAILABLE"),
+        "msi_updated_at": today_data.get("msi_updated_at"),
         "trade_map_key": today_data.get("trade_map_key"),
         "eligible_spreads": eligible,
         "top_drivers": global_data.get("top_drivers", []),

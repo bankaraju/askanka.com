@@ -6,6 +6,22 @@ const REGIME_CLASSES = {
   'RISK-OFF': 'regime-risk-off',
 };
 
+function _msiStaleDot(msiUpdatedAt) {
+  if (!msiUpdatedAt) return '';
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kolkata', hour12: false,
+    hour: '2-digit', minute: '2-digit',
+  }).formatToParts(new Date());
+  const hh = Number(parts.find(p => p.type === 'hour').value);
+  const mm = Number(parts.find(p => p.type === 'minute').value);
+  const totalMin = hh * 60 + mm;
+  const inMarket = totalMin >= 555 && totalMin < 930;  // 09:15–15:30
+  if (!inMarket) return '';
+  const ageMin = (Date.now() - new Date(msiUpdatedAt)) / 60000;
+  if (ageMin < 30) return '';
+  return ' <span title="MSI not refreshed in 30+ min" style="color: var(--colour-amber); font-size: 0.8em;">●</span>';
+}
+
 export function render(container, data) {
   const cls = REGIME_CLASSES[data.zone] || 'regime-neutral';
   const stability = data.stable
@@ -26,11 +42,12 @@ export function render(container, data) {
         <div style="text-align: right;">
           <span class="text-muted" style="font-size: 0.75rem;">
             MSI: <span class="mono">${(data.msi_score || 0).toFixed(1)}</span>
-            (${data.msi_regime || 'N/A'})
+            (${data.msi_regime || 'N/A'})${_msiStaleDot(data.msi_updated_at)}
           </span>
           <br>
           <span class="text-muted" style="font-size: 0.6875rem;">
-            Updated: ${data.updated_at ? new Date(data.updated_at).toLocaleTimeString('en-IN') : '--'}
+            MSI: ${data.msi_updated_at ? new Date(data.msi_updated_at).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'}) : '--'}
+            · Regime: ${data.updated_at ? new Date(data.updated_at).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'}) : '--'}
           </span>
         </div>
       </div>
