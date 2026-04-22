@@ -486,6 +486,7 @@ def trail_stop_triggered(
     peak: float,
     trail_budget: float,
     arm_factor: float = None,
+    ratcheted_stop: float = None,
 ) -> bool:
     """Peak-relative trailing stop check.
 
@@ -496,6 +497,13 @@ def trail_stop_triggered(
 
     ``arm_factor`` defaults to module-level ``TRAIL_ARM_FACTOR``.
 
+    ``ratcheted_stop``: if provided, the effective trail_stop used for the
+    breach check is ``max(ratcheted_stop, peak - trail_budget)``.  This
+    implements the B10 monotonic ratchet invariant — a holiday-gap budget
+    expansion cannot lower the bar that was set when the peak was fresh.
+    The arm guard always uses the live ``trail_budget`` (not the ratcheted
+    value) so an unarmed position cannot fire via a widened gap budget.
+
     Returns False when trail_budget is 0 (no historical basis -> skip).
     """
     if trail_budget <= 0:
@@ -503,7 +511,11 @@ def trail_stop_triggered(
     af = TRAIL_ARM_FACTOR if arm_factor is None else arm_factor
     if peak < trail_budget * af:
         return False
-    return cumulative <= (peak - trail_budget)
+    # B10: use the ratcheted (highest-ever) trail_stop if provided.
+    # Without it, a 3-day gap would widen budget and lower the effective stop.
+    candidate = peak - trail_budget
+    effective_stop = max(ratcheted_stop, candidate) if ratcheted_stop is not None else candidate
+    return cumulative <= effective_stop
 
 
 def _same_direction(trade_rec, direction: str) -> bool:
@@ -609,7 +621,20 @@ def check_signal_status(
         except Exception:
             days_since = 1
     trail_budget = compute_trail_budget(avg_favorable, days_since)
-    trail_stop = peak_pnl - trail_budget if trail_budget > 0 else None
+
+    # B10 fix (2026-04-22): ratchet invariant — trail_stop is monotonically
+    # non-decreasing within a position's life.  After a holiday gap,
+    # days_since_check grows and trail_budget widens, which would lower the
+    # candidate trail_stop below its prior value.  This lets the position
+    # retrace further without firing — the Fossil Arbitrage pattern (peak
+    # +7.07%, round-trip to -4.04% unrestricted).  Fix: persist
+    # peak_trail_stop_pct on the signal and only raise it, never lower it.
+    candidate_trail_stop = (peak_pnl - trail_budget) if trail_budget > 0 else None
+    if candidate_trail_stop is not None:
+        prior_trail_stop = signal.get("peak_trail_stop_pct")
+        if prior_trail_stop is None or candidate_trail_stop > prior_trail_stop:
+            signal["peak_trail_stop_pct"] = candidate_trail_stop
+    trail_stop = signal.get("peak_trail_stop_pct")
 
     # Store levels on the signal for Telegram display + replay
     signal["_data_levels"] = {
@@ -653,14 +678,20 @@ def check_signal_status(
     trail_armed = (trail_budget > 0) and (peak_pnl >= trail_budget * af)
 
     # ── EXIT 0: TRAIL STOP ─────────────────────────────────
-    # Peak-relative give-back using historic favorable-move distribution.
-    if TRAIL_STOP_ENABLED and trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget):
-        log.info(
-            f"Signal {signal.get('signal_id')}: TRAIL STOP "
-            f"(cum {cumulative_spread:+.2f}% <= trail {trail_stop:+.2f}%, "
-            f"peak {peak_pnl:+.2f}% - budget {trail_budget:.2f}%)"
-        )
-        return ("STOPPED_OUT_TRAIL", pnl)
+    # Peak-relative give-back using ratcheted trail_stop (monotonic invariant).
+    # We check the ratcheted trail_stop directly rather than re-deriving from
+    # peak - budget, so that a holiday-gap budget expansion cannot lower the bar.
+    # The arm guard (peak >= budget * arm_factor) still uses the live trail_budget
+    # so a never-profitable position can't fire on a widened gap budget.
+    if TRAIL_STOP_ENABLED and trail_stop is not None:
+        if trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget,
+                                ratcheted_stop=trail_stop):
+            log.info(
+                f"Signal {signal.get('signal_id')}: TRAIL STOP "
+                f"(cum {cumulative_spread:+.2f}% <= ratcheted trail_stop {trail_stop:+.2f}%, "
+                f"peak {peak_pnl:+.2f}% - budget {trail_budget:.2f}%)"
+            )
+            return ("STOPPED_OUT_TRAIL", pnl)
 
     # ── EXIT 1: DAILY STOP ──────────────────────────────────
     # Today's spread move breaches 50% of avg daily favorable move.
