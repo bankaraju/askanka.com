@@ -105,6 +105,19 @@ Missing fields become `null` (never `undefined`). Empty evidence = `[]`.
 - Spread: 5 layer results as {regime_gate, scorecard_delta, technicals, news, composer} with ±1 contributions (PASS/FAIL)
 - Correlation Break: top-3 of {σ, sector_divergence, volume_anomaly, trust_delta} — raw z-scores
 
+## Engine cadence (freshness semantics)
+
+Each engine refreshes on its own schedule. The panel's `computed_at` reflects the engine's last run — not the page load. Traders reading a card need to know how stale the underlying number is; spelling this out here also tells the watchdog what "fresh" means per engine.
+
+| Engine | Cadence | Typical `computed_at` at 14:00 IST | Watchdog source |
+|---|---|---|---|
+| **FCS** | Every 15 min during market hours (via `intraday_scan.bat`) | 13:57 | `AnkaFeatureScorerIntraday` (already wired) |
+| **TA** | **Daily EOD — 16:00 IST** (`AnkaTAScorerScore`). Not intraday. | Previous session 16:00 | `AnkaTAScorerScore` (new, added with scorer build) |
+| **Spread** | Morning scan 09:25 + every 15 min intraday | 13:57 | existing spread-engine watchdog |
+| **Corr Break** | Every 15 min intraday (`AnkaCorrelationBreaks`) | 13:57 | `AnkaCorrelationBreaks` (already wired) |
+
+**Implication for the UI:** the TA card during market hours is always showing yesterday's close signal. That's correct by design — TA patterns are daily-bar phenomena — but the card header MUST show the previous-session timestamp prominently, and the `health.detail` field should include "daily bars, EOD cadence" so traders don't mistake it for stale intraday data. Cards from FCS / Spread / Corr Break inside the same drawer will show a 3-5 min timestamp, making the 16:00-previous-day timestamp on TA visually distinct on its own merits — no special badge needed, just honest labeling.
+
 ## Data flow
 
 1. **Page-level pre-fetch** (extend existing `trading.js` pattern):
@@ -122,11 +135,15 @@ Missing fields become `null` (never `undefined`). Empty evidence = `[]`.
 
 ## UI behavior
 
+**Card render order (frozen):** `FCS → TA → Spread → Corr Break`. Async adapter resolution never changes panel layout — the render loop iterates a fixed array, so a late FCS response doesn't push TA down. This keeps the visual scan path stable across reloads and across tickers.
+
 **Calibration tag visible in the UI (the no-hallucination mandate made visible):**
 - `walk_forward` scores: `conviction_0_100` rendered in `var(--accent-gold)`.
 - `heuristic` scores: rendered in `var(--text-muted)` with a dotted underline; tooltip on hover: *"Not calibrated — heuristic mapping from gate/σ."*
 
 **Health band → dot color:** GREEN → `var(--accent-green)`, AMBER → `var(--accent-gold)`, RED → `var(--accent-red)`, UNAVAILABLE → `var(--text-muted)`.
+
+**Freshness rendering:** every card shows `computed_at` as a relative timestamp in the footer (e.g., "3 min ago", "yesterday 16:00"). Cards older than 2× their expected cadence get an amber dot next to the timestamp (matches watchdog's grace-multiplier convention).
 
 **Empty / UNAVAILABLE card:** still renders. Muted colors, no evidence bars, `empty_state_reason` as body text. Hidden cards read as bugs; transparent UNAVAILABLE reads as honest progress.
 
