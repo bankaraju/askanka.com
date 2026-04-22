@@ -42,9 +42,16 @@ def simulated_pnl_label(
     win_threshold: float = 0.015,
     daily_stop: float = -0.02,
     avg_favorable: float = 0.02,
-    trail_arm_factor: float = 0.5,
+    trail_arm_factor: float = 1.0,
 ) -> dict[str, Any] | None:
-    """Return {'y': 0|1, 'realized_pct': float, 'exit_reason': str} or None."""
+    """Return {'y': 0|1, 'realized_pct': float, 'exit_reason': str} or None.
+
+    Simulates a LONG position opened at close of `entry_date`. Each subsequent
+    close triggers:
+      (a) trail_stop check (if armed) — trail dominates once armed
+      (b) daily_stop check (if not armed)
+      (c) horizon timeout at the last trading day
+    """
     entry = _entry_close(prices_df, entry_date)
     if entry is None:
         return None
@@ -62,19 +69,19 @@ def simulated_pnl_label(
         if pnl > peak_pnl:
             peak_pnl = pnl
 
+        # trail budget grows with sqrt(days_since_entry); ratcheted by B10
         trail_budget = avg_favorable * math.sqrt(i)
         trail_armed = peak_pnl >= trail_budget * trail_arm_factor
 
         if trail_armed:
-            candidate_trail = peak_pnl - avg_favorable  # Constant-width trail, not growing
+            candidate_trail = peak_pnl - trail_budget
+            # ratchet up only — never lower (B10 monotonic invariant)
             peak_trail_stop = (
                 candidate_trail if peak_trail_stop is None
                 else max(peak_trail_stop, candidate_trail)
             )
-            # Use small epsilon for floating-point comparison
-            if pnl <= peak_trail_stop + 1e-10:
-                # Trail fire is always a win—we're locking in planned profits
-                return {"y": 1,
+            if pnl <= peak_trail_stop:
+                return {"y": 1 if pnl >= win_threshold else 0,
                         "realized_pct": pnl, "exit_reason": "trail"}
         else:
             if today_return <= daily_stop:

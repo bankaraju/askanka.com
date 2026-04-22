@@ -20,9 +20,10 @@ def loser_prices():
 
 @pytest.fixture
 def round_trip_prices():
-    """Rises to +3% then retraces to -1%; with trail, would exit around +1.5% at peak-ratchet."""
+    """Rises sharply to +8% peak (trail ratchets to ~+5%), retraces, trail fires at +3%."""
     dates = pd.date_range("2026-03-01", periods=10, freq="B")
-    closes = [100, 101, 102, 103, 102, 101, 100, 99, 99, 99]
+    # entry is 2026-03-02 (index 1, close=100). closes after: [104,108,106,103,100,...]
+    closes = [100, 100, 104, 108, 106, 103, 100, 98, 98, 98]
     return pd.DataFrame({"date": dates, "close": closes})
 
 
