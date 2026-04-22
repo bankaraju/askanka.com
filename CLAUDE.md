@@ -72,7 +72,7 @@ Note: website_exporter.py is invoked from morning_scan (09:25), every intraday c
 **Weekly:**
 - Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)
 - Sunday 00:00 — AnkaUnifiedBacktest: 777-day historical replay backtest (CRITICAL)
-- Sunday 01:00 — AnkaFeatureScorerFit: weekly walk-forward fit of Feature Coincidence Scorer models per ticker (warn)
+- Sunday 01:00 — AnkaFeatureScorerFit: weekly run of quarterly walk-forward Feature Coincidence Scorer fit (warn)
 - Sunday 22:00 — AnkaWeeklyAgg + AnkaWeeklyStats: weekly spread statistics (warn)
 - Friday 16:00 — AnkaWeeklyReport: weekly performance report → Telegram (warn)
 

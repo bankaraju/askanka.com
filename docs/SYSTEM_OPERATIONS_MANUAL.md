@@ -409,10 +409,10 @@ The sequence inside `intraday_scan.bat` is: technicals → OI → news → fno_n
 - `data/regime_ranker_state.json` — active stock positions
 - `data/recommendations.json` — active spread positions
 
-### Station 9: Feature Coincidence Scorer (2026-04-22)
+### Station 9: Feature Coincidence Scorer
 
-A 0-100 per-ticker attractiveness score that ranks candidates within
-conviction bands. Does NOT gate trades.
+Added 2026-04-22. A 0-100 per-ticker attractiveness score that ranks
+candidates within conviction bands. Does NOT gate trades.
 
 **Schedule:**
 - Weekly fit — `AnkaFeatureScorerFit`, Sunday 01:00 IST. Runs quarterly
