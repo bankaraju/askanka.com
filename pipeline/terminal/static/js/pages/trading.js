@@ -32,16 +32,48 @@ function _attachAttractiveness(candidates, scores) {
   }
 }
 
+function _attachAnalyses(candidates, fcs, ta, digest, corr) {
+  const fcsMap = (fcs && fcs.scores) || {};
+  const taMap  = (ta && ta.scores)  || {};
+  const spreadsByName = Object.fromEntries(
+    (digest.spread_theses || []).map(s => [s.name, s]));
+  const corrByTicker  = Object.fromEntries(
+    (corr.breaks || []).map(b => [String(b.ticker || '').toUpperCase(), b]));
+  for (const c of candidates) {
+    const raw = c.long_legs?.[0] || c.short_legs?.[0] || c.ticker;
+    const key = raw ? String(raw).toUpperCase() : null;
+    c.analyses_raw = {
+      fcs:    key      ? (fcsMap[key]         || null) : null,
+      ta:     key      ? (taMap[key]           || null) : null,
+      spread: c.name   ? (spreadsByName[c.name] || null) : null,
+      corr:   key      ? (corrByTicker[key]    || null) : null,
+    };
+  }
+}
+
 async function loadData() {
   try {
-    // Fetch candidates + attractiveness in parallel. Attractiveness is a soft
+    // Fetch candidates + all four analysis engines in parallel. Each engine is a soft
     // dependency: if it fails, we still render candidates (each will show em-dash).
-    const [data, scores] = await Promise.all([
+    const [dataRes, fcsRes, taRes, spreadRes, corrRes] = await Promise.allSettled([
       get('/candidates'),
-      attractiveness.fetchAll().catch(() => ({ scores: {} })),
+      get('/attractiveness'),
+      get('/ta_attractiveness'),
+      get('/research/digest'),
+      get('/correlation_breaks'),
     ]);
-    _allCandidates = data.tradeable_candidates || [];
-    _attachAttractiveness(_allCandidates, scores);
+    _allCandidates = (dataRes.status === 'fulfilled'
+      ? (dataRes.value.tradeable_candidates || []) : []);
+
+    const fcsScores  = (fcsRes.status === 'fulfilled')    ? fcsRes.value    : { scores: {} };
+    const taScores   = (taRes.status === 'fulfilled')     ? taRes.value     : { scores: {} };
+    const digest     = (spreadRes.status === 'fulfilled') ? spreadRes.value : { spread_theses: [] };
+    const corrBreaks = (corrRes.status === 'fulfilled')   ? corrRes.value   : { breaks: [] };
+
+    _attachAnalyses(_allCandidates, fcsScores, taScores, digest, corrBreaks);
+
+    // Keep existing attractiveness cell attachment for the table column.
+    _attachAttractiveness(_allCandidates, fcsScores);
 
     const sources = [...new Set(_allCandidates.map(c => c.source).filter(Boolean))];
     const convictions = [...new Set(_allCandidates.map(c => c.conviction).filter(Boolean))];
