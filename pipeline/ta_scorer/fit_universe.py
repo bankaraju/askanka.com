@@ -64,6 +64,14 @@ def main() -> int:
     prices = _load_csv(_STOCK_HISTORICAL_DIR / f"{_PILOT_TICKER}.csv")
     sector = _load_csv(_INDEX_HISTORICAL_DIR / f"{_SECTOR_INDEX}_daily.csv")
     nifty = _load_csv(_INDEX_HISTORICAL_DIR / "NIFTY_daily.csv")
+    sector_proxied = False
+    if sector is None and nifty is not None:
+        # Sector CSV missing — fall back to broad NIFTY as weak sector proxy so
+        # the pilot can still fit. Downstream card surfaces `sector_proxy=True`.
+        log.warning("sector CSV %s_daily.csv missing — falling back to NIFTY as proxy",
+                    _SECTOR_INDEX)
+        sector = nifty
+        sector_proxied = True
     if prices is None or sector is None or nifty is None:
         log.warning("missing input CSVs — writing UNAVAILABLE model entry")
         storage.write_models({
@@ -96,6 +104,7 @@ def main() -> int:
         "health": result["health"],
         "mean_auc": result["mean_auc"], "min_fold_auc": result["min_fold_auc"],
         "n_folds": result["n_folds"], "folds": result["folds"],
+        "sector_proxy": sector_proxied,
     }
     if result["health"] in ("GREEN", "AMBER"):
         feature_cols = [c for c in frame.columns if c not in ("date", "y")]

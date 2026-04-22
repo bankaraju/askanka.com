@@ -78,6 +78,10 @@ def main() -> int:
     prices = _load_csv(_STOCK_HISTORICAL_DIR / f"{_PILOT_TICKER}.csv")
     sector = _load_csv(_INDEX_HISTORICAL_DIR / f"{_SECTOR_INDEX}_daily.csv")
     nifty = _load_csv(_INDEX_HISTORICAL_DIR / "NIFTY_daily.csv")
+    if sector is None and nifty is not None:
+        log.warning("sector CSV %s_daily.csv missing — falling back to NIFTY proxy",
+                    _SECTOR_INDEX)
+        sector = nifty
     if prices is None or sector is None or nifty is None:
         storage.write_scores(payload_empty, out=_SCORES_OUT)
         return 0
