@@ -562,7 +562,7 @@ def _ticker_modifier(
     Everything else                  →  0
     """
     for v in verdicts:
-        if v.get("symbol") != ticker:
+        if (v.get("symbol") or "").upper() != (ticker or "").upper():
             continue
         if v.get("category") != category:
             continue
@@ -667,7 +667,7 @@ def apply_news_modifier(
         return out
 
     # --- Single-ticker path ---
-    ticker = signal.get("ticker") or ""
+    ticker = (signal.get("ticker") or "").upper()
     category = signal.get("category") or ""
     direction = signal.get("direction") or ""
 

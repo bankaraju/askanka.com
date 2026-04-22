@@ -260,3 +260,31 @@ def test_spread_no_match_zero_modifier():
     out = apply_news_modifier(signal, verdicts)
     assert out["news_modifier"] == 0
     assert out["entry_score"] == 50
+
+
+def test_case_insensitive_ticker_match_lower_signal():
+    """Verdict symbol is RELIANCE; signal ticker is reliance — still matches."""
+    signal = {
+        "ticker": "reliance",
+        "category": "results_announcement",
+        "direction": "LONG",
+        "entry_score": 60,
+    }
+    verdicts = [_verdict("RELIANCE", "results_announcement", "ADD", "HIGH_IMPACT", "Q4")]
+    out = apply_news_modifier(signal, verdicts)
+    assert out["news_modifier"] == 10
+    assert out["entry_score"] == 70
+
+
+def test_case_insensitive_ticker_match_lower_verdict():
+    """Verdict symbol is reliance; signal ticker is RELIANCE — still matches."""
+    signal = {
+        "ticker": "RELIANCE",
+        "category": "results_announcement",
+        "direction": "LONG",
+        "entry_score": 60,
+    }
+    verdicts = [_verdict("reliance", "results_announcement", "ADD", "HIGH_IMPACT", "Q4")]
+    out = apply_news_modifier(signal, verdicts)
+    assert out["news_modifier"] == 10
+    assert out["entry_score"] == 70
