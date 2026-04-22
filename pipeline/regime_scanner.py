@@ -218,7 +218,8 @@ def scan_regime() -> dict:
 
     today_regime = {
         "timestamp": timestamp,
-        "regime": current_regime,
+        "zone": current_regime,       # canonical key — all UI/API consumers read this
+        "regime": current_regime,     # legacy alias — kept for one release cycle (backward compat)
         "regime_source": "etf_engine",
         "msi_score": msi_score,
         "msi_regime": msi_regime,

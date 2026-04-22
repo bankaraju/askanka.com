@@ -259,6 +259,8 @@ This prevents whipsawing.
 **Output:** `data/today_regime.json` — the single most important file in the system.
 Everything downstream reads this to decide what to recommend.
 
+**Schema note (2026-04-22):** `today_regime.json` emits two equivalent keys: `zone` (canonical — read by all UI/API consumers including regime-banner.js, scenario-strip.js, `/api/regime`, `/api/candidates`) and `regime` (legacy alias retained for one release cycle for backward compat). Both always carry the same ETF-derived regime string (e.g., `"RISK-OFF"`). New consumers should read `.zone`; old consumers reading `.regime` are safe.
+
 ### Station 3: Regime-to-Trades Mapping
 
 **What it does:** Given today's regime, which spread trades are eligible?
