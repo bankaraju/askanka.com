@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-22T10:04:17.499932+05:30",
+  "updated_at": "2026-04-22T10:18:37.127805+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,40 +11,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4367.9,
-          "pnl_pct": 1.94
+          "current": 4373.0,
+          "pnl_pct": 2.06
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 446.0,
-          "pnl_pct": -0.86
+          "current": 445.8,
+          "pnl_pct": -0.9
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1379.0,
-          "pnl_pct": 0.35
+          "current": 1377.2,
+          "pnl_pct": 0.22
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2576.8,
-          "pnl_pct": -0.19
+          "current": 2567.6,
+          "pnl_pct": 0.17
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1283.9,
-          "pnl_pct": 2.89
+          "current": 1274.4,
+          "pnl_pct": 3.61
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 205.1,
-          "pnl_pct": 3.7
+          "current": 204.12,
+          "pnl_pct": 4.16
         }
       ],
       "spread_pnl_pct": 3.19,
@@ -57,23 +57,11 @@
       "peak_pnl": 3.4,
       "source": "SPREAD",
       "trust_scores": {
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
           "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
-        "INFY": {
-          "trust_grade": "F",
-          "trust_score": 17.5,
-          "opus_side": null,
-          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
-        },
-        "BEL": {
-          "trust_grade": "C",
-          "trust_score": 55.0,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         },
         "HAL": {
           "trust_grade": "B",
@@ -81,11 +69,23 @@
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
+        "BDL": {
+          "trust_grade": "C",
+          "trust_score": 56.8,
           "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        },
+        "BEL": {
+          "trust_grade": "C",
+          "trust_score": 55.0,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "INFY": {
+          "trust_grade": "F",
+          "trust_score": 17.5,
+          "opus_side": null,
+          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
         },
         "WIPRO": {
           "trust_grade": "A",
@@ -186,8 +186,8 @@
         {
           "ticker": "TMPV",
           "entry": 357.3,
-          "current": 360.9,
-          "pnl_pct": -1.01
+          "current": 360.5,
+          "pnl_pct": -0.9
         }
       ],
       "spread_pnl_pct": 0.83,
@@ -224,8 +224,8 @@
         {
           "ticker": "YESBANK",
           "entry": 20.64,
-          "current": 19.93,
-          "pnl_pct": 3.44
+          "current": 19.97,
+          "pnl_pct": 3.25
         }
       ],
       "spread_pnl_pct": 3.44,
@@ -262,8 +262,8 @@
         {
           "ticker": "IEX",
           "entry": 132.89,
-          "current": 125.9,
-          "pnl_pct": 5.26
+          "current": 126.19,
+          "pnl_pct": 5.04
         }
       ],
       "spread_pnl_pct": 5.02,
@@ -299,8 +299,8 @@
         {
           "ticker": "BHEL",
           "entry": 318.53,
-          "current": 333.7,
-          "pnl_pct": 4.76
+          "current": 333.1,
+          "pnl_pct": 4.57
         }
       ],
       "short_legs": [],
