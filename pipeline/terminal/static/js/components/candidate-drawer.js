@@ -4,6 +4,7 @@
 // /api/research/digest spread_theses where available; falls back to the basic
 // reason field for other sources.
 import { get } from '../lib/api.js';
+import { renderPanel as renderAttractPanel } from './attractiveness-panel.js';
 
 function _esc(s) {
   if (s == null) return '';
@@ -46,6 +47,19 @@ export async function render(container, candidate) {
       </div>`;
   }
 
+  // Target ticker for the Feature Contributions panel. Prefers the first
+  // long-leg ticker, then first short leg, then the candidate ticker field.
+  // Uppercased to match attractiveness_scores.json key convention.
+  const tkr = String(
+    (candidate.long_legs && candidate.long_legs[0]) ||
+    (candidate.short_legs && candidate.short_legs[0]) ||
+    candidate.ticker || ''
+  ).toUpperCase();
+
+  // Unique-per-drawer mount id so two concurrent drawers don't collide.
+  const _uid = Math.random().toString(36).slice(2, 8);
+  const mountId = `attract-panel-mount-${_uid}`;
+
   container.innerHTML = `
     <div style="padding: var(--spacing-md); background: var(--bg-elevated); border-left: 3px solid var(--accent-gold);">
       <div style="font-size: 0.875rem; line-height: 1.6;">${_esc(narration)}</div>
@@ -56,5 +70,14 @@ export async function render(container, candidate) {
         <div><span class="text-muted">Conviction:</span> <span class="mono">${_esc(candidate.conviction)}</span></div>
       </div>
       ${layersHtml}
+      <div id="${mountId}"></div>
     </div>`;
+
+  // Feature Contributions panel (Task 15). Reuses candidate.attractiveness when
+  // trading.js (Task 13) already attached it; falls back to a fetch otherwise.
+  // Uses container.querySelector per project convention (scanner.js comment ref).
+  const mount = container.querySelector(`#${mountId}`);
+  if (mount && tkr) {
+    await renderAttractPanel(mount, tkr, candidate.attractiveness);
+  }
 }

@@ -722,3 +722,19 @@ h3 { font-size: 1.125rem; }
 .attract-rising { color: var(--accent-green); background: rgba(16, 185, 129, 0.08); }
 .attract-falling { color: var(--accent-red); background: rgba(239, 68, 68, 0.08); }
 .attract-flat { color: var(--text-muted); background: rgba(100, 116, 139, 0.08); }
+
+/* Feature Coincidence Scorer — Feature Contributions panel (Task 15).
+   Rendered inside the candidate drawer on Trading tab row-expand; see
+   components/attractiveness-panel.js. Theme tokens per project policy. */
+.attract-panel { border: 1px solid var(--border); padding: var(--spacing-md); margin-top: var(--spacing-md); background: var(--bg-elevated); }
+.attract-panel--empty { color: var(--text-muted); font-size: 0.8125rem; }
+.attract-panel .panel-head { display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm); font-size: 0.8125rem; }
+.attract-panel .panel-head .updated { color: var(--text-muted); font-size: 0.75rem; }
+.attract-panel .feature-bar-row { display: grid; grid-template-columns: 60px 1fr 180px; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8125rem; padding: 2px 0; }
+.attract-panel .feature-bar-label { text-align: right; }
+.attract-panel .feature-bar-track { background: rgba(100, 116, 139, 0.15); height: 10px; position: relative; border-radius: 2px; overflow: hidden; }
+.attract-panel .feature-bar { height: 100%; border-radius: 2px; }
+.attract-panel .bar-pos { background: var(--accent-gold); }
+.attract-panel .bar-neg { background: rgba(100, 116, 139, 0.5); }
+.attract-panel .feature-name { font-size: 0.75rem; color: var(--text-muted); }
+.attract-panel .health { font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-sm); }
