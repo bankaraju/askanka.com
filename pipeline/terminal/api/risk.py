@@ -18,5 +18,8 @@ router = APIRouter()
 
 
 @router.get("/risk/regime-flip")
-def regime_flip(to_zone: str = Query("RISK-OFF"), percentile: int = Query(95)):
+def regime_flip(
+    to_zone: str = Query("RISK-OFF"),
+    percentile: int = Query(95, ge=1, le=99),
+):
     return compute_flip_drawdown_ci(to_zone=to_zone, percentile=percentile)

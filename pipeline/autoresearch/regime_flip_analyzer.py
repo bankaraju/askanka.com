@@ -29,22 +29,27 @@ def compute_flip_drawdown_ci(
     to_zone: str = "RISK-OFF",
     percentile: int = 95,
 ) -> dict:
-    """p95 drawdown observed in the `nifty_5d_after` series for flips into `to_zone`.
+    """Percentile drawdown observed in nifty_5d_after for flips into `to_zone`.
 
     Returns dict:
       - to_zone: str
       - n_flips: int
-      - p95_drawdown_pct: float | None   # worst-realistic post-flip Nifty 5d return
+      - percentile: int                    # the percentile requested (e.g. 95)
+      - worst_drawdown_pct: float | None   # low-tail (100-percentile) of the return distribution
       - median_drawdown_pct: float | None
       - sample_returns: list[float]
       - source: "nifty_5d_after proxy (not per-position)"
       - data_file: absolute path read
     """
+    if not 1 <= percentile <= 99:
+        raise ValueError(f"percentile must be in [1, 99], got {percentile}")
+
     source = Path(source) if source else DEFAULT_SOURCE
     if not source.exists():
         return {
             "to_zone": to_zone, "n_flips": 0,
-            "p95_drawdown_pct": None, "median_drawdown_pct": None,
+            "percentile": percentile,
+            "worst_drawdown_pct": None, "median_drawdown_pct": None,
             "sample_returns": [],
             "source": "nifty_5d_after proxy (not per-position)",
             "data_file": str(source),
@@ -60,22 +65,23 @@ def compute_flip_drawdown_ci(
     if not matched:
         return {
             "to_zone": to_zone, "n_flips": 0,
-            "p95_drawdown_pct": None, "median_drawdown_pct": None,
+            "percentile": percentile,
+            "worst_drawdown_pct": None, "median_drawdown_pct": None,
             "sample_returns": [],
             "source": "nifty_5d_after proxy (not per-position)",
             "data_file": str(source),
         }
 
-    # "Drawdown" = low percentile of the observed return distribution
     arr = np.array(matched, dtype=float)
-    # For a 95-percentile "worst-realistic loss", take the 5th percentile
-    # of the return distribution (return lower -> worse outcome).
+    # For a `percentile` "worst-realistic loss", take the (100-percentile)th
+    # of the return distribution (lower return = worse outcome).
     p_worst = float(np.percentile(arr, 100 - percentile))
     p_median = float(np.median(arr))
     return {
         "to_zone": to_zone,
         "n_flips": len(matched),
-        "p95_drawdown_pct": round(p_worst, 3),
+        "percentile": percentile,
+        "worst_drawdown_pct": round(p_worst, 3),
         "median_drawdown_pct": round(p_median, 3),
         "sample_returns": [round(x, 3) for x in matched],
         "source": "nifty_5d_after proxy (not per-position)",
