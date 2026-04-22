@@ -74,6 +74,16 @@
       "notes": "Sunday 01:00 IST. fit_feature_scorer.bat \u2014 quarterly walk-forward fit of Feature Coincidence Scorer logistic-regression models per ticker over the F&O universe. Consumed intraday by score_universe."
     },
     {
+      "task_name": "AnkaFeatureScorerIntraday",
+      "tier": "warn",
+      "cadence_class": "intraday",
+      "outputs": [
+        "pipeline/data/attractiveness_scores.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Intraday apply of Feature Coincidence Scorer models. Runs inside intraday_scan.bat after the correlation break scanner and before website_exporter; writes attractiveness_scores.json consumed by /api/attractiveness. No standalone Windows scheduled task \u2014 a virtual inventory entry, same pattern as AnkaCorrelationBreaks."
+    },
+    {
       "task_name": "AnkaGapPredictor",
       "tier": "info",
       "cadence_class": "daily",
