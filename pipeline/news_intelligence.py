@@ -64,10 +64,18 @@ def _alias_match_stocks(title: str, universe: list[str]) -> list[str]:
     global _ALIASES_CACHE
     if _ALIASES_CACHE is None:
         _ALIASES_CACHE = _load_aliases()
-    title_lower = title.lower()
     matches: list[str] = []
     for phrase, ticker in _ALIASES_CACHE.items():
-        if phrase.lower() in title_lower and ticker in universe and ticker not in matches:
+        if ticker not in universe or ticker in matches:
+            continue
+        # Word-boundary match (case-insensitive) avoids substring false-positives
+        # like "Jio" matching inside "JioCinema" or "Dr Reddy" matching
+        # "minister Dr Reddy". Mirrors _name_match_stocks style.
+        # Uses (?<!\w)/(?!\w) lookaround instead of \b — more precise for phrases
+        # ending in punctuation (e.g. "Dr. Reddy's") where \b behaves unexpectedly
+        # around apostrophes.
+        pattern = r"(?<!\w)" + re.escape(phrase) + r"(?!\w)"
+        if re.search(pattern, title, re.IGNORECASE):
             matches.append(ticker)
     return matches
 
