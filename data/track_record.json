@@ -1,9 +1,22 @@
 {
-  "updated_at": "2026-04-22T09:34:12.941764+05:30",
-  "total_closed": 4,
-  "win_rate_pct": 25.0,
-  "avg_pnl_pct": 0.43,
+  "updated_at": "2026-04-22T09:48:48.079369+05:30",
+  "total_closed": 5,
+  "win_rate_pct": 20.0,
+  "avg_pnl_pct": 0.25,
   "recent": [
+    {
+      "signal_id": "BRK-2026-04-20-PATANJALI",
+      "spread_name": "Strategy 550",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "event_headline": "Phase C break on PATANJALI: z=-3.01, expected=-0.12, actual=-1.49",
+      "open_date": "2026-04-20",
+      "close_date": "2026-04-22",
+      "days_open": 1,
+      "peak_pnl_pct": 2.14,
+      "final_pnl_pct": -0.48,
+      "close_reason": "Trail stop: cum -0.48% <= trail +0.14% (peak +2.14% - budget 2.00%)"
+    },
     {
       "signal_id": "BRK-2026-04-20-KAYNES",
       "spread_name": "Strategy 324",
