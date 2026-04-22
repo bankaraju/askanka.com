@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-04-22",
+  "updated": "2026-04-23",
   "tasks": [
     {
       "task_name": "AnkaCorrelationBreaks",
@@ -957,6 +957,26 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "14:30 IST daily. phase_c_shadow_close.bat \u2014 mechanical time-stop: transitions all OPEN rows to CLOSED at live Kite LTP. Realized net P&L via cost_model (\u20b950k notional, 5 bps slippage)."
+    },
+    {
+      "task_name": "AnkaTAScorerFit",
+      "tier": "warn",
+      "cadence_class": "weekly",
+      "outputs": [
+        "pipeline/data/ta_feature_models.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Sunday 01:30 IST. fit_ta_scorer.bat \u2014 TA Coincidence Scorer v1 weekly walk-forward fit (RELIANCE pilot). Output consumed daily by AnkaTAScorerScore."
+    },
+    {
+      "task_name": "AnkaTAScorerScore",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/ta_attractiveness_scores.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Daily 16:00 IST. score_ta_scorer.bat \u2014 TA Coincidence Scorer v1 daily EOD scoring after bars lock. Output consumed by /api/ta_attractiveness and the TA adapter in the Unified Analysis Panel."
     }
   ]
 }
