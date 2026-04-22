@@ -683,3 +683,128 @@ def apply_news_modifier(
     else:
         out.setdefault("news_context", "")
     return out
+
+
+# ---------------------------------------------------------------------------
+# Task B8: apply_trust_modifier — trust grade as regime-conditional modifier
+# ---------------------------------------------------------------------------
+# Per memory/project_scorecard_alpha_test.md:
+#   Grade is NOT standalone alpha.  D/F outperform A/B across full sample.
+#   ONLY in NEUTRAL regime does trust become a useful conditional modifier:
+#     A, B → +0 (fundamental signal already captured)
+#     C    →  0
+#     D, F on LONG  → -5  (penalise weak-trust longs in calm regime)
+#     D, F on SHORT → +5  (lean into weak-trust shorts in calm regime)
+#   Non-NEUTRAL regime → 0 regardless of grade.
+# ---------------------------------------------------------------------------
+
+_TRUST_SPREAD_CAP = 10  # smaller than news cap (trust is noisier)
+_LOW_TRUST_GRADES = frozenset({"D", "F"})
+_LOW_TRUST_DELTA = 5  # magnitude applied for D/F
+
+
+def _leg_trust_delta(trust_grade: str, direction: str) -> int:
+    """
+    Return the delta for a single leg (trust_grade, direction) in NEUTRAL regime.
+
+    Returns 0 for A/B/C/INSUFFICIENT_DATA/unknown.
+    Returns -5 for D/F LONG, +5 for D/F SHORT.
+    """
+    grade = (trust_grade or "").upper().strip()
+    if grade not in _LOW_TRUST_GRADES:
+        return 0
+    direction_up = (direction or "").upper()
+    if direction_up == "LONG":
+        return -_LOW_TRUST_DELTA
+    if direction_up == "SHORT":
+        return _LOW_TRUST_DELTA
+    return 0
+
+
+def apply_trust_modifier(
+    signal: Dict[str, Any],
+    regime: Dict[str, Any],
+) -> Dict[str, Any]:
+    """
+    Annotate a signal dict with trust_modifier and adjust entry_score.
+
+    Returns a NEW dict (does not mutate input).  Works for both single-ticker
+    signals (field ``ticker`` + ``direction`` + ``trust_grade``) and spread
+    signals (fields ``long_legs`` / ``short_legs`` with per-leg ``trust_grade``).
+
+    Fields added to the returned signal:
+      trust_modifier              int   — net score delta (capped ±10 for spreads)
+      entry_score                 num   — original + trust_modifier
+      trust_contributing_legs     list  — for spread signals, per-leg breakdown
+
+    The modifier is 0 for all non-NEUTRAL regimes regardless of grade.
+    Trust grade is sourced from the signal/leg's own ``trust_grade`` field.
+    Callers are responsible for populating that field (candidates.py does so
+    via _load_trust_scores before calling this function).
+    """
+    out = copy.deepcopy(signal)
+
+    zone = (regime.get("zone") or "").upper()
+    if zone != "NEUTRAL":
+        out["trust_modifier"] = 0
+        return out
+
+    # --- Spread signal path ---
+    long_legs: List[Dict] = signal.get("long_legs") or []
+    short_legs: List[Dict] = signal.get("short_legs") or []
+    is_spread = bool(long_legs or short_legs)
+
+    if is_spread:
+        total_delta = 0
+        contributing: List[Dict[str, Any]] = []
+
+        for leg in long_legs:
+            if isinstance(leg, str):
+                ticker = leg
+                grade = ""
+            else:
+                ticker = leg.get("ticker") or ""
+                grade = leg.get("trust_grade") or ""
+            delta = _leg_trust_delta(grade, "LONG")
+            if delta != 0:
+                contributing.append({
+                    "ticker": ticker,
+                    "direction": "LONG",
+                    "trust_grade": grade,
+                    "delta": delta,
+                })
+            total_delta += delta
+
+        for leg in short_legs:
+            if isinstance(leg, str):
+                ticker = leg
+                grade = ""
+            else:
+                ticker = leg.get("ticker") or ""
+                grade = leg.get("trust_grade") or ""
+            delta = _leg_trust_delta(grade, "SHORT")
+            if delta != 0:
+                contributing.append({
+                    "ticker": ticker,
+                    "direction": "SHORT",
+                    "trust_grade": grade,
+                    "delta": delta,
+                })
+            total_delta += delta
+
+        # Cap spread aggregate
+        total_delta = max(-_TRUST_SPREAD_CAP, min(_TRUST_SPREAD_CAP, total_delta))
+
+        out["trust_modifier"] = total_delta
+        out["entry_score"] = (out.get("entry_score") or 0) + total_delta
+        out["trust_contributing_legs"] = contributing
+        return out
+
+    # --- Single-ticker path ---
+    grade = (signal.get("trust_grade") or "").upper().strip()
+    direction = signal.get("direction") or ""
+
+    delta = _leg_trust_delta(grade, direction)
+    out["trust_modifier"] = delta
+    out["entry_score"] = (out.get("entry_score") or 0) + delta
+    return out

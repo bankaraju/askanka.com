@@ -354,6 +354,27 @@ and adjusted `entry_score` are attached to every candidate returned by `GET /api
 Today all 185 verdicts are `NO_IMPACT/NO_ACTION` (upstream tracking #37), so modifiers are
 `0` — the wiring is live and will react immediately when upstream produces real verdicts.
 
+**Gate 5 — Trust Grade Modifier (Task B8):** Applied immediately after the news modifier.
+`apply_trust_modifier` (`pipeline/signal_enrichment.py`) is a **regime-conditional** modifier:
+it only fires when the ETF-engine `zone` is `NEUTRAL`. The rule encodes the finding from
+`memory/project_scorecard_alpha_test.md` — trust grade is NOT standalone alpha (D/F stocks
+outperform A/B across the full sample), but within the NEUTRAL cohort specifically, grade
+becomes useful: weak-trust longs are penalised and weak-trust shorts are rewarded.
+
+| Grade | LONG in NEUTRAL | SHORT in NEUTRAL | Any non-NEUTRAL |
+|-------|----------------|-----------------|-----------------|
+| A, B  | 0              | 0               | 0               |
+| C     | 0              | 0               | 0               |
+| D, F  | −5             | +5              | 0               |
+
+For spread signals, the rule is applied per leg, then summed and capped at `±10` (smaller cap
+than news because trust signal is noisier). Per-leg breakdown is stored in
+`trust_contributing_legs` for UI tooltip. Trust grades are sourced from
+`data/trust_scores.json` (v2 format, `sector_grade` field, 210/213 stocks covered); missing
+or `INSUFFICIENT_DATA` grades → 0. When the current regime is RISK-OFF or RISK-ON, all
+modifiers are 0 regardless of grade — the wiring is proved by unit tests; live behaviour will
+show `trust_modifier=0` on RISK-OFF days (correct).
+
 **Output:** Each signal gets a conviction score (0-100). Only signals above a threshold
 get sent to Telegram.
 
