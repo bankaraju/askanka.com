@@ -38,7 +38,7 @@ def fit_logistic(X: pd.DataFrame, y: pd.Series, random_state: int = 42) -> dict[
     pipeline = Pipeline([
         ("scaler", StandardScaler()),
         ("lr", LogisticRegression(
-            penalty="l2", C=1.0, max_iter=500, random_state=random_state,
+            C=1.0, max_iter=500, random_state=random_state,
             solver="lbfgs",
         )),
     ])
