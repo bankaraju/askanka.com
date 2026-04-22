@@ -213,6 +213,31 @@ def scan_regime() -> dict:
         log.info("Regime UNSTABLE: %s (only %d day — need 2 to confirm)",
                  current_regime, consecutive_days)
 
+    # ---- 3b. Bootstrap any eligible spread missing from spread_stats ----
+    # Import lazily to keep the import graph clean (spread_bootstrap depends on
+    # spread_statistics which depends on EODHD; we don't want that at module load).
+    if eligible_spreads:
+        try:
+            import spread_bootstrap as _sb  # lazy import — keeps module load fast
+        except ImportError:
+            _sb = None  # type: ignore
+            log.warning("spread_bootstrap not importable — skipping same-day bootstrap")
+
+        if _sb is not None:
+            for spread_name, spread_info in eligible_spreads.items():
+                long_legs  = spread_info.get("long_legs",  []) if isinstance(spread_info, dict) else []
+                short_legs = spread_info.get("short_legs", []) if isinstance(spread_info, dict) else []
+                if not long_legs or not short_legs:
+                    log.debug("Bootstrap: no leg data for %r — skipping", spread_name)
+                    continue
+                try:
+                    bootstrap_result = _sb.ensure(spread_name, long_legs, short_legs)
+                    if isinstance(spread_info, dict):
+                        spread_info["_bootstrap_result"] = bootstrap_result
+                    log.info("Bootstrap %r: %s", spread_name, bootstrap_result.get("status"))
+                except Exception as _be:
+                    log.warning("Bootstrap failed for %r: %s", spread_name, _be)
+
     # ---- 4. Build and save output ----
     timestamp = datetime.now(IST).isoformat()
 
