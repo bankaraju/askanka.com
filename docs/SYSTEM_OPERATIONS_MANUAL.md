@@ -344,6 +344,16 @@ on a long signal = bonus conviction. Put buildup on a long signal = penalty.
 **Gate 3 — Correlation Break:** Is the stock doing the OPPOSITE of what the regime
 predicts? These are the highest-conviction signals (something unusual is happening).
 
+**Gate 4 — News Verdict Modifier (Task B7):** At candidate scoring time, `apply_news_modifier`
+(`pipeline/signal_enrichment.py`) looks up `pipeline/data/news_verdicts.json` for a matching
+`(symbol, category)` row. If the verdict is `HIGH_IMPACT + ADD` aligned with direction → `+10`;
+`MODERATE + ADD` aligned → `+5`; `HIGH_IMPACT + CUT` opposite → `-10`; `MODERATE + CUT`
+opposite → `-5`; all other combinations (LOW, NO_IMPACT, NO_ACTION) → `0`. For spread signals
+with multiple legs, per-leg deltas are summed and capped at `±15`. Result fields `news_modifier`
+and adjusted `entry_score` are attached to every candidate returned by `GET /api/candidates`.
+Today all 185 verdicts are `NO_IMPACT/NO_ACTION` (upstream tracking #37), so modifiers are
+`0` — the wiring is live and will react immediately when upstream produces real verdicts.
+
 **Output:** Each signal gets a conviction score (0-100). Only signals above a threshold
 get sent to Telegram.
 

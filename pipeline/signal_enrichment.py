@@ -534,3 +534,152 @@ def rescore_signal(
         "gate_blocked_current": blocked,
         "rescored_at": datetime.now(ist).isoformat(),
     }
+
+
+# ---------------------------------------------------------------------------
+# Task B7: apply_news_modifier — news verdict score delta
+# ---------------------------------------------------------------------------
+
+_IMPACT_MAGNITUDE: Dict[str, int] = {
+    "HIGH_IMPACT": 10,
+    "MODERATE": 5,
+}
+
+_SPREAD_CAP = 15
+
+
+def _ticker_modifier(
+    ticker: str,
+    category: str,
+    direction: str,
+    verdicts: List[Dict[str, Any]],
+) -> Tuple[int, Optional[str]]:
+    """
+    Return (delta, event_title) for a single ticker/category/direction triplet.
+
+    Aligned:  ADD+LONG or CUT+SHORT  →  +magnitude
+    Opposite: ADD+SHORT or CUT+LONG  →  -magnitude
+    Everything else                  →  0
+    """
+    for v in verdicts:
+        if v.get("symbol") != ticker:
+            continue
+        if v.get("category") != category:
+            continue
+        recommendation = (v.get("recommendation") or "").upper()
+        impact = (v.get("impact") or "").upper()
+        magnitude = _IMPACT_MAGNITUDE.get(impact, 0)
+        if magnitude == 0:
+            return 0, v.get("event_title")
+
+        direction_up = direction.upper()
+        if recommendation == "ADD":
+            if direction_up == "LONG":
+                return magnitude, v.get("event_title")
+            elif direction_up == "SHORT":
+                return -magnitude, v.get("event_title")
+        elif recommendation == "CUT":
+            if direction_up == "SHORT":
+                return magnitude, v.get("event_title")
+            elif direction_up == "LONG":
+                return -magnitude, v.get("event_title")
+        # NO_ACTION or other → 0
+        return 0, v.get("event_title")
+    return 0, None
+
+
+def apply_news_modifier(
+    signal: Dict[str, Any],
+    verdicts: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """
+    Annotate a signal dict with news_modifier and adjust entry_score.
+
+    Returns a NEW dict (does not mutate input).  Works for both single-ticker
+    signals (field ``ticker``) and spread signals (fields ``long_legs`` /
+    ``short_legs``).
+
+    Fields added to the returned signal:
+      news_modifier         int   — net score delta (capped at ±15 for spreads)
+      entry_score           num   — original + news_modifier
+      news_context          str   — event_title for ticker signals (if matched)
+      news_contributing_legs list — for spread signals, each matched leg's metadata
+    """
+    out = copy.deepcopy(signal)
+
+    # --- Spread signal path ---
+    long_legs: List[Dict] = signal.get("long_legs") or []
+    short_legs: List[Dict] = signal.get("short_legs") or []
+
+    is_spread = bool(long_legs or short_legs)
+
+    if is_spread:
+        total_delta = 0
+        contributing: List[Dict[str, Any]] = []
+
+        for leg in long_legs:
+            # leg may be a plain string ticker OR a dict with "ticker" key
+            if isinstance(leg, str):
+                ticker = leg
+                leg_category = signal.get("category") or ""
+            else:
+                ticker = leg.get("ticker") or ""
+                leg_category = leg.get("category") or signal.get("category") or ""
+            if not ticker:
+                continue
+            delta, title = _ticker_modifier(ticker, leg_category, "LONG", verdicts)
+            if delta != 0:
+                contributing.append({
+                    "ticker": ticker,
+                    "category": leg_category,
+                    "direction": "LONG",
+                    "delta": delta,
+                    "event_title": title,
+                })
+            total_delta += delta
+
+        for leg in short_legs:
+            if isinstance(leg, str):
+                ticker = leg
+                leg_category = signal.get("category") or ""
+            else:
+                ticker = leg.get("ticker") or ""
+                leg_category = leg.get("category") or signal.get("category") or ""
+            if not ticker:
+                continue
+            delta, title = _ticker_modifier(ticker, leg_category, "SHORT", verdicts)
+            if delta != 0:
+                contributing.append({
+                    "ticker": ticker,
+                    "category": leg_category,
+                    "direction": "SHORT",
+                    "delta": delta,
+                    "event_title": title,
+                })
+            total_delta += delta
+
+        # Cap spread aggregate
+        total_delta = max(-_SPREAD_CAP, min(_SPREAD_CAP, total_delta))
+
+        out["news_modifier"] = total_delta
+        out["entry_score"] = (out.get("entry_score") or 0) + total_delta
+        out["news_contributing_legs"] = contributing
+        return out
+
+    # --- Single-ticker path ---
+    ticker = signal.get("ticker") or ""
+    category = signal.get("category") or ""
+    direction = signal.get("direction") or ""
+
+    if not ticker:
+        out["news_modifier"] = 0
+        return out
+
+    delta, title = _ticker_modifier(ticker, category, direction, verdicts)
+    out["news_modifier"] = delta
+    out["entry_score"] = (out.get("entry_score") or 0) + delta
+    if title:
+        out["news_context"] = f"{ticker}: {title}"
+    else:
+        out.setdefault("news_context", "")
+    return out

@@ -12,6 +12,7 @@ _RECOMMENDATIONS_FILE = _HERE.parent.parent / "data" / "today_recommendations.js
 _BREAKS_FILE = _HERE.parent / "data" / "correlation_breaks.json"
 _FINGERPRINTS_DIR = _HERE.parent / "data" / "ta_fingerprints"
 _DYNAMIC_PAIRS_FILE = _HERE.parent / "data" / "dynamic_pairs.json"  # forward-compat: Project B
+_NEWS_VERDICTS_FILE = _HERE.parent / "data" / "news_verdicts.json"
 
 
 def _read_json(path: Path, default):
@@ -134,16 +135,33 @@ def _build_correlation_break_signals() -> list:
     return out
 
 
+def _load_news_verdicts() -> list:
+    """Load today's news verdicts (read-only). Returns [] on any error."""
+    raw = _read_json(_NEWS_VERDICTS_FILE, default=[])
+    if isinstance(raw, list):
+        return raw
+    return []
+
+
 @router.get("/candidates")
 def candidates():
+    from pipeline.signal_enrichment import apply_news_modifier
+
     today_regime = _read_json(_TODAY_REGIME_FILE, default={})
     today_recs = _read_json(_RECOMMENDATIONS_FILE, default={})
+    news_verdicts = _load_news_verdicts()
+
+    raw_candidates = (
+        _build_static_spreads(today_regime)
+        + _build_regime_picks(today_recs)
+        + _build_dynamic_pairs()
+    )
+    enriched_candidates = [
+        apply_news_modifier(c, news_verdicts) for c in raw_candidates
+    ]
+
     return {
-        "tradeable_candidates": (
-            _build_static_spreads(today_regime)
-            + _build_regime_picks(today_recs)
-            + _build_dynamic_pairs()
-        ),
+        "tradeable_candidates": enriched_candidates,
         "signals": (
             _build_ta_signals()
             + _build_correlation_break_signals()
