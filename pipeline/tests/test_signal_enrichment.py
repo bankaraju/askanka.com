@@ -23,6 +23,24 @@ from pipeline.signal_enrichment import (
 # ---------------------------------------------------------------------------
 
 @pytest.fixture
+def isolated_trust_dir(tmp_path, monkeypatch):
+    """
+    Isolate load_trust_scores() from production opus/artifacts/ data.
+
+    load_trust_scores() always scans TRUST_SCORES_DIR for per-stock
+    trust_score.json files regardless of the `path` argument. That
+    leaks real production grades (e.g. GAIL=F) into tests whose
+    fixtures assert legacy grades (GAIL=A). Monkeypatch the module
+    constant to an empty tmp dir so only fixture model_portfolio.json
+    data is read.
+    """
+    empty = tmp_path / "empty_artifacts"
+    empty.mkdir()
+    monkeypatch.setattr("pipeline.signal_enrichment.TRUST_SCORES_DIR", empty)
+    return empty
+
+
+@pytest.fixture
 def trust_fixture(tmp_path):
     data = {
         "regime": "NEUTRAL",
@@ -138,7 +156,7 @@ def oi_wrapped_fixture(tmp_path):
 # Tests
 # ---------------------------------------------------------------------------
 
-def test_load_trust_scores_returns_dict_by_symbol(trust_fixture):
+def test_load_trust_scores_returns_dict_by_symbol(trust_fixture, isolated_trust_dir):
     result = load_trust_scores(trust_fixture)
     assert "GAIL" in result
     assert "HAL" in result
@@ -201,7 +219,7 @@ def test_get_trust_returns_none_for_missing(trust_fixture):
     assert get_trust("GAIL", cache) is not None
 
 
-def test_loaders_return_empty_dict_on_missing_file(tmp_path):
+def test_loaders_return_empty_dict_on_missing_file(tmp_path, isolated_trust_dir):
     missing = tmp_path / "does_not_exist.json"
     assert load_trust_scores(missing) == {}
     assert load_correlation_breaks(missing) == {}
@@ -209,7 +227,7 @@ def test_loaders_return_empty_dict_on_missing_file(tmp_path):
     assert load_oi_anomalies(missing) == {}
 
 
-def test_loaders_return_empty_dict_on_corrupt_file(tmp_path):
+def test_loaders_return_empty_dict_on_corrupt_file(tmp_path, isolated_trust_dir):
     corrupt = tmp_path / "corrupt.json"
     corrupt.write_text("this is not valid json {{{")
     assert load_trust_scores(corrupt) == {}
@@ -253,8 +271,12 @@ def _make_signal(long_ticker="GAIL", short_ticker="HAL"):
 
 
 @pytest.fixture
-def all_caches(trust_fixture, breaks_fixture, regime_profile_fixture, oi_bare_fixture, tmp_path):
-    """Load all four caches from the fixture files."""
+def all_caches(trust_fixture, breaks_fixture, regime_profile_fixture, oi_bare_fixture, tmp_path, isolated_trust_dir):
+    """Load all four caches from the fixture files.
+
+    Depends on `isolated_trust_dir` to prevent production per-stock
+    trust_score.json files from leaking into the trust cache.
+    """
     trust_cache = load_trust_scores(trust_fixture)
     breaks_cache = load_correlation_breaks(breaks_fixture)
     profile_cache = load_regime_profile(regime_profile_fixture)
