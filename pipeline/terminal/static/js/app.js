@@ -39,16 +39,24 @@ function closeContextPanel() {
   document.getElementById('context-panel').classList.remove('context-panel--open');
 }
 
+const IST_CLOCK_FMT = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Kolkata',
+  hour12: false,
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+});
+
 function updateClock() {
-  const now = new Date();
-  const ist = new Date(now.getTime() + (5.5 * 60 * 60 * 1000 - now.getTimezoneOffset() * 60 * 1000));
-  const hh = String(ist.getUTCHours()).padStart(2, '0');
-  const mm = String(ist.getUTCMinutes()).padStart(2, '0');
-  const ss = String(ist.getUTCSeconds()).padStart(2, '0');
+  // Always render IST regardless of the viewer's OS timezone. The prior
+  // formula double-added the offset on IST machines (16:47 instead of 11:17),
+  // flipping Market status to CLOSED during live hours.
+  const parts = IST_CLOCK_FMT.formatToParts(new Date());
+  const hh = parts.find(p => p.type === 'hour').value;
+  const mm = parts.find(p => p.type === 'minute').value;
+  const ss = parts.find(p => p.type === 'second').value;
   document.getElementById('clock').textContent = `${hh}:${mm}:${ss} IST`;
-  const hour = ist.getUTCHours();
-  const min = ist.getUTCMinutes();
-  const totalMin = hour * 60 + min;
+  const totalMin = Number(hh) * 60 + Number(mm);
   let status = 'CLOSED';
   if (totalMin >= 555 && totalMin < 570) status = 'PRE-OPEN';
   else if (totalMin >= 570 && totalMin < 930) status = 'OPEN';
