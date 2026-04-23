@@ -1,0 +1,5234 @@
+{
+  "verdicts": [
+    {
+      "ticker": "360ONE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.742,
+        "p_value": 0.208
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "360ONE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 2.264,
+        "p_value": 0.0002
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ABB",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.598,
+        "p_value": 0.8568
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ABB",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.542,
+        "p_value": 0.9984
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.675,
+        "p_value": 0.9569
+      }
+    },
+    {
+      "ticker": "ABCAPITAL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.832,
+        "p_value": 0.1706
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ABCAPITAL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.12,
+        "p_value": 0.0706
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.19,
+        "p_value": 0.2602
+      }
+    },
+    {
+      "ticker": "ADANIENSOL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.205,
+        "p_value": 0.3037
+      }
+    },
+    {
+      "ticker": "ADANIENT",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.152,
+        "p_value": 0.5487
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.593,
+        "p_value": 0.9398
+      }
+    },
+    {
+      "ticker": "ADANIENT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.338,
+        "p_value": 0.9757
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.213,
+        "p_value": 0.2914
+      }
+    },
+    {
+      "ticker": "ADANIGREEN",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.31,
+        "p_value": 0.3645
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.3,
+        "p_value": 0.9472
+      }
+    },
+    {
+      "ticker": "ADANIGREEN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 21,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.294,
+        "p_value": 0.9999
+      }
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.445,
+        "p_value": 0.9481
+      }
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.427,
+        "p_value": 0.5895
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ADANIPOWER",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.593,
+        "p_value": 0.818
+      },
+      "overshoot": {
+        "n_events": 22,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.907,
+        "p_value": 0.7731
+      }
+    },
+    {
+      "ticker": "ALKEM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.491,
+        "p_value": 0.9875
+      }
+    },
+    {
+      "ticker": "AMBER",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.257,
+        "p_value": 0.3504
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "AMBER",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.386,
+        "p_value": 0.0259
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.156,
+        "p_value": 0.4761
+      }
+    },
+    {
+      "ticker": "AMBUJACEM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.072,
+        "p_value": 0.0866
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.168,
+        "p_value": 0.3434
+      }
+    },
+    {
+      "ticker": "AMBUJACEM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.046,
+        "p_value": 0.3542
+      },
+      "overshoot": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.279,
+        "p_value": 0.9695
+      }
+    },
+    {
+      "ticker": "ANGELONE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.374,
+        "p_value": 0.3924
+      }
+    },
+    {
+      "ticker": "ANGELONE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.195,
+        "p_value": 0.4541
+      },
+      "overshoot": {
+        "n_events": 17,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.838,
+        "p_value": 0.7255
+      }
+    },
+    {
+      "ticker": "APLAPOLLO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.519,
+        "p_value": 0.6965
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "APLAPOLLO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.723,
+        "p_value": 0.716
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.65,
+        "p_value": 0.1656
+      }
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.483,
+        "p_value": 0.1012
+      },
+      "overshoot": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.433,
+        "p_value": 0.986
+      }
+    },
+    {
+      "ticker": "ASHOKLEY",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.266,
+        "p_value": 0.6405
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ASHOKLEY",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.267,
+        "p_value": 0.2563
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.119,
+        "p_value": 0.405
+      }
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.322,
+        "p_value": 0.983
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.05,
+        "p_value": 0.2981
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ASTRAL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.376,
+        "p_value": 0.2067
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "AUBANK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.371,
+        "p_value": 0.2315
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "AUBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.155,
+        "p_value": 0.9211
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "AXISBANK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.312,
+        "p_value": 0.9868
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.311,
+        "p_value": 0.6395
+      }
+    },
+    {
+      "ticker": "AXISBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.17,
+        "p_value": 0.9207
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.191,
+        "p_value": 0.2063
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.321,
+        "p_value": 0.2279
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.055,
+        "p_value": 0.3356
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.243,
+        "p_value": 0.2457
+      }
+    },
+    {
+      "ticker": "BAJAJHLDNG",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.305,
+        "p_value": 0.3131
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BAJAJHLDNG",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.913,
+        "p_value": 0.0378
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.927,
+        "p_value": 0.8296
+      }
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.048,
+        "p_value": 0.409
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.158,
+        "p_value": 0.372
+      }
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.013,
+        "p_value": 0.3409
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.059,
+        "p_value": 0.3431
+      }
+    },
+    {
+      "ticker": "BANDHANBNK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.747,
+        "p_value": 0.77
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BANDHANBNK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.277,
+        "p_value": 0.5935
+      }
+    },
+    {
+      "ticker": "BANKBARODA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.549,
+        "p_value": 0.7346
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.588,
+        "p_value": 0.2297
+      }
+    },
+    {
+      "ticker": "BANKBARODA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.057,
+        "p_value": 0.0211
+      }
+    },
+    {
+      "ticker": "BANKINDIA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.252,
+        "p_value": 0.0587
+      }
+    },
+    {
+      "ticker": "BANKINDIA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.712,
+        "p_value": 0.6883
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.017,
+        "p_value": 0.3515
+      }
+    },
+    {
+      "ticker": "BHARATFORG",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.488,
+        "p_value": 0.261
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BHARATFORG",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.418,
+        "p_value": 0.6059
+      }
+    },
+    {
+      "ticker": "BHEL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.037,
+        "p_value": 0.193
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BHEL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.084,
+        "p_value": 0.0887
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.231,
+        "p_value": 0.4363
+      }
+    },
+    {
+      "ticker": "BIOCON",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.173,
+        "p_value": 0.519
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.572,
+        "p_value": 0.1978
+      }
+    },
+    {
+      "ticker": "BIOCON",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.141,
+        "p_value": 0.4869
+      }
+    },
+    {
+      "ticker": "BLUESTARCO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.652,
+        "p_value": 0.8052
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BLUESTARCO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.397,
+        "p_value": 0.1636
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.793,
+        "p_value": 0.0608
+      }
+    },
+    {
+      "ticker": "BOSCHLTD",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.161,
+        "p_value": 0.5915
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BOSCHLTD",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.124,
+        "p_value": 0.0052
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.222,
+        "p_value": 0.494
+      }
+    },
+    {
+      "ticker": "BRITANNIA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.255,
+        "p_value": 0.1905
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "BRITANNIA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.52,
+        "p_value": 0.7299
+      }
+    },
+    {
+      "ticker": "BSE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.807,
+        "p_value": 0.7717
+      }
+    },
+    {
+      "ticker": "BSE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.191,
+        "p_value": 0.7538
+      },
+      "overshoot": {
+        "n_events": 22,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.016,
+        "p_value": 0.2297
+      }
+    },
+    {
+      "ticker": "CAMS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.551,
+        "p_value": 0.6704
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.203,
+        "p_value": 0.291
+      }
+    },
+    {
+      "ticker": "CANBK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.244,
+        "p_value": 0.382
+      }
+    },
+    {
+      "ticker": "CANBK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.174,
+        "p_value": 0.4073
+      }
+    },
+    {
+      "ticker": "CDSL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.038,
+        "p_value": 0.4867
+      }
+    },
+    {
+      "ticker": "CDSL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 17,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.318,
+        "p_value": 0.9541
+      }
+    },
+    {
+      "ticker": "CGPOWER",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.142,
+        "p_value": 0.2767
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.217,
+        "p_value": 0.4406
+      }
+    },
+    {
+      "ticker": "CHOLAFIN",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.109,
+        "p_value": 0.5308
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "CHOLAFIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.411,
+        "p_value": 0.5862
+      }
+    },
+    {
+      "ticker": "CIPLA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.204,
+        "p_value": 0.5696
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "CIPLA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.979,
+        "p_value": 0.9415
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.111,
+        "p_value": 0.2825
+      }
+    },
+    {
+      "ticker": "COALINDIA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.268,
+        "p_value": 0.3134
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "COALINDIA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.054,
+        "p_value": 0.3486
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.117,
+        "p_value": 0.921
+      }
+    },
+    {
+      "ticker": "COFORGE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.147,
+        "p_value": 0.8884
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.432,
+        "p_value": 0.9462
+      }
+    },
+    {
+      "ticker": "COFORGE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.11,
+        "p_value": 0.4262
+      }
+    },
+    {
+      "ticker": "COLPAL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.283,
+        "p_value": 0.6203
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.657,
+        "p_value": 0.8792
+      }
+    },
+    {
+      "ticker": "COLPAL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.556,
+        "p_value": 0.7516
+      }
+    },
+    {
+      "ticker": "CONCOR",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.261,
+        "p_value": 0.5893
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "CONCOR",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.102,
+        "p_value": 0.3654
+      }
+    },
+    {
+      "ticker": "CUMMINSIND",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.158,
+        "p_value": 0.9288
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.28,
+        "p_value": 0.0598
+      }
+    },
+    {
+      "ticker": "CUMMINSIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.245,
+        "p_value": 0.1837
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.903,
+        "p_value": 0.805
+      }
+    },
+    {
+      "ticker": "DABUR",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.844,
+        "p_value": 0.9174
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.23,
+        "p_value": 0.5669
+      }
+    },
+    {
+      "ticker": "DABUR",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.474,
+        "p_value": 0.7171
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "DALBHARAT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.619,
+        "p_value": 0.6965
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "DLF",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.168,
+        "p_value": 0.9928
+      }
+    },
+    {
+      "ticker": "EICHERMOT",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.778,
+        "p_value": 0.9564
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "EICHERMOT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.586,
+        "p_value": 0.6898
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.314,
+        "p_value": 0.5438
+      }
+    },
+    {
+      "ticker": "ETERNAL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.347,
+        "p_value": 0.8677
+      }
+    },
+    {
+      "ticker": "ETERNAL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.183,
+        "p_value": 0.3676
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.311,
+        "p_value": 0.8458
+      }
+    },
+    {
+      "ticker": "EXIDEIND",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.582,
+        "p_value": 0.1424
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "EXIDEIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.017,
+        "p_value": 0.375
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.861,
+        "p_value": 0.8252
+      }
+    },
+    {
+      "ticker": "FEDERALBNK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.167,
+        "p_value": 0.5833
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "FEDERALBNK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.313,
+        "p_value": 0.5226
+      },
+      "overshoot": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.359,
+        "p_value": 0.5681
+      }
+    },
+    {
+      "ticker": "FORCEMOT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.369,
+        "p_value": 0.5085
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.416,
+        "p_value": 0.9751
+      }
+    },
+    {
+      "ticker": "FORTIS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.066,
+        "p_value": 0.5169
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "FORTIS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.478,
+        "p_value": 0.1631
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.197,
+        "p_value": 0.255
+      }
+    },
+    {
+      "ticker": "GLENMARK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.215,
+        "p_value": 0.3739
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "GLENMARK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.545,
+        "p_value": 0.9993
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.238,
+        "p_value": 0.4772
+      }
+    },
+    {
+      "ticker": "GMRAIRPORT",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.327,
+        "p_value": 0.3238
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "GMRAIRPORT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.462,
+        "p_value": 0.5972
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.037,
+        "p_value": 0.0395
+      }
+    },
+    {
+      "ticker": "GODFRYPHLP",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.948,
+        "p_value": 0.7426
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.176,
+        "p_value": 0.7752
+      }
+    },
+    {
+      "ticker": "GODREJCP",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.433,
+        "p_value": 0.7054
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "GODREJCP",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.551,
+        "p_value": 0.1079
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "GODREJPROP",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.709,
+        "p_value": 0.9909
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "GODREJPROP",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.834,
+        "p_value": 0.9993
+      }
+    },
+    {
+      "ticker": "GRASIM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.947,
+        "p_value": 0.8883
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HAVELLS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.52,
+        "p_value": 0.759
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HCLTECH",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.578,
+        "p_value": 0.9929
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HCLTECH",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.09,
+        "p_value": 0.2691
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.128,
+        "p_value": 0.2818
+      }
+    },
+    {
+      "ticker": "HDFCAMC",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.473,
+        "p_value": 0.1567
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HDFCAMC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.288,
+        "p_value": 0.9431
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.084,
+        "p_value": 0.3271
+      }
+    },
+    {
+      "ticker": "HDFCBANK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.733,
+        "p_value": 0.8959
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HDFCBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.661,
+        "p_value": 0.8968
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HDFCLIFE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.562,
+        "p_value": 0.0829
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.247,
+        "p_value": 0.2494
+      }
+    },
+    {
+      "ticker": "HDFCLIFE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.714,
+        "p_value": 0.0768
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.815,
+        "p_value": 0.0299
+      }
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.291,
+        "p_value": 0.6454
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.084,
+        "p_value": 0.9995
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HINDALCO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.331,
+        "p_value": 0.6436
+      }
+    },
+    {
+      "ticker": "HINDALCO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.022,
+        "p_value": 0.3511
+      }
+    },
+    {
+      "ticker": "HINDPETRO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.529,
+        "p_value": 0.0452
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HINDPETRO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.755,
+        "p_value": 0.7294
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.203,
+        "p_value": 0.2455
+      }
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.418,
+        "p_value": 0.7452
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.605,
+        "p_value": 0.0605
+      }
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.811,
+        "p_value": 0.0309
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "HINDZINC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.2,
+        "p_value": 0.2943
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.616,
+        "p_value": 0.9652
+      }
+    },
+    {
+      "ticker": "HUDCO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.992,
+        "p_value": 0.7774
+      },
+      "overshoot": {
+        "n_events": 15,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.928,
+        "p_value": 0.0348
+      }
+    },
+    {
+      "ticker": "ICICIBANK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.251,
+        "p_value": 0.6584
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ICICIBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.008,
+        "p_value": 0.2736
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ICICIPRULI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.13,
+        "p_value": 0.4765
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "IDFCFIRSTB",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.261,
+        "p_value": 0.2895
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 3.597,
+        "p_value": 0.0002
+      }
+    },
+    {
+      "ticker": "IDFCFIRSTB",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.285,
+        "p_value": 0.995
+      },
+      "overshoot": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.394,
+        "p_value": 0.6514
+      }
+    },
+    {
+      "ticker": "IEX",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.541,
+        "p_value": 0.7398
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.443,
+        "p_value": 0.9456
+      }
+    },
+    {
+      "ticker": "IEX",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.253,
+        "p_value": 0.9115
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "INDHOTEL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.042,
+        "p_value": 0.2948
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "INDIANB",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.617,
+        "p_value": 0.0761
+      }
+    },
+    {
+      "ticker": "INDIANB",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.82,
+        "p_value": 0.7667
+      }
+    },
+    {
+      "ticker": "INDIGO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.216,
+        "p_value": 0.375
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "INDIGO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.601,
+        "p_value": 0.7324
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.261,
+        "p_value": 0.9472
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.524,
+        "p_value": 0.0144
+      }
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.088,
+        "p_value": 0.3099
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "INDUSTOWER",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.002,
+        "p_value": 0.4638
+      }
+    },
+    {
+      "ticker": "INDUSTOWER",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.072,
+        "p_value": 0.4159
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.205,
+        "p_value": 0.4894
+      }
+    },
+    {
+      "ticker": "INFY",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.018,
+        "p_value": 0.9095
+      }
+    },
+    {
+      "ticker": "INFY",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.193,
+        "p_value": 0.5135
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.42,
+        "p_value": 0.6768
+      }
+    },
+    {
+      "ticker": "INOXWIND",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.865,
+        "p_value": 0.9333
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "INOXWIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.322,
+        "p_value": 0.515
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.525,
+        "p_value": 0.976
+      }
+    },
+    {
+      "ticker": "IREDA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.539,
+        "p_value": 0.5967
+      }
+    },
+    {
+      "ticker": "IRFC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.572,
+        "p_value": 0.1245
+      },
+      "overshoot": {
+        "n_events": 23,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.935,
+        "p_value": 0.9942
+      }
+    },
+    {
+      "ticker": "ITC",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.36,
+        "p_value": 0.9852
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ITC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.603,
+        "p_value": 0.8052
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.398,
+        "p_value": 0.6405
+      }
+    },
+    {
+      "ticker": "JINDALSTEL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.833,
+        "p_value": 0.1877
+      }
+    },
+    {
+      "ticker": "JINDALSTEL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.789,
+        "p_value": 0.0185
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.001,
+        "p_value": 0.8427
+      }
+    },
+    {
+      "ticker": "JIOFIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.305,
+        "p_value": 0.3059
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "JSWENERGY",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.481,
+        "p_value": 0.0842
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "JSWENERGY",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.603,
+        "p_value": 0.1799
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.975,
+        "p_value": 0.9387
+      }
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.343,
+        "p_value": 0.1495
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.663,
+        "p_value": 0.9751
+      }
+    },
+    {
+      "ticker": "JUBLFOOD",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.783,
+        "p_value": 0.9768
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "JUBLFOOD",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.261,
+        "p_value": 0.9645
+      }
+    },
+    {
+      "ticker": "KALYANKJIL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.232,
+        "p_value": 0.4781
+      },
+      "overshoot": {
+        "n_events": 16,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.033,
+        "p_value": 0.3033
+      }
+    },
+    {
+      "ticker": "KAYNES",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.369,
+        "p_value": 0.9675
+      }
+    },
+    {
+      "ticker": "KAYNES",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.335,
+        "p_value": 0.7887
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.811,
+        "p_value": 0.0935
+      }
+    },
+    {
+      "ticker": "KEI",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.418,
+        "p_value": 0.9894
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "KEI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.68,
+        "p_value": 0.8845
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.244,
+        "p_value": 0.0232
+      }
+    },
+    {
+      "ticker": "KFINTECH",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.498,
+        "p_value": 0.1846
+      }
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.427,
+        "p_value": 0.7292
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.014,
+        "p_value": 0.3807
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "KPITTECH",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.436,
+        "p_value": 0.0708
+      }
+    },
+    {
+      "ticker": "KPITTECH",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.198,
+        "p_value": 0.9994
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.7,
+        "p_value": 0.1292
+      }
+    },
+    {
+      "ticker": "LAURUSLABS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.773,
+        "p_value": 0.026
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.134,
+        "p_value": 0.9398
+      }
+    },
+    {
+      "ticker": "LAURUSLABS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.754,
+        "p_value": 0.1143
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.227,
+        "p_value": 0.4896
+      }
+    },
+    {
+      "ticker": "LICHSGFIN",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.107,
+        "p_value": 0.5112
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.382,
+        "p_value": 0.6638
+      }
+    },
+    {
+      "ticker": "LICHSGFIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 2.117,
+        "p_value": 0.009
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.382,
+        "p_value": 0.1866
+      }
+    },
+    {
+      "ticker": "LICI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.677,
+        "p_value": 0.8016
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "LODHA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.299,
+        "p_value": 0.5143
+      }
+    },
+    {
+      "ticker": "LTF",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.092,
+        "p_value": 0.097
+      }
+    },
+    {
+      "ticker": "LTF",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 16,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.089,
+        "p_value": 0.3644
+      }
+    },
+    {
+      "ticker": "LUPIN",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.065,
+        "p_value": 0.9271
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.312,
+        "p_value": 0.6627
+      }
+    },
+    {
+      "ticker": "LUPIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.111,
+        "p_value": 0.2562
+      }
+    },
+    {
+      "ticker": "MANAPPURAM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.214,
+        "p_value": 0.8887
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.723,
+        "p_value": 0.0172
+      }
+    },
+    {
+      "ticker": "MANAPPURAM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.003,
+        "p_value": 0.3535
+      }
+    },
+    {
+      "ticker": "MANKIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.862,
+        "p_value": 0.0496
+      }
+    },
+    {
+      "ticker": "MARICO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.195,
+        "p_value": 0.2216
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.792,
+        "p_value": 0.8882
+      }
+    },
+    {
+      "ticker": "MARUTI",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.111,
+        "p_value": 0.3548
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "MARUTI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.227,
+        "p_value": 0.9845
+      }
+    },
+    {
+      "ticker": "MAXHEALTH",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.41,
+        "p_value": 0.2374
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.484,
+        "p_value": 0.6186
+      }
+    },
+    {
+      "ticker": "MOTHERSON",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.163,
+        "p_value": 0.3779
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.372,
+        "p_value": 0.6354
+      }
+    },
+    {
+      "ticker": "MOTHERSON",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.871,
+        "p_value": 0.7535
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.664,
+        "p_value": 0.1218
+      }
+    },
+    {
+      "ticker": "MOTILALOFS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.047,
+        "p_value": 0.4718
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "MOTILALOFS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 2.336,
+        "p_value": 0.0163
+      },
+      "overshoot": {
+        "n_events": 16,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.033,
+        "p_value": 0.3132
+      }
+    },
+    {
+      "ticker": "MPHASIS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.152,
+        "p_value": 0.064
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "MPHASIS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.817,
+        "p_value": 0.8079
+      }
+    },
+    {
+      "ticker": "MUTHOOTFIN",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.61,
+        "p_value": 0.1469
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "MUTHOOTFIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.697,
+        "p_value": 0.7759
+      }
+    },
+    {
+      "ticker": "NAM-INDIA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 4.691,
+        "p_value": 0.0002
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "NAM-INDIA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.877,
+        "p_value": 0.0756
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.256,
+        "p_value": 0.499
+      }
+    },
+    {
+      "ticker": "NATIONALUM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.596,
+        "p_value": 0.5806
+      },
+      "overshoot": {
+        "n_events": 20,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.331,
+        "p_value": 0.9391
+      }
+    },
+    {
+      "ticker": "NAUKRI",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.27,
+        "p_value": 0.5719
+      }
+    },
+    {
+      "ticker": "NAUKRI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.05,
+        "p_value": 0.4243
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.391,
+        "p_value": 0.6142
+      }
+    },
+    {
+      "ticker": "NBCC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.042,
+        "p_value": 0.947
+      },
+      "overshoot": {
+        "n_events": 24,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.535,
+        "p_value": 0.073
+      }
+    },
+    {
+      "ticker": "NESTLEIND",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.259,
+        "p_value": 0.193
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "NESTLEIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.04,
+        "p_value": 0.2803
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.952,
+        "p_value": 0.9604
+      }
+    },
+    {
+      "ticker": "NHPC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.103,
+        "p_value": 0.4107
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.371,
+        "p_value": 0.1621
+      }
+    },
+    {
+      "ticker": "NMDC",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.175,
+        "p_value": 0.4202
+      }
+    },
+    {
+      "ticker": "NMDC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.375,
+        "p_value": 0.546
+      }
+    },
+    {
+      "ticker": "NTPC",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.258,
+        "p_value": 0.2793
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "NTPC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.813,
+        "p_value": 0.8774
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "NUVAMA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.905,
+        "p_value": 0.9651
+      }
+    },
+    {
+      "ticker": "NYKAA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.572,
+        "p_value": 0.9589
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.681,
+        "p_value": 0.7643
+      }
+    },
+    {
+      "ticker": "OBEROIRLTY",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.008,
+        "p_value": 0.4763
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "OBEROIRLTY",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.976,
+        "p_value": 0.8407
+      }
+    },
+    {
+      "ticker": "OFSS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.081,
+        "p_value": 0.3173
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.183,
+        "p_value": 0.2599
+      }
+    },
+    {
+      "ticker": "OIL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 2.777,
+        "p_value": 0.0128
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "OIL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.564,
+        "p_value": 0.9861
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.459,
+        "p_value": 0.997
+      }
+    },
+    {
+      "ticker": "ONGC",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.946,
+        "p_value": 0.1156
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ONGC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.268,
+        "p_value": 0.2087
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.824,
+        "p_value": 0.979
+      }
+    },
+    {
+      "ticker": "PATANJALI",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.81,
+        "p_value": 0.0358
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.882,
+        "p_value": 0.0408
+      }
+    },
+    {
+      "ticker": "PATANJALI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.148,
+        "p_value": 0.9918
+      }
+    },
+    {
+      "ticker": "PAYTM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -3.927,
+        "p_value": 0.9977
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.328,
+        "p_value": 0.1474
+      }
+    },
+    {
+      "ticker": "PAYTM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.097,
+        "p_value": 0.9401
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.026,
+        "p_value": 0.4261
+      }
+    },
+    {
+      "ticker": "PERSISTENT",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.011,
+        "p_value": 0.5077
+      }
+    },
+    {
+      "ticker": "PERSISTENT",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.382,
+        "p_value": 0.9301
+      }
+    },
+    {
+      "ticker": "PETRONET",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.295,
+        "p_value": 0.2337
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PETRONET",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 15,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.697,
+        "p_value": 0.0263
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PFC",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.393,
+        "p_value": 0.5319
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.998,
+        "p_value": 0.9947
+      }
+    },
+    {
+      "ticker": "PGEL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.703,
+        "p_value": 0.7337
+      }
+    },
+    {
+      "ticker": "PGEL",
+      "direction": "UP",
+      "verdict": "CLEAN",
+      "lag": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.323,
+        "p_value": 0.195
+      },
+      "overshoot": {
+        "n_events": 15,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.186,
+        "p_value": 0.9728
+      }
+    },
+    {
+      "ticker": "PHOENIXLTD",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.483,
+        "p_value": 0.6987
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PHOENIXLTD",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.071,
+        "p_value": 0.034
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PIDILITIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.322,
+        "p_value": 0.6141
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PIIND",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.827,
+        "p_value": 0.864
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PIIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.826,
+        "p_value": 0.0587
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.714,
+        "p_value": 0.0974
+      }
+    },
+    {
+      "ticker": "PNB",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.351,
+        "p_value": 0.0306
+      }
+    },
+    {
+      "ticker": "PNB",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.043,
+        "p_value": 0.3348
+      }
+    },
+    {
+      "ticker": "PNBHOUSING",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.812,
+        "p_value": 0.9381
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "PNBHOUSING",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.156,
+        "p_value": 0.4609
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.213,
+        "p_value": 0.883
+      }
+    },
+    {
+      "ticker": "POLICYBZR",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.547,
+        "p_value": 0.6566
+      }
+    },
+    {
+      "ticker": "POLYCAB",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.907,
+        "p_value": 0.8603
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "POLYCAB",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.319,
+        "p_value": 0.4916
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.2,
+        "p_value": 0.844
+      }
+    },
+    {
+      "ticker": "POWERGRID",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.368,
+        "p_value": 0.1756
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "POWERGRID",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.313,
+        "p_value": 0.5393
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "POWERINDIA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 14,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.763,
+        "p_value": 0.0522
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.431,
+        "p_value": 0.1754
+      }
+    },
+    {
+      "ticker": "PPLPHARMA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.481,
+        "p_value": 0.6451
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.426,
+        "p_value": 0.2425
+      }
+    },
+    {
+      "ticker": "RBLBANK",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.082,
+        "p_value": 0.8217
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.535,
+        "p_value": 0.3008
+      }
+    },
+    {
+      "ticker": "RBLBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.343,
+        "p_value": 0.5455
+      }
+    },
+    {
+      "ticker": "RECLTD",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.191,
+        "p_value": 0.5853
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "RECLTD",
+      "direction": "UP",
+      "verdict": "CLEAN",
+      "lag": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.13,
+        "p_value": 0.2323
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.371,
+        "p_value": 0.1512
+      }
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.459,
+        "p_value": 0.7555
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.3,
+        "p_value": 0.6013
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "RVNL",
+      "direction": "UP",
+      "verdict": "CLEAN",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.712,
+        "p_value": 0.6557
+      },
+      "overshoot": {
+        "n_events": 22,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.023,
+        "p_value": 0.8246
+      }
+    },
+    {
+      "ticker": "SAIL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.841,
+        "p_value": 0.0455
+      }
+    },
+    {
+      "ticker": "SAIL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.416,
+        "p_value": 0.5987
+      }
+    },
+    {
+      "ticker": "SAMMAANCAP",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 2.113,
+        "p_value": 0.0301
+      }
+    },
+    {
+      "ticker": "SAMMAANCAP",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.96,
+        "p_value": 0.1834
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.44,
+        "p_value": 0.9293
+      }
+    },
+    {
+      "ticker": "SBICARD",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.418,
+        "p_value": 0.6953
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SBICARD",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.863,
+        "p_value": 0.8948
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.026,
+        "p_value": 0.3894
+      }
+    },
+    {
+      "ticker": "SBILIFE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.474,
+        "p_value": 0.7527
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SBILIFE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.491,
+        "p_value": 0.6859
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SBIN",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.254,
+        "p_value": 0.6638
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SBIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.92,
+        "p_value": 0.0003
+      }
+    },
+    {
+      "ticker": "SHREECEM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.673,
+        "p_value": 0.8391
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SHREECEM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.658,
+        "p_value": 0.7764
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.509,
+        "p_value": 0.9494
+      }
+    },
+    {
+      "ticker": "SIEMENS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.75,
+        "p_value": 0.996
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SIEMENS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.717,
+        "p_value": 0.7149
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.245,
+        "p_value": 0.1812
+      }
+    },
+    {
+      "ticker": "SOLARINDS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.221,
+        "p_value": 0.4188
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SOLARINDS",
+      "direction": "UP",
+      "verdict": "CLEAN",
+      "lag": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.273,
+        "p_value": 0.9954
+      },
+      "overshoot": {
+        "n_events": 13,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.041,
+        "p_value": 0.2992
+      }
+    },
+    {
+      "ticker": "SONACOMS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.599,
+        "p_value": 0.699
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SONACOMS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.077,
+        "p_value": 0.3494
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.154,
+        "p_value": 0.0877
+      }
+    },
+    {
+      "ticker": "SRF",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.608,
+        "p_value": 0.7664
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SRF",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.57,
+        "p_value": 0.0093
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.202,
+        "p_value": 0.8886
+      }
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.322,
+        "p_value": 0.1896
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.66,
+        "p_value": 0.8298
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.284,
+        "p_value": 0.5452
+      }
+    },
+    {
+      "ticker": "SUPREMEIND",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.455,
+        "p_value": 0.2101
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "SUZLON",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.706,
+        "p_value": 0.8694
+      },
+      "overshoot": {
+        "n_events": 15,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.86,
+        "p_value": 0.059
+      }
+    },
+    {
+      "ticker": "TATACONSUM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.179,
+        "p_value": 0.5592
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TATACONSUM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.066,
+        "p_value": 0.275
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.175,
+        "p_value": 0.4688
+      }
+    },
+    {
+      "ticker": "TATAELXSI",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.117,
+        "p_value": 0.4931
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.17,
+        "p_value": 0.5132
+      }
+    },
+    {
+      "ticker": "TATAELXSI",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.173,
+        "p_value": 0.9043
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.953,
+        "p_value": 0.9981
+      }
+    },
+    {
+      "ticker": "TATAPOWER",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.002,
+        "p_value": 0.9396
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TATAPOWER",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.649,
+        "p_value": 0.6837
+      },
+      "overshoot": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.379,
+        "p_value": 0.007
+      }
+    },
+    {
+      "ticker": "TATASTEEL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.441,
+        "p_value": 0.2787
+      }
+    },
+    {
+      "ticker": "TATASTEEL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.261,
+        "p_value": 0.4985
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.98,
+        "p_value": 0.8405
+      }
+    },
+    {
+      "ticker": "TATATECH",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.808,
+        "p_value": 0.9774
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TCS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.755,
+        "p_value": 0.8606
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TCS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.14,
+        "p_value": 0.4898
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TECHM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.484,
+        "p_value": 0.166
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TECHM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.284,
+        "p_value": 0.0106
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.41,
+        "p_value": 0.9983
+      }
+    },
+    {
+      "ticker": "TIINDIA",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.993,
+        "p_value": 0.8208
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TIINDIA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.512,
+        "p_value": 0.1621
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.319,
+        "p_value": 0.2317
+      }
+    },
+    {
+      "ticker": "TORNTPHARM",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.188,
+        "p_value": 0.9957
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TORNTPHARM",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.101,
+        "p_value": 0.005
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.516,
+        "p_value": 0.0572
+      }
+    },
+    {
+      "ticker": "TORNTPOWER",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.949,
+        "p_value": 0.9085
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "TORNTPOWER",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.278,
+        "p_value": 0.0358
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.547,
+        "p_value": 0.1171
+      }
+    },
+    {
+      "ticker": "TRENT",
+      "direction": "UP",
+      "verdict": "CLEAN",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.562,
+        "p_value": 0.6566
+      },
+      "overshoot": {
+        "n_events": 12,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.255,
+        "p_value": 0.9362
+      }
+    },
+    {
+      "ticker": "TVSMOTOR",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.39,
+        "p_value": 0.2914
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.973,
+        "p_value": 0.9567
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "UNIONBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 21,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.089,
+        "p_value": 0.9141
+      }
+    },
+    {
+      "ticker": "UNOMINDA",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.691,
+        "p_value": 0.6935
+      },
+      "overshoot": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.199,
+        "p_value": 0.8427
+      }
+    },
+    {
+      "ticker": "UPL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.28,
+        "p_value": 0.2251
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 1.464,
+        "p_value": 0.0067
+      }
+    },
+    {
+      "ticker": "UPL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 6,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.749,
+        "p_value": 0.7911
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "VEDL",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 10,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.418,
+        "p_value": 0.7387
+      },
+      "overshoot": {
+        "n_events": 7,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.948,
+        "p_value": 0.9829
+      }
+    },
+    {
+      "ticker": "VEDL",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.529,
+        "p_value": 0.5984
+      }
+    },
+    {
+      "ticker": "VOLTAS",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.88,
+        "p_value": 0.8963
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "VOLTAS",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.874,
+        "p_value": 0.7944
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "WIPRO",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.45,
+        "p_value": 0.7162
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "WIPRO",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.162,
+        "p_value": 0.5023
+      },
+      "overshoot": {
+        "n_events": 8,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.133,
+        "p_value": 0.2957
+      }
+    },
+    {
+      "ticker": "YESBANK",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -2.762,
+        "p_value": 0.9951
+      },
+      "overshoot": {
+        "n_events": 21,
+        "bonferroni_pass": false,
+        "edge_net_pct": 0.309,
+        "p_value": 0.1597
+      }
+    },
+    {
+      "ticker": "ZYDUSLIFE",
+      "direction": "DOWN",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 11,
+        "bonferroni_pass": false,
+        "edge_net_pct": -0.079,
+        "p_value": 0.4862
+      },
+      "overshoot": {
+        "n_events": 0,
+        "bonferroni_pass": false,
+        "edge_net_pct": null,
+        "p_value": null
+      }
+    },
+    {
+      "ticker": "ZYDUSLIFE",
+      "direction": "UP",
+      "verdict": "INSUFFICIENT_POWER",
+      "lag": {
+        "n_events": 5,
+        "bonferroni_pass": false,
+        "edge_net_pct": 2.504,
+        "p_value": 0.0003
+      },
+      "overshoot": {
+        "n_events": 9,
+        "bonferroni_pass": false,
+        "edge_net_pct": -1.406,
+        "p_value": 0.9876
+      }
+    }
+  ],
+  "summary": {
+    "verdict_counts": {
+      "INSUFFICIENT_POWER": 302,
+      "CLEAN": 5
+    },
+    "n_cells": 307
+  },
+  "meta": {
+    "lag_bonferroni_alpha": 0.00014534883720930232,
+    "overshoot_bonferroni_alpha": 0.00018726591760299626
+  }
+}
