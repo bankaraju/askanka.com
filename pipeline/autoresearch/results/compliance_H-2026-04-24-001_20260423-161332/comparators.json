@@ -1,0 +1,25 @@
+{
+  "strategy_mean_ret_pct": 0.5242276345356123,
+  "comparators": {
+    "random_direction": {
+      "mean_ret_pct": -0.5242,
+      "sharpe": NaN,
+      "hit_rate": 0.0,
+      "n_trades": 1
+    },
+    "equal_weight_basket": {
+      "mean_ret_pct": 0.5242,
+      "sharpe": NaN,
+      "hit_rate": 1.0,
+      "n_trades": 1
+    },
+    "momentum_follow": {
+      "mean_ret_pct": 0.5242,
+      "sharpe": NaN,
+      "hit_rate": 1.0,
+      "n_trades": 1
+    }
+  },
+  "strongest_name": "equal_weight_basket",
+  "beaten_strongest": true
+}

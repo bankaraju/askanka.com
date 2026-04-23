@@ -1,0 +1,31 @@
+{
+  "run_id": "f3f81d555a1e481a9c047d602c8b3aff",
+  "hypothesis_id": "H-2026-04-24-001",
+  "strategy_version": "0.1.0",
+  "git_commit": "68e5bc833ec93240663d91a891f20cee5835bbbe",
+  "config_hash": "7a6a45264ab8ccb3f55665958fc679835207434eac2ae22efde0fc6570669dbc",
+  "config": {
+    "ticker": "RELIANCE",
+    "direction": "LONG",
+    "score_threshold": 70,
+    "horizon_days": 1,
+    "win_threshold": 0.005,
+    "train_years": 2,
+    "test_months": 3,
+    "n_events": 1,
+    "n_folds": 8,
+    "oos_start": "2024-04-22",
+    "oos_end": "2026-04-21",
+    "mean_auc": 0.5093041545079341,
+    "smoke": false
+  },
+  "data_file_sha256_manifest": {
+    "C:\\Users\\Claude_Anka\\askanka.com\\pipeline\\data\\fno_historical\\RELIANCE.csv": "fb6333f4229e14152f1eb68c9c311d433689096475c881d41ca23d7ea57e0431",
+    "C:\\Users\\Claude_Anka\\askanka.com\\pipeline\\data\\india_historical\\indices\\NIFTY_daily.csv": "1711e9b200696837cd0e164e1588319d417f5db49e1345e49de960464ce9e930"
+  },
+  "cost_model_version": "zerodha-ssf-2025-04",
+  "random_seed": 42,
+  "report_generated_at": "2026-04-23T16:13:44.919846+00:00",
+  "invalid_trade_count": 0,
+  "invalid_trade_log_path": "invalid_trades.json"
+}

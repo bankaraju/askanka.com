@@ -1,0 +1,64 @@
+{
+  "rows": [
+    {
+      "ticker": "RELIANCE",
+      "direction": "LONG",
+      "level": "S0",
+      "n_trades": 1,
+      "mean_ret_pct": 0.4242,
+      "hit_rate": 1.0,
+      "hit_rate_ci_lo_95": 1.0,
+      "hit_rate_ci_hi_95": 1.0,
+      "sharpe": NaN,
+      "sharpe_ci_lo_95": 0.0,
+      "sharpe_ci_hi_95": 0.0,
+      "max_drawdown_pct": 0.0,
+      "calmar": 0.0
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "LONG",
+      "level": "S1",
+      "n_trades": 1,
+      "mean_ret_pct": 0.2242,
+      "hit_rate": 1.0,
+      "hit_rate_ci_lo_95": 1.0,
+      "hit_rate_ci_hi_95": 1.0,
+      "sharpe": NaN,
+      "sharpe_ci_lo_95": 0.0,
+      "sharpe_ci_hi_95": 0.0,
+      "max_drawdown_pct": 0.0,
+      "calmar": 0.0
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "LONG",
+      "level": "S2",
+      "n_trades": 1,
+      "mean_ret_pct": 0.0242,
+      "hit_rate": 1.0,
+      "hit_rate_ci_lo_95": 1.0,
+      "hit_rate_ci_hi_95": 1.0,
+      "sharpe": NaN,
+      "sharpe_ci_lo_95": 0.0,
+      "sharpe_ci_hi_95": 0.0,
+      "max_drawdown_pct": 0.0,
+      "calmar": 0.0
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "LONG",
+      "level": "S3",
+      "n_trades": 1,
+      "mean_ret_pct": -0.1758,
+      "hit_rate": 0.0,
+      "hit_rate_ci_lo_95": 0.0,
+      "hit_rate_ci_hi_95": 0.0,
+      "sharpe": NaN,
+      "sharpe_ci_lo_95": 0.0,
+      "sharpe_ci_hi_95": 0.0,
+      "max_drawdown_pct": 0.0,
+      "calmar": 0.0
+    }
+  ]
+}

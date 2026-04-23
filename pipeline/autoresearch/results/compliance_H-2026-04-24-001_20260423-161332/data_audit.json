@@ -1,0 +1,18 @@
+{
+  "total_bars": 1236,
+  "impaired_bars": 2,
+  "impaired_pct": 0.162,
+  "classification": "CLEAN",
+  "per_ticker": {
+    "RELIANCE": {
+      "ticker": "RELIANCE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    }
+  }
+}

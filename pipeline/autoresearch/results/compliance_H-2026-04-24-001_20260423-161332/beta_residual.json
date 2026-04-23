@@ -1,0 +1,14 @@
+{
+  "gross_sharpe_avg": 0.448819,
+  "residual_sharpe_avg": 0.453061,
+  "per_strategy": {
+    "RELIANCE-LONG": {
+      "beta": -9.1e-05,
+      "alpha_annualised": 0.001066,
+      "r_squared": 2.9e-05,
+      "residual_sharpe": 0.453061,
+      "gross_sharpe": 0.448819,
+      "n_aligned": 1251
+    }
+  }
+}
