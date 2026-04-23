@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-23T13:48:58.305147+05:30",
+  "updated_at": "2026-04-23T14:04:39.468735+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,40 +11,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4375.0,
-          "pnl_pct": 2.11
+          "current": 4376.1,
+          "pnl_pct": 2.13
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 449.7,
-          "pnl_pct": -0.03
+          "current": 452.8,
+          "pnl_pct": 0.66
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1417.7,
-          "pnl_pct": 3.17
+          "current": 1423.5,
+          "pnl_pct": 3.59
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2539.6,
-          "pnl_pct": 1.26
+          "current": 2531.1,
+          "pnl_pct": 1.59
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1254.0,
-          "pnl_pct": 5.15
+          "current": 1248.0,
+          "pnl_pct": 5.6
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 204.0,
-          "pnl_pct": 4.22
+          "current": 203.58,
+          "pnl_pct": 4.41
         }
       ],
       "spread_pnl_pct": 5.11,
@@ -58,17 +58,17 @@
       "peak_pnl": 5.14,
       "source": "SPREAD",
       "trust_scores": {
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
           "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         },
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "INFY": {
           "trust_grade": "F",
@@ -82,17 +82,17 @@
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
+        "BDL": {
+          "trust_grade": "C",
+          "trust_score": 56.8,
           "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
         },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         }
       },
       "regime_rank": {
@@ -187,8 +187,8 @@
         {
           "ticker": "TECHM",
           "entry": 1470.2,
-          "current": 1438.8,
-          "pnl_pct": 2.14
+          "current": 1431.5,
+          "pnl_pct": 2.63
         }
       ],
       "spread_pnl_pct": 2.15,
@@ -226,8 +226,8 @@
         {
           "ticker": "CROMPTON",
           "entry": 261.01,
-          "current": 255.89,
-          "pnl_pct": 1.96
+          "current": 255.32,
+          "pnl_pct": 2.18
         }
       ],
       "spread_pnl_pct": 2.02,
@@ -265,8 +265,8 @@
         {
           "ticker": "TMPV",
           "entry": 359.95,
-          "current": 354.05,
-          "pnl_pct": 1.64
+          "current": 353.15,
+          "pnl_pct": 1.89
         }
       ],
       "spread_pnl_pct": 1.44,
@@ -304,8 +304,8 @@
         {
           "ticker": "RECLTD",
           "entry": 381.85,
-          "current": 378.05,
-          "pnl_pct": 1.0
+          "current": 378.8,
+          "pnl_pct": 0.8
         }
       ],
       "spread_pnl_pct": 0.97,
@@ -343,8 +343,8 @@
         {
           "ticker": "PETRONET",
           "entry": 277.54,
-          "current": 277.62,
-          "pnl_pct": -0.03
+          "current": 277.56,
+          "pnl_pct": -0.01
         }
       ],
       "spread_pnl_pct": 0.16,
@@ -382,8 +382,8 @@
         {
           "ticker": "NUVAMA",
           "entry": 1363.3,
-          "current": 1368.5,
-          "pnl_pct": -0.38
+          "current": 1372.6,
+          "pnl_pct": -0.68
         }
       ],
       "spread_pnl_pct": -0.27,
@@ -394,7 +394,7 @@
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.38,
+      "peak_pnl": -0.68,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "NUVAMA": {
@@ -421,8 +421,8 @@
         {
           "ticker": "HDFCAMC",
           "entry": 2745.0,
-          "current": 2715.1,
-          "pnl_pct": 1.09
+          "current": 2711.4,
+          "pnl_pct": 1.22
         }
       ],
       "spread_pnl_pct": 0.91,
@@ -487,8 +487,8 @@
         {
           "ticker": "MOTILALOFS",
           "entry": 806.95,
-          "current": 790.95,
-          "pnl_pct": 1.98
+          "current": 792.0,
+          "pnl_pct": 1.85
         }
       ],
       "spread_pnl_pct": 2.0,
@@ -553,8 +553,8 @@
         {
           "ticker": "EXIDEIND",
           "entry": 353.8,
-          "current": 349.75,
-          "pnl_pct": 1.14
+          "current": 349.45,
+          "pnl_pct": 1.23
         }
       ],
       "spread_pnl_pct": 1.24,
@@ -592,8 +592,8 @@
         {
           "ticker": "YESBANK",
           "entry": 19.94,
-          "current": 19.98,
-          "pnl_pct": -0.2
+          "current": 20.02,
+          "pnl_pct": -0.4
         }
       ],
       "spread_pnl_pct": -0.3,
@@ -631,8 +631,8 @@
         {
           "ticker": "VEDL",
           "entry": 758.8,
-          "current": 740.3,
-          "pnl_pct": 2.44
+          "current": 738.85,
+          "pnl_pct": 2.63
         }
       ],
       "spread_pnl_pct": 2.47,
@@ -670,8 +670,8 @@
         {
           "ticker": "HAVELLS",
           "entry": 1294.6,
-          "current": 1258.6,
-          "pnl_pct": 2.78
+          "current": 1261.3,
+          "pnl_pct": 2.57
         }
       ],
       "spread_pnl_pct": 2.79,
@@ -742,8 +742,8 @@
         {
           "ticker": "TVSMOTOR",
           "entry": 3636.0,
-          "current": 3489.8,
-          "pnl_pct": 4.02
+          "current": 3487.3,
+          "pnl_pct": 4.09
         }
       ],
       "spread_pnl_pct": 4.02,
@@ -781,8 +781,8 @@
         {
           "ticker": "APLAPOLLO",
           "entry": 2121.1,
-          "current": 2056.3,
-          "pnl_pct": 3.06
+          "current": 2049.7,
+          "pnl_pct": 3.37
         }
       ],
       "spread_pnl_pct": 2.88,
@@ -820,8 +820,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4217.8,
-          "pnl_pct": 3.15
+          "current": 4242.5,
+          "pnl_pct": 2.58
         }
       ],
       "spread_pnl_pct": 3.15,
@@ -859,8 +859,8 @@
         {
           "ticker": "MPHASIS",
           "entry": 2331.0,
-          "current": 2280.4,
-          "pnl_pct": 2.17
+          "current": 2277.8,
+          "pnl_pct": 2.28
         }
       ],
       "spread_pnl_pct": 2.09,
@@ -925,8 +925,8 @@
         {
           "ticker": "BLUESTARCO",
           "entry": 1898.0,
-          "current": 1839.3,
-          "pnl_pct": 3.09
+          "current": 1833.8,
+          "pnl_pct": 3.38
         }
       ],
       "spread_pnl_pct": 3.0,
@@ -964,8 +964,8 @@
         {
           "ticker": "ABCAPITAL",
           "entry": 348.25,
-          "current": 349.15,
-          "pnl_pct": -0.26
+          "current": 350.45,
+          "pnl_pct": -0.63
         }
       ],
       "spread_pnl_pct": -0.4,
@@ -976,7 +976,7 @@
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.26,
+      "peak_pnl": -0.63,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "ABCAPITAL": {
@@ -1003,8 +1003,8 @@
         {
           "ticker": "UNIONBANK",
           "entry": 194.89,
-          "current": 179.25,
-          "pnl_pct": 8.03
+          "current": 179.54,
+          "pnl_pct": 7.88
         }
       ],
       "spread_pnl_pct": 7.09,
@@ -1069,8 +1069,8 @@
         {
           "ticker": "SONACOMS",
           "entry": 587.9,
-          "current": 574.35,
-          "pnl_pct": 2.3
+          "current": 577.75,
+          "pnl_pct": 1.73
         }
       ],
       "spread_pnl_pct": 2.3,
