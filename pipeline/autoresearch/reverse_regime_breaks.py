@@ -105,6 +105,35 @@ def pcr_disagrees_with_expected(pcr_class: str, expected_return: float) -> bool:
 
 
 # ===================================================================
+# Geometric classifier (spec §3)
+# ===================================================================
+# Inputs are in PERCENT (e.g. 2.0 means 2%). Matches scan_for_breaks line 365.
+_DEGENERATE_THRESHOLD_PCT = 0.1  # absolute percent
+
+
+def classify_event_geometry(expected_return: float, actual_return: float) -> str:
+    """
+    Classify a Phase C event by its geometric geometry per spec §3:
+
+      LAG         — sign(expected_return) != sign(residual)
+                    Peers moved; stock lagged or went opposite.
+                    Backtest FADE and live engine FOLLOW agree on trade side.
+      OVERSHOOT   — sign(expected_return) == sign(residual)
+                    Peers moved; stock moved further on the same side.
+                    Backtest FADE and live engine FOLLOW are opposite.
+      DEGENERATE  — |expected_return| < 0.1% or |residual| < 0.1%
+                    Classification ambiguous; excluded from sub-bucket tests.
+
+    residual = actual_return - expected_return (matches line 369).
+    """
+    residual = actual_return - expected_return
+    if abs(expected_return) < _DEGENERATE_THRESHOLD_PCT or abs(residual) < _DEGENERATE_THRESHOLD_PCT:
+        return "DEGENERATE"
+    same_sign = (expected_return > 0 and residual > 0) or (expected_return < 0 and residual < 0)
+    return "OVERSHOOT" if same_sign else "LAG"
+
+
+# ===================================================================
 # Break classification
 # ===================================================================
 def classify_break(
