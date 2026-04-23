@@ -81,3 +81,58 @@ class TestClassifyBreakLabelSplit:
         )
         assert label == "WARNING"
         assert action == "REDUCE"
+
+
+from pipeline.autoresearch.reverse_regime_breaks import enrich_break_with_direction
+
+
+class TestEnrichBreakWithDirection:
+    def test_lag_break_direction_follow(self):
+        brk = {
+            "symbol": "RELIANCE",
+            "expected_return": 2.0,
+            "actual_return": 0.5,
+            "classification": "OPPORTUNITY_LAG",
+        }
+        enriched = enrich_break_with_direction(brk)
+        assert enriched["event_geometry"] == "LAG"
+        assert enriched["direction_intended"] == "FOLLOW"
+        assert enriched["direction_tested"] == "FADE"
+        assert enriched["direction_consistent"] is True  # FADE and FOLLOW agree on LAG
+        assert enriched["trade_rec"] == "LONG"  # expected_return > 0
+
+    def test_overshoot_break_direction_neutral(self):
+        brk = {
+            "symbol": "TORNTPOWER",
+            "expected_return": 2.0,
+            "actual_return": 3.0,
+            "classification": "OPPORTUNITY_OVERSHOOT",
+        }
+        enriched = enrich_break_with_direction(brk)
+        assert enriched["event_geometry"] == "OVERSHOOT"
+        assert enriched["direction_intended"] == "NEUTRAL"  # alert-only
+        assert enriched["direction_tested"] == "FADE"
+        assert enriched["direction_consistent"] is False
+        assert enriched["trade_rec"] is None  # no trade
+
+    def test_warning_break_direction_neutral(self):
+        brk = {
+            "symbol": "SBIN",
+            "expected_return": 2.0,
+            "actual_return": 0.5,
+            "classification": "WARNING",
+        }
+        enriched = enrich_break_with_direction(brk)
+        assert enriched["direction_intended"] == "NEUTRAL"
+        assert enriched["trade_rec"] is None
+
+    def test_negative_expected_follow_is_short(self):
+        brk = {
+            "symbol": "IDFCFIRSTB",
+            "expected_return": -2.0,
+            "actual_return": -0.5,
+            "classification": "OPPORTUNITY_LAG",
+        }
+        enriched = enrich_break_with_direction(brk)
+        assert enriched["event_geometry"] == "LAG"
+        assert enriched["trade_rec"] == "SHORT"

@@ -202,6 +202,48 @@ def classify_break(
 
 
 # ===================================================================
+# Direction enrichment (spec §3 + §4.1)
+# ===================================================================
+def enrich_break_with_direction(brk: dict) -> dict:
+    """
+    Add direction-audit fields to a break record (spec §3 + §4.1).
+
+    Mutates and returns the input dict. Computes:
+      - event_geometry (LAG/OVERSHOOT/DEGENERATE)
+      - direction_intended (FOLLOW/NEUTRAL — FADE is currently never intended)
+      - direction_tested (FADE — hard-coded per spec for correlation-breaks v1)
+      - direction_consistent (bool/None) — True iff geometry==LAG (backtest FADE
+        and live FOLLOW agree on LAG by construction). None for non-actionable
+        classifications.
+      - trade_rec (LONG/SHORT/None) — None for overshoots and non-actionable labels.
+
+    Uses expected_return and actual_return in PERCENT (matches classify_break).
+    """
+    expected = brk.get("expected_return", 0.0)
+    actual = brk.get("actual_return", 0.0)
+    classification = brk.get("classification", "")
+
+    geometry = classify_event_geometry(expected, actual)
+    brk["event_geometry"] = geometry
+    brk["direction_tested"] = "FADE"
+
+    if classification == "OPPORTUNITY_LAG":
+        brk["direction_intended"] = "FOLLOW"
+        brk["direction_consistent"] = True
+        brk["trade_rec"] = "LONG" if expected > 0 else "SHORT"
+    elif classification == "OPPORTUNITY_OVERSHOOT":
+        brk["direction_intended"] = "NEUTRAL"
+        brk["direction_consistent"] = False
+        brk["trade_rec"] = None
+    else:
+        brk["direction_intended"] = "NEUTRAL"
+        brk["direction_consistent"] = None
+        brk["trade_rec"] = None
+
+    return brk
+
+
+# ===================================================================
 # Data loaders
 # ===================================================================
 def load_profile() -> dict:
@@ -436,13 +478,13 @@ def scan_for_breaks(
             oi_anomaly=oi_anomaly,
         )
 
-        # Build trade recommendation for ADD actions
-        trade_rec = None
+        # Build detailed trade parameters for ADD actions (stored as trade_detail)
+        trade_detail = None
         if action == "ADD":
             direction = "LONG" if expected_return > 0 else "SHORT"
             stop_distance = 1.5 * expected_std
             target = stats.get("drift_5d_mean", stats.get("drift_5d", {}).get("mean", expected_return * 3))
-            trade_rec = {
+            trade_detail = {
                 "direction": direction,
                 "entry": "market",
                 "stop_pct": round(stop_distance, 2),
@@ -467,8 +509,12 @@ def scan_for_breaks(
             "pcr_class": pcr_class,
             "oi_anomaly": oi_anomaly,
             "oi_anomaly_type": oi_anomaly_type,
-            "trade_rec": trade_rec,
+            "trade_detail": trade_detail,
         }
+
+        # Add direction-audit fields + trade_rec string (spec §3 + §4.1)
+        # enrich_break_with_direction is the single source of truth for trade_rec
+        enrich_break_with_direction(break_entry)
 
         breaks.append(break_entry)
 
@@ -504,8 +550,8 @@ def print_breaks(breaks: list, regime: str, days_in_regime: int):
         oi_str = b['oi_anomaly_type'] if b['oi_anomaly'] else "None"
         print(f"  PCR: {pcr_str} | OI Anomaly: {oi_str}")
 
-        if b['action'] == "ADD" and b['trade_rec']:
-            tr = b['trade_rec']
+        if b['action'] == "ADD" and b.get('trade_detail'):
+            tr = b['trade_detail']
             print(f"  Action: ADD \u2014 standalone {tr['direction']} {b['symbol']} "
                   f"@ market, {tr['hold_days']}d hold")
         else:
