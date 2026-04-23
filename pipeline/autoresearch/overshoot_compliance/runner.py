@@ -87,10 +87,36 @@ def main(argv: list[str] | None = None) -> int:
              "metrics_grid_sensitivity.json + sensitivity_manifest.json alongside "
              "the authoritative raw-only artifacts. Gate-checklist never reads them.",
     )
+    parser.add_argument(
+        "--events-override",
+        default=None,
+        help="Path to a pre-built events.json (list-of-records). When supplied, "
+             "Steps 4 (compute_residuals/classify_events) and 4b (raw-bar "
+             "canonicity gate) are skipped and the events are consumed "
+             "directly. Used by the Phase C slice runner.",
+    )
+    parser.add_argument(
+        "--hypothesis-id",
+        default=_HYPOTHESIS_ID,
+        help="Override the hypothesis id recorded in manifest.json and "
+             "gate_checklist.json. Defaults to H-2026-04-23-001.",
+    )
+    parser.add_argument(
+        "--family-size",
+        type=int,
+        default=426,
+        help="Bonferroni family size for the Step 13 survivor filter. "
+             "Threshold = 0.05 / family_size. Default 426 matches the "
+             "pre-registered H-2026-04-23-001 family.",
+    )
     args = parser.parse_args(argv)
 
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
+
+    hypothesis_id = args.hypothesis_id
+    family_size = max(1, int(args.family_size))
+    bonferroni_threshold = 0.05 / family_size
 
     sector_of = load_sector_map()
     if args.smoke:
@@ -102,12 +128,19 @@ def main(argv: list[str] | None = None) -> int:
     # Step 1 - manifest
     price_files = [p for p in (_FNO_DIR / f"{t}.csv" for t in tickers) if p.exists()]
     m = manifest.build_manifest(
-        hypothesis_id=_HYPOTHESIS_ID,
+        hypothesis_id=hypothesis_id,
         strategy_version=_STRATEGY_VERSION,
         cost_model_version=_COST_MODEL_VERSION,
         random_seed=42,
         data_files=price_files,
-        config={"smoke": args.smoke, "n_tickers": len(tickers), "min_cohort_size": MIN_COHORT_SIZE},
+        config={
+            "smoke": args.smoke,
+            "n_tickers": len(tickers),
+            "min_cohort_size": MIN_COHORT_SIZE,
+            "family_size": family_size,
+            "bonferroni_threshold": bonferroni_threshold,
+            "events_override": args.events_override,
+        },
     )
     manifest.write_manifest(m, out)
 
@@ -145,53 +178,72 @@ def main(argv: list[str] | None = None) -> int:
     us = universe_snapshot.build_snapshot(tickers, _UNIVERSE_HIST, _WAIVER)
     (out / "universe_snapshot.json").write_text(json.dumps(us, indent=2, default=str), encoding="utf-8")
 
-    # Step 4 - residuals at windows 15, 20, 25 for fragility
-    events_by_window: dict[int, pd.DataFrame] = {}
-    import pipeline.autoresearch.overshoot_reversion_backtest as ORB
-    for w in (15, 20, 25):
-        old_w = ORB.ROLL_STD_WINDOW
-        ORB.ROLL_STD_WINDOW = w
-        try:
-            if closes.empty:
-                events_by_window[w] = pd.DataFrame()
-                continue
-            _, resids, zs = compute_residuals(closes, sector_of)
-            returns = closes.pct_change() * 100
-            ev_list = classify_events(returns, resids, zs)
-            ev_df = pd.DataFrame(ev_list)
-            if not ev_df.empty:
-                ev_df["direction"] = np.where(ev_df["z"] > 0, "UP", "DOWN")
-            events_by_window[w] = ev_df
-        finally:
-            ORB.ROLL_STD_WINDOW = old_w
-
-    # Step 4b - raw-bar canonicity gate (drops invalid trades from every window)
     invalid_trades: list[dict] = []
-    filtered_events_by_window: dict[int, pd.DataFrame] = {}
-    for w, ev_df in events_by_window.items():
-        if ev_df.empty:
-            filtered_events_by_window[w] = ev_df
-            continue
-        valid_rows: list[int] = []
-        for idx, row in ev_df.iterrows():
-            audit = {"flagged_dates": flagged_by_ticker.get(row["ticker"], {})}
-            valid, reasons = execution_window.is_tradeable(
-                row["ticker"], row["date"], _EXECUTION_MODE, audit,
-            )
-            if valid:
-                valid_rows.append(idx)
-            elif w == 20:
-                invalid_trades.append({
-                    "ticker": row["ticker"],
-                    "date": str(pd.Timestamp(row["date"]).normalize().date()),
-                    "direction": row.get("direction"),
-                    "z": float(row.get("z", 0.0)),
-                    "mode": _EXECUTION_MODE,
-                    "reasons": reasons,
-                })
-        filtered_events_by_window[w] = ev_df.loc[valid_rows].reset_index(drop=True)
-    events_by_window = filtered_events_by_window
-    events = events_by_window[20]
+
+    if args.events_override:
+        # Skip Steps 4 and 4b entirely. The caller (typically the Phase C
+        # slice runner) has pre-filtered events from a parent run's events.json
+        # and we consume them directly.
+        override_path = Path(args.events_override)
+        events = pd.read_json(override_path, orient="records")
+        # Coerce date column back to strings in ISO format (pandas may have
+        # parsed them to Timestamps on read).
+        if not events.empty and "date" in events.columns:
+            events["date"] = pd.to_datetime(events["date"]).dt.strftime("%Y-%m-%d")
+        # Only window=20 is populated; windows 15/25 are unavailable in an
+        # override run so fragility falls back to SKIPPED_SLICE_OVERRIDE below.
+        events_by_window: dict[int, pd.DataFrame] = {20: events}
+    else:
+        # Step 4 - residuals at windows 15, 20, 25 for fragility
+        events_by_window = {}
+        import pipeline.autoresearch.overshoot_reversion_backtest as ORB
+        for w in (15, 20, 25):
+            old_w = ORB.ROLL_STD_WINDOW
+            ORB.ROLL_STD_WINDOW = w
+            try:
+                if closes.empty:
+                    events_by_window[w] = pd.DataFrame()
+                    continue
+                _, resids, zs = compute_residuals(closes, sector_of)
+                returns = closes.pct_change() * 100
+                ev_list = classify_events(returns, resids, zs)
+                ev_df = pd.DataFrame(ev_list)
+                if not ev_df.empty:
+                    ev_df["direction"] = np.where(ev_df["z"] > 0, "UP", "DOWN")
+                events_by_window[w] = ev_df
+            finally:
+                ORB.ROLL_STD_WINDOW = old_w
+
+        # Step 4b - raw-bar canonicity gate (drops invalid trades from every window)
+        filtered_events_by_window: dict[int, pd.DataFrame] = {}
+        for w, ev_df in events_by_window.items():
+            if ev_df.empty:
+                filtered_events_by_window[w] = ev_df
+                continue
+            valid_rows: list[int] = []
+            for idx, row in ev_df.iterrows():
+                audit = {"flagged_dates": flagged_by_ticker.get(row["ticker"], {})}
+                valid, reasons = execution_window.is_tradeable(
+                    row["ticker"], row["date"], _EXECUTION_MODE, audit,
+                )
+                if valid:
+                    valid_rows.append(idx)
+                elif w == 20:
+                    invalid_trades.append({
+                        "ticker": row["ticker"],
+                        "date": str(pd.Timestamp(row["date"]).normalize().date()),
+                        "direction": row.get("direction"),
+                        "z": float(row.get("z", 0.0)),
+                        "mode": _EXECUTION_MODE,
+                        "reasons": reasons,
+                    })
+            filtered_events_by_window[w] = ev_df.loc[valid_rows].reset_index(drop=True)
+        events_by_window = filtered_events_by_window
+        events = events_by_window[20]
+
+    # Materialize events.json at the end of Step 4b so every run (including
+    # override runs) produces a self-describing artifact directory.
+    events.to_json(out / "events.json", orient="records", date_format="iso", indent=2)
 
     n_scored = int(sum(len(df) for df in events_by_window.values()))
     rejection_rate = len(invalid_trades) / max(1, len(invalid_trades) + len(events))
@@ -250,7 +302,12 @@ def main(argv: list[str] | None = None) -> int:
     }, indent=2, default=str), encoding="utf-8")
 
     # Step 9 - fragility
-    if all(not events_by_window[w].empty for w in (15, 20, 25)):
+    # Under --events-override we only have window=20 (15/25 cannot be
+    # reconstructed from pre-filtered events); emit an explicit marker instead
+    # of crashing or silently returning INSUFFICIENT_DATA.
+    if args.events_override:
+        fr = {"verdict": "SKIPPED_SLICE_OVERRIDE", "neighbor_rows": []}
+    elif all(w in events_by_window and not events_by_window[w].empty for w in (15, 20, 25)):
         fr = fragility.evaluate(events_by_window, {"min_z": 3.0, "roll_window": 20, "cost_pct": 0.30})
     else:
         fr = {"verdict": "INSUFFICIENT_DATA", "neighbor_rows": []}
@@ -290,7 +347,14 @@ def main(argv: list[str] | None = None) -> int:
     (out / "cusum_decay.json").write_text(json.dumps(cd, indent=2, default=str), encoding="utf-8")
 
     # Step 13 - portfolio gate + defense filter
-    survivors = [r for r in fade_rows if r.get("edge_net_pct", 0) > 0 and r.get("p_value", 1.0) <= 1.17e-4]
+    # Bonferroni-corrected threshold: 0.05 / family_size.  For the pre-registered
+    # H-2026-04-23-001 family_size=426 → 1.17e-4.  Slice runs pass a different
+    # family size via --family-size.
+    survivors = [
+        r for r in fade_rows
+        if r.get("edge_net_pct", 0) > 0
+        and r.get("p_value", 1.0) <= bonferroni_threshold
+    ]
     kept, flagged = defense_filter.partition(survivors, sector_of)
     keys_kept = {f"{r['ticker']}-{r['direction']}" for r in kept}
     pnl_survivors = panel[[c for c in panel.columns if c in keys_kept]] if not panel.empty else pd.DataFrame()
@@ -348,7 +412,7 @@ def main(argv: list[str] | None = None) -> int:
         "holdout": {"pct": 0.06, "target": 0.20},
         "beta_regression": {"residual_sharpe": residual_sharpe_avg, "gross_sharpe": gross_sharpe_avg},
     }
-    gc_report = gate_checklist.build(checklist_inputs, hypothesis_id=_HYPOTHESIS_ID)
+    gc_report = gate_checklist.build(checklist_inputs, hypothesis_id=hypothesis_id)
     gate_checklist.write(gc_report, out)
 
     # Step 16 - sensitivity track (parallel, never read by gate_checklist)
