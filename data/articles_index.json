@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-24",
+      "segment": "war",
+      "filename": "2026-04-24-war.html",
+      "headline": "Trump's Firing Spree and the Kharg Island Backlash: A New Era of US Military Recklessness",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 24, 2026"
+    },
+    {
+      "date": "2026-04-24",
+      "segment": "epstein",
+      "filename": "2026-04-24-epstein.html",
+      "headline": "Lutnick's Evasive Silence on Epstein: A Wall of Omerta Around Wall Street's Elite",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 24, 2026"
+    },
+    {
       "date": "2026-04-23",
       "segment": "war",
       "filename": "2026-04-23-war.html",
