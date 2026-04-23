@@ -25,3 +25,6 @@ pipeline/data/watchdog_state.json
 
 # Watchdog fallback alerts log (generated when Telegram fails)
 pipeline/logs/watchdog_alerts.log
+
+# §9B.2 streaming permutation engine (gitignored per task spec, use git add -f)
+pipeline/autoresearch/overshoot_compliance/perm_scaling.py
