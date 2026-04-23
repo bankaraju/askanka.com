@@ -1,0 +1,350 @@
+{
+  "analysis": "research_fdr_benjamini_hochberg",
+  "source_data": "permutations_100k.json (100000 bootstrap shuffles)",
+  "n_hypotheses_valid": 254,
+  "n_hypotheses_positive_edge_subset": 90,
+  "bonferroni_alpha_full": 0.0001969,
+  "bonferroni_survivors_full": 0,
+  "fdr_all_hypotheses": {
+    "alpha_0.05": {
+      "n_survivors": 0,
+      "survivors": []
+    },
+    "alpha_0.1": {
+      "n_survivors": 4,
+      "survivors": [
+        {
+          "ticker": "TORNTPHARM",
+          "direction": "UP",
+          "n_events": 22,
+          "hit_rate": 0.773,
+          "edge_net_pct": 0.935,
+          "p_value": 0.0007
+        },
+        {
+          "ticker": "360ONE",
+          "direction": "UP",
+          "n_events": 15,
+          "hit_rate": 0.733,
+          "edge_net_pct": 1.611,
+          "p_value": 0.0008
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 1.384,
+          "p_value": 0.0012
+        },
+        {
+          "ticker": "SBIN",
+          "direction": "UP",
+          "n_events": 14,
+          "hit_rate": 0.714,
+          "edge_net_pct": 1.244,
+          "p_value": 0.0013
+        }
+      ]
+    },
+    "alpha_0.2": {
+      "n_survivors": 6,
+      "survivors": [
+        {
+          "ticker": "TORNTPHARM",
+          "direction": "UP",
+          "n_events": 22,
+          "hit_rate": 0.773,
+          "edge_net_pct": 0.935,
+          "p_value": 0.0007
+        },
+        {
+          "ticker": "360ONE",
+          "direction": "UP",
+          "n_events": 15,
+          "hit_rate": 0.733,
+          "edge_net_pct": 1.611,
+          "p_value": 0.0008
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 1.384,
+          "p_value": 0.0012
+        },
+        {
+          "ticker": "SBIN",
+          "direction": "UP",
+          "n_events": 14,
+          "hit_rate": 0.714,
+          "edge_net_pct": 1.244,
+          "p_value": 0.0013
+        },
+        {
+          "ticker": "IDFCFIRSTB",
+          "direction": "DOWN",
+          "n_events": 13,
+          "hit_rate": 0.846,
+          "edge_net_pct": 1.544,
+          "p_value": 0.0021
+        },
+        {
+          "ticker": "MANKIND",
+          "direction": "UP",
+          "n_events": 11,
+          "hit_rate": 0.818,
+          "edge_net_pct": 1.239,
+          "p_value": 0.0044
+        }
+      ]
+    }
+  },
+  "fdr_positive_edge_only": {
+    "alpha_0.05": {
+      "n_survivors": 5,
+      "survivors": [
+        {
+          "ticker": "TORNTPHARM",
+          "direction": "UP",
+          "n_events": 22,
+          "hit_rate": 0.773,
+          "edge_net_pct": 0.935,
+          "p_value": 0.0007
+        },
+        {
+          "ticker": "360ONE",
+          "direction": "UP",
+          "n_events": 15,
+          "hit_rate": 0.733,
+          "edge_net_pct": 1.611,
+          "p_value": 0.0008
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 1.384,
+          "p_value": 0.0012
+        },
+        {
+          "ticker": "SBIN",
+          "direction": "UP",
+          "n_events": 14,
+          "hit_rate": 0.714,
+          "edge_net_pct": 1.244,
+          "p_value": 0.0013
+        },
+        {
+          "ticker": "IDFCFIRSTB",
+          "direction": "DOWN",
+          "n_events": 13,
+          "hit_rate": 0.846,
+          "edge_net_pct": 1.544,
+          "p_value": 0.0021
+        }
+      ]
+    },
+    "alpha_0.1": {
+      "n_survivors": 6,
+      "survivors": [
+        {
+          "ticker": "TORNTPHARM",
+          "direction": "UP",
+          "n_events": 22,
+          "hit_rate": 0.773,
+          "edge_net_pct": 0.935,
+          "p_value": 0.0007
+        },
+        {
+          "ticker": "360ONE",
+          "direction": "UP",
+          "n_events": 15,
+          "hit_rate": 0.733,
+          "edge_net_pct": 1.611,
+          "p_value": 0.0008
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 1.384,
+          "p_value": 0.0012
+        },
+        {
+          "ticker": "SBIN",
+          "direction": "UP",
+          "n_events": 14,
+          "hit_rate": 0.714,
+          "edge_net_pct": 1.244,
+          "p_value": 0.0013
+        },
+        {
+          "ticker": "IDFCFIRSTB",
+          "direction": "DOWN",
+          "n_events": 13,
+          "hit_rate": 0.846,
+          "edge_net_pct": 1.544,
+          "p_value": 0.0021
+        },
+        {
+          "ticker": "MANKIND",
+          "direction": "UP",
+          "n_events": 11,
+          "hit_rate": 0.818,
+          "edge_net_pct": 1.239,
+          "p_value": 0.0044
+        }
+      ]
+    },
+    "alpha_0.2": {
+      "n_survivors": 17,
+      "survivors": [
+        {
+          "ticker": "TORNTPHARM",
+          "direction": "UP",
+          "n_events": 22,
+          "hit_rate": 0.773,
+          "edge_net_pct": 0.935,
+          "p_value": 0.0007
+        },
+        {
+          "ticker": "360ONE",
+          "direction": "UP",
+          "n_events": 15,
+          "hit_rate": 0.733,
+          "edge_net_pct": 1.611,
+          "p_value": 0.0008
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 1.384,
+          "p_value": 0.0012
+        },
+        {
+          "ticker": "SBIN",
+          "direction": "UP",
+          "n_events": 14,
+          "hit_rate": 0.714,
+          "edge_net_pct": 1.244,
+          "p_value": 0.0013
+        },
+        {
+          "ticker": "IDFCFIRSTB",
+          "direction": "DOWN",
+          "n_events": 13,
+          "hit_rate": 0.846,
+          "edge_net_pct": 1.544,
+          "p_value": 0.0021
+        },
+        {
+          "ticker": "MANKIND",
+          "direction": "UP",
+          "n_events": 11,
+          "hit_rate": 0.818,
+          "edge_net_pct": 1.239,
+          "p_value": 0.0044
+        },
+        {
+          "ticker": "PATANJALI",
+          "direction": "DOWN",
+          "n_events": 12,
+          "hit_rate": 0.667,
+          "edge_net_pct": 1.806,
+          "p_value": 0.0097
+        },
+        {
+          "ticker": "PIIND",
+          "direction": "UP",
+          "n_events": 14,
+          "hit_rate": 0.643,
+          "edge_net_pct": 0.851,
+          "p_value": 0.0133
+        },
+        {
+          "ticker": "PNB",
+          "direction": "DOWN",
+          "n_events": 12,
+          "hit_rate": 0.5,
+          "edge_net_pct": 1.4,
+          "p_value": 0.0135
+        },
+        {
+          "ticker": "LICHSGFIN",
+          "direction": "UP",
+          "n_events": 13,
+          "hit_rate": 0.769,
+          "edge_net_pct": 1.049,
+          "p_value": 0.0141
+        },
+        {
+          "ticker": "UPL",
+          "direction": "DOWN",
+          "n_events": 19,
+          "hit_rate": 0.632,
+          "edge_net_pct": 0.779,
+          "p_value": 0.0143
+        },
+        {
+          "ticker": "HDFCLIFE",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 0.688,
+          "p_value": 0.0155
+        },
+        {
+          "ticker": "PHOENIXLTD",
+          "direction": "UP",
+          "n_events": 10,
+          "hit_rate": 0.8,
+          "edge_net_pct": 1.055,
+          "p_value": 0.0288
+        },
+        {
+          "ticker": "HDFCAMC",
+          "direction": "DOWN",
+          "n_events": 13,
+          "hit_rate": 0.538,
+          "edge_net_pct": 0.938,
+          "p_value": 0.0305
+        },
+        {
+          "ticker": "PETRONET",
+          "direction": "DOWN",
+          "n_events": 12,
+          "hit_rate": 0.583,
+          "edge_net_pct": 0.8,
+          "p_value": 0.0321
+        },
+        {
+          "ticker": "TATAPOWER",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.625,
+          "edge_net_pct": 0.619,
+          "p_value": 0.0374
+        },
+        {
+          "ticker": "BLUESTARCO",
+          "direction": "UP",
+          "n_events": 16,
+          "hit_rate": 0.5,
+          "edge_net_pct": 0.595,
+          "p_value": 0.0375
+        }
+      ]
+    }
+  },
+  "guardrails": [
+    "Bonferroni remains the deployment bar. FDR survivors stay RESEARCH / TIER_EXPLORING.",
+    "No promotion pathway. These do not become deployable signals.",
+    "FADE/FOLLOW direction caveat: backtest computed trade_ret_pct = -sign(residual) * next_ret (fades the residual). Live engine direction depends on sign(expected_return) \u2014 aligns with fade only in underperformance cases, disagrees in overshoot cases. The survivors listed here are for the FADE strategy; that is NOT necessarily what the live engine is running."
+  ]
+}
