@@ -1,0 +1,30 @@
+{
+  "n_shuffles": 100000,
+  "floor_required": 100000,
+  "rows": [
+    {
+      "ticker": "TORNTPOWER",
+      "direction": "UP",
+      "n_events": 6,
+      "hit_rate": 0.667,
+      "mean_next_pct": -1.428,
+      "edge_gross_pct": 1.428,
+      "edge_net_pct": 1.278,
+      "txn_cost_pct": 0.15,
+      "p_value": 0.035,
+      "min_z": 3.0
+    },
+    {
+      "ticker": "TORNTPOWER",
+      "direction": "DOWN",
+      "n_events": 9,
+      "hit_rate": 0.556,
+      "mean_next_pct": -0.799,
+      "edge_gross_pct": -0.799,
+      "edge_net_pct": -0.949,
+      "txn_cost_pct": 0.15,
+      "p_value": 0.9073,
+      "min_z": 3.0
+    }
+  ]
+}
