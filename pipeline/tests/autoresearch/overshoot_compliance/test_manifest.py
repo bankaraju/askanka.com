@@ -2,8 +2,6 @@ import json
 import subprocess
 from pathlib import Path
 
-import pytest
-
 from pipeline.autoresearch.overshoot_compliance import manifest as M
 
 
@@ -87,3 +85,15 @@ def test_write_manifest_round_trip(tmp_path):
     assert path.exists()
     loaded = json.loads(path.read_text())
     assert loaded == m
+
+
+def test_write_manifest_handles_non_ascii_config(tmp_path):
+    out_dir = tmp_path / "run_utf8"
+    m = M.build_manifest(
+        hypothesis_id="H-TEST", strategy_version="0.1.0",
+        cost_model_version="c", random_seed=1, data_files=[],
+        config={"note": "σ=0.3 • holdout ≥ 20%"},  # Greek + bullet + ≥
+    )
+    path = M.write_manifest(m, out_dir)
+    loaded = json.loads(path.read_text(encoding="utf-8"))
+    assert loaded["config"]["note"] == "σ=0.3 • holdout ≥ 20%"

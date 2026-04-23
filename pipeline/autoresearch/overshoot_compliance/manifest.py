@@ -24,7 +24,7 @@ def _git_commit() -> str:
             ["git", "rev-parse", "HEAD"], text=True,
             cwd=Path(__file__).resolve().parents[3],
         ).strip()
-    except Exception:
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         return "unknown"
 
 
@@ -62,5 +62,5 @@ def build_manifest(
 def write_manifest(manifest: dict, out_dir: Path) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / "manifest.json"
-    path.write_text(json.dumps(manifest, indent=2, default=str))
+    path.write_text(json.dumps(manifest, indent=2, default=str), encoding="utf-8")
     return path
