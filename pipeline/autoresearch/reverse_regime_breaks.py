@@ -148,16 +148,25 @@ def classify_break(
 
     Returns (classification, action) tuple.
 
-    Matrix:
-      Lagging + PCR agrees + no anomaly     -> OPPORTUNITY, ADD
-      Lagging + PCR neutral + no anomaly     -> POSSIBLE_OPPORTUNITY, HOLD
-      Lagging + PCR disagrees + any anomaly  -> WARNING, REDUCE
-      Opposite + PCR agrees w/ break + anom  -> CONFIRMED_WARNING, EXIT
-      Opposite + PCR disagrees + no anomaly  -> UNCERTAIN, HOLD
+    Matrix (post-§3.1 geometric split):
+      LAG-geometry + PCR agrees + no anomaly      -> OPPORTUNITY_LAG, ADD
+      OVERSHOOT-geometry + PCR agrees + no anom   -> OPPORTUNITY_OVERSHOOT, ALERT
+      Either geometry + PCR neutral + no anomaly  -> POSSIBLE_OPPORTUNITY, HOLD
+      Either geometry + PCR disagrees or anomaly  -> WARNING, REDUCE
+      Opposite + PCR agrees w/ break + anomaly    -> CONFIRMED_WARNING, EXIT
+      Opposite + PCR disagrees + no anomaly       -> UNCERTAIN, HOLD
+      Degenerate geometry                         -> UNCERTAIN, HOLD
+
+    OPPORTUNITY_OVERSHOOT carries action=ALERT (not ADD): it is an alert-only
+    classification until H-2026-04-23-003 (FADE hypothesis) passes. See
+    docs/superpowers/specs/2026-04-23-phase-c-follow-vs-fade-audit-design.md §3.1.
     """
-    # Determine if price is lagging or moving opposite
-    # "Lagging" = expected significant move, actual near zero or smaller same-direction
-    # "Opposite" = actual move is in opposite direction to expected
+    # Degenerate geometry is uncertain — too small to classify
+    geometry = classify_event_geometry(expected_return, actual_return)
+    if geometry == "DEGENERATE":
+        return "UNCERTAIN", "HOLD"
+
+    # Determine if price is lagging or moving opposite (legacy decision matrix)
     same_direction = (expected_return >= 0 and actual_return >= 0) or \
                      (expected_return < 0 and actual_return < 0)
 
@@ -165,19 +174,20 @@ def classify_break(
     is_opposite = not same_direction and abs(actual_return) > abs(expected_return) * 0.3
 
     if is_lagging and not is_opposite:
-        # Price is lagging expected move
+        # Price is lagging expected move OR overshooting same-direction
         if pcr_agrees_with_expected(pcr_class, expected_return) and not oi_anomaly:
-            return "OPPORTUNITY", "ADD"
+            # Split OPPORTUNITY by geometry — spec §3.1
+            if geometry == "LAG":
+                return "OPPORTUNITY_LAG", "ADD"
+            # geometry == "OVERSHOOT": alert-only until H-2026-04-23-003 passes
+            return "OPPORTUNITY_OVERSHOOT", "ALERT"
         elif pcr_class == "NEUTRAL" and not oi_anomaly:
             return "POSSIBLE_OPPORTUNITY", "HOLD"
         elif pcr_disagrees_with_expected(pcr_class, expected_return) or oi_anomaly:
             return "WARNING", "REDUCE"
         else:
-            # Mild agreement without anomaly
             return "POSSIBLE_OPPORTUNITY", "HOLD"
     elif is_opposite:
-        # Price moving opposite to expected
-        # "Agrees with break" = PCR agrees with the ACTUAL direction (opposite to expected)
         pcr_agrees_with_break = pcr_agrees_with_expected(pcr_class, actual_return)
         if pcr_agrees_with_break and oi_anomaly:
             return "CONFIRMED_WARNING", "EXIT"

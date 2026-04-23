@@ -39,3 +39,45 @@ class TestClassifyEventGeometry:
     def test_boundary_at_01pct(self):
         # exactly 0.1% on both is NOT degenerate (strict less-than)
         assert classify_event_geometry(expected_return=0.1, actual_return=2.0) != "DEGENERATE"
+
+
+from pipeline.autoresearch.reverse_regime_breaks import classify_break
+
+
+class TestClassifyBreakLabelSplit:
+    def test_lag_opportunity_yields_opportunity_lag(self):
+        # expected +2%, actual +0.5% → LAG; PCR agrees; no anomaly → OPPORTUNITY_LAG
+        label, action = classify_break(
+            expected_return=2.0, actual_return=0.5,
+            z_score=3.0, pcr_class="BULLISH", oi_anomaly=False,
+        )
+        assert label == "OPPORTUNITY_LAG"
+        assert action == "ADD"
+
+    def test_overshoot_opportunity_yields_opportunity_overshoot(self):
+        # expected +2%, actual +3% → OVERSHOOT; PCR agrees; no anomaly → OPPORTUNITY_OVERSHOOT (alert-only)
+        label, action = classify_break(
+            expected_return=2.0, actual_return=3.0,
+            z_score=3.0, pcr_class="BULLISH", oi_anomaly=False,
+        )
+        assert label == "OPPORTUNITY_OVERSHOOT"
+        # action for overshoot is ALERT, not ADD — signals must not be traded
+        assert action == "ALERT"
+
+    def test_degenerate_yields_uncertain(self):
+        # expected 0.05%, actual 3% → DEGENERATE → UNCERTAIN, HOLD
+        label, action = classify_break(
+            expected_return=0.05, actual_return=3.0,
+            z_score=3.0, pcr_class="BULLISH", oi_anomaly=False,
+        )
+        assert label == "UNCERTAIN"
+        assert action == "HOLD"
+
+    def test_warning_branch_unchanged(self):
+        # Existing WARNING decision-matrix branch must not be affected by the split
+        label, action = classify_break(
+            expected_return=2.0, actual_return=0.5,
+            z_score=3.0, pcr_class="BEARISH", oi_anomaly=True,
+        )
+        assert label == "WARNING"
+        assert action == "REDUCE"

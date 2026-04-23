@@ -109,14 +109,14 @@ class TestBuildV5SignalsFromV4:
 
     def test_only_opportunity_rows_kept(self, tmp_path):
         """Non-OPPORTUNITY rows must be filtered out."""
-        rows = [_row("HDFCBANK", label="OPPORTUNITY"), _row("HDFCBANK", label="SETUP")]
+        rows = [_row("HDFCBANK", label="OPPORTUNITY_LAG"), _row("HDFCBANK", label="SETUP")]
         v4_path = _make_v4_ledger(tmp_path, rows)
         out_path = str(tmp_path / "out.parquet")
 
         result = build_v5_signals_from_v4(v4_path=v4_path, out_path=out_path)
 
         assert len(result) == 1
-        assert result.iloc[0]["classification"] == "OPPORTUNITY"
+        assert result.iloc[0]["classification"] == "OPPORTUNITY_LAG"
 
     def test_date_is_entry_date_as_timestamp(self, tmp_path):
         """date column must be Timestamp equal to entry_date."""

@@ -85,9 +85,9 @@ def build_v5_signals_from_v4(
     raw = pd.read_parquet(v4_path)
     log.info("V4 ledger loaded: %d rows", len(raw))
 
-    # Filter to OPPORTUNITY rows only
-    opps = raw[raw["label"] == "OPPORTUNITY"].copy()
-    log.info("OPPORTUNITY rows: %d", len(opps))
+    # Filter to OPPORTUNITY_LAG rows only (post-§3.1 geometric split)
+    opps = raw[raw["label"] == "OPPORTUNITY_LAG"].copy()
+    log.info("OPPORTUNITY_LAG rows: %d", len(opps))
 
     # Build sector mapping
     sector_map: dict[str, str] = {
@@ -113,7 +113,7 @@ def build_v5_signals_from_v4(
                 "symbol": sym,
                 "sector": sector,
                 "sector_index": _sector_index(sector),
-                "classification": "OPPORTUNITY",
+                "classification": "OPPORTUNITY_LAG",
                 "direction": str(r["side"]),           # "LONG" / "SHORT"
                 "expected_return": float(r["expected_return"]),
                 "confidence": confidence,

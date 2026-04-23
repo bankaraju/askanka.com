@@ -63,8 +63,11 @@ def _load_breaks() -> dict:
 
 
 def _filter_opportunity(breaks: list[dict]) -> list[dict]:
-    """Return only rows whose classification is OPPORTUNITY (the full label)."""
-    return [b for b in breaks if b.get("classification") == "OPPORTUNITY"]
+    """Return only rows whose classification is OPPORTUNITY_LAG (tradeable opportunities).
+
+    OPPORTUNITY_OVERSHOOT is alert-only until H-2026-04-23-003 (FADE hypothesis) passes.
+    """
+    return [b for b in breaks if b.get("classification") == "OPPORTUNITY_LAG"]
 
 
 def _side_from_expected(expected_return: float) -> str:

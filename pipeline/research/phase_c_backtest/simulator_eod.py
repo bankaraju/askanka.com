@@ -54,7 +54,7 @@ def run_simulation(
     notional_inr: float = 50_000,
     slippage_bps: float = 5.0,
     top_n: int | None = None,
-    label_filter: str = "OPPORTUNITY",
+    label_filter: str = "OPPORTUNITY_LAG",
 ) -> pd.DataFrame:
     """Run the end-of-day directional simulator.
 
@@ -71,7 +71,7 @@ def run_simulation(
             ranked by ``abs(z_score)`` (descending). Ties are broken
             deterministically by ``symbol``.
         label_filter: Classification label that triggers entry (default
-            ``"OPPORTUNITY"``).
+            ``"OPPORTUNITY_LAG"``, which is alert-only until H-2026-04-23-003 passes).
 
     Returns:
         Trade ledger DataFrame with columns in the canonical order:

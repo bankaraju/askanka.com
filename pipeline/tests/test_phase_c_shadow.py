@@ -20,7 +20,7 @@ def _breaks_doc(rows: list[dict], date: str = "2026-04-22") -> dict:
 
 def test_filter_opportunity_drops_non_opportunity():
     rows = [
-        {"symbol": "A", "classification": "OPPORTUNITY"},
+        {"symbol": "A", "classification": "OPPORTUNITY_LAG"},
         {"symbol": "B", "classification": "POSSIBLE_OPPORTUNITY"},
         {"symbol": "C", "classification": "UNCERTAIN"},
         {"symbol": "D", "classification": "WARNING"},

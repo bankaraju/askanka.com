@@ -41,9 +41,10 @@ def classify_at_date(
     std = float(reg_prof.get("std_return", 0.0))
     z = _z_score(actual_return, expected, std)
     pcr_class = classify_pcr(pcr) if pcr is not None else "NEUTRAL"
+    # classify_break expects returns in PERCENT (e.g. 2.0 = 2%), but profile stores fractional (0.02 = 2%)
     label, action = classify_break(
-        expected_return=expected,
-        actual_return=actual_return,
+        expected_return=expected * 100,
+        actual_return=actual_return * 100,
         z_score=z,
         pcr_class=pcr_class,
         oi_anomaly=oi_anomaly,

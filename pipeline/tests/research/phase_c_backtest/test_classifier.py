@@ -15,7 +15,7 @@ def test_classify_at_date_lagging_with_pcr_agree_is_opportunity():
         pcr=1.2,  # MILD_BULL -> agrees
         oi_anomaly=False,
     )
-    assert label == "OPPORTUNITY"
+    assert label == "OPPORTUNITY_LAG"  # geometry is LAG (expected 2%, actual 0.1%)
     assert action == "ADD"
     assert z != 0
 
@@ -44,7 +44,7 @@ def test_classify_at_date_handles_missing_pcr_as_neutral():
         pcr=None,
         oi_anomaly=False,
     )
-    assert label in {"POSSIBLE_OPPORTUNITY", "OPPORTUNITY"}
+    assert label in {"POSSIBLE_OPPORTUNITY", "OPPORTUNITY_LAG"}  # PCR neutral -> uncertain geometry -> POSSIBLE_OPPORTUNITY
 
 
 def test_classify_at_date_opposite_with_oi_anomaly_is_confirmed_warning():
