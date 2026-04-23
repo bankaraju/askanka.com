@@ -43,6 +43,15 @@ from config import INDIA_SPREAD_PAIRS
 
 log = logging.getLogger("anka.spread_intelligence")
 
+
+def _num(d: dict, key: str, default):
+    """Safe numeric lookup. Unlike ``dict.get(key, default)`` this also
+    rescues the case where the key is present but the value is None — which
+    upstream technicals/positioning writers do when a metric can't be
+    computed for a stock. Returns ``default`` for both missing and None."""
+    v = d.get(key)
+    return default if v is None else v
+
 IST = timezone(timedelta(hours=5, minutes=30))
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -382,20 +391,20 @@ def run_scan(send_telegram: bool = True, morning: bool = True) -> dict:
             spread_news_map = news_data.get("spread_news", {})
 
             # Aggregate RSI across legs
-            long_rsis = [stocks_tech.get(s, {}).get("rsi_14", 50) for s in long_syms]
-            short_rsis = [stocks_tech.get(s, {}).get("rsi_14", 50) for s in short_syms]
+            long_rsis = [_num(stocks_tech.get(s, {}), "rsi_14", 50) for s in long_syms]
+            short_rsis = [_num(stocks_tech.get(s, {}), "rsi_14", 50) for s in short_syms]
 
             # Trend confirmation: long legs above 20dma, short legs below
             long_above = all(
-                stocks_tech.get(s, {}).get("vs_20dma_pct", 0) > 0 for s in long_syms
+                _num(stocks_tech.get(s, {}), "vs_20dma_pct", 0) > 0 for s in long_syms
             )
             short_below = all(
-                stocks_tech.get(s, {}).get("vs_20dma_pct", 0) < 0 for s in short_syms
+                _num(stocks_tech.get(s, {}), "vs_20dma_pct", 0) < 0 for s in short_syms
             )
             trend_confirming = long_above and short_below
             trend_conflicting = not long_above and not short_below and (
-                all(stocks_tech.get(s, {}).get("vs_20dma_pct", 0) < 0 for s in long_syms)
-                and all(stocks_tech.get(s, {}).get("vs_20dma_pct", 0) > 0 for s in short_syms)
+                all(_num(stocks_tech.get(s, {}), "vs_20dma_pct", 0) < 0 for s in long_syms)
+                and all(_num(stocks_tech.get(s, {}), "vs_20dma_pct", 0) > 0 for s in short_syms)
             )
 
             tech_agg = {
@@ -406,8 +415,8 @@ def run_scan(send_telegram: bool = True, morning: bool = True) -> dict:
             }
 
             # Aggregate PCR across legs
-            short_pcrs = [stocks_pos.get(s, {}).get("pcr", 0.7) for s in short_syms]
-            long_pcrs = [stocks_pos.get(s, {}).get("pcr", 0.7) for s in long_syms]
+            short_pcrs = [_num(stocks_pos.get(s, {}), "pcr", 0.7) for s in short_syms]
+            long_pcrs = [_num(stocks_pos.get(s, {}), "pcr", 0.7) for s in long_syms]
             pos_agg = {
                 "short_pcr_avg": mean(short_pcrs) if short_pcrs else 0.7,
                 "long_pcr_avg": mean(long_pcrs) if long_pcrs else 0.7,
