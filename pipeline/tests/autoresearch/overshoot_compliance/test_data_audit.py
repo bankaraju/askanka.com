@@ -38,7 +38,7 @@ def test_stale_quote_detected_when_ohlc_unchanged_for_many_bars():
     df.index = pd.to_datetime(df["Date"])
     df = df.drop(columns=["Date"])
     report = DA.audit_ticker("TEST", df, business_days=pd.DatetimeIndex(df.index), stale_run_min=3)
-    assert report["stale_quote_count"] >= 7  # runs >= 3 identical bars
+    assert report["stale_quote_count"] == 10  # all 10 bars form one run >= 3
 
 
 def test_zero_or_negative_price_flagged():

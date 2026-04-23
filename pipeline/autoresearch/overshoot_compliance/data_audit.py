@@ -55,7 +55,8 @@ def audit_ticker(
     }
 
 
-def aggregate(per_ticker: dict) -> dict:
+def aggregate(per_ticker: dict[str, dict]) -> dict:
+    """Aggregate per-ticker audit results and classify overall data quality."""
     total = sum(r["total_bars"] for r in per_ticker.values())
     impaired = sum(r["impaired_bars"] for r in per_ticker.values())
     pct = (impaired / total * 100.0) if total else 0.0
