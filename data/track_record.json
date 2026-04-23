@@ -1,9 +1,22 @@
 {
-  "updated_at": "2026-04-23T10:03:56.211243+05:30",
-  "total_closed": 9,
-  "win_rate_pct": 44.4,
-  "avg_pnl_pct": 1.47,
+  "updated_at": "2026-04-23T10:19:18.963483+05:30",
+  "total_closed": 10,
+  "win_rate_pct": 40.0,
+  "avg_pnl_pct": 1.26,
   "recent": [
+    {
+      "signal_id": "BRK-2026-04-23-PFC",
+      "spread_name": "Strategy 264",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "event_headline": "Phase C break on PFC: z=1.66, expected=-1.36, actual=0.29",
+      "open_date": "2026-04-23",
+      "close_date": "2026-04-23",
+      "days_open": 0,
+      "peak_pnl_pct": 0,
+      "final_pnl_pct": -0.66,
+      "close_reason": "STOPPED_OUT_ZCROSS"
+    },
     {
       "signal_id": "BRK-2026-04-20-PATANJALI",
       "spread_name": "Strategy 550",
