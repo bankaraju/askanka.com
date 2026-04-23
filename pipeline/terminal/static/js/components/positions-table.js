@@ -169,8 +169,21 @@ export function render(container, positions) {
     // That's FOLLOW-the-peer-direction (regime-trend), not fade. Until the
     // engine is re-specced (task #107), the UI must describe follow, and flag
     // which sub-case (lag or overshoot) we're seeing.
+    // OPPORTUNITY_LAG / OPPORTUNITY_OVERSHOOT were introduced in Task 7 (#107).
+    // Legacy bare OPPORTUNITY is treated identically to OPPORTUNITY_LAG for
+    // historical records read-back.
     let thesisPhrase = '';
-    if (classif === 'OPPORTUNITY') {
+    if (classif === 'OPPORTUNITY_LAG') {
+      thesisPhrase = [
+        'Peers moved; stock lagged. FOLLOW thesis (aligned with backtest FADE).',
+        'Target: 5-day drift mean of regime-conditional returns. Stop: 1.5σ against entry.',
+      ].join(' ');
+    } else if (classif === 'OPPORTUNITY_OVERSHOOT') {
+      thesisPhrase = 'Peers moved; stock overshot. Live engine thesis opposite to backtest FADE — research-only, no paper trade opened.';
+    } else if (classif === 'OPPORTUNITY') {
+      // Legacy bare OPPORTUNITY: use heuristic sub-case detection on the raw numbers
+      // (engine did not yet emit the split classification). Preserve overshoot/lag wording
+      // so historical records are still readable.
       const subcase = isOvershoot
         ? 'Stock has already moved further than peers expected (overshoot).'
         : (isLag
@@ -183,6 +196,8 @@ export function render(container, positions) {
       ].filter(Boolean).join(' ');
     } else if (classif === 'REGIME_LAG') {
       thesisPhrase = "Thesis: stock lags peers. Enter in peer direction expecting catch-up.";
+    } else if (classif === 'DEGENERATE') {
+      thesisPhrase = 'Both expected and residual magnitudes < 0.1% — classification ambiguous.';
     }
 
     const expActualLine = (expected != null && actual != null)
@@ -191,9 +206,23 @@ export function render(container, positions) {
           ? `Peers expected <b>${fmtPct(expected)}</b> in ${regime}.`
           : '');
 
+    const badgeCls = classif === 'OPPORTUNITY_OVERSHOOT' ? 'badge--muted'
+      : (classif.startsWith('OPPORTUNITY') || classif === 'REGIME_LAG') ? 'badge--gold'
+      : 'badge--muted';
+    const badgeTitle = classif === 'OPPORTUNITY_OVERSHOOT'
+      ? 'Research alert — live engine is opposite to backtest FADE. No shadow row opened. H-2026-04-23-003 will test if FADE is tradeable.'
+      : classif.startsWith('OPPORTUNITY')
+      ? 'LAG-geometry: live engine FOLLOW agrees with backtest FADE. Shadow row opened at 0.5 unit per H-2026-04-23-002.'
+      : 'regime-conditional divergence classification — exploratory (research-tier)';
+    const badgeLabel = classif === 'OPPORTUNITY_OVERSHOOT'
+      ? 'OPPORTUNITY OVERSHOOT · RESEARCH-ONLY'
+      : (classif === 'OPPORTUNITY_LAG' || classif === 'OPPORTUNITY')
+      ? 'OPPORTUNITY LAG · EXPLORATORY'
+      : `${classif.replace(/_/g, ' ')} · EXPLORATORY`;
+
     return `<tr class="break-detail-row" data-break-detail="${sym}">
       <td colspan="10" style="background: rgba(201, 168, 100, 0.04); border-top: 1px dashed var(--colour-muted, #555); padding: var(--spacing-xs) var(--spacing-md); font-size: 0.8rem; line-height: 1.5;">
-        <span class="badge badge--gold" title="regime-conditional divergence classification — exploratory (research-tier)">${classif} · EXPLORATORY</span>
+        <span class="badge ${badgeCls}" title="${badgeTitle}">${badgeLabel}</span>
         <span class="text-muted" style="margin-left: 0.5rem;">z-score ${zTxt} (${rarity})${oi}</span>
         <span style="margin-left: 0.75rem;">${expActualLine}</span>
         ${thesisPhrase ? `<div class="text-muted" style="margin-top: 2px;">${thesisPhrase}</div>` : ''}

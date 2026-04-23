@@ -991,26 +991,48 @@ def format_correlation_break_card(
     run showed zero survivors at Bonferroni 1.17e-4. Alerts remain on for
     forward-scorecard tracking only; the copy below signals research status.
     """
-    icon = {
-        "OPPORTUNITY": "\U0001f52c",            # 🔬 research/exploratory, was ✅
+    _ICON_MAP = {
+        "OPPORTUNITY_LAG": "\U0001f52c",        # 🔬 research-tier, actionable at 0.5 unit
+        "OPPORTUNITY_OVERSHOOT": "\U0001f4ca",  # 📊 alert-only, no paper trade
+        "OPPORTUNITY": "\U0001f52c",            # 🔬 legacy — treat as LAG for historical records
         "POSSIBLE_OPPORTUNITY": "\U0001f9ea",   # 🧪 experiment, was ❔
         "WARNING": "\u26a0\ufe0f",
         "CONFIRMED_WARNING": "\U0001f6a8",
         "UNCERTAIN": "\u2753",
-    }.get(classification, "\u26a0\ufe0f")
+    }
+    icon = _ICON_MAP.get(classification, "\u26a0\ufe0f")
+
+    _HEADER_MAP = {
+        "OPPORTUNITY_LAG": "CORRELATION LAG \u2014 EXPLORATORY",
+        "OPPORTUNITY_OVERSHOOT": "OVERSHOOT ALERT \u2014 RESEARCH-ONLY (no trade)",
+        "OPPORTUNITY": "CORRELATION BREAK \u2014 EXPLORATORY",  # legacy
+    }
+    header = _HEADER_MAP.get(classification, "CORRELATION BREAK \u2014 EXPLORATORY")
+
+    _classify_note = {
+        "OPPORTUNITY_LAG": "research-tier, 0.5 unit — shadow row opened",
+        "OPPORTUNITY_OVERSHOOT": "RESEARCH-ONLY — no shadow row (H-2026-04-23-003 pending)",
+        "OPPORTUNITY": "research-tier, 0.5 unit",
+    }.get(classification, "research-tier")
 
     lines = [
         LINE,
-        f"{icon} CORRELATION BREAK — EXPLORATORY: {symbol}",
+        f"{icon} {header}: {symbol}",
         LINE,
         f"Regime: {regime}",
         f"Expected: {expected:+.1f}% | Actual: {actual:+.1f}% | Z: {z_score:.1f}\u03c3",
-        f"Classification: {classification} (research-tier, 0.5 unit)",
+        f"Classification: {classification} ({_classify_note})",
         "",
         f"Options: PCR {pcr:.2f} ({pcr_sentiment}) | OI anomaly: {'YES' if oi_anomaly else 'No'}",
         "",
         f"Action: {action}",
     ]
+
+    if classification == "OPPORTUNITY_OVERSHOOT":
+        lines.append(
+            "Research-only: live engine opposite to backtest FADE direction. "
+            "Not tracked in shadow ledger until H-2026-04-23-003 passes."
+        )
 
     if action == "ADD" and standalone_trade:
         direction = standalone_trade.get("direction", "LONG")

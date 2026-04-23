@@ -108,10 +108,21 @@ function _breaksCard(breaks) {
     const zStr = zScore != null ? `${zScore > 0 ? '+' : ''}${zScore.toFixed(1)}σ ${dir}` : '--';
     const classification = b.classification || '';
     // Phase C is EXPLORATORY post 2026-04-23 H-2026-04-23-001 compliance FAIL.
-    // Only WARNING-family still uses red (defensive signal; colour retained
-    // for risk emphasis). OPPORTUNITY-family rendered muted-gold to signal
-    // research-tier status, not a tradable signal.
-    const cls = classification === 'CONFIRMED_WARNING' ? 'text-red' : 'text-secondary';
+    // OPPORTUNITY_LAG = shadow row opened (LAG-geometry, FOLLOW agrees with FADE).
+    // OPPORTUNITY_OVERSHOOT = research-only alert, no shadow row, muted display.
+    // WARNING-family retains red for risk emphasis.
+    const cls = classification === 'CONFIRMED_WARNING' ? 'text-red'
+      : classification === 'OPPORTUNITY_OVERSHOOT' ? 'text-muted'
+      : 'text-secondary';
+    const badgeCls = classification === 'CONFIRMED_WARNING' ? 'badge--red'
+      : classification === 'OPPORTUNITY_OVERSHOOT' ? 'badge--muted'
+      : classification.startsWith('OPPORTUNITY') ? 'badge--gold'
+      : 'badge--muted';
+    const title = classification === 'OPPORTUNITY_OVERSHOOT'
+      ? 'Research alert — live engine is opposite to backtest FADE. No shadow row opened. H-2026-04-23-003 will test if FADE is tradeable.'
+      : classification.startsWith('OPPORTUNITY')
+      ? 'LAG-geometry: live engine FOLLOW agrees with backtest FADE. Shadow row opened at 0.5 unit per H-2026-04-23-002.'
+      : 'Phase C defensive signal.';
     return `<div class="digest-break-row">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span class="mono" style="font-size: 0.875rem;">${_esc(b.ticker)}</span>
@@ -119,7 +130,7 @@ function _breaksCard(breaks) {
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
         <span>OI: ${_esc(b.oi_confirmation)}</span>
-        <span class="badge ${classification === 'CONFIRMED_WARNING' ? 'badge--red' : 'badge--muted'}" title="Phase C is exploratory (research-tier) post 2026-04-23 compliance FAIL. Tracked for forward scorecarding only.">${_esc(classification.replace(/_/g, ' '))}${classification.includes('OPPORTUNITY') ? ' · EXPLORATORY' : ''}</span>
+        <span class="badge ${badgeCls}" title="${title}">${_esc(classification.replace(/_/g, ' '))}${classification === 'OPPORTUNITY_LAG' ? ' · EXPLORATORY' : (classification === 'OPPORTUNITY_OVERSHOOT' ? ' · RESEARCH-ONLY' : (classification.includes('OPPORTUNITY') ? ' · EXPLORATORY' : ''))}</span>
       </div>
     </div>`;
   }).join('');
