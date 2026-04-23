@@ -17,6 +17,7 @@ from typing import Any, Dict, List
 
 from signal_enrichment import BREAKS_PATH
 from atr_stops import compute_atr_stop
+from config import TIER_EXPLORING
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +91,12 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
             "status": "OPEN",
             "spread_name": f"Phase C: {symbol} {classification}",
             "category": "phase_c",
-            "tier": "SIGNAL",
+            # Phase C tier is EXPLORING (research/forward-test) following the
+            # H-2026-04-23-001 compliance FAIL (zero survivors at Bonferroni
+            # 1.17e-4). These signals remain tracked at 0.5 unit sizing for
+            # forward scorecarding; promotion to SIGNAL requires 20+ closed
+            # trades with >=65% win rate per config.TIER_PROMOTION_*.
+            "tier": TIER_EXPLORING,
             "event_headline": (
                 f"Phase C break on {symbol}: z={z_score}, "
                 f"expected={expected_return}, actual={actual_return}"
@@ -107,7 +113,13 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
                 "oi_anomaly": oi_anomaly,
             },
         }
-        signal["_atr_stop"] = compute_atr_stop(symbol, direction=trade_rec)
+        # Phase C breaks are intraday — flattened mechanically at 14:30 IST.
+        # Use 1×ATR (not 2× overnight swing default) and cap |stop| at 3.5%
+        # so a high-vol name doesn't show a -8% stop that can't possibly
+        # trigger inside the 5-hour horizon. See atr_stops.py module docstring.
+        signal["_atr_stop"] = compute_atr_stop(
+            symbol, direction=trade_rec, mult=1.0, max_abs_pct=3.5,
+        )
         candidates.append(signal)
         logger.debug(
             "generate_break_candidates: %s %s → signal %s",

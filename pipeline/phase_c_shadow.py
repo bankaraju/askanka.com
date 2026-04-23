@@ -17,11 +17,15 @@ Scheduled from:
     pipeline/scripts/phase_c_shadow_open.bat   (daily 09:25 IST)
     pipeline/scripts/phase_c_shadow_close.bat  (daily 14:30 IST)
 
-Rationale: the backtest (docs/research/phase-c-validation/) established
-that the H1 OPPORTUNITY claim cannot be ruled in from 21 forward trades.
-This script is the six-month accumulation leg that will grow that
-sample to 100+ trades, at which point the binomial test becomes
-statistically decisive at the Bonferroni-corrected alpha.
+Status (2026-04-23): EXPLORATORY — research-tier forward-scorecard only.
+The H-2026-04-23-001 compliance run (100k permutations, Bonferroni
+alpha = 1.17e-4 over 426 hypotheses) produced zero surviving
+(ticker, direction) pairs; the residual-reversion edge could not be
+ruled in at the corrected significance. These ledger entries are kept
+for continued forward accumulation, not as trade recommendations. They
+size at 0.5 unit (TIER_EXPLORING) and are excluded from subscriber-tier
+Telegram broadcasts. Promotion back to SIGNAL requires 20+ closed
+trades with >=65% win rate per config.TIER_PROMOTION_*.
 """
 from __future__ import annotations
 

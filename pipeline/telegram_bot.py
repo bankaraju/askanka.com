@@ -985,10 +985,15 @@ def format_correlation_break_card(
     phase_b_rec: Optional[Dict] = None,
     standalone_trade: Optional[Dict] = None,
 ) -> str:
-    """Format Phase C correlation break alert for Telegram."""
+    """Format Phase C correlation break alert for Telegram.
+
+    Phase C is EXPLORATORY as of 2026-04-23 — the H-2026-04-23-001 compliance
+    run showed zero survivors at Bonferroni 1.17e-4. Alerts remain on for
+    forward-scorecard tracking only; the copy below signals research status.
+    """
     icon = {
-        "OPPORTUNITY": "\u2705",
-        "POSSIBLE_OPPORTUNITY": "\u2754",
+        "OPPORTUNITY": "\U0001f52c",            # 🔬 research/exploratory, was ✅
+        "POSSIBLE_OPPORTUNITY": "\U0001f9ea",   # 🧪 experiment, was ❔
         "WARNING": "\u26a0\ufe0f",
         "CONFIRMED_WARNING": "\U0001f6a8",
         "UNCERTAIN": "\u2753",
@@ -996,11 +1001,11 @@ def format_correlation_break_card(
 
     lines = [
         LINE,
-        f"{icon} CORRELATION BREAK: {symbol}",
+        f"{icon} CORRELATION BREAK — EXPLORATORY: {symbol}",
         LINE,
         f"Regime: {regime}",
         f"Expected: {expected:+.1f}% | Actual: {actual:+.1f}% | Z: {z_score:.1f}\u03c3",
-        f"Classification: {classification}",
+        f"Classification: {classification} (research-tier, 0.5 unit)",
         "",
         f"Options: PCR {pcr:.2f} ({pcr_sentiment}) | OI anomaly: {'YES' if oi_anomaly else 'No'}",
         "",

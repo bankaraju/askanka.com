@@ -107,8 +107,11 @@ function _breaksCard(breaks) {
     const dir = zScore == null ? '' : zScore < 0 ? '▼' : '▲';
     const zStr = zScore != null ? `${zScore > 0 ? '+' : ''}${zScore.toFixed(1)}σ ${dir}` : '--';
     const classification = b.classification || '';
-    const cls = classification === 'CONFIRMED_WARNING' ? 'text-red'
-      : classification === 'CONFIRMED_OPPORTUNITY' ? 'text-green' : 'text-secondary';
+    // Phase C is EXPLORATORY post 2026-04-23 H-2026-04-23-001 compliance FAIL.
+    // Only WARNING-family still uses red (defensive signal; colour retained
+    // for risk emphasis). OPPORTUNITY-family rendered muted-gold to signal
+    // research-tier status, not a tradable signal.
+    const cls = classification === 'CONFIRMED_WARNING' ? 'text-red' : 'text-secondary';
     return `<div class="digest-break-row">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span class="mono" style="font-size: 0.875rem;">${_esc(b.ticker)}</span>
@@ -116,7 +119,7 @@ function _breaksCard(breaks) {
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
         <span>OI: ${_esc(b.oi_confirmation)}</span>
-        <span class="badge ${classification === 'CONFIRMED_WARNING' ? 'badge--red' : classification === 'CONFIRMED_OPPORTUNITY' ? 'badge--green' : 'badge--muted'}">${_esc(classification.replace(/_/g, ' '))}</span>
+        <span class="badge ${classification === 'CONFIRMED_WARNING' ? 'badge--red' : 'badge--muted'}" title="Phase C is exploratory (research-tier) post 2026-04-23 compliance FAIL. Tracked for forward scorecarding only.">${_esc(classification.replace(/_/g, ' '))}${classification.includes('OPPORTUNITY') ? ' · EXPLORATORY' : ''}</span>
       </div>
     </div>`;
   }).join('');

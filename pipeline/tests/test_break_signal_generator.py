@@ -80,7 +80,7 @@ def test_generate_break_candidates_only_emits_actionable(breaks_file: Path, monk
     from pipeline.break_signal_generator import generate_break_candidates
 
     monkeypatch.setattr(bsg, "compute_atr_stop",
-                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                        lambda symbol, direction, **_: {"stop_pct": -2.3, "stop_price": 310.5,
                                                     "atr_14": 7.1, "stop_source": "atr_14"})
     candidates = generate_break_candidates(breaks_path=breaks_file)
 
@@ -97,7 +97,7 @@ def test_candidate_has_required_signal_fields(breaks_file: Path, monkeypatch) ->
     from pipeline.break_signal_generator import generate_break_candidates
 
     monkeypatch.setattr(bsg, "compute_atr_stop",
-                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                        lambda symbol, direction, **_: {"stop_pct": -2.3, "stop_price": 310.5,
                                                     "atr_14": 7.1, "stop_source": "atr_14"})
     candidates = generate_break_candidates(breaks_path=breaks_file)
     hal = next(c for c in candidates if c["_break_metadata"]["symbol"] == "HAL")
@@ -109,7 +109,7 @@ def test_candidate_has_required_signal_fields(breaks_file: Path, monkeypatch) ->
     # required fields
     assert hal["source"] == "CORRELATION_BREAK"
     assert hal["status"] == "OPEN"
-    assert hal["tier"] == "SIGNAL"
+    assert hal["tier"] == "EXPLORING"  # demoted 2026-04-23 post H-2026-04-23-001 FAIL
     assert hal["category"] == "phase_c"
     assert "Phase C:" in hal["spread_name"]
     assert "HAL" in hal["spread_name"]
@@ -136,7 +136,7 @@ def test_short_candidate_uses_short_legs(breaks_file: Path, monkeypatch) -> None
     from pipeline.break_signal_generator import generate_break_candidates
 
     monkeypatch.setattr(bsg, "compute_atr_stop",
-                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                        lambda symbol, direction, **_: {"stop_pct": -2.3, "stop_price": 310.5,
                                                     "atr_14": 7.1, "stop_source": "atr_14"})
     candidates = generate_break_candidates(breaks_path=breaks_file)
     bel = next(c for c in candidates if c["_break_metadata"]["symbol"] == "BEL")
@@ -182,7 +182,7 @@ def test_generated_signal_carries_atr_stop(tmp_path, monkeypatch):
     # Force a deterministic result so the test never hits the network.
     from pipeline import break_signal_generator as bsg
     monkeypatch.setattr(bsg, "compute_atr_stop",
-                        lambda symbol, direction: {"stop_pct": -2.3, "stop_price": 310.5,
+                        lambda symbol, direction, **_: {"stop_pct": -2.3, "stop_price": 310.5,
                                                     "atr_14": 7.1, "stop_source": "atr_14"})
     sigs = bsg.generate_break_candidates(breaks_file)
     assert len(sigs) == 1
@@ -190,3 +190,35 @@ def test_generated_signal_carries_atr_stop(tmp_path, monkeypatch):
     assert "_atr_stop" in s
     assert s["_atr_stop"]["stop_source"] == "atr_14"
     assert s["_atr_stop"]["stop_pct"] == -2.3
+
+
+def test_break_generator_calls_atr_stop_with_intraday_params(tmp_path, monkeypatch) -> None:
+    """Phase C is intraday: generator MUST pass mult=1.0 and max_abs_pct=3.5
+    so a -8% swing-sized stop can never appear on a 5-hour-horizon trade."""
+    import json
+    breaks_file = tmp_path / "breaks.json"
+    breaks_file.write_text(json.dumps({
+        "date": "2026-04-23", "scan_time": "2026-04-23T10:00:00+05:30",
+        "breaks": [
+            {"symbol": "HDFCAMC", "trade_rec": "SHORT", "classification": "OPPORTUNITY",
+             "z_score": -2.3, "expected_return": 0.4, "actual_return": -1.9},
+        ],
+    }))
+
+    captured = {}
+    def spy(symbol, direction, **kwargs):
+        captured["symbol"] = symbol
+        captured["direction"] = direction
+        captured.update(kwargs)
+        return {"stop_pct": -3.5, "stop_price": 103.5,
+                "atr_14": 12.0, "stop_source": "atr_14_capped"}
+
+    from pipeline import break_signal_generator as bsg
+    monkeypatch.setattr(bsg, "compute_atr_stop", spy)
+    sigs = bsg.generate_break_candidates(breaks_file)
+    assert len(sigs) == 1
+    # Critical: generator must pass intraday sizing, not rely on defaults
+    assert captured.get("mult") == 1.0, \
+        f"break generator must call compute_atr_stop with mult=1.0; got {captured}"
+    assert captured.get("max_abs_pct") == 3.5, \
+        f"break generator must cap at 3.5%; got {captured}"
