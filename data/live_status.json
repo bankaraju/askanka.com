@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-22T11:48:56.894262+05:30",
+  "updated_at": "2026-04-23T04:45:32.856978+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,52 +11,59 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4403.6,
-          "pnl_pct": 2.77
+          "current": 4394.0,
+          "pnl_pct": 2.55
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 449.35,
-          "pnl_pct": -0.11
+          "current": 448.95,
+          "pnl_pct": -0.2
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1388.9,
-          "pnl_pct": 1.07
+          "current": 1379.5,
+          "pnl_pct": 0.39
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2550.6,
-          "pnl_pct": 0.83
+          "current": 2535.3,
+          "pnl_pct": 1.43
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1265.4,
-          "pnl_pct": 4.29
+          "current": 1268.8,
+          "pnl_pct": 4.03
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 203.54,
-          "pnl_pct": 4.43
+          "current": 204.0,
+          "pnl_pct": 4.22
         }
       ],
-      "spread_pnl_pct": 4.27,
-      "todays_move": 4.27,
+      "spread_pnl_pct": 4.89,
+      "todays_move": 4.89,
       "daily_stop": -0.97,
       "two_day_stop": -1.95,
-      "trail_stop": 2.32,
+      "trail_stop": 3.19,
       "trail_budget": 1.95,
       "avg_favorable": 1.95,
-      "peak_pnl": 4.27,
+      "stop_source": "spread_stats",
+      "peak_pnl": 5.14,
       "source": "SPREAD",
       "trust_scores": {
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
+          "opus_side": null,
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        },
         "INFY": {
           "trust_grade": "F",
           "trust_score": 17.5,
@@ -86,12 +93,6 @@
           "trust_score": 69.5,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
-          "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         }
       },
       "regime_rank": {
@@ -173,196 +174,6 @@
         }
       },
       "conviction_score": 49.405,
-      "gate_reason": null
-    },
-    {
-      "signal_id": "BRK-2026-04-20-TMPV",
-      "spread_name": "Strategy 645",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-20",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "TMPV",
-          "entry": 357.3,
-          "current": 356.6,
-          "pnl_pct": 0.2
-        }
-      ],
-      "spread_pnl_pct": 0.06,
-      "todays_move": 0.06,
-      "daily_stop": -1.0,
-      "two_day_stop": -2.0,
-      "trail_stop": -1.17,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "peak_pnl": 0.83,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "TMPV": {
-          "trust_grade": "D",
-          "trust_score": 35.4,
-          "opus_side": null,
-          "thesis": "The biggest strength is the successful financial turnaround and consistent improvement in profitability, particularly for JLR, achieving EBIT margins over 6% for six consecutive quarters and strong consolidated PAT of \u20b931,807 crore in FY2023-24. This demonstrates effective cost management and operational efficiency in core business segments, even amidst supply chain challenges."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null
-    },
-    {
-      "signal_id": "BRK-2026-04-20-PATANJALI",
-      "spread_name": "Strategy 550",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-20",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "PATANJALI",
-          "entry": 468.95,
-          "current": 466.6,
-          "pnl_pct": 0.5
-        }
-      ],
-      "spread_pnl_pct": 1.1,
-      "todays_move": 1.1,
-      "daily_stop": -1.0,
-      "two_day_stop": -2.0,
-      "trail_stop": 0.14,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "peak_pnl": 2.14,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "PATANJALI": {
-          "trust_grade": "F",
-          "trust_score": 6.7,
-          "opus_side": null,
-          "thesis": "The company significantly exceeded its target for establishing oil palm plantations in FY24, establishing 74,376 hectares against a plan of 25,000 hectares (FY23 AR, Page 119 vs FY24 AR, Page 127). This demonstrates strong operational capability in a key growth area."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null
-    },
-    {
-      "signal_id": "BRK-2026-04-20-YESBANK",
-      "spread_name": "Strategy 442",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-20",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "YESBANK",
-          "entry": 20.64,
-          "current": 20.05,
-          "pnl_pct": 2.86
-        }
-      ],
-      "spread_pnl_pct": 2.86,
-      "todays_move": 2.86,
-      "daily_stop": -1.0,
-      "two_day_stop": -2.0,
-      "trail_stop": 2.46,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "peak_pnl": 4.46,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "YESBANK": {
-          "trust_grade": "F",
-          "trust_score": 12.9,
-          "opus_side": null,
-          "thesis": "The most impressive delivery is on the 'new CASA accounts onboarded' target. The guidance from the FY25 Annual Report (Page 3) stated '1.3 million new CASA accounts onboarded' for FY25, and the actual value reported in the same report was precisely '1.3 million', resulting in a 0.0% variance and a 'DELIVERED' status. This demonstrates precise execution and reporting on a critical operational metric."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null
-    },
-    {
-      "signal_id": "BRK-2026-04-20-IEX",
-      "spread_name": "Strategy 533",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-20",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "IEX",
-          "entry": 132.89,
-          "current": 126.0,
-          "pnl_pct": 5.18
-        }
-      ],
-      "spread_pnl_pct": 5.03,
-      "todays_move": 5.03,
-      "daily_stop": -1.0,
-      "two_day_stop": -2.0,
-      "trail_stop": 3.67,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "peak_pnl": 5.67,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "IEX": {
-          "trust_grade": "F",
-          "trust_score": 12.0,
-          "opus_side": null,
-          "thesis": "The company's ability to exceed the GDP growth forecast for FY2025-26 (IMF revised to 7.3% vs. guidance of 6.2-6.5%) demonstrates a strong underlying economic environment that could eventually benefit the exchange. Furthermore, the progress in BESS capacity awarded (13.2 GWH awarded) indicates a positive long-term trend for energy storage, which IEX is positioning itself to capitalize on, even if the immediate 'needed' capacity target is still in progress."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null
-    },
-    {
-      "signal_id": "BRK-2026-04-20-BHEL",
-      "spread_name": "Strategy 606",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-20",
-      "long_legs": [
-        {
-          "ticker": "BHEL",
-          "entry": 318.53,
-          "current": 330.8,
-          "pnl_pct": 3.85
-        }
-      ],
-      "short_legs": [],
-      "spread_pnl_pct": 4.05,
-      "todays_move": 4.05,
-      "daily_stop": -1.0,
-      "two_day_stop": -2.0,
-      "trail_stop": 2.02,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "peak_pnl": 4.02,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "BHEL": {
-          "trust_grade": "B",
-          "trust_score": 65.6,
-          "opus_side": null,
-          "thesis": "BHEL's biggest strength lies in its ability to secure and execute large power sector orders, significantly exceeding its own guidance for order inflow and total order book. For FY2024-25, the company secured 14.6 GW of thermal power orders, exceeding its 10-12 GW target by over 20%, and grew its total order book to Rs 1,96,328 crores, far surpassing the Rs 1,31,600 crores reported at the start of the year. This demonstrates strong market positioning and execution capability in its core business."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
       "gate_reason": null
     }
   ],

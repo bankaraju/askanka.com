@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-22T11:48:56.937767+05:30",
+  "updated_at": "2026-04-23T04:45:32.902287+05:30",
   "regime_zone": "RISK-OFF",
-  "regime_source_timestamp": "2026-04-22T09:25:10.575638+05:30",
+  "regime_source_timestamp": "2026-04-23T04:45:21.102487+05:30",
   "spreads": [],
   "stocks": [
     {
@@ -10,11 +10,10 @@
       "conviction": "HIGH",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-21 11:58:41",
-      "is_stale": false,
+      "source_timestamp": "2026-04-22 09:31:35",
+      "is_stale": true,
       "hit_rate": 1.0,
-      "episodes": 1,
-      "hit_rate_meaningful": false
+      "episodes": 1
     },
     {
       "ticker": "PGEL",
@@ -22,11 +21,10 @@
       "conviction": "HIGH",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-21 11:58:41",
-      "is_stale": false,
+      "source_timestamp": "2026-04-22 09:31:35",
+      "is_stale": true,
       "hit_rate": 1.0,
-      "episodes": 1,
-      "hit_rate_meaningful": false
+      "episodes": 1
     },
     {
       "ticker": "MOTILALOFS",
@@ -34,11 +32,10 @@
       "conviction": "MEDIUM",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-21 11:58:41",
-      "is_stale": false,
+      "source_timestamp": "2026-04-22 09:31:35",
+      "is_stale": true,
       "hit_rate": 1.0,
-      "episodes": 1,
-      "hit_rate_meaningful": false
+      "episodes": 1
     }
   ],
   "news_driven": [],
