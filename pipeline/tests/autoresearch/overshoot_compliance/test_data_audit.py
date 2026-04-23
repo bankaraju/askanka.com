@@ -72,3 +72,35 @@ def test_aggregate_classifies_auto_fail():
     per_ticker = {"A": {"total_bars": 1000, "impaired_bars": 40}}
     agg = DA.aggregate(per_ticker)
     assert agg["classification"] == "AUTO-FAIL"
+
+
+def test_missing_bars_not_flagged_before_first_observed_date():
+    """A ticker that listed mid-window should not be penalised for pre-listing days."""
+    rows = [
+        {"Date": "2025-01-06", "Open": 100, "High": 101, "Low": 99, "Close": 100, "Volume": 1000},
+        {"Date": "2025-01-07", "Open": 101, "High": 102, "Low": 100, "Close": 101, "Volume": 1000},
+    ]
+    df = pd.DataFrame(rows)
+    df.index = pd.to_datetime(df["Date"])
+    df = df.drop(columns=["Date"])
+    # Global window is 2025-01-01 to 2025-01-07 (five business days)
+    bdays = pd.bdate_range("2025-01-01", "2025-01-07")
+    report = DA.audit_ticker("LATELISTING", df, business_days=bdays)
+    # Pre-listing bars (Jan 1-3) must NOT count as missing.
+    assert report["missing_bar_count"] == 0
+
+
+def test_business_days_observed_calendar_respects_holidays():
+    """When business_days contains only actually-traded dates (no Mon–Fri holidays),
+    a ticker that has a bar for each of those dates must show zero missing bars."""
+    traded = pd.DatetimeIndex(["2025-01-01", "2025-01-03", "2025-01-06"])  # Jan-02 skipped (holiday)
+    rows = [
+        {"Date": "2025-01-01", "Open": 100, "High": 101, "Low": 99, "Close": 100, "Volume": 1000},
+        {"Date": "2025-01-03", "Open": 101, "High": 102, "Low": 100, "Close": 101, "Volume": 1000},
+        {"Date": "2025-01-06", "Open": 102, "High": 103, "Low": 101, "Close": 102, "Volume": 1000},
+    ]
+    df = pd.DataFrame(rows)
+    df.index = pd.to_datetime(df["Date"])
+    df = df.drop(columns=["Date"])
+    report = DA.audit_ticker("HOLIDAY_CLEAN", df, business_days=traded)
+    assert report["missing_bar_count"] == 0

@@ -15,9 +15,14 @@ def audit_ticker(
     Returns a dict with missing, duplicate, stale-run, zero-price, zero-volume
     counts and the total impaired-bar count.
     """
-    expected = set(pd.DatetimeIndex(business_days).normalize())
     observed = pd.DatetimeIndex(df.index).normalize()
     observed_set = set(observed)
+    # Listing-effect guard: a ticker that starts trading mid-window cannot
+    # be penalised for pre-listing days. Clip the expected calendar to
+    # start at its first observed bar.
+    first_obs = observed.min() if len(observed) else None
+    expected_all = pd.DatetimeIndex(business_days).normalize()
+    expected = {dt for dt in expected_all if first_obs is None or dt >= first_obs}
     missing = len(expected - observed_set)
     duplicate = int(observed.duplicated().sum())
 

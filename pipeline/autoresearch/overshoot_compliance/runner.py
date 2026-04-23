@@ -112,21 +112,32 @@ def main(argv: list[str] | None = None) -> int:
     manifest.write_manifest(m, out)
 
     # Step 2 - data audit + per-ticker flagged-dates map (raw-bar canonicity)
-    if not closes.empty:
-        bdays = pd.bdate_range(closes.index.min(), closes.index.max())
-    else:
-        bdays = pd.DatetimeIndex([])
-    per_ticker = {}
-    flagged_by_ticker: dict[str, dict] = {}
+    # Load frames first so we can build the observed NSE trading calendar from
+    # long-history tickers (encodes exchange holidays without external dep).
     ticker_frames: dict[str, pd.DataFrame] = {}
     for t in tickers:
         p = _FNO_DIR / f"{t}.csv"
         if not p.exists():
             continue
         df = pd.read_csv(p, parse_dates=["Date"]).sort_values("Date").drop_duplicates("Date", keep="last").set_index("Date")
+        ticker_frames[t] = df
+
+    long_hist_dates: set[pd.Timestamp] = set()
+    for t, df in ticker_frames.items():
+        if len(df) >= 1000:
+            long_hist_dates.update(pd.DatetimeIndex(df.index).normalize())
+    if long_hist_dates:
+        bdays = pd.DatetimeIndex(sorted(long_hist_dates))
+    elif not closes.empty:
+        bdays = pd.bdate_range(closes.index.min(), closes.index.max())
+    else:
+        bdays = pd.DatetimeIndex([])
+
+    per_ticker = {}
+    flagged_by_ticker: dict[str, dict] = {}
+    for t, df in ticker_frames.items():
         per_ticker[t] = data_audit.audit_ticker(t, df, bdays)
         flagged_by_ticker[t] = execution_window.build_flagged_dates(t, df, bdays)
-        ticker_frames[t] = df
     da = data_audit.aggregate(per_ticker) if per_ticker else {"classification": "INSUFFICIENT_DATA", "impaired_pct": 0.0, "total_bars": 0, "impaired_bars": 0, "per_ticker": {}}
     (out / "data_audit.json").write_text(json.dumps(da, indent=2, default=str), encoding="utf-8")
 

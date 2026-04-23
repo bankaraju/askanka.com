@@ -29,9 +29,13 @@ def build_flagged_dates(
     - "zero_volume": Volume <= 0 (only when Volume column exists)
     """
     flagged: dict[pd.Timestamp, list[str]] = {}
-    expected = set(pd.DatetimeIndex(business_days).normalize())
     observed = pd.DatetimeIndex(df.index).normalize()
     observed_set = set(observed)
+    # Listing-effect guard: pre-first-trade days are not "missing", they are
+    # pre-existence. Clip the expected calendar to the ticker's first bar.
+    first_obs = observed.min() if len(observed) else None
+    expected_all = pd.DatetimeIndex(business_days).normalize()
+    expected = {dt for dt in expected_all if first_obs is None or dt >= first_obs}
 
     # missing
     for dt in expected - observed_set:
