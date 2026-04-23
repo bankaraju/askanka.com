@@ -589,6 +589,27 @@ The legacy `OPPORTUNITY` label was split into two geometry-specific variants. Ev
 
 DIRECTION-SUSPECT verdicts per (ticker, direction) live at `pipeline/autoresearch/results/direction_suspect_verdicts_<date>.json`. See `docs/superpowers/phase_c_direction.md` for the audit mechanics and `docs/superpowers/specs/2026-04-23-phase-c-follow-vs-fade-audit-design.md` for the spec.
 
+#### Phase C compliance audit trail
+
+Every pre-registered hypothesis against the Phase C event panel appears in `docs/superpowers/hypothesis-registry.jsonl` with its terminal_state. Running audit (most recent last):
+
+- `H-2026-04-23-001` — parent event panel (14,907 events, |z|≥2). PASS (2026-04-23). Registry line 1.
+- `H-2026-04-23-002` (LAG slice) — OPPORTUNITY_LAG FADE hypothesis. FAIL under Bonferroni (2026-04-23).
+- `H-2026-04-23-003` (OVERSHOOT slice) — OPPORTUNITY_OVERSHOOT FADE hypothesis. FAIL under Bonferroni (2026-04-23).
+- `H-2026-04-24-001` — TA Coincidence Scorer RELIANCE pilot. FAIL (mean_auc 0.509, 2026-04-23).
+- `H-2026-04-24-002` — persistent-break + cross-sectional Lasso (symmetric |z|≥3 on T and T-1). ABANDONED_PRE_EXECUTION (n=116 below 500 floor, 2026-04-24).
+- `H-2026-04-24-003` — persistent-break + cross-sectional Lasso v2 (asymmetric |z|≥3 on T AND |z|≥2 on T-1, same-sign). **FAIL** (2026-04-24). Model S1 Sharpe −3.28 vs buy-and-hold +1.70, margin −4.98, permutation p=0.81. Fragility STABLE 26/27 — the negative edge is NOT a parameter artefact. Artifacts at `pipeline/autoresearch/results/compliance_H-2026-04-24-003_20260423T210632Z/`. The 236-feature Lasso cannot extract predictive signal from the persistent-break subset; always-fade and buy-and-hold both dominate in the same holdout.
+
+##### Compliance runner: H-2026-04-24-003 (persistent-break v2 + cross-sectional)
+
+- **Entry:** `python -m pipeline.autoresearch.phase_c_cross_sectional.runner`
+- **Source:** `pipeline/autoresearch/phase_c_cross_sectional/`
+- **Hypothesis:** v2 of H-2026-04-24-002. Lasso regression on 236-feature cross-sectional vector over asymmetric persistent-break events (`|z|≥3 on T AND |z|≥2 on T-1, same-sign`). Single-model family (Bonferroni α = 0.05).
+- **Scheduling:** ad-hoc research, NOT a scheduled task.
+- **Output:** `pipeline/autoresearch/results/compliance_H-2026-04-24-003_<stamp>/` with manifest, feature matrices, model, predictions, slippage grid, naive comparators, permutation null, fragility sweep (α × z_current × z_prior grid), §11B/§11C/§12 sections, §15.1 gate checklist.
+- **Runtime:** ~10 min for 100k permutations on 8 cores.
+- **H-2026-04-24-002 (abandoned) and the superseded v1 plan are historical context only:** see registry line 5 (`b50773f`) and `docs/superpowers/plans/2026-04-24-persistent-break-cross-sectional.md`.
+
 ### How Phases Connect
 
 ```
