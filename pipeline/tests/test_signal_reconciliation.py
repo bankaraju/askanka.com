@@ -1,5 +1,7 @@
-"""Cross-surface reconciliation: one fixture, three surfaces, matching badges."""
-from pathlib import Path
+"""Cross-surface reconciliation: one fixture, matching badges across Python
+surfaces (Telegram card + future terminal renders). The marketing website no
+longer inlines badge thresholds — that surface was dropped when index.html
+was cryptified (commit 7f465e2)."""
 from pipeline.signal_badges import trust_badge, rank_badge, conviction_badge
 
 
@@ -43,12 +45,3 @@ def test_telegram_card_carries_badges():
     assert "S TCS C" in card
 
 
-def test_index_html_js_thresholds_match_python():
-    """Verify index.html JS badge thresholds match signal_badges.py thresholds."""
-    html = Path("index.html").read_text(encoding="utf-8")
-    # Trust thresholds: A+, A → strong
-    assert 'TRUST_STRONG = new Set(["A+", "A"])' in html
-    # Conviction threshold: >= 65 → strong (matches Python conviction_badge)
-    assert "s >= 65" in html
-    # Note: rankBadge JS function is not yet rendered in index.html frontend
-    # but the Python rank_badge(0.60) threshold exists and is tested above
