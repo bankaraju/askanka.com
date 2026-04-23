@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-23T13:04:51.284997+05:30",
+  "updated_at": "2026-04-23T13:18:39.087488+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -11,44 +11,44 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4357.6,
-          "pnl_pct": 1.7
+          "current": 4368.4,
+          "pnl_pct": 1.95
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 446.85,
-          "pnl_pct": -0.67
+          "current": 448.5,
+          "pnl_pct": -0.3
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1397.0,
-          "pnl_pct": 1.66
+          "current": 1412.0,
+          "pnl_pct": 2.75
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2537.0,
-          "pnl_pct": 1.36
+          "current": 2536.3,
+          "pnl_pct": 1.39
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1250.7,
-          "pnl_pct": 5.4
+          "current": 1250.6,
+          "pnl_pct": 5.41
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 203.76,
-          "pnl_pct": 4.33
+          "current": 203.77,
+          "pnl_pct": 4.32
         }
       ],
-      "spread_pnl_pct": 4.73,
-      "todays_move": 4.73,
+      "spread_pnl_pct": 4.94,
+      "todays_move": 4.94,
       "daily_stop": -0.99,
       "two_day_stop": -1.98,
       "trail_stop": 3.16,
@@ -58,11 +58,11 @@
       "peak_pnl": 5.14,
       "source": "SPREAD",
       "trust_scores": {
-        "BEL": {
+        "BDL": {
           "trust_grade": "C",
-          "trust_score": 55.0,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+          "trust_score": 56.8,
+          "opus_side": null,
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
         },
         "INFY": {
           "trust_grade": "F",
@@ -70,17 +70,17 @@
           "opus_side": null,
           "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
         },
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
         "WIPRO": {
           "trust_grade": "A",
           "trust_score": 83.7,
           "opus_side": null,
           "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        },
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         },
         "HAL": {
           "trust_grade": "B",
@@ -88,11 +88,11 @@
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
+        "BEL": {
+          "trust_grade": "C",
+          "trust_score": 55.0,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         }
       },
       "regime_rank": {
@@ -187,12 +187,12 @@
         {
           "ticker": "TECHM",
           "entry": 1470.2,
-          "current": 1445.9,
-          "pnl_pct": 1.65
+          "current": 1442.4,
+          "pnl_pct": 1.89
         }
       ],
-      "spread_pnl_pct": 1.99,
-      "todays_move": 1.99,
+      "spread_pnl_pct": 1.91,
+      "todays_move": 1.91,
       "daily_stop": -6.28,
       "two_day_stop": -12.56,
       "trail_stop": 1.02,
@@ -226,12 +226,12 @@
         {
           "ticker": "CROMPTON",
           "entry": 261.01,
-          "current": 256.44,
-          "pnl_pct": 1.75
+          "current": 256.0,
+          "pnl_pct": 1.92
         }
       ],
-      "spread_pnl_pct": 2.31,
-      "todays_move": 2.31,
+      "spread_pnl_pct": 2.02,
+      "todays_move": 2.02,
       "daily_stop": -7.04,
       "two_day_stop": -14.08,
       "trail_stop": 1.79,
@@ -269,15 +269,15 @@
           "pnl_pct": 1.5
         }
       ],
-      "spread_pnl_pct": 1.4,
-      "todays_move": 1.4,
+      "spread_pnl_pct": 1.69,
+      "todays_move": 1.69,
       "daily_stop": -6.06,
       "two_day_stop": -12.12,
-      "trail_stop": -0.6,
+      "trail_stop": -0.31,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 1.4,
+      "peak_pnl": 1.69,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "TMPV": {
@@ -304,19 +304,19 @@
         {
           "ticker": "RECLTD",
           "entry": 381.85,
-          "current": 378.0,
-          "pnl_pct": 1.01
+          "current": 378.2,
+          "pnl_pct": 0.96
         }
       ],
-      "spread_pnl_pct": 0.82,
-      "todays_move": 0.82,
+      "spread_pnl_pct": 0.92,
+      "todays_move": 0.92,
       "daily_stop": -5.93,
       "two_day_stop": -11.86,
-      "trail_stop": -1.18,
+      "trail_stop": -1.08,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 0.82,
+      "peak_pnl": 0.92,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "RECLTD": {
@@ -343,12 +343,12 @@
         {
           "ticker": "PETRONET",
           "entry": 277.54,
-          "current": 278.35,
-          "pnl_pct": -0.29
+          "current": 278.0,
+          "pnl_pct": -0.17
         }
       ],
-      "spread_pnl_pct": 0.15,
-      "todays_move": 0.15,
+      "spread_pnl_pct": -0.17,
+      "todays_move": -0.17,
       "daily_stop": -5.95,
       "two_day_stop": -11.9,
       "trail_stop": -0.9,
@@ -382,19 +382,19 @@
         {
           "ticker": "NUVAMA",
           "entry": 1363.3,
-          "current": 1367.5,
-          "pnl_pct": -0.31
+          "current": 1367.9,
+          "pnl_pct": -0.34
         }
       ],
-      "spread_pnl_pct": -0.78,
-      "todays_move": -0.78,
+      "spread_pnl_pct": -0.49,
+      "todays_move": -0.49,
       "daily_stop": -6.46,
       "two_day_stop": -12.92,
       "trail_stop": -2.0,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.31,
+      "peak_pnl": -0.34,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "NUVAMA": {
@@ -421,19 +421,19 @@
         {
           "ticker": "HDFCAMC",
           "entry": 2745.0,
-          "current": 2733.1,
-          "pnl_pct": 0.43
+          "current": 2734.9,
+          "pnl_pct": 0.37
         }
       ],
-      "spread_pnl_pct": 0.23,
-      "todays_move": 0.23,
+      "spread_pnl_pct": 0.43,
+      "todays_move": 0.43,
       "daily_stop": -7.11,
       "two_day_stop": -14.22,
-      "trail_stop": -1.77,
+      "trail_stop": -1.57,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 0.23,
+      "peak_pnl": 0.43,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "HDFCAMC": {
@@ -487,12 +487,12 @@
         {
           "ticker": "MOTILALOFS",
           "entry": 806.95,
-          "current": 788.2,
-          "pnl_pct": 2.32
+          "current": 789.0,
+          "pnl_pct": 2.22
         }
       ],
-      "spread_pnl_pct": 2.11,
-      "todays_move": 2.11,
+      "spread_pnl_pct": 2.1,
+      "todays_move": 2.1,
       "daily_stop": -7.25,
       "two_day_stop": -14.5,
       "trail_stop": 0.43,
@@ -553,12 +553,12 @@
         {
           "ticker": "EXIDEIND",
           "entry": 353.8,
-          "current": 349.95,
-          "pnl_pct": 1.09
+          "current": 349.75,
+          "pnl_pct": 1.14
         }
       ],
-      "spread_pnl_pct": 1.13,
-      "todays_move": 1.13,
+      "spread_pnl_pct": 0.98,
+      "todays_move": 0.98,
       "daily_stop": -6.76,
       "two_day_stop": -13.52,
       "trail_stop": -0.87,
@@ -592,12 +592,12 @@
         {
           "ticker": "YESBANK",
           "entry": 19.94,
-          "current": 19.98,
-          "pnl_pct": -0.2
+          "current": 19.97,
+          "pnl_pct": -0.15
         }
       ],
-      "spread_pnl_pct": -0.1,
-      "todays_move": -0.1,
+      "spread_pnl_pct": -0.2,
+      "todays_move": -0.2,
       "daily_stop": -5.32,
       "two_day_stop": -10.64,
       "trail_stop": -1.85,
@@ -631,19 +631,19 @@
         {
           "ticker": "VEDL",
           "entry": 758.8,
-          "current": 739.4,
-          "pnl_pct": 2.56
+          "current": 740.0,
+          "pnl_pct": 2.48
         }
       ],
-      "spread_pnl_pct": 2.37,
-      "todays_move": 2.37,
+      "spread_pnl_pct": 2.58,
+      "todays_move": 2.58,
       "daily_stop": -6.27,
       "two_day_stop": -12.54,
-      "trail_stop": 0.41,
+      "trail_stop": 0.58,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 2.41,
+      "peak_pnl": 2.58,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "VEDL": {
@@ -670,19 +670,19 @@
         {
           "ticker": "HAVELLS",
           "entry": 1294.6,
-          "current": 1265.1,
-          "pnl_pct": 2.28
+          "current": 1264.0,
+          "pnl_pct": 2.36
         }
       ],
-      "spread_pnl_pct": 2.03,
-      "todays_move": 2.03,
+      "spread_pnl_pct": 2.37,
+      "todays_move": 2.37,
       "daily_stop": -7.28,
       "two_day_stop": -14.56,
-      "trail_stop": 0.32,
+      "trail_stop": 0.37,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 2.32,
+      "peak_pnl": 2.37,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "HAVELLS": {
@@ -742,19 +742,19 @@
         {
           "ticker": "TVSMOTOR",
           "entry": 3636.0,
-          "current": 3503.2,
-          "pnl_pct": 3.65
+          "current": 3506.0,
+          "pnl_pct": 3.58
         }
       ],
-      "spread_pnl_pct": 3.17,
-      "todays_move": 3.17,
+      "spread_pnl_pct": 3.56,
+      "todays_move": 3.56,
       "daily_stop": -6.56,
       "two_day_stop": -13.12,
-      "trail_stop": 1.17,
+      "trail_stop": 1.56,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 3.17,
+      "peak_pnl": 3.56,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "TVSMOTOR": {
@@ -781,12 +781,12 @@
         {
           "ticker": "APLAPOLLO",
           "entry": 2121.1,
-          "current": 2053.0,
-          "pnl_pct": 3.21
+          "current": 2057.0,
+          "pnl_pct": 3.02
         }
       ],
-      "spread_pnl_pct": 3.18,
-      "todays_move": 3.18,
+      "spread_pnl_pct": 3.19,
+      "todays_move": 3.19,
       "daily_stop": -7.18,
       "two_day_stop": -14.36,
       "trail_stop": 1.54,
@@ -820,12 +820,12 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4228.7,
-          "pnl_pct": 2.9
+          "current": 4221.3,
+          "pnl_pct": 3.07
         }
       ],
-      "spread_pnl_pct": 2.97,
-      "todays_move": 2.97,
+      "spread_pnl_pct": 2.87,
+      "todays_move": 2.87,
       "daily_stop": -7.02,
       "two_day_stop": -14.04,
       "trail_stop": 0.97,
@@ -859,12 +859,12 @@
         {
           "ticker": "MPHASIS",
           "entry": 2331.0,
-          "current": 2287.9,
-          "pnl_pct": 1.85
+          "current": 2282.3,
+          "pnl_pct": 2.09
         }
       ],
-      "spread_pnl_pct": 1.93,
-      "todays_move": 1.93,
+      "spread_pnl_pct": 1.94,
+      "todays_move": 1.94,
       "daily_stop": -7.7,
       "two_day_stop": -15.4,
       "trail_stop": -0.03,
@@ -925,12 +925,12 @@
         {
           "ticker": "BLUESTARCO",
           "entry": 1898.0,
-          "current": 1850.1,
-          "pnl_pct": 2.52
+          "current": 1849.1,
+          "pnl_pct": 2.58
         }
       ],
-      "spread_pnl_pct": 2.32,
-      "todays_move": 2.32,
+      "spread_pnl_pct": 2.49,
+      "todays_move": 2.49,
       "daily_stop": -7.62,
       "two_day_stop": -15.24,
       "trail_stop": 0.54,
@@ -964,19 +964,19 @@
         {
           "ticker": "ABCAPITAL",
           "entry": 348.25,
-          "current": 348.85,
-          "pnl_pct": -0.17
+          "current": 348.45,
+          "pnl_pct": -0.06
         }
       ],
-      "spread_pnl_pct": -0.32,
-      "todays_move": -0.32,
+      "spread_pnl_pct": -0.13,
+      "todays_move": -0.13,
       "daily_stop": -6.85,
       "two_day_stop": -13.7,
       "trail_stop": -2.0,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.17,
+      "peak_pnl": -0.06,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "ABCAPITAL": {
@@ -1003,19 +1003,19 @@
         {
           "ticker": "PFC",
           "entry": 467.5,
-          "current": 468.3,
-          "pnl_pct": -0.17
+          "current": 468.75,
+          "pnl_pct": -0.27
         }
       ],
-      "spread_pnl_pct": -0.34,
-      "todays_move": -0.34,
+      "spread_pnl_pct": -0.3,
+      "todays_move": -0.3,
       "daily_stop": -5.8,
       "two_day_stop": -11.6,
       "trail_stop": -2.0,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.17,
+      "peak_pnl": -0.27,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "PFC": {
@@ -1023,6 +1023,111 @@
           "trust_score": 77.0,
           "opus_side": null,
           "thesis": "PFC's exceptional performance in improving asset quality, with the consolidated net NPA ratio reducing to 0.38% and standalone net NPA to 0.39% in FY2025 (the lowest in 7 years), demonstrates robust risk management and successful resolution efforts, including 100% principal recovery on the KSK Mahanadi project. This significantly de-risks the balance sheet and reinforces investor confidence."
+        }
+      },
+      "regime_rank": null,
+      "correlation_breaks": null,
+      "oi_anomalies": null,
+      "conviction_score": null,
+      "gate_reason": null
+    },
+    {
+      "signal_id": "BRK-2026-04-23-UNIONBANK",
+      "spread_name": "Strategy 447",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "open_date": "2026-04-23",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "UNIONBANK",
+          "entry": 194.89,
+          "current": 181.46,
+          "pnl_pct": 6.89
+        }
+      ],
+      "spread_pnl_pct": 5.83,
+      "todays_move": 5.83,
+      "daily_stop": -8.22,
+      "two_day_stop": -16.44,
+      "trail_stop": 3.83,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 5.83,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "UNIONBANK": {
+          "trust_grade": "A+",
+          "trust_score": 100.0,
+          "opus_side": null,
+          "thesis": "The bank's robust digital transformation efforts and the resulting operational efficiencies are a significant strength. With a capital budget of INR 1,600 Cr for technology in FY2025-26, the implementation of advanced cybersecurity frameworks, and 80% of liabilities and accounts being opened digitally, the bank is well-positioned to enhance customer service, streamline operations, and drive future business growth through digital channels (Q3 FY26 concall, Page 11-12)."
+        }
+      },
+      "regime_rank": {
+        "UNIONBANK": {
+          "episode_count": 87,
+          "tradeable_rate": 0.9405,
+          "persistence_rate": 0.5,
+          "hit_rate": 0.4167,
+          "avg_drift_1d": -0.006152
+        }
+      },
+      "correlation_breaks": {
+        "UNIONBANK": {
+          "classification": "OPPORTUNITY",
+          "action": "ADD",
+          "z_score": -2.06,
+          "expected_return": -1.42,
+          "actual_return": -6.39,
+          "oi_anomaly": false,
+          "trade_rec": {
+            "direction": "SHORT",
+            "entry": "market",
+            "stop_pct": 3.63,
+            "target_pct": -4.25,
+            "hold_days": 3,
+            "size_inr": 50000
+          }
+        }
+      },
+      "oi_anomalies": {
+        "UNIONBANK": null
+      },
+      "conviction_score": 50.0,
+      "gate_reason": "BLOCKED: short leg UNIONBANK has trust_grade A+ (rank 7 >= 6)"
+    },
+    {
+      "signal_id": "BRK-2026-04-23-SONACOMS",
+      "spread_name": "Strategy 801",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "open_date": "2026-04-23",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "SONACOMS",
+          "entry": 587.9,
+          "current": 572.2,
+          "pnl_pct": 2.67
+        }
+      ],
+      "spread_pnl_pct": 2.51,
+      "todays_move": 2.51,
+      "daily_stop": -7.52,
+      "two_day_stop": -15.04,
+      "trail_stop": 0.51,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 2.51,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "SONACOMS": {
+          "trust_grade": "D",
+          "trust_score": 33.0,
+          "opus_side": null,
+          "thesis": "The company's biggest strength lies in its consistent and strong performance in increasing BEV revenue share. The guidance from FY2022-23 and FY2023-24 targeted 'over 45% of revenue from BEVs by FY2025-26' and '45% of revenue from EV-targeted products by 2026'. As of Q1 FY25, BEV revenue share reached 33%, which is ahead of the pro-rata trajectory needed to hit the FY2025-26 target (33% actual vs ~30.33% pro-rata). This demonstrates strong execution on a critical strategic priority."
         }
       },
       "regime_rank": null,
