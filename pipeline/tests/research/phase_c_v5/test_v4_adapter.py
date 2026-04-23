@@ -32,7 +32,7 @@ _V4_COLS = [
 
 
 def _row(symbol="HDFCBANK", side="SHORT", z_score=-2.1, expected_return=-0.001,
-         label="OPPORTUNITY"):
+         label="OPPORTUNITY_LAG"):
     return {
         "entry_date": "2024-10-04",
         "exit_date": "2024-10-07",
