@@ -1,9 +1,10 @@
 {
-  "updated_at": "2026-04-23T14:19:03.920532+05:30",
+  "updated_at": "2026-04-23T14:34:34.642344+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
       "spread_name": "Sovereign Shield Alpha",
+      "spread_description": "Defence vs IT \u2014 long defence basket, short IT basket. Phase-C hedge for geopolitical risk-off regimes.",
       "category": "hormuz",
       "tier": "SIGNAL",
       "open_date": "2026-04-15",
@@ -11,40 +12,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4376.9,
-          "pnl_pct": 2.15
+          "current": 4359.6,
+          "pnl_pct": 1.75
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 451.85,
-          "pnl_pct": 0.44
+          "current": 450.7,
+          "pnl_pct": 0.19
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1425.8,
-          "pnl_pct": 3.75
+          "current": 1415.9,
+          "pnl_pct": 3.03
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2528.9,
-          "pnl_pct": 1.68
+          "current": 2526.1,
+          "pnl_pct": 1.78
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1246.9,
-          "pnl_pct": 5.69
+          "current": 1244.4,
+          "pnl_pct": 5.88
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 203.56,
-          "pnl_pct": 4.42
+          "current": 203.06,
+          "pnl_pct": 4.66
         }
       ],
       "spread_pnl_pct": 6.21,
@@ -58,23 +59,23 @@
       "peak_pnl": 6.21,
       "source": "SPREAD",
       "trust_scores": {
+        "INFY": {
+          "trust_grade": "F",
+          "trust_score": 17.5,
+          "opus_side": null,
+          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
+        },
         "BDL": {
           "trust_grade": "C",
           "trust_score": 56.8,
           "opus_side": null,
           "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
         },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
-        },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
-          "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "BEL": {
           "trust_grade": "C",
@@ -82,17 +83,17 @@
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "INFY": {
-          "trust_grade": "F",
-          "trust_score": 17.5,
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
           "opus_side": null,
-          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         }
       },
       "regime_rank": {
@@ -179,6 +180,7 @@
     {
       "signal_id": "BRK-2026-04-23-TECHM",
       "spread_name": "Strategy 641",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -187,8 +189,8 @@
         {
           "ticker": "TECHM",
           "entry": 1470.2,
-          "current": 1430.2,
-          "pnl_pct": 2.72
+          "current": 1428.6,
+          "pnl_pct": 2.83
         }
       ],
       "spread_pnl_pct": 2.84,
@@ -213,11 +215,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "TECHM",
+        "z_score": -4.6,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.19,
+        "actual_return": -2.76,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-CROMPTON",
       "spread_name": "Strategy 849",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -226,8 +239,8 @@
         {
           "ticker": "CROMPTON",
           "entry": 261.01,
-          "current": 254.58,
-          "pnl_pct": 2.46
+          "current": 253.85,
+          "pnl_pct": 2.74
         }
       ],
       "spread_pnl_pct": 2.36,
@@ -252,11 +265,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "CROMPTON",
+        "z_score": -2.74,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.28,
+        "actual_return": -2.66,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-TMPV",
       "spread_name": "Strategy 645",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -265,8 +289,8 @@
         {
           "ticker": "TMPV",
           "entry": 359.95,
-          "current": 353.95,
-          "pnl_pct": 1.67
+          "current": 354.0,
+          "pnl_pct": 1.65
         }
       ],
       "spread_pnl_pct": 1.78,
@@ -291,11 +315,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "TMPV",
+        "z_score": 2.17,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.55,
+        "actual_return": -0.01,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-RECLTD",
       "spread_name": "Strategy 281",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -304,8 +339,8 @@
         {
           "ticker": "RECLTD",
           "entry": 381.85,
-          "current": 377.1,
-          "pnl_pct": 1.24
+          "current": 376.95,
+          "pnl_pct": 1.28
         }
       ],
       "spread_pnl_pct": 1.07,
@@ -330,11 +365,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "RECLTD",
+        "z_score": 1.84,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.41,
+        "actual_return": -0.27,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-PETRONET",
       "spread_name": "Strategy 156",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -343,8 +389,8 @@
         {
           "ticker": "PETRONET",
           "entry": 277.54,
-          "current": 277.18,
-          "pnl_pct": 0.13
+          "current": 276.47,
+          "pnl_pct": 0.39
         }
       ],
       "spread_pnl_pct": 0.19,
@@ -369,11 +415,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "PETRONET",
+        "z_score": 1.83,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.56,
+        "actual_return": 0.11,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-NUVAMA",
       "spread_name": "Strategy 273",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -382,8 +439,8 @@
         {
           "ticker": "NUVAMA",
           "entry": 1363.3,
-          "current": 1373.7,
-          "pnl_pct": -0.76
+          "current": 1373.2,
+          "pnl_pct": -0.73
         }
       ],
       "spread_pnl_pct": -0.65,
@@ -394,7 +451,7 @@
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.76,
+      "peak_pnl": -0.73,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "NUVAMA": {
@@ -408,11 +465,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "NUVAMA",
+        "z_score": 1.53,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -2.95,
+        "actual_return": 0.67,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-HDFCAMC",
       "spread_name": "Strategy 582",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -421,8 +489,8 @@
         {
           "ticker": "HDFCAMC",
           "entry": 2745.0,
-          "current": 2707.0,
-          "pnl_pct": 1.38
+          "current": 2706.8,
+          "pnl_pct": 1.39
         }
       ],
       "spread_pnl_pct": 1.28,
@@ -474,11 +542,22 @@
         "HDFCAMC": null
       },
       "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg HDFCAMC has trust_grade A+ (rank 7 >= 6)"
+      "gate_reason": "BLOCKED: short leg HDFCAMC has trust_grade A+ (rank 7 >= 6)",
+      "break_detail": {
+        "symbol": "HDFCAMC",
+        "z_score": 1.53,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.55,
+        "actual_return": 0.22,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-MOTILALOFS",
       "spread_name": "Strategy 578",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -487,8 +566,8 @@
         {
           "ticker": "MOTILALOFS",
           "entry": 806.95,
-          "current": 792.55,
-          "pnl_pct": 1.78
+          "current": 790.7,
+          "pnl_pct": 2.01
         }
       ],
       "spread_pnl_pct": 1.8,
@@ -540,11 +619,22 @@
         "MOTILALOFS": null
       },
       "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg MOTILALOFS has trust_grade A+ (rank 7 >= 6)"
+      "gate_reason": "BLOCKED: short leg MOTILALOFS has trust_grade A+ (rank 7 >= 6)",
+      "break_detail": {
+        "symbol": "MOTILALOFS",
+        "z_score": 1.57,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -2.45,
+        "actual_return": 0.01,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-EXIDEIND",
       "spread_name": "Strategy 305",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -553,8 +643,8 @@
         {
           "ticker": "EXIDEIND",
           "entry": 353.8,
-          "current": 348.2,
-          "pnl_pct": 1.58
+          "current": 347.4,
+          "pnl_pct": 1.81
         }
       ],
       "spread_pnl_pct": 1.47,
@@ -579,11 +669,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "EXIDEIND",
+        "z_score": 2.23,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.91,
+        "actual_return": -0.65,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-YESBANK",
       "spread_name": "Strategy 442",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -592,8 +693,8 @@
         {
           "ticker": "YESBANK",
           "entry": 19.94,
-          "current": 20.0,
-          "pnl_pct": -0.3
+          "current": 19.97,
+          "pnl_pct": -0.15
         }
       ],
       "spread_pnl_pct": -0.3,
@@ -618,11 +719,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "YESBANK",
+        "z_score": 1.76,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.58,
+        "actual_return": 0.2,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-VEDL",
       "spread_name": "Strategy 971",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -631,8 +743,8 @@
         {
           "ticker": "VEDL",
           "entry": 758.8,
-          "current": 737.15,
-          "pnl_pct": 2.85
+          "current": 736.5,
+          "pnl_pct": 2.94
         }
       ],
       "spread_pnl_pct": 2.79,
@@ -657,11 +769,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "VEDL",
+        "z_score": -1.65,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.26,
+        "actual_return": -3.3,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-HAVELLS",
       "spread_name": "Strategy 409",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -670,8 +793,8 @@
         {
           "ticker": "HAVELLS",
           "entry": 1294.6,
-          "current": 1263.0,
-          "pnl_pct": 2.44
+          "current": 1261.9,
+          "pnl_pct": 2.53
         }
       ],
       "spread_pnl_pct": 2.19,
@@ -729,11 +852,22 @@
         }
       },
       "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg HAVELLS has trust_grade A (rank 6 >= 6)"
+      "gate_reason": "BLOCKED: short leg HAVELLS has trust_grade A (rank 6 >= 6)",
+      "break_detail": {
+        "symbol": "HAVELLS",
+        "z_score": -1.55,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.68,
+        "actual_return": -2.57,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-TVSMOTOR",
       "spread_name": "Strategy 638",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -742,8 +876,8 @@
         {
           "ticker": "TVSMOTOR",
           "entry": 3636.0,
-          "current": 3494.0,
-          "pnl_pct": 3.91
+          "current": 3492.2,
+          "pnl_pct": 3.95
         }
       ],
       "spread_pnl_pct": 3.93,
@@ -768,11 +902,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "TVSMOTOR",
+        "z_score": -1.51,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.18,
+        "actual_return": -4.07,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-APLAPOLLO",
       "spread_name": "Strategy 349",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -781,8 +926,8 @@
         {
           "ticker": "APLAPOLLO",
           "entry": 2121.1,
-          "current": 2044.9,
-          "pnl_pct": 3.59
+          "current": 2037.1,
+          "pnl_pct": 3.96
         }
       ],
       "spread_pnl_pct": 3.61,
@@ -807,11 +952,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "APLAPOLLO",
+        "z_score": -1.89,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.8,
+        "actual_return": -3.79,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-TATAELXSI",
       "spread_name": "Strategy 700",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -820,8 +976,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4252.9,
-          "pnl_pct": 2.34
+          "current": 4245.0,
+          "pnl_pct": 2.53
         }
       ],
       "spread_pnl_pct": 2.52,
@@ -846,11 +1002,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "TATAELXSI",
+        "z_score": -1.62,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.69,
+        "actual_return": -2.51,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-MPHASIS",
       "spread_name": "Strategy 548",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -859,8 +1026,8 @@
         {
           "ticker": "MPHASIS",
           "entry": 2331.0,
-          "current": 2275.4,
-          "pnl_pct": 2.39
+          "current": 2275.9,
+          "pnl_pct": 2.36
         }
       ],
       "spread_pnl_pct": 2.34,
@@ -912,11 +1079,22 @@
         "MPHASIS": null
       },
       "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg MPHASIS has trust_grade A+ (rank 7 >= 6)"
+      "gate_reason": "BLOCKED: short leg MPHASIS has trust_grade A+ (rank 7 >= 6)",
+      "break_detail": {
+        "symbol": "MPHASIS",
+        "z_score": -1.59,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -0.6,
+        "actual_return": -2.35,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-BLUESTARCO",
       "spread_name": "Strategy 216",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -925,8 +1103,8 @@
         {
           "ticker": "BLUESTARCO",
           "entry": 1898.0,
-          "current": 1830.7,
-          "pnl_pct": 3.55
+          "current": 1834.1,
+          "pnl_pct": 3.37
         }
       ],
       "spread_pnl_pct": 3.55,
@@ -951,11 +1129,22 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "BLUESTARCO",
+        "z_score": -1.56,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.04,
+        "actual_return": -3.28,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-UNIONBANK",
       "spread_name": "Strategy 447",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -964,8 +1153,8 @@
         {
           "ticker": "UNIONBANK",
           "entry": 194.89,
-          "current": 177.8,
-          "pnl_pct": 8.77
+          "current": 178.0,
+          "pnl_pct": 8.67
         }
       ],
       "spread_pnl_pct": 8.62,
@@ -1017,11 +1206,22 @@
         "UNIONBANK": null
       },
       "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg UNIONBANK has trust_grade A+ (rank 7 >= 6)"
+      "gate_reason": "BLOCKED: short leg UNIONBANK has trust_grade A+ (rank 7 >= 6)",
+      "break_detail": {
+        "symbol": "UNIONBANK",
+        "z_score": -2.06,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.42,
+        "actual_return": -8.74,
+        "days_in_regime": 1
+      }
     },
     {
       "signal_id": "BRK-2026-04-23-SONACOMS",
       "spread_name": "Strategy 801",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
       "tier": "SIGNAL",
       "open_date": "2026-04-23",
@@ -1030,8 +1230,8 @@
         {
           "ticker": "SONACOMS",
           "entry": 587.9,
-          "current": 577.0,
-          "pnl_pct": 1.85
+          "current": 574.25,
+          "pnl_pct": 2.32
         }
       ],
       "spread_pnl_pct": 1.75,
@@ -1056,7 +1256,17 @@
       "correlation_breaks": null,
       "oi_anomalies": null,
       "conviction_score": null,
-      "gate_reason": null
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "SONACOMS",
+        "z_score": -1.82,
+        "classification": "OPPORTUNITY",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.05,
+        "actual_return": -2.7,
+        "days_in_regime": 1
+      }
     }
   ],
   "fragility": {
