@@ -1,3 +1,25 @@
+BACKTESTING STANDARDS — ANKA RESEARCH
+Revision 2026-04-23. Governing document for every backtest, paper trade and live strategy launch on the Anka platform. Every strategy must pass every section below before it touches real capital. Any deviation requires a written waiver from the principal (Bharat) logged in docs/superpowers/waivers/.
+
+0. RESEARCH INTEGRITY PRINCIPLES
+These are the rules we will not break even when they are inconvenient.
+
+0.1 We do not publish a strategy as "deployable" until it has passed every gate in Sections 1-14 of this document. Partial passes are explicitly labelled "Research" and are forbidden from the live signal path.
+
+0.2 We do not retroactively redefine success criteria to make a losing strategy pass. If a strategy fails its pre-registered hypothesis at Section 14, it is retired — we may rebuild under a new hypothesis but not rename the failure.
+
+0.3 We do not adjust p-value thresholds to fit discoveries. Bonferroni and FDR corrections are applied to the full hypothesis family as scoped at pre-registration, not to the surviving subset. A strategy that stops being significant after multiplicity correction is not significant.
+
+0.4 We do not trust a single-point backtest. Every deployable claim is tested at every slippage level (S0-S2 minimum), across every regime (3 of 4 minimum), on a held-out out-of-sample segment, and validated forward for a specified minimum in shadow before live.
+
+0.5 We do not hide rejected hypotheses. Section 14's registry tracks every strategy ever tested, deployed or killed, with reason. This is the only defence against the garden of forking paths.
+
+0.6 We do not deploy faster than the data can justify. A strategy that cleanly passes Sections 1-13 but fails Section 10's shadow-period requirement waits. "Market-open urgency" is not a reason to skip forward validation.
+
+0.7 We document every decision. Every deployment, waiver, parameter change and post-mortem lands in git with a dated commit message. The principal's ego and the researcher's enthusiasm are not valid auditors.
+
+THE ABOVE APPLIES RECURSIVELY. A tool that evaluates strategies (e.g., the unified backtest itself) must also pass these principles — we backtest the backtester.
+
 1. Slippage stress grid specification
 Objective: Measure how robust each strategy and each Phase C class (especially OPPORTUNITY) is under increasingly pessimistic execution costs.
 
@@ -172,4 +194,176 @@ Display current classification and last‑run metrics on the Track Record / Proo
 
 If you wire this in, your Sunday referee will not only ensure no look‑ahead, but also continuously answer the question: “Is this edge still strong after realistic and stressed execution?” – which is exactly what a practitioner‑grade system should do.
 
-If you’d like, next step can be: define the exact labels (“Robust / Execution‑Sensitive / Fragile / Not Deployable”) and caps (max capital or leverage) tied to each classification so risk management also becomes rule‑based, not intuitive.
+If you'd like, next step can be: define the exact labels ("Robust / Execution‑Sensitive / Fragile / Not Deployable") and caps (max capital or leverage) tied to each classification so risk management also becomes rule‑based, not intuitive.
+
+6. SURVIVORSHIP AND UNIVERSE INTEGRITY
+Objective: Ensure the stock universe available to the backtest on any historical date matches the universe that was actually tradeable on that date — not today's constituent list projected backward.
+
+6.1 Point-in-time universe construction
+Maintain pipeline/data/fno_universe_history.json with monthly F&O-member snapshots from NSE going back at least 5 years. When the backtest evaluates a signal on date T, only tickers that were in the F&O list as of T are eligible. Tickers that joined later are unavailable; tickers that were delisted or kicked out between T and now must still appear in historical results up to their exit date.
+
+6.2 Mandatory disclosures per run
+Every backtest report must state:
+- n_tickers_current (today's universe)
+- n_tickers_ever (total unique tickers appearing 2021-now)
+- n_tickers_delisted (no longer in F&O)
+- coverage_ratio = n_delisted / n_tickers_ever
+If coverage_ratio < 10% of the ever-universe OR if the backtest silently uses today's universe only, the report is tagged "SURVIVORSHIP-UNCORRECTED" and strategies built on it cannot cross Section 15 deployment without a written waiver.
+
+6.3 Data provider
+NSE publishes monthly F&O membership changes. Maintain a fetcher that pulls and diff-appends to fno_universe_history.json. Watchdog should alert if the file is >35 days stale.
+
+7. ENTRY / EXIT TIMING DISCIPLINE
+Objective: Eliminate every form of look-ahead at the trade boundary. If the backtest models a fill at price P at time t, the strategy must have been able to know-and-act on that fill at time t in real life.
+
+7.1 Intraday vs end-of-day execution paths
+Every strategy must declare one of the following execution modes and the backtest fill simulator must mirror it:
+
+MODE A — EOD-close entry, close-to-close hold
+- Signal finalised by 15:15 IST using only data available at or before 15:15
+- Fill price = 15:20-15:29 VWAP (with ±5 bps variance tolerance) in SSF
+- Exit at subsequent close (15:20-15:29 VWAP of exit day) or on intraday stop
+- No open-snap. No next-morning-rewrite. The ledger price equals what the exchange printed in the 15:20-29 window.
+
+MODE B — Morning-settled entry, intraday hold
+- Signal generated overnight or pre-market
+- Fill NOT at 09:15 open. Fill price = 09:45 LTP (30-min post-open settling rule) or later
+- Rationale: pre-open auction imbalance can move prices 0.5-2% on noise. The 30-min rule eats the auction-noise into the backtest the same way it eats into live.
+
+MODE C — Intraday adaptive
+- Signal generated intraday at time t; fill price = t+5 minute VWAP; minimum 30 minutes after open; no fills after 15:20
+- The 30-min floor rule still applies
+
+7.2 Forbidden practices
+- snap_entry_to_market_open-style functions that rewrite the ledger after price moves are banned in the live path. Only allowed in a labelled "theoretical-alpha" research report, never in a deployed strategy's P&L.
+- Using today's close as the entry price for a signal that fired intraday today (because today's close was not knowable at signal time).
+- Using adjusted close (for splits/dividends) at entry AND unadjusted close at exit (or vice-versa).
+
+7.3 Audit hook
+Every backtest emits an "entry-timing audit" log: per-trade, the timestamp the signal was decidable, the timestamp of the filled price, and the lag. If lag is negative (fill before signal) OR lag < 0 in MODE B/C, the backtest fails this section.
+
+8. STRATEGY-DIRECTION AUDIT
+Objective: Detect and flag the case where the live engine fires a trade in one direction but the backtest validates the opposite direction as the edge. This is the #107-class of bug — silent inversion.
+
+8.1 Direction declaration
+Every strategy emits, per signal, the intended direction in machine-readable form: { symbol, timestamp, direction: LONG|SHORT, thesis: "peer-follow" | "mean-reversion" | "trend-continuation" | "news-catalyst" | … }.
+
+8.2 Backtest-vs-engine cross-check
+The unified backtest re-runs every live-shipping strategy on historical data AND separately runs the opposite-direction strategy for comparison. Report: for the same event set, what is the Sharpe / PnL of direction=LONG vs direction=SHORT? If opposite-direction Sharpe exceeds the strategy's own Sharpe at S0, the strategy is stamped "DIRECTION-SUSPECT" and must resolve before next release.
+
+8.3 Naming discipline
+A strategy named "fade-the-overshoot" that internally follows peer direction is a lie. Strategy names must match their direction. Name mismatches are a P0 bug.
+
+9. MINIMUM SAMPLE SIZE AND STATISTICAL POWER
+Objective: Prevent tiny-n strategies from being stamped "significant" by chance.
+
+9.1 Per-strategy minimum trade count
+- n ≥ 30 trades per regime for single-ticker strategies
+- n ≥ 50 trades total for baskets or rule families
+- n ≥ 100 events if the strategy is being backtested alone (no multiplicity correction planned)
+
+9.2 Power analysis
+Before pre-registering a hypothesis (Section 14), compute the minimum detectable effect size given available n at alpha=0.05 and power=0.80. If the backtest population is too small to detect the claimed edge at 80% power, the hypothesis is under-powered and labelled exploratory only.
+
+9.3 Confidence intervals, not just point estimates
+Every reported edge must include a 95% bootstrap CI (10,000 resamples from the event-level returns). A 1.5% edge with a [-0.5%, 3.5%] CI is not a usable signal regardless of the mean.
+
+10. OUT-OF-SAMPLE DISCIPLINE AND PURGED WALK-FORWARD
+Objective: Ensure no researcher ever sees the evaluation segment during strategy development.
+
+10.1 True holdout
+A segment of at least 20% of the available history, ending with the most recent 3 months, is designated the pure holdout. The holdout data is not loaded into any notebook, script or report during strategy development. The strategy is scored on the holdout exactly once after all tuning is complete. If it fails, the researcher may rebuild the strategy from scratch but the old holdout is burned and a new one must be carved out from even-more-recent data (which typically requires waiting).
+
+10.2 Walk-forward parameters
+- Train window: 3 years (756 trading days) rolling
+- Test window: 3 months (63 trading days) rolling
+- Step: 1 month (21 trading days)
+- Embargo: 5 days on either side of every train/test boundary (no data from within 5 days of the boundary is used for either fit or evaluation)
+
+10.3 Purging for overlapping trades
+Any strategy that holds positions for >1 day must purge training data that overlaps with test-period events. Specifically: if a test trade opens on T_test and closes on T_test+5, all training trades whose close is within [T_test - 5, T_test + 5] are dropped from training. López de Prado's combinatorial purged cross-validation is the canonical reference.
+
+10.4 Single-use rule for OOS
+The holdout segment is scored exactly once per strategy-version. If you re-run it, you must increment the strategy version (v2, v3) and record that this version's OOS was the second touch. After 3 re-touches, the holdout is considered burned and a new one must be established before further deployment.
+
+11. LIQUIDITY AND CAPACITY
+Objective: Ensure edges modelled on paper can be captured at the capital we intend to deploy, without the act of trading eroding the signal.
+
+11.1 Average Daily Value threshold
+Each ticker's 60-day average daily value (ADV in ₹ notional) must exceed 10× the intended position size. Positions beyond that are backtested with a linear impact penalty: slippage_bps += 5 × (position_size / ADV).
+
+11.2 Capacity curve
+For every deployable strategy, report the capacity curve: Sharpe, DD and net CAGR at position sizes of {₹5 lakh, ₹25 lakh, ₹1 Cr, ₹5 Cr} per trade. The curve must be disclosed in the Track Record / Proof tab so sizing decisions are data-informed.
+
+11.3 Hard notional caps
+At deployment, a strategy classified:
+- Not Deployable — max ₹0 (paper only)
+- Fragile — max ₹5 lakh per trade, ₹25 lakh aggregate exposure
+- Execution-Sensitive — max ₹25 lakh per trade, ₹1 Cr aggregate
+- Robust — max ₹1 Cr per trade, ₹5 Cr aggregate (re-review at this level)
+
+12. EDGE DECAY AND STATIONARITY
+Objective: Detect when an edge that once existed has died.
+
+12.1 Rolling edge plot
+Every deployable strategy publishes a rolling 12-month Sharpe / Hit-rate / Edge-% plot. The unified backtest refreshes this weekly.
+
+12.2 Regime-change detection
+CUSUM (Cumulative Sum) control chart on the rolling monthly PnL with a threshold of 3σ from the strategy's backtest-period volatility. A CUSUM trigger puts the strategy on "decay-watch" for 30 days. Two triggers in 90 days auto-suspends the strategy pending manual review.
+
+12.3 Recent-years requirement
+Backtest edge measured on the most recent 24 months must be ≥50% of the edge measured on the full history. A strategy whose recent edge is <50% of historical is labelled "DECAYING" and cannot be new-deployed without a specific thesis for why the recent period is anomalous (e.g., regime-unusual).
+
+13. PAPER-VS-LIVE DRIFT AUDIT
+Objective: Catch implementation bugs by comparing shadow (paper) P&L to what the backtest predicted.
+
+13.1 Weekly drift report
+Every Sunday, for each strategy running in shadow or live, compute:
+- backtest_expected_pnl_sharpe (as of the last weekly walk-forward)
+- shadow_realised_pnl_sharpe (since go-live or strategy start)
+- drift_ratio = shadow / backtest_expected
+If drift_ratio < 0.5 or > 2.0 over a rolling 60-trade window, alert. Either the implementation is broken or the backtest is sham (both are P0).
+
+13.2 Trade-by-trade reconciliation
+For every closed shadow trade, emit (backtest_predicted_return, shadow_realised_return, divergence_bps). Divergences > 30 bps per trade require root-cause analysis logged in docs/superpowers/drift-reports/YYYY-MM-DD-<ticker>.md.
+
+13.3 Kill-switch
+A strategy with drift_ratio < 0.3 over any 20-trade window is auto-paused. It cannot resume until the drift is explained in writing.
+
+14. META-REPORTING AND HYPOTHESIS REGISTRY
+Objective: Defend against the garden of forking paths — researchers testing many hypotheses and reporting only the survivor.
+
+14.1 Pre-registration
+Every strategy must pre-register its hypothesis in docs/superpowers/hypothesis-registry.jsonl BEFORE any backtest is run. The entry includes: hypothesis_id, author, date, claimed edge, exact universe, exact date range, exact statistical test with alpha. Once registered, the hypothesis is timestamped and git-committed.
+
+14.2 Registry entry lifecycle
+Every hypothesis in the registry ends with one of four terminal states: PASSED (cleared Sections 1-13 and is live), FAILED (explicit fail), ABANDONED (researcher stopped work before conclusion, must state why), REFRAMED (replaced by a new pre-registered hypothesis, with pointer).
+
+14.3 Multiplicity accounting
+The Bonferroni/FDR denominator is the total count of hypotheses with matching scope in the registry, NOT the count of survivors. If 400 per-ticker fade hypotheses were registered, any one of them needs p ≤ 0.00012 at alpha=0.05, even if only 8 are reported in the final table.
+
+14.4 Public-facing rejection count
+The website Track Record page must display: "Strategies tested: N. Strategies deployed: M. Strategies retired: K." Transparency about failure rate is institutional armour against selection bias.
+
+15. DEPLOYMENT GATE — END-TO-END WORKFLOW
+Objective: Make the sequence of checks mechanical, so nothing gets shipped by accident.
+
+15.1 Gate ladder
+A strategy progresses through:
+RESEARCH → PAPER-SHADOW → LIVE-FRAGILE → LIVE-ROBUST
+
+Progression rules:
+- RESEARCH → PAPER: pass Sections 1 (S0+S1), 2, 6-10. Must have a pre-registered hypothesis.
+- PAPER → LIVE-FRAGILE: pass Section 13 drift audit for ≥20 consecutive closed shadow trades with drift_ratio ∈ [0.7, 1.3]. Additionally pass Section 3 S1. Minimum paper duration: 30 calendar days OR 50 trades (whichever is later).
+- LIVE-FRAGILE → LIVE-ROBUST: 90 calendar days of live with realised Sharpe ≥ 0.8 of backtest S1 Sharpe, ≤1 CUSUM trigger, ≤2 drift alerts.
+
+15.2 Automatic demotion
+Section 12 CUSUM triggers or Section 13 drift alerts demote a strategy one level. Two demotions in 6 months removes deployable status for the named strategy permanently — researchers may rebuild, but not re-release the old name.
+
+15.3 Sunday referee
+pipeline/autoresearch/unified_backtest.py is the Sunday referee. It runs the full checklist (Sections 1-14) on every deployable strategy weekly. Its output is posted to the Track Record / Proof tab and to Telegram. If a strategy fails any gate, the referee is the single authority that demotes it — not the researcher, not the principal, not the UI.
+
+15.4 Waiver register
+Any deviation from Sections 0-14 is logged in docs/superpowers/waivers/YYYY-MM-DD-<strategy>.md with the reason, the waiver expiry date, and the signing principal. Waivers cannot be retroactive — must be filed before the deviation takes effect. Waivers on Section 0 principles are not allowed.
+
+END OF STANDARDS DOCUMENT — revision 2026-04-23. Changes require explicit git commit with the principal's co-author tag.
