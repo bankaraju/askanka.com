@@ -1,0 +1,8 @@
+{
+  "total_bars": 263268,
+  "impaired_bars": 13309,
+  "impaired_pct": 5.055,
+  "classification": "AUTO-FAIL",
+  "per_ticker": {},
+  "note": "Close-panel NaN-count proxy; OHLC audit not applicable to cross-sectional model."
+}

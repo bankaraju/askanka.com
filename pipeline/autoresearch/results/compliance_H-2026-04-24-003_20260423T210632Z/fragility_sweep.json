@@ -1,0 +1,197 @@
+{
+  "rows": [
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 1.5,
+      "margin": -1.1295,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 2.0,
+      "margin": -6.5395,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 2.5,
+      "margin": -1.9796000000000002,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 1.5,
+      "margin": -1.2782,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 2.0,
+      "margin": -5.5164,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 2.5,
+      "margin": -3.2630999999999997,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 1.5,
+      "margin": -0.3669,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 2.0,
+      "margin": -2.7252,
+      "skipped": false
+    },
+    {
+      "alpha": 0.044987306015227935,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 2.5,
+      "margin": -0.9055,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 1.5,
+      "margin": -0.9266,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 2.0,
+      "margin": -6.3637,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 2.5,
+      "margin": -1.9796000000000002,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 1.5,
+      "margin": -0.8161,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 2.0,
+      "margin": -4.9765,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 2.5,
+      "margin": -3.6256999999999997,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 1.5,
+      "margin": -0.13329999999999997,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 2.0,
+      "margin": -2.4173,
+      "skipped": false
+    },
+    {
+      "alpha": 0.05623413251903491,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 2.5,
+      "margin": -1.1558,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 1.5,
+      "margin": -0.9263,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 2.0,
+      "margin": -4.9906,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 2.5,
+      "z_threshold_prior": 2.5,
+      "margin": -2.2205000000000004,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 1.5,
+      "margin": -1.1360000000000001,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 2.0,
+      "margin": -4.4025,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 3.0,
+      "z_threshold_prior": 2.5,
+      "margin": -5.6522,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 1.5,
+      "margin": 0.46540000000000004,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 2.0,
+      "margin": -2.4173,
+      "skipped": false
+    },
+    {
+      "alpha": 0.06748095902284189,
+      "z_threshold_current": 3.5,
+      "z_threshold_prior": 2.5,
+      "margin": -1.4563,
+      "skipped": false
+    }
+  ],
+  "n_same_sign": 26,
+  "floor_required": 22,
+  "base_margin_sign": -1,
+  "verdict": "STABLE"
+}

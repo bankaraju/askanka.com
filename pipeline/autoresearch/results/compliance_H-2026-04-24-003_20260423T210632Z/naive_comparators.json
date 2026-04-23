@@ -1,0 +1,24 @@
+{
+  "summary": {
+    "always_fade": {
+      "sharpe": 1.061,
+      "mean_ret_pct": 0.2187,
+      "hit_rate": 0.549,
+      "n_trades": 51
+    },
+    "always_follow": {
+      "sharpe": -1.4973,
+      "mean_ret_pct": -0.308,
+      "hit_rate": 0.4706,
+      "n_trades": 51
+    },
+    "buy_and_hold": {
+      "sharpe": 1.6994,
+      "mean_ret_pct": 0.3491,
+      "hit_rate": 0.6078,
+      "n_trades": 51
+    }
+  },
+  "strongest": "buy_and_hold",
+  "strongest_sharpe": 1.6994
+}

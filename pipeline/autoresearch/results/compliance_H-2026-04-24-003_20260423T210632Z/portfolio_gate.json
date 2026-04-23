@@ -1,0 +1,13 @@
+{
+  "max_pairwise_correlation": 1.0,
+  "top_correlated_pair": [
+    "ADANIENT-MODEL_SHORT",
+    "NTPC-MODEL_SHORT"
+  ],
+  "max_sector_share": 1.0,
+  "max_sector": "Unmapped",
+  "corr_verdict": "FAIL",
+  "concentration_verdict": "FAIL",
+  "overall_verdict": "FAIL",
+  "n_strategies": 42
+}
