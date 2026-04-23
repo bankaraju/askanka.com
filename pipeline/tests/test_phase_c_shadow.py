@@ -40,9 +40,9 @@ def test_side_from_expected_short_negative():
 
 def test_build_open_signals_happy_path():
     doc = _breaks_doc([
-        {"symbol": "ACME", "classification": "OPPORTUNITY",
+        {"symbol": "ACME", "classification": "OPPORTUNITY_LAG",
          "expected_return": 0.8, "z_score": 2.4},
-        {"symbol": "FOO", "classification": "OPPORTUNITY",
+        {"symbol": "FOO", "classification": "OPPORTUNITY_LAG",
          "expected_return": -0.6, "z_score": -1.9},
     ])
     ltp = {"ACME": 100.0, "FOO": 200.0}
@@ -62,8 +62,8 @@ def test_build_open_signals_happy_path():
 
 def test_build_open_signals_skips_symbols_missing_ltp():
     doc = _breaks_doc([
-        {"symbol": "A", "classification": "OPPORTUNITY", "expected_return": 0.5, "z_score": 2.0},
-        {"symbol": "B", "classification": "OPPORTUNITY", "expected_return": 0.5, "z_score": 2.0},
+        {"symbol": "A", "classification": "OPPORTUNITY_LAG", "expected_return": 0.5, "z_score": 2.0},
+        {"symbol": "B", "classification": "OPPORTUNITY_LAG", "expected_return": 0.5, "z_score": 2.0},
     ])
     ltp = {"A": 100.0}  # B is missing
     df = phase_c_shadow.build_open_signals(doc, ltp)
@@ -72,8 +72,8 @@ def test_build_open_signals_skips_symbols_missing_ltp():
 
 def test_build_open_signals_skips_rows_with_missing_expected_return():
     doc = _breaks_doc([
-        {"symbol": "A", "classification": "OPPORTUNITY", "expected_return": None, "z_score": 2.0},
-        {"symbol": "B", "classification": "OPPORTUNITY", "expected_return": 0.5, "z_score": 2.0},
+        {"symbol": "A", "classification": "OPPORTUNITY_LAG", "expected_return": None, "z_score": 2.0},
+        {"symbol": "B", "classification": "OPPORTUNITY_LAG", "expected_return": 0.5, "z_score": 2.0},
     ])
     ltp = {"A": 100.0, "B": 200.0}
     df = phase_c_shadow.build_open_signals(doc, ltp)
@@ -97,7 +97,7 @@ def test_cmd_open_happy_path(tmp_path, monkeypatch):
     # Stub the breaks file
     breaks_path = tmp_path / "correlation_breaks.json"
     breaks_path.write_text(json.dumps(_breaks_doc([
-        {"symbol": "ACME", "classification": "OPPORTUNITY",
+        {"symbol": "ACME", "classification": "OPPORTUNITY_LAG",
          "expected_return": 0.5, "z_score": 2.0},
     ])), encoding="utf-8")
     monkeypatch.setattr(phase_c_shadow, "_BREAKS_PATH", breaks_path)
@@ -122,7 +122,7 @@ def test_cmd_open_happy_path(tmp_path, monkeypatch):
 def test_cmd_open_idempotent_on_second_run(tmp_path, monkeypatch):
     breaks_path = tmp_path / "correlation_breaks.json"
     breaks_path.write_text(json.dumps(_breaks_doc([
-        {"symbol": "ACME", "classification": "OPPORTUNITY",
+        {"symbol": "ACME", "classification": "OPPORTUNITY_LAG",
          "expected_return": 0.5, "z_score": 2.0},
     ])), encoding="utf-8")
     monkeypatch.setattr(phase_c_shadow, "_BREAKS_PATH", breaks_path)
