@@ -1,17 +1,28 @@
 {
-  "updated_at": "2026-04-23T04:45:32.902287+05:30",
+  "updated_at": "2026-04-23T09:31:21.503786+05:30",
   "regime_zone": "RISK-OFF",
-  "regime_source_timestamp": "2026-04-23T04:45:21.102487+05:30",
+  "regime_source_timestamp": "2026-04-23T09:25:09.707007+05:30",
   "spreads": [],
   "stocks": [
+    {
+      "ticker": "MCX",
+      "direction": "LONG",
+      "conviction": "LOW",
+      "trigger": "NEUTRAL",
+      "source": "ranker",
+      "source_timestamp": "2026-04-23 09:31:04",
+      "is_stale": false,
+      "hit_rate": 1.0,
+      "episodes": 6
+    },
     {
       "ticker": "KAYNES",
       "direction": "LONG",
       "conviction": "HIGH",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-22 09:31:35",
-      "is_stale": true,
+      "source_timestamp": "2026-04-23 09:31:04",
+      "is_stale": false,
       "hit_rate": 1.0,
       "episodes": 1
     },
@@ -21,19 +32,8 @@
       "conviction": "HIGH",
       "trigger": "CAUTION",
       "source": "ranker",
-      "source_timestamp": "2026-04-22 09:31:35",
-      "is_stale": true,
-      "hit_rate": 1.0,
-      "episodes": 1
-    },
-    {
-      "ticker": "MOTILALOFS",
-      "direction": "LONG",
-      "conviction": "MEDIUM",
-      "trigger": "CAUTION",
-      "source": "ranker",
-      "source_timestamp": "2026-04-22 09:31:35",
-      "is_stale": true,
+      "source_timestamp": "2026-04-23 09:31:04",
+      "is_stale": false,
       "hit_rate": 1.0,
       "episodes": 1
     }

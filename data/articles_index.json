@@ -134,24 +134,6 @@
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 16, 2026"
-    },
-    {
-      "date": "2026-04-15",
-      "segment": "war",
-      "filename": "2026-04-15-war.html",
-      "headline": "Hormuz Endgame: America's Oil Grab Sparks Global Market Tremors, India's Defence Stocks Poised",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 15, 2026"
-    },
-    {
-      "date": "2026-04-15",
-      "segment": "epstein",
-      "filename": "2026-04-15-epstein.html",
-      "headline": "DOJ's Epstein Cover-Up Deepens: Bondi's Evasion, Trump's Lies, and India's Eroding Trust",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 15, 2026"
     }
   ]
 }
