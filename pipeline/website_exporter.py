@@ -618,38 +618,31 @@ DEPLOY_FILES = [
 
 
 def deploy_to_site():
-    """Stage + commit + push website data JSONs. Noop if nothing staged.
+    """Publish website data JSONs to origin/master via the shared deploy
+    helper. Noop if nothing to publish.
 
     WHY: website_exporter writes data/*.json locally but GitHub Pages only
-    serves committed state. Without this, the live site lags until the next
-    human-initiated push.
+    serves committed state on `master`. Without this, the live site lags
+    until the next manual push — and if the active dev branch isn't master
+    (which it almost never is), a plain `git push` publishes to the dev
+    branch, leaving the public site frozen indefinitely. The helper routes
+    through a dedicated master worktree so dev state is never disturbed.
     """
-    repo = Path(__file__).parent.parent
-    existing = [f for f in DEPLOY_FILES if (repo / f).exists()]
-    if not existing:
-        return
     try:
-        subprocess.run(["git", "-C", str(repo), "add", "--"] + existing,
-                       check=True, capture_output=True, text=True)
-        diff = subprocess.run(["git", "-C", str(repo), "diff", "--cached", "--quiet", "--"] + existing,
-                              capture_output=True)
-        if diff.returncode == 0:
-            print("  [deploy] no data changes to push")
-            return
-        ts = datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
-        msg = f"data: auto-refresh website JSONs {ts}"
-        subprocess.run(["git", "-C", str(repo), "commit", "-m", msg],
-                       check=True, capture_output=True, text=True)
-        push = subprocess.run(["git", "-C", str(repo), "push"],
-                              capture_output=True, text=True, timeout=60)
-        if push.returncode == 0:
-            print(f"  [deploy] pushed: {msg}")
-        else:
-            print(f"  [deploy] push failed (non-fatal): {push.stderr.strip()[:200]}")
-    except subprocess.TimeoutExpired:
-        print("  [deploy] push timed out after 60s (non-fatal)")
-    except subprocess.CalledProcessError as e:
-        print(f"  [deploy] git error (non-fatal): {e.stderr.strip()[:200] if e.stderr else e}")
+        from pipeline import deploy_helper
+    except ImportError:
+        import deploy_helper
+    ts = datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
+    msg = f"data: auto-refresh website JSONs {ts}"
+    try:
+        result = deploy_helper.publish(DEPLOY_FILES, msg)
+    except deploy_helper.DeployError as e:
+        print(f"  [deploy] worktree setup failed (non-fatal): {e}")
+        return
+    if result["pushed"]:
+        print(f"  [deploy] pushed to master: {msg}")
+    else:
+        print(f"  [deploy] not pushed: {result['reason']}")
 
 
 if __name__ == "__main__":

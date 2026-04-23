@@ -618,21 +618,26 @@ def generate_and_publish(segments=None):
         except Exception as e:
             log.error("articles_index.json update failed: %s", e)
 
-    # Git push — only the new article files and the JSON index. NEVER index.html.
+    # Publish — new article files + the JSON index — to `master` via the
+    # shared deploy helper. The helper uses a dedicated master worktree so
+    # this works regardless of which dev branch we're running on. NEVER
+    # touch index.html (client-side renders from articles_index.json).
     if published:
         try:
-            subprocess.run(
-                ["git", "add", "articles/", "data/articles_index.json"],
-                cwd=str(GIT_REPO), check=True,
-            )
+            try:
+                from pipeline import deploy_helper
+            except ImportError:
+                import deploy_helper
+            files = [f"articles/{a['filename']}" for a in published]
+            files.append("data/articles_index.json")
             headlines = " + ".join(a["headline"][:40] for a in published)
-            subprocess.run(
-                ["git", "commit", "-m", f"daily: {today} — {headlines}"],
-                cwd=str(GIT_REPO), check=True,
-            )
-            subprocess.run(["git", "push"], cwd=str(GIT_REPO), check=True)
-            log.info("Deployed %d articles to askanka.com", len(published))
-        except subprocess.CalledProcessError as e:
+            result = deploy_helper.publish(files, f"daily: {today} — {headlines}")
+            if result["pushed"]:
+                log.info("Deployed %d articles to askanka.com (master): %s",
+                         len(published), result["reason"][:80])
+            else:
+                log.warning("Articles not published: %s", result["reason"])
+        except Exception as e:
             log.error("Git deploy failed: %s", e)
 
     return published
