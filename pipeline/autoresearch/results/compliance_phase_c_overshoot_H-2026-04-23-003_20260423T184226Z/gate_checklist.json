@@ -1,0 +1,109 @@
+{
+  "hypothesis_id": "H-2026-04-23-003",
+  "generated_at": "2026-04-23T18:44:28.381767+00:00",
+  "rows": [
+    {
+      "section": "1/3",
+      "requirement": "S0 pass (Sharpe>=1, hit>=55%, DD<=20%)",
+      "value": {
+        "sharpe": -1.2719303370786519,
+        "hit": 0.4859329588014981,
+        "dd": 0.13367104868913857
+      },
+      "pass_fail": "FAIL",
+      "note": ""
+    },
+    {
+      "section": "1/3",
+      "requirement": "S1 pass (Sharpe>=0.8, DD<=25%, cum P&L>0)",
+      "value": {
+        "sharpe": -2.630035205992509,
+        "dd": 0.15151198127340826,
+        "cum": -2653.6823000000004
+      },
+      "pass_fail": "FAIL",
+      "note": ""
+    },
+    {
+      "section": "2",
+      "requirement": "Risk metrics computed per bucket per level",
+      "value": true,
+      "pass_fail": "PASS",
+      "note": ""
+    },
+    {
+      "section": "5A",
+      "requirement": "Data audit classification != AUTO-FAIL",
+      "value": "CLEAN",
+      "pass_fail": "PASS",
+      "note": "impaired_pct=0.259"
+    },
+    {
+      "section": "6",
+      "requirement": "Universe disclosed (or under waiver)",
+      "value": "SURVIVORSHIP-UNCORRECTED-WAIVED",
+      "pass_fail": "PASS",
+      "note": "waiver=C:\\Users\\Claude_Anka\\askanka.com\\docs\\superpowers\\waivers\\2026-04-23-phase-c-residual-reversion-survivorship.md"
+    },
+    {
+      "section": "7",
+      "requirement": "Execution mode declared = MODE_A (EOD)",
+      "value": "MODE_A",
+      "pass_fail": "PASS",
+      "note": ""
+    },
+    {
+      "section": "8",
+      "requirement": "Direction audit emitted",
+      "value": 0,
+      "pass_fail": "PASS",
+      "note": "conflicts=0"
+    },
+    {
+      "section": "9",
+      "requirement": "n>=30 per regime OR flagged exploratory",
+      "value": false,
+      "pass_fail": "FAIL",
+      "note": "underpowered_count=224"
+    },
+    {
+      "section": "9A",
+      "requirement": "Fragility verdict != PARAMETER-FRAGILE",
+      "value": "SKIPPED_SLICE_OVERRIDE",
+      "pass_fail": "PASS",
+      "note": ""
+    },
+    {
+      "section": "9B.1",
+      "requirement": "Beats strongest naive comparator at S0",
+      "value": "equal_weight_basket",
+      "pass_fail": "FAIL",
+      "note": ""
+    },
+    {
+      "section": "9B.2",
+      "requirement": "Permutations >= required floor",
+      "value": {
+        "n": 100000,
+        "floor": 100000
+      },
+      "pass_fail": "PASS",
+      "note": ""
+    },
+    {
+      "section": "10",
+      "requirement": "Holdout >= 20% of history",
+      "value": 0.06,
+      "pass_fail": "PARTIAL",
+      "note": "target=0.2; current holdout 6% -- waiver required for promotion"
+    },
+    {
+      "section": "11B",
+      "requirement": "Residual Sharpe >= 70% of gross Sharpe",
+      "value": 0.0,
+      "pass_fail": "FAIL",
+      "note": ""
+    }
+  ],
+  "decision": "FAIL"
+}

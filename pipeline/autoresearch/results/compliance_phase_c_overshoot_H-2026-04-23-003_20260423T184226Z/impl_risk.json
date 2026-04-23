@@ -1,0 +1,13 @@
+{
+  "n_events_input": 5461,
+  "n_events_kept": 5019,
+  "perturbed_sharpe": -1.0694,
+  "perturbed_max_dd": 0.9999979999999999,
+  "perturbed_cum_pnl": -1028.5060208474251,
+  "baseline_sharpe_s1": 0.0,
+  "baseline_dd_s1": 0.15,
+  "pass_cumulative_pnl_positive": false,
+  "pass_max_dd": false,
+  "pass_realised_sharpe": false,
+  "verdict": "IMPLEMENTATION-SENSITIVE"
+}
