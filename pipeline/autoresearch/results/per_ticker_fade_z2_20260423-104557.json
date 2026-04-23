@@ -1,0 +1,3617 @@
+{
+  "generated_at": "2026-04-23T10:45:57.630045+00:00",
+  "min_z": 2.0,
+  "n_tickers_with_data": 181,
+  "rows": [
+    {
+      "ticker": "NBCC",
+      "direction": "DOWN",
+      "n_events": 19,
+      "hit_rate": 0.632,
+      "mean_next_pct": 1.754,
+      "edge_pct": 1.754,
+      "p_value": 0.012,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NHPC",
+      "direction": "DOWN",
+      "n_events": 40,
+      "hit_rate": 0.775,
+      "mean_next_pct": 1.495,
+      "edge_pct": 1.495,
+      "p_value": 0.0,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NAM-INDIA",
+      "direction": "DOWN",
+      "n_events": 27,
+      "hit_rate": 0.593,
+      "mean_next_pct": 1.35,
+      "edge_pct": 1.35,
+      "p_value": 0.002,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ANGELONE",
+      "direction": "DOWN",
+      "n_events": 28,
+      "hit_rate": 0.643,
+      "mean_next_pct": 1.054,
+      "edge_pct": 1.054,
+      "p_value": 0.093,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MANAPPURAM",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.625,
+      "mean_next_pct": 0.979,
+      "edge_pct": 0.979,
+      "p_value": 0.025,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GMRAIRPORT",
+      "direction": "DOWN",
+      "n_events": 29,
+      "hit_rate": 0.621,
+      "mean_next_pct": 0.908,
+      "edge_pct": 0.908,
+      "p_value": 0.053,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AMBER",
+      "direction": "UP",
+      "n_events": 56,
+      "hit_rate": 0.607,
+      "mean_next_pct": -0.9,
+      "edge_pct": 0.9,
+      "p_value": 0.003,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CGPOWER",
+      "direction": "DOWN",
+      "n_events": 22,
+      "hit_rate": 0.591,
+      "mean_next_pct": 0.9,
+      "edge_pct": 0.9,
+      "p_value": 0.074,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "FORCEMOT",
+      "direction": "DOWN",
+      "n_events": 22,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.88,
+      "edge_pct": 0.88,
+      "p_value": 0.184,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "UNIONBANK",
+      "direction": "DOWN",
+      "n_events": 21,
+      "hit_rate": 0.476,
+      "mean_next_pct": 0.859,
+      "edge_pct": 0.859,
+      "p_value": 0.115,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PNB",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.632,
+      "mean_next_pct": 0.845,
+      "edge_pct": 0.845,
+      "p_value": 0.026,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDPETRO",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.676,
+      "mean_next_pct": 0.781,
+      "edge_pct": 0.781,
+      "p_value": 0.036,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PGEL",
+      "direction": "DOWN",
+      "n_events": 23,
+      "hit_rate": 0.522,
+      "mean_next_pct": 0.775,
+      "edge_pct": 0.775,
+      "p_value": 0.219,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "OIL",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.676,
+      "mean_next_pct": 0.733,
+      "edge_pct": 0.733,
+      "p_value": 0.103,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ABCAPITAL",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.694,
+      "mean_next_pct": 0.722,
+      "edge_pct": 0.722,
+      "p_value": 0.032,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MAXHEALTH",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.706,
+      "mean_next_pct": 0.721,
+      "edge_pct": 0.721,
+      "p_value": 0.067,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LTF",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.647,
+      "mean_next_pct": 0.695,
+      "edge_pct": 0.695,
+      "p_value": 0.068,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RVNL",
+      "direction": "DOWN",
+      "n_events": 27,
+      "hit_rate": 0.519,
+      "mean_next_pct": 0.694,
+      "edge_pct": 0.694,
+      "p_value": 0.247,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATATECH",
+      "direction": "UP",
+      "n_events": 19,
+      "hit_rate": 0.632,
+      "mean_next_pct": -0.693,
+      "edge_pct": 0.693,
+      "p_value": 0.064,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NTPC",
+      "direction": "DOWN",
+      "n_events": 33,
+      "hit_rate": 0.667,
+      "mean_next_pct": 0.671,
+      "edge_pct": 0.671,
+      "p_value": 0.029,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "COALINDIA",
+      "direction": "DOWN",
+      "n_events": 35,
+      "hit_rate": 0.714,
+      "mean_next_pct": 0.644,
+      "edge_pct": 0.644,
+      "p_value": 0.046,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDZINC",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.526,
+      "mean_next_pct": 0.64,
+      "edge_pct": 0.64,
+      "p_value": 0.072,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SAIL",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.535,
+      "mean_next_pct": 0.591,
+      "edge_pct": 0.591,
+      "p_value": 0.1,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "UNOMINDA",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.581,
+      "mean_next_pct": -0.588,
+      "edge_pct": 0.588,
+      "p_value": 0.011,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NATIONALUM",
+      "direction": "DOWN",
+      "n_events": 26,
+      "hit_rate": 0.577,
+      "mean_next_pct": 0.58,
+      "edge_pct": 0.58,
+      "p_value": 0.247,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "360ONE",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.587,
+      "mean_next_pct": -0.578,
+      "edge_pct": 0.578,
+      "p_value": 0.026,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POWERINDIA",
+      "direction": "DOWN",
+      "n_events": 23,
+      "hit_rate": 0.652,
+      "mean_next_pct": 0.569,
+      "edge_pct": 0.569,
+      "p_value": 0.301,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CONCOR",
+      "direction": "DOWN",
+      "n_events": 40,
+      "hit_rate": 0.55,
+      "mean_next_pct": 0.559,
+      "edge_pct": 0.559,
+      "p_value": 0.042,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SOLARINDS",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.514,
+      "mean_next_pct": 0.551,
+      "edge_pct": 0.551,
+      "p_value": 0.183,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IDFCFIRSTB",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.667,
+      "mean_next_pct": 0.546,
+      "edge_pct": 0.546,
+      "p_value": 0.057,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIENSOL",
+      "direction": "UP",
+      "n_events": 27,
+      "hit_rate": 0.556,
+      "mean_next_pct": -0.535,
+      "edge_pct": 0.535,
+      "p_value": 0.133,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "EXIDEIND",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.628,
+      "mean_next_pct": 0.53,
+      "edge_pct": 0.53,
+      "p_value": 0.047,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BLUESTARCO",
+      "direction": "DOWN",
+      "n_events": 35,
+      "hit_rate": 0.543,
+      "mean_next_pct": 0.521,
+      "edge_pct": 0.521,
+      "p_value": 0.141,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GRASIM",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.651,
+      "mean_next_pct": 0.518,
+      "edge_pct": 0.518,
+      "p_value": 0.025,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PIDILITIND",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.722,
+      "mean_next_pct": 0.518,
+      "edge_pct": 0.518,
+      "p_value": 0.014,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KEI",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.608,
+      "mean_next_pct": -0.51,
+      "edge_pct": 0.51,
+      "p_value": 0.019,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PHOENIXLTD",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.559,
+      "mean_next_pct": 0.51,
+      "edge_pct": 0.51,
+      "p_value": 0.196,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PERSISTENT",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.625,
+      "mean_next_pct": 0.502,
+      "edge_pct": 0.502,
+      "p_value": 0.196,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "UNOMINDA",
+      "direction": "DOWN",
+      "n_events": 29,
+      "hit_rate": 0.517,
+      "mean_next_pct": 0.494,
+      "edge_pct": 0.494,
+      "p_value": 0.202,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIENT",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.643,
+      "mean_next_pct": 0.472,
+      "edge_pct": 0.472,
+      "p_value": 0.195,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MAXHEALTH",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.604,
+      "mean_next_pct": -0.472,
+      "edge_pct": 0.472,
+      "p_value": 0.021,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TORNTPOWER",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.48,
+      "mean_next_pct": -0.47,
+      "edge_pct": 0.47,
+      "p_value": 0.026,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SRF",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.574,
+      "mean_next_pct": -0.462,
+      "edge_pct": 0.462,
+      "p_value": 0.022,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ICICIBANK",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.594,
+      "mean_next_pct": 0.459,
+      "edge_pct": 0.459,
+      "p_value": 0.049,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TORNTPHARM",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.705,
+      "mean_next_pct": -0.445,
+      "edge_pct": 0.445,
+      "p_value": 0.012,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PHOENIXLTD",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.575,
+      "mean_next_pct": -0.442,
+      "edge_pct": 0.442,
+      "p_value": 0.045,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MOTILALOFS",
+      "direction": "UP",
+      "n_events": 57,
+      "hit_rate": 0.667,
+      "mean_next_pct": -0.431,
+      "edge_pct": 0.431,
+      "p_value": 0.089,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LODHA",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.429,
+      "edge_pct": 0.429,
+      "p_value": 0.257,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDALCO",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.588,
+      "mean_next_pct": 0.427,
+      "edge_pct": 0.427,
+      "p_value": 0.191,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JUBLFOOD",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.6,
+      "mean_next_pct": -0.421,
+      "edge_pct": 0.421,
+      "p_value": 0.074,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HDFCAMC",
+      "direction": "DOWN",
+      "n_events": 44,
+      "hit_rate": 0.614,
+      "mean_next_pct": 0.419,
+      "edge_pct": 0.419,
+      "p_value": 0.101,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JINDALSTEL",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.538,
+      "mean_next_pct": 0.41,
+      "edge_pct": 0.41,
+      "p_value": 0.205,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LICI",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.585,
+      "mean_next_pct": 0.409,
+      "edge_pct": 0.409,
+      "p_value": 0.097,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ETERNAL",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.574,
+      "mean_next_pct": -0.406,
+      "edge_pct": 0.406,
+      "p_value": 0.129,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BANKBARODA",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.585,
+      "mean_next_pct": 0.396,
+      "edge_pct": 0.396,
+      "p_value": 0.248,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AMBUJACEM",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.585,
+      "mean_next_pct": 0.392,
+      "edge_pct": 0.392,
+      "p_value": 0.161,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "FEDERALBNK",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.639,
+      "mean_next_pct": 0.389,
+      "edge_pct": 0.389,
+      "p_value": 0.192,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "FORTIS",
+      "direction": "UP",
+      "n_events": 55,
+      "hit_rate": 0.636,
+      "mean_next_pct": -0.387,
+      "edge_pct": 0.387,
+      "p_value": 0.026,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MARICO",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.595,
+      "mean_next_pct": 0.385,
+      "edge_pct": 0.385,
+      "p_value": 0.083,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RBLBANK",
+      "direction": "DOWN",
+      "n_events": 30,
+      "hit_rate": 0.467,
+      "mean_next_pct": 0.384,
+      "edge_pct": 0.384,
+      "p_value": 0.278,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ONGC",
+      "direction": "DOWN",
+      "n_events": 35,
+      "hit_rate": 0.514,
+      "mean_next_pct": 0.368,
+      "edge_pct": 0.368,
+      "p_value": 0.232,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ICICIPRULI",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.596,
+      "mean_next_pct": -0.364,
+      "edge_pct": 0.364,
+      "p_value": 0.068,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "APLAPOLLO",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.538,
+      "mean_next_pct": -0.36,
+      "edge_pct": 0.36,
+      "p_value": 0.077,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JINDALSTEL",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.6,
+      "mean_next_pct": -0.355,
+      "edge_pct": 0.355,
+      "p_value": 0.062,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATACONSUM",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.596,
+      "mean_next_pct": -0.347,
+      "edge_pct": 0.347,
+      "p_value": 0.023,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CIPLA",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.488,
+      "mean_next_pct": 0.343,
+      "edge_pct": 0.343,
+      "p_value": 0.063,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PIIND",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.532,
+      "mean_next_pct": -0.339,
+      "edge_pct": 0.339,
+      "p_value": 0.073,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BIOCON",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.558,
+      "mean_next_pct": -0.327,
+      "edge_pct": 0.327,
+      "p_value": 0.136,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HYUNDAI",
+      "direction": "DOWN",
+      "n_events": 11,
+      "hit_rate": 0.545,
+      "mean_next_pct": 0.327,
+      "edge_pct": 0.327,
+      "p_value": 0.288,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NAM-INDIA",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.635,
+      "mean_next_pct": -0.325,
+      "edge_pct": 0.325,
+      "p_value": 0.062,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATAPOWER",
+      "direction": "DOWN",
+      "n_events": 51,
+      "hit_rate": 0.745,
+      "mean_next_pct": 0.323,
+      "edge_pct": 0.323,
+      "p_value": 0.246,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SAMMAANCAP",
+      "direction": "DOWN",
+      "n_events": 24,
+      "hit_rate": 0.583,
+      "mean_next_pct": 0.32,
+      "edge_pct": 0.32,
+      "p_value": 0.315,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ASHOKLEY",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.436,
+      "mean_next_pct": 0.317,
+      "edge_pct": 0.317,
+      "p_value": 0.295,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "UPL",
+      "direction": "DOWN",
+      "n_events": 46,
+      "hit_rate": 0.565,
+      "mean_next_pct": 0.316,
+      "edge_pct": 0.316,
+      "p_value": 0.154,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BLUESTARCO",
+      "direction": "UP",
+      "n_events": 53,
+      "hit_rate": 0.547,
+      "mean_next_pct": -0.314,
+      "edge_pct": 0.314,
+      "p_value": 0.043,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NHPC",
+      "direction": "UP",
+      "n_events": 53,
+      "hit_rate": 0.509,
+      "mean_next_pct": -0.309,
+      "edge_pct": 0.309,
+      "p_value": 0.063,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BHEL",
+      "direction": "DOWN",
+      "n_events": 28,
+      "hit_rate": 0.607,
+      "mean_next_pct": 0.304,
+      "edge_pct": 0.304,
+      "p_value": 0.423,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SUPREMEIND",
+      "direction": "DOWN",
+      "n_events": 31,
+      "hit_rate": 0.548,
+      "mean_next_pct": 0.304,
+      "edge_pct": 0.304,
+      "p_value": 0.264,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LODHA",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.475,
+      "mean_next_pct": -0.3,
+      "edge_pct": 0.3,
+      "p_value": 0.156,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JSWENERGY",
+      "direction": "DOWN",
+      "n_events": 27,
+      "hit_rate": 0.593,
+      "mean_next_pct": 0.279,
+      "edge_pct": 0.279,
+      "p_value": 0.38,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CUMMINSIND",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.529,
+      "mean_next_pct": 0.277,
+      "edge_pct": 0.277,
+      "p_value": 0.339,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PIDILITIND",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.625,
+      "mean_next_pct": -0.276,
+      "edge_pct": 0.276,
+      "p_value": 0.042,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LICHSGFIN",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.535,
+      "mean_next_pct": -0.268,
+      "edge_pct": 0.268,
+      "p_value": 0.144,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GLENMARK",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.556,
+      "mean_next_pct": 0.267,
+      "edge_pct": 0.267,
+      "p_value": 0.345,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MUTHOOTFIN",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.58,
+      "mean_next_pct": -0.265,
+      "edge_pct": 0.265,
+      "p_value": 0.086,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CDSL",
+      "direction": "DOWN",
+      "n_events": 33,
+      "hit_rate": 0.485,
+      "mean_next_pct": 0.264,
+      "edge_pct": 0.264,
+      "p_value": 0.38,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BHARATFORG",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.588,
+      "mean_next_pct": -0.263,
+      "edge_pct": 0.263,
+      "p_value": 0.073,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AXISBANK",
+      "direction": "DOWN",
+      "n_events": 51,
+      "hit_rate": 0.608,
+      "mean_next_pct": 0.26,
+      "edge_pct": 0.26,
+      "p_value": 0.192,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SBIN",
+      "direction": "DOWN",
+      "n_events": 44,
+      "hit_rate": 0.591,
+      "mean_next_pct": 0.257,
+      "edge_pct": 0.257,
+      "p_value": 0.294,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ZYDUSLIFE",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.6,
+      "mean_next_pct": -0.255,
+      "edge_pct": 0.255,
+      "p_value": 0.089,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.556,
+      "mean_next_pct": 0.252,
+      "edge_pct": 0.252,
+      "p_value": 0.272,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.643,
+      "mean_next_pct": 0.247,
+      "edge_pct": 0.247,
+      "p_value": 0.152,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CHOLAFIN",
+      "direction": "DOWN",
+      "n_events": 46,
+      "hit_rate": 0.478,
+      "mean_next_pct": 0.24,
+      "edge_pct": 0.24,
+      "p_value": 0.373,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SONACOMS",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.533,
+      "mean_next_pct": -0.237,
+      "edge_pct": 0.237,
+      "p_value": 0.206,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDUSTOWER",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.595,
+      "mean_next_pct": 0.235,
+      "edge_pct": 0.235,
+      "p_value": 0.323,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "WIPRO",
+      "direction": "UP",
+      "n_events": 54,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.233,
+      "edge_pct": 0.233,
+      "p_value": 0.151,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BOSCHLTD",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.223,
+      "edge_pct": 0.223,
+      "p_value": 0.106,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SBIN",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.535,
+      "mean_next_pct": -0.223,
+      "edge_pct": 0.223,
+      "p_value": 0.071,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CAMS",
+      "direction": "DOWN",
+      "n_events": 23,
+      "hit_rate": 0.565,
+      "mean_next_pct": 0.208,
+      "edge_pct": 0.208,
+      "p_value": 0.369,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.565,
+      "mean_next_pct": -0.205,
+      "edge_pct": 0.205,
+      "p_value": 0.163,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BANKINDIA",
+      "direction": "DOWN",
+      "n_events": 30,
+      "hit_rate": 0.533,
+      "mean_next_pct": 0.201,
+      "edge_pct": 0.201,
+      "p_value": 0.408,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TVSMOTOR",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.559,
+      "mean_next_pct": 0.201,
+      "edge_pct": 0.201,
+      "p_value": 0.443,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PFC",
+      "direction": "DOWN",
+      "n_events": 29,
+      "hit_rate": 0.586,
+      "mean_next_pct": 0.198,
+      "edge_pct": 0.198,
+      "p_value": 0.502,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.571,
+      "mean_next_pct": 0.196,
+      "edge_pct": 0.196,
+      "p_value": 0.38,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TECHM",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.472,
+      "mean_next_pct": 0.192,
+      "edge_pct": 0.192,
+      "p_value": 0.325,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ZYDUSLIFE",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.526,
+      "mean_next_pct": 0.185,
+      "edge_pct": 0.185,
+      "p_value": 0.302,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POWERINDIA",
+      "direction": "UP",
+      "n_events": 54,
+      "hit_rate": 0.611,
+      "mean_next_pct": -0.181,
+      "edge_pct": 0.181,
+      "p_value": 0.115,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDHOTEL",
+      "direction": "DOWN",
+      "n_events": 24,
+      "hit_rate": 0.458,
+      "mean_next_pct": 0.178,
+      "edge_pct": 0.178,
+      "p_value": 0.49,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SIEMENS",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.58,
+      "mean_next_pct": -0.178,
+      "edge_pct": 0.178,
+      "p_value": 0.121,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.614,
+      "mean_next_pct": -0.177,
+      "edge_pct": 0.177,
+      "p_value": 0.164,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NMDC",
+      "direction": "DOWN",
+      "n_events": 27,
+      "hit_rate": 0.556,
+      "mean_next_pct": 0.176,
+      "edge_pct": 0.176,
+      "p_value": 0.424,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PATANJALI",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.441,
+      "mean_next_pct": 0.175,
+      "edge_pct": 0.175,
+      "p_value": 0.394,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IRFC",
+      "direction": "DOWN",
+      "n_events": 27,
+      "hit_rate": 0.593,
+      "mean_next_pct": 0.174,
+      "edge_pct": 0.174,
+      "p_value": 0.477,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDIGO",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.594,
+      "mean_next_pct": 0.173,
+      "edge_pct": 0.173,
+      "p_value": 0.436,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KAYNES",
+      "direction": "UP",
+      "n_events": 33,
+      "hit_rate": 0.455,
+      "mean_next_pct": -0.168,
+      "edge_pct": 0.168,
+      "p_value": 0.212,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "DLF",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.524,
+      "mean_next_pct": 0.167,
+      "edge_pct": 0.167,
+      "p_value": 0.438,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ABB",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.568,
+      "mean_next_pct": 0.157,
+      "edge_pct": 0.157,
+      "p_value": 0.516,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KALYANKJIL",
+      "direction": "DOWN",
+      "n_events": 29,
+      "hit_rate": 0.448,
+      "mean_next_pct": 0.156,
+      "edge_pct": 0.156,
+      "p_value": 0.522,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "OFSS",
+      "direction": "DOWN",
+      "n_events": 30,
+      "hit_rate": 0.567,
+      "mean_next_pct": 0.152,
+      "edge_pct": 0.152,
+      "p_value": 0.441,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "OBEROIRLTY",
+      "direction": "UP",
+      "n_events": 54,
+      "hit_rate": 0.537,
+      "mean_next_pct": -0.149,
+      "edge_pct": 0.149,
+      "p_value": 0.172,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BHARATFORG",
+      "direction": "DOWN",
+      "n_events": 35,
+      "hit_rate": 0.543,
+      "mean_next_pct": 0.146,
+      "edge_pct": 0.146,
+      "p_value": 0.467,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TORNTPOWER",
+      "direction": "DOWN",
+      "n_events": 47,
+      "hit_rate": 0.596,
+      "mean_next_pct": 0.144,
+      "edge_pct": 0.144,
+      "p_value": 0.493,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SHREECEM",
+      "direction": "DOWN",
+      "n_events": 45,
+      "hit_rate": 0.644,
+      "mean_next_pct": 0.14,
+      "edge_pct": 0.14,
+      "p_value": 0.291,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RECLTD",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.431,
+      "mean_next_pct": -0.139,
+      "edge_pct": 0.139,
+      "p_value": 0.169,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KAYNES",
+      "direction": "DOWN",
+      "n_events": 22,
+      "hit_rate": 0.636,
+      "mean_next_pct": 0.133,
+      "edge_pct": 0.133,
+      "p_value": 0.579,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KFINTECH",
+      "direction": "DOWN",
+      "n_events": 19,
+      "hit_rate": 0.421,
+      "mean_next_pct": 0.133,
+      "edge_pct": 0.133,
+      "p_value": 0.501,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INFY",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.595,
+      "mean_next_pct": -0.131,
+      "edge_pct": 0.131,
+      "p_value": 0.263,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MANAPPURAM",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.596,
+      "mean_next_pct": -0.131,
+      "edge_pct": 0.131,
+      "p_value": 0.242,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJAJHLDNG",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.581,
+      "mean_next_pct": 0.13,
+      "edge_pct": 0.13,
+      "p_value": 0.486,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TIINDIA",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.48,
+      "mean_next_pct": -0.125,
+      "edge_pct": 0.125,
+      "p_value": 0.246,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "APLAPOLLO",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.444,
+      "mean_next_pct": 0.123,
+      "edge_pct": 0.123,
+      "p_value": 0.509,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.651,
+      "mean_next_pct": 0.123,
+      "edge_pct": 0.123,
+      "p_value": 0.431,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LAURUSLABS",
+      "direction": "DOWN",
+      "n_events": 40,
+      "hit_rate": 0.575,
+      "mean_next_pct": 0.122,
+      "edge_pct": 0.122,
+      "p_value": 0.477,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MPHASIS",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.511,
+      "mean_next_pct": -0.122,
+      "edge_pct": 0.122,
+      "p_value": 0.267,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HDFCLIFE",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.522,
+      "mean_next_pct": -0.114,
+      "edge_pct": 0.114,
+      "p_value": 0.286,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.486,
+      "mean_next_pct": 0.112,
+      "edge_pct": 0.112,
+      "p_value": 0.438,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CANBK",
+      "direction": "DOWN",
+      "n_events": 28,
+      "hit_rate": 0.536,
+      "mean_next_pct": 0.11,
+      "edge_pct": 0.11,
+      "p_value": 0.558,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ASHOKLEY",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.51,
+      "mean_next_pct": -0.105,
+      "edge_pct": 0.105,
+      "p_value": 0.232,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AMBER",
+      "direction": "DOWN",
+      "n_events": 25,
+      "hit_rate": 0.44,
+      "mean_next_pct": 0.102,
+      "edge_pct": 0.102,
+      "p_value": 0.515,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IEX",
+      "direction": "DOWN",
+      "n_events": 46,
+      "hit_rate": 0.565,
+      "mean_next_pct": 0.101,
+      "edge_pct": 0.101,
+      "p_value": 0.455,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AUBANK",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.564,
+      "mean_next_pct": -0.093,
+      "edge_pct": 0.093,
+      "p_value": 0.298,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POLYCAB",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.553,
+      "mean_next_pct": 0.093,
+      "edge_pct": 0.093,
+      "p_value": 0.587,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BANKINDIA",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.471,
+      "mean_next_pct": -0.089,
+      "edge_pct": 0.089,
+      "p_value": 0.303,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDIANB",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.472,
+      "mean_next_pct": 0.089,
+      "edge_pct": 0.089,
+      "p_value": 0.612,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "direction": "UP",
+      "n_events": 37,
+      "hit_rate": 0.486,
+      "mean_next_pct": -0.085,
+      "edge_pct": 0.085,
+      "p_value": 0.312,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "VOLTAS",
+      "direction": "DOWN",
+      "n_events": 43,
+      "hit_rate": 0.465,
+      "mean_next_pct": 0.084,
+      "edge_pct": 0.084,
+      "p_value": 0.464,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PETRONET",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.55,
+      "mean_next_pct": -0.082,
+      "edge_pct": 0.082,
+      "p_value": 0.302,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SUZLON",
+      "direction": "DOWN",
+      "n_events": 25,
+      "hit_rate": 0.44,
+      "mean_next_pct": 0.078,
+      "edge_pct": 0.078,
+      "p_value": 0.615,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "direction": "DOWN",
+      "n_events": 45,
+      "hit_rate": 0.444,
+      "mean_next_pct": 0.077,
+      "edge_pct": 0.077,
+      "p_value": 0.502,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CIPLA",
+      "direction": "UP",
+      "n_events": 34,
+      "hit_rate": 0.471,
+      "mean_next_pct": -0.068,
+      "edge_pct": 0.068,
+      "p_value": 0.306,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "DOWN",
+      "n_events": 47,
+      "hit_rate": 0.447,
+      "mean_next_pct": 0.067,
+      "edge_pct": 0.067,
+      "p_value": 0.467,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TIINDIA",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.524,
+      "mean_next_pct": 0.067,
+      "edge_pct": 0.067,
+      "p_value": 0.534,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BIOCON",
+      "direction": "DOWN",
+      "n_events": 45,
+      "hit_rate": 0.556,
+      "mean_next_pct": 0.064,
+      "edge_pct": 0.064,
+      "p_value": 0.423,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "VEDL",
+      "direction": "DOWN",
+      "n_events": 40,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.047,
+      "edge_pct": 0.047,
+      "p_value": 0.651,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ASTRAL",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.444,
+      "mean_next_pct": -0.045,
+      "edge_pct": 0.045,
+      "p_value": 0.374,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SBILIFE",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.568,
+      "mean_next_pct": 0.042,
+      "edge_pct": 0.042,
+      "p_value": 0.534,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CONCOR",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.404,
+      "mean_next_pct": -0.039,
+      "edge_pct": 0.039,
+      "p_value": 0.391,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.474,
+      "mean_next_pct": 0.039,
+      "edge_pct": 0.039,
+      "p_value": 0.555,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BOSCHLTD",
+      "direction": "DOWN",
+      "n_events": 45,
+      "hit_rate": 0.511,
+      "mean_next_pct": 0.038,
+      "edge_pct": 0.038,
+      "p_value": 0.616,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BRITANNIA",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.634,
+      "mean_next_pct": 0.037,
+      "edge_pct": 0.037,
+      "p_value": 0.525,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.381,
+      "mean_next_pct": -0.037,
+      "edge_pct": 0.037,
+      "p_value": 0.321,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDZINC",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.468,
+      "mean_next_pct": -0.036,
+      "edge_pct": 0.036,
+      "p_value": 0.339,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "DALBHARAT",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.457,
+      "mean_next_pct": -0.033,
+      "edge_pct": 0.033,
+      "p_value": 0.41,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PETRONET",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.537,
+      "mean_next_pct": 0.029,
+      "edge_pct": 0.029,
+      "p_value": 0.516,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.523,
+      "mean_next_pct": -0.028,
+      "edge_pct": 0.028,
+      "p_value": 0.41,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LICHSGFIN",
+      "direction": "DOWN",
+      "n_events": 51,
+      "hit_rate": 0.49,
+      "mean_next_pct": 0.028,
+      "edge_pct": 0.028,
+      "p_value": 0.545,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HCLTECH",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.476,
+      "mean_next_pct": -0.022,
+      "edge_pct": 0.022,
+      "p_value": 0.376,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NESTLEIND",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.541,
+      "mean_next_pct": 0.022,
+      "edge_pct": 0.022,
+      "p_value": 0.571,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ITC",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.529,
+      "mean_next_pct": 0.021,
+      "edge_pct": 0.021,
+      "p_value": 0.555,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "FORTIS",
+      "direction": "DOWN",
+      "n_events": 29,
+      "hit_rate": 0.483,
+      "mean_next_pct": 0.019,
+      "edge_pct": 0.019,
+      "p_value": 0.621,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POLICYBZR",
+      "direction": "UP",
+      "n_events": 41,
+      "hit_rate": 0.659,
+      "mean_next_pct": -0.019,
+      "edge_pct": 0.019,
+      "p_value": 0.429,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SRF",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.548,
+      "mean_next_pct": 0.019,
+      "edge_pct": 0.019,
+      "p_value": 0.577,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BHEL",
+      "direction": "UP",
+      "n_events": 63,
+      "hit_rate": 0.524,
+      "mean_next_pct": -0.017,
+      "edge_pct": 0.017,
+      "p_value": 0.24,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATASTEEL",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.588,
+      "mean_next_pct": 0.014,
+      "edge_pct": 0.014,
+      "p_value": 0.6,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MOTHERSON",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.54,
+      "mean_next_pct": -0.007,
+      "edge_pct": 0.007,
+      "p_value": 0.37,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.005,
+      "edge_pct": 0.005,
+      "p_value": 0.45,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NESTLEIND",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.571,
+      "mean_next_pct": -0.001,
+      "edge_pct": 0.001,
+      "p_value": 0.397,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.471,
+      "mean_next_pct": -0.0,
+      "edge_pct": -0.0,
+      "p_value": 0.601,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MARICO",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.543,
+      "mean_next_pct": 0.0,
+      "edge_pct": -0.0,
+      "p_value": 0.387,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "COFORGE",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.533,
+      "mean_next_pct": 0.001,
+      "edge_pct": -0.001,
+      "p_value": 0.404,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PNB",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.49,
+      "mean_next_pct": 0.005,
+      "edge_pct": -0.005,
+      "p_value": 0.331,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "OBEROIRLTY",
+      "direction": "DOWN",
+      "n_events": 35,
+      "hit_rate": 0.486,
+      "mean_next_pct": -0.006,
+      "edge_pct": -0.006,
+      "p_value": 0.621,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PPLPHARMA",
+      "direction": "DOWN",
+      "n_events": 18,
+      "hit_rate": 0.333,
+      "mean_next_pct": -0.007,
+      "edge_pct": -0.007,
+      "p_value": 0.494,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.549,
+      "mean_next_pct": 0.011,
+      "edge_pct": -0.011,
+      "p_value": 0.401,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "WIPRO",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.463,
+      "mean_next_pct": -0.012,
+      "edge_pct": -0.012,
+      "p_value": 0.544,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATAELXSI",
+      "direction": "DOWN",
+      "n_events": 44,
+      "hit_rate": 0.568,
+      "mean_next_pct": -0.02,
+      "edge_pct": -0.02,
+      "p_value": 0.603,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ICICIPRULI",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.514,
+      "mean_next_pct": -0.023,
+      "edge_pct": -0.023,
+      "p_value": 0.543,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HDFCLIFE",
+      "direction": "DOWN",
+      "n_events": 54,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.029,
+      "edge_pct": -0.029,
+      "p_value": 0.553,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TVSMOTOR",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.519,
+      "mean_next_pct": 0.03,
+      "edge_pct": -0.03,
+      "p_value": 0.285,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TCS",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.476,
+      "mean_next_pct": -0.035,
+      "edge_pct": -0.035,
+      "p_value": 0.608,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GODFRYPHLP",
+      "direction": "UP",
+      "n_events": 66,
+      "hit_rate": 0.561,
+      "mean_next_pct": 0.036,
+      "edge_pct": -0.036,
+      "p_value": 0.337,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "DABUR",
+      "direction": "DOWN",
+      "n_events": 50,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.037,
+      "edge_pct": -0.037,
+      "p_value": 0.572,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJAJHLDNG",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.556,
+      "mean_next_pct": 0.038,
+      "edge_pct": -0.038,
+      "p_value": 0.397,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATACONSUM",
+      "direction": "DOWN",
+      "n_events": 35,
+      "hit_rate": 0.486,
+      "mean_next_pct": -0.039,
+      "edge_pct": -0.039,
+      "p_value": 0.664,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "direction": "DOWN",
+      "n_events": 48,
+      "hit_rate": 0.542,
+      "mean_next_pct": -0.04,
+      "edge_pct": -0.04,
+      "p_value": 0.622,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SHREECEM",
+      "direction": "UP",
+      "n_events": 37,
+      "hit_rate": 0.541,
+      "mean_next_pct": 0.04,
+      "edge_pct": -0.04,
+      "p_value": 0.557,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BANKBARODA",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.465,
+      "mean_next_pct": 0.048,
+      "edge_pct": -0.048,
+      "p_value": 0.354,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CAMS",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.551,
+      "mean_next_pct": 0.048,
+      "edge_pct": -0.048,
+      "p_value": 0.465,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NUVAMA",
+      "direction": "DOWN",
+      "n_events": 11,
+      "hit_rate": 0.455,
+      "mean_next_pct": -0.051,
+      "edge_pct": -0.051,
+      "p_value": 0.608,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SONACOMS",
+      "direction": "DOWN",
+      "n_events": 33,
+      "hit_rate": 0.485,
+      "mean_next_pct": -0.051,
+      "edge_pct": -0.051,
+      "p_value": 0.617,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GODFRYPHLP",
+      "direction": "DOWN",
+      "n_events": 33,
+      "hit_rate": 0.424,
+      "mean_next_pct": -0.053,
+      "edge_pct": -0.053,
+      "p_value": 0.696,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "DABUR",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.054,
+      "edge_pct": -0.054,
+      "p_value": 0.602,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NTPC",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.409,
+      "mean_next_pct": 0.057,
+      "edge_pct": -0.057,
+      "p_value": 0.362,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ICICIBANK",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.535,
+      "mean_next_pct": 0.062,
+      "edge_pct": -0.062,
+      "p_value": 0.486,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.538,
+      "mean_next_pct": -0.062,
+      "edge_pct": -0.062,
+      "p_value": 0.629,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "DLF",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.532,
+      "mean_next_pct": 0.064,
+      "edge_pct": -0.064,
+      "p_value": 0.457,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INFY",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.071,
+      "edge_pct": -0.071,
+      "p_value": 0.64,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "UPL",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.417,
+      "mean_next_pct": 0.071,
+      "edge_pct": -0.071,
+      "p_value": 0.557,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ABCAPITAL",
+      "direction": "UP",
+      "n_events": 56,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.073,
+      "edge_pct": -0.073,
+      "p_value": 0.431,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KALYANKJIL",
+      "direction": "UP",
+      "n_events": 60,
+      "hit_rate": 0.517,
+      "mean_next_pct": 0.076,
+      "edge_pct": -0.076,
+      "p_value": 0.399,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MPHASIS",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.389,
+      "mean_next_pct": -0.078,
+      "edge_pct": -0.078,
+      "p_value": 0.648,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "direction": "UP",
+      "n_events": 58,
+      "hit_rate": 0.552,
+      "mean_next_pct": 0.079,
+      "edge_pct": -0.079,
+      "p_value": 0.507,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CUMMINSIND",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.479,
+      "mean_next_pct": 0.083,
+      "edge_pct": -0.083,
+      "p_value": 0.363,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GMRAIRPORT",
+      "direction": "UP",
+      "n_events": 58,
+      "hit_rate": 0.534,
+      "mean_next_pct": 0.086,
+      "edge_pct": -0.086,
+      "p_value": 0.421,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "OFSS",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.519,
+      "mean_next_pct": 0.088,
+      "edge_pct": -0.088,
+      "p_value": 0.47,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HDFCBANK",
+      "direction": "UP",
+      "n_events": 41,
+      "hit_rate": 0.439,
+      "mean_next_pct": 0.093,
+      "edge_pct": -0.093,
+      "p_value": 0.639,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PPLPHARMA",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.538,
+      "mean_next_pct": 0.093,
+      "edge_pct": -0.093,
+      "p_value": 0.578,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TCS",
+      "direction": "UP",
+      "n_events": 32,
+      "hit_rate": 0.469,
+      "mean_next_pct": 0.097,
+      "edge_pct": -0.097,
+      "p_value": 0.652,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GODREJCP",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.489,
+      "mean_next_pct": 0.103,
+      "edge_pct": -0.103,
+      "p_value": 0.59,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LUPIN",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.451,
+      "mean_next_pct": 0.106,
+      "edge_pct": -0.106,
+      "p_value": 0.544,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "EXIDEIND",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.532,
+      "mean_next_pct": 0.115,
+      "edge_pct": -0.115,
+      "p_value": 0.568,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MOTILALOFS",
+      "direction": "DOWN",
+      "n_events": 26,
+      "hit_rate": 0.538,
+      "mean_next_pct": -0.118,
+      "edge_pct": -0.118,
+      "p_value": 0.686,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MANKIND",
+      "direction": "DOWN",
+      "n_events": 18,
+      "hit_rate": 0.333,
+      "mean_next_pct": -0.121,
+      "edge_pct": -0.121,
+      "p_value": 0.648,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.417,
+      "mean_next_pct": -0.125,
+      "edge_pct": -0.125,
+      "p_value": 0.778,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDALCO",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.521,
+      "mean_next_pct": 0.129,
+      "edge_pct": -0.129,
+      "p_value": 0.521,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POWERGRID",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.524,
+      "mean_next_pct": -0.129,
+      "edge_pct": -0.129,
+      "p_value": 0.834,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MARUTI",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.439,
+      "mean_next_pct": -0.137,
+      "edge_pct": -0.137,
+      "p_value": 0.827,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ITC",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.44,
+      "mean_next_pct": 0.139,
+      "edge_pct": -0.139,
+      "p_value": 0.673,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GRASIM",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.419,
+      "mean_next_pct": 0.141,
+      "edge_pct": -0.141,
+      "p_value": 0.616,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IREDA",
+      "direction": "DOWN",
+      "n_events": 13,
+      "hit_rate": 0.385,
+      "mean_next_pct": -0.142,
+      "edge_pct": -0.142,
+      "p_value": 0.628,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KEI",
+      "direction": "DOWN",
+      "n_events": 33,
+      "hit_rate": 0.424,
+      "mean_next_pct": -0.145,
+      "edge_pct": -0.145,
+      "p_value": 0.804,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HUDCO",
+      "direction": "UP",
+      "n_events": 67,
+      "hit_rate": 0.567,
+      "mean_next_pct": 0.15,
+      "edge_pct": -0.15,
+      "p_value": 0.471,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GODREJPROP",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.151,
+      "edge_pct": -0.151,
+      "p_value": 0.719,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SBICARD",
+      "direction": "DOWN",
+      "n_events": 44,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.159,
+      "edge_pct": -0.159,
+      "p_value": 0.723,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HAVELLS",
+      "direction": "DOWN",
+      "n_events": 55,
+      "hit_rate": 0.582,
+      "mean_next_pct": -0.16,
+      "edge_pct": -0.16,
+      "p_value": 0.817,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POLICYBZR",
+      "direction": "DOWN",
+      "n_events": 26,
+      "hit_rate": 0.577,
+      "mean_next_pct": -0.161,
+      "edge_pct": -0.161,
+      "p_value": 0.671,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "DALBHARAT",
+      "direction": "DOWN",
+      "n_events": 30,
+      "hit_rate": 0.567,
+      "mean_next_pct": -0.167,
+      "edge_pct": -0.167,
+      "p_value": 0.726,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LICI",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.59,
+      "mean_next_pct": 0.168,
+      "edge_pct": -0.168,
+      "p_value": 0.694,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SUPREMEIND",
+      "direction": "UP",
+      "n_events": 64,
+      "hit_rate": 0.469,
+      "mean_next_pct": 0.17,
+      "edge_pct": -0.17,
+      "p_value": 0.637,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MANKIND",
+      "direction": "UP",
+      "n_events": 33,
+      "hit_rate": 0.545,
+      "mean_next_pct": 0.172,
+      "edge_pct": -0.172,
+      "p_value": 0.623,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NAUKRI",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.408,
+      "mean_next_pct": 0.173,
+      "edge_pct": -0.173,
+      "p_value": 0.669,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GODREJCP",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.486,
+      "mean_next_pct": -0.18,
+      "edge_pct": -0.18,
+      "p_value": 0.826,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PERSISTENT",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.49,
+      "mean_next_pct": 0.186,
+      "edge_pct": -0.186,
+      "p_value": 0.53,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JIOFIN",
+      "direction": "UP",
+      "n_events": 23,
+      "hit_rate": 0.304,
+      "mean_next_pct": 0.189,
+      "edge_pct": -0.189,
+      "p_value": 0.666,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MOTHERSON",
+      "direction": "DOWN",
+      "n_events": 40,
+      "hit_rate": 0.35,
+      "mean_next_pct": -0.191,
+      "edge_pct": -0.191,
+      "p_value": 0.775,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TMPV",
+      "direction": "DOWN",
+      "n_events": 8,
+      "hit_rate": 0.375,
+      "mean_next_pct": -0.193,
+      "edge_pct": -0.193,
+      "p_value": 0.595,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BRITANNIA",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.194,
+      "edge_pct": -0.194,
+      "p_value": 0.773,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.469,
+      "mean_next_pct": 0.198,
+      "edge_pct": -0.198,
+      "p_value": 0.597,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.455,
+      "mean_next_pct": 0.199,
+      "edge_pct": -0.199,
+      "p_value": 0.66,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SBILIFE",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.444,
+      "mean_next_pct": 0.202,
+      "edge_pct": -0.202,
+      "p_value": 0.72,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.474,
+      "mean_next_pct": -0.208,
+      "edge_pct": -0.208,
+      "p_value": 0.827,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KPITTECH",
+      "direction": "DOWN",
+      "n_events": 30,
+      "hit_rate": 0.4,
+      "mean_next_pct": -0.213,
+      "edge_pct": -0.213,
+      "p_value": 0.76,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MUTHOOTFIN",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.486,
+      "mean_next_pct": -0.213,
+      "edge_pct": -0.213,
+      "p_value": 0.842,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AUBANK",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.568,
+      "mean_next_pct": -0.214,
+      "edge_pct": -0.214,
+      "p_value": 0.795,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDUSTOWER",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.214,
+      "edge_pct": -0.214,
+      "p_value": 0.691,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HINDPETRO",
+      "direction": "UP",
+      "n_events": 54,
+      "hit_rate": 0.463,
+      "mean_next_pct": 0.217,
+      "edge_pct": -0.217,
+      "p_value": 0.635,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HAVELLS",
+      "direction": "UP",
+      "n_events": 34,
+      "hit_rate": 0.412,
+      "mean_next_pct": 0.218,
+      "edge_pct": -0.218,
+      "p_value": 0.741,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ALKEM",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.568,
+      "mean_next_pct": 0.219,
+      "edge_pct": -0.219,
+      "p_value": 0.764,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PFC",
+      "direction": "UP",
+      "n_events": 64,
+      "hit_rate": 0.484,
+      "mean_next_pct": 0.22,
+      "edge_pct": -0.22,
+      "p_value": 0.521,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NYKAA",
+      "direction": "DOWN",
+      "n_events": 31,
+      "hit_rate": 0.387,
+      "mean_next_pct": -0.227,
+      "edge_pct": -0.227,
+      "p_value": 0.695,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NAUKRI",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.469,
+      "mean_next_pct": -0.228,
+      "edge_pct": -0.228,
+      "p_value": 0.769,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "360ONE",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.233,
+      "edge_pct": -0.233,
+      "p_value": 0.837,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NYKAA",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.395,
+      "mean_next_pct": 0.233,
+      "edge_pct": -0.233,
+      "p_value": 0.758,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATAPOWER",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.452,
+      "mean_next_pct": 0.238,
+      "edge_pct": -0.238,
+      "p_value": 0.598,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GLENMARK",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.51,
+      "mean_next_pct": 0.242,
+      "edge_pct": -0.242,
+      "p_value": 0.684,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATASTEEL",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.49,
+      "mean_next_pct": 0.263,
+      "edge_pct": -0.263,
+      "p_value": 0.722,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PGEL",
+      "direction": "UP",
+      "n_events": 66,
+      "hit_rate": 0.636,
+      "mean_next_pct": 0.269,
+      "edge_pct": -0.269,
+      "p_value": 0.486,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TECHM",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.462,
+      "mean_next_pct": 0.273,
+      "edge_pct": -0.273,
+      "p_value": 0.785,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CGPOWER",
+      "direction": "UP",
+      "n_events": 64,
+      "hit_rate": 0.516,
+      "mean_next_pct": 0.276,
+      "edge_pct": -0.276,
+      "p_value": 0.565,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.349,
+      "mean_next_pct": 0.281,
+      "edge_pct": -0.281,
+      "p_value": 0.898,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIPOWER",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.469,
+      "mean_next_pct": -0.282,
+      "edge_pct": -0.282,
+      "p_value": 0.839,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JSWENERGY",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.479,
+      "mean_next_pct": 0.285,
+      "edge_pct": -0.285,
+      "p_value": 0.612,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SBICARD",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.512,
+      "mean_next_pct": 0.285,
+      "edge_pct": -0.285,
+      "p_value": 0.864,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TRENT",
+      "direction": "DOWN",
+      "n_events": 29,
+      "hit_rate": 0.621,
+      "mean_next_pct": -0.294,
+      "edge_pct": -0.294,
+      "p_value": 0.868,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LAURUSLABS",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.413,
+      "mean_next_pct": 0.295,
+      "edge_pct": -0.295,
+      "p_value": 0.766,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "EICHERMOT",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.395,
+      "mean_next_pct": -0.308,
+      "edge_pct": -0.308,
+      "p_value": 0.953,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NMDC",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.471,
+      "mean_next_pct": 0.312,
+      "edge_pct": -0.312,
+      "p_value": 0.726,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "COLPAL",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.405,
+      "mean_next_pct": -0.315,
+      "edge_pct": -0.315,
+      "p_value": 0.936,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HYUNDAI",
+      "direction": "UP",
+      "n_events": 14,
+      "hit_rate": 0.643,
+      "mean_next_pct": 0.317,
+      "edge_pct": -0.317,
+      "p_value": 0.717,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NATIONALUM",
+      "direction": "UP",
+      "n_events": 57,
+      "hit_rate": 0.491,
+      "mean_next_pct": 0.333,
+      "edge_pct": -0.333,
+      "p_value": 0.624,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RELIANCE",
+      "direction": "UP",
+      "n_events": 37,
+      "hit_rate": 0.432,
+      "mean_next_pct": 0.34,
+      "edge_pct": -0.34,
+      "p_value": 0.887,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.442,
+      "mean_next_pct": 0.343,
+      "edge_pct": -0.343,
+      "p_value": 0.791,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IEX",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.457,
+      "mean_next_pct": 0.345,
+      "edge_pct": -0.345,
+      "p_value": 0.801,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDHOTEL",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.442,
+      "mean_next_pct": 0.347,
+      "edge_pct": -0.347,
+      "p_value": 0.713,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "YESBANK",
+      "direction": "UP",
+      "n_events": 61,
+      "hit_rate": 0.492,
+      "mean_next_pct": 0.353,
+      "edge_pct": -0.353,
+      "p_value": 0.829,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "COALINDIA",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.471,
+      "mean_next_pct": 0.354,
+      "edge_pct": -0.354,
+      "p_value": 0.79,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ANGELONE",
+      "direction": "UP",
+      "n_events": 56,
+      "hit_rate": 0.446,
+      "mean_next_pct": 0.356,
+      "edge_pct": -0.356,
+      "p_value": 0.618,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ALKEM",
+      "direction": "DOWN",
+      "n_events": 32,
+      "hit_rate": 0.438,
+      "mean_next_pct": -0.357,
+      "edge_pct": -0.357,
+      "p_value": 0.957,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BSE",
+      "direction": "DOWN",
+      "n_events": 23,
+      "hit_rate": 0.565,
+      "mean_next_pct": -0.357,
+      "edge_pct": -0.357,
+      "p_value": 0.879,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LTF",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.412,
+      "mean_next_pct": 0.357,
+      "edge_pct": -0.357,
+      "p_value": 0.796,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KFINTECH",
+      "direction": "UP",
+      "n_events": 38,
+      "hit_rate": 0.526,
+      "mean_next_pct": 0.359,
+      "edge_pct": -0.359,
+      "p_value": 0.676,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JUBLFOOD",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.385,
+      "mean_next_pct": -0.361,
+      "edge_pct": -0.361,
+      "p_value": 0.88,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SIEMENS",
+      "direction": "DOWN",
+      "n_events": 41,
+      "hit_rate": 0.512,
+      "mean_next_pct": -0.361,
+      "edge_pct": -0.361,
+      "p_value": 0.955,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ASTRAL",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.429,
+      "mean_next_pct": -0.364,
+      "edge_pct": -0.364,
+      "p_value": 0.925,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PAYTM",
+      "direction": "UP",
+      "n_events": 41,
+      "hit_rate": 0.561,
+      "mean_next_pct": 0.364,
+      "edge_pct": -0.364,
+      "p_value": 0.749,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "LUPIN",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.41,
+      "mean_next_pct": -0.373,
+      "edge_pct": -0.373,
+      "p_value": 0.963,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "VEDL",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.375,
+      "edge_pct": -0.375,
+      "p_value": 0.719,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POLYCAB",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.44,
+      "mean_next_pct": 0.38,
+      "edge_pct": -0.38,
+      "p_value": 0.773,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HDFCBANK",
+      "direction": "DOWN",
+      "n_events": 40,
+      "hit_rate": 0.525,
+      "mean_next_pct": -0.381,
+      "edge_pct": -0.381,
+      "p_value": 0.975,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HDFCAMC",
+      "direction": "UP",
+      "n_events": 42,
+      "hit_rate": 0.476,
+      "mean_next_pct": 0.383,
+      "edge_pct": -0.383,
+      "p_value": 0.862,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "FEDERALBNK",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.455,
+      "mean_next_pct": 0.393,
+      "edge_pct": -0.393,
+      "p_value": 0.829,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AMBUJACEM",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.419,
+      "mean_next_pct": 0.4,
+      "edge_pct": -0.4,
+      "p_value": 0.845,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.351,
+      "mean_next_pct": -0.407,
+      "edge_pct": -0.407,
+      "p_value": 0.936,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INOXWIND",
+      "direction": "DOWN",
+      "n_events": 22,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.432,
+      "edge_pct": -0.432,
+      "p_value": 0.814,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IDFCFIRSTB",
+      "direction": "UP",
+      "n_events": 47,
+      "hit_rate": 0.468,
+      "mean_next_pct": 0.437,
+      "edge_pct": -0.437,
+      "p_value": 0.914,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BANDHANBNK",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.378,
+      "mean_next_pct": -0.439,
+      "edge_pct": -0.439,
+      "p_value": 0.852,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.469,
+      "mean_next_pct": 0.454,
+      "edge_pct": -0.454,
+      "p_value": 0.964,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "YESBANK",
+      "direction": "DOWN",
+      "n_events": 36,
+      "hit_rate": 0.444,
+      "mean_next_pct": -0.456,
+      "edge_pct": -0.456,
+      "p_value": 0.888,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PNBHOUSING",
+      "direction": "UP",
+      "n_events": 59,
+      "hit_rate": 0.559,
+      "mean_next_pct": 0.461,
+      "edge_pct": -0.461,
+      "p_value": 0.804,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "POWERGRID",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.436,
+      "mean_next_pct": 0.464,
+      "edge_pct": -0.464,
+      "p_value": 0.921,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RBLBANK",
+      "direction": "UP",
+      "n_events": 49,
+      "hit_rate": 0.49,
+      "mean_next_pct": 0.466,
+      "edge_pct": -0.466,
+      "p_value": 0.85,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDIGO",
+      "direction": "UP",
+      "n_events": 46,
+      "hit_rate": 0.413,
+      "mean_next_pct": 0.474,
+      "edge_pct": -0.474,
+      "p_value": 0.903,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "EICHERMOT",
+      "direction": "UP",
+      "n_events": 53,
+      "hit_rate": 0.415,
+      "mean_next_pct": 0.477,
+      "edge_pct": -0.477,
+      "p_value": 0.951,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INOXWIND",
+      "direction": "UP",
+      "n_events": 56,
+      "hit_rate": 0.536,
+      "mean_next_pct": 0.48,
+      "edge_pct": -0.48,
+      "p_value": 0.776,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TRENT",
+      "direction": "UP",
+      "n_events": 52,
+      "hit_rate": 0.538,
+      "mean_next_pct": 0.488,
+      "edge_pct": -0.488,
+      "p_value": 0.877,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIGREEN",
+      "direction": "DOWN",
+      "n_events": 38,
+      "hit_rate": 0.5,
+      "mean_next_pct": -0.497,
+      "edge_pct": -0.497,
+      "p_value": 0.874,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IRFC",
+      "direction": "UP",
+      "n_events": 67,
+      "hit_rate": 0.493,
+      "mean_next_pct": 0.499,
+      "edge_pct": -0.499,
+      "p_value": 0.864,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TORNTPHARM",
+      "direction": "DOWN",
+      "n_events": 31,
+      "hit_rate": 0.355,
+      "mean_next_pct": -0.506,
+      "edge_pct": -0.506,
+      "p_value": 0.994,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATATECH",
+      "direction": "DOWN",
+      "n_events": 17,
+      "hit_rate": 0.294,
+      "mean_next_pct": -0.519,
+      "edge_pct": -0.519,
+      "p_value": 0.849,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NUVAMA",
+      "direction": "UP",
+      "n_events": 31,
+      "hit_rate": 0.484,
+      "mean_next_pct": 0.527,
+      "edge_pct": -0.527,
+      "p_value": 0.699,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HUDCO",
+      "direction": "DOWN",
+      "n_events": 30,
+      "hit_rate": 0.4,
+      "mean_next_pct": -0.528,
+      "edge_pct": -0.528,
+      "p_value": 0.913,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HCLTECH",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.41,
+      "mean_next_pct": -0.548,
+      "edge_pct": -0.548,
+      "p_value": 0.995,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CANBK",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.412,
+      "mean_next_pct": 0.549,
+      "edge_pct": -0.549,
+      "p_value": 0.89,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "UNIONBANK",
+      "direction": "UP",
+      "n_events": 51,
+      "hit_rate": 0.373,
+      "mean_next_pct": 0.564,
+      "edge_pct": -0.564,
+      "p_value": 0.828,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CDSL",
+      "direction": "UP",
+      "n_events": 61,
+      "hit_rate": 0.459,
+      "mean_next_pct": 0.579,
+      "edge_pct": -0.579,
+      "p_value": 0.928,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PNBHOUSING",
+      "direction": "DOWN",
+      "n_events": 27,
+      "hit_rate": 0.407,
+      "mean_next_pct": -0.582,
+      "edge_pct": -0.582,
+      "p_value": 0.9,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "TATAELXSI",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.467,
+      "mean_next_pct": 0.599,
+      "edge_pct": -0.599,
+      "p_value": 0.947,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "VOLTAS",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.455,
+      "mean_next_pct": 0.605,
+      "edge_pct": -0.605,
+      "p_value": 0.975,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "CHOLAFIN",
+      "direction": "UP",
+      "n_events": 44,
+      "hit_rate": 0.386,
+      "mean_next_pct": 0.608,
+      "edge_pct": -0.608,
+      "p_value": 0.944,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ONGC",
+      "direction": "UP",
+      "n_events": 53,
+      "hit_rate": 0.283,
+      "mean_next_pct": 0.61,
+      "edge_pct": -0.61,
+      "p_value": 0.961,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "COLPAL",
+      "direction": "UP",
+      "n_events": 38,
+      "hit_rate": 0.368,
+      "mean_next_pct": 0.617,
+      "edge_pct": -0.617,
+      "p_value": 0.996,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SAIL",
+      "direction": "UP",
+      "n_events": 50,
+      "hit_rate": 0.52,
+      "mean_next_pct": 0.625,
+      "edge_pct": -0.625,
+      "p_value": 0.925,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SAMMAANCAP",
+      "direction": "UP",
+      "n_events": 58,
+      "hit_rate": 0.483,
+      "mean_next_pct": 0.634,
+      "edge_pct": -0.634,
+      "p_value": 0.925,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "JIOFIN",
+      "direction": "DOWN",
+      "n_events": 23,
+      "hit_rate": 0.304,
+      "mean_next_pct": -0.644,
+      "edge_pct": -0.644,
+      "p_value": 0.946,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "AXISBANK",
+      "direction": "UP",
+      "n_events": 40,
+      "hit_rate": 0.325,
+      "mean_next_pct": 0.648,
+      "edge_pct": -0.648,
+      "p_value": 0.995,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PIIND",
+      "direction": "DOWN",
+      "n_events": 25,
+      "hit_rate": 0.36,
+      "mean_next_pct": -0.651,
+      "edge_pct": -0.651,
+      "p_value": 0.974,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "MARUTI",
+      "direction": "UP",
+      "n_events": 43,
+      "hit_rate": 0.326,
+      "mean_next_pct": 0.667,
+      "edge_pct": -0.667,
+      "p_value": 0.995,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "direction": "UP",
+      "n_events": 53,
+      "hit_rate": 0.415,
+      "mean_next_pct": 0.67,
+      "edge_pct": -0.67,
+      "p_value": 1.0,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RECLTD",
+      "direction": "DOWN",
+      "n_events": 37,
+      "hit_rate": 0.378,
+      "mean_next_pct": -0.671,
+      "edge_pct": -0.671,
+      "p_value": 0.982,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "direction": "DOWN",
+      "n_events": 47,
+      "hit_rate": 0.362,
+      "mean_next_pct": -0.673,
+      "edge_pct": -0.673,
+      "p_value": 1.0,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIENT",
+      "direction": "UP",
+      "n_events": 60,
+      "hit_rate": 0.467,
+      "mean_next_pct": 0.676,
+      "edge_pct": -0.676,
+      "p_value": 0.931,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIENSOL",
+      "direction": "DOWN",
+      "n_events": 15,
+      "hit_rate": 0.4,
+      "mean_next_pct": -0.68,
+      "edge_pct": -0.68,
+      "p_value": 0.854,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "OIL",
+      "direction": "UP",
+      "n_events": 59,
+      "hit_rate": 0.373,
+      "mean_next_pct": 0.698,
+      "edge_pct": -0.698,
+      "p_value": 0.939,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "IREDA",
+      "direction": "UP",
+      "n_events": 26,
+      "hit_rate": 0.5,
+      "mean_next_pct": 0.712,
+      "edge_pct": -0.712,
+      "p_value": 0.794,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "INDIANB",
+      "direction": "UP",
+      "n_events": 66,
+      "hit_rate": 0.47,
+      "mean_next_pct": 0.743,
+      "edge_pct": -0.743,
+      "p_value": 0.964,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ABB",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.4,
+      "mean_next_pct": 0.747,
+      "edge_pct": -0.747,
+      "p_value": 0.972,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "COFORGE",
+      "direction": "DOWN",
+      "n_events": 42,
+      "hit_rate": 0.429,
+      "mean_next_pct": -0.753,
+      "edge_pct": -0.753,
+      "p_value": 0.991,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BANDHANBNK",
+      "direction": "UP",
+      "n_events": 45,
+      "hit_rate": 0.311,
+      "mean_next_pct": 0.77,
+      "edge_pct": -0.77,
+      "p_value": 0.983,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "NBCC",
+      "direction": "UP",
+      "n_events": 69,
+      "hit_rate": 0.464,
+      "mean_next_pct": 0.8,
+      "edge_pct": -0.8,
+      "p_value": 0.964,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ETERNAL",
+      "direction": "DOWN",
+      "n_events": 39,
+      "hit_rate": 0.436,
+      "mean_next_pct": -0.805,
+      "edge_pct": -0.805,
+      "p_value": 0.972,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "BSE",
+      "direction": "UP",
+      "n_events": 66,
+      "hit_rate": 0.424,
+      "mean_next_pct": 0.816,
+      "edge_pct": -0.816,
+      "p_value": 0.855,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "FORCEMOT",
+      "direction": "UP",
+      "n_events": 53,
+      "hit_rate": 0.472,
+      "mean_next_pct": 0.821,
+      "edge_pct": -0.821,
+      "p_value": 0.891,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "GODREJPROP",
+      "direction": "UP",
+      "n_events": 39,
+      "hit_rate": 0.41,
+      "mean_next_pct": 0.877,
+      "edge_pct": -0.877,
+      "p_value": 0.984,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SOLARINDS",
+      "direction": "UP",
+      "n_events": 68,
+      "hit_rate": 0.397,
+      "mean_next_pct": 0.891,
+      "edge_pct": -0.891,
+      "p_value": 0.989,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "RVNL",
+      "direction": "UP",
+      "n_events": 75,
+      "hit_rate": 0.467,
+      "mean_next_pct": 0.927,
+      "edge_pct": -0.927,
+      "p_value": 0.962,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "SUZLON",
+      "direction": "UP",
+      "n_events": 63,
+      "hit_rate": 0.444,
+      "mean_next_pct": 0.934,
+      "edge_pct": -0.934,
+      "p_value": 0.942,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PAYTM",
+      "direction": "DOWN",
+      "n_events": 34,
+      "hit_rate": 0.5,
+      "mean_next_pct": -1.156,
+      "edge_pct": -1.156,
+      "p_value": 0.981,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "PATANJALI",
+      "direction": "UP",
+      "n_events": 48,
+      "hit_rate": 0.354,
+      "mean_next_pct": 1.291,
+      "edge_pct": -1.291,
+      "p_value": 1.0,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "KPITTECH",
+      "direction": "UP",
+      "n_events": 64,
+      "hit_rate": 0.344,
+      "mean_next_pct": 1.314,
+      "edge_pct": -1.314,
+      "p_value": 1.0,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIGREEN",
+      "direction": "UP",
+      "n_events": 54,
+      "hit_rate": 0.426,
+      "mean_next_pct": 1.36,
+      "edge_pct": -1.36,
+      "p_value": 0.999,
+      "min_z": 2.0
+    },
+    {
+      "ticker": "ADANIPOWER",
+      "direction": "UP",
+      "n_events": 55,
+      "hit_rate": 0.527,
+      "mean_next_pct": 1.409,
+      "edge_pct": -1.409,
+      "p_value": 0.991,
+      "min_z": 2.0
+    }
+  ]
+}
