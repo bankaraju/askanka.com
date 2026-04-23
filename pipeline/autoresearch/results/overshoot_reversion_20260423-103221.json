@@ -1,0 +1,5522 @@
+{
+  "generated_at": "2026-04-23T10:32:21.253254+00:00",
+  "config": {
+    "min_z": 2.0,
+    "n_folds": 4,
+    "n_shuffles": 200,
+    "roll_std_window": 20,
+    "min_cohort_size": 4,
+    "price_dates": [
+      "2021-04-23",
+      "2026-04-22"
+    ],
+    "n_tickers": 210,
+    "n_events_valid": 14950
+  },
+  "pooled": [
+    {
+      "fold": "ALL",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 219,
+      "hit_rate": 0.489,
+      "mean_next_resid_pct": 0.053,
+      "mean_reversion_pct": 0.053
+    },
+    {
+      "fold": "ALL",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 254,
+      "hit_rate": 0.575,
+      "mean_next_resid_pct": -0.169,
+      "mean_reversion_pct": 0.169
+    },
+    {
+      "fold": "ALL",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 59,
+      "hit_rate": 0.525,
+      "mean_next_resid_pct": 0.15,
+      "mean_reversion_pct": 0.15
+    },
+    {
+      "fold": "ALL",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 85,
+      "hit_rate": 0.506,
+      "mean_next_resid_pct": 0.204,
+      "mean_reversion_pct": -0.204
+    },
+    {
+      "fold": "ALL",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 24,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -0.632,
+      "mean_reversion_pct": -0.632
+    },
+    {
+      "fold": "ALL",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 51,
+      "hit_rate": 0.549,
+      "mean_next_resid_pct": -0.045,
+      "mean_reversion_pct": 0.045
+    },
+    {
+      "fold": "ALL",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 484,
+      "hit_rate": 0.517,
+      "mean_next_resid_pct": 0.062,
+      "mean_reversion_pct": 0.062
+    },
+    {
+      "fold": "ALL",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 576,
+      "hit_rate": 0.542,
+      "mean_next_resid_pct": -0.032,
+      "mean_reversion_pct": 0.032
+    },
+    {
+      "fold": "ALL",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 129,
+      "hit_rate": 0.45,
+      "mean_next_resid_pct": -0.056,
+      "mean_reversion_pct": -0.056
+    },
+    {
+      "fold": "ALL",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 193,
+      "hit_rate": 0.513,
+      "mean_next_resid_pct": -0.035,
+      "mean_reversion_pct": 0.035
+    },
+    {
+      "fold": "ALL",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 71,
+      "hit_rate": 0.465,
+      "mean_next_resid_pct": 0.079,
+      "mean_reversion_pct": 0.079
+    },
+    {
+      "fold": "ALL",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 138,
+      "hit_rate": 0.522,
+      "mean_next_resid_pct": -0.053,
+      "mean_reversion_pct": 0.053
+    },
+    {
+      "fold": "ALL",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 422,
+      "hit_rate": 0.495,
+      "mean_next_resid_pct": 0.137,
+      "mean_reversion_pct": 0.137
+    },
+    {
+      "fold": "ALL",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 559,
+      "hit_rate": 0.555,
+      "mean_next_resid_pct": -0.013,
+      "mean_reversion_pct": 0.013
+    },
+    {
+      "fold": "ALL",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 82,
+      "hit_rate": 0.415,
+      "mean_next_resid_pct": -0.18,
+      "mean_reversion_pct": -0.18
+    },
+    {
+      "fold": "ALL",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 153,
+      "hit_rate": 0.569,
+      "mean_next_resid_pct": -0.023,
+      "mean_reversion_pct": 0.023
+    },
+    {
+      "fold": "ALL",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 43,
+      "hit_rate": 0.488,
+      "mean_next_resid_pct": -0.106,
+      "mean_reversion_pct": -0.106
+    },
+    {
+      "fold": "ALL",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 120,
+      "hit_rate": 0.533,
+      "mean_next_resid_pct": 0.021,
+      "mean_reversion_pct": -0.021
+    },
+    {
+      "fold": "ALL",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 150,
+      "hit_rate": 0.587,
+      "mean_next_resid_pct": 0.256,
+      "mean_reversion_pct": 0.256
+    },
+    {
+      "fold": "ALL",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 161,
+      "hit_rate": 0.547,
+      "mean_next_resid_pct": -0.155,
+      "mean_reversion_pct": 0.155
+    },
+    {
+      "fold": "ALL",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 24,
+      "hit_rate": 0.625,
+      "mean_next_resid_pct": 0.21,
+      "mean_reversion_pct": 0.21
+    },
+    {
+      "fold": "ALL",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 40,
+      "hit_rate": 0.625,
+      "mean_next_resid_pct": -0.421,
+      "mean_reversion_pct": 0.421
+    },
+    {
+      "fold": "ALL",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 23,
+      "hit_rate": 0.652,
+      "mean_next_resid_pct": 0.077,
+      "mean_reversion_pct": 0.077
+    },
+    {
+      "fold": "ALL",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 19,
+      "hit_rate": 0.316,
+      "mean_next_resid_pct": 0.499,
+      "mean_reversion_pct": -0.499
+    },
+    {
+      "fold": "ALL",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 232,
+      "hit_rate": 0.453,
+      "mean_next_resid_pct": -0.027,
+      "mean_reversion_pct": -0.027
+    },
+    {
+      "fold": "ALL",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 333,
+      "hit_rate": 0.562,
+      "mean_next_resid_pct": -0.068,
+      "mean_reversion_pct": 0.068
+    },
+    {
+      "fold": "ALL",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 69,
+      "hit_rate": 0.406,
+      "mean_next_resid_pct": -0.004,
+      "mean_reversion_pct": -0.004
+    },
+    {
+      "fold": "ALL",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 88,
+      "hit_rate": 0.557,
+      "mean_next_resid_pct": 0.242,
+      "mean_reversion_pct": -0.242
+    },
+    {
+      "fold": "ALL",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 28,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.016,
+      "mean_reversion_pct": -0.016
+    },
+    {
+      "fold": "ALL",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 55,
+      "hit_rate": 0.509,
+      "mean_next_resid_pct": 0.292,
+      "mean_reversion_pct": -0.292
+    },
+    {
+      "fold": "ALL",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 225,
+      "hit_rate": 0.493,
+      "mean_next_resid_pct": -0.032,
+      "mean_reversion_pct": -0.032
+    },
+    {
+      "fold": "ALL",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 306,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": -0.071,
+      "mean_reversion_pct": 0.071
+    },
+    {
+      "fold": "ALL",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 46,
+      "hit_rate": 0.435,
+      "mean_next_resid_pct": -0.323,
+      "mean_reversion_pct": -0.323
+    },
+    {
+      "fold": "ALL",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 89,
+      "hit_rate": 0.506,
+      "mean_next_resid_pct": 0.225,
+      "mean_reversion_pct": -0.225
+    },
+    {
+      "fold": "ALL",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 29,
+      "hit_rate": 0.414,
+      "mean_next_resid_pct": -0.745,
+      "mean_reversion_pct": -0.745
+    },
+    {
+      "fold": "ALL",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 60,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.12,
+      "mean_reversion_pct": 0.12
+    },
+    {
+      "fold": "ALL",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 180,
+      "hit_rate": 0.489,
+      "mean_next_resid_pct": -0.052,
+      "mean_reversion_pct": -0.052
+    },
+    {
+      "fold": "ALL",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 260,
+      "hit_rate": 0.542,
+      "mean_next_resid_pct": -0.094,
+      "mean_reversion_pct": 0.094
+    },
+    {
+      "fold": "ALL",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 53,
+      "hit_rate": 0.604,
+      "mean_next_resid_pct": 0.45,
+      "mean_reversion_pct": 0.45
+    },
+    {
+      "fold": "ALL",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 84,
+      "hit_rate": 0.56,
+      "mean_next_resid_pct": -0.5,
+      "mean_reversion_pct": 0.5
+    },
+    {
+      "fold": "ALL",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 26,
+      "hit_rate": 0.423,
+      "mean_next_resid_pct": -0.613,
+      "mean_reversion_pct": -0.613
+    },
+    {
+      "fold": "ALL",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 50,
+      "hit_rate": 0.44,
+      "mean_next_resid_pct": 0.55,
+      "mean_reversion_pct": -0.55
+    },
+    {
+      "fold": "ALL",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 201,
+      "hit_rate": 0.498,
+      "mean_next_resid_pct": 0.108,
+      "mean_reversion_pct": 0.108
+    },
+    {
+      "fold": "ALL",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 232,
+      "hit_rate": 0.509,
+      "mean_next_resid_pct": 0.082,
+      "mean_reversion_pct": -0.082
+    },
+    {
+      "fold": "ALL",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 49,
+      "hit_rate": 0.469,
+      "mean_next_resid_pct": -0.079,
+      "mean_reversion_pct": -0.079
+    },
+    {
+      "fold": "ALL",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 74,
+      "hit_rate": 0.378,
+      "mean_next_resid_pct": 0.655,
+      "mean_reversion_pct": -0.655
+    },
+    {
+      "fold": "ALL",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 21,
+      "hit_rate": 0.619,
+      "mean_next_resid_pct": -0.3,
+      "mean_reversion_pct": -0.3
+    },
+    {
+      "fold": "ALL",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 48,
+      "hit_rate": 0.542,
+      "mean_next_resid_pct": 0.291,
+      "mean_reversion_pct": -0.291
+    },
+    {
+      "fold": "ALL",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 310,
+      "hit_rate": 0.474,
+      "mean_next_resid_pct": -0.099,
+      "mean_reversion_pct": -0.099
+    },
+    {
+      "fold": "ALL",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 344,
+      "hit_rate": 0.532,
+      "mean_next_resid_pct": -0.047,
+      "mean_reversion_pct": 0.047
+    },
+    {
+      "fold": "ALL",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 68,
+      "hit_rate": 0.382,
+      "mean_next_resid_pct": -0.252,
+      "mean_reversion_pct": -0.252
+    },
+    {
+      "fold": "ALL",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 91,
+      "hit_rate": 0.516,
+      "mean_next_resid_pct": 0.278,
+      "mean_reversion_pct": -0.278
+    },
+    {
+      "fold": "ALL",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 45,
+      "hit_rate": 0.533,
+      "mean_next_resid_pct": 0.058,
+      "mean_reversion_pct": 0.058
+    },
+    {
+      "fold": "ALL",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 66,
+      "hit_rate": 0.47,
+      "mean_next_resid_pct": 0.407,
+      "mean_reversion_pct": -0.407
+    },
+    {
+      "fold": "ALL",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 266,
+      "hit_rate": 0.492,
+      "mean_next_resid_pct": -0.198,
+      "mean_reversion_pct": -0.198
+    },
+    {
+      "fold": "ALL",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 364,
+      "hit_rate": 0.519,
+      "mean_next_resid_pct": 0.108,
+      "mean_reversion_pct": -0.108
+    },
+    {
+      "fold": "ALL",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 70,
+      "hit_rate": 0.471,
+      "mean_next_resid_pct": -0.162,
+      "mean_reversion_pct": -0.162
+    },
+    {
+      "fold": "ALL",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 142,
+      "hit_rate": 0.585,
+      "mean_next_resid_pct": -0.477,
+      "mean_reversion_pct": 0.477
+    },
+    {
+      "fold": "ALL",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 29,
+      "hit_rate": 0.517,
+      "mean_next_resid_pct": -0.001,
+      "mean_reversion_pct": -0.001
+    },
+    {
+      "fold": "ALL",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 82,
+      "hit_rate": 0.549,
+      "mean_next_resid_pct": -0.03,
+      "mean_reversion_pct": 0.03
+    },
+    {
+      "fold": "ALL",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 375,
+      "hit_rate": 0.499,
+      "mean_next_resid_pct": -0.128,
+      "mean_reversion_pct": -0.128
+    },
+    {
+      "fold": "ALL",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 460,
+      "hit_rate": 0.559,
+      "mean_next_resid_pct": -0.044,
+      "mean_reversion_pct": 0.044
+    },
+    {
+      "fold": "ALL",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 95,
+      "hit_rate": 0.411,
+      "mean_next_resid_pct": -0.154,
+      "mean_reversion_pct": -0.154
+    },
+    {
+      "fold": "ALL",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 108,
+      "hit_rate": 0.565,
+      "mean_next_resid_pct": 0.093,
+      "mean_reversion_pct": -0.093
+    },
+    {
+      "fold": "ALL",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 55,
+      "hit_rate": 0.509,
+      "mean_next_resid_pct": -0.579,
+      "mean_reversion_pct": -0.579
+    },
+    {
+      "fold": "ALL",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 103,
+      "hit_rate": 0.485,
+      "mean_next_resid_pct": 0.751,
+      "mean_reversion_pct": -0.751
+    },
+    {
+      "fold": "ALL",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 192,
+      "hit_rate": 0.479,
+      "mean_next_resid_pct": 0.036,
+      "mean_reversion_pct": 0.036
+    },
+    {
+      "fold": "ALL",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 193,
+      "hit_rate": 0.528,
+      "mean_next_resid_pct": 0.052,
+      "mean_reversion_pct": -0.052
+    },
+    {
+      "fold": "ALL",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 32,
+      "hit_rate": 0.531,
+      "mean_next_resid_pct": 0.48,
+      "mean_reversion_pct": 0.48
+    },
+    {
+      "fold": "ALL",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 55,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": -0.463,
+      "mean_reversion_pct": 0.463
+    },
+    {
+      "fold": "ALL",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.632,
+      "mean_next_resid_pct": 0.121,
+      "mean_reversion_pct": 0.121
+    },
+    {
+      "fold": "ALL",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.69,
+      "mean_next_resid_pct": -0.552,
+      "mean_reversion_pct": 0.552
+    },
+    {
+      "fold": "ALL",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 104,
+      "hit_rate": 0.567,
+      "mean_next_resid_pct": 0.556,
+      "mean_reversion_pct": 0.556
+    },
+    {
+      "fold": "ALL",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 147,
+      "hit_rate": 0.51,
+      "mean_next_resid_pct": 0.128,
+      "mean_reversion_pct": -0.128
+    },
+    {
+      "fold": "ALL",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 23,
+      "hit_rate": 0.522,
+      "mean_next_resid_pct": -0.113,
+      "mean_reversion_pct": -0.113
+    },
+    {
+      "fold": "ALL",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.586,
+      "mean_next_resid_pct": -0.096,
+      "mean_reversion_pct": 0.096
+    },
+    {
+      "fold": "ALL",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 16,
+      "hit_rate": 0.625,
+      "mean_next_resid_pct": -0.665,
+      "mean_reversion_pct": -0.665
+    },
+    {
+      "fold": "ALL",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 27,
+      "hit_rate": 0.593,
+      "mean_next_resid_pct": -0.595,
+      "mean_reversion_pct": 0.595
+    },
+    {
+      "fold": "ALL",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 266,
+      "hit_rate": 0.511,
+      "mean_next_resid_pct": 0.195,
+      "mean_reversion_pct": 0.195
+    },
+    {
+      "fold": "ALL",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 336,
+      "hit_rate": 0.565,
+      "mean_next_resid_pct": -0.166,
+      "mean_reversion_pct": 0.166
+    },
+    {
+      "fold": "ALL",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 52,
+      "hit_rate": 0.365,
+      "mean_next_resid_pct": -0.492,
+      "mean_reversion_pct": -0.492
+    },
+    {
+      "fold": "ALL",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 100,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": 0.084,
+      "mean_reversion_pct": -0.084
+    },
+    {
+      "fold": "ALL",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 36,
+      "hit_rate": 0.472,
+      "mean_next_resid_pct": -0.111,
+      "mean_reversion_pct": -0.111
+    },
+    {
+      "fold": "ALL",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 49,
+      "hit_rate": 0.592,
+      "mean_next_resid_pct": -0.015,
+      "mean_reversion_pct": 0.015
+    },
+    {
+      "fold": "ALL",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 404,
+      "hit_rate": 0.46,
+      "mean_next_resid_pct": -0.148,
+      "mean_reversion_pct": -0.148
+    },
+    {
+      "fold": "ALL",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 520,
+      "hit_rate": 0.519,
+      "mean_next_resid_pct": 0.077,
+      "mean_reversion_pct": -0.077
+    },
+    {
+      "fold": "ALL",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 96,
+      "hit_rate": 0.49,
+      "mean_next_resid_pct": -0.13,
+      "mean_reversion_pct": -0.13
+    },
+    {
+      "fold": "ALL",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 162,
+      "hit_rate": 0.599,
+      "mean_next_resid_pct": -0.098,
+      "mean_reversion_pct": 0.098
+    },
+    {
+      "fold": "ALL",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 54,
+      "hit_rate": 0.407,
+      "mean_next_resid_pct": -0.893,
+      "mean_reversion_pct": -0.893
+    },
+    {
+      "fold": "ALL",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 119,
+      "hit_rate": 0.538,
+      "mean_next_resid_pct": -0.016,
+      "mean_reversion_pct": 0.016
+    },
+    {
+      "fold": "ALL",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 355,
+      "hit_rate": 0.493,
+      "mean_next_resid_pct": 0.134,
+      "mean_reversion_pct": 0.134
+    },
+    {
+      "fold": "ALL",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 421,
+      "hit_rate": 0.546,
+      "mean_next_resid_pct": -0.092,
+      "mean_reversion_pct": 0.092
+    },
+    {
+      "fold": "ALL",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 80,
+      "hit_rate": 0.438,
+      "mean_next_resid_pct": -0.278,
+      "mean_reversion_pct": -0.278
+    },
+    {
+      "fold": "ALL",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 137,
+      "hit_rate": 0.584,
+      "mean_next_resid_pct": -0.295,
+      "mean_reversion_pct": 0.295
+    },
+    {
+      "fold": "ALL",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 49,
+      "hit_rate": 0.469,
+      "mean_next_resid_pct": -0.458,
+      "mean_reversion_pct": -0.458
+    },
+    {
+      "fold": "ALL",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 82,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.06,
+      "mean_reversion_pct": 0.06
+    },
+    {
+      "fold": "ALL",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 256,
+      "hit_rate": 0.523,
+      "mean_next_resid_pct": -0.063,
+      "mean_reversion_pct": -0.063
+    },
+    {
+      "fold": "ALL",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 273,
+      "hit_rate": 0.516,
+      "mean_next_resid_pct": 0.027,
+      "mean_reversion_pct": -0.027
+    },
+    {
+      "fold": "ALL",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 47,
+      "hit_rate": 0.638,
+      "mean_next_resid_pct": 0.546,
+      "mean_reversion_pct": 0.546
+    },
+    {
+      "fold": "ALL",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 90,
+      "hit_rate": 0.556,
+      "mean_next_resid_pct": -0.126,
+      "mean_reversion_pct": 0.126
+    },
+    {
+      "fold": "ALL",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 35,
+      "hit_rate": 0.486,
+      "mean_next_resid_pct": -0.858,
+      "mean_reversion_pct": -0.858
+    },
+    {
+      "fold": "ALL",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 75,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": 0.676,
+      "mean_reversion_pct": -0.676
+    }
+  ],
+  "folds": [
+    {
+      "fold": "FOLD_0",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 50,
+      "hit_rate": 0.48,
+      "mean_next_resid_pct": -0.089,
+      "mean_reversion_pct": -0.089
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 55,
+      "hit_rate": 0.691,
+      "mean_next_resid_pct": -0.806,
+      "mean_reversion_pct": 0.806
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 10,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.47,
+      "mean_reversion_pct": 0.47
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 23,
+      "hit_rate": 0.609,
+      "mean_next_resid_pct": -0.166,
+      "mean_reversion_pct": 0.166
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 4,
+      "hit_rate": 0.25,
+      "mean_next_resid_pct": -1.309,
+      "mean_reversion_pct": -1.309
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 16,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": -1.874,
+      "mean_reversion_pct": 1.874
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 120,
+      "hit_rate": 0.45,
+      "mean_next_resid_pct": -0.192,
+      "mean_reversion_pct": -0.192
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 154,
+      "hit_rate": 0.558,
+      "mean_next_resid_pct": 0.007,
+      "mean_reversion_pct": -0.007
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 34,
+      "hit_rate": 0.441,
+      "mean_next_resid_pct": 0.157,
+      "mean_reversion_pct": 0.157
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 45,
+      "hit_rate": 0.644,
+      "mean_next_resid_pct": -0.288,
+      "mean_reversion_pct": 0.288
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.684,
+      "mean_next_resid_pct": 1.289,
+      "mean_reversion_pct": 1.289
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 43,
+      "hit_rate": 0.605,
+      "mean_next_resid_pct": -0.155,
+      "mean_reversion_pct": 0.155
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 111,
+      "hit_rate": 0.541,
+      "mean_next_resid_pct": 0.531,
+      "mean_reversion_pct": 0.531
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 138,
+      "hit_rate": 0.609,
+      "mean_next_resid_pct": -0.316,
+      "mean_reversion_pct": 0.316
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.526,
+      "mean_next_resid_pct": 0.365,
+      "mean_reversion_pct": 0.365
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 38,
+      "hit_rate": 0.553,
+      "mean_next_resid_pct": 0.741,
+      "mean_reversion_pct": -0.741
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -0.384,
+      "mean_reversion_pct": -0.384
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 30,
+      "hit_rate": 0.567,
+      "mean_next_resid_pct": 0.03,
+      "mean_reversion_pct": -0.03
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 38,
+      "hit_rate": 0.474,
+      "mean_next_resid_pct": 0.032,
+      "mean_reversion_pct": 0.032
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 49,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.232,
+      "mean_reversion_pct": 0.232
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 4,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": 0.416,
+      "mean_reversion_pct": 0.416
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 5,
+      "hit_rate": 0.8,
+      "mean_next_resid_pct": -1.493,
+      "mean_reversion_pct": 1.493
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 4,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": 0.81,
+      "mean_reversion_pct": 0.81
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 3,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": 0.373,
+      "mean_reversion_pct": -0.373
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 68,
+      "hit_rate": 0.412,
+      "mean_next_resid_pct": -0.111,
+      "mean_reversion_pct": -0.111
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 85,
+      "hit_rate": 0.576,
+      "mean_next_resid_pct": -0.287,
+      "mean_reversion_pct": 0.287
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 16,
+      "hit_rate": 0.375,
+      "mean_next_resid_pct": -0.037,
+      "mean_reversion_pct": -0.037
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": 0.718,
+      "mean_reversion_pct": -0.718
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 3,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -0.002,
+      "mean_reversion_pct": -0.002
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": 1.077,
+      "mean_reversion_pct": -1.077
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 54,
+      "hit_rate": 0.352,
+      "mean_next_resid_pct": -0.694,
+      "mean_reversion_pct": -0.694
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 75,
+      "hit_rate": 0.493,
+      "mean_next_resid_pct": 0.018,
+      "mean_reversion_pct": -0.018
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 14,
+      "hit_rate": 0.357,
+      "mean_next_resid_pct": -0.67,
+      "mean_reversion_pct": -0.67
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.32,
+      "mean_next_resid_pct": 0.788,
+      "mean_reversion_pct": -0.788
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": -0.553,
+      "mean_reversion_pct": -0.553
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 10,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": 0.212,
+      "mean_reversion_pct": -0.212
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 44,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -0.195,
+      "mean_reversion_pct": -0.195
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 68,
+      "hit_rate": 0.515,
+      "mean_next_resid_pct": 0.062,
+      "mean_reversion_pct": -0.062
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.583,
+      "mean_next_resid_pct": 1.535,
+      "mean_reversion_pct": 1.535
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 23,
+      "hit_rate": 0.522,
+      "mean_next_resid_pct": 0.098,
+      "mean_reversion_pct": -0.098
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 2,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.174,
+      "mean_reversion_pct": 0.174
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.643,
+      "mean_next_resid_pct": -0.657,
+      "mean_reversion_pct": 0.657
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 54,
+      "hit_rate": 0.611,
+      "mean_next_resid_pct": 0.75,
+      "mean_reversion_pct": 0.75
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 67,
+      "hit_rate": 0.552,
+      "mean_next_resid_pct": -0.25,
+      "mean_reversion_pct": 0.25
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 10,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": 0.298,
+      "mean_reversion_pct": 0.298
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 16,
+      "hit_rate": 0.25,
+      "mean_next_resid_pct": 0.61,
+      "mean_reversion_pct": -0.61
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": -0.348,
+      "mean_reversion_pct": -0.348
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 9,
+      "hit_rate": 0.556,
+      "mean_next_resid_pct": -0.178,
+      "mean_reversion_pct": 0.178
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 88,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -0.11,
+      "mean_reversion_pct": -0.11
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 84,
+      "hit_rate": 0.548,
+      "mean_next_resid_pct": -0.088,
+      "mean_reversion_pct": 0.088
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 17,
+      "hit_rate": 0.471,
+      "mean_next_resid_pct": 0.182,
+      "mean_reversion_pct": 0.182
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 27,
+      "hit_rate": 0.519,
+      "mean_next_resid_pct": 0.287,
+      "mean_reversion_pct": -0.287
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 4,
+      "hit_rate": 0.25,
+      "mean_next_resid_pct": -0.434,
+      "mean_reversion_pct": -0.434
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.412,
+      "mean_next_resid_pct": 0.908,
+      "mean_reversion_pct": -0.908
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 52,
+      "hit_rate": 0.519,
+      "mean_next_resid_pct": -0.21,
+      "mean_reversion_pct": -0.21
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 89,
+      "hit_rate": 0.573,
+      "mean_next_resid_pct": -0.145,
+      "mean_reversion_pct": 0.145
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 21,
+      "hit_rate": 0.476,
+      "mean_next_resid_pct": -0.367,
+      "mean_reversion_pct": -0.367
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 24,
+      "hit_rate": 0.542,
+      "mean_next_resid_pct": -0.318,
+      "mean_reversion_pct": 0.318
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 4,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": 0.634,
+      "mean_reversion_pct": 0.634
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 22,
+      "hit_rate": 0.591,
+      "mean_next_resid_pct": -0.599,
+      "mean_reversion_pct": 0.599
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 91,
+      "hit_rate": 0.484,
+      "mean_next_resid_pct": -0.175,
+      "mean_reversion_pct": -0.175
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 115,
+      "hit_rate": 0.548,
+      "mean_next_resid_pct": -0.04,
+      "mean_reversion_pct": 0.04
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 24,
+      "hit_rate": 0.375,
+      "mean_next_resid_pct": -0.451,
+      "mean_reversion_pct": -0.451
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 36,
+      "hit_rate": 0.528,
+      "mean_next_resid_pct": 0.389,
+      "mean_reversion_pct": -0.389
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 10,
+      "hit_rate": 0.7,
+      "mean_next_resid_pct": -0.91,
+      "mean_reversion_pct": -0.91
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.48,
+      "mean_next_resid_pct": 1.699,
+      "mean_reversion_pct": -1.699
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 45,
+      "hit_rate": 0.511,
+      "mean_next_resid_pct": 0.097,
+      "mean_reversion_pct": 0.097
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 49,
+      "hit_rate": 0.653,
+      "mean_next_resid_pct": -0.333,
+      "mean_reversion_pct": 0.333
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": 1.276,
+      "mean_reversion_pct": 1.276
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 15,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -1.086,
+      "mean_reversion_pct": 1.086
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 1,
+      "hit_rate": 1.0,
+      "mean_next_resid_pct": 0.448,
+      "mean_reversion_pct": 0.448
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 5,
+      "hit_rate": 0.8,
+      "mean_next_resid_pct": -0.8,
+      "mean_reversion_pct": 0.8
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 29,
+      "hit_rate": 0.483,
+      "mean_next_resid_pct": 0.382,
+      "mean_reversion_pct": 0.382
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 31,
+      "hit_rate": 0.613,
+      "mean_next_resid_pct": 0.344,
+      "mean_reversion_pct": -0.344
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.2,
+      "mean_next_resid_pct": -1.288,
+      "mean_reversion_pct": -1.288
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 10,
+      "hit_rate": 0.7,
+      "mean_next_resid_pct": -0.76,
+      "mean_reversion_pct": 0.76
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 1,
+      "hit_rate": 1.0,
+      "mean_next_resid_pct": 4.006,
+      "mean_reversion_pct": 4.006
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 9,
+      "hit_rate": 0.778,
+      "mean_next_resid_pct": -1.192,
+      "mean_reversion_pct": 1.192
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 55,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": 0.352,
+      "mean_reversion_pct": 0.352
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 82,
+      "hit_rate": 0.573,
+      "mean_next_resid_pct": -0.359,
+      "mean_reversion_pct": 0.359
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 17,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": -0.002,
+      "mean_reversion_pct": -0.002
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 28,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.132,
+      "mean_reversion_pct": 0.132
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.273,
+      "mean_next_resid_pct": -1.117,
+      "mean_reversion_pct": -1.117
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 13,
+      "hit_rate": 0.692,
+      "mean_next_resid_pct": -0.646,
+      "mean_reversion_pct": 0.646
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 92,
+      "hit_rate": 0.446,
+      "mean_next_resid_pct": 0.0,
+      "mean_reversion_pct": 0.0
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 114,
+      "hit_rate": 0.43,
+      "mean_next_resid_pct": 0.361,
+      "mean_reversion_pct": -0.361
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 21,
+      "hit_rate": 0.714,
+      "mean_next_resid_pct": 0.698,
+      "mean_reversion_pct": 0.698
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.621,
+      "mean_next_resid_pct": -0.486,
+      "mean_reversion_pct": 0.486
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 16,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.874,
+      "mean_reversion_pct": -0.874
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 31,
+      "hit_rate": 0.645,
+      "mean_next_resid_pct": -0.438,
+      "mean_reversion_pct": 0.438
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 69,
+      "hit_rate": 0.478,
+      "mean_next_resid_pct": -0.002,
+      "mean_reversion_pct": -0.002
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 102,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": -0.05,
+      "mean_reversion_pct": 0.05
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.368,
+      "mean_next_resid_pct": -0.293,
+      "mean_reversion_pct": -0.293
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 32,
+      "hit_rate": 0.625,
+      "mean_next_resid_pct": -0.456,
+      "mean_reversion_pct": 0.456
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 16,
+      "hit_rate": 0.375,
+      "mean_next_resid_pct": -1.064,
+      "mean_reversion_pct": -1.064
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -0.967,
+      "mean_reversion_pct": 0.967
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 66,
+      "hit_rate": 0.515,
+      "mean_next_resid_pct": 0.042,
+      "mean_reversion_pct": 0.042
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 55,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": 0.789,
+      "mean_reversion_pct": -0.789
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": 0.788,
+      "mean_reversion_pct": 0.788
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 21,
+      "hit_rate": 0.524,
+      "mean_next_resid_pct": 0.403,
+      "mean_reversion_pct": -0.403
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.46,
+      "mean_reversion_pct": 0.46
+    },
+    {
+      "fold": "FOLD_0",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.611,
+      "mean_next_resid_pct": 0.34,
+      "mean_reversion_pct": -0.34
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 55,
+      "hit_rate": 0.491,
+      "mean_next_resid_pct": 0.009,
+      "mean_reversion_pct": 0.009
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 67,
+      "hit_rate": 0.537,
+      "mean_next_resid_pct": 0.147,
+      "mean_reversion_pct": -0.147
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.403,
+      "mean_reversion_pct": 0.403
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.222,
+      "mean_next_resid_pct": 1.057,
+      "mean_reversion_pct": -1.057
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.222,
+      "mean_next_resid_pct": -1.04,
+      "mean_reversion_pct": -1.04
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 9,
+      "hit_rate": 0.556,
+      "mean_next_resid_pct": 0.193,
+      "mean_reversion_pct": -0.193
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 113,
+      "hit_rate": 0.513,
+      "mean_next_resid_pct": 0.232,
+      "mean_reversion_pct": 0.232
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 143,
+      "hit_rate": 0.49,
+      "mean_next_resid_pct": 0.332,
+      "mean_reversion_pct": -0.332
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 32,
+      "hit_rate": 0.344,
+      "mean_next_resid_pct": -0.333,
+      "mean_reversion_pct": -0.333
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 51,
+      "hit_rate": 0.392,
+      "mean_next_resid_pct": 0.063,
+      "mean_reversion_pct": -0.063
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 13,
+      "hit_rate": 0.308,
+      "mean_next_resid_pct": -0.938,
+      "mean_reversion_pct": -0.938
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 30,
+      "hit_rate": 0.367,
+      "mean_next_resid_pct": 0.38,
+      "mean_reversion_pct": -0.38
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 88,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.231,
+      "mean_reversion_pct": 0.231
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 126,
+      "hit_rate": 0.508,
+      "mean_next_resid_pct": 0.34,
+      "mean_reversion_pct": -0.34
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 20,
+      "hit_rate": 0.45,
+      "mean_next_resid_pct": -0.34,
+      "mean_reversion_pct": -0.34
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 43,
+      "hit_rate": 0.581,
+      "mean_next_resid_pct": -0.218,
+      "mean_reversion_pct": 0.218
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": 0.754,
+      "mean_reversion_pct": 0.754
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 43,
+      "hit_rate": 0.535,
+      "mean_next_resid_pct": -0.058,
+      "mean_reversion_pct": 0.058
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 36,
+      "hit_rate": 0.639,
+      "mean_next_resid_pct": 0.215,
+      "mean_reversion_pct": 0.215
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 35,
+      "hit_rate": 0.514,
+      "mean_next_resid_pct": 0.104,
+      "mean_reversion_pct": -0.104
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.8,
+      "mean_next_resid_pct": 0.134,
+      "mean_reversion_pct": 0.134
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 16,
+      "hit_rate": 0.688,
+      "mean_next_resid_pct": -0.062,
+      "mean_reversion_pct": 0.062
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -1.285,
+      "mean_reversion_pct": -1.285
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 5,
+      "hit_rate": 0.0,
+      "mean_next_resid_pct": 0.796,
+      "mean_reversion_pct": -0.796
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 61,
+      "hit_rate": 0.443,
+      "mean_next_resid_pct": -0.299,
+      "mean_reversion_pct": -0.299
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 73,
+      "hit_rate": 0.534,
+      "mean_next_resid_pct": 0.026,
+      "mean_reversion_pct": -0.026
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.316,
+      "mean_next_resid_pct": -0.797,
+      "mean_reversion_pct": -0.797
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 26,
+      "hit_rate": 0.577,
+      "mean_next_resid_pct": -0.388,
+      "mean_reversion_pct": 0.388
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -0.21,
+      "mean_reversion_pct": -0.21
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -0.976,
+      "mean_reversion_pct": 0.976
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 63,
+      "hit_rate": 0.492,
+      "mean_next_resid_pct": 0.025,
+      "mean_reversion_pct": 0.025
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 73,
+      "hit_rate": 0.548,
+      "mean_next_resid_pct": -0.166,
+      "mean_reversion_pct": 0.166
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.388,
+      "mean_reversion_pct": 0.388
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.319,
+      "mean_reversion_pct": -0.319
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 8,
+      "hit_rate": 0.25,
+      "mean_next_resid_pct": -1.186,
+      "mean_reversion_pct": -1.186
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 20,
+      "hit_rate": 0.45,
+      "mean_next_resid_pct": 0.103,
+      "mean_reversion_pct": -0.103
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 47,
+      "hit_rate": 0.638,
+      "mean_next_resid_pct": 0.366,
+      "mean_reversion_pct": 0.366
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 75,
+      "hit_rate": 0.507,
+      "mean_next_resid_pct": 0.017,
+      "mean_reversion_pct": -0.017
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.583,
+      "mean_next_resid_pct": 0.239,
+      "mean_reversion_pct": 0.239
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": -0.462,
+      "mean_reversion_pct": 0.462
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.324,
+      "mean_reversion_pct": 0.324
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 10,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": -0.068,
+      "mean_reversion_pct": 0.068
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 53,
+      "hit_rate": 0.453,
+      "mean_next_resid_pct": -0.034,
+      "mean_reversion_pct": -0.034
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 61,
+      "hit_rate": 0.492,
+      "mean_next_resid_pct": 0.134,
+      "mean_reversion_pct": -0.134
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": 0.235,
+      "mean_reversion_pct": 0.235
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.471,
+      "mean_next_resid_pct": 1.02,
+      "mean_reversion_pct": -1.02
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -2.588,
+      "mean_reversion_pct": -2.588
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.417,
+      "mean_next_resid_pct": 1.739,
+      "mean_reversion_pct": -1.739
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 78,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.224,
+      "mean_reversion_pct": -0.224
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 96,
+      "hit_rate": 0.469,
+      "mean_next_resid_pct": 0.301,
+      "mean_reversion_pct": -0.301
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 15,
+      "hit_rate": 0.267,
+      "mean_next_resid_pct": -0.445,
+      "mean_reversion_pct": -0.445
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": 0.025,
+      "mean_reversion_pct": -0.025
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.417,
+      "mean_next_resid_pct": -0.335,
+      "mean_reversion_pct": -0.335
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 15,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": 0.767,
+      "mean_reversion_pct": -0.767
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 74,
+      "hit_rate": 0.541,
+      "mean_next_resid_pct": 0.185,
+      "mean_reversion_pct": 0.185
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 80,
+      "hit_rate": 0.525,
+      "mean_next_resid_pct": 0.288,
+      "mean_reversion_pct": -0.288
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 15,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": 0.241,
+      "mean_reversion_pct": 0.241
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 37,
+      "hit_rate": 0.514,
+      "mean_next_resid_pct": 0.195,
+      "mean_reversion_pct": -0.195
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.597,
+      "mean_reversion_pct": -0.597
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 24,
+      "hit_rate": 0.458,
+      "mean_next_resid_pct": 0.63,
+      "mean_reversion_pct": -0.63
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 97,
+      "hit_rate": 0.474,
+      "mean_next_resid_pct": -0.081,
+      "mean_reversion_pct": -0.081
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 105,
+      "hit_rate": 0.505,
+      "mean_next_resid_pct": 0.216,
+      "mean_reversion_pct": -0.216
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 24,
+      "hit_rate": 0.542,
+      "mean_next_resid_pct": 0.635,
+      "mean_reversion_pct": 0.635
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 19,
+      "hit_rate": 0.684,
+      "mean_next_resid_pct": -0.589,
+      "mean_reversion_pct": 0.589
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -1.339,
+      "mean_reversion_pct": -1.339
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.44,
+      "mean_next_resid_pct": -0.062,
+      "mean_reversion_pct": 0.062
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 46,
+      "hit_rate": 0.413,
+      "mean_next_resid_pct": -0.409,
+      "mean_reversion_pct": -0.409
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 53,
+      "hit_rate": 0.453,
+      "mean_next_resid_pct": 0.293,
+      "mean_reversion_pct": -0.293
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.444,
+      "mean_next_resid_pct": 0.042,
+      "mean_reversion_pct": 0.042
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": 0.33,
+      "mean_reversion_pct": -0.33
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 2,
+      "hit_rate": 0.0,
+      "mean_next_resid_pct": -1.054,
+      "mean_reversion_pct": -1.054
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 4,
+      "hit_rate": 1.0,
+      "mean_next_resid_pct": -2.055,
+      "mean_reversion_pct": 2.055
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 22,
+      "hit_rate": 0.591,
+      "mean_next_resid_pct": 0.039,
+      "mean_reversion_pct": 0.039
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 44,
+      "hit_rate": 0.523,
+      "mean_next_resid_pct": 0.095,
+      "mean_reversion_pct": -0.095
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.186,
+      "mean_reversion_pct": 0.186
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 6,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": 1.766,
+      "mean_reversion_pct": -1.766
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -2.792,
+      "mean_reversion_pct": -2.792
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 7,
+      "hit_rate": 0.429,
+      "mean_next_resid_pct": -1.03,
+      "mean_reversion_pct": 1.03
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 68,
+      "hit_rate": 0.574,
+      "mean_next_resid_pct": 0.122,
+      "mean_reversion_pct": 0.122
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 75,
+      "hit_rate": 0.48,
+      "mean_next_resid_pct": -0.016,
+      "mean_reversion_pct": 0.016
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 13,
+      "hit_rate": 0.385,
+      "mean_next_resid_pct": -0.85,
+      "mean_reversion_pct": -0.85
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 21,
+      "hit_rate": 0.524,
+      "mean_next_resid_pct": -0.44,
+      "mean_reversion_pct": 0.44
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 8,
+      "hit_rate": 0.625,
+      "mean_next_resid_pct": 0.267,
+      "mean_reversion_pct": 0.267
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.417,
+      "mean_next_resid_pct": 0.601,
+      "mean_reversion_pct": -0.601
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 97,
+      "hit_rate": 0.443,
+      "mean_next_resid_pct": -0.236,
+      "mean_reversion_pct": -0.236
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 139,
+      "hit_rate": 0.511,
+      "mean_next_resid_pct": 0.232,
+      "mean_reversion_pct": -0.232
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.421,
+      "mean_next_resid_pct": -0.224,
+      "mean_reversion_pct": -0.224
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 39,
+      "hit_rate": 0.59,
+      "mean_next_resid_pct": 0.268,
+      "mean_reversion_pct": -0.268
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 16,
+      "hit_rate": 0.438,
+      "mean_next_resid_pct": -0.083,
+      "mean_reversion_pct": -0.083
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 34,
+      "hit_rate": 0.412,
+      "mean_next_resid_pct": 0.937,
+      "mean_reversion_pct": -0.937
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 89,
+      "hit_rate": 0.461,
+      "mean_next_resid_pct": -0.017,
+      "mean_reversion_pct": -0.017
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 101,
+      "hit_rate": 0.624,
+      "mean_next_resid_pct": -0.34,
+      "mean_reversion_pct": 0.34
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 17,
+      "hit_rate": 0.471,
+      "mean_next_resid_pct": -0.057,
+      "mean_reversion_pct": -0.057
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 36,
+      "hit_rate": 0.556,
+      "mean_next_resid_pct": -0.171,
+      "mean_reversion_pct": 0.171
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 17,
+      "hit_rate": 0.412,
+      "mean_next_resid_pct": -0.73,
+      "mean_reversion_pct": -0.73
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 24,
+      "hit_rate": 0.458,
+      "mean_next_resid_pct": -0.31,
+      "mean_reversion_pct": 0.31
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 51,
+      "hit_rate": 0.471,
+      "mean_next_resid_pct": -0.066,
+      "mean_reversion_pct": -0.066
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 71,
+      "hit_rate": 0.507,
+      "mean_next_resid_pct": -0.143,
+      "mean_reversion_pct": 0.143
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": 0.409,
+      "mean_reversion_pct": 0.409
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 16,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": -0.582,
+      "mean_reversion_pct": 0.582
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": -3.753,
+      "mean_reversion_pct": -3.753
+    },
+    {
+      "fold": "FOLD_1",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 15,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": 0.533,
+      "mean_reversion_pct": -0.533
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 51,
+      "hit_rate": 0.431,
+      "mean_next_resid_pct": 0.1,
+      "mean_reversion_pct": 0.1
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 60,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": -0.062,
+      "mean_reversion_pct": 0.062
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.583,
+      "mean_next_resid_pct": -0.225,
+      "mean_reversion_pct": -0.225
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -0.252,
+      "mean_reversion_pct": 0.252
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.4,
+      "mean_next_resid_pct": -0.568,
+      "mean_reversion_pct": -0.568
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.412,
+      "mean_next_resid_pct": 0.821,
+      "mean_reversion_pct": -0.821
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 131,
+      "hit_rate": 0.557,
+      "mean_next_resid_pct": 0.139,
+      "mean_reversion_pct": 0.139
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 147,
+      "hit_rate": 0.565,
+      "mean_next_resid_pct": -0.109,
+      "mean_reversion_pct": 0.109
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 31,
+      "hit_rate": 0.452,
+      "mean_next_resid_pct": -0.01,
+      "mean_reversion_pct": -0.01
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 51,
+      "hit_rate": 0.51,
+      "mean_next_resid_pct": 0.162,
+      "mean_reversion_pct": -0.162
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 18,
+      "hit_rate": 0.444,
+      "mean_next_resid_pct": -0.041,
+      "mean_reversion_pct": -0.041
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 36,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.287,
+      "mean_reversion_pct": 0.287
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 113,
+      "hit_rate": 0.487,
+      "mean_next_resid_pct": -0.091,
+      "mean_reversion_pct": -0.091
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 147,
+      "hit_rate": 0.578,
+      "mean_next_resid_pct": -0.138,
+      "mean_reversion_pct": 0.138
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 16,
+      "hit_rate": 0.438,
+      "mean_next_resid_pct": 0.37,
+      "mean_reversion_pct": 0.37
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 42,
+      "hit_rate": 0.524,
+      "mean_next_resid_pct": -0.269,
+      "mean_reversion_pct": 0.269
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": 0.132,
+      "mean_reversion_pct": 0.132
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 22,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.31,
+      "mean_reversion_pct": -0.31
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 40,
+      "hit_rate": 0.625,
+      "mean_next_resid_pct": 0.509,
+      "mean_reversion_pct": 0.509
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 43,
+      "hit_rate": 0.581,
+      "mean_next_resid_pct": -0.29,
+      "mean_reversion_pct": 0.29
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 8,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.485,
+      "mean_reversion_pct": 0.485
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.656,
+      "mean_reversion_pct": 0.656
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": 0.825,
+      "mean_reversion_pct": 0.825
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 8,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.419,
+      "mean_reversion_pct": -0.419
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 55,
+      "hit_rate": 0.527,
+      "mean_next_resid_pct": 0.19,
+      "mean_reversion_pct": 0.19
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 82,
+      "hit_rate": 0.561,
+      "mean_next_resid_pct": 0.03,
+      "mean_reversion_pct": -0.03
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 14,
+      "hit_rate": 0.429,
+      "mean_next_resid_pct": 0.077,
+      "mean_reversion_pct": 0.077
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": 0.392,
+      "mean_reversion_pct": -0.392
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": 1.831,
+      "mean_reversion_pct": 1.831
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.357,
+      "mean_next_resid_pct": 0.632,
+      "mean_reversion_pct": -0.632
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 57,
+      "hit_rate": 0.561,
+      "mean_next_resid_pct": 0.373,
+      "mean_reversion_pct": 0.373
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 85,
+      "hit_rate": 0.518,
+      "mean_next_resid_pct": 0.016,
+      "mean_reversion_pct": -0.016
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.273,
+      "mean_next_resid_pct": -1.378,
+      "mean_reversion_pct": -1.378
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.56,
+      "mean_next_resid_pct": -0.458,
+      "mean_reversion_pct": 0.458
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": 0.275,
+      "mean_reversion_pct": 0.275
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 16,
+      "hit_rate": 0.562,
+      "mean_next_resid_pct": -0.472,
+      "mean_reversion_pct": 0.472
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 46,
+      "hit_rate": 0.413,
+      "mean_next_resid_pct": -0.323,
+      "mean_reversion_pct": -0.323
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 59,
+      "hit_rate": 0.627,
+      "mean_next_resid_pct": -0.292,
+      "mean_reversion_pct": 0.292
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -0.783,
+      "mean_reversion_pct": -0.783
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 27,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -1.047,
+      "mean_reversion_pct": 1.047
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 4,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": 0.906,
+      "mean_reversion_pct": 0.906
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 1.812,
+      "mean_reversion_pct": -1.812
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 42,
+      "hit_rate": 0.548,
+      "mean_next_resid_pct": 0.113,
+      "mean_reversion_pct": 0.113
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 44,
+      "hit_rate": 0.386,
+      "mean_next_resid_pct": 0.842,
+      "mean_reversion_pct": -0.842
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 13,
+      "hit_rate": 0.462,
+      "mean_next_resid_pct": -0.457,
+      "mean_reversion_pct": -0.457
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 22,
+      "hit_rate": 0.364,
+      "mean_next_resid_pct": 0.906,
+      "mean_reversion_pct": -0.906
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 3,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -0.328,
+      "mean_reversion_pct": -0.328
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 15,
+      "hit_rate": 0.733,
+      "mean_next_resid_pct": -0.555,
+      "mean_reversion_pct": 0.555
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 70,
+      "hit_rate": 0.529,
+      "mean_next_resid_pct": 0.285,
+      "mean_reversion_pct": 0.285
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 89,
+      "hit_rate": 0.584,
+      "mean_next_resid_pct": -0.283,
+      "mean_reversion_pct": 0.283
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 19,
+      "hit_rate": 0.421,
+      "mean_next_resid_pct": -0.378,
+      "mean_reversion_pct": -0.378
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.803,
+      "mean_reversion_pct": 0.803
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.727,
+      "mean_next_resid_pct": 0.717,
+      "mean_reversion_pct": 0.717
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 16,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": -0.596,
+      "mean_reversion_pct": 0.596
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 67,
+      "hit_rate": 0.478,
+      "mean_next_resid_pct": -0.265,
+      "mean_reversion_pct": -0.265
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 117,
+      "hit_rate": 0.479,
+      "mean_next_resid_pct": 0.344,
+      "mean_reversion_pct": -0.344
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 13,
+      "hit_rate": 0.538,
+      "mean_next_resid_pct": -0.011,
+      "mean_reversion_pct": -0.011
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 44,
+      "hit_rate": 0.614,
+      "mean_next_resid_pct": -0.951,
+      "mean_reversion_pct": 0.951
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -0.736,
+      "mean_reversion_pct": -0.736
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 22,
+      "hit_rate": 0.636,
+      "mean_next_resid_pct": -0.081,
+      "mean_reversion_pct": 0.081
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 99,
+      "hit_rate": 0.505,
+      "mean_next_resid_pct": -0.14,
+      "mean_reversion_pct": -0.14
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 125,
+      "hit_rate": 0.568,
+      "mean_next_resid_pct": -0.01,
+      "mean_reversion_pct": 0.01
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 22,
+      "hit_rate": 0.409,
+      "mean_next_resid_pct": -0.419,
+      "mean_reversion_pct": -0.419
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 35,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.014,
+      "mean_reversion_pct": 0.014
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 22,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -0.492,
+      "mean_reversion_pct": -0.492
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.31,
+      "mean_next_resid_pct": 1.36,
+      "mean_reversion_pct": -1.36
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 53,
+      "hit_rate": 0.434,
+      "mean_next_resid_pct": 0.206,
+      "mean_reversion_pct": 0.206
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 44,
+      "hit_rate": 0.409,
+      "mean_next_resid_pct": 0.517,
+      "mean_reversion_pct": -0.517
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.636,
+      "mean_next_resid_pct": 0.802,
+      "mean_reversion_pct": 0.802
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 13,
+      "hit_rate": 0.615,
+      "mean_next_resid_pct": -0.755,
+      "mean_reversion_pct": 0.755
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.444,
+      "mean_next_resid_pct": -0.253,
+      "mean_reversion_pct": -0.253
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 13,
+      "hit_rate": 0.615,
+      "mean_next_resid_pct": -0.179,
+      "mean_reversion_pct": 0.179
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 24,
+      "hit_rate": 0.708,
+      "mean_next_resid_pct": 1.488,
+      "mean_reversion_pct": 1.488
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 30,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.01,
+      "mean_reversion_pct": 0.01
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.8,
+      "mean_next_resid_pct": 0.882,
+      "mean_reversion_pct": 0.882
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 6,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": -0.62,
+      "mean_reversion_pct": 0.62
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -0.205,
+      "mean_reversion_pct": -0.205
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.029,
+      "mean_reversion_pct": 0.029
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 71,
+      "hit_rate": 0.451,
+      "mean_next_resid_pct": -0.047,
+      "mean_reversion_pct": -0.047
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 86,
+      "hit_rate": 0.581,
+      "mean_next_resid_pct": -0.321,
+      "mean_reversion_pct": 0.321
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 13,
+      "hit_rate": 0.231,
+      "mean_next_resid_pct": -0.634,
+      "mean_reversion_pct": -0.634
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.44,
+      "mean_next_resid_pct": 1.229,
+      "mean_reversion_pct": -1.229
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": 1.052,
+      "mean_reversion_pct": 1.052
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": 0.108,
+      "mean_reversion_pct": -0.108
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 101,
+      "hit_rate": 0.406,
+      "mean_next_resid_pct": -0.366,
+      "mean_reversion_pct": -0.366
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 133,
+      "hit_rate": 0.609,
+      "mean_next_resid_pct": -0.228,
+      "mean_reversion_pct": 0.228
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 27,
+      "hit_rate": 0.444,
+      "mean_next_resid_pct": -0.541,
+      "mean_reversion_pct": -0.541
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 42,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.104,
+      "mean_reversion_pct": 0.104
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 13,
+      "hit_rate": 0.385,
+      "mean_next_resid_pct": -1.336,
+      "mean_reversion_pct": -1.336
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 35,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.359,
+      "mean_reversion_pct": 0.359
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 98,
+      "hit_rate": 0.541,
+      "mean_next_resid_pct": 0.428,
+      "mean_reversion_pct": 0.428
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 116,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.128,
+      "mean_reversion_pct": -0.128
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 22,
+      "hit_rate": 0.409,
+      "mean_next_resid_pct": -0.818,
+      "mean_reversion_pct": -0.818
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 40,
+      "hit_rate": 0.725,
+      "mean_next_resid_pct": -0.818,
+      "mean_reversion_pct": 0.818
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.8,
+      "mean_next_resid_pct": 1.849,
+      "mean_reversion_pct": 1.849
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 21,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.091,
+      "mean_reversion_pct": 0.091
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 67,
+      "hit_rate": 0.582,
+      "mean_next_resid_pct": -0.165,
+      "mean_reversion_pct": -0.165
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 73,
+      "hit_rate": 0.575,
+      "mean_next_resid_pct": -0.049,
+      "mean_reversion_pct": 0.049
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 14,
+      "hit_rate": 0.786,
+      "mean_next_resid_pct": 1.763,
+      "mean_reversion_pct": 1.763
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.586,
+      "mean_next_resid_pct": -0.573,
+      "mean_reversion_pct": 0.573
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.417,
+      "mean_next_resid_pct": -1.051,
+      "mean_reversion_pct": -1.051
+    },
+    {
+      "fold": "FOLD_2",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.48,
+      "mean_next_resid_pct": 0.727,
+      "mean_reversion_pct": -0.727
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 63,
+      "hit_rate": 0.54,
+      "mean_next_resid_pct": 0.165,
+      "mean_reversion_pct": 0.165
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Autos",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 72,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.064,
+      "mean_reversion_pct": 0.064
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 25,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": 0.079,
+      "mean_reversion_pct": 0.079
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Autos",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 26,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.255,
+      "mean_reversion_pct": -0.255
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 6,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.38,
+      "mean_reversion_pct": 0.38
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Autos",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 9,
+      "hit_rate": 0.444,
+      "mean_next_resid_pct": 1.335,
+      "mean_reversion_pct": -1.335
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 120,
+      "hit_rate": 0.542,
+      "mean_next_resid_pct": 0.072,
+      "mean_reversion_pct": 0.072
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Banks",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 132,
+      "hit_rate": 0.553,
+      "mean_next_resid_pct": -0.389,
+      "mean_reversion_pct": 0.389
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 32,
+      "hit_rate": 0.562,
+      "mean_next_resid_pct": -0.048,
+      "mean_reversion_pct": -0.048
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Banks",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 46,
+      "hit_rate": 0.522,
+      "mean_next_resid_pct": -0.115,
+      "mean_reversion_pct": 0.115
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 21,
+      "hit_rate": 0.381,
+      "mean_next_resid_pct": -0.282,
+      "mean_reversion_pct": -0.282
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Banks",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.586,
+      "mean_next_resid_pct": -0.057,
+      "mean_reversion_pct": 0.057
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 110,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -0.102,
+      "mean_reversion_pct": -0.102
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Capital_Goods",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 148,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": 0.093,
+      "mean_reversion_pct": -0.093
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 27,
+      "hit_rate": 0.296,
+      "mean_next_resid_pct": -0.771,
+      "mean_reversion_pct": -0.771
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Capital_Goods",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 30,
+      "hit_rate": 0.633,
+      "mean_next_resid_pct": -0.367,
+      "mean_reversion_pct": 0.367
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 14,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.755,
+      "mean_reversion_pct": -0.755
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Capital_Goods",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.52,
+      "mean_next_resid_pct": -0.107,
+      "mean_reversion_pct": 0.107
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 36,
+      "hit_rate": 0.611,
+      "mean_next_resid_pct": 0.252,
+      "mean_reversion_pct": 0.252
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Cement_Building",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 34,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.142,
+      "mean_reversion_pct": 0.142
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.166,
+      "mean_reversion_pct": -0.166
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Cement_Building",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.314,
+      "mean_reversion_pct": 0.314
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.714,
+      "mean_next_resid_pct": 0.484,
+      "mean_reversion_pct": 0.484
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Cement_Building",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 3,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": 0.346,
+      "mean_reversion_pct": -0.346
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 48,
+      "hit_rate": 0.438,
+      "mean_next_resid_pct": 0.189,
+      "mean_reversion_pct": 0.189
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Chemicals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 93,
+      "hit_rate": 0.57,
+      "mean_next_resid_pct": -0.026,
+      "mean_reversion_pct": 0.026
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 20,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.719,
+      "mean_reversion_pct": 0.719
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Chemicals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 20,
+      "hit_rate": 0.6,
+      "mean_next_resid_pct": 0.338,
+      "mean_reversion_pct": -0.338
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -1.0,
+      "mean_reversion_pct": -1.0
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Chemicals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.048,
+      "mean_reversion_pct": -0.048
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 51,
+      "hit_rate": 0.569,
+      "mean_next_resid_pct": 0.145,
+      "mean_reversion_pct": 0.145
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Consumer_Disc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 73,
+      "hit_rate": 0.521,
+      "mean_next_resid_pct": -0.167,
+      "mean_reversion_pct": 0.167
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.667,
+      "mean_next_resid_pct": 0.559,
+      "mean_reversion_pct": 0.559
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Consumer_Disc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 25,
+      "hit_rate": 0.64,
+      "mean_next_resid_pct": 0.292,
+      "mean_reversion_pct": -0.292
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.455,
+      "mean_next_resid_pct": -0.975,
+      "mean_reversion_pct": -0.975
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Consumer_Disc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.273,
+      "mean_reversion_pct": 0.273
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 43,
+      "hit_rate": 0.442,
+      "mean_next_resid_pct": -0.071,
+      "mean_reversion_pct": -0.071
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Electrical",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 58,
+      "hit_rate": 0.534,
+      "mean_next_resid_pct": -0.218,
+      "mean_reversion_pct": 0.218
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 18,
+      "hit_rate": 0.722,
+      "mean_next_resid_pct": 0.619,
+      "mean_reversion_pct": 0.619
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Electrical",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.471,
+      "mean_next_resid_pct": -0.482,
+      "mean_reversion_pct": 0.482
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 14,
+      "hit_rate": 0.286,
+      "mean_next_resid_pct": -1.561,
+      "mean_reversion_pct": -1.561
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Electrical",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.167,
+      "mean_next_resid_pct": 0.999,
+      "mean_reversion_pct": -0.999
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 52,
+      "hit_rate": 0.385,
+      "mean_next_resid_pct": -0.417,
+      "mean_reversion_pct": -0.417
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Energy",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 60,
+      "hit_rate": 0.567,
+      "mean_next_resid_pct": -0.159,
+      "mean_reversion_pct": 0.159
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 14,
+      "hit_rate": 0.357,
+      "mean_next_resid_pct": -0.266,
+      "mean_reversion_pct": -0.266
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Energy",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 19,
+      "hit_rate": 0.421,
+      "mean_next_resid_pct": 0.075,
+      "mean_reversion_pct": -0.075
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.857,
+      "mean_next_resid_pct": 1.707,
+      "mean_reversion_pct": 1.707
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Energy",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.417,
+      "mean_next_resid_pct": 0.252,
+      "mean_reversion_pct": -0.252
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 74,
+      "hit_rate": 0.419,
+      "mean_next_resid_pct": -0.318,
+      "mean_reversion_pct": -0.318
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FMCG",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 75,
+      "hit_rate": 0.533,
+      "mean_next_resid_pct": -0.165,
+      "mean_reversion_pct": 0.165
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 17,
+      "hit_rate": 0.353,
+      "mean_next_resid_pct": -0.376,
+      "mean_reversion_pct": -0.376
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FMCG",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.517,
+      "mean_next_resid_pct": 1.089,
+      "mean_reversion_pct": -1.089
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 18,
+      "hit_rate": 0.556,
+      "mean_next_resid_pct": 0.027,
+      "mean_reversion_pct": 0.027
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FMCG",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.389,
+      "mean_next_resid_pct": 0.526,
+      "mean_reversion_pct": -0.526
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 73,
+      "hit_rate": 0.438,
+      "mean_next_resid_pct": -0.514,
+      "mean_reversion_pct": -0.514
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FinSvc",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 78,
+      "hit_rate": 0.513,
+      "mean_next_resid_pct": -0.141,
+      "mean_reversion_pct": 0.141
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 21,
+      "hit_rate": 0.476,
+      "mean_next_resid_pct": -0.338,
+      "mean_reversion_pct": -0.338
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FinSvc",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 37,
+      "hit_rate": 0.649,
+      "mean_next_resid_pct": -0.689,
+      "mean_reversion_pct": 0.689
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.501,
+      "mean_reversion_pct": 0.501
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "FinSvc",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 14,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.188,
+      "mean_reversion_pct": 0.188
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 88,
+      "hit_rate": 0.534,
+      "mean_next_resid_pct": -0.116,
+      "mean_reversion_pct": -0.116
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "IT",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 115,
+      "hit_rate": 0.609,
+      "mean_next_resid_pct": -0.323,
+      "mean_reversion_pct": 0.323
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 25,
+      "hit_rate": 0.32,
+      "mean_next_resid_pct": -0.393,
+      "mean_reversion_pct": -0.393
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "IT",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 18,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.429,
+      "mean_reversion_pct": -0.429
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.235,
+      "mean_reversion_pct": 0.235
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "IT",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 24,
+      "hit_rate": 0.75,
+      "mean_next_resid_pct": -0.125,
+      "mean_reversion_pct": 0.125
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 48,
+      "hit_rate": 0.562,
+      "mean_next_resid_pct": 0.217,
+      "mean_reversion_pct": 0.217
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Insurance",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 47,
+      "hit_rate": 0.596,
+      "mean_next_resid_pct": -0.252,
+      "mean_reversion_pct": 0.252
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.429,
+      "mean_next_resid_pct": -0.03,
+      "mean_reversion_pct": -0.03
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Insurance",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 13,
+      "hit_rate": 0.538,
+      "mean_next_resid_pct": -0.307,
+      "mean_reversion_pct": 0.307
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 1.0,
+      "mean_next_resid_pct": 0.891,
+      "mean_reversion_pct": 0.891
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Insurance",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.207,
+      "mean_reversion_pct": 0.207
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 29,
+      "hit_rate": 0.517,
+      "mean_next_resid_pct": 0.351,
+      "mean_reversion_pct": 0.351
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Logistics",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 42,
+      "hit_rate": 0.429,
+      "mean_next_resid_pct": 0.1,
+      "mean_reversion_pct": -0.1
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.239,
+      "mean_reversion_pct": -0.239
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Logistics",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 7,
+      "hit_rate": 0.571,
+      "mean_next_resid_pct": -0.293,
+      "mean_reversion_pct": 0.293
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 3,
+      "hit_rate": 1.0,
+      "mean_next_resid_pct": 1.11,
+      "mean_reversion_pct": 1.11
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Logistics",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 4,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.519,
+      "mean_reversion_pct": -0.519
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 72,
+      "hit_rate": 0.556,
+      "mean_next_resid_pct": 0.382,
+      "mean_reversion_pct": 0.382
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Metals",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 93,
+      "hit_rate": 0.613,
+      "mean_next_resid_pct": 0.027,
+      "mean_reversion_pct": -0.027
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.222,
+      "mean_next_resid_pct": -0.696,
+      "mean_reversion_pct": -0.696
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Metals",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 26,
+      "hit_rate": 0.538,
+      "mean_next_resid_pct": -0.362,
+      "mean_reversion_pct": 0.362
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 5,
+      "hit_rate": 0.0,
+      "mean_next_resid_pct": -1.294,
+      "mean_reversion_pct": -1.294
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Metals",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 12,
+      "hit_rate": 0.583,
+      "mean_next_resid_pct": -0.072,
+      "mean_reversion_pct": 0.072
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 114,
+      "hit_rate": 0.535,
+      "mean_next_resid_pct": -0.001,
+      "mean_reversion_pct": -0.001
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "NBFC",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 134,
+      "hit_rate": 0.515,
+      "mean_next_resid_pct": -0.022,
+      "mean_reversion_pct": 0.022
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 29,
+      "hit_rate": 0.414,
+      "mean_next_resid_pct": -0.285,
+      "mean_reversion_pct": -0.285
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "NBFC",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 52,
+      "hit_rate": 0.615,
+      "mean_next_resid_pct": -0.153,
+      "mean_reversion_pct": 0.153
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 9,
+      "hit_rate": 0.222,
+      "mean_next_resid_pct": -1.73,
+      "mean_reversion_pct": -1.73
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "NBFC",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 19,
+      "hit_rate": 0.526,
+      "mean_next_resid_pct": -0.401,
+      "mean_reversion_pct": 0.401
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 99,
+      "hit_rate": 0.485,
+      "mean_next_resid_pct": 0.073,
+      "mean_reversion_pct": 0.073
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Pharma",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 102,
+      "hit_rate": 0.539,
+      "mean_next_resid_pct": -0.139,
+      "mean_reversion_pct": 0.139
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 22,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": 0.105,
+      "mean_reversion_pct": 0.105
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Pharma",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 29,
+      "hit_rate": 0.379,
+      "mean_next_resid_pct": 0.449,
+      "mean_reversion_pct": -0.449
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 11,
+      "hit_rate": 0.545,
+      "mean_next_resid_pct": -0.207,
+      "mean_reversion_pct": -0.207
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Pharma",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 19,
+      "hit_rate": 0.316,
+      "mean_next_resid_pct": 1.151,
+      "mean_reversion_pct": -1.151
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "DOWN",
+      "n": 72,
+      "hit_rate": 0.514,
+      "mean_next_resid_pct": -0.061,
+      "mean_reversion_pct": -0.061
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Utilities",
+      "bucket": "2-3\u03c3",
+      "direction": "UP",
+      "n": 74,
+      "hit_rate": 0.514,
+      "mean_next_resid_pct": -0.303,
+      "mean_reversion_pct": 0.303
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.333,
+      "mean_next_resid_pct": -1.014,
+      "mean_reversion_pct": -1.014
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Utilities",
+      "bucket": "3-4\u03c3",
+      "direction": "UP",
+      "n": 24,
+      "hit_rate": 0.417,
+      "mean_next_resid_pct": 0.257,
+      "mean_reversion_pct": -0.257
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "DOWN",
+      "n": 12,
+      "hit_rate": 0.5,
+      "mean_next_resid_pct": -0.117,
+      "mean_reversion_pct": -0.117
+    },
+    {
+      "fold": "FOLD_3",
+      "sector": "Utilities",
+      "bucket": "4\u03c3+",
+      "direction": "UP",
+      "n": 17,
+      "hit_rate": 0.588,
+      "mean_next_resid_pct": 1.084,
+      "mean_reversion_pct": -1.084
+    }
+  ],
+  "randomised_null_top": [
+    [
+      "FinSvc | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.477,
+        "p_value_one_sided": 0.005,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Electrical | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.5,
+        "p_value_one_sided": 0.015,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Logistics | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.556,
+        "p_value_one_sided": 0.02,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Utilities | 3-4\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.546,
+        "p_value_one_sided": 0.045,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Pharma | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.295,
+        "p_value_one_sided": 0.05,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Metals | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.195,
+        "p_value_one_sided": 0.08,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Capital_Goods | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.137,
+        "p_value_one_sided": 0.085,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Insurance | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.463,
+        "p_value_one_sided": 0.085,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Insurance | 3-4\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.48,
+        "p_value_one_sided": 0.095,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Cement_Building | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.256,
+        "p_value_one_sided": 0.1,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Electrical | 3-4\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.45,
+        "p_value_one_sided": 0.1,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Pharma | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.134,
+        "p_value_one_sided": 0.105,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Autos | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.169,
+        "p_value_one_sided": 0.125,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Insurance | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.552,
+        "p_value_one_sided": 0.13,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Metals | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.166,
+        "p_value_one_sided": 0.13,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Cement_Building | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.421,
+        "p_value_one_sided": 0.14,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Logistics | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.595,
+        "p_value_one_sided": 0.14,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Banks | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.062,
+        "p_value_one_sided": 0.23,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Energy | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.108,
+        "p_value_one_sided": 0.25,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Pharma | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.092,
+        "p_value_one_sided": 0.25,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Cement_Building | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.155,
+        "p_value_one_sided": 0.28,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Utilities | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.126,
+        "p_value_one_sided": 0.3,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Autos | 3-4\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.15,
+        "p_value_one_sided": 0.31,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "NBFC | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.098,
+        "p_value_one_sided": 0.315,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Cement_Building | 3-4\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.21,
+        "p_value_one_sided": 0.325,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Autos | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.053,
+        "p_value_one_sided": 0.33,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Consumer_Disc | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.071,
+        "p_value_one_sided": 0.335,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Electrical | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.094,
+        "p_value_one_sided": 0.35,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "FMCG | 4\u03c3+ | DOWN",
+      {
+        "real_reversion_pct": 0.058,
+        "p_value_one_sided": 0.36,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Consumer_Disc | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.12,
+        "p_value_one_sided": 0.365,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Insurance | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": 0.036,
+        "p_value_one_sided": 0.365,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "IT | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.044,
+        "p_value_one_sided": 0.37,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Insurance | 4\u03c3+ | DOWN",
+      {
+        "real_reversion_pct": 0.121,
+        "p_value_one_sided": 0.38,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Pharma | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.06,
+        "p_value_one_sided": 0.38,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Banks | 4\u03c3+ | DOWN",
+      {
+        "real_reversion_pct": 0.079,
+        "p_value_one_sided": 0.4,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Chemicals | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.068,
+        "p_value_one_sided": 0.405,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "FMCG | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.047,
+        "p_value_one_sided": 0.42,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Logistics | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.096,
+        "p_value_one_sided": 0.425,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Banks | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.032,
+        "p_value_one_sided": 0.44,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Banks | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.035,
+        "p_value_one_sided": 0.445,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Capital_Goods | 3-4\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.023,
+        "p_value_one_sided": 0.445,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Cement_Building | 4\u03c3+ | DOWN",
+      {
+        "real_reversion_pct": 0.077,
+        "p_value_one_sided": 0.46,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Chemicals | 3-4\u03c3 | DOWN",
+      {
+        "real_reversion_pct": -0.004,
+        "p_value_one_sided": 0.465,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Banks | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.053,
+        "p_value_one_sided": 0.475,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Autos | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.045,
+        "p_value_one_sided": 0.48,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "FinSvc | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.03,
+        "p_value_one_sided": 0.485,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "NBFC | 4\u03c3+ | UP",
+      {
+        "real_reversion_pct": 0.016,
+        "p_value_one_sided": 0.495,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Capital_Goods | 2-3\u03c3 | UP",
+      {
+        "real_reversion_pct": 0.013,
+        "p_value_one_sided": 0.5,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "FinSvc | 4\u03c3+ | DOWN",
+      {
+        "real_reversion_pct": -0.001,
+        "p_value_one_sided": 0.515,
+        "n_shuffles": 200
+      }
+    ],
+    [
+      "Consumer_Disc | 2-3\u03c3 | DOWN",
+      {
+        "real_reversion_pct": -0.032,
+        "p_value_one_sided": 0.53,
+        "n_shuffles": 200
+      }
+    ]
+  ]
+}
