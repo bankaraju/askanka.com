@@ -131,6 +131,9 @@ Thresholds calibrated to Indian equity baseline (NSE holidays, circuit filters a
 5A.4 Repair log
 Any repair, forward-fill, symbol map, corporate-action splice or exclusion must be logged to docs/superpowers/data-audits/YYYY-MM-DD-<run>.md with reason and code path. Silent repair is forbidden.
 
+5A.5 Raw-bar canonicity (policy reference)
+Observed OHLC is canonical on the authoritative compliance path. Any bar flagged by §5A.1 inside a trade's execution window (per §7.1 mode binding) invalidates that trade — no substitution, no imputation, no silent pass-through. Imputation, if used, runs only on a parallel sensitivity track emitting a distinct artifact (`metrics_grid_sensitivity.json`); the §15.1 gate never reads the sensitivity track. Full definition, sector-beta imputer formula, and logging obligations: docs/superpowers/policies/2026-04-23-raw-bar-canonicity.md. This policy implements §5A.4 as an execution gate.
+
 
 6. SURVIVORSHIP AND UNIVERSE INTEGRITY
 Objective: Ensure the stock universe available to the backtest on any historical date matches the universe that was actually tradeable on that date.
