@@ -1,0 +1,2108 @@
+{
+  "total_bars": 246344,
+  "impaired_bars": 637,
+  "impaired_pct": 0.259,
+  "classification": "CLEAN",
+  "per_ticker": {
+    "360ONE": {
+      "ticker": "360ONE",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "ABB": {
+      "ticker": "ABB",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ABCAPITAL": {
+      "ticker": "ABCAPITAL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ADANIENSOL": {
+      "ticker": "ADANIENSOL",
+      "missing_bar_count": 5,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 5,
+      "total_bars": 661
+    },
+    "ADANIENT": {
+      "ticker": "ADANIENT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ADANIGREEN": {
+      "ticker": "ADANIGREEN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ADANIPORTS": {
+      "ticker": "ADANIPORTS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ADANIPOWER": {
+      "ticker": "ADANIPOWER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ALKEM": {
+      "ticker": "ALKEM",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "AMBER": {
+      "ticker": "AMBER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "AMBUJACEM": {
+      "ticker": "AMBUJACEM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ANGELONE": {
+      "ticker": "ANGELONE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "APLAPOLLO": {
+      "ticker": "APLAPOLLO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "APOLLOHOSP": {
+      "ticker": "APOLLOHOSP",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ASHOKLEY": {
+      "ticker": "ASHOKLEY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ASIANPAINT": {
+      "ticker": "ASIANPAINT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ASTRAL": {
+      "ticker": "ASTRAL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "AUBANK": {
+      "ticker": "AUBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "AUROPHARMA": {
+      "ticker": "AUROPHARMA",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "AXISBANK": {
+      "ticker": "AXISBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BAJAJ-AUTO": {
+      "ticker": "BAJAJ-AUTO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "BAJAJFINSV": {
+      "ticker": "BAJAJFINSV",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BAJAJHLDNG": {
+      "ticker": "BAJAJHLDNG",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BAJFINANCE": {
+      "ticker": "BAJFINANCE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BANDHANBNK": {
+      "ticker": "BANDHANBNK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BANKBARODA": {
+      "ticker": "BANKBARODA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BANKINDIA": {
+      "ticker": "BANKINDIA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BDL": {
+      "ticker": "BDL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BEL": {
+      "ticker": "BEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BHARATFORG": {
+      "ticker": "BHARATFORG",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BHARTIARTL": {
+      "ticker": "BHARTIARTL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BHEL": {
+      "ticker": "BHEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BIOCON": {
+      "ticker": "BIOCON",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BLUESTARCO": {
+      "ticker": "BLUESTARCO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BOSCHLTD": {
+      "ticker": "BOSCHLTD",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BPCL": {
+      "ticker": "BPCL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "BRITANNIA": {
+      "ticker": "BRITANNIA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 5,
+      "impaired_bars": 5,
+      "total_bars": 1236
+    },
+    "BSE": {
+      "ticker": "BSE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CAMS": {
+      "ticker": "CAMS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "CANBK": {
+      "ticker": "CANBK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CDSL": {
+      "ticker": "CDSL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CGPOWER": {
+      "ticker": "CGPOWER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CHOLAFIN": {
+      "ticker": "CHOLAFIN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CIPLA": {
+      "ticker": "CIPLA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "COALINDIA": {
+      "ticker": "COALINDIA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "COCHINSHIP": {
+      "ticker": "COCHINSHIP",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "COFORGE": {
+      "ticker": "COFORGE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "COLPAL": {
+      "ticker": "COLPAL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CONCOR": {
+      "ticker": "CONCOR",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CROMPTON": {
+      "ticker": "CROMPTON",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "CUMMINSIND": {
+      "ticker": "CUMMINSIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "DABUR": {
+      "ticker": "DABUR",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "DALBHARAT": {
+      "ticker": "DALBHARAT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "DELHIVERY": {
+      "ticker": "DELHIVERY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 967
+    },
+    "DIVISLAB": {
+      "ticker": "DIVISLAB",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "DIXON": {
+      "ticker": "DIXON",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "DLF": {
+      "ticker": "DLF",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 5,
+      "impaired_bars": 5,
+      "total_bars": 1236
+    },
+    "DMART": {
+      "ticker": "DMART",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "DRREDDY": {
+      "ticker": "DRREDDY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "EICHERMOT": {
+      "ticker": "EICHERMOT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ETERNAL": {
+      "ticker": "ETERNAL",
+      "missing_bar_count": 22,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 22,
+      "total_bars": 1173
+    },
+    "EXIDEIND": {
+      "ticker": "EXIDEIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "FEDERALBNK": {
+      "ticker": "FEDERALBNK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "FORCEMOT": {
+      "ticker": "FORCEMOT",
+      "missing_bar_count": 41,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 33,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 35,
+      "impaired_bars": 109,
+      "total_bars": 1236
+    },
+    "FORTIS": {
+      "ticker": "FORTIS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "GAIL": {
+      "ticker": "GAIL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "GLENMARK": {
+      "ticker": "GLENMARK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "GMRAIRPORT": {
+      "ticker": "GMRAIRPORT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 4,
+      "impaired_bars": 4,
+      "total_bars": 1236
+    },
+    "GODFRYPHLP": {
+      "ticker": "GODFRYPHLP",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "GODREJCP": {
+      "ticker": "GODREJCP",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "GODREJPROP": {
+      "ticker": "GODREJPROP",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "GRASIM": {
+      "ticker": "GRASIM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HAL": {
+      "ticker": "HAL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HAVELLS": {
+      "ticker": "HAVELLS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HCLTECH": {
+      "ticker": "HCLTECH",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HDFCAMC": {
+      "ticker": "HDFCAMC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HDFCBANK": {
+      "ticker": "HDFCBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HDFCLIFE": {
+      "ticker": "HDFCLIFE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HEROMOTOCO": {
+      "ticker": "HEROMOTOCO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HINDALCO": {
+      "ticker": "HINDALCO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HINDPETRO": {
+      "ticker": "HINDPETRO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HINDUNILVR": {
+      "ticker": "HINDUNILVR",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HINDZINC": {
+      "ticker": "HINDZINC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HUDCO": {
+      "ticker": "HUDCO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "HYUNDAI": {
+      "ticker": "HYUNDAI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 371
+    },
+    "ICICIBANK": {
+      "ticker": "ICICIBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ICICIGI": {
+      "ticker": "ICICIGI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ICICIPRULI": {
+      "ticker": "ICICIPRULI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "IDEA": {
+      "ticker": "IDEA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "IDFCFIRSTB": {
+      "ticker": "IDFCFIRSTB",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 5,
+      "impaired_bars": 5,
+      "total_bars": 1236
+    },
+    "IEX": {
+      "ticker": "IEX",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "INDHOTEL": {
+      "ticker": "INDHOTEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "INDIANB": {
+      "ticker": "INDIANB",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "INDIGO": {
+      "ticker": "INDIGO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "INDUSINDBK": {
+      "ticker": "INDUSINDBK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "INDUSTOWER": {
+      "ticker": "INDUSTOWER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "INFY": {
+      "ticker": "INFY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "INOXWIND": {
+      "ticker": "INOXWIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "IOC": {
+      "ticker": "IOC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "IREDA": {
+      "ticker": "IREDA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 591
+    },
+    "IRFC": {
+      "ticker": "IRFC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "ITC": {
+      "ticker": "ITC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 1,
+      "total_bars": 1236
+    },
+    "JINDALSTEL": {
+      "ticker": "JINDALSTEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "JIOFIN": {
+      "ticker": "JIOFIN",
+      "missing_bar_count": 5,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 5,
+      "total_bars": 658
+    },
+    "JSWENERGY": {
+      "ticker": "JSWENERGY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "JSWSTEEL": {
+      "ticker": "JSWSTEEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 5,
+      "impaired_bars": 5,
+      "total_bars": 1236
+    },
+    "JUBLFOOD": {
+      "ticker": "JUBLFOOD",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "KALYANKJIL": {
+      "ticker": "KALYANKJIL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "KAYNES": {
+      "ticker": "KAYNES",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 843
+    },
+    "KEI": {
+      "ticker": "KEI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "KFINTECH": {
+      "ticker": "KFINTECH",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 816
+    },
+    "KOTAKBANK": {
+      "ticker": "KOTAKBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "KPITTECH": {
+      "ticker": "KPITTECH",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "LAURUSLABS": {
+      "ticker": "LAURUSLABS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "LICHSGFIN": {
+      "ticker": "LICHSGFIN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "LICI": {
+      "ticker": "LICI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 972
+    },
+    "LODHA": {
+      "ticker": "LODHA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "LTF": {
+      "ticker": "LTF",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "LTM": {
+      "ticker": "LTM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 0,
+      "total_bars": 41
+    },
+    "LUPIN": {
+      "ticker": "LUPIN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MANAPPURAM": {
+      "ticker": "MANAPPURAM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MANKIND": {
+      "ticker": "MANKIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 730
+    },
+    "MARICO": {
+      "ticker": "MARICO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MARUTI": {
+      "ticker": "MARUTI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MAXHEALTH": {
+      "ticker": "MAXHEALTH",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MAZDOCK": {
+      "ticker": "MAZDOCK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "MFSL": {
+      "ticker": "MFSL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MOTHERSON": {
+      "ticker": "MOTHERSON",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "MOTILALOFS": {
+      "ticker": "MOTILALOFS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MPHASIS": {
+      "ticker": "MPHASIS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "MUTHOOTFIN": {
+      "ticker": "MUTHOOTFIN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NAM-INDIA": {
+      "ticker": "NAM-INDIA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "NATIONALUM": {
+      "ticker": "NATIONALUM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NAUKRI": {
+      "ticker": "NAUKRI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NBCC": {
+      "ticker": "NBCC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NESTLEIND": {
+      "ticker": "NESTLEIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NHPC": {
+      "ticker": "NHPC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NMDC": {
+      "ticker": "NMDC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NTPC": {
+      "ticker": "NTPC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "NUVAMA": {
+      "ticker": "NUVAMA",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 1,
+      "total_bars": 633
+    },
+    "NYKAA": {
+      "ticker": "NYKAA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1099
+    },
+    "OBEROIRLTY": {
+      "ticker": "OBEROIRLTY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "OFSS": {
+      "ticker": "OFSS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "OIL": {
+      "ticker": "OIL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ONGC": {
+      "ticker": "ONGC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PAGEIND": {
+      "ticker": "PAGEIND",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PATANJALI": {
+      "ticker": "PATANJALI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "PAYTM": {
+      "ticker": "PAYTM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1093
+    },
+    "PERSISTENT": {
+      "ticker": "PERSISTENT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PETRONET": {
+      "ticker": "PETRONET",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PFC": {
+      "ticker": "PFC",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PGEL": {
+      "ticker": "PGEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PHOENIXLTD": {
+      "ticker": "PHOENIXLTD",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PIDILITIND": {
+      "ticker": "PIDILITIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PIIND": {
+      "ticker": "PIIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PNB": {
+      "ticker": "PNB",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PNBHOUSING": {
+      "ticker": "PNBHOUSING",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 17,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 18,
+      "impaired_bars": 35,
+      "total_bars": 1236
+    },
+    "POLICYBZR": {
+      "ticker": "POLICYBZR",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 3,
+      "total_bars": 1096
+    },
+    "POLYCAB": {
+      "ticker": "POLYCAB",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 6,
+      "impaired_bars": 6,
+      "total_bars": 1236
+    },
+    "POWERGRID": {
+      "ticker": "POWERGRID",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "POWERINDIA": {
+      "ticker": "POWERINDIA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "PPLPHARMA": {
+      "ticker": "PPLPHARMA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 865
+    },
+    "PREMIERENE": {
+      "ticker": "PREMIERENE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 405
+    },
+    "PRESTIGE": {
+      "ticker": "PRESTIGE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "RBLBANK": {
+      "ticker": "RBLBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "RECLTD": {
+      "ticker": "RECLTD",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "RELIANCE": {
+      "ticker": "RELIANCE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "RVNL": {
+      "ticker": "RVNL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SAIL": {
+      "ticker": "SAIL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SAMMAANCAP": {
+      "ticker": "SAMMAANCAP",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SBICARD": {
+      "ticker": "SBICARD",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SBILIFE": {
+      "ticker": "SBILIFE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SBIN": {
+      "ticker": "SBIN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SHREECEM": {
+      "ticker": "SHREECEM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SHRIRAMFIN": {
+      "ticker": "SHRIRAMFIN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "SIEMENS": {
+      "ticker": "SIEMENS",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SOLARINDS": {
+      "ticker": "SOLARINDS",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 1,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SONACOMS": {
+      "ticker": "SONACOMS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 5,
+      "impaired_bars": 5,
+      "total_bars": 1193
+    },
+    "SRF": {
+      "ticker": "SRF",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SUNPHARMA": {
+      "ticker": "SUNPHARMA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SUPREMEIND": {
+      "ticker": "SUPREMEIND",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SUZLON": {
+      "ticker": "SUZLON",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "SWIGGY": {
+      "ticker": "SWIGGY",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 355
+    },
+    "TATACONSUM": {
+      "ticker": "TATACONSUM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TATAELXSI": {
+      "ticker": "TATAELXSI",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TATAPOWER": {
+      "ticker": "TATAPOWER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TATASTEEL": {
+      "ticker": "TATASTEEL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TATATECH": {
+      "ticker": "TATATECH",
+      "missing_bar_count": 5,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 5,
+      "total_bars": 590
+    },
+    "TCS": {
+      "ticker": "TCS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TECHM": {
+      "ticker": "TECHM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TIINDIA": {
+      "ticker": "TIINDIA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TITAN": {
+      "ticker": "TITAN",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TMPV": {
+      "ticker": "TMPV",
+      "missing_bar_count": 1,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 1,
+      "total_bars": 127
+    },
+    "TORNTPHARM": {
+      "ticker": "TORNTPHARM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TORNTPOWER": {
+      "ticker": "TORNTPOWER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TRENT": {
+      "ticker": "TRENT",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "TVSMOTOR": {
+      "ticker": "TVSMOTOR",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ULTRACEMCO": {
+      "ticker": "ULTRACEMCO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "UNIONBANK": {
+      "ticker": "UNIONBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "UNITDSPR": {
+      "ticker": "UNITDSPR",
+      "missing_bar_count": 4,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 0,
+      "impaired_bars": 4,
+      "total_bars": 470
+    },
+    "UNOMINDA": {
+      "ticker": "UNOMINDA",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 3,
+      "impaired_bars": 3,
+      "total_bars": 1236
+    },
+    "UPL": {
+      "ticker": "UPL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "VBL": {
+      "ticker": "VBL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "VEDL": {
+      "ticker": "VEDL",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "VMM": {
+      "ticker": "VMM",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 332
+    },
+    "VOLTAS": {
+      "ticker": "VOLTAS",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "WAAREEENER": {
+      "ticker": "WAAREEENER",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 367
+    },
+    "WIPRO": {
+      "ticker": "WIPRO",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "YESBANK": {
+      "ticker": "YESBANK",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 2,
+      "impaired_bars": 2,
+      "total_bars": 1236
+    },
+    "ZYDUSLIFE": {
+      "ticker": "ZYDUSLIFE",
+      "missing_bar_count": 0,
+      "duplicate_timestamp_count": 0,
+      "stale_quote_count": 0,
+      "zero_or_negative_price_count": 0,
+      "zero_volume_bar_count": 6,
+      "impaired_bars": 6,
+      "total_bars": 1236
+    }
+  }
+}

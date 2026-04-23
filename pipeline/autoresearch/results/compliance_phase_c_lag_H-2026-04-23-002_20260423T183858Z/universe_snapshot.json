@@ -1,0 +1,9 @@
+{
+  "n_tickers_current": 211,
+  "n_tickers_ever": null,
+  "n_tickers_delisted": null,
+  "coverage_ratio": null,
+  "status": "SURVIVORSHIP-UNCORRECTED-WAIVED",
+  "history_path": "C:\\Users\\Claude_Anka\\askanka.com\\pipeline\\data\\fno_universe_history.json",
+  "waiver_path": "C:\\Users\\Claude_Anka\\askanka.com\\docs\\superpowers\\waivers\\2026-04-23-phase-c-residual-reversion-survivorship.md"
+}
