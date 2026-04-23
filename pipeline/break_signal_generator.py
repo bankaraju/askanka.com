@@ -2,8 +2,14 @@
 break_signal_generator.py — Convert Phase C correlation breaks into signal candidates.
 
 Reads pipeline/data/correlation_breaks.json and emits signal-shaped dicts for every
-actionable break (trade_rec == "LONG" or "SHORT"). Breaks where trade_rec is None
-are informational and are silently skipped.
+actionable break meeting TWO criteria:
+  1. trade_rec ∈ {LONG, SHORT}
+  2. classification ∈ {OPPORTUNITY_LAG}
+
+Breaks where trade_rec is None, or where classification is OPPORTUNITY_OVERSHOOT,
+WARNING, CONFIRMED_WARNING, UNCERTAIN, or legacy bare OPPORTUNITY, are skipped.
+These are informational — see docs/superpowers/specs/2026-04-23-phase-c-follow-vs-fade-audit-design.md
+for the compliance gate.
 
 The returned dicts match the open_signals.json schema so they can be passed directly
 to signal_tracker.save_signal() for enrichment and persistence.
@@ -21,14 +27,27 @@ from config import TIER_EXPLORING
 
 logger = logging.getLogger(__name__)
 
-_ACTIONABLE = {"LONG", "SHORT"}
+_ACTIONABLE_DIRECTIONS = {"LONG", "SHORT"}
+_ACTIONABLE_CLASSIFICATIONS = {"OPPORTUNITY_LAG"}
+# OPPORTUNITY_OVERSHOOT and legacy bare OPPORTUNITY are informational only —
+# see docs/superpowers/specs/2026-04-23-phase-c-follow-vs-fade-audit-design.md
+# §3.1 and §4.1. They become actionable only after H-2026-04-23-003 FADE
+# hypothesis passes compliance.
+
+# Backward compatibility alias (deprecated)
+_ACTIONABLE = _ACTIONABLE_DIRECTIONS
 
 
 def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str, Any]]:
     """Return signal-shaped dicts for every actionable Phase C break.
 
-    Only breaks where ``trade_rec`` is ``"LONG"`` or ``"SHORT"`` are included.
-    Breaks with ``trade_rec=None`` (informational) are skipped.
+    Only breaks meeting BOTH criteria are included:
+      1. ``trade_rec`` ∈ {``"LONG"``, ``"SHORT"``}
+      2. ``classification`` ∈ {``"OPPORTUNITY_LAG"``}
+
+    Breaks not meeting either criterion (including ``trade_rec=None``,
+    ``classification="OPPORTUNITY_OVERSHOOT"``, legacy bare ``"OPPORTUNITY"``, etc.)
+    are skipped as informational.
 
     Args:
         breaks_path: Path to ``correlation_breaks.json``. Defaults to the
@@ -70,11 +89,15 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
             trade_rec = raw_rec.get("direction")
         else:
             trade_rec = raw_rec
-        if trade_rec not in _ACTIONABLE:
-            continue  # informational — skip
+        if trade_rec not in _ACTIONABLE_DIRECTIONS:
+            continue  # trade_rec missing or non-directional — skip
+
+        classification: str = brk.get("classification", "")
+        if classification not in _ACTIONABLE_CLASSIFICATIONS:
+            continue  # classification not actionable (OVERSHOOT alert-only,
+                      # WARNING defensive, legacy OPPORTUNITY deprecated)
 
         symbol: str = brk.get("symbol", "UNKNOWN")
-        classification: str = brk.get("classification", "")
         z_score: float = brk.get("z_score", 0.0)
         expected_return: float = brk.get("expected_return", 0.0)
         actual_return: float = brk.get("actual_return", 0.0)
@@ -108,6 +131,10 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
             "_break_metadata": {
                 "symbol": symbol,
                 "classification": classification,
+                "event_geometry": brk.get("event_geometry"),
+                "direction_intended": brk.get("direction_intended"),
+                "direction_tested": brk.get("direction_tested"),
+                "direction_consistent": brk.get("direction_consistent"),
                 "z_score": z_score,
                 "regime": regime,
                 "oi_anomaly": oi_anomaly,

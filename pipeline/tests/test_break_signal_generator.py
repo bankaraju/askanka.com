@@ -21,24 +21,32 @@ SAMPLE_BREAKS = {
         {
             "symbol": "HAL",
             "regime": "NEUTRAL",
-            "classification": "MOMENTUM_CONFIRM",
+            "classification": "OPPORTUNITY_LAG",
             "action": "ENTER",
             "z_score": 2.3,
             "trade_rec": "LONG",
             "expected_return": 0.5,
             "actual_return": 1.8,
             "oi_anomaly": True,
+            "event_geometry": "LAG",
+            "direction_intended": "FOLLOW",
+            "direction_tested": "FADE",
+            "direction_consistent": True,
         },
         {
             "symbol": "BEL",
             "regime": "BULL",
-            "classification": "DIVERGENCE_SIGNAL",
+            "classification": "OPPORTUNITY_LAG",
             "action": "ENTER",
             "z_score": -1.7,
             "trade_rec": "SHORT",
             "expected_return": 0.3,
             "actual_return": -0.9,
             "oi_anomaly": False,
+            "event_geometry": "LAG",
+            "direction_intended": "FOLLOW",
+            "direction_tested": "FADE",
+            "direction_consistent": True,
         },
         {
             "symbol": "PIIND",
@@ -49,6 +57,10 @@ SAMPLE_BREAKS = {
             "expected_return": 1.52,
             "actual_return": 0.47,
             "oi_anomaly": False,
+            "event_geometry": "UNCERTAIN",
+            "direction_intended": "NEUTRAL",
+            "direction_tested": "NEUTRAL",
+            "direction_consistent": False,
         },
     ],
 }
@@ -124,7 +136,7 @@ def test_candidate_has_required_signal_fields(breaks_file: Path, monkeypatch) ->
     assert hal["short_legs"] == []
 
     # metadata
-    assert hal["_break_metadata"]["classification"] == "MOMENTUM_CONFIRM"
+    assert hal["_break_metadata"]["classification"] == "OPPORTUNITY_LAG"
     assert hal["_break_metadata"]["z_score"] == 2.3
     assert hal["_break_metadata"]["regime"] == "NEUTRAL"
     assert hal["_break_metadata"]["oi_anomaly"] is True
@@ -174,8 +186,10 @@ def test_generated_signal_carries_atr_stop(tmp_path, monkeypatch):
     breaks_file.write_text(json.dumps({
         "date": "2026-04-22", "scan_time": "2026-04-22T10:00:00+05:30",
         "breaks": [
-            {"symbol": "BHEL", "trade_rec": "LONG", "classification": "REGIME_LAG",
-             "z_score": 2.1, "expected_return": 1.5, "actual_return": 0.2},
+            {"symbol": "BHEL", "trade_rec": "LONG", "classification": "OPPORTUNITY_LAG",
+             "z_score": 2.1, "expected_return": 1.5, "actual_return": 0.2,
+             "event_geometry": "LAG", "direction_intended": "FOLLOW",
+             "direction_tested": "FADE", "direction_consistent": True},
         ],
     }))
 
@@ -200,8 +214,10 @@ def test_break_generator_calls_atr_stop_with_intraday_params(tmp_path, monkeypat
     breaks_file.write_text(json.dumps({
         "date": "2026-04-23", "scan_time": "2026-04-23T10:00:00+05:30",
         "breaks": [
-            {"symbol": "HDFCAMC", "trade_rec": "SHORT", "classification": "OPPORTUNITY",
-             "z_score": -2.3, "expected_return": 0.4, "actual_return": -1.9},
+            {"symbol": "HDFCAMC", "trade_rec": "SHORT", "classification": "OPPORTUNITY_LAG",
+             "z_score": -2.3, "expected_return": 0.4, "actual_return": -1.9,
+             "event_geometry": "LAG", "direction_intended": "FOLLOW",
+             "direction_tested": "FADE", "direction_consistent": True},
         ],
     }))
 
