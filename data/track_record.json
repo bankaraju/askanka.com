@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-04-23T15:04:24.980102+05:30",
-  "total_closed": 16,
-  "win_rate_pct": 25.0,
-  "avg_pnl_pct": 0.59,
+  "updated_at": "2026-04-23T15:19:04.712315+05:30",
+  "total_closed": 19,
+  "win_rate_pct": 21.1,
+  "avg_pnl_pct": 0.39,
   "recent": [
     {
       "signal_id": "BRK-2026-04-23-PFC",
@@ -93,6 +93,45 @@
       "days_open": 0,
       "peak_pnl_pct": 0,
       "final_pnl_pct": -0.52,
+      "close_reason": "STOPPED_OUT_ZCROSS"
+    },
+    {
+      "signal_id": "BRK-2026-04-23-NUVAMA",
+      "spread_name": "Strategy 273",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "event_headline": "Phase C break on NUVAMA: z=1.53, expected=-2.95, actual=0.59",
+      "open_date": "2026-04-23",
+      "close_date": "2026-04-23",
+      "days_open": 0,
+      "peak_pnl_pct": 0,
+      "final_pnl_pct": -0.97,
+      "close_reason": "STOPPED_OUT_ZCROSS"
+    },
+    {
+      "signal_id": "BRK-2026-04-23-YESBANK",
+      "spread_name": "Strategy 442",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "event_headline": "Phase C break on YESBANK: z=1.76, expected=-1.58, actual=0.35",
+      "open_date": "2026-04-23",
+      "close_date": "2026-04-23",
+      "days_open": 0,
+      "peak_pnl_pct": 0.15,
+      "final_pnl_pct": -0.55,
+      "close_reason": "STOPPED_OUT_ZCROSS"
+    },
+    {
+      "signal_id": "BRK-2026-04-23-ABCAPITAL",
+      "spread_name": "Strategy 173",
+      "category": "phase_c",
+      "tier": "SIGNAL",
+      "event_headline": "Phase C break on ABCAPITAL: z=1.53, expected=-1.43, actual=0.24",
+      "open_date": "2026-04-23",
+      "close_date": "2026-04-23",
+      "days_open": 0,
+      "peak_pnl_pct": 0,
+      "final_pnl_pct": -0.46,
       "close_reason": "STOPPED_OUT_ZCROSS"
     },
     {
