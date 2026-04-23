@@ -51,7 +51,12 @@ def run_walk_forward(
     for w in fold_windows:
         train_mask = (dates >= w["train_start"]) & (dates < w["train_end"])
         test_mask = (dates >= w["test_start"]) & (dates < w["test_end"])
-        if train_mask.sum() < 500 or test_mask.sum() < 30:
+        # Threshold chosen to accommodate Indian trading-day count (~250/yr)
+        # so a 2-year train window yields ~500 rows minus the 20-day feature
+        # lookback. Setting hard 500 floor caused every ticker to fail by
+        # ~5-10 rows on 2026-04-23; 400 matches the TA scorer threshold and
+        # still leaves ~1.5-1.6 years of data per fold.
+        if train_mask.sum() < 400 or test_mask.sum() < 30:
             continue
         X_train = df.loc[train_mask].drop(columns=["date", "y"], errors="ignore")
         y_train = df.loc[train_mask, "y"]
