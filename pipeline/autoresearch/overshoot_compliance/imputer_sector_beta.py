@@ -32,6 +32,11 @@ def impute(
     min_obs : minimum pre-t observation count required before imputing
     """
     gap = pd.Timestamp(gap_date).normalize()
+    # empty / non-datetime inputs cannot be imputed against
+    if ticker_returns.empty or sector_returns.empty:
+        return None
+    if not isinstance(ticker_returns.index, pd.DatetimeIndex) or not isinstance(sector_returns.index, pd.DatetimeIndex):
+        return None
     # strict pre-t: only bars dated strictly BEFORE gap
     tr = ticker_returns.loc[ticker_returns.index.normalize() < gap]
     sr = sector_returns.loc[sector_returns.index.normalize() < gap]

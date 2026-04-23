@@ -34,9 +34,11 @@ from . import (
     data_audit,
     defense_filter,
     direction_audit,
+    execution_window,
     fragility,
     gate_checklist,
     impl_risk,
+    imputer_sector_beta,
     manifest,
     metrics,
     naive_comparators,
@@ -53,6 +55,8 @@ _BREAKS = _REPO / "pipeline" / "data" / "correlation_breaks.json"
 _COST_MODEL_VERSION = "zerodha-ssf-2025-04"
 _STRATEGY_VERSION = "0.1.0"
 _HYPOTHESIS_ID = "H-2026-04-23-001"
+_EXECUTION_MODE = "MODE_A"
+_SENSITIVITY_MIN_OBS = 60
 
 
 def _build_strategy_pnl_panel(events: pd.DataFrame) -> pd.DataFrame:
@@ -76,6 +80,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--smoke", action="store_true")
+    parser.add_argument(
+        "--research-sensitivity",
+        action="store_true",
+        help="Run sector-beta imputation on missing bars and emit "
+             "metrics_grid_sensitivity.json + sensitivity_manifest.json alongside "
+             "the authoritative raw-only artifacts. Gate-checklist never reads them.",
+    )
     args = parser.parse_args(argv)
 
     out = Path(args.out_dir)
@@ -100,18 +111,22 @@ def main(argv: list[str] | None = None) -> int:
     )
     manifest.write_manifest(m, out)
 
-    # Step 2 - data audit
+    # Step 2 - data audit + per-ticker flagged-dates map (raw-bar canonicity)
     if not closes.empty:
         bdays = pd.bdate_range(closes.index.min(), closes.index.max())
     else:
         bdays = pd.DatetimeIndex([])
     per_ticker = {}
+    flagged_by_ticker: dict[str, dict] = {}
+    ticker_frames: dict[str, pd.DataFrame] = {}
     for t in tickers:
         p = _FNO_DIR / f"{t}.csv"
         if not p.exists():
             continue
         df = pd.read_csv(p, parse_dates=["Date"]).sort_values("Date").drop_duplicates("Date", keep="last").set_index("Date")
         per_ticker[t] = data_audit.audit_ticker(t, df, bdays)
+        flagged_by_ticker[t] = execution_window.build_flagged_dates(t, df, bdays)
+        ticker_frames[t] = df
     da = data_audit.aggregate(per_ticker) if per_ticker else {"classification": "INSUFFICIENT_DATA", "impaired_pct": 0.0, "total_bars": 0, "impaired_bars": 0, "per_ticker": {}}
     (out / "data_audit.json").write_text(json.dumps(da, indent=2, default=str), encoding="utf-8")
 
@@ -139,7 +154,48 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             ORB.ROLL_STD_WINDOW = old_w
 
+    # Step 4b - raw-bar canonicity gate (drops invalid trades from every window)
+    invalid_trades: list[dict] = []
+    filtered_events_by_window: dict[int, pd.DataFrame] = {}
+    for w, ev_df in events_by_window.items():
+        if ev_df.empty:
+            filtered_events_by_window[w] = ev_df
+            continue
+        valid_rows: list[int] = []
+        for idx, row in ev_df.iterrows():
+            audit = {"flagged_dates": flagged_by_ticker.get(row["ticker"], {})}
+            valid, reasons = execution_window.is_tradeable(
+                row["ticker"], row["date"], _EXECUTION_MODE, audit,
+            )
+            if valid:
+                valid_rows.append(idx)
+            elif w == 20:
+                invalid_trades.append({
+                    "ticker": row["ticker"],
+                    "date": str(pd.Timestamp(row["date"]).normalize().date()),
+                    "direction": row.get("direction"),
+                    "z": float(row.get("z", 0.0)),
+                    "mode": _EXECUTION_MODE,
+                    "reasons": reasons,
+                })
+        filtered_events_by_window[w] = ev_df.loc[valid_rows].reset_index(drop=True)
+    events_by_window = filtered_events_by_window
     events = events_by_window[20]
+
+    n_scored = int(sum(len(df) for df in events_by_window.values()))
+    rejection_rate = len(invalid_trades) / max(1, len(invalid_trades) + len(events))
+    (out / "invalid_trades.json").write_text(json.dumps({
+        "mode": _EXECUTION_MODE,
+        "n_invalid": len(invalid_trades),
+        "rejection_rate_pct": round(rejection_rate * 100.0, 3),
+        "trades": invalid_trades,
+    }, indent=2, default=str), encoding="utf-8")
+
+    m["invalid_trade_count"] = len(invalid_trades)
+    m["invalid_trade_log_path"] = "invalid_trades.json"
+    if len(events) > 0 and rejection_rate > 0.05:
+        m.setdefault("warnings", []).append("WARN_HIGH_REJECTION_RATE")
+    manifest.write_manifest(m, out)
 
     # Step 5 - per-ticker fade stats
     n_shuffles = 500 if args.smoke else 100_000
@@ -284,7 +340,91 @@ def main(argv: list[str] | None = None) -> int:
     gc_report = gate_checklist.build(checklist_inputs, hypothesis_id=_HYPOTHESIS_ID)
     gate_checklist.write(gc_report, out)
 
+    # Step 16 - sensitivity track (parallel, never read by gate_checklist)
+    if args.research_sensitivity:
+        _write_sensitivity_artifacts(
+            out, tickers, ticker_frames, per_ticker, flagged_by_ticker,
+            nifty_rets=nifty_rets, min_obs=_SENSITIVITY_MIN_OBS,
+        )
+
     return 0
+
+
+def _write_sensitivity_artifacts(
+    out: Path,
+    tickers: list[str],
+    ticker_frames: dict,
+    per_ticker_audit: dict,
+    flagged_by_ticker: dict,
+    *,
+    nifty_rets: pd.Series,
+    min_obs: int,
+) -> None:
+    """Parallel analytical-aid emission per §5 of the canonicity policy.
+
+    Invokes the sector-beta imputer for every `missing` bar in every ticker's
+    audit. The authoritative compliance path is untouched; this writes two
+    artifacts that the gate checklist MUST NOT read:
+
+    - metrics_grid_sensitivity.json: per-ticker imputation counts + proxy beta stats
+    - sensitivity_manifest.json: imputer config, policy pointer, timestamps
+    """
+    imputed_rows: list[dict] = []
+    n_imputed = 0
+    n_failed = 0
+    for t in tickers:
+        df = ticker_frames.get(t)
+        if df is None or df.empty:
+            continue
+        flagged = flagged_by_ticker.get(t, {})
+        missing_dates = [dt for dt, flags in flagged.items() if "missing" in flags]
+        if not missing_dates:
+            continue
+        close = df["Close"].astype(float)
+        t_rets = close.pct_change().dropna()
+        proxy: list[dict] = []
+        for gap in missing_dates:
+            r_sec = float(nifty_rets.loc[nifty_rets.index.normalize() == pd.Timestamp(gap).normalize()].sum()) \
+                if not nifty_rets.empty else 0.0
+            res = imputer_sector_beta.impute(
+                ticker_returns=t_rets,
+                sector_returns=nifty_rets,
+                raw_close=close,
+                gap_date=gap,
+                sector_return_at_t=r_sec,
+                min_obs=min_obs,
+            )
+            if res is None:
+                n_failed += 1
+                continue
+            n_imputed += 1
+            proxy.append({
+                "date": str(pd.Timestamp(gap).normalize().date()),
+                "P_imputed": round(res["P_imputed"], 4),
+                "beta_value": round(res["beta_value"], 6),
+                "r_sector_used": round(res["r_sector_used"], 6),
+                "source": res["source"],
+            })
+        if proxy:
+            imputed_rows.append({"ticker": t, "n_imputed": len(proxy), "samples": proxy[:5]})
+
+    (out / "metrics_grid_sensitivity.json").write_text(json.dumps({
+        "track": "sensitivity",
+        "n_imputed_bars": n_imputed,
+        "n_imputation_failures": n_failed,
+        "per_ticker": imputed_rows,
+        "note": "Sector-beta proxy. Raw compliance path (metrics_grid.json) is authoritative.",
+    }, indent=2, default=str), encoding="utf-8")
+
+    (out / "sensitivity_manifest.json").write_text(json.dumps({
+        "imputer": "sector_beta",
+        "policy_ref": "docs/superpowers/policies/2026-04-23-raw-bar-canonicity.md",
+        "min_obs": min_obs,
+        "sector_index": "NIFTY",
+        "n_imputed_bars": n_imputed,
+        "n_imputation_failures": n_failed,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }, indent=2, default=str), encoding="utf-8")
 
 
 if __name__ == "__main__":

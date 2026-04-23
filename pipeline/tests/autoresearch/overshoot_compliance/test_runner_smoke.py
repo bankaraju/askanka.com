@@ -23,6 +23,7 @@ def test_smoke_runner_produces_all_artifacts(tmp_path):
         "portfolio_gate.json",
         "direction_audit.json",
         "gate_checklist.json",
+        "invalid_trades.json",
     }
     produced = {p.name for p in out_dir.iterdir()}
     missing = expected - produced
