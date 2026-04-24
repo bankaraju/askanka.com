@@ -57,11 +57,11 @@ from pipeline.autoresearch.regime_autoresearch.null_basket_hurdle import (
     load_null_basket_hurdle,
 )
 from pipeline.autoresearch.regime_autoresearch.proposer import (
-    ProposerView, generate_proposal,
+    ProposerView, generate_proposal, log_path_for_regime,
 )
 
 PILOT_TARGET = 20  # ~20 approved NEUTRAL proposals before autonomous mode
-LOG_PATH = DATA_DIR / "proposal_log.jsonl"
+LOG_PATH = log_path_for_regime("NEUTRAL")  # v2: per-regime sharded log
 HOLDOUT_LOG_PATH = DATA_DIR / "holdout_outcomes.jsonl"
 # Proposer duplicate-suppression: how many retries on an exact-5-tuple
 # match before we log DUPLICATE_GIVEUP and exit. The LLM is given the
@@ -640,6 +640,7 @@ def _make_row(proposal: Proposal, approval_status: str,
         "pair_id": proposal.pair_id,
         "approval_status": approval_status,
         "timestamp_iso": datetime.now(timezone.utc).isoformat(),
+        "schema_version": "v2",
     }
     if result is not None:
         row["net_sharpe_mean"] = result.get("net_sharpe_in_sample")
@@ -885,16 +886,17 @@ def main(argv: list[str] | None = None) -> int:
         description="Run ONE iteration of the Mode-1 human-in-loop pilot.",
     )
     parser.add_argument("--regime", default="NEUTRAL", choices=list(REGIMES))
-    parser.add_argument("--log", type=Path, default=LOG_PATH,
-                        help="proposal_log.jsonl path (default: package data dir)")
+    parser.add_argument("--log", type=Path, default=None,
+                        help="proposal log path override (default: per-regime sharded log)")
     parser.add_argument("--auto-approve", action="store_true",
                         help="skip the input() prompt and force APPROVE "
                              "(used only for end-to-end verification)")
     args = parser.parse_args(argv)
 
+    log_path = args.log if args.log is not None else log_path_for_regime(args.regime)
     return run_one_iteration(
         regime=args.regime,
-        log_path=args.log,
+        log_path=log_path,
         auto_approve=args.auto_approve,
     )
 

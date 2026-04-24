@@ -11,9 +11,34 @@ from pathlib import Path
 from typing import Any
 
 from pipeline.autoresearch.regime_autoresearch.constants import (
-    PROPOSER_CONTEXT_WINDOW_SIZE, PROPOSER_MODEL,
+    DATA_DIR, PROPOSER_CONTEXT_WINDOW_SIZE, PROPOSER_MODEL, REGIMES,
 )
 from pipeline.autoresearch.regime_autoresearch.dsl import Proposal, validate
+
+
+_REGIME_TO_SLUG = {
+    "RISK-OFF": "risk_off",
+    "CAUTION":  "caution",
+    "NEUTRAL":  "neutral",
+    "RISK-ON":  "risk_on",
+    "EUPHORIA": "euphoria",
+}
+
+
+def log_path_for_regime(regime: str) -> Path:
+    """Return the per-regime proposal log path.
+
+    v2 shards the single v1 proposal_log.jsonl into five regime-specific
+    files to avoid file-lock contention when Mode 2 runs 5 concurrent
+    workers. v1 NEUTRAL history is preserved verbatim in
+    proposal_log_neutral.jsonl.
+    """
+    slug = _REGIME_TO_SLUG.get(regime)
+    if slug is None:
+        raise ValueError(
+            f"unknown regime {regime!r}; expected one of {REGIMES}"
+        )
+    return DATA_DIR / f"proposal_log_{slug}.jsonl"
 
 
 @dataclass
