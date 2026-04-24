@@ -39,7 +39,8 @@ _load_env_file()
 
 
 from pipeline.autoresearch.regime_autoresearch.constants import (
-    DATA_DIR, DELTA_IN_SAMPLE, MIN_EVENTS_FOR_PASS, PROPOSER_MODEL, REGIMES,
+    DATA_DIR, DELTA_IN_SAMPLE, MIN_EVENTS_FOR_PASS,
+    MIN_EVENTS_PER_FOLD_FOR_PASS, PROPOSER_MODEL, REGIMES,
     REPO_ROOT, TRAIN_VAL_END, TRAIN_VAL_START,
 )
 from pipeline.autoresearch.regime_autoresearch.dsl import (
@@ -509,19 +510,34 @@ def _print_proposal(p: Proposal) -> None:
 
 
 def _compute_verdict(n_events: int | None, net_sharpe: float | None,
-                     hurdle_sharpe: float | None) -> dict:
+                     hurdle_sharpe: float | None,
+                     fold_n_events: list[int] | None = None,
+                     insufficient_for_folds: bool = False) -> dict:
     """Compute the in-sample verdict booleans.
 
     Returns a dict with:
       - passes_delta_in: net_sharpe - hurdle >= DELTA_IN_SAMPLE
       - passes_min_events: n_events >= MIN_EVENTS_FOR_PASS
-      - verdict_pass: both of the above True
+      - passes_all_folds_populated: every fold had at least
+        MIN_EVENTS_PER_FOLD_FOR_PASS events AND the runner did not fall
+        back to a single-pass evaluation
+      - verdict_pass: all three of the above True
       - verdict_reason: human-readable string on FAIL (empty on PASS)
 
     Any None input propagates to a safe False. The `n_events=0` failure
-    mode motivating this gate (observed 2026-04-24 pilot on
+    mode motivating the min_events gate (observed 2026-04-24 pilot on
     `trust_score top_20` which passed delta_in with 0 trades) cannot
     produce verdict_pass=True because min_events=0 < 20.
+
+    The all_folds_populated gate (Task #198) catches a separate failure
+    mode: features with a 252-bar trailing requirement silently empty
+    fold 0 when the panel only goes back 3 years before TRAIN_VAL_START.
+    The empty fold averages in as 0.0, but the non-empty folds can still
+    pull the mean above hurdle+delta_in — falsely passing. We now
+    require every fold to carry at least MIN_EVENTS_PER_FOLD_FOR_PASS
+    events. insufficient_for_folds (single-pass fallback rows) auto-fail
+    because the rule's in-sample window is too short for a trustworthy
+    cross-time Sharpe.
     """
     passes_delta_in = (
         net_sharpe is not None
@@ -531,7 +547,15 @@ def _compute_verdict(n_events: int | None, net_sharpe: float | None,
     passes_min_events = (
         n_events is not None and n_events >= MIN_EVENTS_FOR_PASS
     )
-    verdict_pass = bool(passes_delta_in and passes_min_events)
+    passes_all_folds_populated = (
+        not insufficient_for_folds
+        and fold_n_events is not None
+        and len(fold_n_events) > 0
+        and all(n >= MIN_EVENTS_PER_FOLD_FOR_PASS for n in fold_n_events)
+    )
+    verdict_pass = bool(
+        passes_delta_in and passes_min_events and passes_all_folds_populated
+    )
     reason = ""
     if not verdict_pass:
         reasons = []
@@ -541,10 +565,29 @@ def _compute_verdict(n_events: int | None, net_sharpe: float | None,
             )
         if not passes_delta_in:
             reasons.append("delta_in gap below hurdle")
+        if not passes_all_folds_populated:
+            if insufficient_for_folds:
+                reasons.append(
+                    "single-pass fallback (insufficient events for K folds)"
+                )
+            elif fold_n_events is None or len(fold_n_events) == 0:
+                reasons.append("no fold breakdown available")
+            else:
+                sparse = [
+                    (i, n) for i, n in enumerate(fold_n_events)
+                    if n < MIN_EVENTS_PER_FOLD_FOR_PASS
+                ]
+                parts = ", ".join(
+                    f"fold {i} has {n} events" for i, n in sparse
+                )
+                reasons.append(
+                    f"{parts} (min required: {MIN_EVENTS_PER_FOLD_FOR_PASS})"
+                )
         reason = "; ".join(reasons)
     return {
         "passes_delta_in": passes_delta_in,
         "passes_min_events": passes_min_events,
+        "passes_all_folds_populated": passes_all_folds_populated,
         "verdict_pass": verdict_pass,
         "verdict_reason": reason,
     }
@@ -579,12 +622,17 @@ def _make_row(proposal: Proposal, approval_status: str,
         row["insufficient_for_folds"] = result.get("insufficient_for_folds")
         verdict = _compute_verdict(
             row["n_events"], row["net_sharpe_mean"], hurdle_sharpe,
+            fold_n_events=row.get("fold_n_events"),
+            insufficient_for_folds=bool(row.get("insufficient_for_folds")),
         )
-        # passes_delta_in preserved for backward compat; new
-        # passes_min_events gate enforces the MIN_EVENTS_FOR_PASS floor
-        # so `n_events=0` can no longer produce a spurious PASS verdict.
+        # passes_delta_in preserved for backward compat; the
+        # passes_min_events gate enforces MIN_EVENTS_FOR_PASS so
+        # `n_events=0` cannot produce a spurious PASS verdict. The
+        # passes_all_folds_populated gate (Task #198) blocks the
+        # fold-0-empty failure mode on 252-bar features.
         row["passes_delta_in"] = verdict["passes_delta_in"]
         row["passes_min_events"] = verdict["passes_min_events"]
+        row["passes_all_folds_populated"] = verdict["passes_all_folds_populated"]
     return row
 
 
@@ -721,9 +769,13 @@ def run_one_iteration(regime: str, log_path: Path,
     )
     passes_delta_in = row["passes_delta_in"]
     passes_min_events = row["passes_min_events"]
-    verdict_pass = bool(passes_delta_in and passes_min_events)
+    passes_all_folds_populated = row.get("passes_all_folds_populated", False)
+    verdict_pass = bool(
+        passes_delta_in and passes_min_events and passes_all_folds_populated
+    )
     delta_mark = "OK" if passes_delta_in else "FAIL"
     events_mark = "OK" if passes_min_events else "FAIL"
+    folds_mark = "OK" if passes_all_folds_populated else "FAIL"
     print("\n--- IN-SAMPLE RESULT ---")
     print(f"  proposal_id     : {row['proposal_id']}")
     fold_n = row.get("fold_n_events")
@@ -760,6 +812,34 @@ def run_one_iteration(regime: str, log_path: Path,
     print(
         f"  min_events gate : {row['n_events']} (target: {MIN_EVENTS_FOR_PASS}) {events_mark}"
     )
+    # all_folds_populated gate (Task #198) — require every fold to have
+    # at least MIN_EVENTS_PER_FOLD_FOR_PASS events. Prints a specific
+    # diagnostic when the gate fails so the reader can tell which fold
+    # was starved.
+    if passes_all_folds_populated:
+        print(
+            f"  all_folds gate  : OK (min required per fold: "
+            f"{MIN_EVENTS_PER_FOLD_FOR_PASS})"
+        )
+    else:
+        if row.get("insufficient_for_folds"):
+            detail = (
+                "single-pass fallback (insufficient events for K folds)"
+            )
+        elif not fold_n:
+            detail = "no fold breakdown available"
+        else:
+            sparse = [
+                (i, n) for i, n in enumerate(fold_n)
+                if n < MIN_EVENTS_PER_FOLD_FOR_PASS
+            ]
+            detail = ", ".join(
+                f"fold {i} has {n} events" for i, n in sparse
+            )
+        print(
+            f"  all_folds gate  : FAIL — {detail} "
+            f"(min required: {MIN_EVENTS_PER_FOLD_FOR_PASS})"
+        )
     verdict = "PASS" if verdict_pass else "FAIL"
     print(f"  verdict         : {verdict}")
     print(f"\n[pilot] APPROVED — logged to {log_path}")

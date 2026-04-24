@@ -65,6 +65,13 @@ def patched_env(monkeypatch, tmp_path):
             "n_events_in_sample": 48,
             "gap_vs_incumbent": 0.42 - incumbent_sharpe,
             "incumbent_sharpe": incumbent_sharpe,
+            # Task #191 walk-forward fields — every fold populated so the
+            # Task #198 all_folds_populated gate reports OK in tests that
+            # exercise the happy path.
+            "fold_sharpes": [0.40, 0.44, 0.42, 0.43],
+            "fold_n_events": [12, 12, 12, 12],
+            "sharpe_oos_std": 0.02,
+            "insufficient_for_folds": False,
         }
 
     monkeypatch.setattr(proposer_mod, "generate_proposal", fake_generate)
@@ -441,8 +448,10 @@ def test_verdict_blocks_spurious_pass_on_zero_events():
     # Exact pilot scenario: hurdle=-0.6, net_sharpe=0.0, n_events=0.
     # 0.0 - (-0.6) = 0.6 >= 0.15 → delta_in holds.
     # But n_events=0 < MIN_EVENTS_FOR_PASS (20) → verdict must be FAIL.
-    v = run_pilot._compute_verdict(n_events=0, net_sharpe=0.0,
-                                    hurdle_sharpe=-0.6)
+    v = run_pilot._compute_verdict(
+        n_events=0, net_sharpe=0.0, hurdle_sharpe=-0.6,
+        fold_n_events=[0, 0, 0, 0], insufficient_for_folds=False,
+    )
     assert v["passes_delta_in"] is True, (
         "preserved backward-compat boolean should still fire "
         "when the gap alone is above the hurdle"
@@ -454,11 +463,88 @@ def test_verdict_blocks_spurious_pass_on_zero_events():
     )
 
     # Also verify the happy path: 32 events, gap above threshold → PASS.
-    v2 = run_pilot._compute_verdict(n_events=32, net_sharpe=1.131,
-                                     hurdle_sharpe=-0.586)
+    # All four folds populated so the new all_folds_populated gate is OK.
+    v2 = run_pilot._compute_verdict(
+        n_events=32, net_sharpe=1.131, hurdle_sharpe=-0.586,
+        fold_n_events=[8, 8, 8, 8], insufficient_for_folds=False,
+    )
     assert v2["passes_delta_in"] is True
     assert v2["passes_min_events"] is True
+    assert v2["passes_all_folds_populated"] is True
     assert v2["verdict_pass"] is True
+
+
+def test_verdict_blocks_pass_when_fold_0_empty():
+    """Task #198: fold 0 has 0 events because the panel only goes back
+    3 years before TRAIN_VAL_START and a 252-bar feature emptied it out.
+    Folds 1..3 are populated and positive, and the mean Sharpe clears
+    hurdle + delta_in. The all_folds_populated gate must still FAIL the
+    verdict because an averaged-in zero fold is not a real Sharpe
+    estimate.
+    """
+    # Mirrors the pilot winner `days_from_52w_high bottom_10` shape.
+    # fold_sharpes=[0.0, 1.20, 0.91, 0.60] → mean ≈ 0.68; hurdle=-0.586;
+    # gap = 0.68 - (-0.586) ≈ 1.26 >> 0.15.
+    v = run_pilot._compute_verdict(
+        n_events=52, net_sharpe=0.6775, hurdle_sharpe=-0.586,
+        fold_n_events=[0, 18, 20, 14], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["passes_min_events"] is True
+    assert v["passes_all_folds_populated"] is False, (
+        "fold 0 has 0 events — all_folds_populated must FAIL"
+    )
+    assert v["verdict_pass"] is False
+    assert "fold 0 has 0 events" in v["verdict_reason"]
+
+
+def test_verdict_blocks_pass_when_any_fold_below_min_events():
+    """Even a non-zero fold count below MIN_EVENTS_PER_FOLD_FOR_PASS (=5)
+    must block the verdict. 3 events in fold 0 is not enough to give a
+    meaningful Sharpe estimate.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=55, net_sharpe=0.80, hurdle_sharpe=-0.50,
+        fold_n_events=[3, 18, 20, 14], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["passes_min_events"] is True
+    assert v["passes_all_folds_populated"] is False
+    assert v["verdict_pass"] is False
+    assert "fold 0 has 3 events" in v["verdict_reason"]
+
+
+def test_verdict_passes_when_all_folds_populated():
+    """Happy path: all four folds meet MIN_EVENTS_PER_FOLD_FOR_PASS, the
+    delta_in gap clears, n_events clears the min floor → verdict PASS.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=80, net_sharpe=0.70, hurdle_sharpe=-0.30,
+        fold_n_events=[20, 20, 20, 20], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["passes_min_events"] is True
+    assert v["passes_all_folds_populated"] is True
+    assert v["verdict_pass"] is True
+    assert v["verdict_reason"] == ""
+
+
+def test_verdict_blocks_pass_when_insufficient_for_folds():
+    """Single-pass fallback rows (insufficient_for_folds=True) must auto-
+    fail the all_folds_populated gate regardless of the other two gates.
+    A rule whose in-sample window is too short for K-fold CV is not
+    eligible for PASS — we would rather fail it than pass with shaky
+    statistics.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=25, net_sharpe=0.50, hurdle_sharpe=-0.40,
+        fold_n_events=None, insufficient_for_folds=True,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["passes_min_events"] is True
+    assert v["passes_all_folds_populated"] is False
+    assert v["verdict_pass"] is False
+    assert "single-pass fallback" in v["verdict_reason"]
 
 
 def _dup_proposal(feature="ret_5d", construction_type="long_short_basket",

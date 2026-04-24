@@ -33,6 +33,11 @@ INCUMBENT_SCARCITY_MIN = 3   # < this -> scarcity fallback to regime-cond buy-an
 # 2026-04-24 pilot on `trust_score top_20`).
 MIN_EVENTS_FOR_PASS = 20
 
+# Minimum events required in EACH fold for the verdict to be valid.
+# If any fold has fewer than this, the rule is disqualified regardless of
+# delta_in outcome. Prevents silent fold-0-empty passes on 252-bar features.
+MIN_EVENTS_PER_FOLD_FOR_PASS = 5
+
 # Proposer budget
 PROPOSALS_PER_REGIME_HARD_CAP = 500
 CONSECUTIVE_NO_IMPROVE_SOFT_CAP = 50
