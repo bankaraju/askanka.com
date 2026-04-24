@@ -79,9 +79,15 @@ def validate(p: Proposal) -> bool:
 
 
 def enumerate_family_size(include_pairs: bool = False, n_pairs: int = 0) -> int:
-    """Cardinality of the grammar for multiplicity accounting."""
-    non_pair = 3 * len(FEATURES) * len(THRESHOLD_OPS) * 8 * len(HOLD_HORIZONS) * len(REGIMES)
+    """Cardinality of the grammar for multiplicity accounting.
+
+    non_pair = 3 non-pair constructions × 20 features × 4 ops × 8 thresholds × 3 holds × 5 regimes = 28,800
+    pair (if include_pairs) = 1 × 20 × 4 × 8 × 3 × 5 × n_pairs
+    """
+    non_pair = 3 * len(FEATURES) * len(THRESHOLD_OPS) * len(ABSOLUTE_THRESHOLD_GRID) * len(HOLD_HORIZONS) * len(REGIMES)
     if not include_pairs:
         return non_pair
-    pair = 1 * len(FEATURES) * len(THRESHOLD_OPS) * 8 * len(HOLD_HORIZONS) * len(REGIMES) * max(n_pairs, 1)
+    if n_pairs < 1:
+        raise ValueError(f"include_pairs=True requires n_pairs >= 1; got {n_pairs}")
+    pair = len(FEATURES) * len(THRESHOLD_OPS) * len(ABSOLUTE_THRESHOLD_GRID) * len(HOLD_HORIZONS) * len(REGIMES) * n_pairs
     return non_pair + pair

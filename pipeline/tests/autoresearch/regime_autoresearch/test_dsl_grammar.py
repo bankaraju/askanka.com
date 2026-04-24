@@ -53,3 +53,13 @@ def test_validate_rejects_off_grid_threshold():
     p = Proposal("single_long", "ret_20d", ">", 0.05, 5, "NEUTRAL", None)
     with pytest.raises(ValueError, match="threshold_value"):
         validate(p)
+
+
+def test_enumerate_family_size_pair_zero_raises():
+    with pytest.raises(ValueError, match="n_pairs >= 1"):
+        enumerate_family_size(include_pairs=True, n_pairs=0)
+
+
+def test_enumerate_family_size_pair_positive():
+    # 20 × 4 × 8 × 3 × 5 × n = 9600 × n; plus non_pair 28800
+    assert enumerate_family_size(include_pairs=True, n_pairs=111) == 28_800 + (20 * 4 * 8 * 3 * 5 * 111)

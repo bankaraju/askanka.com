@@ -123,15 +123,17 @@ def beta_nifty_60d(panel, ticker, t):
 
 def days_from_52w_high(panel, ticker, t):
     s = _trailing(panel, ticker, t, 252)
-    if len(s) == 0: return np.nan
+    if len(s) < 252: return np.nan
     idx_max = s.values.argmax()
     return float(len(s) - 1 - idx_max)
 
 
 def dist_from_52w_high_pct(panel, ticker, t):
     s = _trailing(panel, ticker, t, 252)
-    if len(s) == 0 or s.max() == 0: return np.nan
-    return float((s.iloc[-1] - s.max()) / s.max())
+    if len(s) < 252: return np.nan
+    peak = s.max()
+    if peak == 0: return np.nan
+    return float((s.iloc[-1] - peak) / peak)
 
 
 def beta_vix_60d(panel, ticker, t):
