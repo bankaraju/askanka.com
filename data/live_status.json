@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T14:18:34.325273+05:30",
+  "updated_at": "2026-04-24T14:33:40.819520+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -12,40 +12,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4256.7,
-          "pnl_pct": -0.66
+          "current": 4255.6,
+          "pnl_pct": -0.68
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 442.15,
-          "pnl_pct": -1.71
+          "current": 442.4,
+          "pnl_pct": -1.66
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1395.9,
-          "pnl_pct": 1.58
+          "current": 1393.0,
+          "pnl_pct": 1.37
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2395.7,
-          "pnl_pct": 6.85
+          "current": 2396.9,
+          "pnl_pct": 6.81
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1154.1,
-          "pnl_pct": 12.71
+          "current": 1156.2,
+          "pnl_pct": 12.55
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 198.67,
-          "pnl_pct": 6.72
+          "current": 198.85,
+          "pnl_pct": 6.63
         }
       ],
       "spread_pnl_pct": 8.2,
@@ -65,11 +65,23 @@
           "opus_side": null,
           "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
         },
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
+          "opus_side": null,
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        },
         "BEL": {
           "trust_grade": "C",
           "trust_score": 55.0,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         },
         "INFY": {
           "trust_grade": "F",
@@ -82,18 +94,6 @@
           "trust_score": 69.5,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
-        },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
-          "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         }
       },
       "regime_rank": {
@@ -189,8 +189,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4166.6,
-          "pnl_pct": 4.33
+          "current": 4180.5,
+          "pnl_pct": 4.01
         }
       ],
       "spread_pnl_pct": 4.27,
@@ -239,8 +239,8 @@
         {
           "ticker": "LAURUSLABS",
           "entry": 1129.2,
-          "current": 1123.05,
-          "pnl_pct": 0.54
+          "current": 1124.8,
+          "pnl_pct": 0.39
         }
       ],
       "spread_pnl_pct": 0.61,
@@ -293,7 +293,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -2.74,
-        "actual_return": -0.5,
+        "actual_return": -0.34,
         "days_in_regime": 1
       }
     },
@@ -309,8 +309,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4233.5,
-          "current": 4166.6,
-          "pnl_pct": 1.58
+          "current": 4180.5,
+          "pnl_pct": 1.25
         }
       ],
       "spread_pnl_pct": 1.52,
@@ -379,8 +379,8 @@
         {
           "ticker": "DIVISLAB",
           "entry": 6408.5,
-          "current": 6373.5,
-          "pnl_pct": 0.55
+          "current": 6372.5,
+          "pnl_pct": 0.56
         }
       ],
       "spread_pnl_pct": 0.58,
