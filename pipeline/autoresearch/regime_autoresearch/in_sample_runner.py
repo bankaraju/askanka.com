@@ -26,31 +26,54 @@ def _backtest_returns_stub(p: Proposal, panel: pd.DataFrame) -> pd.Series:
 
 
 def _net_sharpe(event_rets_pct: pd.Series, level: str = "S1",
-                 periods_per_year: int = 252) -> float:
-    """Net Sharpe after applying the slippage_grid level."""
+                 hold_horizon: int = 1) -> float:
+    """Net Sharpe after applying the slippage_grid level, annualized by
+    hold_horizon.
+
+    A 5-day hold produces ~sqrt(252/5) × per-event-Sharpe, not sqrt(252).
+    For the Task 2 stub (all returns = 0) this has no effect; matters when
+    Task 8's compiler swaps in real returns.
+    """
     if event_rets_pct.empty:
         return 0.0
+    if hold_horizon < 1:
+        raise ValueError(f"hold_horizon must be >= 1; got {hold_horizon}")
     ledger = pd.DataFrame({"trade_ret_pct": event_rets_pct.values,
                             "ticker": "NA", "direction": 1})
     net = apply_level(ledger, level)["net_ret_pct"].astype(float)
     if net.std() == 0:
         return 0.0
+    periods_per_year = 252 / hold_horizon
     return float(net.mean() / net.std() * np.sqrt(periods_per_year))
 
 
 def run_in_sample(p: Proposal, panel: pd.DataFrame, log_path: Path,
                   incumbent_sharpe: float) -> dict[str, Any]:
-    """Run one proposal end-to-end in-sample (v1 uses plumbing stub)."""
+    """Run one proposal end-to-end in-sample and persist the row.
+
+    The result dict is appended to log_path as a single JSONL row before being
+    returned. Orchestrators that want the result without persistence should call
+    _backtest_returns_stub / _net_sharpe directly.
+    """
     event_rets = _backtest_returns_stub(p, panel)
-    net_sharpe = _net_sharpe(event_rets, "S1")
+    net_sharpe = _net_sharpe(event_rets, "S1", hold_horizon=p.hold_horizon)
     gap = net_sharpe - incumbent_sharpe
-    return {
+    result = {
         "net_sharpe_in_sample": round(net_sharpe, 4),
         "n_events_in_sample": int(len(event_rets)),
         "transaction_cost_bps": int(LEVELS["S1"] * 100),
         "incumbent_sharpe": round(incumbent_sharpe, 4),
         "gap_vs_incumbent": round(gap, 4),
+        "regime": p.regime,
+        "feature": p.feature,
+        "threshold_op": p.threshold_op,
+        "threshold_value": p.threshold_value,
+        "hold_horizon": p.hold_horizon,
+        "construction_type": p.construction_type,
+        "pair_id": p.pair_id,
     }
+    append_proposal_log(log_path, result)
+    return result
 
 
 def append_proposal_log(log_path: Path, entry: dict) -> None:
