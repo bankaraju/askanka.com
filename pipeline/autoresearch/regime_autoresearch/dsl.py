@@ -40,27 +40,41 @@ class Proposal:
 
 
 def validate(p: Proposal) -> bool:
-    """True if proposal fits the grammar. Raises ValueError with reason otherwise."""
+    """True if proposal fits the grammar. Raises ValueError with reason otherwise.
+
+    The grid IS the grammar: threshold_value MUST be a member of the enumerated
+    grid (ABSOLUTE_THRESHOLD_GRID or K_GRID). This is a hard constraint, not a
+    hint — the entire purpose of the DSL is to have a countable family size
+    (28,800 non-pair points) so BH-FDR q=0.1 can apply the correct multiplicity
+    correction. If validate() accepts off-grid values, the space is infinite
+    and the false-discovery-rate math is wrong.
+    """
     if p.construction_type not in CONSTRUCTION_TYPES:
         raise ValueError(f"unknown construction_type: {p.construction_type}")
     if p.feature not in FEATURES:
         raise ValueError(f"unknown feature: {p.feature}")
     if p.threshold_op not in THRESHOLD_OPS:
         raise ValueError(f"unknown threshold_op: {p.threshold_op}")
-    if p.hold_horizon not in HOLD_HORIZONS:
-        raise ValueError(f"hold_horizon must be one of {HOLD_HORIZONS}")
     if p.regime not in REGIMES:
         raise ValueError(f"regime must be one of {REGIMES}")
+    if p.hold_horizon not in HOLD_HORIZONS:
+        raise ValueError(f"hold_horizon must be one of {HOLD_HORIZONS}")
     if p.construction_type == "pair" and not p.pair_id:
         raise ValueError("pair construction requires pair_id")
     if p.construction_type != "pair" and p.pair_id is not None:
         raise ValueError("pair_id only valid when construction_type == 'pair'")
-    # Threshold grids (ABSOLUTE_THRESHOLD_GRID, K_GRID) are enumeration aids for
-    # the proposer and the family-size cardinality — `validate` accepts any
-    # numeric threshold since the proposer may interpolate between grid points.
+    # Strict grid membership — the grid IS the grammar.
     if p.threshold_op in ("top_k", "bottom_k"):
-        if not isinstance(p.threshold_value, (int, float)) or p.threshold_value <= 0:
-            raise ValueError(f"k-op requires positive threshold_value (grid hint: {K_GRID})")
+        if p.threshold_value not in K_GRID:
+            raise ValueError(
+                f"threshold_value {p.threshold_value} not in K_GRID {K_GRID}"
+            )
+    else:
+        if p.threshold_value not in ABSOLUTE_THRESHOLD_GRID:
+            raise ValueError(
+                f"threshold_value {p.threshold_value} not in "
+                f"ABSOLUTE_THRESHOLD_GRID {ABSOLUTE_THRESHOLD_GRID}"
+            )
     return True
 
 

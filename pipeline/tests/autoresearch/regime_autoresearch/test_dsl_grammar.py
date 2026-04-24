@@ -23,7 +23,7 @@ def test_validate_accepts_good_proposal():
         construction_type="single_long",
         feature="ret_20d",
         threshold_op=">",
-        threshold_value=0.05,
+        threshold_value=0.5,
         hold_horizon=5,
         regime="NEUTRAL",
         pair_id=None,
@@ -44,6 +44,12 @@ def test_validate_rejects_pair_without_pair_id():
 
 
 def test_validate_rejects_non_pair_with_pair_id():
-    p = Proposal("single_long", "ret_20d", ">", 0.05, 5, "NEUTRAL", "RELIANCE_INFY")
+    p = Proposal("single_long", "ret_20d", ">", 0.5, 5, "NEUTRAL", "RELIANCE_INFY")
     with pytest.raises(ValueError, match="pair_id only valid when construction_type == 'pair'"):
+        validate(p)
+
+
+def test_validate_rejects_off_grid_threshold():
+    p = Proposal("single_long", "ret_20d", ">", 0.05, 5, "NEUTRAL", None)
+    with pytest.raises(ValueError, match="threshold_value"):
         validate(p)
