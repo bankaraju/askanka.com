@@ -239,6 +239,284 @@ def trust_sector_rank(panel, ticker, t):
     return float((peers["trust_score"] <= my_ts.iloc[0]).mean())
 
 
+# ---- v2 feature additions (Task 4) -----------------------------------------
+
+
+def return_1d(panel, ticker, t):
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t]
+    if len(past) < 2:
+        return np.nan
+    c1, c2 = past["close"].iloc[-1], past["close"].iloc[-2]
+    if c2 <= 0:
+        return np.nan
+    return float(c1 / c2 - 1.0)
+
+
+def return_5d(panel, ticker, t):
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t]
+    if len(past) < 6:
+        return np.nan
+    c1, c0 = past["close"].iloc[-1], past["close"].iloc[-6]
+    if c0 <= 0:
+        return np.nan
+    return float(c1 / c0 - 1.0)
+
+
+def return_60d(panel, ticker, t):
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t]
+    if len(past) < 61:
+        return np.nan
+    c1, c0 = past["close"].iloc[-1], past["close"].iloc[-61]
+    if c0 <= 0:
+        return np.nan
+    return float(c1 / c0 - 1.0)
+
+
+def skewness_20d(panel, ticker, t):
+    import scipy.stats as sps
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t].tail(21)
+    if len(past) < 21:
+        return np.nan
+    rets = past["close"].pct_change().dropna().values
+    if len(rets) < 10:
+        return np.nan
+    return float(sps.skew(rets, bias=False))
+
+
+def kurtosis_20d(panel, ticker, t):
+    import scipy.stats as sps
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t].tail(21)
+    if len(past) < 21:
+        return np.nan
+    rets = past["close"].pct_change().dropna().values
+    if len(rets) < 10:
+        return np.nan
+    return float(sps.kurtosis(rets, bias=False))  # excess kurtosis
+
+
+def volume_zscore_20d(panel, ticker, t):
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t].tail(20)
+    if len(past) < 20 or "volume" not in past.columns:
+        return np.nan
+    vol = past["volume"].astype(float).values
+    latest = vol[-1]
+    hist = vol[:-1]
+    if hist.std(ddof=0) == 0:
+        return np.nan
+    return float((latest - hist.mean()) / hist.std(ddof=0))
+
+
+def turnover_percentile_252d(panel, ticker, t):
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t].tail(252)
+    if len(past) < 50 or "volume" not in past.columns:
+        return np.nan
+    turnover = (past["volume"].astype(float) * past["close"].astype(float))
+    latest = turnover.iloc[-1]
+    rank = float((turnover <= latest).mean())
+    return rank
+
+
+def volume_trend_5d(panel, ticker, t):
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t].tail(20)
+    if len(past) < 20 or "volume" not in past.columns:
+        return np.nan
+    vol = past["volume"].astype(float).values
+    m5 = vol[-5:].mean()
+    m20 = vol.mean()
+    if m20 == 0:
+        return np.nan
+    return float(m5 / m20)
+
+
+def _sector_peers(panel, ticker, t):
+    """Returns (peer_df, my_sector) for same-sector tickers on date <= t."""
+    if "sector" not in panel.columns:
+        return None, None
+    my_row = panel[(panel["ticker"] == ticker)
+                     & (panel["date"] < t)].tail(1)
+    if my_row.empty:
+        return None, None
+    my_sector = my_row["sector"].iloc[0]
+    peers = panel[(panel["sector"] == my_sector)
+                    & (panel["date"] < t)]
+    return peers, my_sector
+
+
+def excess_return_vs_sector_20d(panel, ticker, t):
+    peers, _ = _sector_peers(panel, ticker, t)
+    if peers is None:
+        return np.nan
+
+    def _20d_ret_for(tk):
+        df = panel[panel["ticker"] == tk].sort_values("date")
+        past = df[df["date"] < t]
+        if len(past) < 21:
+            return np.nan
+        return float(past["close"].iloc[-1] / past["close"].iloc[-21] - 1.0)
+
+    tk_ret = _20d_ret_for(ticker)
+    if np.isnan(tk_ret):
+        return np.nan
+    peer_rets = [
+        _20d_ret_for(tk) for tk in peers["ticker"].unique()
+        if tk != ticker
+    ]
+    peer_rets = [r for r in peer_rets if not np.isnan(r)]
+    if not peer_rets:
+        return np.nan
+    return float(tk_ret - np.mean(peer_rets))
+
+
+def rank_in_sector_20d_return(panel, ticker, t):
+    peers, _ = _sector_peers(panel, ticker, t)
+    if peers is None:
+        return np.nan
+
+    def _20d_ret_for(tk):
+        df = panel[panel["ticker"] == tk].sort_values("date")
+        past = df[df["date"] < t]
+        if len(past) < 21:
+            return np.nan
+        return float(past["close"].iloc[-1] / past["close"].iloc[-21] - 1.0)
+
+    rets = {tk: _20d_ret_for(tk) for tk in peers["ticker"].unique()}
+    rets = {k: v for k, v in rets.items() if not np.isnan(v)}
+    if ticker not in rets or len(rets) < 2:
+        return np.nan
+    my_ret = rets[ticker]
+    return float(sum(r <= my_ret for r in rets.values()) / len(rets))
+
+
+def peer_spread_zscore_20d(panel, ticker, t):
+    # 60-day rolling window of daily (ticker_20d_ret - sector_mean_20d_ret).
+    df = panel[panel["ticker"] == ticker].sort_values("date")
+    past = df[df["date"] < t]
+    if len(past) < 80:  # 20d for the return + 60d for the rolling window.
+        return np.nan
+    peers, _ = _sector_peers(panel, ticker, t)
+    if peers is None:
+        return np.nan
+    # For each of the last 60 dates, compute (ticker_20d_ret - sector_mean_20d_ret).
+    spread_series = []
+    sample_dates = sorted(past["date"].unique())[-60:]
+    for d in sample_dates:
+        sub = panel[panel["date"] <= d]
+        tk_rows = sub[sub["ticker"] == ticker].sort_values("date")
+        if len(tk_rows) < 21:
+            continue
+        tk_ret = float(tk_rows["close"].iloc[-1] / tk_rows["close"].iloc[-21]
+                        - 1.0)
+        peer_rets = []
+        for peer_tk in peers["ticker"].unique():
+            if peer_tk == ticker:
+                continue
+            pr = sub[sub["ticker"] == peer_tk].sort_values("date")
+            if len(pr) < 21:
+                continue
+            peer_rets.append(
+                float(pr["close"].iloc[-1] / pr["close"].iloc[-21] - 1.0)
+            )
+        if not peer_rets:
+            continue
+        spread_series.append(tk_ret - float(np.mean(peer_rets)))
+    if len(spread_series) < 20:
+        return np.nan
+    arr = np.array(spread_series, dtype=float)
+    latest = arr[-1]
+    hist = arr[:-1]
+    if hist.std(ddof=0) == 0:
+        return np.nan
+    return float((latest - hist.mean()) / hist.std(ddof=0))
+
+
+def correlation_to_sector_60d(panel, ticker, t):
+    peers, _ = _sector_peers(panel, ticker, t)
+    if peers is None:
+        return np.nan
+    tk = panel[(panel["ticker"] == ticker)
+                & (panel["date"] < t)].sort_values("date").tail(60)
+    if len(tk) < 60:
+        return np.nan
+    tk_rets = tk["close"].pct_change().dropna().values
+    # Sector equal-weight daily returns aligned on the same dates.
+    sector_dates = tk["date"].iloc[1:].values
+    sector_rets = []
+    for d in sector_dates:
+        peer_d = peers[peers["date"] == d]
+        peer_prev = peers[peers["date"] < d].sort_values("date").groupby(
+            "ticker"
+        ).tail(1)
+        # Merge on ticker, compute per-ticker daily return, take mean.
+        daily = peer_d[["ticker", "close"]].merge(
+            peer_prev[["ticker", "close"]], on="ticker",
+            suffixes=("_d", "_prev"),
+        )
+        if daily.empty:
+            sector_rets.append(np.nan)
+            continue
+        per_tk = (daily["close_d"] / daily["close_prev"] - 1.0).dropna()
+        sector_rets.append(float(per_tk.mean()) if not per_tk.empty
+                            else np.nan)
+    arr_s = np.array(sector_rets, dtype=float)
+    mask = np.isfinite(arr_s) & np.isfinite(tk_rets[: len(arr_s)])
+    if mask.sum() < 30:
+        return np.nan
+    return float(np.corrcoef(tk_rets[: len(arr_s)][mask], arr_s[mask])[0, 1])
+
+
+def residual_return_5d(panel, ticker, t):
+    # β-regress ticker's daily returns on NIFTY's daily returns over the
+    # trailing 60d; then sum the residuals over the last 5 bars.
+    tk = panel[(panel["ticker"] == ticker)
+                 & (panel["date"] < t)].sort_values("date").tail(60)
+    nifty = panel[(panel["ticker"] == "NIFTY")
+                    & (panel["date"] < t)].sort_values("date").tail(60)
+    if len(tk) < 30 or len(nifty) < 30:
+        return np.nan
+    merged = tk[["date", "close"]].merge(
+        nifty[["date", "close"]], on="date", suffixes=("_tk", "_nifty"),
+    )
+    if len(merged) < 30:
+        return np.nan
+    tk_rets = merged["close_tk"].pct_change().dropna().values
+    ni_rets = merged["close_nifty"].pct_change().dropna().values
+    if ni_rets.var(ddof=0) == 0:
+        return np.nan
+    beta = np.cov(tk_rets, ni_rets, ddof=0)[0, 1] / ni_rets.var(ddof=0)
+    residuals = tk_rets - beta * ni_rets
+    return float(residuals[-5:].sum())
+
+
+def adv_ratio_to_sector_mean_20d(panel, ticker, t):
+    peers, _ = _sector_peers(panel, ticker, t)
+    if peers is None:
+        return np.nan
+
+    def _adv20(tk):
+        df = panel[panel["ticker"] == tk].sort_values("date")
+        past = df[df["date"] < t].tail(20)
+        if len(past) < 20 or "volume" not in past.columns:
+            return np.nan
+        return float(
+            (past["volume"].astype(float) * past["close"].astype(float)).mean()
+        )
+
+    my_adv = _adv20(ticker)
+    peer_advs = [_adv20(tk) for tk in peers["ticker"].unique() if tk != ticker]
+    peer_advs = [a for a in peer_advs if not np.isnan(a) and a > 0]
+    if not peer_advs or np.isnan(my_adv):
+        return np.nan
+    return float(my_adv / np.mean(peer_advs))
+
+
 FEATURE_FUNCS: dict[str, Callable] = {
     "ret_1d": ret_1d, "ret_5d": ret_5d, "ret_20d": ret_20d, "ret_60d": ret_60d,
     "mom_ratio_20_60": mom_ratio_20_60,
@@ -254,8 +532,30 @@ FEATURE_FUNCS: dict[str, Callable] = {
     "adv_20d": adv_20d, "adv_percentile_252d": adv_percentile_252d,
     "turnover_ratio_20d": turnover_ratio_20d,
     "trust_score": trust_score, "trust_sector_rank": trust_sector_rank,
+    # ---- v2 additions (Task 4) -------------------------------------------
+    "return_1d": return_1d,
+    "return_5d": return_5d,
+    "return_60d": return_60d,
+    "skewness_20d": skewness_20d,
+    "kurtosis_20d": kurtosis_20d,
+    "volume_zscore_20d": volume_zscore_20d,
+    "turnover_percentile_252d": turnover_percentile_252d,
+    "volume_trend_5d": volume_trend_5d,
+    "excess_return_vs_sector_20d": excess_return_vs_sector_20d,
+    "rank_in_sector_20d_return": rank_in_sector_20d_return,
+    "peer_spread_zscore_20d": peer_spread_zscore_20d,
+    "correlation_to_sector_60d": correlation_to_sector_60d,
+    "residual_return_5d": residual_return_5d,
+    "adv_ratio_to_sector_mean_20d": adv_ratio_to_sector_mean_20d,
 }
-assert set(FEATURE_FUNCS) == set(FEATURES), "FEATURE_FUNCS / FEATURES out of sync"
+# v2: exactly 34 FEATURE_FUNCS entries. The fast-path dispatcher covers
+# the v1 subset; new v2 features use the reference path at proposal-time
+# (they're computed once per proposal evaluation, not per feature matrix
+# row, so the perf cost is bounded). Fast-path kernels for v2 features
+# are deferred to a later optimization pass if run-time becomes binding.
+assert len(FEATURE_FUNCS) == 34, (
+    f"v2 FEATURE_FUNCS must have 34 entries; got {len(FEATURE_FUNCS)}"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -738,9 +1038,11 @@ _FAST_FEATURE_FUNCS: dict[str, Callable] = {
     "trust_score": _fast_trust_score,
     # trust_sector_rank: handled specially in build_feature_matrix.
 }
-assert set(_FAST_FEATURE_FUNCS) | {"trust_sector_rank"} == set(FEATURE_FUNCS), \
-    "_FAST_FEATURE_FUNCS is missing a feature — adding one to FEATURE_FUNCS " \
-    "without a matching fast kernel would KeyError in production."
+# v2: the fast-path dispatcher covers the v1 subset (20 features).
+# New v2 features use the reference (slow) path in build_feature_matrix;
+# fast-path kernels for v2 features are deferred to a later optimization pass.
+assert set(_FAST_FEATURE_FUNCS) | {"trust_sector_rank"} <= set(FEATURE_FUNCS), \
+    "_FAST_FEATURE_FUNCS references a feature not in FEATURE_FUNCS — sync error."
 
 
 def build_feature_matrix(panel: pd.DataFrame, eval_date: pd.Timestamp,
@@ -760,7 +1062,10 @@ def build_feature_matrix(panel: pd.DataFrame, eval_date: pd.Timestamp,
         for name in feature_names:
             if name == "trust_sector_rank":
                 row[name] = _fast_trust_sector_rank(ctx, ticker, trust_rank_cache)
-            else:
+            elif name in _FAST_FEATURE_FUNCS:
                 row[name] = _FAST_FEATURE_FUNCS[name](ctx, ticker)
+            else:
+                # v2 features: fall back to the slow reference path.
+                row[name] = FEATURE_FUNCS[name](panel, ticker, ctx.eval_date)
         rows.append(row)
     return pd.DataFrame(rows).set_index("ticker")

@@ -23,7 +23,8 @@ def _synthetic_panel(n_tickers: int = 5, n_days: int = 300, seed: int = 42) -> p
 
 
 def test_all_20_features_registered():
-    assert len(FEATURE_FUNCS) == 20
+    # v2: now 34 features (20 v1 + 14 v2); update assertion accordingly.
+    assert len(FEATURE_FUNCS) == 34
 
 
 def test_causality_pointwise():

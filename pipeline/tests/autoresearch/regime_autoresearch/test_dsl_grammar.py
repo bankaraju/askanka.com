@@ -10,12 +10,13 @@ from pipeline.autoresearch.regime_autoresearch.dsl import (
 
 
 def test_feature_library_size():
-    assert len(FEATURES) == 20
+    # v2: 20 v1 features + 14 new v2 features = 34 total
+    assert len(FEATURES) == 34
 
 
 def test_grammar_enumeration_non_pair():
-    # 3 non-pair constructions × 20 × 4 ops × 8 thresholds × 3 holds × 5 regimes
-    assert enumerate_family_size(include_pairs=False) == 28_800
+    # 3 non-pair constructions × 34 × 4 ops × 8 thresholds × 3 holds × 5 regimes
+    assert enumerate_family_size(include_pairs=False) == 3 * 34 * 4 * 8 * 3 * 5
 
 
 def test_validate_accepts_good_proposal():
@@ -61,5 +62,7 @@ def test_enumerate_family_size_pair_zero_raises():
 
 
 def test_enumerate_family_size_pair_positive():
-    # 20 × 4 × 8 × 3 × 5 × n = 9600 × n; plus non_pair 28800
-    assert enumerate_family_size(include_pairs=True, n_pairs=111) == 28_800 + (20 * 4 * 8 * 3 * 5 * 111)
+    # 34 × 4 × 8 × 3 × 5 × n; plus non_pair (3 × 34 × 4 × 8 × 3 × 5)
+    non_pair = 3 * 34 * 4 * 8 * 3 * 5
+    pair = 34 * 4 * 8 * 3 * 5 * 111
+    assert enumerate_family_size(include_pairs=True, n_pairs=111) == non_pair + pair

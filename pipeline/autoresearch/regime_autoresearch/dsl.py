@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pipeline.autoresearch.regime_autoresearch.constants import REGIMES
 
 FEATURES: tuple[str, ...] = (
+    # v1 features (20)
     "ret_1d", "ret_5d", "ret_20d", "ret_60d", "mom_ratio_20_60",
     "vol_20d", "vol_percentile_252d", "vol_of_vol_60d",
     "resid_vs_sector_1d", "z_resid_vs_sector_20d", "beta_nifty_60d",
@@ -13,6 +14,13 @@ FEATURES: tuple[str, ...] = (
     "beta_vix_60d", "macro_composite_60d_corr",
     "adv_20d", "adv_percentile_252d", "turnover_ratio_20d",
     "trust_score", "trust_sector_rank",
+    # v2 features (14) — Task 4
+    "return_1d", "return_5d", "return_60d",
+    "skewness_20d", "kurtosis_20d",
+    "volume_zscore_20d", "turnover_percentile_252d", "volume_trend_5d",
+    "excess_return_vs_sector_20d", "rank_in_sector_20d_return",
+    "peer_spread_zscore_20d", "correlation_to_sector_60d",
+    "residual_return_5d", "adv_ratio_to_sector_mean_20d",
 )
 
 THRESHOLD_OPS: tuple[str, ...] = (">", "<", "top_k", "bottom_k")
