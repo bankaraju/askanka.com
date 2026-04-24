@@ -45,8 +45,11 @@ import pandas as pd
 from pipeline.autoresearch.etf_reoptimize import GLOBAL_ETFS, _signal_to_zone
 from pipeline.autoresearch.regime_autoresearch._yfinance_util import download_ohlcv
 from pipeline.autoresearch.regime_autoresearch.constants import (
+    DATA_DIR,
+    FNO_DIR,
     HOLDOUT_END,
     HOLDOUT_START,
+    PANEL_START,
     REPO_ROOT,
     TRAIN_VAL_END,
     TRAIN_VAL_START,
@@ -282,6 +285,82 @@ def main() -> int:
               f"Investigate calibration window or composite signal.",
               file=sys.stderr)
         return 2
+
+    # -------------------------------------------------------------------------
+    # v2 panel coverage audit — build_regime_history emits this so the v2
+    # in_sample_runner can load it at startup and know which tickers to
+    # exclude. We load each FNO CSV, filter to [PANEL_START, TRAIN_VAL_END],
+    # and flag tickers with >=100 missing days vs the NIFTY calendar.
+    # -------------------------------------------------------------------------
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz
+
+    MAX_MISSING_DAYS = 100
+    panel_start_ts = pd.Timestamp(PANEL_START)
+    train_val_end_ts = pd.Timestamp(TRAIN_VAL_END)
+
+    print(f"\nBuilding FNO panel coverage audit "
+          f"({PANEL_START} -> {TRAIN_VAL_END})...", file=sys.stderr)
+
+    # Load FNO CSVs into a dict[ticker -> DataFrame] filtered to the v2 window.
+    panel_by_ticker: dict[str, pd.DataFrame] = {}
+    for csv_path in sorted(FNO_DIR.glob("*.csv")):
+        ticker = csv_path.stem
+        try:
+            df = pd.read_csv(csv_path)
+            df.columns = [c.lower() for c in df.columns]
+            if "date" not in df.columns or "close" not in df.columns:
+                continue
+            df["date"] = pd.to_datetime(df["date"])
+            df = df[(df["date"] >= panel_start_ts) & (df["date"] <= train_val_end_ts)]
+            if not df.empty:
+                panel_by_ticker[ticker] = df[["date", "close"]].reset_index(drop=True)
+        except Exception as exc:
+            print(f"  warn: could not load {csv_path.name}: {exc}", file=sys.stderr)
+
+    print(f"  loaded {len(panel_by_ticker)} FNO tickers", file=sys.stderr)
+
+    # Canonical business-day calendar from NIFTY. NIFTY.csv is not in FNO_DIR;
+    # use the NIFTY_daily.csv from india_historical if available, otherwise
+    # fall back to an empty set (all tickers retained, audit is informational).
+    nifty_csv = REPO_ROOT / "pipeline/data/india_historical/indices/NIFTY_daily.csv"
+    if nifty_csv.exists():
+        nifty_df = pd.read_csv(nifty_csv, parse_dates=["date"], usecols=["date"])
+        nifty_dates = set(nifty_df["date"].dt.date.tolist())
+        lo = panel_start_ts.date()
+        hi = train_val_end_ts.date()
+        canon_in_window = {d for d in nifty_dates if lo <= d <= hi}
+        print(f"  NIFTY calendar: {len(canon_in_window)} business days "
+              f"in [{PANEL_START}, {TRAIN_VAL_END}]", file=sys.stderr)
+    else:
+        canon_in_window = set()
+        print("  warn: NIFTY_daily.csv not found — skipping calendar check; "
+              "all tickers retained", file=sys.stderr)
+
+    retained: list[str] = []
+    dropped: list[dict] = []
+    for ticker, df in panel_by_ticker.items():
+        have = set(pd.to_datetime(df["date"]).dt.date.tolist())
+        missing = len(canon_in_window - have)
+        if missing >= MAX_MISSING_DAYS:
+            dropped.append({"ticker": ticker, "missing_days": missing})
+        else:
+            retained.append(ticker)
+
+    audit = {
+        "generated_at": _dt.now(_tz.utc).isoformat(),
+        "panel_start": PANEL_START,
+        "train_val_end": TRAIN_VAL_END,
+        "holdout_end": HOLDOUT_END,
+        "coverage_threshold": {"max_missing_days": MAX_MISSING_DAYS},
+        "retained_tickers": sorted(retained),
+        "dropped_tickers": sorted(dropped, key=lambda d: -d["missing_days"]),
+    }
+    audit_path = DATA_DIR / "panel_coverage_audit_2026-04-25.json"
+    audit_path.parent.mkdir(parents=True, exist_ok=True)
+    audit_path.write_text(_json.dumps(audit, indent=2, sort_keys=False), encoding="utf-8")
+    print(f"  retained={len(retained)} dropped={len(dropped)} "
+          f"— wrote {audit_path.name}", file=sys.stderr)
 
     return 0
 

@@ -20,6 +20,13 @@ TRAIN_VAL_END = "2024-04-22"
 HOLDOUT_START = "2024-04-23"
 HOLDOUT_END = "2026-04-23"
 
+# Panel history start — 252 trading days earlier than TRAIN_VAL_START so
+# 252-bar trailing-window features (e.g. vol_percentile_252d,
+# days_from_52w_high) have full history on day 1 of train+val. Regime
+# quantile cutpoints remain frozen on the 2018-01-01..2021-04-22 window
+# regardless of this; panel extension is feature-history only.
+PANEL_START = "2020-04-23"
+
 # Hurdle constants
 DELTA_IN_SAMPLE = 0.15       # qualify-for-holdout Sharpe gap
 DELTA_HOLDOUT = 0.10         # holdout-pass Sharpe gap
