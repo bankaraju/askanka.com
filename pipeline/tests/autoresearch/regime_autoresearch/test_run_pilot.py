@@ -55,8 +55,11 @@ def patched_env(monkeypatch, tmp_path):
         calls["proposer"] += 1
         return _fixed_proposal()
 
-    def fake_run_in_sample(p, panel, log_path, incumbent_sharpe):
+    def fake_run_in_sample(p, panel, log_path, incumbent_sharpe,
+                            event_dates=None, tickers=None):
         calls["in_sample"] += 1
+        calls["event_dates"] = event_dates
+        calls["tickers"] = tickers
         return {
             "net_sharpe_in_sample": 0.42,
             "n_events_in_sample": 48,
@@ -70,12 +73,23 @@ def patched_env(monkeypatch, tmp_path):
     monkeypatch.setattr(run_pilot, "generate_proposal", fake_generate, raising=False)
     monkeypatch.setattr(run_pilot, "run_in_sample", fake_run_in_sample, raising=False)
 
-    # Stub panel builder so tests never touch the real data dirs.
-    monkeypatch.setattr(run_pilot, "_build_neutral_panel",
-                         lambda regime: _stub_panel(), raising=False)
+    # Stub panel + event_dates helpers so tests never touch the real data
+    # dirs. The unfiltered panel and regime-filtered event_dates are now
+    # two separate helpers (see run_pilot._build_panel /
+    # _get_event_dates); stub both.
+    monkeypatch.setattr(run_pilot, "_build_panel",
+                         lambda: _stub_panel(), raising=False)
+    monkeypatch.setattr(
+        run_pilot, "_get_event_dates",
+        lambda panel, regime: pd.DatetimeIndex(
+            sorted(panel.loc[panel["regime_zone"] == regime, "date"].unique())
+        ),
+        raising=False,
+    )
     # Stub hurdle so the CLI has a deterministic incumbent.
-    # Accept any extra kwargs (panel, hold_horizon) introduced by Task 8
-    # step 2's switch to the real regime-conditional buy-and-hold.
+    # Accept any extra kwargs (panel, event_dates, hold_horizon) introduced
+    # by the Task 8 step 2 switch to the real regime-conditional buy-and-hold
+    # and the subsequent decoupling of panel from event_dates.
     monkeypatch.setattr(run_pilot, "_compute_hurdle",
                          lambda regime, **kw: (0.10, "scarcity_fallback:buy_and_hold"),
                          raising=False)
@@ -240,67 +254,83 @@ def test_system_prompt_inlines_all_dsl_enums():
     assert regime in prompt, "regime not interpolated into system prompt"
 
 
-def test_pilot_panel_has_pseudo_tickers(monkeypatch, tmp_path):
-    """_build_neutral_panel must union NIFTY/VIX/REGIME pseudo-ticker series
-    into the per-ticker panel. Without these, 5 of 20 DSL features
-    (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, and any
-    features composing them) return NaN for every ticker and the compiler
-    reports n_events=0. This test pins the union behaviour in place.
+def _write_pilot_data_stubs(tmp_path, regime_rows, bar_rows):
+    """Write minimal regime_history + NIFTY + VIX + daily_bars stubs under
+    tmp_path, returning paths so callers can monkeypatch the run_pilot
+    module-level constants. `regime_rows` is a list of
+    (iso_date, zone, score) tuples; `bar_rows` is a list of
+    (iso_date, close, volume) tuples for the single stub ticker XYZ.
     """
-    # Build a tiny regime_history with 3 NEUTRAL dates inside train/val.
-    neutral_dates = ["2022-06-01", "2022-06-02", "2022-06-03"]
     regime_csv = tmp_path / "regime_history.csv"
     regime_csv.write_text(
         "date,regime_zone,signal_score\n"
+        + "\n".join(f"{d},{z},{s}" for d, z, s in regime_rows)
+        + "\n"
+    )
+
+    nifty_csv = tmp_path / "NIFTY_daily.csv"
+    nifty_csv.write_text(
+        "date,open,high,low,close,volume\n"
         + "\n".join(
-            f"{d},NEUTRAL,{score}" for d, score in zip(
-                neutral_dates, [1.0, 2.0, 3.0],
-            )
+            f"{d},{c - 50},{c + 50},{c - 100},{c},{v}"
+            for d, c, v in bar_rows
         )
         + "\n"
     )
 
-    # A matching 3-row NIFTY CSV and 3-row VIX CSV keyed by the same dates.
-    nifty_csv = tmp_path / "NIFTY_daily.csv"
-    nifty_csv.write_text(
-        "date,open,high,low,close,volume\n"
-        "2022-06-01,17000,17100,16900,17050,1000\n"
-        "2022-06-02,17050,17200,17000,17150,1100\n"
-        "2022-06-03,17150,17300,17100,17200,1200\n"
-    )
     vix_csv = tmp_path / "vix_history.csv"
     vix_csv.write_text(
         "date,vix_close\n"
-        "2022-06-01,19.5\n"
-        "2022-06-02,20.0\n"
-        "2022-06-03,18.5\n"
+        + "\n".join(f"{d},{15.0 + i}" for i, (d, *_rest) in enumerate(bar_rows))
+        + "\n"
     )
 
-    # A minimal daily_bars dir with ONE real ticker parquet so the panel
-    # is non-empty (the panel builder raises RuntimeError on an empty
-    # frames list).
     bars_dir = tmp_path / "daily_bars"
     bars_dir.mkdir()
     real = pd.DataFrame({
-        "date": pd.to_datetime(neutral_dates),
-        "open": [100.0, 101.0, 102.0],
-        "high": [103.0, 104.0, 105.0],
-        "low": [99.0, 100.0, 101.0],
-        "close": [102.0, 103.0, 104.0],
-        "volume": [1_000_000, 1_100_000, 1_200_000],
+        "date": pd.to_datetime([d for d, *_ in bar_rows]),
+        "open": [c - 2 for _d, c, _v in bar_rows],
+        "high": [c + 3 for _d, c, _v in bar_rows],
+        "low": [c - 3 for _d, c, _v in bar_rows],
+        "close": [c for _d, c, _v in bar_rows],
+        "volume": [v for _d, _c, v in bar_rows],
     })
     real.to_parquet(bars_dir / "XYZ.parquet", index=False)
+    return {
+        "regime_csv": regime_csv, "nifty_csv": nifty_csv,
+        "vix_csv": vix_csv, "bars_dir": bars_dir,
+    }
 
-    # Point module-level constants at the stubs. The parquet path is
-    # deliberately inside bars_dir so _load_nifty_bars() falls through
-    # to the NIFTY_CSV branch.
-    monkeypatch.setattr(run_pilot, "REGIME_CSV", regime_csv)
-    monkeypatch.setattr(run_pilot, "NIFTY_PARQUET", bars_dir / "NIFTY.parquet")
-    monkeypatch.setattr(run_pilot, "NIFTY_CSV", nifty_csv)
-    monkeypatch.setattr(run_pilot, "VIX_CSV", vix_csv)
-    monkeypatch.setattr(run_pilot, "DAILY_BARS_DIR", bars_dir)
 
-    panel = run_pilot._build_neutral_panel("NEUTRAL")
+def test_pilot_panel_has_pseudo_tickers(monkeypatch, tmp_path):
+    """_build_panel must union NIFTY/VIX/REGIME pseudo-ticker series into
+    the per-ticker panel. Without these, 5 of 20 DSL features
+    (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, and any
+    features composing them) return NaN for every ticker and the compiler
+    reports n_events=0. This test pins the union behaviour in place.
+    """
+    neutral_dates = ["2022-06-01", "2022-06-02", "2022-06-03"]
+    regime_rows = [
+        (d, "NEUTRAL", s) for d, s in zip(neutral_dates, [1.0, 2.0, 3.0])
+    ]
+    bar_rows = [
+        ("2022-06-01", 17050, 1000),
+        ("2022-06-02", 17150, 1100),
+        ("2022-06-03", 17200, 1200),
+    ]
+    stubs = _write_pilot_data_stubs(tmp_path, regime_rows, bar_rows)
+
+    # Point module-level constants at the stubs. The NIFTY parquet path is
+    # deliberately inside bars_dir but absent so _load_nifty_bars() falls
+    # through to the NIFTY_CSV branch.
+    monkeypatch.setattr(run_pilot, "REGIME_CSV", stubs["regime_csv"])
+    monkeypatch.setattr(run_pilot, "NIFTY_PARQUET",
+                         stubs["bars_dir"] / "NIFTY.parquet")
+    monkeypatch.setattr(run_pilot, "NIFTY_CSV", stubs["nifty_csv"])
+    monkeypatch.setattr(run_pilot, "VIX_CSV", stubs["vix_csv"])
+    monkeypatch.setattr(run_pilot, "DAILY_BARS_DIR", stubs["bars_dir"])
+
+    panel = run_pilot._build_panel()
 
     tickers = set(panel["ticker"].unique())
     assert "NIFTY" in tickers, "NIFTY pseudo-ticker missing from panel"
@@ -312,8 +342,95 @@ def test_pilot_panel_has_pseudo_tickers(monkeypatch, tmp_path):
     assert len(panel[panel["ticker"] == "VIX"]) == 3
     assert len(panel[panel["ticker"] == "REGIME"]) == 3
     # REGIME close must be signal_score, not signal_score column name left over.
-    regime_rows = panel[panel["ticker"] == "REGIME"].sort_values("date")
-    assert list(regime_rows["close"]) == [1.0, 2.0, 3.0]
+    regime_bars = panel[panel["ticker"] == "REGIME"].sort_values("date")
+    assert list(regime_bars["close"]) == [1.0, 2.0, 3.0]
+
+
+def test_panel_unfiltered_event_dates_regime_filtered(monkeypatch, tmp_path):
+    """_build_panel must return rows from ALL regime zones within
+    [PANEL_START, TRAIN_VAL_END], while _get_event_dates(panel, regime)
+    must return EXACTLY the regime-tagged dates in [TRAIN_VAL_START,
+    TRAIN_VAL_END], sorted ascending.
+
+    Pins the panel/event_dates decoupling that the Mode-1 pilot depends on:
+    a regime-filtered panel caps every ticker's trailing window at ~165
+    rows (the NEUTRAL event count) which starves 252d features. Keeping
+    the panel unfiltered and the event set regime-filtered lets those
+    features compute correctly.
+    """
+    # Mixed regime_zones across six dates inside train+val plus one date
+    # BEFORE TRAIN_VAL_START to verify the panel retains pre-train rows
+    # (they feed trailing-window features) but event_dates does NOT leak
+    # them in.
+    regime_rows = [
+        ("2019-03-01", "NEUTRAL", 0.5),   # pre-train — panel-yes, events-no
+        ("2022-05-02", "NEUTRAL", 1.0),   # event: NEUTRAL
+        ("2022-05-03", "RISK-ON", 2.0),   # event: not NEUTRAL
+        ("2022-05-04", "NEUTRAL", 3.0),   # event: NEUTRAL
+        ("2022-05-05", "CAUTION", 4.0),   # event: not NEUTRAL
+        ("2022-05-06", "NEUTRAL", 5.0),   # event: NEUTRAL
+        ("2025-01-02", "NEUTRAL", 6.0),   # post-train — panel-no, events-no
+    ]
+    bar_rows = [
+        ("2019-03-01", 10000, 500),
+        ("2022-05-02", 17000, 1000),
+        ("2022-05-03", 17100, 1100),
+        ("2022-05-04", 17200, 1200),
+        ("2022-05-05", 17300, 1300),
+        ("2022-05-06", 17400, 1400),
+        ("2025-01-02", 21000, 2000),
+    ]
+    stubs = _write_pilot_data_stubs(tmp_path, regime_rows, bar_rows)
+
+    monkeypatch.setattr(run_pilot, "REGIME_CSV", stubs["regime_csv"])
+    monkeypatch.setattr(run_pilot, "NIFTY_PARQUET",
+                         stubs["bars_dir"] / "NIFTY.parquet")
+    monkeypatch.setattr(run_pilot, "NIFTY_CSV", stubs["nifty_csv"])
+    monkeypatch.setattr(run_pilot, "VIX_CSV", stubs["vix_csv"])
+    monkeypatch.setattr(run_pilot, "DAILY_BARS_DIR", stubs["bars_dir"])
+
+    panel = run_pilot._build_panel()
+
+    # Panel contains rows from ALL regimes present inside the panel
+    # window (PANEL_START..TRAIN_VAL_END). The 2025-01-02 row is past
+    # TRAIN_VAL_END (2024-04-22), so it must NOT be in the panel.
+    zones_in_panel = set(
+        panel.loc[panel["regime_zone"].notna(), "regime_zone"].unique()
+    )
+    assert zones_in_panel == {"NEUTRAL", "RISK-ON", "CAUTION"}, (
+        f"panel must retain all regime zones seen in-window; got {zones_in_panel}"
+    )
+    # The pre-train NEUTRAL row (2019-03-01) MUST be in the panel
+    # (it's what lets 252d features look back beyond TRAIN_VAL_START).
+    assert (panel["date"] == pd.Timestamp("2019-03-01")).any(), (
+        "pre-train panel rows missing — trailing-window features will starve"
+    )
+    # The post-train row (2025-01-02) MUST be clipped.
+    assert not (panel["date"] == pd.Timestamp("2025-01-02")).any(), (
+        "post-TRAIN_VAL_END rows must not leak into the in-sample panel"
+    )
+
+    event_dates = run_pilot._get_event_dates(panel, "NEUTRAL")
+
+    # Event dates MUST be exactly the three NEUTRAL dates inside train+val.
+    expected = pd.DatetimeIndex([
+        pd.Timestamp("2022-05-02"),
+        pd.Timestamp("2022-05-04"),
+        pd.Timestamp("2022-05-06"),
+    ])
+    assert list(event_dates) == list(expected), (
+        f"event_dates mismatch: got {list(event_dates)}, expected {list(expected)}"
+    )
+    # Sorted ascending.
+    assert list(event_dates) == sorted(event_dates)
+    # All within [TRAIN_VAL_START, TRAIN_VAL_END].
+    tv_start = pd.Timestamp(run_pilot.TRAIN_VAL_START)
+    tv_end = pd.Timestamp(run_pilot.TRAIN_VAL_END)
+    assert (event_dates >= tv_start).all()
+    assert (event_dates <= tv_end).all()
+    # Pre-train NEUTRAL row must NOT be an event date even though it's
+    # in the panel.
+    assert pd.Timestamp("2019-03-01") not in event_dates
 
 
 def test_pilot_view_isolation_preserved(patched_env, monkeypatch):

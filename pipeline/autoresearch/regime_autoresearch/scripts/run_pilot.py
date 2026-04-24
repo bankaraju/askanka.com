@@ -61,6 +61,15 @@ LOG_PATH = DATA_DIR / "proposal_log.jsonl"
 HOLDOUT_LOG_PATH = DATA_DIR / "holdout_outcomes.jsonl"
 REGIME_CSV = REPO_ROOT / "pipeline/data/regime_history.csv"
 DAILY_BARS_DIR = REPO_ROOT / "pipeline/data/research/phase_c/daily_bars"
+# Panel goes back 3+ years before TRAIN_VAL_START (2021-04-23) so that the
+# longest-window feature (vol_percentile_252d, 253 trailing bars) has valid
+# values from day 1 of train+val. 2018-01-02 is the earliest date cached by
+# the quantile rework in 2b1aba4 (yfinance earliest available for the ETF
+# aliases). Stock parquets start at TRAIN_VAL_START-1; even so, the full
+# train+val window gives ~750 rows per ticker before TRAIN_VAL_END — more
+# than enough runway for the 252d features once event_dates are separated
+# from panel rows.
+PANEL_START = "2018-01-02"
 # Pseudo-ticker data sources. 5 of 20 DSL features
 # (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, plus features
 # that compose them) need NIFTY/VIX/REGIME series keyed by ticker name
@@ -88,6 +97,7 @@ def _count_approved(log_path: Path, regime: str) -> int:
 
 
 def _compute_hurdle(regime: str, panel: pd.DataFrame | None = None,
+                    event_dates: pd.DatetimeIndex | None = None,
                     hold_horizon: int = 1) -> tuple[float, str]:
     """Delegate to incumbents.hurdle_sharpe_for_regime with the real
     regime-conditional buy-and-hold Sharpe as the scarcity fallback.
@@ -98,21 +108,24 @@ def _compute_hurdle(regime: str, panel: pd.DataFrame | None = None,
     change that drops incumbents below the scarcity threshold doesn't
     silently revert to 0.0.
 
+    `panel` is the full unfiltered history; `event_dates` is the
+    regime-filtered date list to benchmark against. The caller is
+    responsible for building both (via `_build_panel` +
+    `_get_event_dates`) so the benchmark sees the same trade-day set as
+    the proposal.
+
     Returns (hurdle_sharpe, source).
     """
     table = load_table(TABLE_PATH)
-    if panel is None:
+    if panel is None or event_dates is None:
         # Plumbing path (tests) — can't compute a real buy-and-hold; defer
         # to the zero lambda so behaviour is identical to the Task 2 stub
         # when no panel is available.
         return hurdle_sharpe_for_regime(
             table, regime, buy_hold_sharpe_fn=lambda r: 0.0,
         )
-    regime_dates = pd.DatetimeIndex(
-        sorted(panel.loc[panel["regime_zone"] == regime, "date"].unique())
-    )
     buy_hold_fn = lambda r: regime_buy_and_hold_sharpe(  # noqa: E731
-        panel, regime_dates, benchmark_ticker="NIFTY",
+        panel, event_dates, benchmark_ticker="NIFTY",
         hold_horizon=hold_horizon,
     )
     return hurdle_sharpe_for_regime(table, regime, buy_hold_sharpe_fn=buy_hold_fn)
@@ -179,23 +192,34 @@ def _load_regime_bars(regime_df: pd.DataFrame) -> pd.DataFrame:
     return df[["date", "close", "volume", "ticker"]]
 
 
-def _build_neutral_panel(regime: str) -> pd.DataFrame:
-    """Assemble the (date, ticker, close, volume, regime_zone) panel for the
-    train+val window, filtered to `regime`-tagged dates. Uses the 67
-    parquets in pipeline/data/research/phase_c/daily_bars, plus the three
-    pseudo-ticker series (NIFTY/VIX/REGIME) required by 5 of 20 DSL
-    features (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, and
-    anything that composes them). Without the pseudo-tickers, those
-    features return NaN for every ticker and the compiler reports
-    n_events=0 regardless of threshold.
+def _build_panel() -> pd.DataFrame:
+    """Assemble the full (date, ticker, close, volume, regime_zone) panel
+    spanning [PANEL_START, TRAIN_VAL_END] for all tickers and all dates.
+
+    The panel is NOT filtered by regime — that filtering belongs to
+    event_dates, which is what the compiler actually uses to decide which
+    days to evaluate the rule on. Panel rows exist so trailing-window
+    features (e.g. vol_percentile_252d, needs 253 prior bars) have enough
+    history to return non-NaN values on every event date.
+
+    Includes the three pseudo-ticker series (NIFTY/VIX/REGIME) required
+    by 5 of 20 DSL features (beta_nifty_60d, beta_vix_60d,
+    macro_composite_60d_corr, and anything composing them). Without the
+    pseudo-tickers, those features return NaN for every ticker and the
+    compiler reports n_events=0 regardless of threshold.
+
+    The `regime_zone` column is left-joined from regime_history.csv; it
+    will be NaN for panel dates before regime history began
+    (regime_history currently starts at TRAIN_VAL_START). That's fine —
+    pre-train rows are never event dates, so their zone tag is unused.
     """
     if not REGIME_CSV.exists():
         raise FileNotFoundError(f"missing regime history: {REGIME_CSV}")
     regime_df = pd.read_csv(REGIME_CSV, parse_dates=["date"])
-    mask = ((regime_df["date"] >= TRAIN_VAL_START)
-            & (regime_df["date"] <= TRAIN_VAL_END)
-            & (regime_df["regime_zone"] == regime))
-    regime_window = regime_df.loc[mask, ["date", "regime_zone"]].copy()
+    regime_zones = regime_df[["date", "regime_zone"]].copy()
+
+    panel_start_ts = pd.Timestamp(PANEL_START)
+    panel_end_ts = pd.Timestamp(TRAIN_VAL_END)
 
     frames: list[pd.DataFrame] = []
     for parquet in sorted(DAILY_BARS_DIR.glob("*.parquet")):
@@ -226,8 +250,35 @@ def _build_neutral_panel(regime: str) -> pd.DataFrame:
     panel = pd.concat(
         frames + [nifty_df, vix_df, regime_bars], ignore_index=True,
     )
-    panel = panel.merge(regime_window, on="date", how="inner")
+    panel["date"] = pd.to_datetime(panel["date"])
+    # Apply the panel window. Upper bound is TRAIN_VAL_END so no holdout
+    # data bleeds into in-sample evaluation.
+    panel = panel[(panel["date"] >= panel_start_ts)
+                  & (panel["date"] <= panel_end_ts)].copy()
+    # Left-join regime_zone so every row has the column; dates before
+    # regime_history begins get NaN, which is fine because those rows are
+    # never picked as event dates.
+    panel = panel.merge(regime_zones, on="date", how="left")
     return panel
+
+
+def _get_event_dates(panel: pd.DataFrame, regime: str) -> pd.DatetimeIndex:
+    """Return the unique dates in [TRAIN_VAL_START, TRAIN_VAL_END] tagged
+    with the given regime, sorted ascending.
+
+    These are the days on which the compiler will evaluate the rule. The
+    panel itself spans a wider window so trailing-window features have
+    sufficient history; the two concepts are intentionally decoupled.
+    """
+    start = pd.Timestamp(TRAIN_VAL_START)
+    end = pd.Timestamp(TRAIN_VAL_END)
+    mask = ((panel["date"] >= start)
+            & (panel["date"] <= end)
+            & (panel["regime_zone"] == regime))
+    dates = pd.DatetimeIndex(
+        sorted(panel.loc[mask, "date"].unique())
+    )
+    return dates
 
 
 def _strip_fences_to_json(raw: str) -> str:
@@ -423,13 +474,22 @@ def run_one_iteration(regime: str, log_path: Path,
         print(f"[pilot] unrecognised answer {answer!r}; treating as skip.")
         return 0
 
-    # APPROVED path: load panel, compute hurdle, run in-sample.
-    panel = _build_neutral_panel(regime)
+    # APPROVED path: build the unfiltered panel, compute regime-filtered
+    # event_dates separately, exclude pseudo-tickers from the trade
+    # universe, then run the compiler with all three passed explicitly.
+    panel = _build_panel()
+    event_dates = _get_event_dates(panel, regime)
+    pseudo = {"NIFTY", "VIX", "REGIME"}
+    tickers = sorted(
+        t for t in panel["ticker"].unique() if t not in pseudo
+    )
     hurdle_sharpe, hurdle_source = _compute_hurdle(
-        regime, panel=panel, hold_horizon=proposal.hold_horizon,
+        regime, panel=panel, event_dates=event_dates,
+        hold_horizon=proposal.hold_horizon,
     )
     result = run_in_sample(proposal, panel, log_path=log_path,
-                           incumbent_sharpe=hurdle_sharpe)
+                           incumbent_sharpe=hurdle_sharpe,
+                           event_dates=event_dates, tickers=tickers)
     row = _make_row(proposal, "APPROVED", result, hurdle_sharpe, hurdle_source)
     append_proposal_log(log_path, row)
 
