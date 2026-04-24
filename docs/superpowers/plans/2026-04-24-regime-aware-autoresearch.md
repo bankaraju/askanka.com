@@ -188,8 +188,16 @@ Expected: FAIL with `missing: pipeline/data/regime_history.csv`.
 # pipeline/autoresearch/regime_autoresearch/scripts/build_regime_history.py
 """Produces pipeline/data/regime_history.csv via the existing backfill.
 
-Uses pipeline.research.phase_c_backtest.regime.backfill_regime, which in turn
-delegates to pipeline.autoresearch.etf_reoptimize._signal_to_zone.
+Reuses pipeline.research.phase_c_backtest:
+- `fetcher.fetch_daily(sym, days=N)` — resolves parquet cache at
+   pipeline/data/research/phase_c/daily_bars/<SYM>.parquet (falls back to Kite
+   on cache miss, but all 20 ETF symbols are cached locally).
+- `regime._signal_to_zone` and `regime._compute_signal` — the canonical
+   zone-mapping functions used by the live engine (cannot drift).
+
+Weights live at pipeline/autoresearch/etf_optimal_weights.json (NOT
+pipeline/data/…). ETF symbol keys are lowercase basket names
+(brazil, natgas, silver, india_etf, …), each matching a parquet filename.
 
 KNOWN CAVEAT: this applies current optimal weights to historical returns. The
 zone mapping function is causal, but the weights themselves were selected
@@ -204,23 +212,28 @@ from pathlib import Path
 
 import pandas as pd
 
+from pipeline.research.phase_c_backtest import fetcher
 from pipeline.research.phase_c_backtest.regime import _signal_to_zone, _compute_signal
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-WEIGHTS_PATH = REPO_ROOT / "pipeline/data/etf_optimal_weights.json"
-ETF_BARS_DIR = REPO_ROOT / "pipeline/data/etf_bars"
+WEIGHTS_PATH = REPO_ROOT / "pipeline/autoresearch/etf_optimal_weights.json"
 OUT_CSV = REPO_ROOT / "pipeline/data/regime_history.csv"
 START = "2021-04-23"
+FETCH_DAYS = 2000  # ≥5 years + buffer; fetcher reads cache if present
 
 
 def _load_etf_bars(weights: dict[str, float]) -> dict[str, pd.DataFrame]:
     bars: dict[str, pd.DataFrame] = {}
     for sym in weights:
-        p = ETF_BARS_DIR / f"{sym}.csv"
-        if not p.exists():
-            print(f"warn: missing bars for {sym}", file=sys.stderr)
+        try:
+            df = fetcher.fetch_daily(sym, days=FETCH_DAYS)
+        except Exception as exc:
+            print(f"warn: fetch_daily failed for {sym}: {exc}", file=sys.stderr)
             continue
-        bars[sym] = pd.read_csv(p, parse_dates=["date"]).sort_values("date")
+        if df is None or df.empty:
+            print(f"warn: empty bars for {sym}", file=sys.stderr)
+            continue
+        bars[sym] = df.sort_values("date").reset_index(drop=True)
     return bars
 
 
@@ -228,6 +241,9 @@ def main() -> int:
     cfg = json.loads(WEIGHTS_PATH.read_text(encoding="utf-8"))
     weights = cfg["optimal_weights"]
     etf_bars = _load_etf_bars(weights)
+    if not etf_bars:
+        print("error: no ETF bars loaded — check parquet cache", file=sys.stderr)
+        return 1
 
     # Union of all ETF trading dates ≥ START
     all_dates = sorted({d for df in etf_bars.values()
