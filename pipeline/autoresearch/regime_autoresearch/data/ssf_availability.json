@@ -1,0 +1,1067 @@
+{
+  "360ONE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ABB": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ABCAPITAL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ADANIENSOL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ADANIENT": {
+    "borrow_cost_bps": 100,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ADANIGREEN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ADANIPORTS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ADANIPOWER": {
+    "borrow_cost_bps": 100,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ALKEM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "AMBER": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "AMBUJACEM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ANGELONE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "APLAPOLLO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "APOLLOHOSP": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ASHOKLEY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ASIANPAINT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ASTRAL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "AUBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "AUROPHARMA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "AXISBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BAJAJ-AUTO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BAJAJFINSV": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BAJAJHLDNG": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BAJFINANCE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BANDHANBNK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BANKBARODA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BANKINDIA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BDL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BHARATFORG": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BHARTIARTL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BHEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BIOCON": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BLUESTARCO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BOSCHLTD": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BPCL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BRITANNIA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "BSE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CAMS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CANBK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CDSL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CGPOWER": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CHOLAFIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CIPLA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "COALINDIA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "COCHINSHIP": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "COFORGE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "COLPAL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CONCOR": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CROMPTON": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "CUMMINSIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DABUR": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DALBHARAT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DELHIVERY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DIVISLAB": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DIXON": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DLF": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DMART": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "DRREDDY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "EICHERMOT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ETERNAL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "EXIDEIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "FEDERALBNK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "FORCEMOT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "FORTIS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GAIL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GLENMARK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GMRAIRPORT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GODFRYPHLP": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GODREJCP": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GODREJPROP": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "GRASIM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HAL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HAVELLS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HCLTECH": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HDFCAMC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HDFCBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HDFCLIFE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HEROMOTOCO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HINDALCO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HINDPETRO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HINDUNILVR": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HINDZINC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HUDCO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "HYUNDAI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ICICIBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ICICIGI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ICICIPRULI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "IDEA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "IDFCFIRSTB": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "IEX": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INDHOTEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INDIANB": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INDIGO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INDUSINDBK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INDUSTOWER": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INFY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "INOXWIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "IOC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "IREDA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "IRFC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ITC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "JINDALSTEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "JIOFIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "JSWENERGY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "JSWSTEEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "JUBLFOOD": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "KALYANKJIL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "KAYNES": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "KEI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "KFINTECH": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "KOTAKBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "KPITTECH": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LAURUSLABS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LICHSGFIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LICI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LODHA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LTF": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LTM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "LUPIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "M&M": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MANAPPURAM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MANKIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MARICO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MARUTI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MAXHEALTH": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MAZDOCK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MCX": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MFSL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MOTHERSON": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MOTILALOFS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MPHASIS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "MUTHOOTFIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NAM-INDIA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NATIONALUM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NAUKRI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NBCC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NESTLEIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NHPC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NMDC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NTPC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NUVAMA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "NYKAA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "OBEROIRLTY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "OFSS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "OIL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ONGC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PAGEIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PATANJALI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PAYTM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PERSISTENT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PETRONET": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PFC": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PGEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PHOENIXLTD": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PIDILITIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PIIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PNB": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PNBHOUSING": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "POLICYBZR": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "POLYCAB": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "POWERGRID": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "POWERINDIA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PPLPHARMA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PREMIERENE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "PRESTIGE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "RBLBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "RECLTD": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "RELIANCE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "RVNL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SAIL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SAMMAANCAP": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SBICARD": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SBILIFE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SBIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SHREECEM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SHRIRAMFIN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SIEMENS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SOLARINDS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SONACOMS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SRF": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SUNPHARMA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SUPREMEIND": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SUZLON": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "SWIGGY": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TATACONSUM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TATAELXSI": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TATAPOWER": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TATASTEEL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TATATECH": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TCS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TECHM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TIINDIA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TITAN": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TMPV": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TORNTPHARM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TORNTPOWER": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TRENT": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "TVSMOTOR": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ULTRACEMCO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "UNIONBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "UNITDSPR": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "UNOMINDA": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "UPL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "VBL": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "VEDL": {
+    "borrow_cost_bps": 60,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "VMM": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "VOLTAS": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "WAAREEENER": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "WIPRO": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "YESBANK": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  },
+  "ZYDUSLIFE": {
+    "borrow_cost_bps": 25,
+    "is_ssf_available": true,
+    "notes": "v1 default; refresh via Kite + NSE SLB in v2"
+  }
+}
