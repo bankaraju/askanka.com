@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T10:48:53.098441+05:30",
+  "updated_at": "2026-04-24T11:04:12.808864+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -12,40 +12,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4309.6,
-          "pnl_pct": 0.58
+          "current": 4288.2,
+          "pnl_pct": 0.08
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 442.45,
-          "pnl_pct": -1.64
+          "current": 441.6,
+          "pnl_pct": -1.83
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1416.7,
-          "pnl_pct": 3.09
+          "current": 1407.9,
+          "pnl_pct": 2.45
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2461.7,
-          "pnl_pct": 4.29
+          "current": 2439.9,
+          "pnl_pct": 5.14
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1190.2,
-          "pnl_pct": 9.98
+          "current": 1178.4,
+          "pnl_pct": 10.87
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 198.47,
-          "pnl_pct": 6.81
+          "current": 198.36,
+          "pnl_pct": 6.86
         }
       ],
       "spread_pnl_pct": 7.74,
@@ -59,17 +59,17 @@
       "peak_pnl": 7.74,
       "source": "SPREAD",
       "trust_scores": {
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
+          "opus_side": null,
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        },
         "BDL": {
           "trust_grade": "C",
           "trust_score": 56.8,
           "opus_side": null,
           "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "BEL": {
           "trust_grade": "C",
@@ -77,23 +77,23 @@
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
+        "INFY": {
+          "trust_grade": "F",
+          "trust_score": 17.5,
           "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
+        },
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "TCS": {
           "trust_grade": "B+",
           "trust_score": 72.4,
           "opus_side": null,
           "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
-        },
-        "INFY": {
-          "trust_grade": "F",
-          "trust_score": 17.5,
-          "opus_side": null,
-          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
         }
       },
       "regime_rank": {
@@ -189,8 +189,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4198.6,
-          "pnl_pct": 3.59
+          "current": 4202.4,
+          "pnl_pct": 3.5
         }
       ],
       "spread_pnl_pct": 3.35,
@@ -239,8 +239,8 @@
         {
           "ticker": "LAURUSLABS",
           "entry": 1129.2,
-          "current": 1123.85,
-          "pnl_pct": 0.47
+          "current": 1123.45,
+          "pnl_pct": 0.51
         }
       ],
       "spread_pnl_pct": 0.46,
@@ -293,7 +293,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -2.74,
-        "actual_return": -0.53,
+        "actual_return": -0.43,
         "days_in_regime": 1
       }
     },
@@ -309,8 +309,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4233.5,
-          "current": 4198.6,
-          "pnl_pct": 0.82
+          "current": 4202.4,
+          "pnl_pct": 0.73
         }
       ],
       "spread_pnl_pct": 0.57,
@@ -379,8 +379,8 @@
         {
           "ticker": "DIVISLAB",
           "entry": 6408.5,
-          "current": 6367.0,
-          "pnl_pct": 0.65
+          "current": 6367.5,
+          "pnl_pct": 0.64
         }
       ],
       "spread_pnl_pct": 0.6,
@@ -449,8 +449,8 @@
         {
           "ticker": "IEX",
           "entry": 128.4,
-          "current": 126.27,
-          "pnl_pct": 1.66
+          "current": 125.87,
+          "pnl_pct": 1.97
         }
       ],
       "spread_pnl_pct": 1.68,
