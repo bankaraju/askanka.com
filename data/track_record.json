@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-04-24T12:34:08.128727+05:30",
-  "total_closed": 36,
-  "win_rate_pct": 58.3,
-  "avg_pnl_pct": 1.96,
+  "updated_at": "2026-04-24T12:48:37.174555+05:30",
+  "total_closed": 37,
+  "win_rate_pct": 56.8,
+  "avg_pnl_pct": 1.86,
   "recent": [
     {
       "signal_id": "BRK-2026-04-23-TECHM",
@@ -226,6 +226,19 @@
       "close_reason": "STOPPED_OUT_ZCROSS"
     },
     {
+      "signal_id": "BRK-2026-04-24-NMDC",
+      "spread_name": "Strategy 371",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "event_headline": "Phase C break on NMDC: z=1.57, expected=-1.48, actual=0.13",
+      "open_date": "2026-04-24",
+      "close_date": "2026-04-24",
+      "days_open": 0,
+      "peak_pnl_pct": 0,
+      "final_pnl_pct": -1.71,
+      "close_reason": "STOPPED_OUT_ZCROSS"
+    },
+    {
       "signal_id": "BRK-2026-04-23-PFC",
       "spread_name": "Strategy 264",
       "category": "phase_c",
@@ -249,19 +262,6 @@
       "days_open": 0,
       "peak_pnl_pct": 0,
       "final_pnl_pct": -1.23,
-      "close_reason": "STOPPED_OUT_ZCROSS"
-    },
-    {
-      "signal_id": "BRK-2026-04-23-PFC",
-      "spread_name": "Strategy 264",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "event_headline": "Phase C break on PFC: z=1.76, expected=-1.36, actual=0.39",
-      "open_date": "2026-04-23",
-      "close_date": "2026-04-23",
-      "days_open": 0,
-      "peak_pnl_pct": 0,
-      "final_pnl_pct": -0.39,
       "close_reason": "STOPPED_OUT_ZCROSS"
     }
   ]
