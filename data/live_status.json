@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T10:19:10.788023+05:30",
+  "updated_at": "2026-04-24T10:34:30.705411+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -12,40 +12,40 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4315.4,
-          "pnl_pct": 0.71
+          "current": 4316.0,
+          "pnl_pct": 0.73
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 443.15,
-          "pnl_pct": -1.49
+          "current": 443.05,
+          "pnl_pct": -1.51
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1409.7,
-          "pnl_pct": 2.58
+          "current": 1417.8,
+          "pnl_pct": 3.17
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2461.4,
-          "pnl_pct": 4.3
+          "current": 2458.9,
+          "pnl_pct": 4.4
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1191.9,
-          "pnl_pct": 9.85
+          "current": 1187.3,
+          "pnl_pct": 10.2
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 199.38,
-          "pnl_pct": 6.39
+          "current": 198.44,
+          "pnl_pct": 6.83
         }
       ],
       "spread_pnl_pct": 6.94,
@@ -59,24 +59,6 @@
       "peak_pnl": 7.43,
       "source": "SPREAD",
       "trust_scores": {
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
-        "INFY": {
-          "trust_grade": "F",
-          "trust_score": 17.5,
-          "opus_side": null,
-          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
-        },
-        "BEL": {
-          "trust_grade": "C",
-          "trust_score": 55.0,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
         "BDL": {
           "trust_grade": "C",
           "trust_score": 56.8,
@@ -94,6 +76,24 @@
           "trust_score": 83.7,
           "opus_side": null,
           "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        },
+        "INFY": {
+          "trust_grade": "F",
+          "trust_score": 17.5,
+          "opus_side": null,
+          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
+        },
+        "BEL": {
+          "trust_grade": "C",
+          "trust_score": 55.0,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         }
       },
       "regime_rank": {
@@ -189,8 +189,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4230.8,
-          "pnl_pct": 2.85
+          "current": 4210.0,
+          "pnl_pct": 3.33
         }
       ],
       "spread_pnl_pct": 3.01,
@@ -239,8 +239,8 @@
         {
           "ticker": "LAURUSLABS",
           "entry": 1129.2,
-          "current": 1128.25,
-          "pnl_pct": 0.08
+          "current": 1126.25,
+          "pnl_pct": 0.26
         }
       ],
       "spread_pnl_pct": -0.3,
@@ -251,7 +251,7 @@
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 0.08,
+      "peak_pnl": 0.26,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "LAURUSLABS": {
@@ -293,7 +293,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -2.74,
-        "actual_return": -0.04,
+        "actual_return": -0.26,
         "days_in_regime": 1
       }
     },
@@ -309,8 +309,8 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4233.5,
-          "current": 4230.8,
-          "pnl_pct": 0.06
+          "current": 4210.0,
+          "pnl_pct": 0.56
         }
       ],
       "spread_pnl_pct": 0.23,
@@ -379,8 +379,8 @@
         {
           "ticker": "DIVISLAB",
           "entry": 6408.5,
-          "current": 6370.0,
-          "pnl_pct": 0.6
+          "current": 6367.5,
+          "pnl_pct": 0.64
         }
       ],
       "spread_pnl_pct": 0.37,
@@ -449,8 +449,8 @@
         {
           "ticker": "IEX",
           "entry": 128.4,
-          "current": 126.9,
-          "pnl_pct": 1.17
+          "current": 126.35,
+          "pnl_pct": 1.6
         }
       ],
       "spread_pnl_pct": 1.02,
