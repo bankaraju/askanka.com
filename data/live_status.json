@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T13:34:05.958688+05:30",
+  "updated_at": "2026-04-24T13:48:54.305623+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -12,44 +12,44 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4243.7,
-          "pnl_pct": -0.96
+          "current": 4246.9,
+          "pnl_pct": -0.88
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 439.1,
-          "pnl_pct": -2.39
+          "current": 439.5,
+          "pnl_pct": -2.3
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1391.5,
-          "pnl_pct": 1.26
+          "current": 1392.3,
+          "pnl_pct": 1.32
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2394.8,
-          "pnl_pct": 6.89
+          "current": 2396.2,
+          "pnl_pct": 6.84
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1165.0,
-          "pnl_pct": 11.88
+          "current": 1165.5,
+          "pnl_pct": 11.84
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 198.29,
-          "pnl_pct": 6.9
+          "current": 198.41,
+          "pnl_pct": 6.84
         }
       ],
-      "spread_pnl_pct": 7.97,
-      "todays_move": 7.97,
+      "spread_pnl_pct": 7.85,
+      "todays_move": 7.85,
       "daily_stop": -0.99,
       "two_day_stop": -1.97,
       "trail_stop": 6.0,
@@ -59,23 +59,23 @@
       "peak_pnl": 7.97,
       "source": "SPREAD",
       "trust_scores": {
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
         "BDL": {
           "trust_grade": "C",
           "trust_score": 56.8,
           "opus_side": null,
           "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
         },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
+        "BEL": {
+          "trust_grade": "C",
+          "trust_score": 55.0,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "INFY": {
           "trust_grade": "F",
@@ -89,11 +89,11 @@
           "opus_side": null,
           "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         },
-        "BEL": {
-          "trust_grade": "C",
-          "trust_score": 55.0,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
         }
       },
       "regime_rank": {
@@ -189,19 +189,19 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4189.8,
-          "pnl_pct": 3.79
+          "current": 4180.0,
+          "pnl_pct": 4.02
         }
       ],
-      "spread_pnl_pct": 3.88,
-      "todays_move": 3.88,
+      "spread_pnl_pct": 4.02,
+      "todays_move": 4.02,
       "daily_stop": -7.02,
       "two_day_stop": -14.04,
-      "trail_stop": 1.88,
+      "trail_stop": 2.02,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 3.88,
+      "peak_pnl": 4.02,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "TATAELXSI": {
@@ -239,12 +239,12 @@
         {
           "ticker": "LAURUSLABS",
           "entry": 1129.2,
-          "current": 1123.95,
-          "pnl_pct": 0.46
+          "current": 1121.0,
+          "pnl_pct": 0.73
         }
       ],
-      "spread_pnl_pct": 0.39,
-      "todays_move": 0.39,
+      "spread_pnl_pct": 0.56,
+      "todays_move": 0.56,
       "daily_stop": -2.47,
       "two_day_stop": -4.94,
       "trail_stop": -1.23,
@@ -293,7 +293,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -2.74,
-        "actual_return": -0.63,
+        "actual_return": -0.73,
         "days_in_regime": 1
       }
     },
@@ -309,19 +309,19 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4233.5,
-          "current": 4189.8,
-          "pnl_pct": 1.03
+          "current": 4180.0,
+          "pnl_pct": 1.26
         }
       ],
-      "spread_pnl_pct": 1.12,
-      "todays_move": 1.12,
+      "spread_pnl_pct": 1.26,
+      "todays_move": 1.26,
       "daily_stop": -3.38,
       "two_day_stop": -6.76,
-      "trail_stop": -0.88,
+      "trail_stop": -0.74,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 1.12,
+      "peak_pnl": 1.26,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "TATAELXSI": {
@@ -379,12 +379,12 @@
         {
           "ticker": "DIVISLAB",
           "entry": 6408.5,
-          "current": 6386.0,
-          "pnl_pct": 0.35
+          "current": 6369.0,
+          "pnl_pct": 0.62
         }
       ],
-      "spread_pnl_pct": 0.35,
-      "todays_move": 0.35,
+      "spread_pnl_pct": 0.58,
+      "todays_move": 0.58,
       "daily_stop": -2.08,
       "two_day_stop": -4.16,
       "trail_stop": -1.39,
@@ -438,82 +438,6 @@
       }
     },
     {
-      "signal_id": "BRK-2026-04-24-IEX",
-      "spread_name": "Strategy 824",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "EXPLORING",
-      "open_date": "2026-04-24",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "IEX",
-          "entry": 128.4,
-          "current": 123.39,
-          "pnl_pct": 3.9
-        }
-      ],
-      "spread_pnl_pct": 3.32,
-      "todays_move": 3.32,
-      "daily_stop": -3.19,
-      "two_day_stop": -6.38,
-      "trail_stop": 1.32,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 3.32,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "IEX": {
-          "trust_grade": "F",
-          "trust_score": 12.0,
-          "opus_side": null,
-          "thesis": "The company's ability to exceed the GDP growth forecast for FY2025-26 (IMF revised to 7.3% vs. guidance of 6.2-6.5%) demonstrates a strong underlying economic environment that could eventually benefit the exchange. Furthermore, the progress in BESS capacity awarded (13.2 GWH awarded) indicates a positive long-term trend for energy storage, which IEX is positioning itself to capitalize on, even if the immediate 'needed' capacity target is still in progress."
-        }
-      },
-      "regime_rank": {
-        "IEX": {
-          "episode_count": 88,
-          "tradeable_rate": 0.881,
-          "persistence_rate": 0.4762,
-          "hit_rate": 0.4643,
-          "avg_drift_1d": -0.003644
-        }
-      },
-      "correlation_breaks": {
-        "IEX": {
-          "classification": "OPPORTUNITY_LAG",
-          "action": "ADD",
-          "z_score": 1.61,
-          "expected_return": -2.07,
-          "actual_return": -0.76,
-          "oi_anomaly": false,
-          "trade_rec": "SHORT"
-        }
-      },
-      "oi_anomalies": {
-        "IEX": {
-          "anomaly_type": "OI_SPIKE",
-          "pcr": 0.785,
-          "sentiment": "NEUTRAL",
-          "oi_change": 12457500,
-          "pcr_flip": false
-        }
-      },
-      "conviction_score": 58.0,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "IEX",
-        "z_score": 1.61,
-        "classification": "OPPORTUNITY_LAG",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -2.07,
-        "actual_return": -3.92,
-        "days_in_regime": 1
-      }
-    },
-    {
       "signal_id": "BRK-2026-04-24-HDFCAMC",
       "spread_name": "Strategy 810",
       "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
@@ -525,12 +449,12 @@
         {
           "ticker": "HDFCAMC",
           "entry": 2700.0,
-          "current": 2707.4,
-          "pnl_pct": -0.27
+          "current": 2710.1,
+          "pnl_pct": -0.37
         }
       ],
-      "spread_pnl_pct": -0.26,
-      "todays_move": -0.26,
+      "spread_pnl_pct": -0.2,
+      "todays_move": -0.2,
       "daily_stop": -3.5,
       "two_day_stop": -7.0,
       "trail_stop": -1.99,
@@ -579,7 +503,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -1.49,
-        "actual_return": 0.24,
+        "actual_return": 0.33,
         "days_in_regime": 1
       }
     }
