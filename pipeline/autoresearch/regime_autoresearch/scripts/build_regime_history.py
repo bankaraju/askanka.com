@@ -1,8 +1,15 @@
 """Produces pipeline/data/regime_history.csv via the existing backfill.
 
 Reuses pipeline.research.phase_c_backtest:
-- `regime._signal_to_zone` and `regime._compute_signal` — the canonical
-   zone-mapping functions used by the live engine (cannot drift).
+- `regime._compute_signal` — the canonical composite-signal function used by
+   the live engine (cannot drift).
+
+The zone mapping itself is NOT the live engine's absolute-threshold function.
+It is a quintile-based bucketing whose cutpoints are frozen from a
+pre-train calibration window [CALIBRATION_START, CALIBRATION_END]. This
+keeps labels causal (no look-ahead into train+val or holdout) while
+ensuring the 5 zones are evenly populated in train+val — a prerequisite
+for the autoresearch engine's per-regime rule search.
 
 Weights live at pipeline/autoresearch/etf_optimal_weights.json (NOT
 pipeline/data/…). ETF symbol keys are lowercase basket names
@@ -11,14 +18,11 @@ under pipeline/data/research/phase_c/daily_bars/.
 
 Self-healing ETF cache (yfinance backfill)
 ------------------------------------------
-Before this builder runs, many of the 20 ETF parquets in
-pipeline/data/research/phase_c/daily_bars/ were empty — Phase C work
-populated Indian-equity parquets ad-hoc but most global ETFs were
-untouched. `_load_etf_bars` now self-heals the cache: when a parquet is
-empty or its coverage starts after 2021-04-23, it refetches via yfinance
-using the `GLOBAL_ETFS` alias map from etf_reoptimize and writes the
-result back to the parquet cache. Every downstream consumer of
-phase_c/daily_bars benefits.
+`_load_etf_bars` self-heals the parquet cache: when a parquet is empty
+or its coverage starts after `BACKFILL_START` (2018-01-01), it refetches
+via yfinance using the `GLOBAL_ETFS` alias map from etf_reoptimize and
+writes the result back to the parquet cache. Every downstream consumer
+of phase_c/daily_bars benefits.
 
 Non-yfinance aliases (india_vix_daily, dii_net_daily, fii_net_daily) are
 NOT in GLOBAL_ETFS; their backfill is out of scope for this script and
@@ -38,19 +42,93 @@ import sys
 
 import pandas as pd
 
-from pipeline.autoresearch.etf_reoptimize import GLOBAL_ETFS
+from pipeline.autoresearch.etf_reoptimize import GLOBAL_ETFS, _signal_to_zone
 from pipeline.autoresearch.regime_autoresearch._yfinance_util import download_ohlcv
-from pipeline.autoresearch.regime_autoresearch.constants import REPO_ROOT
+from pipeline.autoresearch.regime_autoresearch.constants import (
+    HOLDOUT_END,
+    HOLDOUT_START,
+    REPO_ROOT,
+    TRAIN_VAL_END,
+    TRAIN_VAL_START,
+)
 from pipeline.research.phase_c_backtest import paths as phase_c_paths
-from pipeline.research.phase_c_backtest.regime import _signal_to_zone, _compute_signal
+from pipeline.research.phase_c_backtest.regime import _compute_signal
 
 WEIGHTS_PATH = REPO_ROOT / "pipeline/autoresearch/etf_optimal_weights.json"
 OUT_CSV = REPO_ROOT / "pipeline/data/regime_history.csv"
-START = "2021-04-23"
-BACKFILL_START = pd.Timestamp("2020-04-23")  # 1yr buffer before START for rolling features
-MIN_COVERAGE_DATE = pd.Timestamp("2021-04-23")
+CUTPOINTS_PATH = REPO_ROOT / "pipeline/data/regime_cutpoints.json"
+
+# Pre-train calibration window. Cutpoints are frozen here; NEVER include
+# train+val or holdout data when computing them — that would be look-ahead.
+CALIBRATION_START = pd.Timestamp("2018-01-01")
+CALIBRATION_END = pd.Timestamp("2021-04-22")
+
+# Signal is emitted from START onwards; cutpoints applied from START onwards.
+START = pd.Timestamp(TRAIN_VAL_START)          # 2021-04-23
+BACKFILL_START = CALIBRATION_START              # fetch bars from 2018-01-01
+MIN_COVERAGE_DATE = CALIBRATION_START           # trigger backfill if cache starts after this
 
 
+# ---------------------------------------------------------------------------
+# Absolute-threshold zone mapping (kept for reference / diagnostics).
+# This is the OLD mapping. It is not used by this script anymore; the live
+# engine still uses it (imported from etf_reoptimize._signal_to_zone), but
+# our historical regime_history.csv uses quantile-based bucketing so every
+# regime has enough events for per-regime rule search in autoresearch.
+# ---------------------------------------------------------------------------
+def _signal_to_zone_absolute(signal: float) -> str:
+    """Absolute-threshold mapping from the live engine. Kept as a diagnostic.
+
+    Delegates to the canonical function in etf_reoptimize so behaviour
+    cannot drift. NOT used by the regime_history.csv builder — see
+    `_signal_to_zone_quantile` for the builder's mapping.
+    """
+    return _signal_to_zone(signal)
+
+
+# ---------------------------------------------------------------------------
+# Quantile-based zone mapping (this script's actual mapping).
+# ---------------------------------------------------------------------------
+def _compute_quintile_cutpoints(signals: pd.Series) -> dict[str, float]:
+    """Compute 20/40/60/80 quantile cutpoints from a signal series.
+
+    NaNs are dropped before computing quantiles.
+    """
+    clean = pd.Series(signals).dropna()
+    if clean.empty:
+        raise ValueError("cannot compute cutpoints from empty signal series")
+    q = clean.quantile([0.20, 0.40, 0.60, 0.80])
+    return {
+        "q20": float(q.loc[0.20]),
+        "q40": float(q.loc[0.40]),
+        "q60": float(q.loc[0.60]),
+        "q80": float(q.loc[0.80]),
+    }
+
+
+def _signal_to_zone_quantile(signal: float, cutpoints: dict) -> str:
+    """Bucket a signal into one of 5 zones using frozen quintile cutpoints.
+
+    - signal < q20  → RISK-OFF
+    - q20 ≤ signal < q40 → CAUTION
+    - q40 ≤ signal < q60 → NEUTRAL
+    - q60 ≤ signal < q80 → RISK-ON
+    - signal ≥ q80 → EUPHORIA
+    """
+    if signal < cutpoints["q20"]:
+        return "RISK-OFF"
+    if signal < cutpoints["q40"]:
+        return "CAUTION"
+    if signal < cutpoints["q60"]:
+        return "NEUTRAL"
+    if signal < cutpoints["q80"]:
+        return "RISK-ON"
+    return "EUPHORIA"
+
+
+# ---------------------------------------------------------------------------
+# ETF cache loading + yfinance self-heal
+# ---------------------------------------------------------------------------
 def _yfinance_backfill_one(alias: str) -> pd.DataFrame | None:
     """Fetch daily OHLCV for one ETF alias via yfinance, return DataFrame or None.
 
@@ -78,7 +156,10 @@ def _load_etf_bars(weights: dict[str, float]) -> dict[str, pd.DataFrame]:
     """Load parquet cache; backfill via yfinance when empty or coverage-short.
 
     Side effect: writes backfilled bars to pipeline/data/research/phase_c/daily_bars/
-    so every downstream consumer benefits.
+    so every downstream consumer benefits. An ETF whose yfinance history starts
+    after BACKFILL_START (e.g. younger issues that post-date 2018) is not retried
+    in a loop; we log a warning and accept its shorter series. Calibration can
+    tolerate a few ETFs with partial history as long as the majority contribute.
     """
     cache_dir = phase_c_paths.DAILY_BARS_DIR
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -92,24 +173,47 @@ def _load_etf_bars(weights: dict[str, float]) -> dict[str, pd.DataFrame]:
             except Exception as exc:
                 print(f"warn: corrupt parquet for {sym}: {exc}", file=sys.stderr)
                 df = None
-        # Determine whether we need to backfill
+        # Determine whether we need to backfill. We need 2018-01-01 coverage
+        # for the calibration window; if the cache starts after that, refetch.
         need_backfill = (
             df is None
             or df.empty
             or df["date"].min() > MIN_COVERAGE_DATE
         )
         if need_backfill:
-            print(f"backfilling {sym} via yfinance...", file=sys.stderr)
+            print(f"backfilling {sym} via yfinance (target start={BACKFILL_START.date()})...",
+                  file=sys.stderr)
             fetched = _yfinance_backfill_one(sym)
             if fetched is not None and not fetched.empty:
                 fetched.to_parquet(cache_path, index=False)
                 df = fetched
-                print(f"  -> wrote {len(fetched)} rows to {cache_path.name}", file=sys.stderr)
+                print(f"  -> wrote {len(fetched)} rows to {cache_path.name} "
+                      f"(coverage {fetched['date'].min().date()}..{fetched['date'].max().date()})",
+                      file=sys.stderr)
+                if fetched["date"].min() > MIN_COVERAGE_DATE:
+                    print(f"  warn: {sym} history begins "
+                          f"{fetched['date'].min().date()} "
+                          f"(after {MIN_COVERAGE_DATE.date()}); "
+                          f"calibration will use its earliest available data",
+                          file=sys.stderr)
             else:
                 print(f"  -> yfinance fetch returned nothing for {sym}", file=sys.stderr)
         if df is not None and not df.empty:
             bars[sym] = df.sort_values("date").reset_index(drop=True)
     return bars
+
+
+# ---------------------------------------------------------------------------
+# Main driver
+# ---------------------------------------------------------------------------
+def _print_distribution(df: pd.DataFrame, label: str, start: str, end: str) -> pd.Series:
+    """Print per-regime count for a window and return the value_counts series."""
+    mask = (df["date"] >= pd.Timestamp(start)) & (df["date"] <= pd.Timestamp(end))
+    counts = df.loc[mask, "regime_zone"].value_counts().sort_index()
+    print(f"\n{label} distribution ({start} -> {end}, n={int(mask.sum())}):")
+    for zone in ("RISK-OFF", "CAUTION", "NEUTRAL", "RISK-ON", "EUPHORIA"):
+        print(f"  {zone:<9} {int(counts.get(zone, 0))}")
+    return counts
 
 
 def main() -> int:
@@ -120,18 +224,65 @@ def main() -> int:
         print("error: no ETF bars loaded — check parquet cache", file=sys.stderr)
         return 1
 
-    # Union of all ETF trading dates >= START
+    # Union of all ETF trading dates >= BACKFILL_START. Full range (calibration
+    # + emitted regime series) so we can compute signal once.
     all_dates = sorted({d for df in etf_bars.values()
-                        for d in df["date"][df["date"] >= pd.Timestamp(START)]})
-    rows = []
-    for d in all_dates:
-        signal = _compute_signal(d.strftime("%Y-%m-%d"), weights, etf_bars)
-        rows.append({"date": d, "regime_zone": _signal_to_zone(signal),
-                     "signal_score": round(signal, 4)})
-    out = pd.DataFrame(rows).sort_values("date")
+                        for d in df["date"][df["date"] >= BACKFILL_START]})
+    print(f"computing composite signal over {len(all_dates)} dates "
+          f"({all_dates[0].date()} -> {all_dates[-1].date()})", file=sys.stderr)
+
+    rows = [
+        {"date": d, "signal_score": round(_compute_signal(
+            d.strftime("%Y-%m-%d"), weights, etf_bars), 4)}
+        for d in all_dates
+    ]
+    signal_df = pd.DataFrame(rows).sort_values("date").reset_index(drop=True)
+
+    # Freeze quintile cutpoints from the calibration window.
+    calib_mask = ((signal_df["date"] >= CALIBRATION_START)
+                  & (signal_df["date"] <= CALIBRATION_END))
+    calib_signals = signal_df.loc[calib_mask, "signal_score"]
+    print(f"calibration window: {CALIBRATION_START.date()} -> {CALIBRATION_END.date()} "
+          f"({int(calib_mask.sum())} days)", file=sys.stderr)
+    cutpoints = _compute_quintile_cutpoints(calib_signals)
+
+    cutpoints_out = {
+        "calibration_start": CALIBRATION_START.strftime("%Y-%m-%d"),
+        "calibration_end": CALIBRATION_END.strftime("%Y-%m-%d"),
+        **cutpoints,
+    }
+    CUTPOINTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CUTPOINTS_PATH.write_text(json.dumps(cutpoints_out, indent=2), encoding="utf-8")
+    print(f"wrote cutpoints to {CUTPOINTS_PATH}:", file=sys.stderr)
+    for k, v in cutpoints_out.items():
+        print(f"  {k}: {v}", file=sys.stderr)
+
+    # Apply cutpoints to dates from START onwards; emit regime_history.csv.
+    emit_mask = signal_df["date"] >= START
+    out = signal_df.loc[emit_mask].copy()
+    out["regime_zone"] = out["signal_score"].apply(
+        lambda s: _signal_to_zone_quantile(s, cutpoints)
+    )
+    out = out[["date", "regime_zone", "signal_score"]]
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(OUT_CSV, index=False)
     print(f"wrote {len(out)} rows to {OUT_CSV}")
+
+    # Distribution audit.
+    train_val_counts = _print_distribution(out, "train+val",
+                                           TRAIN_VAL_START, TRAIN_VAL_END)
+    _print_distribution(out, "holdout", HOLDOUT_START, HOLDOUT_END)
+
+    min_events = int(train_val_counts.reindex(
+        ["RISK-OFF", "CAUTION", "NEUTRAL", "RISK-ON", "EUPHORIA"], fill_value=0
+    ).min())
+    if min_events < 50:
+        print(f"\nERROR: train+val min regime count = {min_events} (< 50). "
+              f"Distribution is skewed; quantile bucketing failed to balance. "
+              f"Investigate calibration window or composite signal.",
+              file=sys.stderr)
+        return 2
+
     return 0
 
 
