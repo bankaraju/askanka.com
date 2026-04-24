@@ -45,8 +45,8 @@ def test_reanalyze_smoke(monkeypatch, tmp_path, capsys):
     )
     monkeypatch.setattr(
         run_pilot, "_compute_hurdle",
-        lambda regime, panel=None, event_dates=None, hold_horizon=1: (
-            0.0, "scarcity_fallback:buy_and_hold"
+        lambda regime, panel=None, event_dates=None, hold_horizon=1, proposal=None: (
+            0.0, "null_basket:single_long:k=1:h=1"
         ),
     )
     monkeypatch.setattr(

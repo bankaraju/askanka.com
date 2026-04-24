@@ -1,4 +1,8 @@
-"""Coverage for incumbents.py: loader + clean filter + scarcity fallback hurdle."""
+"""Coverage for incumbents.py: loader + clean filter + per-regime mean hurdle.
+
+v2: scarcity fallback removed; hurdle_sharpe_for_regime no longer accepts a
+buy_hold_sharpe_fn. Tests updated accordingly.
+"""
 from __future__ import annotations
 
 import json
@@ -69,48 +73,35 @@ def test_clean_incumbents_missing_regime_returns_empty():
     assert clean == []
 
 
-def test_hurdle_uses_best_incumbent_when_enough_clean():
-    """>=3 clean incumbents -> hurdle = max-Sharpe incumbent."""
+def test_hurdle_returns_mean_of_clean_incumbents():
+    """v2: hurdle = mean Sharpe of all clean incumbents (not max)."""
     table = _make_table([
         {"NEUTRAL": {"status_flag": "CLEAN", "sharpe_ci_low": 0.10, "sharpe_point": 0.30}},
-        {"NEUTRAL": {"status_flag": "CLEAN", "sharpe_ci_low": 0.15, "sharpe_point": 0.50}},  # best
+        {"NEUTRAL": {"status_flag": "CLEAN", "sharpe_ci_low": 0.15, "sharpe_point": 0.50}},
         {"NEUTRAL": {"status_flag": "CLEAN", "sharpe_ci_low": 0.08, "sharpe_point": 0.40}},
     ])
-    sentinel_called = []
-
-    def buy_hold_fn(regime):
-        sentinel_called.append(regime)
-        return 0.0  # should NOT be consulted when enough clean incumbents exist
-
-    hurdle, source = hurdle_sharpe_for_regime(table, "NEUTRAL", buy_hold_fn)
-    assert hurdle == 0.50
-    assert source == "incumbent:INC_1"
-    assert sentinel_called == []  # buy-and-hold path was not taken
+    hurdle, source = hurdle_sharpe_for_regime(table, "NEUTRAL")
+    # mean of 0.30, 0.50, 0.40 = 0.40
+    assert abs(hurdle - 0.40) < 1e-9
+    assert source == "mean_of_incumbents"
 
 
-def test_hurdle_falls_back_to_buy_hold_on_scarcity():
-    """<3 clean incumbents -> hurdle = buy_and_hold_fn(regime)."""
+def test_hurdle_returns_mean_when_single_clean():
+    """v2: single clean incumbent -> mean_of_incumbents (no scarcity fallback)."""
     table = _make_table([
         {"NEUTRAL": {"status_flag": "CLEAN", "sharpe_ci_low": 0.10, "sharpe_point": 0.30}},
         {"NEUTRAL": {"status_flag": "INSUFFICIENT_POWER", "sharpe_ci_low": None, "sharpe_point": None}},
     ])
-
-    def buy_hold_fn(regime):
-        assert regime == "NEUTRAL"
-        return 0.18
-
-    hurdle, source = hurdle_sharpe_for_regime(table, "NEUTRAL", buy_hold_fn)
-    assert hurdle == 0.18
-    assert source == "scarcity_fallback:buy_and_hold"
+    hurdle, source = hurdle_sharpe_for_regime(table, "NEUTRAL")
+    assert hurdle == 0.30
+    assert source == "mean_of_incumbents"
 
 
-def test_hurdle_falls_back_to_buy_hold_when_zero_clean():
-    """0 clean incumbents (Task 0e seed state) -> buy-and-hold."""
+def test_hurdle_returns_no_incumbent_when_zero_clean():
+    """v2: 0 clean incumbents -> (0.0, 'no_incumbent'), no fallback."""
     table = _make_table([
         {"NEUTRAL": {"status_flag": "INSUFFICIENT_POWER", "sharpe_ci_low": None, "sharpe_point": None}},
     ])
-
-    hurdle, source = hurdle_sharpe_for_regime(table, "NEUTRAL",
-                                              lambda r: 0.22)
-    assert hurdle == 0.22
-    assert source == "scarcity_fallback:buy_and_hold"
+    hurdle, source = hurdle_sharpe_for_regime(table, "NEUTRAL")
+    assert hurdle == 0.0
+    assert source == "no_incumbent"

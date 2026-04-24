@@ -98,7 +98,7 @@ def patched_env(monkeypatch, tmp_path):
     # by the Task 8 step 2 switch to the real regime-conditional buy-and-hold
     # and the subsequent decoupling of panel from event_dates.
     monkeypatch.setattr(run_pilot, "_compute_hurdle",
-                         lambda regime, **kw: (0.10, "scarcity_fallback:buy_and_hold"),
+                         lambda regime, **kw: (0.10, "null_basket:single_long:k=1:h=5"),
                          raising=False)
     # Stub the Haiku llm_call factory — MUST NOT be invoked during tests.
     def _blow_up(*a, **kw):
@@ -160,7 +160,7 @@ def test_pilot_approve_path(patched_env, monkeypatch):
     assert row["net_sharpe_mean"] == pytest.approx(0.42)
     assert row["n_events"] == 48
     assert row["hurdle_sharpe"] == pytest.approx(0.10)
-    assert row["hurdle_source"] == "scarcity_fallback:buy_and_hold"
+    assert row["hurdle_source"] == "null_basket:single_long:k=1:h=5"
     # passes_delta_in: 0.42 - 0.10 = 0.32 >= DELTA_IN_SAMPLE (0.15) -> True
     assert row["passes_delta_in"] is True
     # DSL fields present

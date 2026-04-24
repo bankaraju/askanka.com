@@ -1,13 +1,18 @@
-"""strategy_results_10 loader + per-regime hurdle + scarcity fallback."""
+"""strategy_results_10 loader + per-regime incumbent mean Sharpe helper.
+
+v2: scarcity-fallback removed. Every proposal now gets a
+construction-matched null-basket hurdle via `load_null_basket_hurdle`
+at the proposal call-site (run_pilot._compute_hurdle). This module
+retains `hurdle_sharpe_for_regime` only for incumbent-audit scripts
+that still want to report the per-regime incumbent mean.
+"""
 from __future__ import annotations
 
 import json
 from pathlib import Path
 from typing import Any
 
-from pipeline.autoresearch.regime_autoresearch.constants import (
-    INCUMBENT_SCARCITY_MIN, DATA_DIR,
-)
+from pipeline.autoresearch.regime_autoresearch.constants import DATA_DIR
 
 TABLE_PATH = DATA_DIR / "strategy_results_10.json"
 
@@ -28,11 +33,16 @@ def clean_incumbents_for_regime(table: dict, regime: str) -> list[dict]:
     return rows
 
 
-def hurdle_sharpe_for_regime(table: dict, regime: str,
-                              buy_hold_sharpe_fn) -> tuple[float, str]:
-    """Returns (hurdle_sharpe, source)."""
+def hurdle_sharpe_for_regime(table: dict, regime: str) -> tuple[float, str]:
+    """v2: return mean-of-clean-incumbents Sharpe; scarcity fallback removed.
+
+    Every proposal now gets a construction-matched null-basket hurdle via
+    `load_null_basket_hurdle` at the proposal call-site. This helper is
+    retained only for incumbent-audit scripts that still want to report
+    the per-regime incumbent mean.
+    """
     clean = clean_incumbents_for_regime(table, regime)
-    if len(clean) >= INCUMBENT_SCARCITY_MIN:
-        best = max(clean, key=lambda r: r["cell"]["sharpe_point"])
-        return float(best["cell"]["sharpe_point"]), f"incumbent:{best['strategy_id']}"
-    return buy_hold_sharpe_fn(regime), "scarcity_fallback:buy_and_hold"
+    if not clean:
+        return (0.0, "no_incumbent")
+    return (float(sum(r["cell"]["sharpe_point"] for r in clean) / len(clean)),
+            "mean_of_incumbents")

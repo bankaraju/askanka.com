@@ -48,10 +48,13 @@ from pipeline.autoresearch.regime_autoresearch.dsl import (
     K_GRID, Proposal, THRESHOLD_OPS,
 )
 from pipeline.autoresearch.regime_autoresearch.in_sample_runner import (
-    append_proposal_log, regime_buy_and_hold_sharpe, run_in_sample,
+    append_proposal_log, regime_buy_and_hold_sharpe, run_in_sample,  # noqa: F401 (regime_buy_and_hold_sharpe kept for rollback)
 )
 from pipeline.autoresearch.regime_autoresearch.incumbents import (
     TABLE_PATH, hurdle_sharpe_for_regime, load_table,
+)
+from pipeline.autoresearch.regime_autoresearch.null_basket_hurdle import (
+    load_null_basket_hurdle,
 )
 from pipeline.autoresearch.regime_autoresearch.proposer import (
     ProposerView, generate_proposal,
@@ -165,39 +168,69 @@ def _count_approved(log_path: Path, regime: str) -> int:
     return n
 
 
+def _null_basket_construction(construction_type: str) -> str:
+    """Map DSL construction_type to canonical null_basket_hurdle construction.
+
+    DSL types: "single_long", "single_short", "long_short_basket", "pair".
+    null_basket_hurdle CONSTRUCTIONS: "single_long", "single_short",
+        "top_k", "bottom_k", "long_short_basket".
+
+    "pair" maps to "long_short_basket" (closest analog — one long leg,
+    one short leg). "top_k" and "bottom_k" are not DSL types: threshold_op
+    encodes the direction, not the construction name.
+    """
+    _MAP = {
+        "single_long": "single_long",
+        "single_short": "single_short",
+        "long_short_basket": "long_short_basket",
+        "pair": "long_short_basket",  # closest analog
+    }
+    return _MAP.get(construction_type, "long_short_basket")
+
+
+def _null_basket_k(proposal) -> int:
+    """Extract cardinality k for the null basket lookup.
+
+    For top_k / bottom_k threshold_ops, threshold_value IS k (an integer
+    from K_GRID).  For everything else, the basket has a single ticker
+    so k=1.
+    """
+    if proposal.threshold_op in ("top_k", "bottom_k"):
+        return int(proposal.threshold_value)
+    return 1
+
+
 def _compute_hurdle(regime: str, panel: pd.DataFrame | None = None,
                     event_dates: pd.DatetimeIndex | None = None,
-                    hold_horizon: int = 1) -> tuple[float, str]:
-    """Delegate to incumbents.hurdle_sharpe_for_regime with the real
-    regime-conditional buy-and-hold Sharpe as the scarcity fallback.
+                    hold_horizon: int = 1,
+                    proposal=None) -> tuple[float, str]:
+    """v2: look up the construction-matched null-basket hurdle.
 
-    When incumbents are plentiful (>= INCUMBENT_SCARCITY_MIN clean), the
-    fallback is never consulted and can be anything — we still supply
-    the real function so the signature is consistent and a future table
-    change that drops incumbents below the scarcity threshold doesn't
-    silently revert to 0.0.
-
-    `panel` is the full unfiltered history; `event_dates` is the
-    regime-filtered date list to benchmark against. The caller is
-    responsible for building both (via `_build_panel` +
-    `_get_event_dates`) so the benchmark sees the same trade-day set as
-    the proposal.
+    Uses load_null_basket_hurdle(construction, k, hold_horizon, regime,
+    window='train_val') instead of the v1 NIFTY buy-and-hold / scarcity
+    fallback pair. Falls back gracefully when the parquet table is absent
+    (test or pre-build environments) or when the proposal is not provided.
 
     Returns (hurdle_sharpe, source).
     """
+    if proposal is not None:
+        construction = _null_basket_construction(proposal.construction_type)
+        k = _null_basket_k(proposal)
+        try:
+            hurdle = load_null_basket_hurdle(
+                construction=construction,
+                k=k,
+                hold_horizon=hold_horizon,
+                regime=regime,
+                window="train_val",
+            )
+            return hurdle, f"null_basket:{construction}:k={k}:h={hold_horizon}"
+        except (FileNotFoundError, KeyError):
+            # Parquet not built yet — fall through to incumbent table
+            pass
+    # Legacy path: used when proposal is None (tests / pre-build)
     table = load_table(TABLE_PATH)
-    if panel is None or event_dates is None:
-        # Plumbing path (tests) — can't compute a real buy-and-hold; defer
-        # to the zero lambda so behaviour is identical to the Task 2 stub
-        # when no panel is available.
-        return hurdle_sharpe_for_regime(
-            table, regime, buy_hold_sharpe_fn=lambda r: 0.0,
-        )
-    buy_hold_fn = lambda r: regime_buy_and_hold_sharpe(  # noqa: E731
-        panel, event_dates, benchmark_ticker="NIFTY",
-        hold_horizon=hold_horizon,
-    )
-    return hurdle_sharpe_for_regime(table, regime, buy_hold_sharpe_fn=buy_hold_fn)
+    return hurdle_sharpe_for_regime(table, regime)
 
 
 def _load_nifty_bars() -> pd.DataFrame:
@@ -754,7 +787,7 @@ def run_one_iteration(regime: str, log_path: Path,
     )
     hurdle_sharpe, hurdle_source = _compute_hurdle(
         regime, panel=panel, event_dates=event_dates,
-        hold_horizon=proposal.hold_horizon,
+        hold_horizon=proposal.hold_horizon, proposal=proposal,
     )
     result = run_in_sample(proposal, panel, log_path=log_path,
                            incumbent_sharpe=hurdle_sharpe,
