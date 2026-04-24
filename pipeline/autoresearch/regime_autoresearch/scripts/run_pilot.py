@@ -61,6 +61,14 @@ LOG_PATH = DATA_DIR / "proposal_log.jsonl"
 HOLDOUT_LOG_PATH = DATA_DIR / "holdout_outcomes.jsonl"
 REGIME_CSV = REPO_ROOT / "pipeline/data/regime_history.csv"
 DAILY_BARS_DIR = REPO_ROOT / "pipeline/data/research/phase_c/daily_bars"
+# Pseudo-ticker data sources. 5 of 20 DSL features
+# (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, plus features
+# that compose them) need NIFTY/VIX/REGIME series keyed by ticker name
+# inside the panel. Without these, those features return NaN for every
+# ticker and the compiler reports n_events=0 whenever Haiku picks one.
+NIFTY_PARQUET = DAILY_BARS_DIR / "NIFTY.parquet"  # canonical cache, may be absent
+NIFTY_CSV = REPO_ROOT / "pipeline/data/india_historical/indices/NIFTY_daily.csv"
+VIX_CSV = REPO_ROOT / "pipeline/data/vix_history.csv"
 
 
 def _count_approved(log_path: Path, regime: str) -> int:
@@ -110,10 +118,76 @@ def _compute_hurdle(regime: str, panel: pd.DataFrame | None = None,
     return hurdle_sharpe_for_regime(table, regime, buy_hold_sharpe_fn=buy_hold_fn)
 
 
+def _load_nifty_bars() -> pd.DataFrame:
+    """Load NIFTY 50 daily close bars. Tries the canonical parquet cache
+    first, then falls back to the authoritative india_historical CSV, then
+    finally to a yfinance fetch of ^NSEI written to the canonical cache.
+
+    Returns a DataFrame with columns [date, ticker="NIFTY", close, volume].
+    Volume is zero-filled — no feature consumes NIFTY volume/turnover and
+    the pseudo-ticker has no exchange-traded volume concept anyway.
+    """
+    if NIFTY_PARQUET.exists():
+        df = pd.read_parquet(NIFTY_PARQUET, columns=["date", "close"])
+    elif NIFTY_CSV.exists():
+        df = pd.read_csv(NIFTY_CSV, parse_dates=["date"], usecols=["date", "close"])
+    else:
+        from pipeline.autoresearch.regime_autoresearch._yfinance_util import (
+            download_ohlcv,
+        )
+        raw = download_ohlcv("^NSEI", TRAIN_VAL_START, "2026-04-23")
+        if raw.empty:
+            raise RuntimeError(
+                "NIFTY bars unavailable: no parquet cache, no india_historical "
+                "CSV, and yfinance fetch of ^NSEI failed"
+            )
+        df = raw[["date", "close"]].copy()
+        # Write to canonical cache for subsequent invocations.
+        NIFTY_PARQUET.parent.mkdir(parents=True, exist_ok=True)
+        df.to_parquet(NIFTY_PARQUET, index=False)
+
+    df = df.copy()
+    df["date"] = pd.to_datetime(df["date"])
+    df["ticker"] = "NIFTY"
+    df["volume"] = 0
+    return df[["date", "close", "volume", "ticker"]]
+
+
+def _load_vix_bars() -> pd.DataFrame:
+    """Load VIX daily close series from pipeline/data/vix_history.csv.
+
+    CSV columns: date, vix_close. Reshape to (date, ticker="VIX", close, volume).
+    """
+    if not VIX_CSV.exists():
+        raise FileNotFoundError(f"missing VIX history: {VIX_CSV}")
+    df = pd.read_csv(VIX_CSV, parse_dates=["date"])
+    df = df.rename(columns={"vix_close": "close"})
+    df["ticker"] = "VIX"
+    df["volume"] = 0
+    return df[["date", "close", "volume", "ticker"]]
+
+
+def _load_regime_bars(regime_df: pd.DataFrame) -> pd.DataFrame:
+    """Reshape regime_history.csv's signal_score column as a REGIME
+    pseudo-ticker series so macro_composite_60d_corr can correlate tickers
+    against the ETF regime score.
+    """
+    df = regime_df[["date", "signal_score"]].copy()
+    df = df.rename(columns={"signal_score": "close"})
+    df["ticker"] = "REGIME"
+    df["volume"] = 0
+    return df[["date", "close", "volume", "ticker"]]
+
+
 def _build_neutral_panel(regime: str) -> pd.DataFrame:
     """Assemble the (date, ticker, close, volume, regime_zone) panel for the
     train+val window, filtered to `regime`-tagged dates. Uses the 67
-    parquets in pipeline/data/research/phase_c/daily_bars.
+    parquets in pipeline/data/research/phase_c/daily_bars, plus the three
+    pseudo-ticker series (NIFTY/VIX/REGIME) required by 5 of 20 DSL
+    features (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, and
+    anything that composes them). Without the pseudo-tickers, those
+    features return NaN for every ticker and the compiler reports
+    n_events=0 regardless of threshold.
     """
     if not REGIME_CSV.exists():
         raise FileNotFoundError(f"missing regime history: {REGIME_CSV}")
@@ -125,12 +199,33 @@ def _build_neutral_panel(regime: str) -> pd.DataFrame:
 
     frames: list[pd.DataFrame] = []
     for parquet in sorted(DAILY_BARS_DIR.glob("*.parquet")):
+        # Skip the (potentially-cached) NIFTY parquet — it's loaded
+        # separately by _load_nifty_bars so we don't double-count.
+        if parquet.name == "NIFTY.parquet":
+            continue
         df = pd.read_parquet(parquet, columns=["date", "close", "volume"])
+        # Some auxiliary parquets under daily_bars/ (e.g. dii_net_daily,
+        # fii_net_daily, india_vix_daily) are empty placeholders from
+        # earlier Task 0a work. Skipping them avoids a pandas
+        # FutureWarning about concatenating all-NA entries and prevents
+        # spurious "tickers" from leaking into the panel.
+        if df.empty:
+            continue
         df["ticker"] = parquet.stem
         frames.append(df)
     if not frames:
         raise RuntimeError(f"no parquets under {DAILY_BARS_DIR}")
-    panel = pd.concat(frames, ignore_index=True)
+
+    # Load the three pseudo-ticker frames from their canonical sources and
+    # union them into the per-ticker panel. Consistent columns are
+    # enforced (date, ticker, close, volume).
+    nifty_df = _load_nifty_bars()
+    vix_df = _load_vix_bars()
+    regime_bars = _load_regime_bars(regime_df)
+
+    panel = pd.concat(
+        frames + [nifty_df, vix_df, regime_bars], ignore_index=True,
+    )
     panel = panel.merge(regime_window, on="date", how="inner")
     return panel
 

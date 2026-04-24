@@ -240,6 +240,82 @@ def test_system_prompt_inlines_all_dsl_enums():
     assert regime in prompt, "regime not interpolated into system prompt"
 
 
+def test_pilot_panel_has_pseudo_tickers(monkeypatch, tmp_path):
+    """_build_neutral_panel must union NIFTY/VIX/REGIME pseudo-ticker series
+    into the per-ticker panel. Without these, 5 of 20 DSL features
+    (beta_nifty_60d, beta_vix_60d, macro_composite_60d_corr, and any
+    features composing them) return NaN for every ticker and the compiler
+    reports n_events=0. This test pins the union behaviour in place.
+    """
+    # Build a tiny regime_history with 3 NEUTRAL dates inside train/val.
+    neutral_dates = ["2022-06-01", "2022-06-02", "2022-06-03"]
+    regime_csv = tmp_path / "regime_history.csv"
+    regime_csv.write_text(
+        "date,regime_zone,signal_score\n"
+        + "\n".join(
+            f"{d},NEUTRAL,{score}" for d, score in zip(
+                neutral_dates, [1.0, 2.0, 3.0],
+            )
+        )
+        + "\n"
+    )
+
+    # A matching 3-row NIFTY CSV and 3-row VIX CSV keyed by the same dates.
+    nifty_csv = tmp_path / "NIFTY_daily.csv"
+    nifty_csv.write_text(
+        "date,open,high,low,close,volume\n"
+        "2022-06-01,17000,17100,16900,17050,1000\n"
+        "2022-06-02,17050,17200,17000,17150,1100\n"
+        "2022-06-03,17150,17300,17100,17200,1200\n"
+    )
+    vix_csv = tmp_path / "vix_history.csv"
+    vix_csv.write_text(
+        "date,vix_close\n"
+        "2022-06-01,19.5\n"
+        "2022-06-02,20.0\n"
+        "2022-06-03,18.5\n"
+    )
+
+    # A minimal daily_bars dir with ONE real ticker parquet so the panel
+    # is non-empty (the panel builder raises RuntimeError on an empty
+    # frames list).
+    bars_dir = tmp_path / "daily_bars"
+    bars_dir.mkdir()
+    real = pd.DataFrame({
+        "date": pd.to_datetime(neutral_dates),
+        "open": [100.0, 101.0, 102.0],
+        "high": [103.0, 104.0, 105.0],
+        "low": [99.0, 100.0, 101.0],
+        "close": [102.0, 103.0, 104.0],
+        "volume": [1_000_000, 1_100_000, 1_200_000],
+    })
+    real.to_parquet(bars_dir / "XYZ.parquet", index=False)
+
+    # Point module-level constants at the stubs. The parquet path is
+    # deliberately inside bars_dir so _load_nifty_bars() falls through
+    # to the NIFTY_CSV branch.
+    monkeypatch.setattr(run_pilot, "REGIME_CSV", regime_csv)
+    monkeypatch.setattr(run_pilot, "NIFTY_PARQUET", bars_dir / "NIFTY.parquet")
+    monkeypatch.setattr(run_pilot, "NIFTY_CSV", nifty_csv)
+    monkeypatch.setattr(run_pilot, "VIX_CSV", vix_csv)
+    monkeypatch.setattr(run_pilot, "DAILY_BARS_DIR", bars_dir)
+
+    panel = run_pilot._build_neutral_panel("NEUTRAL")
+
+    tickers = set(panel["ticker"].unique())
+    assert "NIFTY" in tickers, "NIFTY pseudo-ticker missing from panel"
+    assert "VIX" in tickers, "VIX pseudo-ticker missing from panel"
+    assert "REGIME" in tickers, "REGIME pseudo-ticker missing from panel"
+    assert "XYZ" in tickers, "real ticker XYZ missing from panel"
+
+    assert len(panel[panel["ticker"] == "NIFTY"]) == 3
+    assert len(panel[panel["ticker"] == "VIX"]) == 3
+    assert len(panel[panel["ticker"] == "REGIME"]) == 3
+    # REGIME close must be signal_score, not signal_score column name left over.
+    regime_rows = panel[panel["ticker"] == "REGIME"].sort_values("date")
+    assert list(regime_rows["close"]) == [1.0, 2.0, 3.0]
+
+
 def test_pilot_view_isolation_preserved(patched_env, monkeypatch):
     """The proposer context built by the CLI must NOT call read_holdout_tail."""
     captured_view: dict = {}
