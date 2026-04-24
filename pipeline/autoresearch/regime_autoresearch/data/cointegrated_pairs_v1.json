@@ -1,0 +1,1007 @@
+{
+  "pairs": [
+    {
+      "coint_p": 0.03301,
+      "coint_t": -3.4931,
+      "leg_a": "ANGELONE",
+      "leg_b": "BSE",
+      "n_obs_train": 741,
+      "pair_id": "ANGELONE_BSE",
+      "sector": "FinSvc"
+    },
+    {
+      "coint_p": 0.031046,
+      "coint_t": -3.5155,
+      "leg_a": "ANGELONE",
+      "leg_b": "RECLTD",
+      "n_obs_train": 741,
+      "pair_id": "ANGELONE_RECLTD",
+      "sector": "FinSvc"
+    },
+    {
+      "coint_p": 0.023243,
+      "coint_t": -3.6184,
+      "leg_a": "CAMS",
+      "leg_b": "HDFCAMC",
+      "n_obs_train": 741,
+      "pair_id": "CAMS_HDFCAMC",
+      "sector": "FinSvc"
+    },
+    {
+      "coint_p": 0.042761,
+      "coint_t": -3.3963,
+      "leg_a": "CAMS",
+      "leg_b": "NUVAMA",
+      "n_obs_train": 138,
+      "pair_id": "CAMS_NUVAMA",
+      "sector": "FinSvc"
+    },
+    {
+      "coint_p": 0.023134,
+      "coint_t": -3.6201,
+      "leg_a": "HDFCAMC",
+      "leg_b": "KFINTECH",
+      "n_obs_train": 321,
+      "pair_id": "HDFCAMC_KFINTECH",
+      "sector": "FinSvc"
+    },
+    {
+      "coint_p": 0.002943,
+      "coint_t": -4.261,
+      "leg_a": "ABB",
+      "leg_b": "KEI",
+      "n_obs_train": 741,
+      "pair_id": "ABB_KEI",
+      "sector": "Electrical"
+    },
+    {
+      "coint_p": 0.005937,
+      "coint_t": -4.0575,
+      "leg_a": "ABB",
+      "leg_b": "SIEMENS",
+      "n_obs_train": 741,
+      "pair_id": "ABB_SIEMENS",
+      "sector": "Electrical"
+    },
+    {
+      "coint_p": 0.026089,
+      "coint_t": -3.5779,
+      "leg_a": "HDFCLIFE",
+      "leg_b": "ICICIPRULI",
+      "n_obs_train": 741,
+      "pair_id": "HDFCLIFE_ICICIPRULI",
+      "sector": "Insurance"
+    },
+    {
+      "coint_p": 0.013522,
+      "coint_t": -3.8008,
+      "leg_a": "NHPC",
+      "leg_b": "NTPC",
+      "n_obs_train": 741,
+      "pair_id": "NHPC_NTPC",
+      "sector": "Utilities"
+    },
+    {
+      "coint_p": 0.038156,
+      "coint_t": -3.4394,
+      "leg_a": "NHPC",
+      "leg_b": "POWERGRID",
+      "n_obs_train": 741,
+      "pair_id": "NHPC_POWERGRID",
+      "sector": "Utilities"
+    },
+    {
+      "coint_p": 0.016658,
+      "coint_t": -3.732,
+      "leg_a": "OIL",
+      "leg_b": "PETRONET",
+      "n_obs_train": 741,
+      "pair_id": "OIL_PETRONET",
+      "sector": "Energy"
+    },
+    {
+      "coint_p": 0.000318,
+      "coint_t": -4.8422,
+      "leg_a": "ADANIPORTS",
+      "leg_b": "CONCOR",
+      "n_obs_train": 741,
+      "pair_id": "ADANIPORTS_CONCOR",
+      "sector": "Logistics"
+    },
+    {
+      "coint_p": 0.025378,
+      "coint_t": -3.5876,
+      "leg_a": "ALKEM",
+      "leg_b": "APOLLOHOSP",
+      "n_obs_train": 741,
+      "pair_id": "ALKEM_APOLLOHOSP",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.036037,
+      "coint_t": -3.4607,
+      "leg_a": "ALKEM",
+      "leg_b": "FORTIS",
+      "n_obs_train": 741,
+      "pair_id": "ALKEM_FORTIS",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.02401,
+      "coint_t": -3.6071,
+      "leg_a": "APOLLOHOSP",
+      "leg_b": "FORTIS",
+      "n_obs_train": 741,
+      "pair_id": "APOLLOHOSP_FORTIS",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.032962,
+      "coint_t": -3.4937,
+      "leg_a": "APOLLOHOSP",
+      "leg_b": "MAXHEALTH",
+      "n_obs_train": 741,
+      "pair_id": "APOLLOHOSP_MAXHEALTH",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.027866,
+      "coint_t": -3.5544,
+      "leg_a": "APOLLOHOSP",
+      "leg_b": "SUNPHARMA",
+      "n_obs_train": 741,
+      "pair_id": "APOLLOHOSP_SUNPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.012998,
+      "coint_t": -3.8137,
+      "leg_a": "BIOCON",
+      "leg_b": "LAURUSLABS",
+      "n_obs_train": 741,
+      "pair_id": "BIOCON_LAURUSLABS",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.031693,
+      "coint_t": -3.508,
+      "leg_a": "BIOCON",
+      "leg_b": "PPLPHARMA",
+      "n_obs_train": 370,
+      "pair_id": "BIOCON_PPLPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.026521,
+      "coint_t": -3.5721,
+      "leg_a": "CIPLA",
+      "leg_b": "FORTIS",
+      "n_obs_train": 741,
+      "pair_id": "CIPLA_FORTIS",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.045984,
+      "coint_t": -3.3684,
+      "leg_a": "CIPLA",
+      "leg_b": "PPLPHARMA",
+      "n_obs_train": 370,
+      "pair_id": "CIPLA_PPLPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.016092,
+      "coint_t": -3.7436,
+      "leg_a": "FORTIS",
+      "leg_b": "MANKIND",
+      "n_obs_train": 235,
+      "pair_id": "FORTIS_MANKIND",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.028498,
+      "coint_t": -3.5464,
+      "leg_a": "FORTIS",
+      "leg_b": "SUNPHARMA",
+      "n_obs_train": 741,
+      "pair_id": "FORTIS_SUNPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.000106,
+      "coint_t": -5.1024,
+      "leg_a": "FORTIS",
+      "leg_b": "TORNTPHARM",
+      "n_obs_train": 741,
+      "pair_id": "FORTIS_TORNTPHARM",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.023447,
+      "coint_t": -3.6154,
+      "leg_a": "GLENMARK",
+      "leg_b": "MANKIND",
+      "n_obs_train": 235,
+      "pair_id": "GLENMARK_MANKIND",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.012712,
+      "coint_t": -3.8209,
+      "leg_a": "LAURUSLABS",
+      "leg_b": "PPLPHARMA",
+      "n_obs_train": 370,
+      "pair_id": "LAURUSLABS_PPLPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.019654,
+      "coint_t": -3.6762,
+      "leg_a": "MAXHEALTH",
+      "leg_b": "SUNPHARMA",
+      "n_obs_train": 741,
+      "pair_id": "MAXHEALTH_SUNPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.007425,
+      "coint_t": -3.9898,
+      "leg_a": "MAXHEALTH",
+      "leg_b": "TORNTPHARM",
+      "n_obs_train": 741,
+      "pair_id": "MAXHEALTH_TORNTPHARM",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.000428,
+      "coint_t": -4.7687,
+      "leg_a": "PPLPHARMA",
+      "leg_b": "SUNPHARMA",
+      "n_obs_train": 370,
+      "pair_id": "PPLPHARMA_SUNPHARMA",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.000819,
+      "coint_t": -4.6048,
+      "leg_a": "PPLPHARMA",
+      "leg_b": "TORNTPHARM",
+      "n_obs_train": 370,
+      "pair_id": "PPLPHARMA_TORNTPHARM",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.005784,
+      "coint_t": -4.0652,
+      "leg_a": "PPLPHARMA",
+      "leg_b": "ZYDUSLIFE",
+      "n_obs_train": 370,
+      "pair_id": "PPLPHARMA_ZYDUSLIFE",
+      "sector": "Pharma"
+    },
+    {
+      "coint_p": 0.03958,
+      "coint_t": -3.4257,
+      "leg_a": "BHARATFORG",
+      "leg_b": "RVNL",
+      "n_obs_train": 741,
+      "pair_id": "BHARATFORG_RVNL",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.022653,
+      "coint_t": -3.6274,
+      "leg_a": "BHARATFORG",
+      "leg_b": "SUZLON",
+      "n_obs_train": 741,
+      "pair_id": "BHARATFORG_SUZLON",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.04708,
+      "coint_t": -3.3593,
+      "leg_a": "BHEL",
+      "leg_b": "NBCC",
+      "n_obs_train": 741,
+      "pair_id": "BHEL_NBCC",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.004875,
+      "coint_t": -4.1158,
+      "leg_a": "DLF",
+      "leg_b": "INOXWIND",
+      "n_obs_train": 741,
+      "pair_id": "DLF_INOXWIND",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.038494,
+      "coint_t": -3.4361,
+      "leg_a": "DLF",
+      "leg_b": "LODHA",
+      "n_obs_train": 741,
+      "pair_id": "DLF_LODHA",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.020376,
+      "coint_t": -3.6639,
+      "leg_a": "DLF",
+      "leg_b": "RVNL",
+      "n_obs_train": 741,
+      "pair_id": "DLF_RVNL",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.043713,
+      "coint_t": -3.3879,
+      "leg_a": "HAVELLS",
+      "leg_b": "LODHA",
+      "n_obs_train": 741,
+      "pair_id": "HAVELLS_LODHA",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.043471,
+      "coint_t": -3.39,
+      "leg_a": "INOXWIND",
+      "leg_b": "LODHA",
+      "n_obs_train": 741,
+      "pair_id": "INOXWIND_LODHA",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.006054,
+      "coint_t": -4.0516,
+      "leg_a": "INOXWIND",
+      "leg_b": "NBCC",
+      "n_obs_train": 741,
+      "pair_id": "INOXWIND_NBCC",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.04773,
+      "coint_t": -3.3539,
+      "leg_a": "LODHA",
+      "leg_b": "SUZLON",
+      "n_obs_train": 741,
+      "pair_id": "LODHA_SUZLON",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.022037,
+      "coint_t": -3.637,
+      "leg_a": "OBEROIRLTY",
+      "leg_b": "RVNL",
+      "n_obs_train": 741,
+      "pair_id": "OBEROIRLTY_RVNL",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.042825,
+      "coint_t": -3.3957,
+      "leg_a": "OBEROIRLTY",
+      "leg_b": "SUZLON",
+      "n_obs_train": 741,
+      "pair_id": "OBEROIRLTY_SUZLON",
+      "sector": "Capital_Goods"
+    },
+    {
+      "coint_p": 0.016142,
+      "coint_t": -3.7425,
+      "leg_a": "DALBHARAT",
+      "leg_b": "SHREECEM",
+      "n_obs_train": 741,
+      "pair_id": "DALBHARAT_SHREECEM",
+      "sector": "Cement_Building"
+    },
+    {
+      "coint_p": 0.002343,
+      "coint_t": -4.3247,
+      "leg_a": "HINDZINC",
+      "leg_b": "JINDALSTEL",
+      "n_obs_train": 741,
+      "pair_id": "HINDZINC_JINDALSTEL",
+      "sector": "Metals"
+    },
+    {
+      "coint_p": 0.036846,
+      "coint_t": -3.4525,
+      "leg_a": "HINDZINC",
+      "leg_b": "JSWSTEEL",
+      "n_obs_train": 741,
+      "pair_id": "HINDZINC_JSWSTEEL",
+      "sector": "Metals"
+    },
+    {
+      "coint_p": 0.04559,
+      "coint_t": -3.3717,
+      "leg_a": "ASIANPAINT",
+      "leg_b": "PGEL",
+      "n_obs_train": 741,
+      "pair_id": "ASIANPAINT_PGEL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.040145,
+      "coint_t": -3.4203,
+      "leg_a": "ASIANPAINT",
+      "leg_b": "SOLARINDS",
+      "n_obs_train": 741,
+      "pair_id": "ASIANPAINT_SOLARINDS",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.041564,
+      "coint_t": -3.4071,
+      "leg_a": "ASIANPAINT",
+      "leg_b": "SUPREMEIND",
+      "n_obs_train": 741,
+      "pair_id": "ASIANPAINT_SUPREMEIND",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.036043,
+      "coint_t": -3.4607,
+      "leg_a": "ASIANPAINT",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "ASIANPAINT_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.001995,
+      "coint_t": -4.3688,
+      "leg_a": "ASTRAL",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "ASTRAL_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.020302,
+      "coint_t": -3.6652,
+      "leg_a": "PGEL",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "PGEL_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.036194,
+      "coint_t": -3.4591,
+      "leg_a": "PIDILITIND",
+      "leg_b": "SOLARINDS",
+      "n_obs_train": 741,
+      "pair_id": "PIDILITIND_SOLARINDS",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.004353,
+      "coint_t": -4.149,
+      "leg_a": "PIDILITIND",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "PIDILITIND_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.014118,
+      "coint_t": -3.7867,
+      "leg_a": "PIIND",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "PIIND_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.003709,
+      "coint_t": -4.1953,
+      "leg_a": "SOLARINDS",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "SOLARINDS_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.029252,
+      "coint_t": -3.537,
+      "leg_a": "SRF",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "SRF_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.014526,
+      "coint_t": -3.7774,
+      "leg_a": "SUPREMEIND",
+      "leg_b": "UPL",
+      "n_obs_train": 741,
+      "pair_id": "SUPREMEIND_UPL",
+      "sector": "Chemicals"
+    },
+    {
+      "coint_p": 0.00757,
+      "coint_t": -3.9839,
+      "leg_a": "AXISBANK",
+      "leg_b": "BANDHANBNK",
+      "n_obs_train": 741,
+      "pair_id": "AXISBANK_BANDHANBNK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.012366,
+      "coint_t": -3.8298,
+      "leg_a": "AXISBANK",
+      "leg_b": "INDIANB",
+      "n_obs_train": 741,
+      "pair_id": "AXISBANK_INDIANB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.001822,
+      "coint_t": -4.3935,
+      "leg_a": "AXISBANK",
+      "leg_b": "INDUSINDBK",
+      "n_obs_train": 741,
+      "pair_id": "AXISBANK_INDUSINDBK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.000824,
+      "coint_t": -4.6033,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "BANKBARODA",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_BANKBARODA",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.010996,
+      "coint_t": -3.8674,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "BANKINDIA",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_BANKINDIA",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.005202,
+      "coint_t": -4.0967,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "CANBK",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_CANBK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.000784,
+      "coint_t": -4.6161,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "FEDERALBNK",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_FEDERALBNK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.000862,
+      "coint_t": -4.5917,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "ICICIBANK",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_ICICIBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.041227,
+      "coint_t": -3.4102,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "IDFCFIRSTB",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_IDFCFIRSTB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.00282,
+      "coint_t": -4.273,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "INDIANB",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_INDIANB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.016397,
+      "coint_t": -3.7373,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "INDUSINDBK",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_INDUSINDBK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.021315,
+      "coint_t": -3.6484,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "PNB",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_PNB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.002177,
+      "coint_t": -4.345,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "SBIN",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_SBIN",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.004158,
+      "coint_t": -4.1623,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "UNIONBANK",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_UNIONBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.00379,
+      "coint_t": -4.189,
+      "leg_a": "BANDHANBNK",
+      "leg_b": "YESBANK",
+      "n_obs_train": 741,
+      "pair_id": "BANDHANBNK_YESBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.034466,
+      "coint_t": -3.4772,
+      "leg_a": "BANKBARODA",
+      "leg_b": "INDIANB",
+      "n_obs_train": 741,
+      "pair_id": "BANKBARODA_INDIANB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.023762,
+      "coint_t": -3.6107,
+      "leg_a": "CANBK",
+      "leg_b": "UNIONBANK",
+      "n_obs_train": 741,
+      "pair_id": "CANBK_UNIONBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.045895,
+      "coint_t": -3.3691,
+      "leg_a": "HDFCBANK",
+      "leg_b": "IDFCFIRSTB",
+      "n_obs_train": 741,
+      "pair_id": "HDFCBANK_IDFCFIRSTB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.028365,
+      "coint_t": -3.5481,
+      "leg_a": "ICICIBANK",
+      "leg_b": "YESBANK",
+      "n_obs_train": 741,
+      "pair_id": "ICICIBANK_YESBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.012101,
+      "coint_t": -3.8368,
+      "leg_a": "KOTAKBANK",
+      "leg_b": "NAM-INDIA",
+      "n_obs_train": 741,
+      "pair_id": "KOTAKBANK_NAM-INDIA",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.008947,
+      "coint_t": -3.9323,
+      "leg_a": "KOTAKBANK",
+      "leg_b": "PNB",
+      "n_obs_train": 741,
+      "pair_id": "KOTAKBANK_PNB",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.011169,
+      "coint_t": -3.8624,
+      "leg_a": "KOTAKBANK",
+      "leg_b": "RBLBANK",
+      "n_obs_train": 741,
+      "pair_id": "KOTAKBANK_RBLBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.013206,
+      "coint_t": -3.8085,
+      "leg_a": "KOTAKBANK",
+      "leg_b": "SBIN",
+      "n_obs_train": 741,
+      "pair_id": "KOTAKBANK_SBIN",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.00941,
+      "coint_t": -3.9165,
+      "leg_a": "KOTAKBANK",
+      "leg_b": "UNIONBANK",
+      "n_obs_train": 741,
+      "pair_id": "KOTAKBANK_UNIONBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.009877,
+      "coint_t": -3.9014,
+      "leg_a": "KOTAKBANK",
+      "leg_b": "YESBANK",
+      "n_obs_train": 741,
+      "pair_id": "KOTAKBANK_YESBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.040255,
+      "coint_t": -3.4193,
+      "leg_a": "SBIN",
+      "leg_b": "UNIONBANK",
+      "n_obs_train": 741,
+      "pair_id": "SBIN_UNIONBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.001589,
+      "coint_t": -4.4305,
+      "leg_a": "SBIN",
+      "leg_b": "YESBANK",
+      "n_obs_train": 741,
+      "pair_id": "SBIN_YESBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.005594,
+      "coint_t": -4.0752,
+      "leg_a": "UNIONBANK",
+      "leg_b": "YESBANK",
+      "n_obs_train": 741,
+      "pair_id": "UNIONBANK_YESBANK",
+      "sector": "Banks"
+    },
+    {
+      "coint_p": 0.045653,
+      "coint_t": -3.3712,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "CHOLAFIN",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_CHOLAFIN",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.042621,
+      "coint_t": -3.3976,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "HUDCO",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_HUDCO",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.041212,
+      "coint_t": -3.4104,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "IRFC",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_IRFC",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.044609,
+      "coint_t": -3.3801,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "LICHSGFIN",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_LICHSGFIN",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.034336,
+      "coint_t": -3.4786,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "LTF",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_LTF",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.029128,
+      "coint_t": -3.5385,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "MANAPPURAM",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_MANAPPURAM",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.029226,
+      "coint_t": -3.5373,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "MUTHOOTFIN",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_MUTHOOTFIN",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.040304,
+      "coint_t": -3.4188,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "PFC",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_PFC",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.04597,
+      "coint_t": -3.3685,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "PNBHOUSING",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_PNBHOUSING",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.040455,
+      "coint_t": -3.4174,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "SAMMAANCAP",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_SAMMAANCAP",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.042963,
+      "coint_t": -3.3945,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "SBICARD",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_SBICARD",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.034303,
+      "coint_t": -3.479,
+      "leg_a": "BAJFINANCE",
+      "leg_b": "SHRIRAMFIN",
+      "n_obs_train": 741,
+      "pair_id": "BAJFINANCE_SHRIRAMFIN",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.002098,
+      "coint_t": -4.3551,
+      "leg_a": "IRFC",
+      "leg_b": "PFC",
+      "n_obs_train": 741,
+      "pair_id": "IRFC_PFC",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.013218,
+      "coint_t": -3.8082,
+      "leg_a": "LTF",
+      "leg_b": "SHRIRAMFIN",
+      "n_obs_train": 741,
+      "pair_id": "LTF_SHRIRAMFIN",
+      "sector": "NBFC"
+    },
+    {
+      "coint_p": 0.000956,
+      "coint_t": -4.5648,
+      "leg_a": "BEL",
+      "leg_b": "HAL",
+      "n_obs_train": 741,
+      "pair_id": "BEL_HAL",
+      "sector": "Defence"
+    },
+    {
+      "coint_p": 0.006846,
+      "coint_t": -4.0145,
+      "leg_a": "COLPAL",
+      "leg_b": "TATACONSUM",
+      "n_obs_train": 741,
+      "pair_id": "COLPAL_TATACONSUM",
+      "sector": "FMCG"
+    },
+    {
+      "coint_p": 0.044413,
+      "coint_t": -3.3818,
+      "leg_a": "DABUR",
+      "leg_b": "GODFRYPHLP",
+      "n_obs_train": 741,
+      "pair_id": "DABUR_GODFRYPHLP",
+      "sector": "FMCG"
+    },
+    {
+      "coint_p": 0.000738,
+      "coint_t": -4.6318,
+      "leg_a": "MARICO",
+      "leg_b": "NESTLEIND",
+      "n_obs_train": 741,
+      "pair_id": "MARICO_NESTLEIND",
+      "sector": "FMCG"
+    },
+    {
+      "coint_p": 0.001384,
+      "coint_t": -4.4676,
+      "leg_a": "MARICO",
+      "leg_b": "PATANJALI",
+      "n_obs_train": 741,
+      "pair_id": "MARICO_PATANJALI",
+      "sector": "FMCG"
+    },
+    {
+      "coint_p": 0.001262,
+      "coint_t": -4.492,
+      "leg_a": "MARICO",
+      "leg_b": "TATACONSUM",
+      "n_obs_train": 741,
+      "pair_id": "MARICO_TATACONSUM",
+      "sector": "FMCG"
+    },
+    {
+      "coint_p": 0.01806,
+      "coint_t": -3.7049,
+      "leg_a": "HCLTECH",
+      "leg_b": "PERSISTENT",
+      "n_obs_train": 741,
+      "pair_id": "HCLTECH_PERSISTENT",
+      "sector": "IT"
+    },
+    {
+      "coint_p": 0.006572,
+      "coint_t": -4.0269,
+      "leg_a": "NAUKRI",
+      "leg_b": "POLICYBZR",
+      "n_obs_train": 601,
+      "pair_id": "NAUKRI_POLICYBZR",
+      "sector": "IT"
+    },
+    {
+      "coint_p": 0.034897,
+      "coint_t": -3.4727,
+      "leg_a": "POLICYBZR",
+      "leg_b": "TCS",
+      "n_obs_train": 601,
+      "pair_id": "POLICYBZR_TCS",
+      "sector": "IT"
+    },
+    {
+      "coint_p": 0.020634,
+      "coint_t": -3.6596,
+      "leg_a": "EICHERMOT",
+      "leg_b": "TIINDIA",
+      "n_obs_train": 741,
+      "pair_id": "EICHERMOT_TIINDIA",
+      "sector": "Consumer_Disc"
+    },
+    {
+      "coint_p": 0.035998,
+      "coint_t": -3.4612,
+      "leg_a": "HEROMOTOCO",
+      "leg_b": "TRENT",
+      "n_obs_train": 741,
+      "pair_id": "HEROMOTOCO_TRENT",
+      "sector": "Consumer_Disc"
+    }
+  ],
+  "train_window": [
+    "2021-04-23",
+    "2024-04-22"
+  ]
+}
