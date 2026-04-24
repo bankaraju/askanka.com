@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T09:34:06.989323+05:30",
+  "updated_at": "2026-04-24T09:48:28.910351+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -12,56 +12,74 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4347.8,
-          "pnl_pct": 1.47
+          "current": 4312.4,
+          "pnl_pct": 0.64
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 448.85,
-          "pnl_pct": -0.22
+          "current": 445.05,
+          "pnl_pct": -1.07
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1425.1,
-          "pnl_pct": 3.7
+          "current": 1414.5,
+          "pnl_pct": 2.93
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2495.5,
-          "pnl_pct": 2.97
+          "current": 2469.6,
+          "pnl_pct": 3.98
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1216.0,
-          "pnl_pct": 8.03
+          "current": 1209.0,
+          "pnl_pct": 8.55
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 202.21,
-          "pnl_pct": 5.06
+          "current": 200.84,
+          "pnl_pct": 5.7
         }
       ],
-      "spread_pnl_pct": 5.79,
-      "todays_move": 5.79,
+      "spread_pnl_pct": 7.43,
+      "todays_move": 7.43,
       "daily_stop": -0.99,
-      "two_day_stop": -1.98,
-      "trail_stop": 4.23,
-      "trail_budget": 1.98,
-      "avg_favorable": 1.98,
+      "two_day_stop": -1.97,
+      "trail_stop": 5.46,
+      "trail_budget": 1.97,
+      "avg_favorable": 1.97,
       "stop_source": "spread_stats",
-      "peak_pnl": 6.21,
+      "peak_pnl": 7.43,
       "source": "SPREAD",
       "trust_scores": {
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
+          "opus_side": null,
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+        },
         "BEL": {
           "trust_grade": "C",
           "trust_score": 55.0,
+          "opus_side": "LONG",
+          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+        },
+        "BDL": {
+          "trust_grade": "C",
+          "trust_score": 56.8,
+          "opus_side": null,
+          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        },
+        "HAL": {
+          "trust_grade": "B",
+          "trust_score": 69.5,
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
@@ -70,24 +88,6 @@
           "trust_score": 17.5,
           "opus_side": null,
           "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
-        },
-        "BDL": {
-          "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
-          "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
-        },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
         "TCS": {
           "trust_grade": "B+",
@@ -178,693 +178,6 @@
       "gate_reason": null
     },
     {
-      "signal_id": "BRK-2026-04-23-TECHM",
-      "spread_name": "Strategy 641",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "TECHM",
-          "entry": 1470.2,
-          "current": 1408.2,
-          "pnl_pct": 4.22
-        }
-      ],
-      "spread_pnl_pct": 3.08,
-      "todays_move": 3.08,
-      "daily_stop": -6.28,
-      "two_day_stop": -12.56,
-      "trail_stop": 1.08,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 3.08,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "TECHM": {
-          "trust_grade": "D",
-          "trust_score": 33.6,
-          "opus_side": null,
-          "thesis": "The company's commitment to shareholder returns is a significant strength, as evidenced by the '85% or more of free cash flow generated over five years to shareholders' guidance (FY23-24 AR). Actual dividend payout percentages (94% in FY25, 150% in FY24) and Free Cash Flow to PAT ratios (161.5% in FY25, 123% YTD in Q3 FY26) consistently exceed this target, demonstrating strong capital allocation and shareholder value creation."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "TECHM",
-        "z_score": -4.6,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -0.19,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-CROMPTON",
-      "spread_name": "Strategy 849",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "CROMPTON",
-          "entry": 261.01,
-          "current": 253.14,
-          "pnl_pct": 3.02
-        }
-      ],
-      "spread_pnl_pct": 2.92,
-      "todays_move": 2.92,
-      "daily_stop": -7.04,
-      "two_day_stop": -14.08,
-      "trail_stop": 1.79,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 3.79,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "CROMPTON": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "New category incubation and market entry execution is exceptional. Appliances segment grew 99% in Q1 FY22 from a near-zero base in FY21, with specific sub-category traction (geysers +205%, air coolers +90%, mixer grinders +125% in Q1 FY21; irons +55% in Q1 FY22). By FY24-25, appliance and LDA categories are now material contributors with #5 water heaters and #6 air coolers market rankings (AR). Rural channel delivered 195% growth in Q1 FY22, and rural contribution increased from 48% (fans reach) to 50%+ in rolling 12 months. E-commerce grew 76% in FY24, 149% in Q1 FY22. These expansions are backed by quantified concall evidence and AR actuals, not vague guidance. Premium premiumization strategy delivered: premium/deco fans grew 122%, super-premium fans 258% in Q1 FY22. This demonstrates management's ability to identify and execute market whitespace before it becomes obvious to Street."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "CROMPTON",
-        "z_score": -2.74,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -0.28,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-TMPV",
-      "spread_name": "Strategy 645",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "TMPV",
-          "entry": 359.95,
-          "current": 351.95,
-          "pnl_pct": 2.22
-        }
-      ],
-      "spread_pnl_pct": 1.93,
-      "todays_move": 1.93,
-      "daily_stop": -6.06,
-      "two_day_stop": -12.12,
-      "trail_stop": -0.07,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 1.93,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "TMPV": {
-          "trust_grade": "D",
-          "trust_score": 35.4,
-          "opus_side": null,
-          "thesis": "The biggest strength is the successful financial turnaround and consistent improvement in profitability, particularly for JLR, achieving EBIT margins over 6% for six consecutive quarters and strong consolidated PAT of \u20b931,807 crore in FY2023-24. This demonstrates effective cost management and operational efficiency in core business segments, even amidst supply chain challenges."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "TMPV",
-        "z_score": 2.17,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.55,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-RECLTD",
-      "spread_name": "Strategy 281",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "RECLTD",
-          "entry": 381.85,
-          "current": 374.3,
-          "pnl_pct": 1.98
-        }
-      ],
-      "spread_pnl_pct": 1.35,
-      "todays_move": 1.35,
-      "daily_stop": -5.93,
-      "two_day_stop": -11.86,
-      "trail_stop": -0.55,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 1.45,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "RECLTD": {
-          "trust_grade": "D",
-          "trust_score": 20.5,
-          "opus_side": null,
-          "thesis": "REC has consistently exceeded or delivered on its fund-raising targets through private placement of bonds/debentures. In FY2024-25, it raised \u20b91,42,204 crore against a target of \u20b91,05,000 crore (FY22-23 guidance) and \u20b91,45,000 crore (FY23-24 guidance), demonstrating strong market access and financial agility."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "RECLTD",
-        "z_score": 1.84,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.41,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-PETRONET",
-      "spread_name": "Strategy 156",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "PETRONET",
-          "entry": 277.54,
-          "current": 274.92,
-          "pnl_pct": 0.94
-        }
-      ],
-      "spread_pnl_pct": 0.68,
-      "todays_move": 0.68,
-      "daily_stop": -5.95,
-      "two_day_stop": -11.9,
-      "trail_stop": -0.9,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 1.1,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "PETRONET": {
-          "trust_grade": "C",
-          "trust_score": 41.8,
-          "opus_side": null,
-          "thesis": "The successful augmentation of the Dahej terminal capacity from 17.5 MMTPA to 22.5 MMTPA, as confirmed by the FY2024-25 Annual Report, demonstrates strong execution capability on critical infrastructure projects. This was an 'ongoing' project from the FY2023-24 guidance and has been delivered, enhancing the company's core asset base."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "PETRONET",
-        "z_score": 1.83,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.56,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-HDFCAMC",
-      "spread_name": "Strategy 582",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "HDFCAMC",
-          "entry": 2745.0,
-          "current": 2730.2,
-          "pnl_pct": 0.54
-        }
-      ],
-      "spread_pnl_pct": 1.46,
-      "todays_move": 1.46,
-      "daily_stop": -7.11,
-      "two_day_stop": -14.22,
-      "trail_stop": -0.51,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 1.49,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "HDFCAMC": {
-          "trust_grade": "A+",
-          "trust_score": 95.0,
-          "opus_side": null,
-          "thesis": "The company's ability to consistently maintain its operating margin within the guided 33-36 basis point range (actual 36 bps in Q3 FY26) despite telescopic pricing impacts, coupled with disciplined OPEX growth (12% TTM vs 12-15% guidance), highlights exceptional financial management and operating leverage. This is further supported by significant expansion in unique investors (15.4 million in Q3 FY26) and digital transaction adoption (94% in FY25)."
-        }
-      },
-      "regime_rank": {
-        "HDFCAMC": {
-          "episode_count": 87,
-          "tradeable_rate": 0.881,
-          "persistence_rate": 0.5238,
-          "hit_rate": 0.5357,
-          "avg_drift_1d": -0.001659
-        }
-      },
-      "correlation_breaks": {
-        "HDFCAMC": {
-          "classification": "OPPORTUNITY",
-          "action": "ADD",
-          "z_score": 1.53,
-          "expected_return": -1.55,
-          "actual_return": -0.01,
-          "oi_anomaly": false,
-          "trade_rec": {
-            "direction": "SHORT",
-            "entry": "market",
-            "stop_pct": 1.51,
-            "target_pct": -4.66,
-            "hold_days": 3,
-            "size_inr": 50000
-          }
-        }
-      },
-      "oi_anomalies": {
-        "HDFCAMC": null
-      },
-      "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg HDFCAMC has trust_grade A+ (rank 7 >= 6)",
-      "break_detail": {
-        "symbol": "HDFCAMC",
-        "z_score": 1.53,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.55,
-        "actual_return": 1.23,
-        "days_in_regime": 1
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-MOTILALOFS",
-      "spread_name": "Strategy 578",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "MOTILALOFS",
-          "entry": 806.95,
-          "current": 784.9,
-          "pnl_pct": 2.73
-        }
-      ],
-      "spread_pnl_pct": 2.13,
-      "todays_move": 2.13,
-      "daily_stop": -7.25,
-      "two_day_stop": -14.5,
-      "trail_stop": 0.43,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 2.43,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "MOTILALOFS": {
-          "trust_grade": "A+",
-          "trust_score": 93.3,
-          "opus_side": null,
-          "thesis": "Exceptional execution on CRITICAL profitability and AUM growth metrics. In FY2024-25, consolidated ROE delivered 25% (vs 20%+ target) with PAT of \u20b92,508 Cr (+2.5% YoY). AMC AUM surged 72% YoY to \u20b91,23,397 Cr, HFC disbursements grew 76% YoY to \u20b91,794 Cr (with GNPA/NNPA at 0.8%/0.4% within targets), and distribution AUM expanded 33% YoY to \u20b931,551 Cr. Revenue growth of 18.4% (\u20b98,417 Cr) with annuity revenue >60% of total demonstrates successful business model diversification. The company has also consistently beaten guidance on retail client acquisition (48 Lakh, +14% YoY in FY25) and market share metrics (cash 7.6%, FO 8.5%), proving operational execution excellence."
-        }
-      },
-      "regime_rank": {
-        "MOTILALOFS": {
-          "episode_count": 87,
-          "tradeable_rate": 0.9286,
-          "persistence_rate": 0.4762,
-          "hit_rate": 0.4762,
-          "avg_drift_1d": -0.004687
-        }
-      },
-      "correlation_breaks": {
-        "MOTILALOFS": {
-          "classification": "OPPORTUNITY",
-          "action": "ADD",
-          "z_score": 1.57,
-          "expected_return": -2.45,
-          "actual_return": 0.01,
-          "oi_anomaly": false,
-          "trade_rec": {
-            "direction": "SHORT",
-            "entry": "market",
-            "stop_pct": 2.35,
-            "target_pct": -7.35,
-            "hold_days": 3,
-            "size_inr": 50000
-          }
-        }
-      },
-      "oi_anomalies": {
-        "MOTILALOFS": null
-      },
-      "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg MOTILALOFS has trust_grade A+ (rank 7 >= 6)",
-      "break_detail": {
-        "symbol": "MOTILALOFS",
-        "z_score": 1.57,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -2.45,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-EXIDEIND",
-      "spread_name": "Strategy 305",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "EXIDEIND",
-          "entry": 353.8,
-          "current": 344.3,
-          "pnl_pct": 2.69
-        }
-      ],
-      "spread_pnl_pct": 1.78,
-      "todays_move": 1.78,
-      "daily_stop": -6.76,
-      "two_day_stop": -13.52,
-      "trail_stop": -0.22,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 1.78,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "EXIDEIND": {
-          "trust_grade": "D",
-          "trust_score": 21.9,
-          "opus_side": null,
-          "thesis": "The company's significant equity investment of Rs 2,852 crore in the lithium-ion cell manufacturing facility as of Oct 2024, which is ahead of the pro-rata target for FY2025-26 (Rs 2,000 crore for a Rs 6,000 crore total by FY2031-33), demonstrates a strong financial commitment to its new growth engine. This proactive investment, despite project delays, signals confidence in the long-term vision."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "EXIDEIND",
-        "z_score": 2.23,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.91,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-VEDL",
-      "spread_name": "Strategy 971",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "VEDL",
-          "entry": 758.8,
-          "current": 725.5,
-          "pnl_pct": 4.39
-        }
-      ],
-      "spread_pnl_pct": 3.08,
-      "todays_move": 3.08,
-      "daily_stop": -6.27,
-      "two_day_stop": -12.54,
-      "trail_stop": 1.08,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 3.08,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "VEDL": {
-          "trust_grade": "F",
-          "trust_score": 5.7,
-          "opus_side": null,
-          "thesis": "The company's ability to achieve record operational and financial performance, including 'highest ever quarterly EBITDA of Rs.15,171 crores' and 'lifetime high revenue and PAT of Rs.7,807 crores' in Q3FY26, demonstrates strong execution in core operations and cost optimization. The progress on the demerger scheme, with NCLT approval and a target effective date of April 1st, also shows a commitment to structural transformation."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "VEDL",
-        "z_score": -1.65,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.26,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-HAVELLS",
-      "spread_name": "Strategy 409",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "HAVELLS",
-          "entry": 1294.6,
-          "current": 1250.8,
-          "pnl_pct": 3.38
-        }
-      ],
-      "spread_pnl_pct": 2.76,
-      "todays_move": 2.76,
-      "daily_stop": -7.28,
-      "two_day_stop": -14.56,
-      "trail_stop": 0.79,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 2.79,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "HAVELLS": {
-          "trust_grade": "A",
-          "trust_score": 87.1,
-          "opus_side": null,
-          "thesis": "The company's consistent delivery on its R&D spend target, investing >1% of Net sales annually (1.11% in FY2023-24), and its commitment to shareholder returns through a recommended final dividend of Rs 6.00 per share for FY2024-25, demonstrate a strong focus on innovation and financial discipline."
-        }
-      },
-      "regime_rank": {
-        "HAVELLS": {
-          "episode_count": 87,
-          "tradeable_rate": 0.9048,
-          "persistence_rate": 0.4524,
-          "hit_rate": 0.4286,
-          "avg_drift_1d": -0.002911
-        }
-      },
-      "correlation_breaks": {
-        "HAVELLS": {
-          "classification": "OPPORTUNITY",
-          "action": "ADD",
-          "z_score": -1.55,
-          "expected_return": -0.68,
-          "actual_return": -2.5,
-          "oi_anomaly": false,
-          "trade_rec": {
-            "direction": "SHORT",
-            "entry": "market",
-            "stop_pct": 1.76,
-            "target_pct": -2.03,
-            "hold_days": 3,
-            "size_inr": 50000
-          }
-        }
-      },
-      "oi_anomalies": {
-        "HAVELLS": {
-          "anomaly_type": "OI_SPIKE",
-          "pcr": 0.4361,
-          "sentiment": "BEARISH",
-          "oi_change": 3303000,
-          "pcr_flip": false
-        }
-      },
-      "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg HAVELLS has trust_grade A (rank 6 >= 6)",
-      "break_detail": {
-        "symbol": "HAVELLS",
-        "z_score": -1.55,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -0.68,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-TVSMOTOR",
-      "spread_name": "Strategy 638",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "TVSMOTOR",
-          "entry": 3636.0,
-          "current": 3474.8,
-          "pnl_pct": 4.43
-        }
-      ],
-      "spread_pnl_pct": 3.29,
-      "todays_move": 3.29,
-      "daily_stop": -6.56,
-      "two_day_stop": -13.12,
-      "trail_stop": 2.02,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 4.02,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "TVSMOTOR": {
-          "trust_grade": "F",
-          "trust_score": 18.9,
-          "opus_side": null,
-          "thesis": "TVS Motor demonstrates strong execution in EV market expansion and renewable energy adoption. The company exceeded its target for EV geographical presence, expanding beyond 130 towns to 'about 250 towns' by Q3 FY26. Furthermore, its renewable energy usage reached 95.32% in Indian operations by FY25, showing strong progress towards its 100% commitment."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "TVSMOTOR",
-        "z_score": -1.51,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -0.18,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-APLAPOLLO",
-      "spread_name": "Strategy 349",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "APLAPOLLO",
-          "entry": 2121.1,
-          "current": 2014.1,
-          "pnl_pct": 5.04
-        }
-      ],
-      "spread_pnl_pct": 4.54,
-      "todays_move": 4.54,
-      "daily_stop": -7.18,
-      "two_day_stop": -14.36,
-      "trail_stop": 2.54,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 4.54,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "APLAPOLLO": {
-          "trust_grade": "F",
-          "trust_score": 0.0,
-          "opus_side": null,
-          "thesis": "The consistent focus on capacity expansion and value-added products, even if slightly behind schedule, demonstrates a clear strategic direction. The company's ability to maintain a low net debt-equity (0.0x in FY25) and strong operating cash flow (C12.1 Bn in FY25) provides a solid financial foundation for future growth initiatives."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "APLAPOLLO",
-        "z_score": -1.89,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -0.8,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
       "signal_id": "BRK-2026-04-23-TATAELXSI",
       "spread_name": "Strategy 700",
       "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
@@ -876,12 +189,12 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4240.0,
-          "pnl_pct": 2.64
+          "current": 4213.0,
+          "pnl_pct": 3.26
         }
       ],
-      "spread_pnl_pct": 2.48,
-      "todays_move": 2.48,
+      "spread_pnl_pct": 2.98,
+      "todays_move": 2.98,
       "daily_stop": -7.02,
       "two_day_stop": -14.04,
       "trail_stop": 1.15,
@@ -915,307 +228,289 @@
       }
     },
     {
-      "signal_id": "BRK-2026-04-23-MPHASIS",
-      "spread_name": "Strategy 548",
+      "signal_id": "BRK-2026-04-24-LAURUSLABS",
+      "spread_name": "Strategy 734",
       "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-24",
       "long_legs": [],
       "short_legs": [
         {
-          "ticker": "MPHASIS",
-          "entry": 2331.0,
-          "current": 2241.3,
-          "pnl_pct": 3.85
+          "ticker": "LAURUSLABS",
+          "entry": 1129.2,
+          "current": 1135.9,
+          "pnl_pct": -0.59
         }
       ],
-      "spread_pnl_pct": 2.23,
-      "todays_move": 2.23,
-      "daily_stop": -7.7,
-      "two_day_stop": -15.4,
-      "trail_stop": 0.36,
+      "spread_pnl_pct": -0.37,
+      "todays_move": -0.37,
+      "daily_stop": -2.47,
+      "two_day_stop": -4.94,
+      "trail_stop": -2.0,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 2.36,
+      "peak_pnl": -0.59,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
-        "MPHASIS": {
-          "trust_grade": "A+",
-          "trust_score": 96.2,
+        "LAURUSLABS": {
+          "trust_grade": "F",
+          "trust_score": 0.0,
           "opus_side": null,
-          "thesis": "Mphasis's consistent and significant over-delivery on environmental targets, specifically the 5% yearly decrease in energy consumption (actual ~5.97% average) and 1% yearly decrease in carbon footprint (actual ~6.72% average) since 2015, as reported in the FY23 AR (Page 11), highlights a strong commitment and effective execution in sustainability initiatives."
+          "thesis": "The company continues to invest heavily in R&D, with R&D spend to revenue at 4.6% in FY25, indicating a sustained commitment to innovation and product pipeline development. This long-term strategic focus is crucial for a pharmaceutical company."
         }
       },
       "regime_rank": {
-        "MPHASIS": {
-          "episode_count": 87,
-          "tradeable_rate": 0.8095,
-          "persistence_rate": 0.4405,
-          "hit_rate": 0.5,
-          "avg_drift_1d": -0.00209
-        }
-      },
-      "correlation_breaks": {
-        "MPHASIS": {
-          "classification": "OPPORTUNITY",
-          "action": "ADD",
-          "z_score": -1.59,
-          "expected_return": -0.6,
-          "actual_return": -1.95,
-          "oi_anomaly": false,
-          "trade_rec": {
-            "direction": "SHORT",
-            "entry": "market",
-            "stop_pct": 1.27,
-            "target_pct": -1.8,
-            "hold_days": 3,
-            "size_inr": 50000
-          }
-        }
-      },
-      "oi_anomalies": {
-        "MPHASIS": null
-      },
-      "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg MPHASIS has trust_grade A+ (rank 7 >= 6)",
-      "break_detail": {
-        "symbol": "MPHASIS",
-        "z_score": -1.59,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -0.6,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-BLUESTARCO",
-      "spread_name": "Strategy 216",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "BLUESTARCO",
-          "entry": 1898.0,
-          "current": 1824.4,
-          "pnl_pct": 3.88
-        }
-      ],
-      "spread_pnl_pct": 3.74,
-      "todays_move": 3.74,
-      "daily_stop": -7.62,
-      "two_day_stop": -15.24,
-      "trail_stop": 1.99,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 3.99,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "BLUESTARCO": {
-          "trust_grade": "C",
-          "trust_score": 53.0,
-          "opus_side": null,
-          "thesis": "Blue Star's ability to consistently meet or exceed its revenue growth targets (FY24 growth of 23.6% vs 15% target) and maintain market share (13.5% in Q1FY24, 13.75% in Q1FY25) in a volatile market, coupled with strong operating margin performance in key segments (Segment-I EBIT 9.9% vs 7.5-8% outlook in Q1FY25), demonstrates robust execution and market resilience."
-        }
-      },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "BLUESTARCO",
-        "z_score": -1.56,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.04,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-UNIONBANK",
-      "spread_name": "Strategy 447",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "UNIONBANK",
-          "entry": 194.89,
-          "current": 176.67,
-          "pnl_pct": 9.35
-        }
-      ],
-      "spread_pnl_pct": 7.72,
-      "todays_move": 7.72,
-      "daily_stop": -8.22,
-      "two_day_stop": -16.44,
-      "trail_stop": 6.94,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 8.94,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "UNIONBANK": {
-          "trust_grade": "A+",
-          "trust_score": 100.0,
-          "opus_side": null,
-          "thesis": "The bank's robust digital transformation efforts and the resulting operational efficiencies are a significant strength. With a capital budget of INR 1,600 Cr for technology in FY2025-26, the implementation of advanced cybersecurity frameworks, and 80% of liabilities and accounts being opened digitally, the bank is well-positioned to enhance customer service, streamline operations, and drive future business growth through digital channels (Q3 FY26 concall, Page 11-12)."
-        }
-      },
-      "regime_rank": {
-        "UNIONBANK": {
-          "episode_count": 87,
+        "LAURUSLABS": {
+          "episode_count": 88,
           "tradeable_rate": 0.9405,
-          "persistence_rate": 0.5,
-          "hit_rate": 0.4167,
-          "avg_drift_1d": -0.006152
+          "persistence_rate": 0.5238,
+          "hit_rate": 0.6071,
+          "avg_drift_1d": -8e-05
         }
       },
       "correlation_breaks": {
-        "UNIONBANK": {
-          "classification": "OPPORTUNITY",
+        "LAURUSLABS": {
+          "classification": "OPPORTUNITY_LAG",
           "action": "ADD",
-          "z_score": -2.06,
-          "expected_return": -1.42,
-          "actual_return": -6.39,
+          "z_score": 3.03,
+          "expected_return": -2.74,
+          "actual_return": 0.34,
           "oi_anomaly": false,
-          "trade_rec": {
-            "direction": "SHORT",
-            "entry": "market",
-            "stop_pct": 3.63,
-            "target_pct": -4.25,
-            "hold_days": 3,
-            "size_inr": 50000
-          }
+          "trade_rec": "SHORT"
         }
       },
       "oi_anomalies": {
-        "UNIONBANK": null
+        "LAURUSLABS": null
+      },
+      "conviction_score": 63.355,
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "LAURUSLABS",
+        "z_score": 3.03,
+        "classification": "OPPORTUNITY_LAG",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -2.74,
+        "actual_return": 0.56,
+        "days_in_regime": 1
+      }
+    },
+    {
+      "signal_id": "BRK-2026-04-24-TATAELXSI",
+      "spread_name": "Strategy 188",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-24",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "TATAELXSI",
+          "entry": 4233.5,
+          "current": 4213.0,
+          "pnl_pct": 0.48
+        }
+      ],
+      "spread_pnl_pct": 0.19,
+      "todays_move": 0.19,
+      "daily_stop": -3.38,
+      "two_day_stop": -6.76,
+      "trail_stop": -1.81,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 0.19,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "TATAELXSI": {
+          "trust_grade": "C",
+          "trust_score": 50.6,
+          "opus_side": null,
+          "thesis": "**Automotive/Transportation vertical has achieved demonstrable ramp-up of large SDV-led deals with sustainable momentum.** Transportation revenue grew 13.8% YoY in 9M FY26 (Rs 1,961.9 Cr) and accelerated 7.7% QoQ in Q3, driven by: (1) successful execution on 'large deals won earlier in the year', (2) 'normalization of work streams' with strategic OEM client that recovered from prior quarter disruption, (3) entry into 'adjacency businesses' (off-road, construction equipment, railway) with 7.5-8% current mix targeting 20% over 2-3 years. This vertical now represents 55%+ of revenue and is delivering both volume growth and geographic/customer diversification (Europe, U.S., Japan, India all showing growth per concall). The segment is also validated by management's credible track record: CEO states 'our share in the overall spend of this customer has only increased' over 5+ years, indicating durable value capture. Operating leverage from transportation growth (200 bps margin benefit in Q3) is concrete and replicable, unlike Media/Healthcare recovery promises which remain unverified."
+        }
+      },
+      "regime_rank": {
+        "TATAELXSI": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8095,
+          "persistence_rate": 0.3929,
+          "hit_rate": 0.4167,
+          "avg_drift_1d": -0.005234
+        }
+      },
+      "correlation_breaks": {
+        "TATAELXSI": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 2.2,
+          "expected_return": -1.16,
+          "actual_return": 0.2,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "TATAELXSI": null
+      },
+      "conviction_score": 53.835,
+      "gate_reason": null,
+      "break_detail": {
+        "symbol": "TATAELXSI",
+        "z_score": 2.2,
+        "classification": "OPPORTUNITY_LAG",
+        "regime": "CAUTION",
+        "oi_anomaly": false,
+        "expected_1d": -1.16,
+        "actual_return": 0.2,
+        "days_in_regime": 1
+      }
+    },
+    {
+      "signal_id": "BRK-2026-04-24-DIVISLAB",
+      "spread_name": "Strategy 627",
+      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-24",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "DIVISLAB",
+          "entry": 6408.5,
+          "current": 6398.0,
+          "pnl_pct": 0.16
+        }
+      ],
+      "spread_pnl_pct": 0.21,
+      "todays_move": 0.21,
+      "daily_stop": -2.08,
+      "two_day_stop": -4.16,
+      "trail_stop": -1.79,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 0.21,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "DIVISLAB": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
+          "opus_side": null,
+          "thesis": "Divi's consistent delivery on revenue growth, achieving an 18% YoY growth in Q1 FY25, exceeding their general double-digit growth guidance. This, coupled with successful US FDA inspection at Unit-II (with only one procedural observation) and steady progress on the Unit-III Greenfield expansion (Rs. 1,018 crores spent towards Rs. 1,500 crore target), demonstrates strong operational execution and regulatory compliance."
+        }
+      },
+      "regime_rank": {
+        "DIVISLAB": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8929,
+          "persistence_rate": 0.4881,
+          "hit_rate": 0.5476,
+          "avg_drift_1d": 0.002134
+        }
+      },
+      "correlation_breaks": {
+        "DIVISLAB": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.95,
+          "expected_return": -0.87,
+          "actual_return": 0.09,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "DIVISLAB": null
       },
       "conviction_score": 50.0,
-      "gate_reason": "BLOCKED: short leg UNIONBANK has trust_grade A+ (rank 7 >= 6)",
+      "gate_reason": "BLOCKED: short leg DIVISLAB has trust_grade A (rank 6 >= 6)",
       "break_detail": {
-        "symbol": "UNIONBANK",
-        "z_score": -2.06,
-        "classification": "OPPORTUNITY",
+        "symbol": "DIVISLAB",
+        "z_score": 1.95,
+        "classification": "OPPORTUNITY_LAG",
         "regime": "CAUTION",
         "oi_anomaly": false,
-        "expected_1d": -1.42,
-        "actual_return": null,
-        "days_in_regime": null
+        "expected_1d": -0.87,
+        "actual_return": -0.12,
+        "days_in_regime": 1
       }
     },
     {
-      "signal_id": "BRK-2026-04-23-SONACOMS",
-      "spread_name": "Strategy 801",
+      "signal_id": "BRK-2026-04-24-IEX",
+      "spread_name": "Strategy 824",
       "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
       "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-24",
       "long_legs": [],
       "short_legs": [
         {
-          "ticker": "SONACOMS",
-          "entry": 587.9,
-          "current": 569.55,
-          "pnl_pct": 3.12
+          "ticker": "IEX",
+          "entry": 128.4,
+          "current": 126.11,
+          "pnl_pct": 1.78
         }
       ],
-      "spread_pnl_pct": 2.23,
-      "todays_move": 2.23,
-      "daily_stop": -7.52,
-      "two_day_stop": -15.04,
-      "trail_stop": 0.65,
+      "spread_pnl_pct": 1.56,
+      "todays_move": 1.56,
+      "daily_stop": -3.19,
+      "two_day_stop": -6.38,
+      "trail_stop": -0.44,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 2.65,
+      "peak_pnl": 1.56,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
-        "SONACOMS": {
-          "trust_grade": "D",
-          "trust_score": 33.0,
+        "IEX": {
+          "trust_grade": "F",
+          "trust_score": 12.0,
           "opus_side": null,
-          "thesis": "The company's biggest strength lies in its consistent and strong performance in increasing BEV revenue share. The guidance from FY2022-23 and FY2023-24 targeted 'over 45% of revenue from BEVs by FY2025-26' and '45% of revenue from EV-targeted products by 2026'. As of Q1 FY25, BEV revenue share reached 33%, which is ahead of the pro-rata trajectory needed to hit the FY2025-26 target (33% actual vs ~30.33% pro-rata). This demonstrates strong execution on a critical strategic priority."
+          "thesis": "The company's ability to exceed the GDP growth forecast for FY2025-26 (IMF revised to 7.3% vs. guidance of 6.2-6.5%) demonstrates a strong underlying economic environment that could eventually benefit the exchange. Furthermore, the progress in BESS capacity awarded (13.2 GWH awarded) indicates a positive long-term trend for energy storage, which IEX is positioning itself to capitalize on, even if the immediate 'needed' capacity target is still in progress."
         }
       },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
-      "gate_reason": null,
-      "break_detail": {
-        "symbol": "SONACOMS",
-        "z_score": -1.82,
-        "classification": "OPPORTUNITY",
-        "regime": "CAUTION",
-        "oi_anomaly": false,
-        "expected_1d": -1.05,
-        "actual_return": null,
-        "days_in_regime": null
-      }
-    },
-    {
-      "signal_id": "BRK-2026-04-23-TATATECH",
-      "spread_name": "Strategy 656",
-      "spread_description": "Phase C intraday peer-divergence fade. Mechanical flatten at 14:30 IST; see break-detail sub-row for z-score and expected vs actual move.",
-      "category": "phase_c",
-      "tier": "SIGNAL",
-      "open_date": "2026-04-23",
-      "long_legs": [],
-      "short_legs": [
-        {
-          "ticker": "TATATECH",
-          "entry": 574.7,
-          "current": 557.1,
-          "pnl_pct": 3.06
-        }
-      ],
-      "spread_pnl_pct": 1.86,
-      "todays_move": 1.86,
-      "daily_stop": -2.65,
-      "two_day_stop": -5.3,
-      "trail_stop": -0.14,
-      "trail_budget": 2.0,
-      "avg_favorable": 2.0,
-      "stop_source": "atr_14",
-      "peak_pnl": 1.86,
-      "source": "CORRELATION_BREAK",
-      "trust_scores": {
-        "TATATECH": {
-          "trust_grade": "D",
-          "trust_score": 30.0,
-          "opus_side": null,
-          "thesis": "The company's ability to significantly exceed its headcount target for the BMW TechWorks India joint venture, reaching over 1,500 engineers by Q3 FY26 against a target of 'nearing 1,000 by end-2025', demonstrates strong execution in strategic partnerships and talent acquisition for critical growth areas. This also highlights successful integration and scaling of key client relationships. (FY24-25 AR, Page 16; Q3 FY26 Concall, Page 6)"
+      "regime_rank": {
+        "IEX": {
+          "episode_count": 88,
+          "tradeable_rate": 0.881,
+          "persistence_rate": 0.4762,
+          "hit_rate": 0.4643,
+          "avg_drift_1d": -0.003644
         }
       },
-      "regime_rank": null,
-      "correlation_breaks": null,
-      "oi_anomalies": null,
-      "conviction_score": null,
+      "correlation_breaks": {
+        "IEX": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.61,
+          "expected_return": -2.07,
+          "actual_return": -0.76,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "IEX": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.785,
+          "sentiment": "NEUTRAL",
+          "oi_change": 12457500,
+          "pcr_flip": false
+        }
+      },
+      "conviction_score": 58.0,
       "gate_reason": null,
       "break_detail": {
-        "symbol": "TATATECH",
-        "z_score": -1.67,
-        "classification": "OPPORTUNITY",
+        "symbol": "IEX",
+        "z_score": 1.61,
+        "classification": "OPPORTUNITY_LAG",
         "regime": "CAUTION",
         "oi_anomaly": false,
-        "expected_1d": -0.91,
-        "actual_return": null,
-        "days_in_regime": null
+        "expected_1d": -2.07,
+        "actual_return": -0.76,
+        "days_in_regime": 1
       }
     }
   ],
