@@ -168,6 +168,32 @@ def test_pilot_counter_reads_existing_log(patched_env, monkeypatch, capsys):
         f"expected counter '4 of ~20' in stdout, got: {out!r}"
 
 
+def test_strip_fences_to_json_handles_common_haiku_wrappers():
+    """The fence-stripper must isolate ``{...}`` from four common Haiku shapes:
+    clean JSON, ```json-fenced, plain ```-fenced, and leading prose.
+    """
+    body = '{"feature": "ret_5d", "hold_horizon": 5}'
+
+    # 1. Clean JSON — must round-trip verbatim (modulo whitespace).
+    assert run_pilot._strip_fences_to_json(body) == body
+
+    # 2. ```json ... ``` fenced
+    fenced_json = f"```json\n{body}\n```"
+    assert run_pilot._strip_fences_to_json(fenced_json) == body
+
+    # 3. ``` ... ``` fenced (no language tag)
+    fenced_plain = f"```\n{body}\n```"
+    assert run_pilot._strip_fences_to_json(fenced_plain) == body
+
+    # 4. Leading prose then JSON
+    prosed = f"Here is the proposal:\n{body}\nThis is based on recent data."
+    assert run_pilot._strip_fences_to_json(prosed) == body
+
+    # Also assert the loud-failure branch for a response with no JSON at all.
+    with pytest.raises(ValueError, match="no JSON object"):
+        run_pilot._strip_fences_to_json("sorry, I cannot comply.")
+
+
 def test_pilot_view_isolation_preserved(patched_env, monkeypatch):
     """The proposer context built by the CLI must NOT call read_holdout_tail."""
     captured_view: dict = {}

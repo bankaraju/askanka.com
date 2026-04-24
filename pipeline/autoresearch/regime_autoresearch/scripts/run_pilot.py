@@ -21,6 +21,23 @@ from pathlib import Path
 
 import pandas as pd
 
+
+def _load_env_file() -> None:
+    """Load pipeline/.env into os.environ if present. Stdlib-only, no dotenv dep.
+    Quietly no-ops if the file is missing; never overwrites existing env vars."""
+    env_file = Path(__file__).resolve().parents[3] / ".env"  # pipeline/.env
+    if not env_file.exists():
+        return
+    for line in env_file.read_text().splitlines():
+        if "=" not in line or line.strip().startswith("#"):
+            continue
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+_load_env_file()
+
+
 from pipeline.autoresearch.regime_autoresearch.constants import (
     DATA_DIR, DELTA_IN_SAMPLE, PROPOSER_MODEL, REGIMES, REPO_ROOT,
     TRAIN_VAL_END, TRAIN_VAL_START,
@@ -92,6 +109,36 @@ def _build_neutral_panel(regime: str) -> pd.DataFrame:
     return panel
 
 
+def _strip_fences_to_json(raw: str) -> str:
+    """Extract the first balanced ``{...}`` JSON object from a Haiku response.
+
+    Handles all of:
+      * clean ``{...}`` with no wrapper
+      * triple-backtick fenced with or without a ``json`` tag
+      * leading or trailing prose around the JSON object
+
+    The caller (proposer) is responsible for ``json.loads``; this helper only
+    isolates the candidate substring via position-based slicing so we don't
+    accidentally swallow parse errors here.
+
+    Raises ``ValueError`` if no balanced-looking JSON object is found, so a
+    genuinely-broken LLM response is loud rather than silent.
+    """
+    stripped = raw.strip()
+    try:
+        start = stripped.index("{")
+        end = stripped.rindex("}")
+    except ValueError:
+        raise ValueError(
+            "LLM response contained no JSON object: " + raw[:200]
+        ) from None
+    if end < start:
+        raise ValueError(
+            "LLM response contained no JSON object: " + raw[:200]
+        )
+    return stripped[start:end + 1]
+
+
 def _build_llm_call():
     """Factory for an anthropic messages.create wrapper that returns raw JSON.
 
@@ -135,7 +182,15 @@ def _build_llm_call():
         text = "".join(
             b.text for b in resp.content if getattr(b, "type", "") == "text"
         )
-        return text.strip()
+        # Persist the raw pre-strip response so BLOCKED iterations leave a
+        # forensic artefact without needing another paid API call.
+        try:
+            (DATA_DIR / "last_llm_response.txt").write_text(text, encoding="utf-8")
+        except Exception:  # pragma: no cover — best-effort logging only
+            pass
+        # Haiku sometimes ignores the "no markdown fences" instruction; strip
+        # fences / leading prose here so the proposer gets clean JSON.
+        return _strip_fences_to_json(text)
 
     return _call
 
