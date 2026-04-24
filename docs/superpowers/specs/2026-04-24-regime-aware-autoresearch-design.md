@@ -478,8 +478,8 @@ These land in v2 and later, after v1 produces its first forward-shadow result.
 
 ---
 
-## 19. Open questions for user review
+## 19. Resolved design parameters (user-approved 2026-04-24)
 
-1. **Forward-shadow floor.** Is 60 trading days / 50 events the right minimum, or should we go longer (90/75) given H-003's small-n brittleness? Recommendation: start at 60/50, measure forward-Sharpe CI width on the first 3 HOLDOUT_PASS candidates, tighten in v2 if too noisy.
-2. **VIX history provenance.** Do we have a clean 2021–2024 India VIX close source? Recommendation: yfinance `^INDIAVIX` primary, NSE archive fallback. Validate causality and gap-fill policy (forward-fill ≤ 2 bars only) in Task 0 itself.
-3. **BH-FDR batch cadence.** §9 says holdout BH-FDR runs per batch. Is monthly right, or should we fire when ≥10 PRE_REGISTERED rules have accumulated, whichever first? The implementation plan will pin a specific rule — confirm your preference.
+1. **Forward-shadow floor = 60 trading days / 50 events.** Locked for v1. Will measure forward-Sharpe CI width on the first 3 HOLDOUT_PASS candidates and tighten in v2 if too noisy.
+2. **VIX history source = yfinance `^INDIAVIX` primary, NSE archive fallback.** Causality check + forward-fill ≤ 2 bars only gap-fill policy implemented in Task 0.
+3. **BH-FDR batch cadence = whichever-first rule.** Fire holdout BH-FDR pass when EITHER (a) a calendar month has passed since the last batch OR (b) ≥10 PRE_REGISTERED rules have accumulated since the last batch. Pinned in `constants.py`.
