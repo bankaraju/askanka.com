@@ -1,0 +1,5 @@
+# Pin shell scripts to LF so Windows (core.autocrlf=true) cannot flip them
+# to CRLF and break invocation under msys bash. Our pre-commit hook lives
+# under pipeline/scripts/hooks/ and MUST stay LF or it will fail with
+# `$'\r': command not found` when git executes it.
+*.sh text eol=lf

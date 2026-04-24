@@ -25,7 +25,7 @@ TRADING_PATTERNS='(_strategy\.py|_signal_generator\.py|_backtest\.py|_ranker\.py
 NEW_STRATEGY_FILES=$(echo "$STAGED" | grep -E "$TRADING_PATTERNS" || true)
 [[ -z "$NEW_STRATEGY_FILES" ]] && exit 0
 
-if ! git diff --cached --name-only | grep -q "hypothesis-registry.jsonl"; then
+if ! git diff --cached --name-only | grep -qE '(^|/)hypothesis-registry\.jsonl$'; then
   echo "ERROR: new trading-rule file(s) without hypothesis-registry.jsonl entry:" >&2
   echo "$NEW_STRATEGY_FILES" >&2
   echo "See docs/superpowers/specs/2026-04-24-regime-aware-autoresearch-design.md §13." >&2
