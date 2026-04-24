@@ -15,7 +15,10 @@ import pytest
 
 from pipeline.autoresearch.regime_autoresearch import proposer as proposer_mod
 from pipeline.autoresearch.regime_autoresearch import in_sample_runner as isr_mod
-from pipeline.autoresearch.regime_autoresearch.dsl import Proposal
+from pipeline.autoresearch.regime_autoresearch.dsl import (
+    ABSOLUTE_THRESHOLD_GRID, CONSTRUCTION_TYPES, FEATURES, HOLD_HORIZONS,
+    K_GRID, Proposal, THRESHOLD_OPS,
+)
 from pipeline.autoresearch.regime_autoresearch.scripts import run_pilot
 
 
@@ -192,6 +195,47 @@ def test_strip_fences_to_json_handles_common_haiku_wrappers():
     # Also assert the loud-failure branch for a response with no JSON at all.
     with pytest.raises(ValueError, match="no JSON object"):
         run_pilot._strip_fences_to_json("sorry, I cannot comply.")
+
+
+def test_system_prompt_inlines_all_dsl_enums():
+    """The Haiku system prompt must enumerate every DSL enum literally.
+
+    Prior versions described the grammar abstractly ("must be a grid member"),
+    which let Haiku confabulate values (construction_type="absolute",
+    feature="rsi_14"). Guarding against future regressions where someone
+    shortens the prompt and loses an enum.
+    """
+    regime = "NEUTRAL"
+    prompt = run_pilot._build_system_prompt(regime)
+
+    # Every FEATURE must appear verbatim.
+    for feat in FEATURES:
+        assert feat in prompt, f"feature {feat!r} missing from system prompt"
+
+    # Every CONSTRUCTION_TYPE must appear verbatim.
+    for ctype in CONSTRUCTION_TYPES:
+        assert ctype in prompt, f"construction_type {ctype!r} missing from system prompt"
+
+    # Every THRESHOLD_OP must appear verbatim.
+    for op in THRESHOLD_OPS:
+        assert op in prompt, f"threshold_op {op!r} missing from system prompt"
+
+    # Every HOLD_HORIZON value must appear verbatim.
+    for h in HOLD_HORIZONS:
+        assert str(h) in prompt, f"hold_horizon {h!r} missing from system prompt"
+
+    # Every ABSOLUTE_THRESHOLD_GRID value must appear verbatim.
+    for v in ABSOLUTE_THRESHOLD_GRID:
+        assert str(v) in prompt, (
+            f"ABSOLUTE_THRESHOLD_GRID value {v!r} missing from system prompt"
+        )
+
+    # Every K_GRID value must appear verbatim.
+    for k in K_GRID:
+        assert str(k) in prompt, f"K_GRID value {k!r} missing from system prompt"
+
+    # Regime must be interpolated so the LLM can't drift to another label.
+    assert regime in prompt, "regime not interpolated into system prompt"
 
 
 def test_pilot_view_isolation_preserved(patched_env, monkeypatch):

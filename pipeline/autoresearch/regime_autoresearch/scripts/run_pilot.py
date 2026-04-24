@@ -42,7 +42,10 @@ from pipeline.autoresearch.regime_autoresearch.constants import (
     DATA_DIR, DELTA_IN_SAMPLE, PROPOSER_MODEL, REGIMES, REPO_ROOT,
     TRAIN_VAL_END, TRAIN_VAL_START,
 )
-from pipeline.autoresearch.regime_autoresearch.dsl import Proposal
+from pipeline.autoresearch.regime_autoresearch.dsl import (
+    ABSOLUTE_THRESHOLD_GRID, CONSTRUCTION_TYPES, FEATURES, HOLD_HORIZONS,
+    K_GRID, Proposal, THRESHOLD_OPS,
+)
 from pipeline.autoresearch.regime_autoresearch.in_sample_runner import (
     append_proposal_log, run_in_sample,
 )
@@ -139,6 +142,42 @@ def _strip_fences_to_json(raw: str) -> str:
     return stripped[start:end + 1]
 
 
+def _build_system_prompt(regime: str) -> str:
+    """Build the Haiku system prompt with every DSL enum inlined verbatim.
+
+    Prior versions described the grammar abstractly ("must be a grid member"),
+    which let Haiku confabulate field values (e.g. construction_type="absolute",
+    feature="rsi_14"). We now enumerate every allowed value imported from dsl.py
+    so the prompt stays in sync if the grammar grows.
+    """
+    features = ", ".join(FEATURES)
+    constructions = ", ".join(CONSTRUCTION_TYPES)
+    ops = ", ".join(f'"{op}"' for op in THRESHOLD_OPS)
+    abs_grid = ", ".join(str(v) for v in ABSOLUTE_THRESHOLD_GRID)
+    k_grid = ", ".join(str(v) for v in K_GRID)
+    horizons = ", ".join(str(h) for h in HOLD_HORIZONS)
+    return (
+        "You generate a single DSL proposal as strict JSON (no markdown "
+        "fences, no prose).\n\n"
+        "Required keys: construction_type, feature, threshold_op, "
+        "threshold_value, hold_horizon, regime, pair_id.\n\n"
+        "ALLOWED VALUES — pick EXACTLY one of the listed items for each "
+        "field:\n"
+        f"- construction_type: one of: {constructions}\n"
+        f"- feature: one of: {features}\n"
+        f"- threshold_op: one of: {ops}\n"
+        "- threshold_value: when threshold_op is \">\" or \"<\", must be a "
+        f"number from ABSOLUTE_THRESHOLD_GRID [{abs_grid}]; when "
+        "threshold_op is \"top_k\" or \"bottom_k\" (construction_type must be "
+        f"long_short_basket), must be an integer from K_GRID [{k_grid}]\n"
+        f"- hold_horizon: one of: {horizons}\n"
+        f"- regime: must be \"{regime}\"\n"
+        "- pair_id: must be null unless construction_type is \"pair\"\n\n"
+        "Respond with the JSON object only. No code fences. No preamble. "
+        "Start with { and end with }."
+    )
+
+
 def _build_llm_call():
     """Factory for an anthropic messages.create wrapper that returns raw JSON.
 
@@ -156,15 +195,7 @@ def _build_llm_call():
     client = _anthropic.Anthropic()
 
     def _call(model: str, context: dict) -> str:
-        system = (
-            "You are a quantitative researcher proposing ONE trading rule as a "
-            "JSON object matching the DSL grammar. Respond with ONLY the JSON "
-            "object — no markdown fences, no commentary. Fields: "
-            "construction_type, feature, threshold_op, threshold_value, "
-            "hold_horizon, regime, pair_id. threshold_value MUST be a grid "
-            "member (see ABSOLUTE_THRESHOLD_GRID or K_GRID). pair_id must be "
-            "null unless construction_type == 'pair'."
-        )
+        system = _build_system_prompt(context["regime"])
         user = (
             f"Regime: {context['regime']}\n"
             f"Recent in-sample proposals (last 200): "
