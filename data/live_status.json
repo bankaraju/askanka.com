@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T10:05:49.366204+05:30",
+  "updated_at": "2026-04-24T10:19:10.788023+05:30",
   "positions": [
     {
       "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
@@ -12,44 +12,44 @@
         {
           "ticker": "HAL",
           "entry": 4284.8,
-          "current": 4302.0,
-          "pnl_pct": 0.4
+          "current": 4315.4,
+          "pnl_pct": 0.71
         },
         {
           "ticker": "BEL",
           "entry": 449.85,
-          "current": 444.15,
-          "pnl_pct": -1.27
+          "current": 443.15,
+          "pnl_pct": -1.49
         },
         {
           "ticker": "BDL",
           "entry": 1374.2,
-          "current": 1395.4,
-          "pnl_pct": 1.54
+          "current": 1409.7,
+          "pnl_pct": 2.58
         }
       ],
       "short_legs": [
         {
           "ticker": "TCS",
           "entry": 2572.0,
-          "current": 2466.9,
-          "pnl_pct": 4.09
+          "current": 2461.4,
+          "pnl_pct": 4.3
         },
         {
           "ticker": "INFY",
           "entry": 1322.1,
-          "current": 1196.3,
-          "pnl_pct": 9.52
+          "current": 1191.9,
+          "pnl_pct": 9.85
         },
         {
           "ticker": "WIPRO",
           "entry": 212.98,
-          "current": 199.34,
-          "pnl_pct": 6.4
+          "current": 199.38,
+          "pnl_pct": 6.39
         }
       ],
-      "spread_pnl_pct": 7.43,
-      "todays_move": 7.43,
+      "spread_pnl_pct": 6.94,
+      "todays_move": 6.94,
       "daily_stop": -0.99,
       "two_day_stop": -1.97,
       "trail_stop": 5.46,
@@ -59,12 +59,6 @@
       "peak_pnl": 7.43,
       "source": "SPREAD",
       "trust_scores": {
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
-        },
         "HAL": {
           "trust_grade": "B",
           "trust_score": 69.5,
@@ -83,17 +77,23 @@
           "opus_side": "LONG",
           "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
         },
-        "WIPRO": {
-          "trust_grade": "A",
-          "trust_score": 83.7,
-          "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
-        },
         "BDL": {
           "trust_grade": "C",
           "trust_score": 56.8,
           "opus_side": null,
           "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
+        },
+        "TCS": {
+          "trust_grade": "B+",
+          "trust_score": 72.4,
+          "opus_side": null,
+          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
+        },
+        "WIPRO": {
+          "trust_grade": "A",
+          "trust_score": 83.7,
+          "opus_side": null,
+          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
         }
       },
       "regime_rank": {
@@ -189,12 +189,12 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4355.0,
-          "current": 4222.1,
-          "pnl_pct": 3.05
+          "current": 4230.8,
+          "pnl_pct": 2.85
         }
       ],
-      "spread_pnl_pct": 2.98,
-      "todays_move": 2.98,
+      "spread_pnl_pct": 3.01,
+      "todays_move": 3.01,
       "daily_stop": -7.02,
       "two_day_stop": -14.04,
       "trail_stop": 1.15,
@@ -223,7 +223,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -0.69,
-        "actual_return": 0.2,
+        "actual_return": 0.04,
         "days_in_regime": 1
       }
     },
@@ -239,19 +239,19 @@
         {
           "ticker": "LAURUSLABS",
           "entry": 1129.2,
-          "current": 1130.85,
-          "pnl_pct": -0.15
+          "current": 1128.25,
+          "pnl_pct": 0.08
         }
       ],
-      "spread_pnl_pct": -0.37,
-      "todays_move": -0.37,
+      "spread_pnl_pct": -0.3,
+      "todays_move": -0.3,
       "daily_stop": -2.47,
       "two_day_stop": -4.94,
       "trail_stop": -2.0,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": -0.15,
+      "peak_pnl": 0.08,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "LAURUSLABS": {
@@ -293,7 +293,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -2.74,
-        "actual_return": 0.14,
+        "actual_return": -0.04,
         "days_in_regime": 1
       }
     },
@@ -309,19 +309,19 @@
         {
           "ticker": "TATAELXSI",
           "entry": 4233.5,
-          "current": 4222.1,
-          "pnl_pct": 0.27
+          "current": 4230.8,
+          "pnl_pct": 0.06
         }
       ],
-      "spread_pnl_pct": 0.19,
-      "todays_move": 0.19,
+      "spread_pnl_pct": 0.23,
+      "todays_move": 0.23,
       "daily_stop": -3.38,
       "two_day_stop": -6.76,
-      "trail_stop": -1.81,
+      "trail_stop": -1.77,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 0.19,
+      "peak_pnl": 0.23,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "TATAELXSI": {
@@ -363,7 +363,7 @@
         "regime": "CAUTION",
         "oi_anomaly": false,
         "expected_1d": -1.16,
-        "actual_return": 0.2,
+        "actual_return": 0.04,
         "days_in_regime": 1
       }
     },
@@ -379,19 +379,19 @@
         {
           "ticker": "DIVISLAB",
           "entry": 6408.5,
-          "current": 6395.0,
-          "pnl_pct": 0.21
+          "current": 6370.0,
+          "pnl_pct": 0.6
         }
       ],
-      "spread_pnl_pct": 0.21,
-      "todays_move": 0.21,
+      "spread_pnl_pct": 0.37,
+      "todays_move": 0.37,
       "daily_stop": -2.08,
       "two_day_stop": -4.16,
-      "trail_stop": -1.79,
+      "trail_stop": -1.63,
       "trail_budget": 2.0,
       "avg_favorable": 2.0,
       "stop_source": "atr_14",
-      "peak_pnl": 0.21,
+      "peak_pnl": 0.37,
       "source": "CORRELATION_BREAK",
       "trust_scores": {
         "DIVISLAB": {
@@ -449,12 +449,12 @@
         {
           "ticker": "IEX",
           "entry": 128.4,
-          "current": 126.97,
-          "pnl_pct": 1.11
+          "current": 126.9,
+          "pnl_pct": 1.17
         }
       ],
-      "spread_pnl_pct": 1.56,
-      "todays_move": 1.56,
+      "spread_pnl_pct": 1.02,
+      "todays_move": 1.02,
       "daily_stop": -3.19,
       "two_day_stop": -6.38,
       "trail_stop": -0.44,
