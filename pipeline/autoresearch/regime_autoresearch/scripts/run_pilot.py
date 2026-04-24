@@ -570,6 +570,13 @@ def _make_row(proposal: Proposal, approval_status: str,
         row["n_events"] = result.get("n_events_in_sample")
         row["hurdle_sharpe"] = hurdle_sharpe
         row["hurdle_source"] = hurdle_source
+        # Task #191 — fold breakdown from K-fold time-series CV; carried
+        # into the row so the downstream reader can see cross-time
+        # Sharpe robustness, not just the aggregate.
+        row["fold_sharpes"] = result.get("fold_sharpes")
+        row["fold_n_events"] = result.get("fold_n_events")
+        row["sharpe_oos_std"] = result.get("sharpe_oos_std")
+        row["insufficient_for_folds"] = result.get("insufficient_for_folds")
         verdict = _compute_verdict(
             row["n_events"], row["net_sharpe_mean"], hurdle_sharpe,
         )
@@ -719,10 +726,34 @@ def run_one_iteration(regime: str, log_path: Path,
     events_mark = "OK" if passes_min_events else "FAIL"
     print("\n--- IN-SAMPLE RESULT ---")
     print(f"  proposal_id     : {row['proposal_id']}")
-    print(f"  n_events        : {row['n_events']}")
-    print(f"  net_sharpe_mean : {row['net_sharpe_mean']:.4f}")
+    fold_n = row.get("fold_n_events")
+    if fold_n:
+        fold_n_str = ", ".join(str(n) for n in fold_n)
+        print(
+            f"  n_events        : {row['n_events']} "
+            f"(folds: {fold_n_str})"
+        )
+    else:
+        print(f"  n_events        : {row['n_events']}")
+    fold_s = row.get("fold_sharpes")
+    if fold_s:
+        fold_s_str = ", ".join(f"{s:+.2f}" for s in fold_s)
+        print(f"  fold_sharpes    : [{fold_s_str}]")
+    oos_std = row.get("sharpe_oos_std")
+    if oos_std is not None:
+        print(
+            f"  net_sharpe_mean : {row['net_sharpe_mean']:+.4f}   "
+            f"(OOS sigma: {oos_std:.4f})"
+        )
+    else:
+        print(f"  net_sharpe_mean : {row['net_sharpe_mean']:.4f}")
+    if row.get("insufficient_for_folds"):
+        print(
+            "  WARNING         : insufficient events for K-fold CV; "
+            "single-pass fallback used"
+        )
     print(f"  hurdle_sharpe   : {hurdle_sharpe:.4f}  ({hurdle_source})")
-    gap_str = f"{gap:.4f}" if gap is not None else "n/a"
+    gap_str = f"{gap:+.4f}" if gap is not None else "n/a"
     print(
         f"  delta_in gap    : {gap_str}  (target: {DELTA_IN_SAMPLE:.2f}) {delta_mark}"
     )

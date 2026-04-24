@@ -26,6 +26,7 @@ import numpy as np
 import pandas as pd
 
 from pipeline.autoresearch.overshoot_compliance.slippage_grid import apply_level, LEVELS
+from pipeline.autoresearch.regime_autoresearch._walk_forward import split_walk_forward
 from pipeline.autoresearch.regime_autoresearch.dsl import Proposal
 from pipeline.autoresearch.regime_autoresearch.features import build_feature_matrix
 
@@ -333,13 +334,28 @@ def _net_sharpe(event_rets_pct: pd.Series, level: str = "S1",
 def run_in_sample(p: Proposal, panel: pd.DataFrame, log_path: Path,
                   incumbent_sharpe: float,
                   event_dates: pd.DatetimeIndex | None = None,
-                  tickers: list[str] | None = None) -> dict[str, Any]:
+                  tickers: list[str] | None = None,
+                  n_folds: int = 4) -> dict[str, Any]:
     """Run one proposal end-to-end in-sample and persist the row.
 
     `event_dates` and `tickers` default to the panel's own unique values
     (excluding pseudo-tickers NIFTY / VIX / REGIME) — passing them
     explicitly is the production path, which is used by run_pilot so the
     event set is governed by the regime filter, not the panel accidentally.
+
+    Task #191 — in-sample evaluation now uses K=`n_folds` chronological
+    folds with `max(2, hold_horizon)`-day embargo between them. Per-fold
+    Sharpes are computed and mean-aggregated to produce the reported
+    `net_sharpe_in_sample`. This estimates cross-time Sharpe robustness
+    and prevents early-heavy alpha from looking uniformly strong. Our
+    DSL rules have no trainable parameters, so this is time-series
+    cross-validation for Sharpe estimation, NOT purged walk-forward in
+    the Lopez de Prado / ML sense.
+
+    If there are too few events to form >= 2 folds of
+    `MIN_EVENTS_PER_FOLD` each, falls back to a single-pass evaluation
+    with `insufficient_for_folds=True` in the log row so the downstream
+    reader knows the Sharpe is not cross-time-validated.
 
     The result dict is appended to log_path as a single JSONL row before
     being returned.
@@ -353,14 +369,64 @@ def run_in_sample(p: Proposal, panel: pd.DataFrame, log_path: Path,
         tickers = sorted(
             t for t in panel["ticker"].unique() if t not in _PSEUDO
         ) if not panel.empty else []
-    event_rets_frac = _compile_proposal_returns(p, panel, event_dates, tickers)
-    # _net_sharpe expects percent-return units; convert.
-    event_rets_pct = event_rets_frac * 100.0
-    net_sharpe = _net_sharpe(event_rets_pct, "S1", hold_horizon=p.hold_horizon)
+
+    embargo = max(2, p.hold_horizon)
+    fold_sharpes: list[float] | None
+    fold_n_events: list[int] | None
+    sharpe_oos_std: float | None
+    insufficient_for_folds: bool
+    try:
+        folds = split_walk_forward(
+            event_dates, n_folds=n_folds, embargo_days=embargo,
+        )
+    except ValueError:
+        # Not enough events — single-pass fallback with a warning flag.
+        event_rets_frac = _compile_proposal_returns(
+            p, panel, event_dates, tickers,
+        )
+        event_rets_pct = event_rets_frac * 100.0
+        net_sharpe = _net_sharpe(
+            event_rets_pct, "S1", hold_horizon=p.hold_horizon,
+        )
+        fold_sharpes = None
+        fold_n_events = None
+        sharpe_oos_std = None
+        insufficient_for_folds = True
+        total_n_events = int(len(event_rets_frac))
+    else:
+        fold_sharpes = []
+        fold_n_events = []
+        for fold_events in folds:
+            fold_rets_frac = _compile_proposal_returns(
+                p, panel, fold_events, tickers,
+            )
+            fold_rets_pct = fold_rets_frac * 100.0
+            s = _net_sharpe(
+                fold_rets_pct, "S1", hold_horizon=p.hold_horizon,
+            )
+            fold_sharpes.append(float(s))
+            fold_n_events.append(int(len(fold_rets_frac)))
+        net_sharpe = float(np.mean(fold_sharpes))
+        sharpe_oos_std = (
+            float(np.std(fold_sharpes, ddof=1))
+            if len(fold_sharpes) >= 2 else 0.0
+        )
+        insufficient_for_folds = False
+        total_n_events = int(sum(fold_n_events))
+
     gap = net_sharpe - incumbent_sharpe
-    result = {
+    result: dict[str, Any] = {
         "net_sharpe_in_sample": round(net_sharpe, 4),
-        "n_events_in_sample": int(len(event_rets_frac)),
+        "sharpe_oos_std": (
+            round(sharpe_oos_std, 4) if sharpe_oos_std is not None else None
+        ),
+        "fold_sharpes": (
+            [round(s, 4) for s in fold_sharpes] if fold_sharpes is not None
+            else None
+        ),
+        "fold_n_events": fold_n_events,
+        "n_events_in_sample": total_n_events,
+        "insufficient_for_folds": insufficient_for_folds,
         "transaction_cost_bps": int(LEVELS["S1"] * 100),
         "incumbent_sharpe": round(incumbent_sharpe, 4),
         "gap_vs_incumbent": round(gap, 4),
