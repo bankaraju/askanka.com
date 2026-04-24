@@ -1,0 +1,576 @@
+{
+  "incumbents": [
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "SI_PRIMARY",
+      "strategy_name": "Spread Intelligence regime-gated primary"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "SI_SECONDARY",
+      "strategy_name": "Spread Intelligence sector-neutral"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE_ALERT_ONLY",
+      "strategy_id": "PHASE_C_LAG",
+      "strategy_name": "Phase C LAG (alert-only post H-107 FAIL)"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "OVERSHOOT_TORNTPOWER",
+      "strategy_name": "Per-ticker fade - TORNTPOWER STRONG"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "OVERSHOOT_MULTITICKER",
+      "strategy_name": "Per-ticker fade top-5 (defence-excluded)"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "FCS_LONG_TOPK",
+      "strategy_name": "FCS top-k long-only"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "FCS_LONG_SHORT",
+      "strategy_name": "FCS market-neutral long/short"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "EXPLORING",
+      "strategy_id": "TA_SCORER_RELIANCE",
+      "strategy_name": "TA fingerprint RELIANCE pilot (walk-forward only)"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "EXPLORING",
+      "strategy_id": "OPUS_TRUST_SPREAD",
+      "strategy_name": "OPUS trust-tilted cross-sectional"
+    },
+    {
+      "per_regime": {
+        "CAUTION": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "EUPHORIA": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "NEUTRAL": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-OFF": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        },
+        "RISK-ON": {
+          "compliance_artifact_path": null,
+          "n_obs": 0,
+          "p_value_vs_buy_hold": null,
+          "p_value_vs_zero": null,
+          "sharpe_ci_high": null,
+          "sharpe_ci_low": null,
+          "sharpe_point": null,
+          "status_flag": "INSUFFICIENT_POWER"
+        }
+      },
+      "status": "LIVE",
+      "strategy_id": "PHASE_AB_REVERSE",
+      "strategy_name": "Reverse Regime Phase A/B (collapsed)"
+    }
+  ],
+  "seeded_at": "2026-04-24",
+  "spec_version": "v1"
+}
