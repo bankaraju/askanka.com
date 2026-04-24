@@ -1,0 +1,283 @@
+{
+  "gated": {
+    "label": "gated",
+    "n_trades": 478,
+    "n_alpha_valid": 478,
+    "n_clusters_date": 27,
+    "avg_alpha_bps": -18.26,
+    "cluster_robust_mean_alpha_bps": -22.35,
+    "cluster_robust_se_alpha_bps": 6.06,
+    "t_vs_40bps_cluster": -10.29,
+    "t_vs_0_cluster": -3.69,
+    "hit_rate_alpha": 0.381,
+    "hit_rate_net": 0.421,
+    "avg_net_pnl_bps": -18.0,
+    "by_direction": {
+      "SHORT": {
+        "n": 398,
+        "avg_alpha_bps": -15.14
+      },
+      "LONG": {
+        "n": 80,
+        "avg_alpha_bps": -33.8
+      }
+    },
+    "by_regime": {
+      "RISK-OFF": {
+        "n": 188,
+        "avg_alpha_bps": -4.13
+      },
+      "NEUTRAL": {
+        "n": 47,
+        "avg_alpha_bps": -35.17
+      },
+      "EUPHORIA": {
+        "n": 50,
+        "avg_alpha_bps": -29.57
+      },
+      "RISK-ON": {
+        "n": 70,
+        "avg_alpha_bps": -25.71
+      },
+      "CAUTION": {
+        "n": 123,
+        "avg_alpha_bps": -24.55
+      }
+    },
+    "by_sigma_bucket": {
+      "extreme": {
+        "n": 79,
+        "avg_alpha_bps": -1.94
+      },
+      "rare": {
+        "n": 116,
+        "avg_alpha_bps": -30.82
+      },
+      "mild": {
+        "n": 283,
+        "avg_alpha_bps": -17.67
+      }
+    },
+    "by_exit_reason": {
+      "SECTOR_FLIP": {
+        "n": 133,
+        "avg_alpha_bps": -26.41
+      },
+      "Z_CROSS": {
+        "n": 183,
+        "avg_alpha_bps": 4.17
+      },
+      "STOP": {
+        "n": 43,
+        "avg_alpha_bps": -130.89
+      },
+      "T1_CLOSE": {
+        "n": 110,
+        "avg_alpha_bps": -0.25
+      },
+      "SKIP_NO_NEXT_DAY": {
+        "n": 9,
+        "avg_alpha_bps": -35.96
+      }
+    },
+    "by_sector": {
+      "NIFTY FIN SERVICE": {
+        "n": 77,
+        "avg_alpha_bps": -32.84
+      },
+      "NIFTY ENERGY": {
+        "n": 36,
+        "avg_alpha_bps": -15.27
+      },
+      "NIFTY INFRA": {
+        "n": 27,
+        "avg_alpha_bps": -42.2
+      },
+      "NIFTY METAL": {
+        "n": 37,
+        "avg_alpha_bps": -29.01
+      },
+      "NIFTY BANK": {
+        "n": 30,
+        "avg_alpha_bps": -19.76
+      },
+      "NIFTY PHARMA": {
+        "n": 45,
+        "avg_alpha_bps": -3.57
+      },
+      "NIFTY PSU BANK": {
+        "n": 12,
+        "avg_alpha_bps": -31.73
+      },
+      "NIFTY PSE": {
+        "n": 63,
+        "avg_alpha_bps": -5.83
+      },
+      "NIFTY CONSR DURBL": {
+        "n": 22,
+        "avg_alpha_bps": -16.27
+      },
+      "NIFTY REALTY": {
+        "n": 17,
+        "avg_alpha_bps": -29.5
+      },
+      "NIFTY AUTO": {
+        "n": 35,
+        "avg_alpha_bps": -37.18
+      },
+      "NIFTY FMCG": {
+        "n": 32,
+        "avg_alpha_bps": -4.66
+      },
+      "NIFTY IT": {
+        "n": 22,
+        "avg_alpha_bps": -14.16
+      },
+      "NIFTY OIL AND GAS": {
+        "n": 23,
+        "avg_alpha_bps": 29.81
+      }
+    }
+  },
+  "ungated": {
+    "label": "ungated",
+    "n_trades": 696,
+    "n_alpha_valid": 696,
+    "n_clusters_date": 27,
+    "avg_alpha_bps": -20.76,
+    "cluster_robust_mean_alpha_bps": -25.23,
+    "cluster_robust_se_alpha_bps": 3.16,
+    "t_vs_40bps_cluster": -20.63,
+    "t_vs_0_cluster": -7.98,
+    "hit_rate_alpha": 0.339,
+    "hit_rate_net": 0.443,
+    "avg_net_pnl_bps": 7.84,
+    "by_direction": {
+      "SHORT": {
+        "n": 481,
+        "avg_alpha_bps": -19.58
+      },
+      "LONG": {
+        "n": 215,
+        "avg_alpha_bps": -23.41
+      }
+    },
+    "by_regime": {
+      "RISK-OFF": {
+        "n": 169,
+        "avg_alpha_bps": -1.27
+      },
+      "NEUTRAL": {
+        "n": 69,
+        "avg_alpha_bps": -30.71
+      },
+      "EUPHORIA": {
+        "n": 186,
+        "avg_alpha_bps": -25.8
+      },
+      "RISK-ON": {
+        "n": 123,
+        "avg_alpha_bps": -19.77
+      },
+      "CAUTION": {
+        "n": 149,
+        "avg_alpha_bps": -32.79
+      }
+    },
+    "by_sigma_bucket": {
+      "rare": {
+        "n": 156,
+        "avg_alpha_bps": -20.69
+      },
+      "mild": {
+        "n": 447,
+        "avg_alpha_bps": -24.52
+      },
+      "extreme": {
+        "n": 93,
+        "avg_alpha_bps": -2.8
+      }
+    },
+    "by_exit_reason": {
+      "SECTOR_FLIP": {
+        "n": 161,
+        "avg_alpha_bps": -26.99
+      },
+      "T1_CLOSE": {
+        "n": 172,
+        "avg_alpha_bps": -13.69
+      },
+      "Z_CROSS": {
+        "n": 286,
+        "avg_alpha_bps": -1.65
+      },
+      "STOP": {
+        "n": 55,
+        "avg_alpha_bps": -116.65
+      },
+      "SKIP_NO_NEXT_DAY": {
+        "n": 22,
+        "avg_alpha_bps": -39.14
+      }
+    },
+    "by_sector": {
+      "NIFTY OIL AND GAS": {
+        "n": 33,
+        "avg_alpha_bps": -11.7
+      },
+      "NIFTY FMCG": {
+        "n": 36,
+        "avg_alpha_bps": -26.16
+      },
+      "NIFTY FIN SERVICE": {
+        "n": 68,
+        "avg_alpha_bps": -21.61
+      },
+      "NIFTY PHARMA": {
+        "n": 69,
+        "avg_alpha_bps": -18.16
+      },
+      "NIFTY AUTO": {
+        "n": 73,
+        "avg_alpha_bps": -29.69
+      },
+      "NIFTY IT": {
+        "n": 74,
+        "avg_alpha_bps": -17.6
+      },
+      "NIFTY CONSR DURBL": {
+        "n": 39,
+        "avg_alpha_bps": -23.12
+      },
+      "NIFTY BANK": {
+        "n": 42,
+        "avg_alpha_bps": -23.84
+      },
+      "NIFTY PSU BANK": {
+        "n": 28,
+        "avg_alpha_bps": -8.73
+      },
+      "NIFTY PSE": {
+        "n": 60,
+        "avg_alpha_bps": -10.58
+      },
+      "NIFTY INFRA": {
+        "n": 35,
+        "avg_alpha_bps": -15.39
+      },
+      "NIFTY REALTY": {
+        "n": 49,
+        "avg_alpha_bps": -25.73
+      },
+      "NIFTY ENERGY": {
+        "n": 19,
+        "avg_alpha_bps": -48.68
+      },
+      "NIFTY METAL": {
+        "n": 71,
+        "avg_alpha_bps": -20.04
+      }
+    }
+  },
+  "verdict": "FAIL"
+}
