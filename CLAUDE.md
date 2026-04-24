@@ -16,6 +16,14 @@ Every task follows: brainstorm → plan → build → verify → review. No exce
 - After major work: invoke requesting-code-review
 - See `memory/feedback_always_use_superpowers.md` for rationale
 
+## Kill Switch: No Un-Registered Trading Rules
+Any NEW file matching `*_strategy.py`, `*_signal_generator.py`, `*_backtest.py`, `*_ranker.py`, or `*_engine.py` MUST ship with a matching entry in `docs/superpowers/hypothesis-registry.jsonl` in the SAME commit. Enforced by `pipeline/scripts/hooks/pre-commit-strategy-gate.sh` (local pre-commit) AND `.github/workflows/strategy-gate.yml` on pull_request. Renaming or refactoring an existing file matching the pattern is not "new" per the `diff-filter=A` test — the gate only triggers on additions. Install the local hook once per clone:
+```
+cp pipeline/scripts/hooks/pre-commit-strategy-gate.sh .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+If the hook fails, investigate — do NOT bypass with `--no-verify`. This exists to keep every new trading rule traceable to a registered hypothesis (Station 11, regime-aware autoresearch engine).
+
 ## Context Management
 When context is getting heavy or you've been working for 2+ hours continuously, invoke /autowrap to checkpoint progress before continuing. This saves memories, commits tracked files, syncs to Obsidian, and writes a resume prompt. Safe to invoke multiple times. Do NOT invoke while a plan step is actively executing.
 

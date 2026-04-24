@@ -508,6 +508,70 @@ schtasks /create /tn "AnkaTAScorerScore" /tr "C:\Users\Claude_Anka\askanka.com\p
 
 ---
 
+### Station 11: Regime-Aware Autoresearch Engine
+
+Added 2026-04-24 (Tasks 0–9 of the 11-task plan). A human-in-loop DSL
+proposal generator → in-sample evaluation → BH-FDR holdout gate →
+forward-shadow predicate → live promotion pipeline, run per regime.
+Exists because of §0.3 Posture C Disciplined-Pragmatic: no new
+trading strategy ships outside this engine ever again. Every incumbent
+either has a registry-backed statistical basis or is retired.
+
+**Data artefacts (paths + refresh cadence).**
+- `pipeline/data/regime_history.csv` — quantile-zoned regime labels (cutpoints frozen on 2018-01-01..2021-04-22 calibration window; daily refresh downstream of `AnkaETFSignal`)
+- `pipeline/data/regime_cutpoints.json` — frozen q20/q40/q60/q80 cutpoints (write-once)
+- `pipeline/data/vix_history.csv` — daily VIX series (daily refresh)
+- `pipeline/autoresearch/regime_autoresearch/data/ssf_availability.json` — single-stock-futures eligibility list (manual refresh)
+- `pipeline/autoresearch/regime_autoresearch/data/cointegrated_pairs_v1.json` — pair universe (manual refresh)
+- `pipeline/autoresearch/regime_autoresearch/data/strategy_results_10.json` — in-sample cache; seeded with INSUFFICIENT_POWER placeholders
+- `pipeline/autoresearch/regime_autoresearch/data/proposal_log.jsonl` — append-only runtime log (every proposer call)
+- `pipeline/autoresearch/regime_autoresearch/data/incumbent_audit_2026-04-24.json` — latest incumbent audit snapshot
+
+**Run Mode 1 (human-in-loop NEUTRAL pilot):**
+```
+python -m pipeline.autoresearch.regime_autoresearch.scripts.run_pilot --regime NEUTRAL
+python -m pipeline.autoresearch.regime_autoresearch.scripts.run_pilot --regime NEUTRAL --auto-approve
+```
+See `pipeline/autoresearch/regime_autoresearch/README_PILOT.md` for the
+full walk-through and interpretation guide.
+
+**Run the incumbent audit:**
+```
+python -m pipeline.autoresearch.regime_autoresearch.scripts.audit_incumbents
+```
+
+**Lifecycle.** 7-state DSL: `PROPOSED → PRE_REGISTERED → HOLDOUT_PASS →
+FORWARD_SHADOW → PROMOTED_LIVE`; `RETIRED` and `DEAD` are terminals.
+Displacement + rate-limit (2-per-regime-per-quarter) + scarcity-fallback
+hurdle (<3 clean incumbents → NIFTY buy-and-hold benchmark) defined in
+the design spec at `docs/superpowers/specs/2026-04-24-regime-aware-autoresearch-design.md`.
+
+**Hurdles.** `Δ_in = 0.15` (in-sample uplift over incumbent or scarcity benchmark),
+`Δ_holdout = 0.10` (holdout replication threshold). BH-FDR q = 0.1 applied
+on "whichever-first" batch trigger: 30 calendar days OR ≥10 accumulated
+holdout candidates.
+
+**Forward shadow predicate.** A candidate must accumulate 60 calendar
+days AND 50 events in live shadow AND beat the incumbent by `Δ_holdout`
+on that live sample before promotion.
+
+**Kill switch.** Enforced by `pipeline/scripts/hooks/pre-commit-strategy-gate.sh`
+(local pre-commit) and `.github/workflows/strategy-gate.yml` (CI on
+pull_request). New files matching the strategy-file patterns must ship
+with a matching `docs/superpowers/hypothesis-registry.jsonl` entry in
+the same commit — see the kill-switch policy section of `CLAUDE.md`.
+
+**Known limitations (open follow-ups).**
+- #188 — research-zones vs live-engine-zones unification pending (research uses quantile cutpoints, live engine still on absolute thresholds)
+- #190 — pair construction deferred (3 of 4 DSL-to-returns constructions shipped; pair wiring is future work)
+- #191 — walk-forward folds not yet in the runner (current runner uses single train+val split)
+- #195 — hurdle semantics (absolute uplift vs relative uplift) still under review
+- #196 — pre-register best NEUTRAL pilot candidate (`days_from_52w_high` bottom_10, Sharpe +1.13)
+
+**Status (2026-04-24): NEUTRAL Mode-1 pilot complete, 127 autoresearch tests green at `d8f0d2f`; 1 clean-positive candidate awaiting pre-registration.**
+
+---
+
 ## 3b. The Reverse Regime Engine — How Stock Picks Are Made
 
 The "reverse regime" engine is a 3-phase system that turns regime changes into
