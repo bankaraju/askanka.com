@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-04-24T14:04:03.165184+05:30",
-  "total_closed": 38,
-  "win_rate_pct": 57.9,
-  "avg_pnl_pct": 1.92,
+  "updated_at": "2026-04-24T14:18:34.364564+05:30",
+  "total_closed": 39,
+  "win_rate_pct": 56.4,
+  "avg_pnl_pct": 1.85,
   "recent": [
     {
       "signal_id": "BRK-2026-04-23-TECHM",
@@ -252,16 +252,16 @@
       "close_reason": "STOPPED_OUT_ZCROSS"
     },
     {
-      "signal_id": "BRK-2026-04-23-PFC",
-      "spread_name": "Strategy 264",
+      "signal_id": "BRK-2026-04-24-HDFCAMC",
+      "spread_name": "Strategy 810",
       "category": "phase_c",
-      "tier": "SIGNAL",
-      "event_headline": "Phase C break on PFC: z=1.66, expected=-1.36, actual=0.29",
-      "open_date": "2026-04-23",
-      "close_date": "2026-04-23",
+      "tier": "EXPLORING",
+      "event_headline": "Phase C break on HDFCAMC: z=1.84, expected=-1.49, actual=0.37",
+      "open_date": "2026-04-24",
+      "close_date": "2026-04-24",
       "days_open": 0,
-      "peak_pnl_pct": 0,
-      "final_pnl_pct": -0.66,
+      "peak_pnl_pct": 0.01,
+      "final_pnl_pct": -0.68,
       "close_reason": "STOPPED_OUT_ZCROSS"
     }
   ]
