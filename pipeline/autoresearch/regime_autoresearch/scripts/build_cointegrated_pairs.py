@@ -20,19 +20,23 @@ from __future__ import annotations
 
 import itertools
 import json
-from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
+from numpy.linalg import LinAlgError
 from statsmodels.tsa.stattools import coint
 
 from pipeline.autoresearch.overshoot_reversion_backtest import load_sector_map
 from pipeline.autoresearch.regime_autoresearch.constants import (
-    TRAIN_VAL_START, TRAIN_VAL_END,
+    COINT_MAX_NA_FRACTION,
+    COINT_MIN_TRAIN_BARS,
+    FNO_DIR,
+    REPO_ROOT,
+    TRAIN_VAL_END,
+    TRAIN_VAL_START,
 )
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-FNO_DIR = REPO_ROOT / "pipeline/data/fno_historical"
 OUT = REPO_ROOT / "pipeline/autoresearch/regime_autoresearch/data/cointegrated_pairs_v1.json"
 
 
@@ -47,7 +51,7 @@ def _close_series(ticker: str) -> pd.Series | None:
     df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values("date")
     df = df[(df["date"] >= TRAIN_VAL_START) & (df["date"] <= TRAIN_VAL_END)]
-    if df.empty or df["close"].isna().mean() > 0.1:
+    if df.empty or df["close"].isna().mean() > COINT_MAX_NA_FRACTION:
         return None
     return df.set_index("date")["close"]
 
@@ -66,6 +70,7 @@ def _sector_buckets() -> dict[str, list[str]]:
 def main() -> int:
     buckets = _sector_buckets()
     results = []
+    coint_errors = 0
     for sector, tickers in buckets.items():
         n_pairs = len(tickers) * (len(tickers) - 1) // 2
         print(f"{sector}: {len(tickers)} tickers, {n_pairs} pairs")
@@ -74,11 +79,14 @@ def main() -> int:
             if s_a is None or s_b is None:
                 continue
             joined = pd.concat([s_a, s_b], axis=1).dropna()
-            if len(joined) < 120:
+            if len(joined) < COINT_MIN_TRAIN_BARS:
                 continue
             try:
                 t_stat, p_val, _ = coint(joined.iloc[:, 0], joined.iloc[:, 1])
-            except Exception:
+            except (ValueError, LinAlgError) as exc:
+                coint_errors += 1
+                if coint_errors <= 5:  # rate-limit logging
+                    print(f"warn: coint failed {a}/{b}: {exc}", file=sys.stderr)
                 continue
             if p_val < 0.05:
                 results.append({
@@ -90,6 +98,8 @@ def main() -> int:
                     "coint_p": round(float(p_val), 6),
                     "n_obs_train": int(len(joined)),
                 })
+    if coint_errors:
+        print(f"coint errors: {coint_errors} pair tests skipped", file=sys.stderr)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({"pairs": results, "train_window": [TRAIN_VAL_START, TRAIN_VAL_END]},
                               indent=2, sort_keys=True), encoding="utf-8")

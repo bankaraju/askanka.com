@@ -5,14 +5,13 @@ the downstream feature builder can flag them.
 """
 from __future__ import annotations
 
-import logging
 import sys
-from pathlib import Path
 
 import pandas as pd
-import yfinance as yf
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+from pipeline.autoresearch.regime_autoresearch._yfinance_util import download_ohlcv
+from pipeline.autoresearch.regime_autoresearch.constants import REPO_ROOT
+
 OUT_CSV = REPO_ROOT / "pipeline/data/vix_history.csv"
 NSE_FALLBACK = REPO_ROOT / "pipeline/data/india_historical/indices/INDIAVIX.csv"
 START = "2021-04-01"
@@ -20,16 +19,10 @@ END = "2026-05-01"
 
 
 def _from_yfinance() -> pd.DataFrame:
-    df = yf.download("^INDIAVIX", start=START, end=END, progress=False, auto_adjust=True, threads=False)
+    df = download_ohlcv("^INDIAVIX", start=START, end=END)
     if df.empty:
-        return df
-    df = df.reset_index()
-    # yfinance may return MultiIndex columns for single-ticker with newer versions
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
-    df = df[["Date", "Close"]].rename(columns={"Date": "date", "Close": "vix_close"})
-    df["date"] = pd.to_datetime(df["date"])
-    return df
+        return pd.DataFrame(columns=["date", "vix_close"])
+    return df[["date", "close"]].rename(columns={"close": "vix_close"})
 
 
 def _from_nse_archive() -> pd.DataFrame:
@@ -42,13 +35,20 @@ def _from_nse_archive() -> pd.DataFrame:
 
 def main() -> int:
     df_yf = _from_yfinance()
-    if df_yf.empty:
-        logging.warning("yfinance INDIAVIX empty; falling back to NSE archive")
-        df_yf = _from_nse_archive()
     df_nse = _from_nse_archive()
+    if df_yf.empty and df_nse.empty:
+        print("error: both yfinance and NSE archive empty", file=sys.stderr)
+        return 1
+    if df_yf.empty:
+        combined = df_nse
+    elif df_nse.empty:
+        combined = df_yf
+    else:
+        # yfinance is primary; NSE fills only gaps
+        combined = pd.concat([df_yf, df_nse], ignore_index=True)
+        combined = combined.drop_duplicates(subset="date", keep="first")
 
-    combined = pd.concat([df_yf, df_nse], ignore_index=True).dropna()
-    combined = combined.drop_duplicates(subset=["date"], keep="first").sort_values("date")
+    combined = combined.dropna().sort_values("date")
     # Forward-fill gaps of <= 2 bars only
     combined = combined.set_index("date").asfreq("B")
     combined["vix_close"] = combined["vix_close"].ffill(limit=2)

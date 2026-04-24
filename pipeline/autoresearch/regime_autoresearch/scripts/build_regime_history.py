@@ -35,15 +35,15 @@ from __future__ import annotations
 
 import json
 import sys
-from pathlib import Path
 
 import pandas as pd
 
 from pipeline.autoresearch.etf_reoptimize import GLOBAL_ETFS
+from pipeline.autoresearch.regime_autoresearch._yfinance_util import download_ohlcv
+from pipeline.autoresearch.regime_autoresearch.constants import REPO_ROOT
 from pipeline.research.phase_c_backtest import paths as phase_c_paths
 from pipeline.research.phase_c_backtest.regime import _signal_to_zone, _compute_signal
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
 WEIGHTS_PATH = REPO_ROOT / "pipeline/autoresearch/etf_optimal_weights.json"
 OUT_CSV = REPO_ROOT / "pipeline/data/regime_history.csv"
 START = "2021-04-23"
@@ -54,51 +54,23 @@ MIN_COVERAGE_DATE = pd.Timestamp("2021-04-23")
 def _yfinance_backfill_one(alias: str) -> pd.DataFrame | None:
     """Fetch daily OHLCV for one ETF alias via yfinance, return DataFrame or None.
 
-    alias is a GLOBAL_ETFS key (brazil, natgas, silver, …).
+    alias is a GLOBAL_ETFS key (brazil, natgas, silver, ...).
+
+    Returns real OHLCV when yfinance provides it. No fabrication: any downstream
+    consumer of high/low/open/volume either sees real data or the row is absent.
     """
-    try:
-        import yfinance as yf  # type: ignore
-    except ImportError:
-        print("error: yfinance not installed — `pip install yfinance`", file=sys.stderr)
-        return None
     ticker_mapped = GLOBAL_ETFS.get(alias)
     if ticker_mapped is None:
-        print(f"warn: alias {alias} not in GLOBAL_ETFS — skipping", file=sys.stderr)
+        print(f"warn: alias {alias} not in GLOBAL_ETFS -- skipping", file=sys.stderr)
         return None
     yf_ticker = ticker_mapped.replace(".US", "")
-    try:
-        raw = yf.download(
-            yf_ticker,
-            start=BACKFILL_START.strftime("%Y-%m-%d"),
-            end=pd.Timestamp.now().strftime("%Y-%m-%d"),
-            progress=False,
-            auto_adjust=True,
-            threads=False,
-        )
-    except Exception as exc:
-        print(f"warn: yfinance download failed for {alias} ({yf_ticker}): {exc}", file=sys.stderr)
+    df = download_ohlcv(
+        yf_ticker,
+        start=BACKFILL_START.strftime("%Y-%m-%d"),
+        end=pd.Timestamp.now().strftime("%Y-%m-%d"),
+    )
+    if df.empty:
         return None
-    if raw is None or raw.empty:
-        return None
-    # yfinance single-ticker returns a flat DataFrame; multi-ticker returns MultiIndex
-    if isinstance(raw.columns, pd.MultiIndex):
-        try:
-            close = raw["Close"]
-        except KeyError:
-            return None
-        if hasattr(close, "columns"):
-            # still a DataFrame — pick first column
-            close = close.iloc[:, 0]
-    else:
-        close = raw["Close"]
-    df = pd.DataFrame({"date": close.index, "close": close.values})
-    df["date"] = pd.to_datetime(df["date"])
-    # Add dummy OHLCV columns to match phase_c_backtest.fetcher's schema
-    df["open"] = df["close"]
-    df["high"] = df["close"]
-    df["low"] = df["close"]
-    df["volume"] = 0
-    df = df[["date", "open", "high", "low", "close", "volume"]].dropna(subset=["close"])
     return df.sort_values("date").reset_index(drop=True)
 
 

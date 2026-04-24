@@ -21,11 +21,9 @@ Incumbents per the spec (v1 seed list; fewer-than-10 is acceptable):
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
-from pipeline.autoresearch.regime_autoresearch.constants import REGIMES
+from pipeline.autoresearch.regime_autoresearch.constants import REGIMES, REPO_ROOT
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
 OUT = REPO_ROOT / "pipeline/autoresearch/regime_autoresearch/data/strategy_results_10.json"
 
 SEED_INCUMBENTS = [

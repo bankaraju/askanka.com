@@ -13,10 +13,9 @@ pipeline.autoresearch.overshoot_reversion_backtest._FNO_DIR.
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-FNO_DIR = REPO_ROOT / "pipeline/data/fno_historical"
+from pipeline.autoresearch.regime_autoresearch.constants import FNO_DIR, REPO_ROOT
+
 OUT = REPO_ROOT / "pipeline/autoresearch/regime_autoresearch/data/ssf_availability.json"
 DEFAULT_BORROW_BPS = 25
 HIGH_BORROW_TICKERS = {"IRCTC": 80, "VEDL": 60, "ADANIENT": 100, "ADANIPOWER": 100}

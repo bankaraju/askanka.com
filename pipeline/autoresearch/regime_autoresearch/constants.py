@@ -5,6 +5,11 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = Path(__file__).parent / "data"
+FNO_DIR = REPO_ROOT / "pipeline/data/fno_historical"
+
+# Cointegration/panel quality gates
+COINT_MAX_NA_FRACTION = 0.10
+COINT_MIN_TRAIN_BARS = 120
 
 # The 5 ETF regime labels. Canonical — do not rename.
 REGIMES: tuple[str, ...] = ("RISK-OFF", "CAUTION", "NEUTRAL", "RISK-ON", "EUPHORIA")
