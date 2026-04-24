@@ -1,0 +1,21 @@
+name: strategy-gate
+on: [pull_request]
+
+jobs:
+  strategy-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Simulate pre-commit scan vs main
+        run: |
+          git diff --name-only --diff-filter=A origin/${{ github.base_ref }}...HEAD > /tmp/new_files.txt
+          NEW=$(grep -E '(_strategy\.py|_signal_generator\.py|_backtest\.py|_ranker\.py|_engine\.py)$' /tmp/new_files.txt || true)
+          if [[ -n "$NEW" ]]; then
+            if ! git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "hypothesis-registry.jsonl"; then
+              echo "ERROR: new strategy files without registry entry:"
+              echo "$NEW"
+              exit 1
+            fi
+          fi
