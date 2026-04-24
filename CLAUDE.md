@@ -78,6 +78,11 @@ The system runs automatically via Windows Scheduled Tasks:
 
 Note: website_exporter.py is invoked from morning_scan (09:25), every intraday cycle (09:30–15:30), eod_review (16:00), eod_track_record (16:15), and daily_dump (04:30) — it is NOT a standalone scheduled task. It auto-deploys data/*.json to the GitHub Pages branch.
 
+**Autoresearch v2 (new 2026-04-25):**
+- 20:00 — AnkaAutoresearchMode2: per-regime Mode 2 proposer + in-sample runner, 5 parallel workers (info)
+- 05:00 — AnkaAutoresearchBHFDR: per-regime BH-FDR batch trigger (info)
+- 05:30 — AnkaAutoresearchHoldout: single-touch holdout runner (info)
+
 **Weekly:**
 - Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)
 - Sunday 00:00 — AnkaUnifiedBacktest: 777-day historical replay backtest (CRITICAL)

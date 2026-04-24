@@ -1,0 +1,48 @@
+{
+  "started_at": "2026-04-24T15:26:17.309212+00:00",
+  "cap": 0,
+  "dry_run": true,
+  "regime_results": [
+    {
+      "regime": "RISK-OFF",
+      "exit_code": 0,
+      "started_at": "2026-04-24T15:26:17.309212+00:00",
+      "ended_at": "2026-04-24T15:26:17.309240+00:00",
+      "stdout_tail": "dry-run cap=0",
+      "stderr_tail": ""
+    },
+    {
+      "regime": "CAUTION",
+      "exit_code": 0,
+      "started_at": "2026-04-24T15:26:17.309212+00:00",
+      "ended_at": "2026-04-24T15:26:17.309253+00:00",
+      "stdout_tail": "dry-run cap=0",
+      "stderr_tail": ""
+    },
+    {
+      "regime": "NEUTRAL",
+      "exit_code": 0,
+      "started_at": "2026-04-24T15:26:17.309212+00:00",
+      "ended_at": "2026-04-24T15:26:17.309262+00:00",
+      "stdout_tail": "dry-run cap=0",
+      "stderr_tail": ""
+    },
+    {
+      "regime": "RISK-ON",
+      "exit_code": 0,
+      "started_at": "2026-04-24T15:26:17.309212+00:00",
+      "ended_at": "2026-04-24T15:26:17.309272+00:00",
+      "stdout_tail": "dry-run cap=0",
+      "stderr_tail": ""
+    },
+    {
+      "regime": "EUPHORIA",
+      "exit_code": 0,
+      "started_at": "2026-04-24T15:26:17.309212+00:00",
+      "ended_at": "2026-04-24T15:26:17.309283+00:00",
+      "stdout_tail": "dry-run cap=0",
+      "stderr_tail": ""
+    }
+  ],
+  "ended_at": "2026-04-24T15:26:17.309293+00:00"
+}
