@@ -130,9 +130,43 @@ def _compute_one_cell(close_map, date_arrs, tickers_pool,
     }
 
 
+# Worker-state slot used by the parallel build path. The ProcessPoolExecutor
+# initializer populates this once per subprocess so the 250k-row panel
+# pickling cost is paid once, not 1,200 times.
+_WORKER_STATE: dict = {}
+
+
+def _init_worker(close_map, date_arrs, tickers_pool, ev_map_train,
+                 ev_map_holdout):
+    _WORKER_STATE["close_map"] = close_map
+    _WORKER_STATE["date_arrs"] = date_arrs
+    _WORKER_STATE["tickers_pool"] = tickers_pool
+    _WORKER_STATE["ev_map_train"] = ev_map_train
+    _WORKER_STATE["ev_map_holdout"] = ev_map_holdout
+
+
+def _compute_cell_task(args_tuple):
+    construction, k, h, regime, window, n_trials = args_tuple
+    ev_map = (_WORKER_STATE["ev_map_train"] if window == "train_val"
+              else _WORKER_STATE["ev_map_holdout"])
+    ev = ev_map.get(regime, pd.DatetimeIndex([]))
+    return _compute_one_cell(
+        _WORKER_STATE["close_map"], _WORKER_STATE["date_arrs"],
+        _WORKER_STATE["tickers_pool"],
+        ev, construction, k, h, regime, window, n_trials,
+    )
+
+
+def _row_sort_key(row: dict) -> tuple:
+    window_rank = 0 if row["window"] == "train_val" else 1
+    regime_rank = REGIMES.index(row["regime"])
+    c_rank = CONSTRUCTIONS.index(row["construction"])
+    return (window_rank, regime_rank, c_rank, row["k"], row["hold_horizon"])
+
+
 def compute_hurdle_table(panel, event_dates_by_regime,
                           holdout_event_dates_by_regime,
-                          n_trials=N_TRIALS_PROD):
+                          n_trials=N_TRIALS_PROD, n_jobs=1):
     # Hoist panel precomputes out of the per-cell loop (otherwise rebuilt
     # 1,200 times on a ~266k-row real panel — tens of minutes of overhead).
     date_arrs = _per_ticker_dates(panel)
@@ -140,7 +174,34 @@ def compute_hurdle_table(panel, event_dates_by_regime,
     tickers_pool = np.array(sorted(
         set(panel["ticker"].unique()) - {"NIFTY", "VIX", "REGIME"}
     ))
-    rows: list[dict] = []
+    # Build the full cell-task list up front so the parallel and serial
+    # paths share the same iteration.
+    cell_tasks: list[tuple] = []
+    for window in ("train_val", "holdout"):
+        for regime in REGIMES:
+            for C in CONSTRUCTIONS:
+                for k in K_VALUES:
+                    for h in HOLD_HORIZONS:
+                        cell_tasks.append((C, k, h, regime, window, n_trials))
+
+    if n_jobs and n_jobs > 1:
+        from concurrent.futures import ProcessPoolExecutor
+        rows: list[dict] = []
+        with ProcessPoolExecutor(
+            max_workers=n_jobs,
+            initializer=_init_worker,
+            initargs=(close_map, date_arrs, tickers_pool,
+                      event_dates_by_regime, holdout_event_dates_by_regime),
+        ) as pool:
+            for row in pool.map(_compute_cell_task, cell_tasks, chunksize=8):
+                rows.append(row)
+        # as_completed ordering can differ across runs — sort for
+        # byte-reproducible parquet output across n_jobs settings.
+        rows.sort(key=_row_sort_key)
+        return pd.DataFrame(rows)
+
+    # Serial path (default — tests rely on this for deterministic speed).
+    rows = []
     for window, dates_map in (
         ("train_val", event_dates_by_regime),
         ("holdout", holdout_event_dates_by_regime),

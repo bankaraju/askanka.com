@@ -98,18 +98,22 @@ def main(argv: list[str] | None = None) -> int:
                     help="bootstrap trials per cell (default 3 ships a "
                          "placeholder parquet; use 1000 for production "
                          "before Task 9 dry-run)")
+    ap.add_argument("--n-jobs", type=int, default=1,
+                    help="parallel workers over the 1,200 cells (default 1). "
+                         "Set to os.cpu_count()-1 for production rebuild.")
     ap.add_argument("--out", type=Path, default=HURDLE_PARQUET,
                     help="parquet output path")
     args = ap.parse_args(argv)
 
     panel, ev_train, ev_holdout = _load_panel_and_events()
     print(f"[build_null_basket_hurdles] panel rows={len(panel):,} "
-          f"n_trials={args.n_trials} out={args.out}")
+          f"n_trials={args.n_trials} n_jobs={args.n_jobs} out={args.out}")
     table = compute_hurdle_table(
         panel=panel,
         event_dates_by_regime=ev_train,
         holdout_event_dates_by_regime=ev_holdout,
         n_trials=args.n_trials,
+        n_jobs=args.n_jobs,
     )
     table["generated_at_sha"] = _current_git_sha()
     table["generated_at"] = datetime.now(timezone.utc).isoformat()
