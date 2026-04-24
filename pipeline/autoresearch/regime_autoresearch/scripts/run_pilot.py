@@ -47,7 +47,7 @@ from pipeline.autoresearch.regime_autoresearch.dsl import (
     K_GRID, Proposal, THRESHOLD_OPS,
 )
 from pipeline.autoresearch.regime_autoresearch.in_sample_runner import (
-    append_proposal_log, run_in_sample,
+    append_proposal_log, regime_buy_and_hold_sharpe, run_in_sample,
 )
 from pipeline.autoresearch.regime_autoresearch.incumbents import (
     TABLE_PATH, hurdle_sharpe_for_regime, load_table,
@@ -79,12 +79,35 @@ def _count_approved(log_path: Path, regime: str) -> int:
     return n
 
 
-def _compute_hurdle(regime: str) -> tuple[float, str]:
-    """Delegate to incumbents.hurdle_sharpe_for_regime with a zero
-    buy-and-hold fallback. Returns (hurdle_sharpe, source).
+def _compute_hurdle(regime: str, panel: pd.DataFrame | None = None,
+                    hold_horizon: int = 1) -> tuple[float, str]:
+    """Delegate to incumbents.hurdle_sharpe_for_regime with the real
+    regime-conditional buy-and-hold Sharpe as the scarcity fallback.
+
+    When incumbents are plentiful (>= INCUMBENT_SCARCITY_MIN clean), the
+    fallback is never consulted and can be anything — we still supply
+    the real function so the signature is consistent and a future table
+    change that drops incumbents below the scarcity threshold doesn't
+    silently revert to 0.0.
+
+    Returns (hurdle_sharpe, source).
     """
     table = load_table(TABLE_PATH)
-    return hurdle_sharpe_for_regime(table, regime, buy_hold_sharpe_fn=lambda r: 0.0)
+    if panel is None:
+        # Plumbing path (tests) — can't compute a real buy-and-hold; defer
+        # to the zero lambda so behaviour is identical to the Task 2 stub
+        # when no panel is available.
+        return hurdle_sharpe_for_regime(
+            table, regime, buy_hold_sharpe_fn=lambda r: 0.0,
+        )
+    regime_dates = pd.DatetimeIndex(
+        sorted(panel.loc[panel["regime_zone"] == regime, "date"].unique())
+    )
+    buy_hold_fn = lambda r: regime_buy_and_hold_sharpe(  # noqa: E731
+        panel, regime_dates, benchmark_ticker="NIFTY",
+        hold_horizon=hold_horizon,
+    )
+    return hurdle_sharpe_for_regime(table, regime, buy_hold_sharpe_fn=buy_hold_fn)
 
 
 def _build_neutral_panel(regime: str) -> pd.DataFrame:
@@ -306,8 +329,10 @@ def run_one_iteration(regime: str, log_path: Path,
         return 0
 
     # APPROVED path: load panel, compute hurdle, run in-sample.
-    hurdle_sharpe, hurdle_source = _compute_hurdle(regime)
     panel = _build_neutral_panel(regime)
+    hurdle_sharpe, hurdle_source = _compute_hurdle(
+        regime, panel=panel, hold_horizon=proposal.hold_horizon,
+    )
     result = run_in_sample(proposal, panel, log_path=log_path,
                            incumbent_sharpe=hurdle_sharpe)
     row = _make_row(proposal, "APPROVED", result, hurdle_sharpe, hurdle_source)

@@ -74,8 +74,10 @@ def patched_env(monkeypatch, tmp_path):
     monkeypatch.setattr(run_pilot, "_build_neutral_panel",
                          lambda regime: _stub_panel(), raising=False)
     # Stub hurdle so the CLI has a deterministic incumbent.
+    # Accept any extra kwargs (panel, hold_horizon) introduced by Task 8
+    # step 2's switch to the real regime-conditional buy-and-hold.
     monkeypatch.setattr(run_pilot, "_compute_hurdle",
-                         lambda regime: (0.10, "scarcity_fallback:buy_and_hold"),
+                         lambda regime, **kw: (0.10, "scarcity_fallback:buy_and_hold"),
                          raising=False)
     # Stub the Haiku llm_call factory — MUST NOT be invoked during tests.
     def _blow_up(*a, **kw):
