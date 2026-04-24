@@ -570,6 +570,22 @@ the same commit — see the kill-switch policy section of `CLAUDE.md`.
 
 **Status (2026-04-24): NEUTRAL Mode-1 pilot complete, 127 autoresearch tests green at `d8f0d2f`; 1 clean-positive candidate awaiting pre-registration.**
 
+### v2 differences (2026-04-25)
+
+v2 layered on the v1 infrastructure after the NEUTRAL pilot produced 0 survivors under the 3-gate verdict. v1 is parked at `09847ef`; v2 ships at commit chain `a1ce41c..2578e98` on `feat/phase-c-v5`.
+
+- **Panel start**: `PANEL_START = 2020-04-23`, 252 trading days earlier than `TRAIN_VAL_START`. Fixes 252-bar fold-0-empty failure mode.
+- **Hurdle**: construction-matched random-basket bootstrap. `load_null_basket_hurdle(construction, k, hold_horizon, regime, window)` replaces `regime_buy_and_hold_sharpe`. Precomputed table at `pipeline/autoresearch/regime_autoresearch/data/null_basket_hurdles_v2.parquet` (1,200 rows; 5 constructions × 8 k × 3 horizons × 5 regimes × 2 windows). Placeholder ships at `--n-trials 3`; rebuild with `--n-trials 1000` before first live Mode 2 run.
+- **Feature library**: 34 features (was 20). 14 additions from existing price/volume/trust data; microstructure (OI/PCR/basis) deferred to v2.1.
+- **Proposal logs sharded** per regime: `proposal_log_{risk_off,caution,neutral,risk_on,euphoria}.jsonl`. v1 NEUTRAL rows preserved verbatim in the NEUTRAL shard. New rows carry `schema_version="v2"`.
+- **Mode 2 orchestrator**: `AnkaAutoresearchMode2.bat` at 20:00 IST spawns 5 parallel regime workers via `scripts/run_mode2.py`. Supports `--dry-run --cap 0` for test fast-path.
+- **BH-FDR**: `AnkaAutoresearchBHFDR.bat` at 05:00 IST fires per-regime batches on v1's whichever-first rule (≥10 accumulated OR ≥30 calendar days) via `scripts/run_bh_fdr_check.py`.
+- **Holdout runner**: `AnkaAutoresearchHoldout.bat` at 05:30 IST.
+- **Autonomy boundary**: ends at forward-shadow. `scripts/promote_to_live.py` is the only code path that writes `*_strategy.py` files — refuses any rule not in `state=FORWARD_SHADOW_PASS`, commits strategy file + hypothesis-registry entry atomically so the pre-commit gate passes in one commit.
+- **Scarcity-fallback deleted**: every proposal now gets a construction-matched null regardless of incumbent count. `hurdle_sharpe_for_regime` in `incumbents.py` reduced to a mean-of-clean-incumbents helper for audit use only.
+
+**v2 status (2026-04-25): infrastructure shipped; 203-test autoresearch suite green across Tasks 1-7.**
+
 ---
 
 ## 3b. The Reverse Regime Engine — How Stock Picks Are Made
