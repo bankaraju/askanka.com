@@ -12,3 +12,16 @@ H-2026-04-24-003 FAIL (margin -4.98, p=0.81, Fragility STABLE 26/27).
 See docs/superpowers/specs/2026-04-23-persistent-break-cross-sectional-design.md
 for the frozen spec. All thresholds here were pre-registration-bound (spec 0.3).
 """
+from __future__ import annotations
+
+import warnings
+
+warnings.warn(
+    "pipeline.autoresearch.phase_c_cross_sectional is RETIRED 2026-04-24. "
+    "See docs/superpowers/DEPRECATED-2026-04-24.md. "
+    "This package is preserved ONLY for reproducibility of the H-2026-04-24-003 "
+    "compliance artefact. Do not use in live-signal code. "
+    "Replacement: pipeline.autoresearch.regime_autoresearch.",
+    DeprecationWarning,
+    stacklevel=2,
+)
