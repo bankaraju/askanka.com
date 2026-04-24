@@ -433,6 +433,121 @@ def test_panel_unfiltered_event_dates_regime_filtered(monkeypatch, tmp_path):
     assert pd.Timestamp("2019-03-01") not in event_dates
 
 
+def test_verdict_blocks_spurious_pass_on_zero_events():
+    """`trust_score top_20` passed delta_in with n_events=0 in the 2026-04-24
+    pilot because 0.0 > hurdle + 0.15 trivially holds when the hurdle is
+    sufficiently negative. The MIN_EVENTS_FOR_PASS gate must veto that.
+    """
+    # Exact pilot scenario: hurdle=-0.6, net_sharpe=0.0, n_events=0.
+    # 0.0 - (-0.6) = 0.6 >= 0.15 → delta_in holds.
+    # But n_events=0 < MIN_EVENTS_FOR_PASS (20) → verdict must be FAIL.
+    v = run_pilot._compute_verdict(n_events=0, net_sharpe=0.0,
+                                    hurdle_sharpe=-0.6)
+    assert v["passes_delta_in"] is True, (
+        "preserved backward-compat boolean should still fire "
+        "when the gap alone is above the hurdle"
+    )
+    assert v["passes_min_events"] is False
+    assert v["verdict_pass"] is False
+    assert "insufficient events" in v["verdict_reason"], (
+        f"expected reason to mention insufficient events, got {v['verdict_reason']!r}"
+    )
+
+    # Also verify the happy path: 32 events, gap above threshold → PASS.
+    v2 = run_pilot._compute_verdict(n_events=32, net_sharpe=1.131,
+                                     hurdle_sharpe=-0.586)
+    assert v2["passes_delta_in"] is True
+    assert v2["passes_min_events"] is True
+    assert v2["verdict_pass"] is True
+
+
+def _dup_proposal(feature="ret_5d", construction_type="long_short_basket",
+                  threshold_op="top_k", threshold_value=15, hold_horizon=5,
+                  regime="NEUTRAL", pair_id=None) -> Proposal:
+    return Proposal(
+        construction_type=construction_type, feature=feature,
+        threshold_op=threshold_op, threshold_value=threshold_value,
+        hold_horizon=hold_horizon, regime=regime, pair_id=pair_id,
+    )
+
+
+def test_duplicate_detection_exact_5tuple_match(tmp_path):
+    """Log has one APPROVED row with (ret_5d, long_short_basket, top_k, 15, 5).
+    A new proposal with identical 5-tuple must be flagged as duplicate,
+    regardless of regime match (we scope to same regime only).
+    """
+    log_path = tmp_path / "proposal_log.jsonl"
+    prior = {
+        "proposal_id": "P-prior001", "regime": "NEUTRAL",
+        "approval_status": "APPROVED",
+        "construction_type": "long_short_basket", "feature": "ret_5d",
+        "threshold_op": "top_k", "threshold_value": 15, "hold_horizon": 5,
+        "pair_id": None,
+    }
+    log_path.write_text(json.dumps(prior) + "\n")
+
+    new_prop = _dup_proposal()
+    assert run_pilot._is_duplicate(new_prop, log_path, regime="NEUTRAL") is True
+
+
+def test_duplicate_detection_different_threshold(tmp_path):
+    """Same 4 fields but different threshold_value → NOT a duplicate."""
+    log_path = tmp_path / "proposal_log.jsonl"
+    prior = {
+        "proposal_id": "P-prior002", "regime": "NEUTRAL",
+        "approval_status": "APPROVED",
+        "construction_type": "long_short_basket", "feature": "ret_5d",
+        "threshold_op": "top_k", "threshold_value": 15, "hold_horizon": 5,
+        "pair_id": None,
+    }
+    log_path.write_text(json.dumps(prior) + "\n")
+
+    # threshold_value=20 instead of 15
+    new_prop = _dup_proposal(threshold_value=20)
+    assert run_pilot._is_duplicate(new_prop, log_path, regime="NEUTRAL") is False
+
+
+def test_duplicate_retry_loop_giveup_after_3(patched_env, monkeypatch):
+    """If generate_proposal keeps producing an identical 5-tuple that matches
+    an existing log row, the CLI retries DUPLICATE_MAX_RETRIES (=3) times,
+    then logs a DUPLICATE_GIVEUP row and exits with rc=0.
+    """
+    log = patched_env["log_path"]
+    # Pre-populate a NEUTRAL row with the 5-tuple Haiku will keep proposing.
+    prior = {
+        "proposal_id": "P-seed01", "regime": "NEUTRAL",
+        "approval_status": "APPROVED",
+        "construction_type": "single_long", "feature": "ret_5d",
+        "threshold_op": ">", "threshold_value": 0.5, "hold_horizon": 5,
+        "pair_id": None,
+    }
+    log.parent.mkdir(parents=True, exist_ok=True)
+    log.write_text(json.dumps(prior) + "\n")
+
+    # patched_env already stubs generate_proposal → always returns
+    # _fixed_proposal() whose 5-tuple is (ret_5d, single_long, >, 0.5, 5),
+    # which matches `prior` above. So every retry is a duplicate.
+    rc = run_pilot.run_one_iteration(regime="NEUTRAL", log_path=log,
+                                     auto_approve=True)
+    assert rc == 0
+    # No input prompt should be reached (we exit before the approval gate).
+    # The log should now have the seed row + a DUPLICATE_GIVEUP row.
+    rows = [json.loads(ln) for ln in log.read_text().splitlines() if ln.strip()]
+    assert len(rows) == 2, f"expected seed + giveup row, got {rows}"
+    giveup = rows[-1]
+    assert giveup["approval_status"] == "DUPLICATE_GIVEUP"
+    assert giveup["regime"] == "NEUTRAL"
+    assert "duplicate_tuples" in giveup
+    # generate_proposal should have been called DUPLICATE_MAX_RETRIES + 1
+    # times (initial attempt + 3 retries).
+    assert patched_env["calls"]["proposer"] == run_pilot.DUPLICATE_MAX_RETRIES + 1, (
+        f"expected {run_pilot.DUPLICATE_MAX_RETRIES + 1} proposer calls, "
+        f"got {patched_env['calls']['proposer']}"
+    )
+    # in_sample must NOT have run on the duplicate path.
+    assert patched_env["calls"]["in_sample"] == 0
+
+
 def test_pilot_view_isolation_preserved(patched_env, monkeypatch):
     """The proposer context built by the CLI must NOT call read_holdout_tail."""
     captured_view: dict = {}

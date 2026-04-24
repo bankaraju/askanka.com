@@ -24,6 +24,14 @@ HOLDOUT_END = "2026-04-23"
 DELTA_IN_SAMPLE = 0.15       # qualify-for-holdout Sharpe gap
 DELTA_HOLDOUT = 0.10         # holdout-pass Sharpe gap
 INCUMBENT_SCARCITY_MIN = 3   # < this -> scarcity fallback to regime-cond buy-and-hold
+# In-sample verdict PASS requires BOTH the delta_in gap AND a minimum
+# event count. 20 is the smallest sample that gives a roughly meaningful
+# Sharpe estimation at 5-day holds; the holdout floor is 50 (§9.3) but
+# in-sample we want to filter junk without over-pruning. Without this
+# floor, `n_events=0` makes `net_sharpe_mean=0.0 > hurdle + delta_in`
+# pass trivially whenever the hurdle is sufficiently negative (observed
+# 2026-04-24 pilot on `trust_score top_20`).
+MIN_EVENTS_FOR_PASS = 20
 
 # Proposer budget
 PROPOSALS_PER_REGIME_HARD_CAP = 500

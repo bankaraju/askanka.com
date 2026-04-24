@@ -39,8 +39,8 @@ _load_env_file()
 
 
 from pipeline.autoresearch.regime_autoresearch.constants import (
-    DATA_DIR, DELTA_IN_SAMPLE, PROPOSER_MODEL, REGIMES, REPO_ROOT,
-    TRAIN_VAL_END, TRAIN_VAL_START,
+    DATA_DIR, DELTA_IN_SAMPLE, MIN_EVENTS_FOR_PASS, PROPOSER_MODEL, REGIMES,
+    REPO_ROOT, TRAIN_VAL_END, TRAIN_VAL_START,
 )
 from pipeline.autoresearch.regime_autoresearch.dsl import (
     ABSOLUTE_THRESHOLD_GRID, CONSTRUCTION_TYPES, FEATURES, HOLD_HORIZONS,
@@ -59,6 +59,74 @@ from pipeline.autoresearch.regime_autoresearch.proposer import (
 PILOT_TARGET = 20  # ~20 approved NEUTRAL proposals before autonomous mode
 LOG_PATH = DATA_DIR / "proposal_log.jsonl"
 HOLDOUT_LOG_PATH = DATA_DIR / "holdout_outcomes.jsonl"
+# Proposer duplicate-suppression: how many retries on an exact-5-tuple
+# match before we log DUPLICATE_GIVEUP and exit. The LLM is given the
+# forbidden tuple on each retry so it has a chance to diverge.
+DUPLICATE_MAX_RETRIES = 3
+
+
+class DuplicateProposalError(Exception):
+    """Raised when a validated proposal matches an existing log-row 5-tuple.
+
+    The CLI catches this up to DUPLICATE_MAX_RETRIES times, each retry
+    appending the duplicate tuple to the system prompt as a forbidden
+    combination, before logging a DUPLICATE_GIVEUP row and exiting.
+    """
+
+    def __init__(self, tuple5: tuple) -> None:
+        super().__init__(f"proposal repeats existing 5-tuple: {tuple5}")
+        self.tuple5 = tuple5
+
+
+def _proposal_tuple5(proposal_or_row) -> tuple:
+    """Extract the (feature, construction_type, threshold_op, threshold_value,
+    hold_horizon) 5-tuple used for duplicate detection.
+
+    Accepts either a `Proposal` dataclass or a dict loaded from the
+    proposal log (whose field names match). We intentionally OMIT regime
+    and pair_id from the tuple: regime because the caller is always
+    scanning within a single regime's log slice, pair_id because it's
+    construction-specific.
+    """
+    if hasattr(proposal_or_row, "feature"):  # Proposal dataclass
+        return (
+            proposal_or_row.feature,
+            proposal_or_row.construction_type,
+            proposal_or_row.threshold_op,
+            proposal_or_row.threshold_value,
+            proposal_or_row.hold_horizon,
+        )
+    # dict path
+    return (
+        proposal_or_row.get("feature"),
+        proposal_or_row.get("construction_type"),
+        proposal_or_row.get("threshold_op"),
+        proposal_or_row.get("threshold_value"),
+        proposal_or_row.get("hold_horizon"),
+    )
+
+
+def _is_duplicate(proposal, log_path: Path, regime: str) -> bool:
+    """True if `proposal`'s 5-tuple matches any prior row in `log_path`
+    for the same regime (regardless of approval_status — we block repeats
+    of REJECTED rules too, because re-proposing a known-rejected rule is
+    exactly the failure mode this gate is meant to catch).
+    """
+    if not log_path.exists():
+        return False
+    target = _proposal_tuple5(proposal)
+    for line in log_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if row.get("regime") != regime:
+            continue
+        if _proposal_tuple5(row) == target:
+            return True
+    return False
 REGIME_CSV = REPO_ROOT / "pipeline/data/regime_history.csv"
 DAILY_BARS_DIR = REPO_ROOT / "pipeline/data/research/phase_c/daily_bars"
 # Panel goes back 3+ years before TRAIN_VAL_START (2021-04-23) so that the
@@ -311,13 +379,23 @@ def _strip_fences_to_json(raw: str) -> str:
     return stripped[start:end + 1]
 
 
-def _build_system_prompt(regime: str) -> str:
+def _build_system_prompt(regime: str,
+                          forbidden_tuples: list[tuple] | None = None) -> str:
     """Build the Haiku system prompt with every DSL enum inlined verbatim.
 
     Prior versions described the grammar abstractly ("must be a grid member"),
     which let Haiku confabulate field values (e.g. construction_type="absolute",
     feature="rsi_14"). We now enumerate every allowed value imported from dsl.py
     so the prompt stays in sync if the grammar grows.
+
+    `forbidden_tuples` (when non-empty) is appended as an explicit
+    anti-duplication directive listing exact (feature,
+    construction_type, threshold_op, threshold_value, hold_horizon)
+    tuples the LLM MUST NOT re-emit. This is a belt-and-braces companion
+    to the post-validate dedup gate in `run_one_iteration`: during the
+    20-iter NEUTRAL pilot (2026-04-24) Haiku re-rolled 3 identical rules
+    despite seeing prior proposals, so we now shout the constraint into
+    the system prompt itself.
     """
     features = ", ".join(FEATURES)
     constructions = ", ".join(CONSTRUCTION_TYPES)
@@ -325,7 +403,7 @@ def _build_system_prompt(regime: str) -> str:
     abs_grid = ", ".join(str(v) for v in ABSOLUTE_THRESHOLD_GRID)
     k_grid = ", ".join(str(v) for v in K_GRID)
     horizons = ", ".join(str(h) for h in HOLD_HORIZONS)
-    return (
+    base = (
         "You generate a single DSL proposal as strict JSON (no markdown "
         "fences, no prose).\n\n"
         "Required keys: construction_type, feature, threshold_op, "
@@ -342,9 +420,23 @@ def _build_system_prompt(regime: str) -> str:
         f"- hold_horizon: one of: {horizons}\n"
         f"- regime: must be \"{regime}\"\n"
         "- pair_id: must be null unless construction_type is \"pair\"\n\n"
+        "AVOID PROPOSING ANY RULE WITH THE SAME (feature, construction_type, "
+        "threshold_op, threshold_value, hold_horizon) TUPLE as any prior "
+        "proposal in the user-message context list. Generate a rule that is "
+        "structurally different from every one above.\n\n"
+    )
+    if forbidden_tuples:
+        lines = "\n".join(f"  - {t}" for t in forbidden_tuples)
+        base += (
+            "DO NOT REPEAT ANY OF THESE EXACT TUPLES — each was just "
+            "proposed and rejected as a duplicate:\n"
+            f"{lines}\n\n"
+        )
+    base += (
         "Respond with the JSON object only. No code fences. No preamble. "
         "Start with { and end with }."
     )
+    return base
 
 
 def _build_llm_call():
@@ -364,7 +456,9 @@ def _build_llm_call():
     client = _anthropic.Anthropic()
 
     def _call(model: str, context: dict) -> str:
-        system = _build_system_prompt(context["regime"])
+        forbidden = context.get("forbidden_tuples") or []
+        system = _build_system_prompt(context["regime"],
+                                      forbidden_tuples=forbidden)
         user = (
             f"Regime: {context['regime']}\n"
             f"Recent in-sample proposals (last 200): "
@@ -372,9 +466,16 @@ def _build_llm_call():
             f"Incumbent table (strategy_results_10): "
             f"{json.dumps(context.get('incumbents', {}), default=str)[:2000]}"
         )
+        # temperature=0.7 set explicitly for proposal diversity. Default
+        # of 1.0 hasn't prevented Haiku re-rolling identical rules, but
+        # dropping the temperature slightly does at least bias the
+        # sampler away from low-entropy repeats — combined with the
+        # forbidden-tuple directive and the post-validate dedup gate,
+        # this is defense-in-depth.
         resp = client.messages.create(
             model=model,
             max_tokens=512,
+            temperature=0.7,
             system=system,
             messages=[{"role": "user", "content": user}],
         )
@@ -407,6 +508,48 @@ def _print_proposal(p: Proposal) -> None:
         print(f"  pair_id           : {p.pair_id}")
 
 
+def _compute_verdict(n_events: int | None, net_sharpe: float | None,
+                     hurdle_sharpe: float | None) -> dict:
+    """Compute the in-sample verdict booleans.
+
+    Returns a dict with:
+      - passes_delta_in: net_sharpe - hurdle >= DELTA_IN_SAMPLE
+      - passes_min_events: n_events >= MIN_EVENTS_FOR_PASS
+      - verdict_pass: both of the above True
+      - verdict_reason: human-readable string on FAIL (empty on PASS)
+
+    Any None input propagates to a safe False. The `n_events=0` failure
+    mode motivating this gate (observed 2026-04-24 pilot on
+    `trust_score top_20` which passed delta_in with 0 trades) cannot
+    produce verdict_pass=True because min_events=0 < 20.
+    """
+    passes_delta_in = (
+        net_sharpe is not None
+        and hurdle_sharpe is not None
+        and (net_sharpe - hurdle_sharpe) >= DELTA_IN_SAMPLE
+    )
+    passes_min_events = (
+        n_events is not None and n_events >= MIN_EVENTS_FOR_PASS
+    )
+    verdict_pass = bool(passes_delta_in and passes_min_events)
+    reason = ""
+    if not verdict_pass:
+        reasons = []
+        if not passes_min_events:
+            reasons.append(
+                f"insufficient events (n={n_events} < {MIN_EVENTS_FOR_PASS})"
+            )
+        if not passes_delta_in:
+            reasons.append("delta_in gap below hurdle")
+        reason = "; ".join(reasons)
+    return {
+        "passes_delta_in": passes_delta_in,
+        "passes_min_events": passes_min_events,
+        "verdict_pass": verdict_pass,
+        "verdict_reason": reason,
+    }
+
+
 def _make_row(proposal: Proposal, approval_status: str,
               result: dict | None, hurdle_sharpe: float | None,
               hurdle_source: str | None) -> dict:
@@ -427,12 +570,63 @@ def _make_row(proposal: Proposal, approval_status: str,
         row["n_events"] = result.get("n_events_in_sample")
         row["hurdle_sharpe"] = hurdle_sharpe
         row["hurdle_source"] = hurdle_source
-        row["passes_delta_in"] = (
-            row["net_sharpe_mean"] is not None
-            and hurdle_sharpe is not None
-            and (row["net_sharpe_mean"] - hurdle_sharpe) >= DELTA_IN_SAMPLE
+        verdict = _compute_verdict(
+            row["n_events"], row["net_sharpe_mean"], hurdle_sharpe,
         )
+        # passes_delta_in preserved for backward compat; new
+        # passes_min_events gate enforces the MIN_EVENTS_FOR_PASS floor
+        # so `n_events=0` can no longer produce a spurious PASS verdict.
+        row["passes_delta_in"] = verdict["passes_delta_in"]
+        row["passes_min_events"] = verdict["passes_min_events"]
     return row
+
+
+def _propose_with_dedup(view: ProposerView, regime: str, llm_call,
+                         log_path: Path) -> tuple[Proposal | None, list[tuple]]:
+    """Generate a proposal, retrying on exact-5-tuple duplicates up to
+    DUPLICATE_MAX_RETRIES times.
+
+    On each retry, the failed tuple is added to `forbidden_tuples` which
+    `_build_llm_call` threads into the system prompt as an explicit
+    "DO NOT REPEAT" list. Returns (proposal, forbidden_tuples) on success;
+    (None, forbidden_tuples) if all retries produced duplicates, in which
+    case the CLI is expected to log a DUPLICATE_GIVEUP row and exit.
+
+    `llm_call` may be None for test paths that stub `generate_proposal`
+    directly — those stubs never hit the real Haiku client and so the
+    forbidden_tuples threading is a no-op.
+    """
+    forbidden: list[tuple] = []
+    last_proposal: Proposal | None = None
+    for attempt in range(DUPLICATE_MAX_RETRIES + 1):
+        # Wrap llm_call so the forbidden-tuples list reaches _build_llm_call's
+        # inner `_call(model, context)` via the shared context dict.
+        if llm_call is not None and forbidden:
+            inner = llm_call
+
+            def _wrapped(model, context, _inner=inner, _forbidden=list(forbidden)):
+                ctx = dict(context)
+                ctx["forbidden_tuples"] = _forbidden
+                return _inner(model=model, context=ctx)
+
+            current_call = _wrapped
+        else:
+            current_call = llm_call
+        candidate = generate_proposal(view, regime, current_call)
+        last_proposal = candidate
+        if _is_duplicate(candidate, log_path, regime):
+            forbidden.append(_proposal_tuple5(candidate))
+            print(
+                f"[pilot] duplicate 5-tuple detected "
+                f"({_proposal_tuple5(candidate)}); "
+                f"retry {attempt + 1}/{DUPLICATE_MAX_RETRIES}"
+            )
+            if attempt >= DUPLICATE_MAX_RETRIES:
+                return None, forbidden
+            continue
+        return candidate, forbidden
+    # Defensive — loop above always returns.
+    return None, forbidden
 
 
 def run_one_iteration(regime: str, log_path: Path,
@@ -451,7 +645,27 @@ def run_one_iteration(regime: str, log_path: Path,
         strategy_results=TABLE_PATH,
     )
     llm_call = _build_llm_call() if not auto_approve or os.environ.get("ANTHROPIC_API_KEY") else None
-    proposal = generate_proposal(view, regime, llm_call)
+    proposal, forbidden_tuples = _propose_with_dedup(view, regime, llm_call, log_path)
+    if proposal is None:
+        # 3 consecutive duplicates — log forensic row and exit cleanly.
+        placeholder = Proposal(
+            construction_type="single_long",
+            feature="ret_1d",
+            threshold_op=">",
+            threshold_value=0.0,
+            hold_horizon=1,
+            regime=regime,
+            pair_id=None,
+        )
+        row = _make_row(placeholder, "DUPLICATE_GIVEUP", None, None, None)
+        row["duplicate_tuples"] = [list(t) for t in forbidden_tuples]
+        append_proposal_log(log_path, row)
+        print(
+            f"[pilot] DUPLICATE_GIVEUP — Haiku produced "
+            f"{DUPLICATE_MAX_RETRIES} consecutive duplicates of existing "
+            f"log 5-tuples; logged to {log_path} and exiting."
+        )
+        return 0
     _print_proposal(proposal)
 
     if auto_approve:
@@ -493,13 +707,29 @@ def run_one_iteration(regime: str, log_path: Path,
     row = _make_row(proposal, "APPROVED", result, hurdle_sharpe, hurdle_source)
     append_proposal_log(log_path, row)
 
+    gap = (
+        (row["net_sharpe_mean"] - hurdle_sharpe)
+        if row["net_sharpe_mean"] is not None and hurdle_sharpe is not None
+        else None
+    )
+    passes_delta_in = row["passes_delta_in"]
+    passes_min_events = row["passes_min_events"]
+    verdict_pass = bool(passes_delta_in and passes_min_events)
+    delta_mark = "OK" if passes_delta_in else "FAIL"
+    events_mark = "OK" if passes_min_events else "FAIL"
     print("\n--- IN-SAMPLE RESULT ---")
     print(f"  proposal_id     : {row['proposal_id']}")
     print(f"  n_events        : {row['n_events']}")
     print(f"  net_sharpe_mean : {row['net_sharpe_mean']:.4f}")
     print(f"  hurdle_sharpe   : {hurdle_sharpe:.4f}  ({hurdle_source})")
-    print(f"  delta_in target : {DELTA_IN_SAMPLE:.2f}")
-    verdict = "PASS" if row["passes_delta_in"] else "FAIL"
+    gap_str = f"{gap:.4f}" if gap is not None else "n/a"
+    print(
+        f"  delta_in gap    : {gap_str}  (target: {DELTA_IN_SAMPLE:.2f}) {delta_mark}"
+    )
+    print(
+        f"  min_events gate : {row['n_events']} (target: {MIN_EVENTS_FOR_PASS}) {events_mark}"
+    )
+    verdict = "PASS" if verdict_pass else "FAIL"
     print(f"  verdict         : {verdict}")
     print(f"\n[pilot] APPROVED — logged to {log_path}")
     return 0
