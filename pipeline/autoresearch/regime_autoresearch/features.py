@@ -297,9 +297,9 @@ class _Context:
     nifty_close: np.ndarray | None = None
     vix_close: np.ndarray | None = None
     regime_close: np.ndarray | None = None
-    # Prior 20 dates that each ticker has available (for z_resid_vs_sector_20d).
-    # History matrix: for each ticker, list of (at most) 20 residuals at its
-    # last 20 prior dates. Keyed by ticker.
+    # For each ticker, the residual (ticker 1d return − universe-mean 1d return)
+    # computed at each of its last 20 prior dates — the history z_resid_vs_sector_20d
+    # z-scores against.
     resid_history: dict[str, list[float]] = field(default_factory=dict)
 
 
@@ -323,6 +323,7 @@ def _build_context(panel: pd.DataFrame, eval_date: pd.Timestamp,
     past = panel[panel["date"] < eval_date]
     if past.empty:
         return ctx
+    assert past["date"].max() < eval_date, "causality violated in _build_context"
 
     # Group by ticker, sort within each group, cache per-ticker frames and
     # their close/volume ndarrays. We cap the window at 300 rows per ticker
@@ -335,10 +336,6 @@ def _build_context(panel: pd.DataFrame, eval_date: pd.Timestamp,
     all_needed = set(tickers) | set(_PSEUDO_TICKERS)
 
     for ticker, g in past.groupby("ticker", sort=False):
-        if ticker not in all_needed:
-            # Universe tickers we don't need per-ticker frames for still need
-            # to contribute to universe_r1 — handled below.
-            pass
         g_sorted = g.sort_values("date")
         tail = g_sorted.tail(CAP)
         ctx.per_ticker[ticker] = tail
@@ -741,6 +738,9 @@ _FAST_FEATURE_FUNCS: dict[str, Callable] = {
     "trust_score": _fast_trust_score,
     # trust_sector_rank: handled specially in build_feature_matrix.
 }
+assert set(_FAST_FEATURE_FUNCS) | {"trust_sector_rank"} == set(FEATURE_FUNCS), \
+    "_FAST_FEATURE_FUNCS is missing a feature — adding one to FEATURE_FUNCS " \
+    "without a matching fast kernel would KeyError in production."
 
 
 def build_feature_matrix(panel: pd.DataFrame, eval_date: pd.Timestamp,
