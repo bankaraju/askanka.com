@@ -71,14 +71,13 @@ def assemble_panel(
 
     # Pre-build the ETF feature index for all universe dates to avoid redundant computation.
     # We cache the result per unique date to avoid O(n_tickers × n_dates) re-computation.
-    etf_cache: dict[pd.Timestamp, pd.Series | None] = {}
+    # NOTE: no try/except here — KeyError from build_etf_features_matrix (schema mismatch)
+    # must propagate so schema regressions are never silently swallowed.
+    etf_cache: dict[pd.Timestamp, pd.Series] = {}
 
-    def _get_etf_row(d: pd.Timestamp) -> pd.Series | None:
+    def _get_etf_row(d: pd.Timestamp) -> pd.Series:
         if d not in etf_cache:
-            try:
-                etf_cache[d] = build_etf_features_matrix(inputs.etf_panel, d)
-            except Exception:
-                etf_cache[d] = None
+            etf_cache[d] = build_etf_features_matrix(inputs.etf_panel, d)
         return etf_cache[d]
 
     for ticker, bars in inputs.stock_bars.items():
@@ -117,9 +116,6 @@ def assemble_panel(
                 continue
 
             etf_row = _get_etf_row(d)
-            if etf_row is None:
-                continue
-
             ctx_row = build_stock_features_row(bars, d, sector_id)
 
             row: dict = {
