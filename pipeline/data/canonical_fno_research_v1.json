@@ -770,5 +770,12 @@
     "NIFTYPSUBANK",
     "NIFTYREALTY"
   ],
+  "adjustment_mode": {
+    "fno_equity_csvs": "dividend_adjusted_close",
+    "sectoral_indices": "total_return_index",
+    "global_etf_panel": "dividend_adjusted_close",
+    "source_authority": "docs/superpowers/specs/2026-04-25-canonical-fno-research-dataset-audit.md#6-adjustment-mode-declaration"
+  },
+  "audit_doc": "docs/superpowers/specs/2026-04-25-canonical-fno-research-dataset-audit.md",
   "notes": "Universe = stable F&O members (in all 27 monthly snapshots 2024-01 to 2026-03) + IPOs with >= 100 bars and listing > 2021-10-23. Pre-2024 universe membership inferred from stability assumption (NSE archive endpoints permanently 404 for 2021-2023). Sectoral indices added to global state per H-2026-04-25-002 amendment."
 }
