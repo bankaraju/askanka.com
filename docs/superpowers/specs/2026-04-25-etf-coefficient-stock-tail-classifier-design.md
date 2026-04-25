@@ -11,6 +11,27 @@
 
 ---
 
+## Amendment 1 (2026-04-25, before single-touch holdout consumed)
+
+The hypothesis is amended in two non-substantive ways before the holdout is run for the first time. Both changes are recorded here and in `docs/superpowers/hypothesis-registry.jsonl` under the `amendments` field for H-2026-04-25-002. The single-touch holdout is **intact** — no run has been executed against the model yet.
+
+**A1.1 — Sectoral indices added to the global state vector.**
+Data audit on 2026-04-25 found the registered ETF state vector under-uses available India-side market state. The 10 NSE sectoral indices (BANKNIFTY, NIFTYAUTO, NIFTYENERGY, NIFTYFMCG, NIFTYIT, NIFTYMEDIA, NIFTYMETAL, NIFTYPHARMA, NIFTYPSUBANK, NIFTYREALTY) are added to `C.ETF_SYMBOLS` and contribute identical-shape features (returns, vol z-score, distance from highs, etc.) to the global state vector. Net effect: the global state vector grows from 28 to 38 indices. Stock context features are unchanged.
+
+Rationale: sectoral indices have continuous 5-year coverage with no IPO discontinuities; they fill the gap left by the unrecoverable pre-2024 NSE F&O archive. They also provide explicit India-side directional signal that the original 28-ETF state vector approximates only via global proxies (e.g. KBW Bank Index for BANKNIFTY).
+
+The §15.1 ladder is unchanged. The Delta-margin (0.005 nats), p-floor (0.01), sigma-threshold (1.5), and family size (1, no multiplicity correction) remain locked. No model hyperparameter was calibrated against any held-out number.
+
+**A1.2 — Universe pinned to canonical_fno_research_v1 (154 tickers).**
+The hypothesis was registered against the F&O universe at large (~211 tickers). Data audit revealed:
+- NSE pre-2024 F&O archive endpoints permanently 404 — universe membership for 2021-04-23 to 2024-01-31 is unrecoverable from public sources
+- 62 tickers in the 2024+ universe history have no F&O CSV (data backfill task tracked separately)
+- 22 IPOs are correctly absent before listing date (point-in-time correct)
+
+The canonical universe `canonical_fno_research_v1` (154 tickers = 133 stable F&O members + 21 IPOs with at least 100 bars) is locked as the input universe for this and all subsequent hypotheses. Survivorship bias is documented and bounded in `docs/superpowers/specs/2026-04-25-canonical-fno-research-dataset-audit.md` Section 7.
+
+---
+
 ## 1. Claim
 
 A small multi-task MLP (`etf_stock_tail_mlp_v1`) conditioned on the day-T-1
