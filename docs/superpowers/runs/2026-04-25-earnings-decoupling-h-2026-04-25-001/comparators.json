@@ -1,0 +1,25 @@
+{
+  "strategy_mean_ret_pct": 0.19241951750740932,
+  "comparators": {
+    "random_direction": {
+      "mean_ret_pct": 0.5689,
+      "sharpe": 4.0215,
+      "hit_rate": 0.5769,
+      "n_trades": 26
+    },
+    "equal_weight_basket": {
+      "mean_ret_pct": -0.1001,
+      "sharpe": -0.6856,
+      "hit_rate": 0.5,
+      "n_trades": 26
+    },
+    "fade_inverse": {
+      "mean_ret_pct": -0.1924,
+      "sharpe": -1.3216,
+      "hit_rate": 0.4615,
+      "n_trades": 26
+    }
+  },
+  "strongest_name": "random_direction",
+  "beaten_strongest": false
+}

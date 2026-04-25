@@ -679,6 +679,7 @@ Every pre-registered hypothesis against the Phase C event panel appears in `docs
 - `H-2026-04-24-001` — TA Coincidence Scorer RELIANCE pilot. FAIL (mean_auc 0.509, 2026-04-23).
 - `H-2026-04-24-002` — persistent-break + cross-sectional Lasso (symmetric |z|≥3 on T and T-1). ABANDONED_PRE_EXECUTION (n=116 below 500 floor, 2026-04-24).
 - `H-2026-04-24-003` — persistent-break + cross-sectional Lasso v2 (asymmetric |z|≥3 on T AND |z|≥2 on T-1, same-sign). **FAIL** (2026-04-24). Model S1 Sharpe −3.28 vs buy-and-hold +1.70, margin −4.98, permutation p=0.81. Fragility STABLE 26/27 — the negative edge is NOT a parameter artefact. Artifacts at `pipeline/autoresearch/results/compliance_H-2026-04-24-003_20260423T210632Z/`. The 236-feature Lasso cannot extract predictive signal from the persistent-break subset; always-fade and buy-and-hold both dominate in the same holdout.
+- `H-2026-04-25-001` — earnings-decoupling pre-publication residual + ΔPCR amplifier (T-3 close → T-1 close MODE A). **FAIL** (2026-04-25). 100k-perm null p=0.336, n=26 (1 regime <30, §9 underpowered). S0 Sharpe 0.63 / hit 0.46 / DD 6.3% — fails §1/3 thresholds. random_direction comparator beats strategy at S0 (mean 0.57% vs 0.09%, §9B.1 fail). β-residual §11B fail. Single-touch holdout consumed per §10.4 — re-run requires v2 pre-registration with fresh holdout. Run executed on Contabo VPS (~12s wall clock, 12-core EPYC). Artifacts at `docs/superpowers/runs/2026-04-25-earnings-decoupling-h-2026-04-25-001/`.
 
 ##### Compliance runner: H-2026-04-24-003 (persistent-break v2 + cross-sectional)
 

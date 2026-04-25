@@ -1,0 +1,17 @@
+{
+  "run_id": "0960d43431224613a919e3a80fd7bcc0",
+  "hypothesis_id": "H-2026-04-25-001",
+  "strategy_version": "0.1.0",
+  "git_commit": "dbe7f1d591d661d4d562246fde9ad76928fa27e2",
+  "config_hash": "aac2700977c8b8976fb259a44a8ea3a2fa91f8474ecaa2ac8936aaa837c015bc",
+  "config": {
+    "smoke": false,
+    "n_permutations": 100000,
+    "n_events_input": 1180,
+    "trigger_z_threshold": 1.5
+  },
+  "data_file_sha256_manifest": {},
+  "cost_model_version": "zerodha-ssf-2025-04",
+  "random_seed": 42,
+  "report_generated_at": "2026-04-25T08:05:34.414654+00:00"
+}

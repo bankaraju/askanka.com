@@ -1,0 +1,51 @@
+{
+  "verdict": "STABLE",
+  "base_mean_ret_pct": 0.19241951750740932,
+  "n_neighbors": 6,
+  "pos_share": 1.0,
+  "invert_share": 0.0,
+  "rows": [
+    {
+      "axis": "trigger_z",
+      "value": 1.35,
+      "n_trades": 33,
+      "mean_ret_pct": 0.0054782472034778425,
+      "sign_flip": false
+    },
+    {
+      "axis": "trigger_z",
+      "value": 1.4,
+      "n_trades": 30,
+      "mean_ret_pct": 0.2170412468552675,
+      "sign_flip": false
+    },
+    {
+      "axis": "trigger_z",
+      "value": 1.45,
+      "n_trades": 29,
+      "mean_ret_pct": 0.26991953853943473,
+      "sign_flip": false
+    },
+    {
+      "axis": "trigger_z",
+      "value": 1.55,
+      "n_trades": 25,
+      "mean_ret_pct": 0.255294705277967,
+      "sign_flip": false
+    },
+    {
+      "axis": "trigger_z",
+      "value": 1.6,
+      "n_trades": 20,
+      "mean_ret_pct": 0.4994017520468795,
+      "sign_flip": false
+    },
+    {
+      "axis": "trigger_z",
+      "value": 1.65,
+      "n_trades": 16,
+      "mean_ret_pct": 0.5427095662170092,
+      "sign_flip": false
+    }
+  ]
+}
