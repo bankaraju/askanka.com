@@ -21,8 +21,11 @@ def _cache_path(bars_dir: Path, ticker: str, trade_date: date) -> Path:
 
 
 def _default_kite_session():
-    from pipeline.kite_client import get_kite
-    return get_kite()
+    # pipeline.kite_client.get_kite uses a bare `from kite_auth import ...`
+    # which only resolves when CWD is pipeline/. Import the package-qualified
+    # module directly so this works from repo root too.
+    from pipeline.kite_auth import get_kite_client
+    return get_kite_client()
 
 
 def _default_token_resolver(ticker: str) -> int | None:

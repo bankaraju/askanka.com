@@ -40,6 +40,9 @@ def _enrich_with_features_and_cf(
             log.warning("Bar fetch failed for %s %s: %s", ticker, trade_date, exc)
             record["validation"] = "FETCH_FAILED"
             record["shape"] = "INVALID"
+            record["cf_grid_avg_pnl_pct"] = np.nan
+            record["cf_grid_avg_win"] = False
+            record["cf_best_grid_pnl_pct"] = np.nan
             rows_out.append(record)
             continue
 

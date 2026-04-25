@@ -48,7 +48,13 @@ def _load_closed_phase_c(path: Path) -> pd.DataFrame:
         ts = s.get("open_timestamp")
         if not ticker or not ts:
             continue
+        # open_timestamp has mixed formats in the live ledger: some entries
+        # are tz-naive IST (e.g. "2026-04-22 09:42:30"), some are ISO with
+        # +00:00 UTC offset. Normalize to tz-naive so the merged date Series
+        # has a single dtype.
         open_dt = pd.to_datetime(ts)
+        if open_dt.tz is not None:
+            open_dt = open_dt.tz_localize(None)
         fp = s.get("final_pnl") or {}
         side = "SHORT" if fp.get("short_legs") else ("LONG" if fp.get("long_legs") else None)
         rows.append({
