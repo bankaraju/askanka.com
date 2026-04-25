@@ -1755,7 +1755,7 @@ class RegimeLogisticBaseline:
     def __init__(self):
         self.encoder_ = OneHotEncoder(categories=[list(self.REGIMES)],
                                       handle_unknown="ignore", sparse_output=False)
-        self.model_ = LogisticRegression(multi_class="multinomial", solver="lbfgs",
+        self.model_ = LogisticRegression(solver="lbfgs",
                                          max_iter=200, random_state=C.RANDOM_SEED)
 
     def fit(self, train_panel: pd.DataFrame) -> "RegimeLogisticBaseline":
@@ -1766,7 +1766,16 @@ class RegimeLogisticBaseline:
 
     def predict_proba(self, panel: pd.DataFrame) -> np.ndarray:
         X = self.encoder_.transform(panel[["regime"]])
-        return self.model_.predict_proba(X)
+        raw = self.model_.predict_proba(X)
+        # model_.classes_ may be a subset if some classes are absent in training;
+        # expand to full N_CLASSES columns so column j always means class j.
+        if raw.shape[1] == C.N_CLASSES:
+            return raw
+        out = np.zeros((len(panel), C.N_CLASSES), dtype=float)
+        for j, cls in enumerate(self.model_.classes_):
+            out[:, int(cls)] = raw[:, j]
+        row_sums = out.sum(axis=1, keepdims=True)
+        return out / np.where(row_sums == 0, 1.0, row_sums)
 ```
 
 - [ ] **Step 4: Run tests**
@@ -1855,7 +1864,7 @@ class InteractionsLogisticBaseline:
     def __init__(self):
         self.scaler_ = StandardScaler()
         self.model_ = LogisticRegression(
-            multi_class="multinomial", solver="lbfgs", max_iter=500,
+            solver="lbfgs", max_iter=500,
             C=1.0, random_state=C.RANDOM_SEED,
         )
 
