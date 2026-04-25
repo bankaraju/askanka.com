@@ -27,6 +27,12 @@ _FUND_PATTERNS = re.compile(
     re.I,
 )
 
+# IndianAPI returns 01-01-1970 as a missing-date sentinel for announcements
+# whose meeting date has not been reported. These rows must be quarantined
+# (data validation policy §9.1, §9.3) — silent pass-through would corrupt
+# any time-window feature.
+EPOCH_SENTINEL = dt.date(1970, 1, 1)
+
 
 class EventKind(str, enum.Enum):
     QUARTERLY_EARNINGS = "QUARTERLY_EARNINGS"
@@ -36,10 +42,18 @@ def _parse_dmy(date_s: str) -> dt.date:
     return dt.datetime.strptime(date_s, "%d-%m-%Y").date()
 
 
+def is_sentinel_date(d: dt.date) -> bool:
+    return d == EPOCH_SENTINEL
+
+
 def classify_board_meeting(date_s: str, agenda: str) -> Optional[dict]:
     """Return a typed event dict if the agenda matches the earnings-result
-    pattern, else None. Raises ValueError on bad date format."""
+    pattern AND the date is not the IndianAPI missing-date sentinel
+    (01-01-1970). Returns None if the agenda is not earnings-related or if
+    the date is a sentinel. Raises ValueError on unparseable date format."""
     event_date = _parse_dmy(date_s)
+    if is_sentinel_date(event_date):
+        return None
     if not _EARN_PATTERNS.search(agenda or ""):
         return None
     return {

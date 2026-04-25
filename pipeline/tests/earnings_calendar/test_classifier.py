@@ -82,6 +82,27 @@ def test_extract_skips_malformed_rows():
     assert out[0]["event_date"] == dt.date(2026, 1, 16)
 
 
+def test_classify_rejects_epoch_sentinel_date():
+    """IndianAPI uses 01-01-1970 as a missing-date sentinel — must be quarantined
+    even when the agenda matches the earnings pattern."""
+    out = classify_board_meeting("01-01-1970", "Quarterly Results")
+    assert out is None
+
+
+def test_extract_skips_sentinel_dates():
+    payload = {
+        "board_meetings": {
+            "data": [
+                ["16-01-2026", "Quarterly Results"],
+                ["01-01-1970", "Quarterly Results"],
+            ]
+        }
+    }
+    out = extract_earnings_events("X", payload)
+    assert len(out) == 1
+    assert out[0]["event_date"] == dt.date(2026, 1, 16)
+
+
 def test_extract_sorted_descending_by_date():
     payload = {
         "board_meetings": {
