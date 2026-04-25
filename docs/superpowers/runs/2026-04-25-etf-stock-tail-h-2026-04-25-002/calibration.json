@@ -1,0 +1,166 @@
+{
+  "reliability_bins": {
+    "down_tail": [
+      {
+        "mean_pred": 0.08329999223845493,
+        "frac_pos": 0.05985267034990792,
+        "count": 32580
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      }
+    ],
+    "neutral": [
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      },
+      {
+        "mean_pred": 0.19210165424327172,
+        "frac_pos": 0.75,
+        "count": 4
+      },
+      {
+        "mean_pred": 0.2627931375947633,
+        "frac_pos": 0.8048780487804879,
+        "count": 41
+      },
+      {
+        "mean_pred": 0.35693726061010594,
+        "frac_pos": 0.7530864197530864,
+        "count": 81
+      },
+      {
+        "mean_pred": 0.4550691128269162,
+        "frac_pos": 0.726027397260274,
+        "count": 146
+      },
+      {
+        "mean_pred": 0.5513936417697909,
+        "frac_pos": 0.7130044843049327,
+        "count": 223
+      },
+      {
+        "mean_pred": 0.6538613261539086,
+        "frac_pos": 0.7582417582417582,
+        "count": 364
+      },
+      {
+        "mean_pred": 0.7721554187954576,
+        "frac_pos": 0.8028021015761821,
+        "count": 2855
+      },
+      {
+        "mean_pred": 0.8347855378814796,
+        "frac_pos": 0.8813829418693272,
+        "count": 28866
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      }
+    ],
+    "up_tail": [
+      {
+        "mean_pred": 0.0757233253340983,
+        "frac_pos": 0.062223944207671446,
+        "count": 25810
+      },
+      {
+        "mean_pred": 0.12562577223303428,
+        "frac_pos": 0.07560447491880187,
+        "count": 5542
+      },
+      {
+        "mean_pred": 0.2389822004245623,
+        "frac_pos": 0.11191335740072202,
+        "count": 554
+      },
+      {
+        "mean_pred": 0.34592768435351234,
+        "frac_pos": 0.28,
+        "count": 250
+      },
+      {
+        "mean_pred": 0.4478843071297642,
+        "frac_pos": 0.24479166666666666,
+        "count": 192
+      },
+      {
+        "mean_pred": 0.5449758222919651,
+        "frac_pos": 0.2396694214876033,
+        "count": 121
+      },
+      {
+        "mean_pred": 0.6457145111659209,
+        "frac_pos": 0.24324324324324326,
+        "count": 74
+      },
+      {
+        "mean_pred": 0.7398195424323636,
+        "frac_pos": 0.17647058823529413,
+        "count": 34
+      },
+      {
+        "mean_pred": 0.8047468669213557,
+        "frac_pos": 0.3333333333333333,
+        "count": 3
+      },
+      {
+        "mean_pred": NaN,
+        "frac_pos": NaN,
+        "count": 0
+      }
+    ]
+  },
+  "brier_decomposition": {
+    "total": 0.23767412731867954,
+    "reliability": 0.006170297821527491,
+    "resolution": 0.0017464029193655006,
+    "uncertainty": 0.2332502324165175
+  }
+}

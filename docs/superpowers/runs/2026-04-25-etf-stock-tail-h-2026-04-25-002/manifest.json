@@ -1,0 +1,12 @@
+{
+  "run_id": "5cdb2ffe7f69249922c73a5fd1a6c758",
+  "hypothesis_id": "H-2026-04-25-002",
+  "config_sha256": "45fe9d4cd81e21cf186cb799613014c5fd740a38fef1d647e423f301d8e256a4",
+  "smoke": false,
+  "n_permutations": 100000,
+  "n_train": 87369,
+  "n_val": 10374,
+  "n_holdout": 32580,
+  "n_tickers": 133,
+  "best_val_loss": 0.9581860899925232
+}

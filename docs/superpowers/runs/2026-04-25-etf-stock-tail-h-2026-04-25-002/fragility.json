@@ -1,0 +1,52 @@
+{
+  "verdict": "FRAGILE",
+  "n_passing": 0,
+  "n_total": 6,
+  "tol_pct": 0.02,
+  "min_passing_required": 4,
+  "base_holdout_ce": 0.48380736857356166,
+  "runs": [
+    {
+      "name": "dropout_minus_10pct",
+      "holdout_ce": 0.958452582359314,
+      "passing": true,
+      "within_tolerance": false,
+      "tol_used": 0.009676147371471234
+    },
+    {
+      "name": "dropout_plus_10pct",
+      "holdout_ce": 0.9511528611183167,
+      "passing": true,
+      "within_tolerance": false,
+      "tol_used": 0.009676147371471234
+    },
+    {
+      "name": "weight_decay_minus_20pct",
+      "holdout_ce": 0.9418647885322571,
+      "passing": true,
+      "within_tolerance": false,
+      "tol_used": 0.009676147371471234
+    },
+    {
+      "name": "weight_decay_plus_20pct",
+      "holdout_ce": 0.9426060318946838,
+      "passing": true,
+      "within_tolerance": false,
+      "tol_used": 0.009676147371471234
+    },
+    {
+      "name": "sigma_1_0",
+      "holdout_ce": 0.9426060318946838,
+      "passing": true,
+      "within_tolerance": false,
+      "tol_used": 0.009676147371471234
+    },
+    {
+      "name": "sigma_2_0",
+      "holdout_ce": 0.9426060318946838,
+      "passing": true,
+      "within_tolerance": false,
+      "tol_used": 0.009676147371471234
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "decision": "FAIL",
+  "rows": [
+    {
+      "section": "\u00a75A",
+      "status": "PASS",
+      "note": "all input datasets Approved-for-research per data validation policy"
+    },
+    {
+      "section": "\u00a76",
+      "status": "PASS",
+      "note": "F&O 211, point-in-time via fno_universe_history.json"
+    },
+    {
+      "section": "\u00a77",
+      "status": "PASS",
+      "note": "MODE_NONE_FORECAST_ONLY (path D)"
+    },
+    {
+      "section": "\u00a78",
+      "status": "PASS",
+      "note": "model outputs probabilities only \u2014 no direction conflict possible"
+    },
+    {
+      "section": "\u00a79",
+      "status": "PASS",
+      "note": "n_holdout=32,580"
+    },
+    {
+      "section": "\u00a79A",
+      "status": "FAIL",
+      "note": "fragility verdict = FRAGILE"
+    },
+    {
+      "section": "\u00a79B.1",
+      "status": "FAIL",
+      "note": "strongest baseline = B0_always_prior (ce=0.4748); model_ce=0.4838; margin=-0.0090 nats; required \u22650.0050"
+    },
+    {
+      "section": "\u00a79B.2",
+      "status": "PASS",
+      "note": "p=0.0000, floor 0.01"
+    },
+    {
+      "section": "\u00a710",
+      "status": "PASS",
+      "note": "holdout_pct=0.21 (target 0.20)"
+    },
+    {
+      "section": "\u00a711B",
+      "status": "FAIL",
+      "note": "calibration-residualized margin=-0.0028 nats, required \u22650.005"
+    }
+  ],
+  "model_ce": 0.48380736857356166,
+  "baseline_ces": {
+    "B0_always_prior": 0.47484021483326666,
+    "B1_regime_logistic": 0.47776683417773336,
+    "B2_interactions_logistic": 0.5174670976616809
+  },
+  "best_baseline_id": "B0_always_prior",
+  "perm_p_value": 0.0,
+  "fragility_verdict": "FRAGILE",
+  "generated_at": "2026-04-25T19:44:29.848961+00:00"
+}
