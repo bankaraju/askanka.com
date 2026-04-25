@@ -2838,6 +2838,17 @@ git add pipeline/autoresearch/etf_stock_tail/runner.py \
 git commit -m "feat(etf_stock_tail): end-to-end runner CLI with smoke test"
 ```
 
+**Shipped deviations from the verbatim code above (commits `a19a379` + `3e1aaa3`):**
+
+1. `max_epochs` is gated: `5 if smoke else C.MAX_EPOCHS`. Default 100 epochs diverged on tiny smoke panels.
+2. Stock-feature NaN handling is gated. Smoke: `fillna(0.0)` on all 3 splits (panel too small to drop). Production: `dropna(subset=stock_feat_cols)` with row-drop logging. Imputing 0.0 in production would treat invalid early-history rows as valid z-score=0 observations.
+3. NaN-probability guard on `val_probs_raw` and `holdout_probs_raw` is gated. Smoke: replace with uniform priors and log warning. Production: `raise RuntimeError` (NaN softmax means training broke; uniform-prior substitution would mask the failure and produce a misleading verdict).
+4. Test fixture: `n_days` raised 700 → 900 to clear `MIN_TAIL_EXAMPLES_PER_SIDE=30` for all 3 synthetic tickers; volume column randomized to avoid std=0 → NaN `volume_z_20d`.
+5. `verdict.md` written with `encoding="utf-8"` (Windows cp1252 codec rejects `≥` character).
+6. `n_tickers = max(int(panel["ticker_id"].max()) + 1, 1)` — explicit `int()` cast to handle pandas nullable-int return type.
+
+The fragility stub in the verbatim code block is also smoke-gated in shipped code; production calls real `run_perturbed_training` from Task 18.
+
 ---
 
 ## Task 18: Wire fragility to actually re-train (replace stub)
