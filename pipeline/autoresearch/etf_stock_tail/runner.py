@@ -184,23 +184,26 @@ def run(
     # Fragility
     if run_fragility:
         log.info("fragility sweep (6 perturbations)...")
+        from pipeline.autoresearch.etf_stock_tail.fragility import run_perturbed_training
         runs = []
-        for p in PERTURBATIONS:
-            # For smoke, just stub the perturbation as "passing within 0.005 of base"
-            # Real perturbation would re-train with the modified hyperparam.
-            holdout_ce = float(model_ce + (1.0 if p["name"] == "sigma_2_0" else 0.0) * 0.0001)
-            runs.append({"name": p["name"], "holdout_ce": holdout_ce, "passing": True})
+        if smoke:
+            # Stub for smoke: trivially passing (real re-train is too slow on tiny smoke panel)
+            runs = [{"name": p["name"], "holdout_ce": model_ce, "passing": True}
+                    for p in PERTURBATIONS]
+        else:
+            for p in PERTURBATIONS:
+                r = run_perturbed_training(
+                    train=train, val=val, holdout=holdout,
+                    feature_cols=feature_cols, n_tickers=int(n_tickers),
+                    n_etf=n_etf, n_ctx=n_ctx, perturbation=p,
+                )
+                runs.append(r)
         frag = fragility_verdict(model_ce, runs)
     else:
-        frag = {
-            "verdict": "SKIPPED",
-            "n_passing": 0,
-            "n_total": 0,
-            "tol_pct": C.FRAGILITY_TOL_PCT,
-            "min_passing_required": C.FRAGILITY_MIN_PASSING,
-            "base_holdout_ce": model_ce,
-            "runs": [],
-        }
+        frag = {"verdict": "SKIPPED", "n_passing": 0, "n_total": 0,
+                "tol_pct": C.FRAGILITY_TOL_PCT,
+                "min_passing_required": C.FRAGILITY_MIN_PASSING,
+                "base_holdout_ce": model_ce, "runs": []}
     (out_dir / "fragility.json").write_text(json.dumps(frag, indent=2))
 
     # Verdict

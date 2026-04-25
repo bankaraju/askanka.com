@@ -45,3 +45,31 @@ def test_fragile_when_only_3_of_6():
     v = fragility_verdict(base_ce, runs)
     assert v["verdict"] == "FRAGILE"
     assert v["n_passing"] == 3
+
+
+import pandas as pd
+import numpy as np
+
+from pipeline.autoresearch.etf_stock_tail.fragility import run_perturbed_training
+
+
+def test_run_perturbed_training_returns_holdout_ce():
+    rng = np.random.default_rng(0)
+    n = 200
+    feature_cols = ["etf_a_ret_1d", "stock_x"]
+    train = pd.DataFrame({
+        "etf_a_ret_1d": rng.normal(size=n),
+        "stock_x": rng.normal(size=n),
+        "ticker_id": rng.integers(0, 3, size=n),
+        "label": rng.integers(0, 3, size=n),
+    })
+    val = train.copy()
+    holdout = train.copy()
+    perturbation = {"name": "dropout_minus_10pct", "field": "dropout", "value": 0.27}
+    result = run_perturbed_training(
+        train=train, val=val, holdout=holdout,
+        feature_cols=feature_cols, n_tickers=3,
+        n_etf=1, n_ctx=1, perturbation=perturbation, max_epochs=3,
+    )
+    assert "holdout_ce" in result
+    assert result["name"] == "dropout_minus_10pct"
