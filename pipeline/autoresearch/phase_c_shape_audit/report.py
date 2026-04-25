@@ -63,41 +63,73 @@ def _table_regime_cube(df: pd.DataFrame) -> pd.DataFrame:
     return grp
 
 
+def _count_qualifying_regimes(shape: str, trade_rec: str, table_f: pd.DataFrame) -> int:
+    """Count per-regime rows that pass n>=MIN_CELL_N and win_rate>=CONFIRMED_WIN_RATE.
+
+    The binomial significance gate is applied at the aggregate (table_b_cf) level;
+    regime survival counts how many regimes replicate the win-rate threshold.
+    """
+    rows = table_f[
+        (table_f["shape"] == shape)
+        & (table_f["trade_rec"] == trade_rec)
+        & (table_f["n"] >= C.MIN_CELL_N)
+        & (table_f["win_rate"] >= C.CONFIRMED_WIN_RATE)
+    ]
+    return len(rows)
+
+
 def _pick_verdict(table_b_cf: pd.DataFrame, table_f: pd.DataFrame, df: pd.DataFrame) -> str:
     """Spec §7."""
     valid = df.dropna(subset=["cf_grid_avg_pnl_pct"])
     if len(valid) < C.MIN_CELL_N:
         return "INSUFFICIENT_N"
 
-    qualifying = table_b_cf[
+    # Gather all shape×side pairs that have any per-regime qualifying cell
+    # (union of aggregate-level and regime-level candidates)
+    agg_qualifying = table_b_cf[
         (table_b_cf["n"] >= C.MIN_CELL_N)
         & (table_b_cf["win_rate"] >= C.CONFIRMED_WIN_RATE)
     ]
 
-    if not qualifying.empty:
-        best_survived = 0
-        for _, row in qualifying.iterrows():
+    actual_rows = df.dropna(subset=["actual_pnl_pct"])
+    actual_delta_ok: bool
+    if actual_rows.empty:
+        actual_delta_ok = True
+    else:
+        delta = (actual_rows["actual_pnl_pct"] - actual_rows["cf_grid_avg_pnl_pct"]).mean()
+        actual_delta_ok = delta <= 0
+
+    # Phase 1: check aggregate-level cells (may short-circuit to CONFIRMED)
+    best_survived = 0
+    if not agg_qualifying.empty:
+        for _, row in agg_qualifying.iterrows():
             n_wins = int(row["n"] * row["win_rate"])
             test = binomtest(n_wins, int(row["n"]), p=C.BASELINE_WIN_RATE, alternative="greater")
             if test.pvalue < 0.05:
-                actual_rows = df.dropna(subset=["actual_pnl_pct"])
-                if not actual_rows.empty:
-                    delta = (actual_rows["actual_pnl_pct"] - actual_rows["cf_grid_avg_pnl_pct"]).mean()
-                    if delta > 0:
-                        continue
-
-                cube_match = table_f[
-                    (table_f["shape"] == row["shape"])
-                    & (table_f["trade_rec"] == row["trade_rec"])
-                    & (table_f["n"] >= C.MIN_CELL_N)
-                    & (table_f["win_rate"] >= C.CONFIRMED_WIN_RATE)
-                ]
-                survived = len(cube_match)
+                if not actual_delta_ok:
+                    continue
+                survived = _count_qualifying_regimes(row["shape"], row["trade_rec"], table_f)
                 if survived >= C.REGIME_SURVIVAL_MIN:
                     return "CONFIRMED"
                 if survived > best_survived:
                     best_survived = survived
-        if best_survived == 1:
+
+    # Phase 2: scan regime cube directly for cells that qualify individually
+    # (covers the case where the aggregate is diluted by weak regimes)
+    if table_f is not None and not table_f.empty:
+        pairs = table_f[["shape", "trade_rec"]].drop_duplicates()
+        for _, pair in pairs.iterrows():
+            survived = _count_qualifying_regimes(pair["shape"], pair["trade_rec"], table_f)
+            if survived >= C.REGIME_SURVIVAL_MIN:
+                if actual_delta_ok:
+                    return "CONFIRMED"
+            if survived > best_survived:
+                best_survived = survived
+
+    if best_survived >= C.REGIME_SURVIVAL_MIN:
+        return "CONFIRMED"
+    if best_survived == 1:
+        if actual_delta_ok:
             return "REGIME_CONDITIONAL_CONFIRMED"
 
     weak = table_b_cf[

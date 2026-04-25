@@ -53,3 +53,19 @@ def test_verdict_confirmed_when_cell_lifts_above_baseline_in_two_regimes() -> No
     df = pd.DataFrame(rows)
     rep = report.build_report(df)
     assert rep["verdict"] == "CONFIRMED"
+
+
+def test_verdict_regime_conditional_when_lift_only_in_one_regime() -> None:
+    """Same as CONFIRMED but cell only lifts in 1 of 5 regimes."""
+    rows: list[dict] = []
+    for _ in range(12):
+        rows.append(_synth_row("REVERSE_V_HIGH", "SHORT", "NEUTRAL", cf_pnl=2.0))
+    for _ in range(3):
+        rows.append(_synth_row("REVERSE_V_HIGH", "SHORT", "NEUTRAL", cf_pnl=-1.0))
+    for _ in range(8):
+        rows.append(_synth_row("REVERSE_V_HIGH", "SHORT", "RISK-OFF", cf_pnl=0.1))
+    for _ in range(7):
+        rows.append(_synth_row("REVERSE_V_HIGH", "SHORT", "RISK-OFF", cf_pnl=-0.5))
+    df = pd.DataFrame(rows)
+    rep = report.build_report(df)
+    assert rep["verdict"] == "REGIME_CONDITIONAL_CONFIRMED"
