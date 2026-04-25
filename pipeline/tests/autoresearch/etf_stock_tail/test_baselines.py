@@ -31,3 +31,24 @@ def test_regime_logistic_learns_regime_priors():
     probs = b.predict_proba(val)
     assert int(np.argmax(probs[0])) == 2
     assert int(np.argmax(probs[1])) == 0
+
+
+from pipeline.autoresearch.etf_stock_tail.baselines.interactions_logistic import InteractionsLogisticBaseline
+
+
+def test_interactions_logistic_runs_end_to_end():
+    rng = np.random.default_rng(2)
+    n = 400
+    cols = (
+        ["etf_brazil_ret_1d", "etf_dollar_ret_1d", "etf_india_vix_daily_ret_1d", "etf_india_etf_ret_1d",
+         "stock_sector_id", "stock_vol_z_60d", "stock_dist_from_52w_high_pct"]
+    )
+    df = pd.DataFrame({c: rng.normal(size=n) for c in cols})
+    df["label"] = rng.integers(0, 3, size=n)
+    df["regime"] = "NEUTRAL"
+    feature_cols = [c for c in cols if c not in ("stock_sector_id",)]
+    base_cols = cols
+    b = InteractionsLogisticBaseline().fit(df, base_cols=base_cols)
+    probs = b.predict_proba(df, base_cols=base_cols)
+    assert probs.shape == (n, 3)
+    np.testing.assert_allclose(probs.sum(axis=1), 1.0, atol=1e-5)
