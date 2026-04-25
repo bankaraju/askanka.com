@@ -12,22 +12,22 @@ from pipeline.autoresearch.etf_stock_tail.etf_features import (
 
 @pytest.fixture
 def synthetic_etf_panel() -> pd.DataFrame:
-    """30-day synthetic ETF panel, 30 ETFs, monotonic close = (ETF_idx + 1) * day."""
+    """30-day synthetic panel, all 40 indices (30 ETFs + 10 sectoral), monotonic close = (idx + 1) * day."""
     dates = pd.date_range("2024-01-01", periods=30, freq="D")
     rows = []
-    for i, sym in enumerate(C.ETF_SYMBOLS):
+    for i, sym in enumerate(C.ALL_INDEX_SYMBOLS):
         for d in dates:
             day = (d - dates[0]).days + 1
             rows.append({"date": d, "etf": sym, "close": float((i + 1) * day)})
     return pd.DataFrame(rows)
 
 
-def test_feature_names_are_30x3():
+def test_feature_names_are_40x3():
     names = etf_feature_names()
-    assert len(names) == 90
+    assert len(names) == 120
     assert all(n.startswith("etf_") for n in names)
-    # Each ETF appears 3 times (one per window)
-    for sym in C.ETF_SYMBOLS:
+    # Each index appears 3 times (one per window)
+    for sym in C.ALL_INDEX_SYMBOLS:
         assert sum(sym in n for n in names) == 3
 
 

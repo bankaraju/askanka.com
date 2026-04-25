@@ -14,7 +14,7 @@ from pipeline.autoresearch.etf_stock_tail.panel import (
 def _mk_etf_panel(start: str, n_days: int) -> pd.DataFrame:
     dates = pd.date_range(start, periods=n_days, freq="D")
     rows = []
-    for i, sym in enumerate(C.ETF_SYMBOLS):
+    for i, sym in enumerate(C.ALL_INDEX_SYMBOLS):
         for d in dates:
             day = (d - dates[0]).days + 1
             rows.append({"date": d, "etf": sym, "close": float((i + 1) * day)})
@@ -75,14 +75,14 @@ def test_panel_columns(tmp_path):
     )
     panel, manifest = assemble_panel(inputs, train_start=pd.Timestamp("2024-04-01"),
                                      train_end=pd.Timestamp("2024-12-31"))
-    expected_etf_cols = 30 * 3
+    expected_etf_cols = 40 * 3   # 30 ETFs + 10 sectoral indices x 3 windows
     expected_ctx_cols = 6
     assert "ticker_id" in panel.columns
     assert "label" in panel.columns
     assert "date" in panel.columns
     assert "ticker" in panel.columns
     assert "regime" in panel.columns
-    # ETF + context columns total 96
+    # ETF + context columns total 126
     feature_cols = [c for c in panel.columns if c.startswith(("etf_", "stock_"))]
     assert len(feature_cols) == expected_etf_cols + expected_ctx_cols
     # Verify the panel is not empty — AAA must survive the tail screen and produce real rows

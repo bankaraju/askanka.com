@@ -14,7 +14,7 @@ def _mk_etf_panel(start: str, n_days: int) -> pd.DataFrame:
     dates = pd.date_range(start, periods=n_days, freq="D")
     rng = np.random.default_rng(0)
     rows = []
-    for i, sym in enumerate(C.ETF_SYMBOLS):
+    for i, sym in enumerate(C.ALL_INDEX_SYMBOLS):
         closes = 100.0 * np.cumprod(1 + rng.normal(0, 0.005, n_days))
         for d, c in zip(dates, closes):
             rows.append({"date": d, "etf": sym, "close": float(c)})

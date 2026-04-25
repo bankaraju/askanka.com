@@ -19,10 +19,14 @@ from pipeline.autoresearch.etf_stock_tail import constants as C
 
 
 def etf_feature_names() -> tuple[str, ...]:
-    """Return stable tuple of 90 feature names: etf_{sym}_ret_{w}d."""
+    """Return stable tuple of feature names: etf_{sym}_ret_{w}d.
+
+    Per Amendment A1.1 (2026-04-25), iterates over C.ALL_INDEX_SYMBOLS
+    (28 global ETFs + 10 NSE sectoral indices = 40 indices x 3 windows = 120 names).
+    """
     return tuple(
         f"etf_{sym}_ret_{w}d"
-        for sym in C.ETF_SYMBOLS
+        for sym in C.ALL_INDEX_SYMBOLS
         for w in C.ETF_RETURN_WINDOWS
     )
 
@@ -56,7 +60,7 @@ def build_etf_features_matrix(panel: pd.DataFrame, eval_date: pd.Timestamp) -> p
     """
     eval_date = pd.Timestamp(eval_date)
     out: dict[str, float] = {}
-    for sym in C.ETF_SYMBOLS:
+    for sym in C.ALL_INDEX_SYMBOLS:
         # STRICT causality: exclude eval_date itself
         df = panel[(panel["etf"] == sym) & (panel["date"] < eval_date)]
         df = df.drop_duplicates(subset="date", keep="last")  # documented policy: keep latest if dup
