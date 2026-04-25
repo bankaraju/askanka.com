@@ -3,7 +3,12 @@ pipeline/.env
 *.env
 
 # Pipeline data (large JSON files, generated)
-pipeline/data/
+pipeline/data/*
+# … but ex-ante frozen hypothesis artifacts MUST be committed
+# (data validation policy §11.3 point-in-time correctness)
+!pipeline/data/earnings_calendar/
+pipeline/data/earnings_calendar/*
+!pipeline/data/earnings_calendar/peers_frozen.json
 pipeline/logs/
 pipeline/__pycache__/
 pipeline/lib/

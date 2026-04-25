@@ -1,0 +1,1041 @@
+{
+  "frozen_at": "2026-04-25",
+  "cohorts": {
+    "360ONE": [
+      "MOTILALOFS",
+      "CDSL",
+      "ANGELONE"
+    ],
+    "ABB": [
+      "POWERINDIA",
+      "SIEMENS",
+      "POLYCAB"
+    ],
+    "ABCAPITAL": [
+      "ICICIGI",
+      "ICICIPRULI",
+      "MFSL"
+    ],
+    "ADANIENSOL": [
+      "TATAPOWER",
+      "GAIL",
+      "ADANIGREEN"
+    ],
+    "ADANIENT": [
+      "ABB",
+      "POWERINDIA",
+      "SIEMENS"
+    ],
+    "ADANIGREEN": [
+      "ADANIENSOL",
+      "TATAPOWER",
+      "GAIL"
+    ],
+    "ADANIPORTS": [
+      "INDIGO",
+      "GMRAIRPORT",
+      "MAZDOCK"
+    ],
+    "ADANIPOWER": [
+      "NTPC",
+      "POWERGRID",
+      "COALINDIA"
+    ],
+    "ALKEM": [
+      "GLENMARK",
+      "LAURUSLABS",
+      "BIOCON"
+    ],
+    "AMBER": [
+      "KAYNES",
+      "EXIDEIND",
+      "BLUESTARCO"
+    ],
+    "AMBUJACEM": [
+      "SHREECEM",
+      "DALBHARAT",
+      "GRASIM"
+    ],
+    "ANGELONE": [
+      "CDSL",
+      "NUVAMA",
+      "CAMS"
+    ],
+    "APLAPOLLO": [
+      "SAIL",
+      "NMDC",
+      "NATIONALUM"
+    ],
+    "APOLLOHOSP": [
+      "MAXHEALTH",
+      "FORTIS"
+    ],
+    "ASHOKLEY": [
+      "TMPV",
+      "HYUNDAI",
+      "FORCEMOT"
+    ],
+    "ASIANPAINT": [
+      "PIDILITIND",
+      "SOLARINDS",
+      "SRF"
+    ],
+    "ASTRAL": [
+      "PIIND",
+      "SUPREMEIND",
+      "UPL"
+    ],
+    "AUBANK": [
+      "FEDERALBNK",
+      "BANKINDIA",
+      "INDUSINDBK"
+    ],
+    "AUROPHARMA": [
+      "MANKIND",
+      "ALKEM",
+      "ZYDUSLIFE"
+    ],
+    "AXISBANK": [
+      "KOTAKBANK",
+      "UNIONBANK",
+      "BANKBARODA"
+    ],
+    "BAJAJ-AUTO": [
+      "BAJFINANCE",
+      "SHRIRAMFIN",
+      "JIOFIN"
+    ],
+    "BAJAJFINSV": [
+      "SBILIFE",
+      "HDFCLIFE",
+      "ABCAPITAL"
+    ],
+    "BAJAJHLDNG": [
+      "HDFCAMC",
+      "RECLTD",
+      "BSE"
+    ],
+    "BAJFINANCE": [
+      "BAJAJ-AUTO",
+      "SHRIRAMFIN",
+      "JIOFIN"
+    ],
+    "BANDHANBNK": [
+      "RBLBANK",
+      "IDFCFIRSTB",
+      "YESBANK"
+    ],
+    "BANKBARODA": [
+      "UNIONBANK",
+      "INDIANB",
+      "PNB"
+    ],
+    "BANKINDIA": [
+      "INDUSINDBK",
+      "FEDERALBNK",
+      "AUBANK"
+    ],
+    "BDL": [
+      "HAL",
+      "BEL"
+    ],
+    "BEL": [
+      "HAL",
+      "BDL"
+    ],
+    "BHARATFORG": [
+      "HAVELLS",
+      "NATIONALUM",
+      "NMDC"
+    ],
+    "BHARTIARTL": [
+      "IDEA"
+    ],
+    "BHEL": [
+      "WAAREEENER",
+      "CGPOWER",
+      "POLYCAB"
+    ],
+    "BIOCON": [
+      "LAURUSLABS",
+      "GLENMARK",
+      "ALKEM"
+    ],
+    "BLUESTARCO": [
+      "EXIDEIND",
+      "KEI",
+      "KAYNES"
+    ],
+    "BOSCHLTD": [
+      "MOTHERSON",
+      "CUMMINSIND",
+      "UNOMINDA"
+    ],
+    "BPCL": [
+      "HINDPETRO",
+      "IOC",
+      "PETRONET"
+    ],
+    "BRITANNIA": [
+      "VBL",
+      "GODREJCP",
+      "TATACONSUM"
+    ],
+    "BSE": [
+      "HDFCAMC",
+      "BAJAJHLDNG",
+      "RECLTD"
+    ],
+    "CAMS": [
+      "KFINTECH",
+      "NUVAMA",
+      "IEX"
+    ],
+    "CANBK": [
+      "PNB",
+      "INDIANB",
+      "BANKBARODA"
+    ],
+    "CDSL": [
+      "ANGELONE",
+      "NUVAMA",
+      "CAMS"
+    ],
+    "CGPOWER": [
+      "POLYCAB",
+      "SIEMENS",
+      "POWERINDIA"
+    ],
+    "CHOLAFIN": [
+      "IRFC",
+      "PFC",
+      "MUTHOOTFIN"
+    ],
+    "CIPLA": [
+      "LUPIN",
+      "ZYDUSLIFE",
+      "MANKIND"
+    ],
+    "COALINDIA": [
+      "POWERGRID",
+      "ADANIPOWER",
+      "ADANIGREEN"
+    ],
+    "COCHINSHIP": [
+      "CONCOR",
+      "MAZDOCK",
+      "GMRAIRPORT"
+    ],
+    "COFORGE": [
+      "MPHASIS",
+      "TATAELXSI",
+      "TATATECH"
+    ],
+    "COLPAL": [
+      "PATANJALI",
+      "GODFRYPHLP",
+      "DABUR"
+    ],
+    "CONCOR": [
+      "COCHINSHIP",
+      "MAZDOCK",
+      "GMRAIRPORT"
+    ],
+    "CROMPTON": [
+      "INOXWIND",
+      "AMBER",
+      "KAYNES"
+    ],
+    "CUMMINSIND": [
+      "MOTHERSON",
+      "BOSCHLTD",
+      "UNOMINDA"
+    ],
+    "DABUR": [
+      "UNITDSPR",
+      "MARICO",
+      "COLPAL"
+    ],
+    "DALBHARAT": [
+      "SHREECEM",
+      "AMBUJACEM",
+      "GRASIM"
+    ],
+    "DELHIVERY": [
+      "SWIGGY"
+    ],
+    "DIXON": [
+      "NYKAA",
+      "VMM",
+      "TIINDIA"
+    ],
+    "DLF": [
+      "INDUSTOWER",
+      "LODHA",
+      "PHOENIXLTD"
+    ],
+    "DMART": [
+      "EICHERMOT",
+      "TVSMOTOR",
+      "TITAN"
+    ],
+    "EICHERMOT": [
+      "TVSMOTOR",
+      "TRENT",
+      "DMART"
+    ],
+    "ETERNAL": [
+      "WIPRO",
+      "TECHM",
+      "LTM"
+    ],
+    "EXIDEIND": [
+      "KAYNES",
+      "AMBER",
+      "BLUESTARCO"
+    ],
+    "FEDERALBNK": [
+      "AUBANK",
+      "BANKINDIA",
+      "INDUSINDBK"
+    ],
+    "FORCEMOT": [
+      "ASHOKLEY",
+      "TMPV",
+      "HYUNDAI"
+    ],
+    "FORTIS": [
+      "MAXHEALTH",
+      "APOLLOHOSP"
+    ],
+    "GAIL": [
+      "JSWENERGY",
+      "NHPC",
+      "TATAPOWER"
+    ],
+    "GLENMARK": [
+      "LAURUSLABS",
+      "ALKEM",
+      "BIOCON"
+    ],
+    "GMRAIRPORT": [
+      "MAZDOCK",
+      "COCHINSHIP",
+      "CONCOR"
+    ],
+    "GODFRYPHLP": [
+      "PATANJALI",
+      "COLPAL",
+      "DABUR"
+    ],
+    "GODREJCP": [
+      "TATACONSUM",
+      "MARICO",
+      "UNITDSPR"
+    ],
+    "GODREJPROP": [
+      "RVNL",
+      "OBEROIRLTY",
+      "PHOENIXLTD"
+    ],
+    "GRASIM": [
+      "AMBUJACEM",
+      "SHREECEM",
+      "DALBHARAT"
+    ],
+    "HAL": [
+      "BEL",
+      "BDL"
+    ],
+    "HAVELLS": [
+      "NATIONALUM",
+      "NMDC",
+      "BHARATFORG"
+    ],
+    "HCLTECH": [
+      "INFY",
+      "ETERNAL",
+      "WIPRO"
+    ],
+    "HDFCAMC": [
+      "BAJAJHLDNG",
+      "RECLTD",
+      "BSE"
+    ],
+    "HDFCBANK": [
+      "NAM-INDIA",
+      "SBIN",
+      "ICICIBANK"
+    ],
+    "HDFCLIFE": [
+      "ABCAPITAL",
+      "ICICIGI",
+      "ICICIPRULI"
+    ],
+    "HEROMOTOCO": [
+      "TRENT",
+      "NYKAA",
+      "DIXON"
+    ],
+    "HINDALCO": [
+      "HINDZINC",
+      "TATASTEEL",
+      "VEDL"
+    ],
+    "HINDPETRO": [
+      "PETRONET",
+      "BPCL",
+      "IOC"
+    ],
+    "HINDUNILVR": [
+      "ITC",
+      "NESTLEIND",
+      "VBL"
+    ],
+    "HINDZINC": [
+      "HINDALCO",
+      "TATASTEEL",
+      "VEDL"
+    ],
+    "HUDCO": [
+      "LICHSGFIN",
+      "MANAPPURAM",
+      "PNBHOUSING"
+    ],
+    "HYUNDAI": [
+      "TMPV",
+      "ASHOKLEY",
+      "FORCEMOT"
+    ],
+    "ICICIBANK": [
+      "NAM-INDIA",
+      "SBIN",
+      "HDFCBANK"
+    ],
+    "ICICIGI": [
+      "ABCAPITAL",
+      "ICICIPRULI",
+      "MFSL"
+    ],
+    "ICICIPRULI": [
+      "ICICIGI",
+      "ABCAPITAL",
+      "MFSL"
+    ],
+    "IDEA": [
+      "BHARTIARTL"
+    ],
+    "IDFCFIRSTB": [
+      "YESBANK",
+      "INDUSINDBK",
+      "BANKINDIA"
+    ],
+    "IEX": [
+      "KFINTECH",
+      "CAMS",
+      "NUVAMA"
+    ],
+    "INDHOTEL": [
+      "PRESTIGE",
+      "JUBLFOOD"
+    ],
+    "INDIANB": [
+      "PNB",
+      "CANBK",
+      "BANKBARODA"
+    ],
+    "INDIGO": [
+      "GMRAIRPORT",
+      "MAZDOCK",
+      "COCHINSHIP"
+    ],
+    "INDUSINDBK": [
+      "BANKINDIA",
+      "YESBANK",
+      "FEDERALBNK"
+    ],
+    "INDUSTOWER": [
+      "DLF",
+      "LODHA",
+      "PHOENIXLTD"
+    ],
+    "INFY": [
+      "HCLTECH",
+      "ETERNAL",
+      "WIPRO"
+    ],
+    "INOXWIND": [
+      "CROMPTON",
+      "AMBER",
+      "KAYNES"
+    ],
+    "IOC": [
+      "BPCL",
+      "HINDPETRO",
+      "OIL"
+    ],
+    "IREDA": [
+      "TORNTPOWER",
+      "NHPC",
+      "JSWENERGY"
+    ],
+    "IRFC": [
+      "CHOLAFIN",
+      "PFC",
+      "MUTHOOTFIN"
+    ],
+    "ITC": [
+      "HINDUNILVR",
+      "NESTLEIND",
+      "VBL"
+    ],
+    "JINDALSTEL": [
+      "BHARATFORG",
+      "HAVELLS",
+      "NATIONALUM"
+    ],
+    "JIOFIN": [
+      "MUTHOOTFIN",
+      "PFC",
+      "CHOLAFIN"
+    ],
+    "JSWENERGY": [
+      "NHPC",
+      "TORNTPOWER",
+      "GAIL"
+    ],
+    "JSWSTEEL": [
+      "VEDL",
+      "TATASTEEL",
+      "HINDZINC"
+    ],
+    "JUBLFOOD": [
+      "PRESTIGE",
+      "INDHOTEL"
+    ],
+    "KALYANKJIL": [
+      "PAGEIND",
+      "TIINDIA",
+      "VMM"
+    ],
+    "KAYNES": [
+      "AMBER",
+      "EXIDEIND",
+      "BLUESTARCO"
+    ],
+    "KEI": [
+      "VOLTAS",
+      "PREMIERENE",
+      "BLUESTARCO"
+    ],
+    "KFINTECH": [
+      "CAMS",
+      "IEX",
+      "NUVAMA"
+    ],
+    "KOTAKBANK": [
+      "AXISBANK",
+      "UNIONBANK",
+      "BANKBARODA"
+    ],
+    "KPITTECH": [
+      "TATATECH",
+      "TATAELXSI",
+      "COFORGE"
+    ],
+    "LAURUSLABS": [
+      "GLENMARK",
+      "BIOCON",
+      "ALKEM"
+    ],
+    "LICHSGFIN": [
+      "MANAPPURAM",
+      "PNBHOUSING",
+      "HUDCO"
+    ],
+    "LICI": [
+      "BAJAJFINSV",
+      "SBILIFE",
+      "HDFCLIFE"
+    ],
+    "LODHA": [
+      "PHOENIXLTD",
+      "OBEROIRLTY",
+      "RVNL"
+    ],
+    "LTF": [
+      "PAYTM",
+      "SBICARD",
+      "HUDCO"
+    ],
+    "LTM": [
+      "TECHM",
+      "PERSISTENT",
+      "POLICYBZR"
+    ],
+    "LUPIN": [
+      "CIPLA",
+      "ZYDUSLIFE",
+      "MANKIND"
+    ],
+    "MANAPPURAM": [
+      "PNBHOUSING",
+      "LICHSGFIN",
+      "SAMMAANCAP"
+    ],
+    "MANKIND": [
+      "ZYDUSLIFE",
+      "AUROPHARMA",
+      "CIPLA"
+    ],
+    "MARICO": [
+      "UNITDSPR",
+      "TATACONSUM",
+      "GODREJCP"
+    ],
+    "MARUTI": [
+      "HYUNDAI",
+      "TMPV",
+      "ASHOKLEY"
+    ],
+    "MAXHEALTH": [
+      "APOLLOHOSP",
+      "FORTIS"
+    ],
+    "MAZDOCK": [
+      "GMRAIRPORT",
+      "COCHINSHIP",
+      "CONCOR"
+    ],
+    "MFSL": [
+      "ICICIPRULI",
+      "ICICIGI",
+      "ABCAPITAL"
+    ],
+    "MOTHERSON": [
+      "CUMMINSIND",
+      "BOSCHLTD",
+      "UNOMINDA"
+    ],
+    "MOTILALOFS": [
+      "360ONE",
+      "CDSL",
+      "ANGELONE"
+    ],
+    "MPHASIS": [
+      "COFORGE",
+      "TATAELXSI",
+      "OFSS"
+    ],
+    "MUTHOOTFIN": [
+      "PFC",
+      "CHOLAFIN",
+      "JIOFIN"
+    ],
+    "NAM-INDIA": [
+      "SBIN",
+      "ICICIBANK",
+      "HDFCBANK"
+    ],
+    "NATIONALUM": [
+      "NMDC",
+      "HAVELLS",
+      "SAIL"
+    ],
+    "NAUKRI": [
+      "OFSS",
+      "POLICYBZR",
+      "MPHASIS"
+    ],
+    "NBCC": [
+      "GODREJPROP",
+      "RVNL",
+      "OBEROIRLTY"
+    ],
+    "NESTLEIND": [
+      "VBL",
+      "BRITANNIA",
+      "GODREJCP"
+    ],
+    "NHPC": [
+      "TORNTPOWER",
+      "JSWENERGY",
+      "GAIL"
+    ],
+    "NMDC": [
+      "NATIONALUM",
+      "HAVELLS",
+      "SAIL"
+    ],
+    "NTPC": [
+      "ADANIPOWER",
+      "POWERGRID",
+      "COALINDIA"
+    ],
+    "NUVAMA": [
+      "ANGELONE",
+      "CDSL",
+      "CAMS"
+    ],
+    "NYKAA": [
+      "DIXON",
+      "VMM",
+      "TIINDIA"
+    ],
+    "OBEROIRLTY": [
+      "PHOENIXLTD",
+      "RVNL",
+      "GODREJPROP"
+    ],
+    "OFSS": [
+      "NAUKRI",
+      "POLICYBZR",
+      "MPHASIS"
+    ],
+    "OIL": [
+      "ONGC",
+      "IOC",
+      "BPCL"
+    ],
+    "ONGC": [
+      "OIL",
+      "IOC",
+      "BPCL"
+    ],
+    "PAGEIND": [
+      "KALYANKJIL",
+      "TIINDIA",
+      "VMM"
+    ],
+    "PATANJALI": [
+      "COLPAL",
+      "GODFRYPHLP",
+      "DABUR"
+    ],
+    "PAYTM": [
+      "LTF",
+      "SBICARD",
+      "HUDCO"
+    ],
+    "PERSISTENT": [
+      "POLICYBZR",
+      "NAUKRI",
+      "OFSS"
+    ],
+    "PETRONET": [
+      "HINDPETRO",
+      "BPCL",
+      "IOC"
+    ],
+    "PFC": [
+      "MUTHOOTFIN",
+      "CHOLAFIN",
+      "JIOFIN"
+    ],
+    "PGEL": [
+      "ASTRAL",
+      "PIIND",
+      "SUPREMEIND"
+    ],
+    "PHOENIXLTD": [
+      "OBEROIRLTY",
+      "RVNL",
+      "GODREJPROP"
+    ],
+    "PIDILITIND": [
+      "SOLARINDS",
+      "SRF",
+      "UPL"
+    ],
+    "PIIND": [
+      "ASTRAL",
+      "SUPREMEIND",
+      "UPL"
+    ],
+    "PNB": [
+      "CANBK",
+      "INDIANB",
+      "BANKBARODA"
+    ],
+    "PNBHOUSING": [
+      "MANAPPURAM",
+      "LICHSGFIN",
+      "SAMMAANCAP"
+    ],
+    "POLICYBZR": [
+      "NAUKRI",
+      "OFSS",
+      "PERSISTENT"
+    ],
+    "POLYCAB": [
+      "CGPOWER",
+      "SIEMENS",
+      "POWERINDIA"
+    ],
+    "POWERGRID": [
+      "COALINDIA",
+      "ADANIPOWER",
+      "NTPC"
+    ],
+    "POWERINDIA": [
+      "SIEMENS",
+      "POLYCAB",
+      "CGPOWER"
+    ],
+    "PPLPHARMA": [
+      "BIOCON",
+      "LAURUSLABS",
+      "GLENMARK"
+    ],
+    "PREMIERENE": [
+      "VOLTAS",
+      "KEI",
+      "BLUESTARCO"
+    ],
+    "PRESTIGE": [
+      "JUBLFOOD",
+      "INDHOTEL"
+    ],
+    "RBLBANK": [
+      "BANDHANBNK",
+      "IDFCFIRSTB",
+      "YESBANK"
+    ],
+    "RECLTD": [
+      "BAJAJHLDNG",
+      "HDFCAMC",
+      "BSE"
+    ],
+    "RELIANCE": [
+      "OIL",
+      "ONGC",
+      "IOC"
+    ],
+    "RVNL": [
+      "OBEROIRLTY",
+      "PHOENIXLTD",
+      "GODREJPROP"
+    ],
+    "SAIL": [
+      "NMDC",
+      "NATIONALUM",
+      "APLAPOLLO"
+    ],
+    "SAMMAANCAP": [
+      "PNBHOUSING",
+      "MANAPPURAM",
+      "LICHSGFIN"
+    ],
+    "SBICARD": [
+      "LTF",
+      "PAYTM",
+      "HUDCO"
+    ],
+    "SBILIFE": [
+      "HDFCLIFE",
+      "BAJAJFINSV",
+      "ABCAPITAL"
+    ],
+    "SBIN": [
+      "NAM-INDIA",
+      "ICICIBANK",
+      "HDFCBANK"
+    ],
+    "SHREECEM": [
+      "AMBUJACEM",
+      "DALBHARAT",
+      "GRASIM"
+    ],
+    "SHRIRAMFIN": [
+      "JIOFIN",
+      "MUTHOOTFIN",
+      "PFC"
+    ],
+    "SIEMENS": [
+      "POLYCAB",
+      "POWERINDIA",
+      "CGPOWER"
+    ],
+    "SOLARINDS": [
+      "PIDILITIND",
+      "SRF",
+      "UPL"
+    ],
+    "SONACOMS": [
+      "UNOMINDA",
+      "BOSCHLTD",
+      "MOTHERSON"
+    ],
+    "SRF": [
+      "UPL",
+      "SUPREMEIND",
+      "PIIND"
+    ],
+    "SUNPHARMA": [
+      "TORNTPHARM",
+      "LUPIN",
+      "CIPLA"
+    ],
+    "SUPREMEIND": [
+      "PIIND",
+      "ASTRAL",
+      "UPL"
+    ],
+    "SUZLON": [
+      "PREMIERENE",
+      "VOLTAS",
+      "KEI"
+    ],
+    "SWIGGY": [
+      "DELHIVERY"
+    ],
+    "TATACONSUM": [
+      "GODREJCP",
+      "MARICO",
+      "UNITDSPR"
+    ],
+    "TATAELXSI": [
+      "TATATECH",
+      "KPITTECH",
+      "COFORGE"
+    ],
+    "TATAPOWER": [
+      "ADANIENSOL",
+      "GAIL",
+      "JSWENERGY"
+    ],
+    "TATASTEEL": [
+      "HINDZINC",
+      "VEDL",
+      "HINDALCO"
+    ],
+    "TATATECH": [
+      "KPITTECH",
+      "TATAELXSI",
+      "COFORGE"
+    ],
+    "TCS": [
+      "INFY",
+      "HCLTECH",
+      "ETERNAL"
+    ],
+    "TECHM": [
+      "LTM",
+      "PERSISTENT",
+      "POLICYBZR"
+    ],
+    "TIINDIA": [
+      "VMM",
+      "KALYANKJIL",
+      "DIXON"
+    ],
+    "TITAN": [
+      "DMART",
+      "EICHERMOT",
+      "TVSMOTOR"
+    ],
+    "TMPV": [
+      "HYUNDAI",
+      "ASHOKLEY",
+      "FORCEMOT"
+    ],
+    "TORNTPHARM": [
+      "LUPIN",
+      "CIPLA",
+      "ZYDUSLIFE"
+    ],
+    "TORNTPOWER": [
+      "NHPC",
+      "JSWENERGY",
+      "GAIL"
+    ],
+    "TRENT": [
+      "HEROMOTOCO",
+      "TVSMOTOR",
+      "EICHERMOT"
+    ],
+    "TVSMOTOR": [
+      "EICHERMOT",
+      "TRENT",
+      "HEROMOTOCO"
+    ],
+    "ULTRACEMCO": [
+      "GRASIM",
+      "AMBUJACEM",
+      "SHREECEM"
+    ],
+    "UNIONBANK": [
+      "BANKBARODA",
+      "INDIANB",
+      "PNB"
+    ],
+    "UNITDSPR": [
+      "MARICO",
+      "DABUR",
+      "TATACONSUM"
+    ],
+    "UNOMINDA": [
+      "SONACOMS",
+      "BOSCHLTD",
+      "MOTHERSON"
+    ],
+    "UPL": [
+      "SUPREMEIND",
+      "PIIND",
+      "ASTRAL"
+    ],
+    "VBL": [
+      "BRITANNIA",
+      "GODREJCP",
+      "TATACONSUM"
+    ],
+    "VEDL": [
+      "JSWSTEEL",
+      "TATASTEEL",
+      "HINDZINC"
+    ],
+    "VMM": [
+      "TIINDIA",
+      "KALYANKJIL",
+      "DIXON"
+    ],
+    "VOLTAS": [
+      "PREMIERENE",
+      "KEI",
+      "BLUESTARCO"
+    ],
+    "WAAREEENER": [
+      "BHEL",
+      "CGPOWER",
+      "POLYCAB"
+    ],
+    "WIPRO": [
+      "ETERNAL",
+      "TECHM",
+      "LTM"
+    ],
+    "YESBANK": [
+      "IDFCFIRSTB",
+      "INDUSINDBK",
+      "BANKINDIA"
+    ],
+    "ZYDUSLIFE": [
+      "MANKIND",
+      "CIPLA",
+      "AUROPHARMA"
+    ]
+  },
+  "lineage": {
+    "sector_source": "pipeline.scorecard_v2.sector_mapper.SectorMapper",
+    "sector_taxonomy": "pipeline/config/sector_taxonomy.json",
+    "industry_field": "indianapi.industry (per-stock)",
+    "market_cap_source": "opus/artifacts/<SYM>/indianapi_stock.json :: stockDetailsReusableData.marketCap (INR cr)",
+    "n_size_bucket_neighbours": 3,
+    "min_peers": 1,
+    "known_caveats": [
+      "IndianAPI 'industry' tags are vendor-supplied and contain known errors (e.g. NAM-INDIA tagged 'Regional Banks'); these are quarantined at audit time per data validation policy \u00a79.4 and not corrected in this freeze.",
+      "Single-cap dominants (RELIANCE) get smaller peers because no equally-large peer exists in their sector \u2014 this is intended behaviour, not a bug.",
+      "BHARTIARTL has only one peer (IDEA) because the Communications Services bucket has 2 F&O members \u2014 the cohort is real, not padded."
+    ]
+  }
+}
