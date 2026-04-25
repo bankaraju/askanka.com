@@ -36,6 +36,16 @@
       "notes": "04:30 IST Mon-Fri. run_daily.py — prices/fundamentals/FII flows. Writes date-stamped files in pipeline/data/daily/. Watchdog checks the PREVIOUS business day's files so alerts are robust against being run before today's 04:30 firing."
     },
     {
+      "task_name": "AnkaEarningsCalendarFetch",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/earnings_calendar/{today}.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "08:00 IST daily. backfill_earnings_calendar.py (with --asof today). Source: IndianAPI /corporate_actions per F&O ticker. Feeds the H-2026-04-25-001 earnings-decoupling pre-registered hypothesis backtest. Per data validation policy §15 freshness contract: snapshot age must not exceed cadence × grace = 36h before WARN."
+    },
+    {
       "task_name": "AnkaEODNews",
       "tier": "warn",
       "cadence_class": "daily",
