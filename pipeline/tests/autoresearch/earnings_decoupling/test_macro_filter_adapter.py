@@ -47,3 +47,32 @@ def test_is_event_macro_excluded_passes_when_quiet():
     )
     assert not excluded
     assert reason is None
+
+
+def test_is_event_macro_excluded_accepts_string_event_date():
+    """Defensive: ISO-string event_date should normalise, not silently miss the index."""
+    dates = pd.bdate_range("2025-01-01", periods=5)
+    rets = pd.Series([0.0, 0.0, 0.0, 0.02, 0.0], index=dates)
+    vix = pd.Series([15.0] * 5, index=dates)
+    excluded_ts, reason_ts = is_event_macro_excluded(
+        event_date=dates[3], sector_index_returns=rets, india_vix=vix,
+    )
+    excluded_str, reason_str = is_event_macro_excluded(
+        event_date=dates[3].strftime("%Y-%m-%d"),
+        sector_index_returns=rets, india_vix=vix,
+    )
+    assert excluded_ts == excluded_str
+    assert reason_ts == reason_str == "SECTOR_T"
+
+
+def test_is_event_macro_excluded_accepts_tz_aware_event_date():
+    """Defensive: tz-aware Timestamp must normalise to tz-naive panel index."""
+    dates = pd.bdate_range("2025-01-01", periods=5)
+    rets = pd.Series([0.0, 0.0, 0.0, 0.02, 0.0], index=dates)
+    vix = pd.Series([15.0] * 5, index=dates)
+    excluded, reason = is_event_macro_excluded(
+        event_date=pd.Timestamp(dates[3].strftime("%Y-%m-%d"), tz="Asia/Kolkata"),
+        sector_index_returns=rets, india_vix=vix,
+    )
+    assert excluded
+    assert reason == "SECTOR_T"

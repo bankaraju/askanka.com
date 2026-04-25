@@ -2,32 +2,37 @@
 
 Returns (excluded: bool, reason: str | None) where reason is one of
 SECTOR_T, SECTOR_T1, VIX_SHOCK, or None when not excluded.
+
+Rule logic lives in `pipeline.earnings_calendar.macro_filter.classify_macro_exclusion`;
+this adapter only normalises the input panels' DatetimeIndex (strip tz,
+midnight-align) and tuple-wraps the (excluded, reason) return shape that
+the backtest event ledger expects. Keeping the rule in exactly one place
+prevents drift between the live macro gate and the backtest's exclusion
+classifier.
 """
 from __future__ import annotations
 
 import pandas as pd
 
-from pipeline.earnings_calendar.macro_filter import (
-    INDEX_MOVE_THRESHOLD,
-    VIX_ZSCORE_THRESHOLD,
-    VIX_ZSCORE_LOOKBACK_DAYS,
-)
+from pipeline.earnings_calendar.macro_filter import classify_macro_exclusion
+
+
+def _normalize_event_date(event_date) -> pd.Timestamp:
+    ts = pd.Timestamp(event_date)
+    if ts.tz is not None:
+        ts = ts.tz_localize(None)
+    return ts.normalize()
+
+
+def _normalize_series_index(s: pd.Series) -> pd.Series:
+    out = s.copy()
+    out.index = out.index.tz_localize(None) if out.index.tz is not None else out.index
+    out.index = out.index.normalize()
+    return out
 
 
 def compute_index_returns_panel(closes: pd.DataFrame) -> pd.DataFrame:
     return closes.pct_change()
-
-
-def _vix_z(vix: pd.Series, on: pd.Timestamp) -> float | None:
-    if on not in vix.index:
-        return None
-    pos = vix.index.get_loc(on)
-    if pos < VIX_ZSCORE_LOOKBACK_DAYS:
-        return None
-    window = vix.iloc[pos - VIX_ZSCORE_LOOKBACK_DAYS:pos]
-    if window.std(ddof=1) == 0:
-        return None
-    return float((vix.iloc[pos] - window.mean()) / window.std(ddof=1))
 
 
 def is_event_macro_excluded(
@@ -36,23 +41,12 @@ def is_event_macro_excluded(
     sector_index_returns: pd.Series,
     india_vix: pd.Series,
 ) -> tuple[bool, str | None]:
-    ts = pd.Timestamp(event_date).normalize()
-    rets_idx = sector_index_returns.index.normalize()
-    rets = sector_index_returns.copy()
-    rets.index = rets_idx
-    if ts in rets.index:
-        r_t = rets.loc[ts]
-        if pd.notna(r_t) and abs(r_t) >= INDEX_MOVE_THRESHOLD:
-            return (True, "SECTOR_T")
-        pos = rets.index.get_loc(ts)
-        if pos + 1 < len(rets):
-            r_t1 = rets.iloc[pos + 1]
-            if pd.notna(r_t1) and abs(r_t1) >= INDEX_MOVE_THRESHOLD:
-                return (True, "SECTOR_T1")
-    vix_idx = india_vix.index.normalize()
-    vix = india_vix.copy()
-    vix.index = vix_idx
-    z = _vix_z(vix, ts)
-    if z is not None and z >= VIX_ZSCORE_THRESHOLD:
-        return (True, "VIX_SHOCK")
-    return (False, None)
+    ts = _normalize_event_date(event_date)
+    rets = _normalize_series_index(sector_index_returns)
+    vix = _normalize_series_index(india_vix)
+    reason = classify_macro_exclusion(
+        event_date=ts.date(),
+        index_returns=rets,
+        india_vix=vix,
+    )
+    return (reason is not None, reason)

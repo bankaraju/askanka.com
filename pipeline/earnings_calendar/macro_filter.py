@@ -43,20 +43,23 @@ def _vix_zscore_on(vix: pd.Series, day: dt.date) -> float | None:
     return (float(vix.iloc[pos]) - mu) / sd
 
 
-def is_macro_excluded(
+def classify_macro_exclusion(
     *,
     event_date: dt.date,
     index_returns: pd.Series,
     india_vix: pd.Series,
-) -> bool:
-    """Return True iff any of the three pre-registered macro conditions
-    is breached on event_day or T+1.
+) -> str | None:
+    """Classify exclusion reason or return None if no condition fires.
+
+    Single source of truth for the H-2026-04-25-001 §4.4 macro gate.
+    Reason precedence is SECTOR_T → SECTOR_T1 → VIX_SHOCK; the rule's
+    binary outcome is independent of order, but the reason tag is
+    diagnostic and always returns the first triggered condition.
 
     Missing index/vix data on a queried date is NOT treated as an
     exclusion — the caller is expected to handle absent-data events
-    explicitly (data validation policy §9.3 quarantine pattern). A
-    missing series silently returning False here would be safe but
-    misleading; an over-eager True would corrupt the event count."""
+    explicitly (data validation policy §9.3 quarantine pattern).
+    """
     ts = pd.Timestamp(event_date)
     if ts in index_returns.index:
         pos = index_returns.index.get_loc(ts)
@@ -68,11 +71,27 @@ def is_macro_excluded(
         r_t = _index_return_on(index_returns, event_date)
         r_t1 = _index_return_on(index_returns, t1_date)
         if r_t is not None and abs(r_t) >= INDEX_MOVE_THRESHOLD:
-            return True
+            return "SECTOR_T"
         if r_t1 is not None and abs(r_t1) >= INDEX_MOVE_THRESHOLD:
-            return True
+            return "SECTOR_T1"
 
     z = _vix_zscore_on(india_vix, event_date)
     if z is not None and z >= VIX_ZSCORE_THRESHOLD:
-        return True
-    return False
+        return "VIX_SHOCK"
+    return None
+
+
+def is_macro_excluded(
+    *,
+    event_date: dt.date,
+    index_returns: pd.Series,
+    india_vix: pd.Series,
+) -> bool:
+    """Return True iff any of the three pre-registered macro conditions
+    is breached on event_day or T+1. Thin boolean wrapper over
+    classify_macro_exclusion."""
+    return classify_macro_exclusion(
+        event_date=event_date,
+        index_returns=index_returns,
+        india_vix=india_vix,
+    ) is not None
