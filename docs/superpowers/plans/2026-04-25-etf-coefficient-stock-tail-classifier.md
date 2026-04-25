@@ -2466,7 +2466,7 @@ def render_verdict_md(checklist: dict, hypothesis_id: str, run_id: str) -> str:
     lines = [
         f"# {hypothesis_id} backtest verdict: {checklist['decision']}",
         "",
-        f"Generated: {checklist['generated_at']}  |  run_id: `{run_id}`",
+        f"Generated: {checklist.get('generated_at', '')}  |  run_id: `{run_id}`",
         "",
         "## Held-out cross-entropy",
         f"- Model CE: **{checklist['model_ce']:.4f}** nats/prediction",
@@ -2475,7 +2475,7 @@ def render_verdict_md(checklist: dict, hypothesis_id: str, run_id: str) -> str:
         lines.append(f"- {bid}: {ce:.4f}")
     lines += [
         "",
-        f"- Strongest baseline: **{checklist['best_baseline_id']}**",
+        f"- Strongest baseline: **{checklist.get('best_baseline_id', '')}**",
         f"- Permutation p-value (100k label perms): **{checklist['perm_p_value']:.4f}**",
         f"- Fragility verdict: **{checklist['fragility_verdict']}**",
         "",
