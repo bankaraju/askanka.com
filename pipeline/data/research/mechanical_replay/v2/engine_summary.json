@@ -1,22 +1,24 @@
 {
   "phase_b": {
-    "n": 2,
-    "hit_rate": 0.0,
-    "mean_pnl_pct": -1.4656,
-    "total_pnl_pct": -2.9312,
-    "median_pnl_pct": -1.4656,
+    "n": 5,
+    "hit_rate": 0.4,
+    "mean_pnl_pct": -0.0618,
+    "total_pnl_pct": -0.3091,
+    "median_pnl_pct": -0.4675,
     "exit_reasons": {
-      "TIME_STOP": 2
+      "TIME_STOP": 5
     }
   },
   "phase_c": {
-    "n": 2,
-    "hit_rate": 1.0,
-    "mean_pnl_pct": 0.3276,
-    "total_pnl_pct": 0.6552,
-    "median_pnl_pct": 0.3276,
+    "n": 65,
+    "hit_rate": 0.5077,
+    "mean_pnl_pct": -0.2373,
+    "total_pnl_pct": -15.4228,
+    "median_pnl_pct": 0.0377,
     "exit_reasons": {
-      "TIME_STOP": 2
+      "TIME_STOP": 59,
+      "ATR_STOP": 5,
+      "TRAIL": 1
     }
   }
 }
