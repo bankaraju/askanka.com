@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-26",
+      "segment": "war",
+      "filename": "2026-04-26-war.html",
+      "headline": "Trump's 'Endless War' Gaffe: The Real Cost of Stagnation for Indian Markets",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 26, 2026"
+    },
+    {
+      "date": "2026-04-26",
+      "segment": "epstein",
+      "filename": "2026-04-26-epstein.html",
+      "headline": "Epstein's Shadow Over Trump's DOJ: The Cover-Up's Forensic Footprint",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 26, 2026"
+    },
+    {
       "date": "2026-04-23",
       "segment": "war",
       "filename": "2026-04-23-war.html",
