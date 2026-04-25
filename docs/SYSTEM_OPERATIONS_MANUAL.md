@@ -697,9 +697,11 @@ Every pre-registered hypothesis against the Phase C event panel appears in `docs
 - **First run (2026-04-25, window 2026-02-24 → 2026-04-25):** roster 87 rows (5 actual, 82 missed), n_valid 71. Verdict **INSUFFICIENT_N** — no shape × side cell reaches MIN_CELL_N=10. Most missed-signal rows carry `trade_rec=nan` because POSSIBLE_OPPORTUNITY entries in `correlation_break_history.json` don't populate a directional rec. Re-run after the LAG slice forward sample grows.
 - **Tests:** 26 SP1-specific tests across `tests/test_roster.py`, `test_fetcher.py`, `test_features.py`, `test_simulator.py`, `test_report.py`.
 
-##### Mechanical 60-Day Replay (MR, descriptive forensics, 2026-04-25)
+##### Mechanical 60-Day Replay (MR v1, descriptive forensics, 2026-04-25)
 
 `pipeline/autoresearch/mechanical_replay/` re-runs the live execution rules over a 60-day historical window and produces a per-engine P&L attribution. Mandate: enter every signal at **09:30 IST**, hard-close at **14:30 IST**, apply our own ATR stop + ratchet trail + 20bps slippage. Per spec (`docs/superpowers/specs/2026-04-25-mechanical-60day-replay-design.md`), this is **forensics, not an edge test** — no hypothesis-registry append, no kill-switch trigger, no PASS/FAIL gating.
+
+> **v1 scope reality:** v1 reads the live engine's stored Phase C roster (`correlation_break_history.json`) and regime tag (`regime_history.csv`) instead of regenerating them from canonical bars. Phase B + spread engines are not replayed. Z_CROSS exit channel is wired but not populated. Only the intraday 09:30→14:30 minute-bar walk is fully deterministic. v2 spec (`docs/superpowers/specs/2026-04-25-mechanical-60day-replay-v2-design.md`) closes the gap.
 
 - **Entry:** `python -m pipeline.autoresearch.mechanical_replay.runner [--window-start YYYY-MM-DD] [--window-end YYYY-MM-DD] [--limit N] [--no-fetch] [--out-dir PATH]`
 - **Universe:** `canonical_fno_research_v1` (154 tickers, dividend-adjusted) — anything outside is dropped, count logged.
