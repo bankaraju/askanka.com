@@ -20,9 +20,16 @@ ENTRY_TIME = time(9, 30)        # mandate: every signal enters at 09:30
 HARD_CLOSE = time(14, 30)       # mandate: 14:30 force-close
 SESSION_CLOSE = time(15, 30)
 
-# ATR-based stop (mirrors break_signal_generator._compute_atr_stop)
+# ATR-based stop. Live intent (per break_signal_generator.py:143-149):
+# Phase C is intraday → 1.0× ATR with abs cap at 3.5%. Overnight default 2.0×
+# (atr_stops.py module default), used here for any non-intraday engine entries
+# the replay processes. Note: live atr_stops.py is missing the max_abs_pct
+# kwarg the caller passes — separate live bug, replay honors documented intent.
 ATR_LOOKBACK = 14
-ATR_MULT = 2.0
+ATR_MULT_INTRADAY = 1.0
+ATR_MULT_OVERNIGHT = 2.0
+ATR_MAX_ABS_PCT = 3.5
+ATR_FALLBACK_PCT = -1.0
 
 # Trail logic (mirrors signal_tracker.check_signal_status post-2026-04-22 B9 + B10)
 TRAIL_ARM_PCT = 2.0             # trail arms when peak >= trail_budget
