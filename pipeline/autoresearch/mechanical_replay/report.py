@@ -256,6 +256,160 @@ def write_engine_summary(summary: Dict[str, Dict[str, Any]], out_path: Path) -> 
     out_path.write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
 
 
+# ---------------------------------------------------------------------------
+# v2 — per-engine roster CSV writers + cross-check one-pager
+# ---------------------------------------------------------------------------
+
+def write_per_engine_rosters(rosters: Dict[str, pd.DataFrame], out_dir: Path) -> Dict[str, Path]:
+    """Write one CSV per engine roster. Returns the {engine: path} map.
+
+    Expected keys (any subset, missing/empty rosters skip):
+      regime         -> regime_reconstructed.csv
+      phase_c        -> phase_c_roster.csv
+      phase_b        -> phase_b_roster.csv
+      spread         -> spread_roster.csv
+      zcross_times   -> zcross_times.csv
+    """
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    name_map = {
+        "regime": "regime_reconstructed.csv",
+        "phase_c": "phase_c_roster.csv",
+        "phase_b": "phase_b_roster.csv",
+        "spread": "spread_roster.csv",
+        "zcross_times": "zcross_times.csv",
+    }
+    written: Dict[str, Path] = {}
+    for key, df in rosters.items():
+        if df is None or len(df) == 0:
+            continue
+        fname = name_map.get(key, f"{key}_roster.csv")
+        path = out_dir / fname
+        df.to_csv(path, index=False)
+        written[key] = path
+    return written
+
+
+def write_v2_one_pager(
+    *,
+    summary: Dict[str, Dict[str, Any]],
+    cube: pd.DataFrame,
+    checks: Dict[str, Dict[str, Any]],
+    trades: pd.DataFrame,
+    cross_check: Dict[str, Any],
+    rosters: Dict[str, pd.DataFrame],
+    window_start: pd.Timestamp,
+    window_end: pd.Timestamp,
+    out_path: Path,
+) -> None:
+    """v2 trader's one-pager — adds roster cross-check section vs v1."""
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "# Mechanical 60-Day Replay — Trader One-Pager (v2)",
+        "",
+        f"**Window:** {window_start.date().isoformat()} → {window_end.date().isoformat()}",
+        f"**Universe:** canonical_fno_research_v1 (154 tickers)",
+        f"**Rules:** entry 09:30 IST · hard close 14:30 IST · ATR stop · ratchet trail · 20bps slippage",
+        f"**Total trades simulated:** {len(trades)}",
+        "",
+        "> **v2 vs v1 — what changed:** v2 regenerates the regime tag, Phase C "
+        "roster, Phase B basket, and spread book deterministically from canonical "
+        "ETF + F&O bars. v1 read the live engine's stored state. The acid test: "
+        "if `regime_history.csv` and `correlation_break_history.json` are deleted "
+        "from disk, v2 outputs are unchanged. Z_CROSS exit channel is populated "
+        "via per-minute peer-residual recompute against sectoral indices.",
+        "",
+        "## Roster Counts (per engine, before simulation)",
+        "",
+    ]
+    for k in ("regime", "phase_c", "phase_b", "spread", "zcross_times"):
+        df = rosters.get(k)
+        n = 0 if df is None else len(df)
+        lines.append(f"- **{k}**: {n} rows")
+    lines.append("")
+
+    lines.extend(["## Cross-check vs Live State", ""])
+    for label, payload in cross_check.items():
+        if payload is None:
+            lines.append(f"- **{label}:** skipped")
+            continue
+        if "agreement_pct" in payload:
+            verdict = "PASS" if payload.get("pass", False) else "FAIL"
+            lines.append(
+                f"- **{label}:** {payload['agreement_pct']:.1f}% agree on "
+                f"{payload['n_overlap']} overlap rows (threshold "
+                f"{payload['threshold_pct']:.0f}%) — {verdict}"
+            )
+        else:
+            lines.append(f"- **{label}:** {payload}")
+    lines.append("")
+
+    lines.extend([
+        "## Per-Engine Attribution",
+        "",
+        "| Engine | n | Hit-rate | Mean P&L (%) | Total P&L (%) | Top Exit |",
+        "|---|---:|---:|---:|---:|---|",
+    ])
+    for engine, e in sorted(summary.items()):
+        top_exit = max(e["exit_reasons"].items(), key=lambda kv: kv[1])[0] if e["exit_reasons"] else "-"
+        lines.append(
+            f"| {engine} | {e['n']} | {e['hit_rate']*100:.1f}% | "
+            f"{e['mean_pnl_pct']:+.2f} | {e['total_pnl_pct']:+.2f} | {top_exit} |"
+        )
+
+    lines.extend(["", "## Regime × Engine Cube", ""])
+    if cube.empty:
+        lines.append("_no rows_")
+    else:
+        lines.append("| Engine | Regime | n | Hit-rate | Mean P&L (%) | Total P&L (%) |")
+        lines.append("|---|---|---:|---:|---:|---:|")
+        for (engine, regime), row in cube.iterrows():
+            lines.append(
+                f"| {engine} | {regime} | {int(row['n'])} | "
+                f"{row['hit_rate']*100:.1f}% | {row['mean_pnl_pct']:+.2f} | {row['total_pnl_pct']:+.2f} |"
+            )
+
+    lines.extend(["", "## Sanity Checks (spec §10)", ""])
+    cov = checks["coverage"]
+    lines.append(
+        f"- **Coverage:** {cov['n_processed']}/{cov['n_total']} = "
+        f"{cov['coverage_pct']:.1f}% (threshold {cov['threshold_pct']:.0f}%) — "
+        f"{'PASS' if cov['pass'] else 'FAIL'}"
+    )
+    cross = checks["live_cross_check"]
+    if cross["pass"] is None:
+        lines.append(f"- **Live cross-check:** skipped — {cross.get('note', '')}")
+    else:
+        lines.append(
+            f"- **Live cross-check:** {cross['agree_pct']:.1f}% agree within "
+            f"±{cross['pnl_tolerance_pp']:.1f}pp on {cross['n_overlap']} overlapping rows "
+            f"(threshold {cross['threshold_pct']:.0f}%) — "
+            f"{'PASS' if cross['pass'] else 'FAIL'}"
+        )
+
+    narrations = build_per_trade_narrations(trades)
+    lines.extend(["", "## Per-Trade Story", ""])
+    if not narrations:
+        lines.append("_no rows_")
+    else:
+        for n in narrations:
+            lines.append("- " + n)
+            lines.append("")
+
+    lines.extend([
+        "## Trader's read",
+        "",
+        "Descriptive forensics: every row above is the *deterministic* result of "
+        "running our live rules on canonical historical inputs. There is no edge "
+        "claim, no kill-switch trigger, no hypothesis-registry append. v2 closes "
+        "the four gaps from v1 (regime regen, Phase C regen, Phase B regen, spread "
+        "regen, Z_CROSS populate).",
+        "",
+        "_Generated by `pipeline/autoresearch/mechanical_replay/runner_v2.py`._",
+    ])
+    out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_one_pager(
     *,
     summary: Dict[str, Dict[str, Any]],

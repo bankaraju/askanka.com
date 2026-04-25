@@ -720,6 +720,32 @@ Every pre-registered hypothesis against the Phase C event panel appears in `docs
 - **First run (2026-04-25, window 2026-02-24 → 2026-04-24):** roster 24 rows (5 actual + 19 missed); 5 simulated; hit_rate 80%; total +4.34%. Exit mix TRAIL=4 / TIME_STOP=1. Regime split NEUTRAL 4/4 (+4.81%) / CAUTION 0/1 (-0.47%).
 - **Tests:** 33 MR-specific tests across `tests/test_canonical_loader.py`, `test_atr.py`, `test_roster.py`, `test_simulator.py`, `test_report.py`.
 
+##### Mechanical 60-Day Replay (MR v2, deterministic regen, 2026-04-25)
+
+`pipeline/autoresearch/mechanical_replay/runner_v2.py` closes v1's reconstruction gaps. Every engine roster (regime, Phase C, Phase B, spread) is **deterministically regenerated** from canonical inputs — if `regime_history.csv` and `correlation_break_history.json` are deleted, v2 outputs are unchanged. Spec: `docs/superpowers/specs/2026-04-25-mechanical-60day-replay-v2-design.md`.
+
+- **Entry:** `python -m pipeline.autoresearch.mechanical_replay.runner_v2 [--window-start YYYY-MM-DD] [--window-end YYYY-MM-DD] [--no-fetch] [--out-dir PATH]`
+- **Modules** (all under `pipeline/autoresearch/mechanical_replay/reconstruct/`):
+  - `regime.py` — sums weighted ETF returns through `phase_c_backtest.regime._compute_signal`, then quintile-buckets via frozen `regime_cutpoints.json`. Lookback extended to `window_start - 2y - 30d` so Phase C profile training sees full history.
+  - `phase_c.py` — walk-forward profile (per-(symbol,regime) next-day return stats, 2y lookback) + shared `classify_break` decision matrix. POSSIBLE_OPPORTUNITY synthesizes `trade_rec` (LONG if expected_return>0, SHORT otherwise — FOLLOW-the-peer geometry).
+  - `phase_b.py` — fires only on regime-transition days; ranks by `avg_drift_5d`, top-N longs + shorts.
+  - `spread.py` — log(long/short) z-score over rolling 60-day lookback, regime-gated, |z| ≥ entry_threshold (default 2.0).
+  - `zcross.py` — per-minute peer-relative residual recompute against sectoral indices, returns first sign-flip timestamp.
+- **Cross-checks** (informational, not gating):
+  - regime_vs_history_csv: ≥98% zone agreement
+  - phase_c_roster_vs_history_json: ≥95% (ticker,date) overlap — **FAIL by design under §14 PCR contamination** (live archives stricter LAG-only set; v2 captures broader POSSIBLE_OPPORTUNITY because PCR archive missing → `classify_break` defaults to NEUTRAL → never reaches LAG)
+- **Outputs:**
+  - `pipeline/data/research/mechanical_replay/v2/regime_reconstructed.csv`
+  - `pipeline/data/research/mechanical_replay/v2/phase_c_roster.csv`
+  - `pipeline/data/research/mechanical_replay/v2/phase_b_roster.csv`
+  - `pipeline/data/research/mechanical_replay/v2/spread_roster.csv`
+  - `pipeline/data/research/mechanical_replay/v2/trades_with_exit.csv`
+  - `pipeline/data/research/mechanical_replay/v2/engine_summary.json`
+  - `docs/research/mechanical_replay/2026-04-25-replay-60day-v2.md`
+- **First v2 run (2026-04-25, window 2026-02-24 → 2026-04-24):** regime cross-check 100% on 47 overlap rows (PASS). Phase C roster 2,076 rows of 6,006 events scored (LAG=0, POSSIBLE=2,076 under NEUTRAL-PCR). Phase B 340 basket rows. Spread 516 evaluations / 134 gate-OPEN. 2,416 trades simulated; only 9 had cached minute bars to fill (Phase B: 2 / Phase C: 7) — others retained as roster rows. Combined fillable sample: hit-rate 78%, total +5.14pp.
+- **§14 binding contamination:** ETF weights (current snapshot, not as-of-D), trust scores not archived, **PCR archive missing** (the binding constraint that keeps Phase C at LAG=0), pair definitions not versioned. PCR backfill is the priority v3 work.
+- **Tests:** 26 v2-specific tests added — `test_reconstruct_regime.py` (7), `test_reconstruct_phase_c.py` (5), `test_reconstruct_phase_b.py` (5), `test_reconstruct_spread.py` (5), `test_reconstruct_zcross.py` (4). All green alongside the 33 v1 tests.
+
 ##### Compliance runner: H-2026-04-24-003 (persistent-break v2 + cross-sectional)
 
 - **Entry:** `python -m pipeline.autoresearch.phase_c_cross_sectional.runner`
