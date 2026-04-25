@@ -64,3 +64,14 @@ def test_long_trails_after_arm_then_retraces() -> None:
     leg = result["09:15"]
     assert leg["exit_reason"] == "TRAILED"
     assert leg["pnl_pct"] == pytest.approx(1.0, abs=0.15)  # 0.15 accounts for ±0.1% H/L spread in helper
+
+
+def test_drifts_to_time_close() -> None:
+    """SHORT, never hits stop/target/trail, drifts to +0.8% by 14:30."""
+    n = 315  # bars from 09:15 to 14:30 inclusive
+    prices = list(np.linspace(100.0, 99.2, n))
+    bars = _make_bars_from_path(prices)
+    result = simulator.simulate_grid(bars=bars, side="SHORT", entry_grid=(time(9, 15),))
+    leg = result["09:15"]
+    assert leg["exit_reason"] == "TIME"
+    assert leg["pnl_pct"] == pytest.approx(0.8, abs=0.1)
