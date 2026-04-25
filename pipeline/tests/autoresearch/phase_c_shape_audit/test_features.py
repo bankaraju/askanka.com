@@ -56,3 +56,12 @@ def test_classify_v_low_recovery() -> None:
     bars = _make_bars(prices)
     feats = features.compute_shape_features(bars)
     assert features.classify_shape(feats) == "V_LOW_RECOVERY"
+
+
+def test_classify_one_way_up() -> None:
+    """Monotone climb 100 -> 102, peak is the close, no early peak."""
+    prices = list(np.linspace(100.0, 102.0, 380))
+    bars = _make_bars(prices)
+    feats = features.compute_shape_features(bars)
+    assert feats["peak_in_first_15min"] is False  # peak is at the END
+    assert features.classify_shape(feats) == "ONE_WAY_UP"
