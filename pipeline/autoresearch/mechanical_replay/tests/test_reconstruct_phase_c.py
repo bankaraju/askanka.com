@@ -131,3 +131,30 @@ def test_phase_c_regen_z_score_finite_and_signed():
     )
     if not out.empty:
         assert out["z_score"].apply(np.isfinite).all()
+
+
+def test_load_pcr_history_returns_per_day_per_ticker_map(tmp_path):
+    """Reads {date}.parquet files into a {date_str: {ticker: pcr}} map."""
+    df = pd.DataFrame({
+        "symbol": ["RELI", "INFY", "TCS"],
+        "pcr": [1.45, 0.62, 1.05],
+    })
+    df.to_parquet(tmp_path / "2026-04-15.parquet")
+    out = phase_c.load_pcr_history(
+        pd.Timestamp("2026-04-13"),
+        pd.Timestamp("2026-04-17"),
+        pcr_dir=tmp_path,
+    )
+    assert "2026-04-15" in out
+    assert out["2026-04-15"]["RELI"] == pytest.approx(1.45)
+    assert out["2026-04-15"]["INFY"] == pytest.approx(0.62)
+
+
+def test_load_pcr_history_returns_empty_when_dir_missing(tmp_path):
+    """Missing directory returns empty map (caller treats absent → NEUTRAL)."""
+    out = phase_c.load_pcr_history(
+        pd.Timestamp("2026-04-13"),
+        pd.Timestamp("2026-04-17"),
+        pcr_dir=tmp_path / "does_not_exist",
+    )
+    assert out == {}

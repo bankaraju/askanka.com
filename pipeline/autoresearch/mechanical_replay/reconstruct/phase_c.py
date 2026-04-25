@@ -35,6 +35,7 @@ bars + identical regime tags, the output is bit-stable.
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Optional
 
 import pandas as pd
@@ -48,6 +49,43 @@ from pipeline.research.phase_c_backtest import profile as profile_mod
 from pipeline.research.phase_c_backtest.regime import _daily_return_at
 
 log = logging.getLogger(__name__)
+
+_DEFAULT_PCR_HISTORY_DIR = (
+    Path(__file__).resolve().parents[3]
+    / "data" / "research" / "phase_c" / "pcr_history"
+)
+
+
+def load_pcr_history(
+    window_start: pd.Timestamp,
+    window_end: pd.Timestamp,
+    *,
+    pcr_dir: Path = _DEFAULT_PCR_HISTORY_DIR,
+) -> dict[str, dict[str, float]]:
+    """Read per-day NSE-bhavcopy PCR parquets into a {date -> {ticker -> pcr}} map.
+
+    Returns an empty map when `pcr_dir` does not exist. Missing days within the
+    window are silently skipped — `regenerate` already treats absent entries
+    as NEUTRAL.
+    """
+    pcr_dir = Path(pcr_dir)
+    if not pcr_dir.exists():
+        return {}
+    out: dict[str, dict[str, float]] = {}
+    start = pd.Timestamp(window_start).normalize()
+    end = pd.Timestamp(window_end).normalize()
+    for d in pd.bdate_range(start, end):
+        date_str = d.strftime("%Y-%m-%d")
+        path = pcr_dir / f"{date_str}.parquet"
+        if not path.exists():
+            continue
+        try:
+            df = pd.read_parquet(path, columns=["symbol", "pcr"])
+        except Exception:
+            continue
+        df = df.dropna(subset=["pcr"])
+        out[date_str] = dict(zip(df["symbol"], df["pcr"].astype(float)))
+    return out
 
 
 def _z_score(actual: float, expected: float, std: float) -> float:

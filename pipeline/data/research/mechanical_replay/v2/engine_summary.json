@@ -10,14 +10,13 @@
     }
   },
   "phase_c": {
-    "n": 7,
-    "hit_rate": 0.8571,
-    "mean_pnl_pct": 1.1523,
-    "total_pnl_pct": 8.0663,
-    "median_pnl_pct": 0.3352,
+    "n": 2,
+    "hit_rate": 1.0,
+    "mean_pnl_pct": 0.3276,
+    "total_pnl_pct": 0.6552,
+    "median_pnl_pct": 0.3276,
     "exit_reasons": {
-      "TIME_STOP": 5,
-      "TRAIL": 2
+      "TIME_STOP": 2
     }
   }
 }

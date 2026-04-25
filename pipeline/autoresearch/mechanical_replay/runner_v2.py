@@ -118,11 +118,22 @@ def reconstruct_all(
             logger.warning("  bars unavailable for %s: %s", ticker, exc)
     logger.info("  loaded daily bars for %d/%d tickers",
                 len(universe_bars), len(loader.universe))
+    pcr_by_date = recon_phase_c.load_pcr_history(window_start, window_end)
+    n_pcr_days = len(pcr_by_date)
+    n_pcr_symbol_avg = (
+        int(sum(len(v) for v in pcr_by_date.values()) / max(n_pcr_days, 1))
+        if pcr_by_date else 0
+    )
+    logger.info(
+        "  loaded PCR archive: %d days, ~%d symbols/day",
+        n_pcr_days, n_pcr_symbol_avg,
+    )
     phase_c_full = recon_phase_c.regenerate(
         window_start=window_start,
         window_end=window_end,
         universe_bars=universe_bars,
         regime_by_date=regime_by_date,
+        pcr_by_date=pcr_by_date,
         actionable_only=False,
     )
     # Without per-day PCR archive (a §14 contamination), `classify_break`
