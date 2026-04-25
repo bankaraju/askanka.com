@@ -1,4 +1,12 @@
-"""Construct candidate-trade ledger from earnings events + features."""
+"""Construct candidate-trade ledger from earnings events + features.
+
+Gate order is intentional and preserves the FAIL-mode autopsy diagnostic:
+PIT → sector → trigger_z → trigger_threshold → macro_filter. We compute
+the z-score BEFORE the macro check so the funnel records "how many events
+would have triggered in a quiet macro" — the runner reports this as a
+contamination map per data-validation policy §14. Macro-first ordering
+would optimise CPU but destroy the diagnostic; do not reorder.
+"""
 from __future__ import annotations
 
 import pandas as pd
