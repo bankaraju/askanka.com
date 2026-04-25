@@ -41,3 +41,15 @@ def test_short_hits_stop_loss_at_minute_30() -> None:
     assert leg["exit_reason"] == "STOPPED"
     assert leg["pnl_pct"] == pytest.approx(-3.0)
     assert leg["exit_minute"] == 30
+
+
+def test_short_hits_target_at_minute_60() -> None:
+    """Open at 09:15 entry @ 100, drift down to 95 at minute 60 -> SHORT wins 5%
+    triggers 4.5% target."""
+    prices = [100.0] * 60 + [95.0] + [97.0] * 290
+    bars = _make_bars_from_path(prices)
+    result = simulator.simulate_grid(bars=bars, side="SHORT", entry_grid=(time(9, 15),))
+    leg = result["09:15"]
+    assert leg["exit_reason"] == "TARGETED"
+    assert leg["pnl_pct"] == pytest.approx(4.5)
+    assert leg["exit_minute"] == 60
