@@ -90,3 +90,15 @@ def test_single_bar_with_both_stop_and_target_picks_stop() -> None:
     leg = result["09:15"]
     assert leg["exit_reason"] == "STOPPED"
     assert leg["pnl_pct"] == pytest.approx(-3.0)
+
+
+def test_entry_after_last_bar_returns_no_entry() -> None:
+    """If bars only go to 09:14 and entry grid asks for 09:15, return NO_ENTRY."""
+    base = datetime(2026, 4, 22, 9, 10)
+    bars = pd.DataFrame([
+        {"timestamp_ist": base + pd.Timedelta(minutes=i),
+         "open": 100.0, "high": 100.5, "low": 99.5, "close": 100.0, "volume": 1000}
+        for i in range(4)
+    ])  # bars 09:10 .. 09:13 only
+    result = simulator.simulate_grid(bars=bars, side="SHORT", entry_grid=(time(9, 15),))
+    assert result["09:15"]["exit_reason"] == "NO_ENTRY"
