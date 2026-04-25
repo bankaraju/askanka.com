@@ -16,6 +16,13 @@ Every task follows: brainstorm → plan → build → verify → review. No exce
 - After major work: invoke requesting-code-review
 - See `memory/feedback_always_use_superpowers.md` for rationale
 
+## Data Validation Gate (CRITICAL)
+**No backtest, no validation run, no live signal consumption may proceed against a dataset that has not been accepted under** `docs/superpowers/specs/anka_data_validation_policy_global_standard.md`. This is the data-side companion to the model governance policy. Specifically:
+- Every dataset cited as evidence must be **registered** (Section 6), have a **schema contract** (Section 8), have passed **cleanliness gates** (Section 9), declare its **adjustment mode** (Section 10), be **point-in-time correct** (Section 11), and have a **contamination map** (Section 14) where event-noise channels are credible.
+- A backtest that runs on data that has not satisfied this policy is research evidence of nothing and shall not be cited.
+- For new datasets, write a registration + audit document under `docs/superpowers/specs/<date>-<dataset>-data-source-audit.md` (template: `2026-04-25-earnings-data-source-audit.md`) BEFORE writing the hypothesis spec that consumes it.
+- Section 21 of the data policy binds this gate to the model governance ladder: a model cannot reach Approved status if any data dependency is below Approved-for-deployment at the corresponding tier.
+
 ## Kill Switch: No Un-Registered Trading Rules
 Any NEW file matching `*_strategy.py`, `*_signal_generator.py`, `*_backtest.py`, `*_ranker.py`, or `*_engine.py` MUST ship with a matching entry in `docs/superpowers/hypothesis-registry.jsonl` in the SAME commit. Enforced by `pipeline/scripts/hooks/pre-commit-strategy-gate.sh` (local pre-commit) AND `.github/workflows/strategy-gate.yml` on pull_request. Renaming or refactoring an existing file matching the pattern is not "new" per the `diff-filter=A` test — the gate only triggers on additions. Install the local hook once per clone:
 ```
