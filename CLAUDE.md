@@ -59,6 +59,7 @@ The system runs automatically via Windows Scheduled Tasks:
 **Pre-Market:**
 - 07:15 — AnkaCorrelationScan: Asian market correlation check (info)
 - 07:30 — AnkaMorningBrief0730: morning briefing → Telegram (warn)
+- 08:00 — AnkaEarningsCalendarFetch: IndianAPI corporate_actions sweep + parquet history. Feeds H-2026-04-25-001 (warn)
 - 08:30 — AnkaGapPredictor: overnight gap risk analysis (info)
 - 09:00 — AnkaRefreshKite: refresh Zerodha broker session (CRITICAL)
 - 09:16 — AnkaOpenCapture: capture today's opening prices (CRITICAL)

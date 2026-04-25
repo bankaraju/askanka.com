@@ -797,6 +797,7 @@ When the watchdog finds issues:
 |------------|-----------|-------------|-----------|
 | 07:15 | AnkaCorrelationScan | Asian market correlation check | info |
 | 07:30 | AnkaMorningBrief0730 | Morning briefing → Telegram | warn |
+| 08:00 | AnkaEarningsCalendarFetch | IndianAPI corporate_actions sweep, classify quarterly results, append parquet history. Feeds H-2026-04-25-001. | warn |
 | 08:30 | AnkaGapPredictor | Overnight gap risk analysis | info |
 | 09:00 | AnkaRefreshKite | Refresh Zerodha broker session | CRITICAL |
 | 09:16 | AnkaOpenCapture | Capture today's opening prices | CRITICAL |
