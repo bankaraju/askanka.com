@@ -47,3 +47,12 @@ def test_classify_reverse_v_high() -> None:
     assert feats["peak_pct"] == pytest.approx(2.0, abs=0.05)
     assert feats["close_pct"] == pytest.approx(0.5, abs=0.05)
     assert features.classify_shape(feats) == "REVERSE_V_HIGH"
+
+
+def test_classify_v_low_recovery() -> None:
+    """Open at 100, trough at minute 5 (98), drift up to close at 99.5.
+    trough_pct = -2%, close_pct = -0.5%, close_pct >= trough_pct/2 = -1.0 -> V_LOW_RECOVERY."""
+    prices = [100.0] * 5 + [98.0] + [98.5] * 100 + [99.0] * 100 + [99.3] * 100 + [99.5] * 70
+    bars = _make_bars(prices)
+    feats = features.compute_shape_features(bars)
+    assert features.classify_shape(feats) == "V_LOW_RECOVERY"
