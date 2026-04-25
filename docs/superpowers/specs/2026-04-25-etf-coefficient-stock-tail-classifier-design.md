@@ -32,6 +32,37 @@ The canonical universe `canonical_fno_research_v1` (154 tickers = 133 stable F&O
 
 ---
 
+## Amendment 2 (2026-04-25, before single-touch holdout consumed)
+
+Three further non-substantive changes recorded before the model has produced a holdout cross-entropy number. The two prior real-run attempts (commits `8d…` smoke, `0b5f3a4` first real attempt) both terminated **before** any model fit on the holdout window — first on a panel-coverage problem, then on a regime-coverage assertion error. **Single-touch holdout remains intact.** No held-out metric exists yet.
+
+**A1.3 — Adjustment-mode declaration on canonical_fno_research_v1.**
+The canonical dataset entry now carries an explicit `adjustment_mode` block per `docs/superpowers/specs/anka_data_validation_policy_global_standard.md` §10. F&O equity CSVs use dividend-adjusted close, sectoral indices use total-return-index series, the global ETF panel uses dividend-adjusted close. Codified in `pipeline/data/canonical_fno_research_v1.json` (commit `cd47be5`) and cross-referenced from the audit doc §6.
+
+Rationale: schema completeness, no model behaviour change. Required for Approved-for-research status.
+
+**A1.4 — Synthetic FII/DII series under explicit policy waiver.**
+Three of the originally registered ETF parquets (`india_vix_daily`, `fii_net_daily`, `dii_net_daily`) were schema-only stubs. The first real run failed because `panel.py:dropna(subset=etf_cols, how="any")` killed every row for which any of these nine columns (3 windows × 3 series) was NaN — i.e. every row.
+
+Backfill (commit `0b5f3a4`):
+- `india_vix_daily` — real history from `pipeline/data/vix_history.csv`, 1321 rows
+- `fii_net_daily`, `dii_net_daily` — **synthetic**, 19-day Trendlyne snapshot (25 Mar 2026 → 24 Apr 2026) replicated cyclically across the canonical Indian trading-day index, 1236 rows each
+
+The synthetic FII/DII series is **policy-waived**. Coefficients on `fii_*` and `dii_*` features in the trained model carry no interpretive weight and may not be cited as evidence for any FII/DII narrative. The waiver expires when a real point-in-time FII/DII history is acquired (NSE/Trendlyne paid feed candidates noted in the audit doc). At that point the dataset versions to `fii_dii_v2` and the model is re-fit; a re-fit under §10.4 is not a re-touch of the holdout because the input dataset itself has changed.
+
+This decision was made explicitly by the user ("we can assume the same trend for the last 2 months — replicate it") after a documented best-effort search across IndianStockAPI / EODHD / NSE archives confirmed no free 5-year FII/DII history exists.
+
+**A1.5 — Regime-coverage check made data-driven.**
+The original spec (§5.1) hardcoded the V5 zone taxonomy `["DEEP_PAIN", "PAIN", "NEUTRAL", "EUPHORIA", "MEGA_EUPHORIA"]` and required ≥30 days of each in the holdout. The live regime engine emits the V4 taxonomy `["CAUTION", "NEUTRAL", "RISK-ON", "EUPHORIA", "RISK-OFF"]` (UNKNOWN as a sentinel for missing regime). The first real run died on `InsufficientRegimeCoverage: holdout missing regime coverage for ['DEEP_PAIN', 'PAIN', 'MEGA_EUPHORIA']` — purely a hardcoded-label vs live-label mismatch, not a regime-mix problem.
+
+Fix (commit `98684a7`): `check_regime_coverage(holdout, train=train)` now derives the set of "material" regimes from the train window (regimes appearing ≥ `MIN_REGIME_DAYS_IN_HOLDOUT` days in train, UNKNOWN excluded as a sentinel) and requires each of those material regimes to appear ≥ MIN days in the holdout. Falls back to "≥3 regimes meet MIN in holdout" when train is unavailable.
+
+The §10.4 single-touch protection is **unchanged**. The previous run failed at panel-build time inside `runner.py` line 79 — well before any model.fit() call and well before any cross-entropy was computed against the holdout. The fix only changes what set of labels the assertion compares against.
+
+The Δ-margin (0.005 nats), p-floor (0.01), σ-threshold (1.5), family size (1) and statistical test method (100k-permutation null) remain locked.
+
+---
+
 ## 1. Claim
 
 A small multi-task MLP (`etf_stock_tail_mlp_v1`) conditioned on the day-T-1
