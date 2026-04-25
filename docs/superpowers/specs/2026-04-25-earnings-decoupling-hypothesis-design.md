@@ -204,3 +204,23 @@ Macro-index choice (stock's own sector index rather than NIFTY 50) and macro-che
 | Git commit at registration | (to be filled at registry append time) |
 | Raw-bar canonicity policy | `docs/superpowers/policies/2026-04-23-raw-bar-canonicity.md` v1.0 — MODE A T-3, T-1 execution-window gate applies |
 | Next required artifact | Backtest plan (separate document, written only after data dependency #1 reaches Approved-for-research) |
+
+## 11. Backtest-time addendum (2026-04-25)
+
+ΔPCR confirmation deferred for the first backtest run because per-ticker daily
+PCR history is not currently stored (`pipeline/data/oi_history.json` is index-level
+only). Per spec §4.5 Variant A, ΔPCR is a post-hoc cohort filter, not an entry
+gate, so disabling it for this run does NOT modify the entry rule and does NOT
+require a new hypothesis version. The amplifier code path is wired with a
+feature flag and will be re-enabled in a separate run when per-ticker PCR
+history is backfilled.
+
+§9A fragility-grid axes for this hypothesis: trigger_z threshold (locked 1.5;
+perturbed ±10% over 9 points), trigger window start (locked T-7; perturbed
+±2 days), trigger window end (locked T-3; perturbed ±2 days), baseline length
+(locked 252; perturbed ±20%), macro index threshold (locked 0.015; perturbed
+±20%), VIX z threshold (locked 2.0; perturbed ±20%). 9 points × 6 axes = 54
+neighborhood samples in a one-axis-at-a-time grid (§9A.1 floor = 25).
+
+Backtest spec: `docs/superpowers/specs/2026-04-25-earnings-decoupling-backtest-design.md`
+Backtest plan: `docs/superpowers/plans/2026-04-25-earnings-decoupling-backtest.md`
