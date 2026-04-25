@@ -87,3 +87,41 @@ def test_build_roster_unions_actual_and_missed(tmp_path: Path) -> None:
     assert missed_row["ticker"] == "TICKERB"
     assert pd.isna(missed_row["actual_pnl_pct"])
     assert missed_row["signal_id"].startswith("MISSED-")
+
+
+def test_build_roster_dedupes_intra_day_by_max_abs_z(tmp_path: Path) -> None:
+    """Multiple history rows for same (ticker, date, classification)
+    collapse to the row with max |z_score|."""
+    hist = [
+        {
+            "symbol": "TICKERX", "date": "2026-04-22", "time": "10:00",
+            "classification": "OPPORTUNITY_LAG", "trade_rec": "SHORT",
+            "z_score": -2.0, "expected_return": -0.3, "actual_return": 0.9,
+            "regime": "NEUTRAL", "pcr": None, "pcr_class": "NEUTRAL",
+            "oi_anomaly": False,
+        },
+        {
+            "symbol": "TICKERX", "date": "2026-04-22", "time": "13:00",
+            "classification": "OPPORTUNITY_LAG", "trade_rec": "SHORT",
+            "z_score": -3.5, "expected_return": -0.3, "actual_return": 1.6,
+            "regime": "NEUTRAL", "pcr": None, "pcr_class": "NEUTRAL",
+            "oi_anomaly": False,
+        },
+    ]
+    hist_path = tmp_path / "hist.json"
+    closed_path = tmp_path / "closed.json"
+    regime_path = tmp_path / "regime.csv"
+    _write_history_fixture(hist_path, hist)
+    _write_closed_fixture(closed_path, [])
+    _write_regime_fixture(regime_path, [("2026-04-22", "NEUTRAL")])
+
+    df = roster.build_roster(
+        history_path=hist_path,
+        closed_path=closed_path,
+        regime_path=regime_path,
+        window_start=pd.Timestamp("2026-04-21"),
+        window_end=pd.Timestamp("2026-04-25"),
+    )
+
+    assert len(df) == 1
+    assert df.iloc[0]["z_score"] == pytest.approx(-3.5)
