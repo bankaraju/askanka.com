@@ -683,6 +683,20 @@ Every pre-registered hypothesis against the Phase C event panel appears in `docs
 - `H-2026-04-24-003` — persistent-break + cross-sectional Lasso v2 (asymmetric |z|≥3 on T AND |z|≥2 on T-1, same-sign). **FAIL** (2026-04-24). Model S1 Sharpe −3.28 vs buy-and-hold +1.70, margin −4.98, permutation p=0.81. Fragility STABLE 26/27 — the negative edge is NOT a parameter artefact. Artifacts at `pipeline/autoresearch/results/compliance_H-2026-04-24-003_20260423T210632Z/`. The 236-feature Lasso cannot extract predictive signal from the persistent-break subset; always-fade and buy-and-hold both dominate in the same holdout.
 - `H-2026-04-25-001` — earnings-decoupling pre-publication residual + ΔPCR amplifier (T-3 close → T-1 close MODE A). **FAIL** (2026-04-25). 100k-perm null p=0.336, n=26 (1 regime <30, §9 underpowered). S0 Sharpe 0.63 / hit 0.46 / DD 6.3% — fails §1/3 thresholds. random_direction comparator beats strategy at S0 (mean 0.57% vs 0.09%, §9B.1 fail). β-residual §11B fail. Single-touch holdout consumed per §10.4 — re-run requires v2 pre-registration with fresh holdout. Run executed on Contabo VPS (~12s wall clock, 12-core EPYC). Artifacts at `docs/superpowers/runs/2026-04-25-earnings-decoupling-h-2026-04-25-001/`.
 
+##### Phase C intraday shape audit (SP1, descriptive forensics, 2026-04-25)
+
+`pipeline/autoresearch/phase_c_shape_audit/` is a one-shot descriptive audit — not a hypothesis. It classifies the intraday shape of every Phase C OPPORTUNITY signal in the trailing 60 calendar days, replays each one across an entry-time grid (09:15/09:20/09:25/09:30/09:45 IST), and reports whether shape × side × regime separates winners from losers. Per spec (`docs/superpowers/specs/2026-04-25-phase-c-intraday-shape-audit-design.md`), the audit is descriptive-only: no kill-switch trigger, no hypothesis-registry append, no edge claim.
+
+- **Entry:** `python -m pipeline.autoresearch.phase_c_shape_audit.runner [--end-date YYYY-MM-DD] [--days N] [--limit N]`
+- **Roster source:** join of `pipeline/data/signals/closed_signals.json` (actual Phase C trades) + `pipeline/data/correlation_break_history.json` (full OPPORTUNITY universe — LAG/OVERSHOOT/POSSIBLE) + `pipeline/data/regime_history.csv` (canonical regime tag).
+- **Bar source:** Kite `historical_data` minute candles for 09:15–15:35 IST, cached as parquet at `pipeline/data/research/phase_c_shape_audit/bars/<TICKER>_<YYYYMMDD>.parquet`. Re-runs are disk-only.
+- **Shape labels:** REVERSE_V_HIGH, V_LOW_RECOVERY, ONE_WAY_UP, ONE_WAY_DOWN, CHOPPY (mutually exclusive, first-match-wins on the order in `features.classify_shape`).
+- **Counterfactual replay:** `simulator.simulate_grid` runs each session through the entry grid with STOP=3% / TARGET=4.5% / TRAIL_ARM=2% / TRAIL_DROP=1.5% / HARD_CLOSE=14:30. Conservative tie-break — STOP fires before TARGET on the same bar.
+- **Verdicts:** CONFIRMED, REGIME_CONDITIONAL_CONFIRMED, WEAK_SIGNAL, DISCIPLINE_ONLY, NULL, INSUFFICIENT_N (chosen by `report._pick_verdict` against MIN_CELL_N=10 and the baseline 56.4% closed-trade win rate).
+- **Outputs:** `pipeline/data/research/phase_c_shape_audit/trades_with_shape.csv` (per-row roster with shape features + cf grid pnl), `missed_signals.csv` (subset with `source=missed`), and `docs/research/phase_c_shape_audit/<date>-shape-audit.md` (Tables A/B/F + verdict).
+- **First run (2026-04-25, window 2026-02-24 → 2026-04-25):** roster 87 rows (5 actual, 82 missed), n_valid 71. Verdict **INSUFFICIENT_N** — no shape × side cell reaches MIN_CELL_N=10. Most missed-signal rows carry `trade_rec=nan` because POSSIBLE_OPPORTUNITY entries in `correlation_break_history.json` don't populate a directional rec. Re-run after the LAG slice forward sample grows.
+- **Tests:** 26 SP1-specific tests across `tests/test_roster.py`, `test_fetcher.py`, `test_features.py`, `test_simulator.py`, `test_report.py`.
+
 ##### Compliance runner: H-2026-04-24-003 (persistent-break v2 + cross-sectional)
 
 - **Entry:** `python -m pipeline.autoresearch.phase_c_cross_sectional.runner`
