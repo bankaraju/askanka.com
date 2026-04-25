@@ -1907,7 +1907,7 @@ git commit -m "feat(etf_stock_tail): B2 interactions logistic baseline (4 locked
 - Create: `pipeline/autoresearch/etf_stock_tail/calibration.py`
 - Test: `pipeline/tests/autoresearch/etf_stock_tail/test_calibration.py`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```python
 # pipeline/tests/autoresearch/etf_stock_tail/test_calibration.py
@@ -1958,12 +1958,12 @@ def test_reliability_bins_returns_n_bins_per_class():
     assert len(bins["down_tail"]) == 10
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pytest pipeline/tests/autoresearch/etf_stock_tail/test_calibration.py -v`
 Expected: ImportError.
 
-- [ ] **Step 3: Implement calibration**
+- [x] **Step 3: Implement calibration**
 
 ```python
 # pipeline/autoresearch/etf_stock_tail/calibration.py
@@ -1980,7 +1980,9 @@ class PlattScaler:
     """Multinomial Platt: fit a logistic regression on (logits → label) then transform."""
 
     def __init__(self):
-        self.model_ = LogisticRegression(multi_class="multinomial", solver="lbfgs",
+        # NOTE: multi_class kwarg removed for sklearn 1.8 compat (raises TypeError otherwise).
+        # sklearn auto-detects multinomial when len(classes_) > 2.
+        self.model_ = LogisticRegression(solver="lbfgs",
                                          max_iter=500, random_state=C.RANDOM_SEED)
 
     def fit(self, logits: np.ndarray, labels: np.ndarray) -> "PlattScaler":
@@ -2042,12 +2044,12 @@ def brier_decomposition(probs: np.ndarray, labels: np.ndarray, n_bins: int = 10)
             "resolution": res_sum, "uncertainty": unc_sum}
 ```
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run: `pytest pipeline/tests/autoresearch/etf_stock_tail/test_calibration.py -v`
 Expected: `3 passed`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add pipeline/autoresearch/etf_stock_tail/calibration.py \
