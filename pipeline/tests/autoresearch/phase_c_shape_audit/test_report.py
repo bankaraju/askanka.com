@@ -69,3 +69,14 @@ def test_verdict_regime_conditional_when_lift_only_in_one_regime() -> None:
     df = pd.DataFrame(rows)
     rep = report.build_report(df)
     assert rep["verdict"] == "REGIME_CONDITIONAL_CONFIRMED"
+
+
+def test_verdict_discipline_only_when_cf_beats_actual_without_shape_edge() -> None:
+    """No shape × side cell qualifies, but mean(cf - actual) > 1pp."""
+    rows: list[dict] = []
+    for _ in range(15):
+        rows.append(_synth_row("CHOPPY", "SHORT", "NEUTRAL",
+                               cf_pnl=1.5, source="actual", actual_pnl=-1.0))
+    df = pd.DataFrame(rows)
+    rep = report.build_report(df)
+    assert rep["verdict"] == "DISCIPLINE_ONLY"

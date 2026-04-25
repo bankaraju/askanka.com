@@ -153,14 +153,20 @@ def build_report(per_trade_df: pd.DataFrame) -> dict[str, Any]:
     """Build Tables A-G + pick verdict. Returns dict keyed by table name + 'verdict'."""
     valid = per_trade_df[per_trade_df["validation"] == "OK"].copy() if "validation" in per_trade_df.columns else per_trade_df.copy()
 
+    # Shape-edge tables use missed/counterfactual rows only (not actual trades).
+    # Actual-source rows have their own cf_pnl (what the rule WOULD have done), but
+    # the shape-edge check should reflect the counterfactual opportunity set, not
+    # already-executed trades, to avoid inflating win rates from actual-coincident cf data.
+    missed_valid = valid[valid.get("source", pd.Series(["missed"] * len(valid))) != "actual"] if "source" in valid.columns else valid
+
     table_a = _table_shape_x_side_x_source(valid)
     table_b_actual = _table_winrate_by_shape_side(valid, "actual")
-    table_b_cf = _table_winrate_by_shape_side(valid, "cf_grid_avg")
+    table_b_cf = _table_winrate_by_shape_side(missed_valid, "cf_grid_avg")
     table_b_best = (
-        _table_winrate_by_shape_side(valid, "cf_best_grid")
-        if "cf_best_grid_pnl_pct" in valid.columns else pd.DataFrame()
+        _table_winrate_by_shape_side(missed_valid, "cf_best_grid")
+        if "cf_best_grid_pnl_pct" in missed_valid.columns else pd.DataFrame()
     )
-    table_f = _table_regime_cube(valid)
+    table_f = _table_regime_cube(missed_valid)
 
     verdict = _pick_verdict(table_b_cf, table_f, valid)
 
