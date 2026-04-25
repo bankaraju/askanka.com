@@ -1140,7 +1140,7 @@ def _mk_stock_bars(start: str, n_days: int, n_up_tails: int = 35, n_down_tails: 
     return pd.DataFrame({"date": dates, "close": closes, "volume": np.full(n_days, 1e6)})
 
 
-def test_panel_features_causal_against_future_mutation():
+def test_panel_features_causal_against_holdout_mutation():
     n_days = 400
     train_start = pd.Timestamp("2024-04-01")
     train_end = pd.Timestamp("2024-12-31")
