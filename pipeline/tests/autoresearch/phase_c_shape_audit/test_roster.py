@@ -125,3 +125,40 @@ def test_build_roster_dedupes_intra_day_by_max_abs_z(tmp_path: Path) -> None:
 
     assert len(df) == 1
     assert df.iloc[0]["z_score"] == pytest.approx(-3.5)
+
+
+def test_build_roster_side_is_null_for_overshoot_and_possible(tmp_path: Path) -> None:
+    """Per spec §4 + §3, OVERSHOOT and POSSIBLE rows have trade_rec=None
+    and must end up with side=None / NaN in the roster."""
+    hist = [
+        {"symbol": "T1", "date": "2026-04-22", "time": "10:00",
+         "classification": "OPPORTUNITY_OVERSHOOT", "trade_rec": None,
+         "z_score": 3.5, "expected_return": 1.0, "actual_return": 3.0,
+         "regime": "NEUTRAL", "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+        {"symbol": "T2", "date": "2026-04-22", "time": "10:00",
+         "classification": "POSSIBLE_OPPORTUNITY", "trade_rec": None,
+         "z_score": 2.5, "expected_return": 0.5, "actual_return": -0.7,
+         "regime": "NEUTRAL", "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+        {"symbol": "T3", "date": "2026-04-22", "time": "10:00",
+         "classification": "OPPORTUNITY_LAG", "trade_rec": "LONG",
+         "z_score": 3.0, "expected_return": 0.6, "actual_return": -0.5,
+         "regime": "NEUTRAL", "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+    ]
+    hist_path = tmp_path / "hist.json"; closed_path = tmp_path / "closed.json"; regime_path = tmp_path / "regime.csv"
+    _write_history_fixture(hist_path, hist)
+    _write_closed_fixture(closed_path, [])
+    _write_regime_fixture(regime_path, [("2026-04-22", "NEUTRAL")])
+
+    df = roster.build_roster(
+        history_path=hist_path,
+        closed_path=closed_path,
+        regime_path=regime_path,
+        window_start=pd.Timestamp("2026-04-21"),
+        window_end=pd.Timestamp("2026-04-25"),
+    )
+
+    by_class = {row["classification"]: row for _, row in df.iterrows()}
+    # trade_rec=None in JSON becomes NaN in pandas — use pd.isna to handle both
+    assert pd.isna(by_class["OPPORTUNITY_OVERSHOOT"]["trade_rec"])
+    assert pd.isna(by_class["POSSIBLE_OPPORTUNITY"]["trade_rec"])
+    assert by_class["OPPORTUNITY_LAG"]["trade_rec"] == "LONG"
