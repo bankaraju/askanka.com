@@ -36,3 +36,43 @@ def test_regime_coverage_raises_when_missing():
     df = pd.DataFrame({"date": days, "regime": ["NEUTRAL"] * len(days)})
     with pytest.raises(InsufficientRegimeCoverage):
         check_regime_coverage(df)
+
+
+def test_regime_coverage_train_aware_passes_when_holdout_covers_material_regimes():
+    """Per Amendment A1.5 — material regimes are derived from train, not hardcoded."""
+    train_days = pd.date_range("2022-01-01", periods=400, freq="D")
+    train_regimes = (["CAUTION"] * 100 + ["NEUTRAL"] * 100
+                     + ["RISK-ON"] * 100 + ["EUPHORIA"] * 50 + ["RISK-OFF"] * 50)
+    train = pd.DataFrame({"date": train_days, "regime": train_regimes})
+
+    holdout_days = pd.date_range(C.HOLDOUT_START, C.HOLDOUT_END, freq="D")
+    base = ["CAUTION"] * 30 + ["NEUTRAL"] * 30 + ["RISK-ON"] * 30 + ["EUPHORIA"] * 30 + ["RISK-OFF"] * 30
+    holdout_regimes = [base[i % len(base)] for i in range(len(holdout_days))]
+    holdout = pd.DataFrame({"date": holdout_days, "regime": holdout_regimes})
+
+    check_regime_coverage(holdout, train=train)  # should not raise
+
+
+def test_regime_coverage_train_aware_raises_when_holdout_lacks_material_regime():
+    train_days = pd.date_range("2022-01-01", periods=400, freq="D")
+    train = pd.DataFrame({"date": train_days, "regime": ["RISK-OFF"] * 400})
+
+    holdout_days = pd.date_range(C.HOLDOUT_START, C.HOLDOUT_END, freq="D")
+    holdout = pd.DataFrame({"date": holdout_days, "regime": ["RISK-ON"] * len(holdout_days)})
+
+    with pytest.raises(InsufficientRegimeCoverage):
+        check_regime_coverage(holdout, train=train)
+
+
+def test_regime_coverage_ignores_unknown_sentinel():
+    """UNKNOWN regime must be excluded — it's a sentinel, not a real regime."""
+    train_days = pd.date_range("2022-01-01", periods=400, freq="D")
+    train = pd.DataFrame({"date": train_days, "regime": ["UNKNOWN"] * 400})
+
+    holdout_days = pd.date_range(C.HOLDOUT_START, C.HOLDOUT_END, freq="D")
+    holdout = pd.DataFrame({"date": holdout_days, "regime": ["UNKNOWN"] * len(holdout_days)})
+
+    # No material train regimes (UNKNOWN excluded), but the fallback fires
+    # because there are no >=3 material regimes with >=MIN days in holdout either.
+    with pytest.raises(InsufficientRegimeCoverage):
+        check_regime_coverage(holdout, train=train)

@@ -76,7 +76,7 @@ def run(
     else:
         train, val, holdout = split_panel(panel)
         try:
-            check_regime_coverage(holdout)
+            check_regime_coverage(holdout, train=train)
         except Exception as e:
             log.error("regime coverage check failed: %s", e)
             raise

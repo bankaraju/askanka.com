@@ -1,0 +1,27 @@
+Live Phase C closed: 36 trades
+  signal-date range: 2026-04-20 to 2026-04-24
+  hit-rate: 58.3%, total: 69.28pp
+
+Apples-to-apples overlap (same date+ticker): 6 trades
+
+                key   tier  days_open  live_pnl  side  exit_reason  replay_pnl  mfe_pct       classification
+    2026-04-20|TMPV SIGNAL          1     -1.27 SHORT    TIME_STOP     -0.4675   0.7601     CAUTION->NEUTRAL
+   2026-04-23|WIPRO SIGNAL          0     -0.20 SHORT      Z_CROSS     -0.1312   0.2212 POSSIBLE_OPPORTUNITY
+    2026-04-23|TMPV SIGNAL          1      2.28 SHORT FETCH_FAILED         NaN      NaN     CAUTION->NEUTRAL
+  2026-04-23|RECLTD SIGNAL          1      1.99 SHORT    TIME_STOP      1.3163   1.5425 POSSIBLE_OPPORTUNITY
+ 2026-04-23|MPHASIS SIGNAL          0      4.55 SHORT      Z_CROSS      1.6462   2.3388 POSSIBLE_OPPORTUNITY
+2026-04-23|TATATECH SIGNAL          0      3.31 SHORT      Z_CROSS     -0.3576   0.0000 POSSIBLE_OPPORTUNITY
+
+  Live   total: 10.66pp, hit-rate: 66.7%, mean: 1.78pp
+  Replay total: 2.01pp, hit-rate: 33.3%, mean: 0.40pp
+  Delta (live - replay): mean 1.27pp, total 6.37pp
+
+Trades where live BEAT replay (likely overnight hold paid off):
+                key  days_open  live_pnl  replay_pnl exit_reason  mfe_pct
+  2026-04-23|RECLTD          1      1.99      1.3163   TIME_STOP   1.5425
+ 2026-04-23|MPHASIS          0      4.55      1.6462     Z_CROSS   2.3388
+2026-04-23|TATATECH          0      3.31     -0.3576     Z_CROSS   0.0000
+
+Trades where replay BEAT live (likely live exit cut a winner):
+            key  days_open  live_pnl  replay_pnl exit_reason  mfe_pct
+2026-04-20|TMPV          1     -1.27     -0.4675   TIME_STOP   0.7601

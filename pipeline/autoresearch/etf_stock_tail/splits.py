@@ -24,16 +24,49 @@ def split_panel(panel: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
     )
 
 
-def check_regime_coverage(holdout: pd.DataFrame) -> None:
-    """Each of 5 regimes must have >= MIN_REGIME_DAYS_IN_HOLDOUT distinct dates in holdout."""
+def check_regime_coverage(holdout: pd.DataFrame, train: pd.DataFrame | None = None) -> None:
+    """Holdout must cover the regimes the model was trained on.
+
+    Per Amendment A1.5 (2026-04-25) — the original spec hardcoded the V5 zone
+    taxonomy (DEEP_PAIN/PAIN/NEUTRAL/EUPHORIA/MEGA_EUPHORIA) but the live regime
+    engine emits V4 labels (CAUTION/NEUTRAL/RISK-ON/EUPHORIA/RISK-OFF). The
+    revised check is data-driven:
+
+      * "Material" regimes are those that appear in train with >= MIN days.
+      * UNKNOWN is excluded as a sentinel.
+      * Each material regime must appear in holdout with >= MIN days too.
+
+    If train is not provided, falls back to checking that the *holdout's own*
+    most-frequent 3 regimes each have >= MIN days (lighter guard).
+    """
     if "regime" not in holdout.columns:
         return  # caller chose not to enforce
-    daily = holdout.drop_duplicates(subset=["date"])[["date", "regime"]]
-    counts = daily["regime"].value_counts().to_dict()
-    expected = ["DEEP_PAIN", "PAIN", "NEUTRAL", "EUPHORIA", "MEGA_EUPHORIA"]
-    insufficient = [r for r in expected if counts.get(r, 0) < C.MIN_REGIME_DAYS_IN_HOLDOUT]
-    if insufficient:
+    holdout_daily = holdout.drop_duplicates(subset=["date"])[["date", "regime"]]
+    holdout_counts = holdout_daily["regime"].value_counts().to_dict()
+    holdout_counts.pop("UNKNOWN", None)
+
+    min_days = C.MIN_REGIME_DAYS_IN_HOLDOUT
+
+    if train is not None and "regime" in train.columns:
+        train_daily = train.drop_duplicates(subset=["date"])[["date", "regime"]]
+        train_counts = train_daily["regime"].value_counts().to_dict()
+        train_counts.pop("UNKNOWN", None)
+        material = sorted(r for r, n in train_counts.items() if n >= min_days)
+        if material:
+            insufficient = [r for r in material if holdout_counts.get(r, 0) < min_days]
+            if insufficient:
+                raise InsufficientRegimeCoverage(
+                    f"holdout missing regime coverage for material train regimes "
+                    f"(need >={min_days} days each): {insufficient}; "
+                    f"holdout_counts={holdout_counts}; train_counts={train_counts}"
+                )
+            return
+        # No material train regimes — fall through to holdout-only fallback below.
+
+    # Fallback when train not provided: require >=3 regimes meet MIN in holdout.
+    n_material_in_holdout = sum(1 for n in holdout_counts.values() if n >= min_days)
+    if n_material_in_holdout < 3:
         raise InsufficientRegimeCoverage(
-            f"holdout missing regime coverage (need >={C.MIN_REGIME_DAYS_IN_HOLDOUT} days each): "
-            f"{insufficient}; counts={counts}"
+            f"holdout has fewer than 3 regimes with >={min_days} days; "
+            f"counts={holdout_counts}"
         )
