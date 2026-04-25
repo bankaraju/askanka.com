@@ -135,6 +135,119 @@ def run_sanity_checks(
 
 
 # ---------------------------------------------------------------------------
+# Per-trade narration (the desk-facing story for each trade)
+# ---------------------------------------------------------------------------
+
+def _fmt_time(t: Any) -> str:
+    if t is None or pd.isna(t):
+        return "—"
+    ts = pd.Timestamp(t)
+    return ts.strftime("%H:%M")
+
+
+def _fmt_pp(x: Any, sign: bool = True) -> str:
+    if x is None or pd.isna(x):
+        return "—"
+    return (f"{x:+.2f}" if sign else f"{x:.2f}") + "pp"
+
+
+def narrate_trade(row: pd.Series) -> str:
+    """One trader-facing paragraph per simulated trade.
+
+    Tells the entry-time story, what happened intraday, why we exited, and
+    (when present) how the live ledger compared. Designed to be quotable
+    in a desk summary or a client-facing recap.
+    """
+    ticker = row.get("ticker", "?")
+    date = pd.Timestamp(row.get("date")).date().isoformat() if not pd.isna(row.get("date")) else "?"
+    side = row.get("side") or "?"
+    regime = row.get("regime") or "?"
+    classification = row.get("classification") or "?"
+    entry_t = _fmt_time(row.get("entry_time"))
+    exit_t = _fmt_time(row.get("exit_time"))
+    entry_px = row.get("entry_price")
+    exit_px = row.get("exit_price")
+    pnl = row.get("pnl_pct")
+    mfe = row.get("mfe_pct")
+    exit_reason = row.get("exit_reason") or "?"
+    stop_pct = row.get("stop_pct")
+    atr = row.get("atr_14")
+    actual_pnl = row.get("actual_pnl_pct")
+
+    headline = f"**{ticker} {date} · {side} · {regime}**"
+    setup = (
+        f"Phase C `{classification}` event. Entered at {entry_t} IST at "
+        f"{entry_px:.2f}." if entry_px is not None and not pd.isna(entry_px)
+        else f"Phase C `{classification}` event."
+    )
+    risk = (
+        f" Pre-trade ATR-14 was {atr:.2f}; mechanical stop set at {stop_pct:.2f}pp."
+        if atr is not None and not pd.isna(atr) and stop_pct is not None and not pd.isna(stop_pct)
+        else ""
+    )
+
+    # Intraday story
+    if exit_reason == "TRAIL":
+        story = (
+            f" Trade ran to a peak of {_fmt_pp(mfe)} (trail armed once peak crossed +2.0%), "
+            f"then gave back ~1.0pp into the close. Trail exit at {exit_t} IST at "
+            f"{(f'{exit_px:.2f}' if exit_px is not None and not pd.isna(exit_px) else '—')} → **{_fmt_pp(pnl)}**."
+        )
+    elif exit_reason == "TIME_STOP":
+        story = (
+            f" Held to the 14:30 hard close. Peak intraday move was {_fmt_pp(mfe)}, "
+            f"closed at {(f'{exit_px:.2f}' if exit_px is not None and not pd.isna(exit_px) else '—')} → **{_fmt_pp(pnl)}**."
+        )
+    elif exit_reason == "ATR_STOP":
+        story = (
+            f" Move ran against us; intra-bar drawdown breached the {_fmt_pp(stop_pct)} ATR stop "
+            f"at {exit_t} IST. Exit {(f'{exit_px:.2f}' if exit_px is not None and not pd.isna(exit_px) else '—')} → **{_fmt_pp(pnl)}**. "
+            f"Best intraday run before the stop: {_fmt_pp(mfe)}."
+        )
+    elif exit_reason == "Z_CROSS":
+        story = (
+            f" Phase C peer-relative z-score crossed back through zero at {exit_t} IST — "
+            f"the dislocation that drove the entry had closed. Exit {(f'{exit_px:.2f}' if exit_px is not None and not pd.isna(exit_px) else '—')} → **{_fmt_pp(pnl)}**."
+        )
+    elif exit_reason == "NO_SIDE":
+        return (
+            f"{headline} — POSSIBLE_OPPORTUNITY event without a directional read in the live ledger; "
+            f"replay cannot simulate without a side."
+        )
+    elif exit_reason == "FETCH_FAILED":
+        return (
+            f"{headline} — minute bars unavailable from Kite cache for this date; "
+            f"trade not simulated."
+        )
+    else:
+        story = f" Exit reason `{exit_reason}` at {exit_t} IST → **{_fmt_pp(pnl)}**."
+
+    # Live cross-check (when present)
+    if actual_pnl is not None and not pd.isna(actual_pnl):
+        diff = float(pnl) - float(actual_pnl) if pnl is not None and not pd.isna(pnl) else None
+        if diff is not None:
+            tail = (
+                f" Live ledger booked **{_fmt_pp(actual_pnl)}** (replay vs live diff: "
+                f"{_fmt_pp(diff)}). Gap reflects entry-time difference: replay enters at 09:30, "
+                f"live entered at the signal-fire moment intraday."
+            )
+        else:
+            tail = ""
+    else:
+        tail = ""
+
+    return headline + " — " + setup + risk + story + tail
+
+
+def build_per_trade_narrations(trades: pd.DataFrame) -> list[str]:
+    """One narration string per row, in chronological order."""
+    if trades.empty:
+        return []
+    df = trades.sort_values(["date", "ticker"])
+    return [narrate_trade(row) for _, row in df.iterrows()]
+
+
+# ---------------------------------------------------------------------------
 # Writers
 # ---------------------------------------------------------------------------
 
@@ -155,12 +268,19 @@ def write_one_pager(
 ) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     lines = [
-        "# Mechanical 60-Day Replay — Trader One-Pager",
+        "# Mechanical 60-Day Replay — Trader One-Pager (v1)",
         "",
         f"**Window:** {window_start.date().isoformat()} → {window_end.date().isoformat()}",
         f"**Universe:** canonical_fno_research_v1 (154 tickers)",
         f"**Rules:** entry 09:30 IST · hard close 14:30 IST · ATR stop · ratchet trail · 20bps slippage",
         f"**Total trades simulated:** {len(trades)}",
+        "",
+        "> **⚠ v1 scope reality:** Phase C roster read from the live engine's stored "
+        "`correlation_break_history.json`; regime tag read from `regime_history.csv`. "
+        "Phase B + spread engines are NOT replayed in v1. Z_CROSS exit channel wired in the "
+        "simulator but not populated by the runner. Only the intraday 09:30→14:30 minute-bar "
+        "walk is fully deterministic. v2 spec at "
+        "`docs/superpowers/specs/2026-04-25-mechanical-60day-replay-v2-design.md` closes the gap.",
         "",
         "## Per-Engine Attribution",
         "",
@@ -217,8 +337,17 @@ def write_one_pager(
     lines.append(f"- **Regime balance:** {rb['n_regimes']} regimes seen ({', '.join(rb['regimes_seen'])}) — "
                  f"{'PASS' if rb['pass'] else 'FAIL'}")
 
+    # Per-trade narration — the desk-facing story for each simulated trade.
+    narrations = build_per_trade_narrations(trades)
+    lines.extend(["", "## Per-Trade Story", ""])
+    if not narrations:
+        lines.append("_no rows_")
+    else:
+        for n in narrations:
+            lines.append("- " + n)
+            lines.append("")  # blank line between trades
+
     lines.extend([
-        "",
         "## Trader's read",
         "",
         "Descriptive forensics: this table tells you which engine made or lost money "

@@ -129,6 +129,49 @@ def test_write_engine_summary_json(tmp_path: Path):
     assert "spread" in loaded
 
 
+def test_per_trade_narration_includes_pnl_and_exit():
+    rows = [{
+        "signal_id": "s1", "ticker": "IEX", "date": pd.Timestamp("2026-04-20"),
+        "source": "actual", "regime": "NEUTRAL", "engine": "phase_c",
+        "side": "SHORT", "exit_reason": "TRAIL",
+        "pnl_pct": 1.4267, "mfe_pct": 2.6267,
+        "actual_pnl_pct": 5.20,
+        "entry_time": pd.Timestamp("2026-04-20 09:30:00"),
+        "exit_time": pd.Timestamp("2026-04-20 12:50:00"),
+        "entry_price": 128.68, "exit_price": 126.59,
+        "stop_pct": -2.99, "atr_14": 4.06,
+        "classification": "OPPORTUNITY",
+    }]
+    trades = pd.DataFrame(rows)
+    narrations = report.build_per_trade_narrations(trades)
+    assert len(narrations) == 1
+    n = narrations[0]
+    assert "IEX" in n
+    assert "SHORT" in n
+    assert "+1.43pp" in n
+    assert "TRAIL" in n.upper() or "Trail" in n
+    # Live cross-check tail when actual_pnl_pct is present
+    assert "+5.20pp" in n
+
+
+def test_per_trade_narration_handles_no_side():
+    rows = [{
+        "signal_id": "s1", "ticker": "TKR", "date": pd.Timestamp("2026-04-16"),
+        "source": "missed", "regime": "NEUTRAL", "engine": "phase_c",
+        "side": None, "exit_reason": "NO_SIDE",
+        "pnl_pct": None, "mfe_pct": None,
+        "actual_pnl_pct": None,
+        "entry_time": None, "exit_time": None,
+        "entry_price": None, "exit_price": None,
+        "stop_pct": -1.0, "atr_14": None,
+        "classification": "POSSIBLE_OPPORTUNITY",
+    }]
+    trades = pd.DataFrame(rows)
+    narrations = report.build_per_trade_narrations(trades)
+    assert len(narrations) == 1
+    assert "without a directional read" in narrations[0]
+
+
 def test_write_one_pager_markdown(tmp_path: Path):
     trades = _synth_trades()
     summary = report.build_engine_summary(trades)

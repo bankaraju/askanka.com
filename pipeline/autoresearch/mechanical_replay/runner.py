@@ -201,6 +201,18 @@ def run(
         trades.append(merged)
 
     trades_df = pd.DataFrame(trades)
+    # Dedupe: roster keeps one row per (symbol, date, classification) so a single
+    # ticker can have multiple rows on one day under different classification labels
+    # (e.g. legacy OPPORTUNITY + POSSIBLE_OPPORTUNITY). For trade attribution we want
+    # one trade per (ticker, date, side) — prefer the row with a real (non-null) pnl
+    # so an actual-side row beats a NO_SIDE row.
+    if not trades_df.empty:
+        trades_df = (
+            trades_df.sort_values("pnl_pct", na_position="last")
+                     .drop_duplicates(subset=["ticker", "date", "side"], keep="first")
+                     .sort_values(["date", "ticker"])
+                     .reset_index(drop=True)
+        )
     trades_csv = out_dir / "trades_with_exit.csv"
     trades_df.to_csv(trades_csv, index=False)
     logger.info("Wrote %d trades → %s", len(trades_df), trades_csv)
