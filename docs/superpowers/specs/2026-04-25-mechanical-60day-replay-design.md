@@ -27,7 +27,7 @@ The output is a single attribution table the trader desk can stand behind, repla
 |---|---|
 | Window | `2026-02-21 → 2026-04-22` (60 calendar days, bounded by canonical end) |
 | Universe | 154 canonical tickers — anything outside dropped, count logged |
-| Engines covered | Phase C breaks (LAG only), Phase B basket, spread book (best-effort) |
+| Engines covered | Phase C breaks (LAG only), Phase B basket, spread book — all reconstructed by re-running trigger logic against canonical historical inputs |
 | Entry rule | **9:30 AM IST** for every signal that fires that day, no waiting for live trigger time |
 | Exit rules (in priority order) | (1) ATR_STOP — entry-relative loss exceeds 14d ATR × 2.0; (2) Z_CROSS — Phase C only, when intraday peer-relative z-score crosses zero; (3) TRAIL — once peak ≥ trail_budget, ratchet up monotonically, fire on retracement; (4) TIME_STOP — mandatory close at **14:30 IST** |
 | Sizing | Equal-weight per signal (descriptive — sizing layer is separate) |
@@ -44,8 +44,8 @@ The output is a single attribution table the trader desk can stand behind, repla
 | Regime tags | `pipeline/data/regime_history.csv` | Per-day regime label for stratification |
 | Phase C signals | `pipeline/data/correlation_break_history.json` | Daily LAG/OVERSHOOT/POSSIBLE roster |
 | Closed-trade ledger | `pipeline/data/signals/closed_signals.json` | Sanity-check the replay against live realized P&L |
-| Phase B picks | `pipeline/data/regime_ranker_state.json` | Daily long/short basket (current snapshot only — historical reconstruction may be partial) |
-| Spread book state | `pipeline/data/spread_*` | Open spread positions (best-effort) |
+| Phase B picks | reconstructed by re-running ranker logic | Daily long/short basket reproduced from canonical bars + regime + frozen trust scores |
+| Spread book state | reconstructed by re-running trigger logic | Daily entry roster reproduced by computing pair z-score against canonical bars + regime gate |
 | Minute bars | Kite via `pipeline/autoresearch/phase_c_shape_audit/fetcher.py` | On-demand intraday for the 9:30 → 14:30 walk; parquet-cached at `pipeline/data/research/phase_c_shape_audit/bars/`. **Only fetched for (ticker, date) pairs that have a signal — not for every ticker every day.** |
 
 **No second cache, no parallel fetcher.** SP1's existing minute-bar fetcher and parquet cache are extended; daily bars come from the canonical CSVs registered in the audit doc.
@@ -165,14 +165,23 @@ Ad-hoc. Re-run when:
 - Live execution rules change (new ATR multiplier, new trail formula, etc.)
 - The operator wants the rolling 60-day attribution refreshed
 
-## 13. Out of scope (v1)
+## 13. Reconstruction approach — same logic for all three engines
 
-- Spread engine replay beyond best-effort — full pair-leg reconstruction requires historical spread state snapshots which may not be persisted.
-- Sizing layer — current scope is equal-weight; any sizing study is a v2 spec.
-- Multi-day holding period — replay is intraday-only by mandate.
-- Regime-conditional rule tuning — rules are frozen at live settings; the replay does not search for better rules.
+All three engines are reconstructed deterministically by re-running their trigger logic against canonical historical inputs (daily bars + regime + sectoral indices). With 1-minute bars on demand for the entry day, every signal that fires under the historical inputs gets a complete intraday simulation. There is no "state file" dependency.
 
-## 14. Acceptance
+**Phase C:** roster comes straight from `correlation_break_history.json` (which is already a log of every signal fired). No re-trigger needed.
+
+**Phase B:** re-run `pipeline/regime_ranker.py::rank_today` for each historical day with that day's canonical bars, regime tag, and the current trust scores (trust scores are not historically archived — small contamination, flagged in §10).
+
+**Spread engine:** for each pair `P` in config, for each day `D` in window, compute spread z-score from canonical bars over the rolling lookback. If `|z| > entry_threshold` and `regime_gate(D)` is green, `P` enters at 09:30 on `D`. Same simulator handles the intraday walk.
+
+## 14. Out of scope (v1)
+
+- Sizing layer — equal-weight per signal in v1; live ATR-sizing is a v2 study.
+- Multi-day holding — replay is intraday-only by mandate (entry 09:30, hard close 14:30).
+- Regime-conditional rule tuning — rules frozen at live settings; the replay does not search for better rules.
+
+## 15. Acceptance
 
 - Spec committed and reviewable.
 - All 9 modules under `pipeline/autoresearch/mechanical_replay/` implemented with TDD.
@@ -182,7 +191,7 @@ Ad-hoc. Re-run when:
 - `SYSTEM_OPERATIONS_MANUAL.md` updated with the new sub-section.
 - Memory file `project_mechanical_60day_replay.md` written; index updated.
 
-## 15. References
+## 16. References
 
 - Canonical dataset: `docs/superpowers/specs/2026-04-25-canonical-fno-research-dataset-audit.md`
 - Live ATR stop logic: `pipeline/break_signal_generator.py::_compute_atr_stop`
