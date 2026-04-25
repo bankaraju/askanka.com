@@ -1021,6 +1021,26 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "05:30 IST daily. AnkaAutoresearchHoldout.bat — single-touch holdout runner; evaluates BH-FDR survivors against the held-out data slice and appends result to holdout_run_log.jsonl. Freshness contract: 24h."
+    },
+    {
+      "task_name": "AnkaBulkDeals",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/bulk_deals/{prev_biz_day}.parquet"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "16:30 IST daily. AnkaBulkDeals.bat — pulls NSE rolling-today bulk + block deals CSVs from nsearchives.nseindia.com and writes one parquet per trade-date. Forward-only (no historical backfill exists from NSE direct, see memory/reference_nse_bulk_deals_history_unavailable.md). Feeds forensic card v2 bulk_deal_T channel."
+    },
+    {
+      "task_name": "AnkaInsiderTrades",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/insider_trades/{this_month}.parquet"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "18:30 IST daily. AnkaInsiderTrades.bat — pulls NSE PIT (insider trading) disclosures from /api/corporates-pit. Pulls last 7 days each run because PIT filings often arrive 1-3 days late. Backfill 2021+ is one-shot. Feeds forensic card v2 insider channel."
     }
   ]
 }

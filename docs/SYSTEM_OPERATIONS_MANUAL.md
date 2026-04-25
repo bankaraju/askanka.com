@@ -401,6 +401,8 @@ The sequence inside `intraday_scan.bat` is: technicals → OI → news → fno_n
 | 16:00 | AnkaEODReview | Dashboard → Telegram, archive OI, run website_exporter |
 | 16:15 | AnkaEODTrackRecord | Calculate P&L, write `track_record.json`, run website_exporter |
 | 16:20 | AnkaEODNews | Backtest news events: did the stock react as expected? |
+| 16:30 | AnkaBulkDeals | Pull NSE rolling-today bulk + block deals → `pipeline/data/bulk_deals/<date>.parquet` (forward-only, see forensic card v2) |
+| 18:30 | AnkaInsiderTrades | Pull NSE PIT (insider trading) disclosures, last 7 days → `pipeline/data/insider_trades/<YYYY-MM>.parquet` |
 
 **What carries forward to tomorrow:**
 - `data/track_record.json` — cumulative performance history
@@ -827,8 +829,10 @@ That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 | 16:00 | AnkaTAScorerScore | TA Coincidence Scorer daily apply — writes `ta_attractiveness_scores.json` (RELIANCE pilot) | warn |
 | 16:15 | AnkaEODTrackRecord | Write official track record, push website JSONs | warn |
 | 16:20 | AnkaEODNews | Backtest news predictions | warn |
+| 16:30 | AnkaBulkDeals | NSE rolling bulk + block deals CSV → daily parquet | info |
 | 16:35 | AnkaTrustEOD | OPUS ANKA EOD review + next-day outlook | warn |
 | 16:45 | AnkaWatchdogGate | Watchdog gate run — check everything | warn |
+| 18:30 | AnkaInsiderTrades | NSE PIT (insider trading) disclosures, 7-day rolling pull | info |
 
 Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, eod_review, eod_track_record, and daily_dump — it is not a standalone scheduled task. Auto-pushes data/*.json to the GitHub Pages branch.
 

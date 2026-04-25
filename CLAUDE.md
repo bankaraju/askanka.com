@@ -81,8 +81,10 @@ The system runs automatically via Windows Scheduled Tasks:
 - 16:00 — AnkaTAScorerScore: TA Coincidence Scorer daily apply — writes `ta_attractiveness_scores.json` (warn)
 - 16:15 — AnkaEODTrackRecord: write official track record + run `website_exporter.py` (warn)
 - 16:20 — AnkaEODNews: backtest news predictions (warn)
+- 16:30 — AnkaBulkDeals: NSE bulk + block deals daily CSV pull → `bulk_deals/<date>.parquet` (info)
 - 16:35 — AnkaTrustEOD: OPUS ANKA EOD review + next-day outlook (warn)
 - 16:45 — AnkaWatchdogGate: watchdog gate run, check everything (warn)
+- 18:30 — AnkaInsiderTrades: NSE PIT insider disclosures, last 7 days rolling → `insider_trades/<YYYY-MM>.parquet` (info)
 
 Note: website_exporter.py is invoked from morning_scan (09:25), every intraday cycle (09:30–15:30), eod_review (16:00), eod_track_record (16:15), and daily_dump (04:30) — it is NOT a standalone scheduled task. It auto-deploys data/*.json to the GitHub Pages branch.
 
