@@ -68,7 +68,14 @@ def _try_url(url: str, retries: int = 3, sleep_seconds: float = 1.5) -> pd.DataF
         try:
             r = requests.get(url, headers=UA, timeout=30)
             if r.status_code != 200:
-                if r.status_code in (401, 403, 429, 503):
+                if r.status_code in (401, 403):
+                    logging.warning(
+                        "HTTP %d for %s — auth required, check headers",
+                        r.status_code,
+                        url,
+                    )
+                    return None
+                if r.status_code in (429, 503):
                     logging.warning("HTTP %d for %s, backing off", r.status_code, url)
                     time.sleep(sleep_seconds * (attempt + 1))
                     continue
@@ -165,6 +172,15 @@ def main() -> int:
         fmt_counts["legacy"],
         len(failed),
     )
+
+    # I-1: fail loudly on UDiFF-window misses. Pre-2024 gaps are documented
+    # in the audit doc §20 known-issue, but any miss on/after 2024-01-02
+    # (UDiFF cutover) means NSE archives are unreachable — exit non-zero so
+    # reruns don't silently produce stale output.
+    udiff_misses = [m for m in failed if m >= "2024-01-02"]
+    if udiff_misses:
+        logging.error("UDiFF-window months unexpectedly missing: %s", udiff_misses)
+        return 2
     return 0
 
 
