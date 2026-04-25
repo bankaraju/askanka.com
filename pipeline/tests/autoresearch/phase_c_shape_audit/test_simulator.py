@@ -75,3 +75,18 @@ def test_drifts_to_time_close() -> None:
     leg = result["09:15"]
     assert leg["exit_reason"] == "TIME"
     assert leg["pnl_pct"] == pytest.approx(0.8, abs=0.1)
+
+
+def test_single_bar_with_both_stop_and_target_picks_stop() -> None:
+    """SHORT, single bar where high - open = +5% (stop) and low - open = -5% (target).
+    Conservative rule: STOP fires first."""
+    base = datetime(2026, 4, 22, 9, 15)
+    bars = pd.DataFrame([
+        {"timestamp_ist": base, "open": 100.0, "high": 100.0, "low": 100.0, "close": 100.0, "volume": 0},
+        {"timestamp_ist": base + pd.Timedelta(minutes=1),
+         "open": 100.0, "high": 105.0, "low": 95.0, "close": 100.0, "volume": 1000},
+    ])
+    result = simulator.simulate_grid(bars=bars, side="SHORT", entry_grid=(time(9, 15),))
+    leg = result["09:15"]
+    assert leg["exit_reason"] == "STOPPED"
+    assert leg["pnl_pct"] == pytest.approx(-3.0)
