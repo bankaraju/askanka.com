@@ -263,7 +263,7 @@ def _load_inputs():
     repo = REPO
     log.info("loading earnings_calendar/history.parquet")
     ec = pd.read_parquet(repo / "pipeline" / "data" / "earnings_calendar" / "history.parquet")
-    ec = ec[ec["is_earnings"]].rename(columns={"event_date": "event_date"})
+    ec = ec[ec["kind"].astype(str).str.contains("EARNINGS")].copy()
     today = pd.Timestamp.today().normalize()
     cutoff = today - pd.Timedelta(days=540)
     ec["event_date"] = pd.to_datetime(ec["event_date"])
@@ -308,12 +308,8 @@ def _load_inputs():
     log.info("building sector→index map")
     from pipeline.scorecard_v2.sector_mapper import SectorMapper
     sm = SectorMapper()
-    peer_meta = {}
-    for s in symbols:
-        try:
-            peer_meta[s] = sm.map_to_canonical(s)
-        except Exception:
-            continue
+    raw = sm.map_all()
+    peer_meta = {s: raw[s]["sector"] for s in symbols if s in raw}
     from .sector_index_map import build_sector_index_map
     sector_map = build_sector_index_map(symbols, peer_meta)
 

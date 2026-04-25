@@ -26,6 +26,8 @@ def _normalize_event_date(event_date) -> pd.Timestamp:
 
 def _normalize_series_index(s: pd.Series) -> pd.Series:
     out = s.copy()
+    if not isinstance(out.index, pd.DatetimeIndex):
+        return out
     out.index = out.index.tz_localize(None) if out.index.tz is not None else out.index
     out.index = out.index.normalize()
     return out

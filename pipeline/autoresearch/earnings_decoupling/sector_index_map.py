@@ -7,26 +7,22 @@ status=DROPPED_NO_SECTOR_MAP.
 """
 from __future__ import annotations
 
-# canonical sector names (the SectorMapper output) → backfill_indices.py symbol
+# SectorMapper canonical sector keys (pipeline.scorecard_v2.sector_mapper.SectorMapper.map_all)
+# → NSE sectoral index ticker (registered under nse_sectoral_indices_v1 dataset audit).
+# Sectors with no clean sectoral-index home are intentionally omitted — those events
+# drop with status=DROPPED_NO_SECTOR_MAP at event_ledger time.
 SECTOR_TO_INDEX: dict[str, str] = {
     "Banks": "BANKNIFTY",
-    "Information Technology": "NIFTYIT",
+    "IT_Services": "NIFTYIT",
     "Pharma": "NIFTYPHARMA",
-    "Pharmaceuticals": "NIFTYPHARMA",
-    "Healthcare": "NIFTYPHARMA",
-    "Auto": "NIFTYAUTO",
-    "Automobile": "NIFTYAUTO",
-    "Consumer Goods": "NIFTYFMCG",
+    "Hospitals_Diagnostics": "NIFTYPHARMA",
+    "Autos": "NIFTYAUTO",
+    "Auto_Ancillaries": "NIFTYAUTO",
     "FMCG": "NIFTYFMCG",
-    "Metal": "NIFTYMETAL",
-    "Metals": "NIFTYMETAL",
-    "Energy": "NIFTYENERGY",
-    "Oil & Gas": "NIFTYENERGY",
-    "PSU Bank": "NIFTYPSUBANK",
-    "Realty": "NIFTYREALTY",
-    "Real Estate": "NIFTYREALTY",
-    "Media": "NIFTYMEDIA",
-    "Entertainment": "NIFTYMEDIA",
+    "Metals_Mining": "NIFTYMETAL",
+    "Oil_Gas": "NIFTYENERGY",
+    "Power_Utilities": "NIFTYENERGY",
+    "Real_Estate_Hotels": "NIFTYREALTY",
 }
 
 
