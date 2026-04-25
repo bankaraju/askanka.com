@@ -1,7 +1,7 @@
 """Spec-frozen constants. Single edit point if thresholds change."""
 from __future__ import annotations
 
-from datetime import date, time
+from datetime import time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
