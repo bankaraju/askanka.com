@@ -1,0 +1,13 @@
+{
+  "phase_c": {
+    "n": 5,
+    "hit_rate": 0.8,
+    "mean_pnl_pct": 0.8677,
+    "total_pnl_pct": 4.3386,
+    "median_pnl_pct": 1.2524,
+    "exit_reasons": {
+      "TRAIL": 4,
+      "TIME_STOP": 1
+    }
+  }
+}

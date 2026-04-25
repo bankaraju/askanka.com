@@ -67,6 +67,8 @@ def build_regime_cube(trades: pd.DataFrame) -> pd.DataFrame:
             "mean_pnl_pct": round(float(grp["pnl_pct"].mean()), 4),
             "total_pnl_pct": round(float(grp["pnl_pct"].sum()), 4),
         })
+    if not rows:
+        return pd.DataFrame()
     cube = pd.DataFrame(rows).set_index(["engine", "regime"])
     return cube
 

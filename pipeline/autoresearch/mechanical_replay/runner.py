@@ -131,8 +131,17 @@ def run(
                 int((rost["source"] == "actual").sum()),
                 int((rost["source"] == "missed").sum()))
 
-    regime = _load_regime_history(C.REGIME_HISTORY_CSV)
-    rost = rost.merge(regime, on="date", how="left")
+    # Roster already carries `regime` from correlation_break_history.json (the
+    # live snapshot at signal-fire time). Fill any gaps from regime_history.csv,
+    # but don't overwrite — the roster's regime is the one the live engine saw.
+    if "regime" not in rost.columns or rost["regime"].isna().any():
+        regime = _load_regime_history(C.REGIME_HISTORY_CSV).rename(columns={"regime": "_regime_csv"})
+        rost = rost.merge(regime, on="date", how="left")
+        if "regime" in rost.columns:
+            rost["regime"] = rost["regime"].fillna(rost["_regime_csv"])
+        else:
+            rost["regime"] = rost["_regime_csv"]
+        rost = rost.drop(columns=[c for c in ["_regime_csv"] if c in rost.columns])
 
     trades: list[dict] = []
     for _, row in rost.iterrows():
