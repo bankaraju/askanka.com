@@ -53,3 +53,14 @@ def test_short_hits_target_at_minute_60() -> None:
     assert leg["exit_reason"] == "TARGETED"
     assert leg["pnl_pct"] == pytest.approx(4.5)
     assert leg["exit_minute"] == 60
+
+
+def test_long_trails_after_arm_then_retraces() -> None:
+    """LONG: open=100, MFE 102.5 (2.5%) at minute 60, retraces to 100.7 by minute 120
+    (1.8% drop from peak — exceeds 1.5% trail-drop) -> exit at MFE - 1.5 = 1.0%."""
+    prices = [100.0] * 60 + [102.5] + [101.5] * 30 + [100.7] + [100.5] * 280
+    bars = _make_bars_from_path(prices)
+    result = simulator.simulate_grid(bars=bars, side="LONG", entry_grid=(time(9, 15),))
+    leg = result["09:15"]
+    assert leg["exit_reason"] == "TRAILED"
+    assert leg["pnl_pct"] == pytest.approx(1.0, abs=0.15)  # 0.15 accounts for ±0.1% H/L spread in helper
