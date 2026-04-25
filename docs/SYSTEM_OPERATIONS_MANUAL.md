@@ -697,6 +697,27 @@ Every pre-registered hypothesis against the Phase C event panel appears in `docs
 - **First run (2026-04-25, window 2026-02-24 → 2026-04-25):** roster 87 rows (5 actual, 82 missed), n_valid 71. Verdict **INSUFFICIENT_N** — no shape × side cell reaches MIN_CELL_N=10. Most missed-signal rows carry `trade_rec=nan` because POSSIBLE_OPPORTUNITY entries in `correlation_break_history.json` don't populate a directional rec. Re-run after the LAG slice forward sample grows.
 - **Tests:** 26 SP1-specific tests across `tests/test_roster.py`, `test_fetcher.py`, `test_features.py`, `test_simulator.py`, `test_report.py`.
 
+##### Mechanical 60-Day Replay (MR, descriptive forensics, 2026-04-25)
+
+`pipeline/autoresearch/mechanical_replay/` re-runs the live execution rules over a 60-day historical window and produces a per-engine P&L attribution. Mandate: enter every signal at **09:30 IST**, hard-close at **14:30 IST**, apply our own ATR stop + ratchet trail + 20bps slippage. Per spec (`docs/superpowers/specs/2026-04-25-mechanical-60day-replay-design.md`), this is **forensics, not an edge test** — no hypothesis-registry append, no kill-switch trigger, no PASS/FAIL gating.
+
+- **Entry:** `python -m pipeline.autoresearch.mechanical_replay.runner [--window-start YYYY-MM-DD] [--window-end YYYY-MM-DD] [--limit N] [--no-fetch] [--out-dir PATH]`
+- **Universe:** `canonical_fno_research_v1` (154 tickers, dividend-adjusted) — anything outside is dropped, count logged.
+- **Roster:** Phase C only in v1, sourced from `pipeline/data/correlation_break_history.json` joined with `pipeline/data/signals/closed_signals.json`. Phase B + spread engines are out-of-scope until roster.py is extended.
+- **Bar source:** SP1's parquet cache at `pipeline/data/research/phase_c_shape_audit/bars/`. The replay reuses the SP1 fetcher as a passthrough — no fork.
+- **Exit hierarchy** (most-conservative-first, mirrors live `signal_tracker.check_signal_status`):
+  1. **ATR_STOP** — 14-day ATR × 1.0 with 3.5% absolute cap (intraday profile)
+  2. **Z_CROSS** — caller-supplied timestamp (Phase C peer-relative neutralisation; deferred to v2)
+  3. **TRAIL** — peak ratchet, arms at +2.0% (TRAIL_ARM_PCT), gives back 1.0% (TRAIL_GIVEBACK_PCT — 50% of arm, B9+B10 fix intent)
+  4. **TIME_STOP** — last bar at/before 14:30 IST
+- **Outputs:**
+  - `pipeline/data/research/mechanical_replay/trades_with_exit.csv` — per-row ledger (signal_id, ticker, date, regime, side, exit_reason, pnl_pct, mfe_pct, entry/exit_time/price, stop_pct, atr_14, actual_pnl_pct).
+  - `pipeline/data/research/mechanical_replay/engine_summary.json` — per-engine n / hit_rate / mean+total P&L / exit mix.
+  - `docs/research/mechanical_replay/2026-04-25-replay-60day.md` — trader's one-pager: per-engine table + regime cube + exit breakdown + §10 sanity rollup + trader's read paragraph.
+- **Sanity checks (descriptive, not gating):** coverage ≥95%, live cross-check ±2pp on ≥80% of overlap, ≥1 regime present. Coverage and live cross-check FAIL on the first run by design (most roster rows are POSSIBLE_OPPORTUNITY without a side; live entered at signal time, replay at 09:30).
+- **First run (2026-04-25, window 2026-02-24 → 2026-04-24):** roster 24 rows (5 actual + 19 missed); 5 simulated; hit_rate 80%; total +4.34%. Exit mix TRAIL=4 / TIME_STOP=1. Regime split NEUTRAL 4/4 (+4.81%) / CAUTION 0/1 (-0.47%).
+- **Tests:** 33 MR-specific tests across `tests/test_canonical_loader.py`, `test_atr.py`, `test_roster.py`, `test_simulator.py`, `test_report.py`.
+
 ##### Compliance runner: H-2026-04-24-003 (persistent-break v2 + cross-sectional)
 
 - **Entry:** `python -m pipeline.autoresearch.phase_c_cross_sectional.runner`
