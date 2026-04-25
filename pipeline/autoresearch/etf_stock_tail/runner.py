@@ -262,10 +262,10 @@ def main() -> None:
 
 
 def _load_real_inputs() -> PanelInputs:
-    """Load all real datasets per the spec §3 lineage table."""
+    """Load all real datasets per the spec §3 lineage table (Amendment A1.1 + A1.2)."""
     from pipeline.scorecard_v2.sector_mapper import SectorMapper
 
-    # ETF panel
+    # ETF panel — global ETFs (parquet) + sectoral indices (CSV), unified long format
     etf_dir = Path("pipeline/data/research/phase_c/daily_bars")
     etf_frames = []
     for sym in C.ETF_SYMBOLS:
@@ -275,22 +275,47 @@ def _load_real_inputs() -> PanelInputs:
             continue
         df = pd.read_parquet(f)
         df["etf"] = sym
-        df = df.rename(columns={"close": "close"})  # explicit no-op
         etf_frames.append(df[["date", "etf", "close"]])
+
+    # Amendment A1.1: sectoral indices — pipeline/data/sectoral_indices/<SYM>_daily.csv
+    sect_dir = Path("pipeline/data/sectoral_indices")
+    for sym in C.SECTORAL_INDEX_SYMBOLS:
+        f = sect_dir / f"{sym}_daily.csv"
+        if not f.exists():
+            log.warning("missing sectoral index csv: %s", f)
+            continue
+        df = pd.read_csv(f, parse_dates=["date"])
+        df["etf"] = sym
+        etf_frames.append(df[["date", "etf", "close"]])
+
     etf_panel = pd.concat(etf_frames, ignore_index=True) if etf_frames else pd.DataFrame()
 
-    # Stock bars
+    # Amendment A1.2: stock bars — load only canonical tickers (not all 213 CSVs)
+    canonical_path = Path("pipeline/data/canonical_fno_research_v1.json")
+    canonical = json.loads(canonical_path.read_text())
+    window_start = pd.Timestamp(canonical["window_start"])
+    window_end = pd.Timestamp(canonical["window_end"])
+    canonical_tickers: list[str] = canonical["tickers"]
+    valid_from = {t: pd.Timestamp(d) for t, d in canonical["per_ticker_valid_from"].items()}
+    valid_to   = {t: pd.Timestamp(d) for t, d in canonical["per_ticker_valid_to"].items()}
+
+    # Build daily-keyed universe: each date maps to canonical tickers whose window contains it
+    universe: dict[str, list[str]] = {}
+    for d in pd.date_range(window_start, window_end, freq="D"):
+        iso = d.strftime("%Y-%m-%d")
+        universe[iso] = [t for t in canonical_tickers
+                         if valid_from[t] <= d <= valid_to[t]]
+
     stock_dir = Path("pipeline/data/fno_historical")
     stock_bars: dict[str, pd.DataFrame] = {}
-    for f in stock_dir.glob("*.csv"):
-        sym = f.stem
+    for sym in canonical_tickers:
+        f = stock_dir / f"{sym}.csv"
+        if not f.exists():
+            log.warning("canonical ticker missing CSV (should not happen): %s", sym)
+            continue
         df = pd.read_csv(f, parse_dates=["Date"])
         df = df.rename(columns={"Date": "date", "Close": "close", "Volume": "volume"})
         stock_bars[sym] = df[["date", "close", "volume"]]
-
-    # Universe
-    universe_path = Path("pipeline/data/fno_universe_history.json")
-    universe = json.loads(universe_path.read_text())
 
     # Sector map
     sm = SectorMapper().map_all()
@@ -302,9 +327,15 @@ def _load_real_inputs() -> PanelInputs:
             sector_to_id[sec] = len(sector_to_id)
         sector_map[sym] = sector_to_id[sec]
 
-    # Regime history
+    # Regime history — handle both "regime_zone" and "regime" column names
     rh_path = Path("pipeline/data/regime_history.csv")
-    rh = pd.read_csv(rh_path, parse_dates=["date"]) if rh_path.exists() else None
+    if rh_path.exists():
+        rh = pd.read_csv(rh_path, parse_dates=["date"])
+        if "regime_zone" in rh.columns and "regime" not in rh.columns:
+            rh = rh.rename(columns={"regime_zone": "regime"})
+        rh = rh[["date", "regime"]]
+    else:
+        rh = None
 
     return PanelInputs(
         etf_panel=etf_panel,

@@ -23,6 +23,20 @@ ETF_SYMBOLS: tuple[str, ...] = (
     "dii_net_daily", "crude_oil", "gold", "copper", "global_bonds",
     "uk_etf", "japan_etf", "china_etf", "korea_etf", "taiwan_etf",
 )
+
+# NSE sectoral indices — Amendment A1.1 (2026-04-25), added before single-touch holdout consumed.
+# 10 indices with 5-year daily coverage, no IPO discontinuities.
+# CSV files: pipeline/data/sectoral_indices/<SYM>_daily.csv
+SECTORAL_INDEX_SYMBOLS: tuple[str, ...] = (
+    "BANKNIFTY", "NIFTYAUTO", "NIFTYENERGY", "NIFTYFMCG", "NIFTYIT",
+    "NIFTYMEDIA", "NIFTYMETAL", "NIFTYPHARMA", "NIFTYPSUBANK", "NIFTYREALTY",
+)
+
+# Combined panel of indices used as the global state vector.
+# Per Amendment A1.1 (2026-04-25), sectoral indices contribute identical-shape
+# features alongside global ETFs.
+ALL_INDEX_SYMBOLS: tuple[str, ...] = ETF_SYMBOLS + SECTORAL_INDEX_SYMBOLS
+
 ETF_RETURN_WINDOWS: tuple[int, ...] = (1, 5, 20)
 
 # Stock context features (6 dims, fixed order)
