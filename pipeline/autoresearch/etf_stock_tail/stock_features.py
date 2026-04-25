@@ -32,9 +32,9 @@ def build_stock_features_row(
         out["stock_ret_5d"] = float("nan")
 
     # vol_z_60d: z-score of trailing-20d realized vol against trailing-60d distribution of 20d vols
-    last60 = _trailing(bars, eval_date, 60)["close"].pct_change().dropna()
-    if len(last60) >= 60:
-        vol20_series = last60.rolling(20).std().dropna()
+    returns_60 = _trailing(bars, eval_date, 61)["close"].pct_change().dropna()
+    if len(returns_60) >= 60:
+        vol20_series = returns_60.rolling(20).std().dropna()
         if len(vol20_series) >= 2 and vol20_series.std() > 0:
             out["stock_vol_z_60d"] = float((vol20_series.iloc[-1] - vol20_series.mean()) / vol20_series.std())
         else:
@@ -60,7 +60,7 @@ def build_stock_features_row(
     # sector_id pass-through
     out["stock_sector_id"] = float(sector_id)
 
-    # dist_from_52w_high_pct: log(T-1 close / 252d trailing peak); NaN if fewer than 252 days available
+    # dist_from_52w_high_pct: (T-1 close / 252d trailing peak) - 1; negative means below 52w high; NaN if fewer than 252 days available
     if len(last252) >= 252:
         peak = float(last252["close"].max())
         latest = float(last252["close"].iloc[-1])
@@ -68,4 +68,5 @@ def build_stock_features_row(
     else:
         out["stock_dist_from_52w_high_pct"] = float("nan")
 
-    return pd.Series(out, index=list(stock_feature_names()))
+    result = pd.Series(out)
+    return result[list(stock_feature_names())]

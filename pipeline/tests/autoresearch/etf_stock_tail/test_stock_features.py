@@ -51,3 +51,25 @@ def test_dist_from_52w_high_negative_for_pullback(stock_bars):
     eval_date = pd.Timestamp("2024-09-01")
     out = build_stock_features_row(bars, eval_date, sector_id=0)
     assert out["stock_dist_from_52w_high_pct"] < 0
+
+
+@pytest.fixture
+def stock_bars_varied() -> pd.DataFrame:
+    """550-day panel with varying volume — exercises vol_z_60d and volume_z_20d."""
+    n = 550
+    rng = np.random.default_rng(42)
+    return pd.DataFrame({
+        "date": pd.date_range("2023-03-01", periods=n, freq="D"),
+        "close": np.linspace(100.0, 130.0, n) + rng.normal(0, 0.5, n),  # add small noise so vol > 0
+        "volume": rng.uniform(500_000.0, 2_000_000.0, n),
+    })
+
+
+def test_vol_z_60d_is_finite(stock_bars_varied):
+    out = build_stock_features_row(stock_bars_varied, pd.Timestamp("2024-09-01"), sector_id=0)
+    assert np.isfinite(out["stock_vol_z_60d"])
+
+
+def test_volume_z_20d_is_finite(stock_bars_varied):
+    out = build_stock_features_row(stock_bars_varied, pd.Timestamp("2024-09-01"), sector_id=0)
+    assert np.isfinite(out["stock_volume_z_20d"])
