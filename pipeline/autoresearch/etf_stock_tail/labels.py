@@ -1,7 +1,7 @@
 """3-class σ-thresholded tail labels per (ticker, date).
 
 Public API:
-  label_for_date(bars, eval_date) -> int | nan  — single date
+  label_for_date(bars, eval_date) -> float  (NaN if ineligible)  — single date
   label_series(bars) -> pd.Series  — labels for every eligible date in bars
 
 Eligibility: requires ≥ SIGMA_LOOKBACK_DAYS prior closes excluding t.
@@ -51,7 +51,7 @@ def label_series(bars: pd.DataFrame) -> pd.Series:
     closes = bars_sorted["close"].values
     rets_full = pd.Series(closes).pct_change().values
     for i in range(1, len(bars_sorted)):
-        prior = rets_full[max(0, i - C.SIGMA_LOOKBACK_DAYS): i]
+        prior = rets_full[max(0, i - (C.SIGMA_LOOKBACK_DAYS - 1)): i]
         prior = prior[~np.isnan(prior)]
         if len(prior) < C.SIGMA_LOOKBACK_DAYS - 1:
             continue  # need ≥ SIGMA_LOOKBACK_DAYS-1 returns from SIGMA_LOOKBACK_DAYS prior closes
