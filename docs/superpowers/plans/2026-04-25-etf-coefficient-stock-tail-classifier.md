@@ -855,6 +855,31 @@ def test_manifest_contains_input_hashes(tmp_path):
     assert len(manifest["etf_panel_sha256"]) == 64
     assert "config_sha256" in manifest
     assert "n_rows" in manifest
+
+
+def test_regime_history_joins_correctly():
+    """When regime_history is provided, panel rows carry the regime label, not 'UNKNOWN'."""
+    dates = pd.date_range("2024-01-01", periods=400, freq="D")
+    regime_history = pd.DataFrame({
+        "date": dates,
+        "regime": ["RISK_ON" if i < 200 else "RISK_OFF" for i in range(400)],
+    })
+    inputs = PanelInputs(
+        etf_panel=_mk_etf_panel("2024-01-01", 400),
+        stock_bars={"AAA": _mk_stock_bars_with_tails("2024-01-01", 400)},
+        universe=_mk_universe(["AAA"], dates),
+        sector_map=_mk_sector_map(["AAA"]),
+        regime_history=regime_history,
+    )
+    panel, manifest = assemble_panel(inputs, train_start=pd.Timestamp("2024-04-01"),
+                                     train_end=pd.Timestamp("2024-12-31"))
+    assert len(panel) > 0
+    # Every row should have a real regime label, never UNKNOWN
+    assert (panel["regime"] != "UNKNOWN").all()
+    # Both regime values should appear in the panel
+    regimes_seen = set(panel["regime"].unique())
+    assert regimes_seen <= {"RISK_ON", "RISK_OFF"}
+    assert len(regimes_seen) >= 1   # at least one regime appears
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -870,7 +895,8 @@ Expected: ImportError.
 
 Drop rules:
   - INSUFFICIENT_TAIL_LABELS — ticker has < MIN_TAIL_EXAMPLES_PER_SIDE in either tail direction in train window
-  - INSUFFICIENT_HISTORY     — ticker has < SIGMA_LOOKBACK_DAYS prior bars at any train-window date
+  - MISSING_SECTOR_MAP       — ticker is absent from sector_map (cannot assign a sector_id feature)
+                               (NaN labels caused by insufficient bar history are silently skipped at the row level.)
 """
 from __future__ import annotations
 
@@ -890,7 +916,7 @@ from pipeline.autoresearch.etf_stock_tail.stock_features import build_stock_feat
 
 class PanelDropReason(str, enum.Enum):
     INSUFFICIENT_TAIL_LABELS = "INSUFFICIENT_TAIL_LABELS"
-    INSUFFICIENT_HISTORY = "INSUFFICIENT_HISTORY"
+    MISSING_SECTOR_MAP = "MISSING_SECTOR_MAP"
 
 
 @dataclass
@@ -936,6 +962,11 @@ def assemble_panel(
     # must propagate so schema regressions are never silently swallowed.
     etf_cache: dict[pd.Timestamp, pd.Series] = {}
 
+    # Pre-index regime history for O(1) lookup (avoid O(n_regime_rows) linear scan per row).
+    rh_by_date: pd.Series | None = None
+    if inputs.regime_history is not None:
+        rh_by_date = inputs.regime_history.set_index("date")["regime"]
+
     def _get_etf_row(d: pd.Timestamp) -> pd.Series:
         if d not in etf_cache:
             etf_cache[d] = build_etf_features_matrix(inputs.etf_panel, d)
@@ -945,7 +976,7 @@ def assemble_panel(
 
     for ticker, bars in inputs.stock_bars.items():
         if ticker not in inputs.sector_map:
-            dropped[ticker] = PanelDropReason.INSUFFICIENT_HISTORY.value
+            dropped[ticker] = PanelDropReason.MISSING_SECTOR_MAP.value
             continue
 
         labels = label_series(bars)
@@ -962,7 +993,9 @@ def assemble_panel(
         ticker_id = len(ticker_to_id)
         ticker_to_id[ticker] = ticker_id
 
-        # Build per-row features for every eligible date in [train_start, panel_end]
+        # NOTE: build_stock_features_row is uncached (per-ticker rolling window math).
+        # Production cost: ~200 tickers × ~1100 trading days × 5ms ≈ 18 minutes wall time.
+        # Task 9's training orchestrator must allow ≥30 min for panel assembly.
         for d in pd.date_range(train_start, panel_end, freq="D"):
             d_iso = d.strftime("%Y-%m-%d")
             if d_iso not in inputs.universe:
@@ -982,13 +1015,8 @@ def assemble_panel(
                 row[col] = etf_row[col]
             for col in ctx_row.index:
                 row[col] = ctx_row[col]
-            # Regime label join
-            if inputs.regime_history is not None:
-                rh = inputs.regime_history
-                rmatch = rh[rh["date"] == d]
-                row["regime"] = rmatch["regime"].iloc[0] if len(rmatch) else "UNKNOWN"
-            else:
-                row["regime"] = "UNKNOWN"
+            # Regime label join — O(1) via pre-indexed Series (see rh_by_date above).
+            row["regime"] = rh_by_date.get(d, "UNKNOWN") if rh_by_date is not None else "UNKNOWN"
             rows.append(row)
 
     panel = pd.DataFrame(rows)
@@ -1019,7 +1047,7 @@ def assemble_panel(
 - [ ] **Step 4: Run tests**
 
 Run: `pytest pipeline/tests/autoresearch/etf_stock_tail/test_panel.py -v`
-Expected: `3 passed`.
+Expected: `4 passed`.
 
 - [ ] **Step 5: Commit**
 

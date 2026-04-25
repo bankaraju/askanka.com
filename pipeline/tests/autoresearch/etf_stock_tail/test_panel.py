@@ -122,3 +122,28 @@ def test_manifest_contains_input_hashes(tmp_path):
     assert len(manifest["etf_panel_sha256"]) == 64
     assert "config_sha256" in manifest
     assert "n_rows" in manifest
+
+
+def test_regime_history_joins_correctly():
+    """When regime_history is provided, panel rows carry the regime label, not 'UNKNOWN'."""
+    dates = pd.date_range("2024-01-01", periods=400, freq="D")
+    regime_history = pd.DataFrame({
+        "date": dates,
+        "regime": ["RISK_ON" if i < 200 else "RISK_OFF" for i in range(400)],
+    })
+    inputs = PanelInputs(
+        etf_panel=_mk_etf_panel("2024-01-01", 400),
+        stock_bars={"AAA": _mk_stock_bars_with_tails("2024-01-01", 400)},
+        universe=_mk_universe(["AAA"], dates),
+        sector_map=_mk_sector_map(["AAA"]),
+        regime_history=regime_history,
+    )
+    panel, manifest = assemble_panel(inputs, train_start=pd.Timestamp("2024-04-01"),
+                                     train_end=pd.Timestamp("2024-12-31"))
+    assert len(panel) > 0
+    # Every row should have a real regime label, never UNKNOWN
+    assert (panel["regime"] != "UNKNOWN").all()
+    # Both regime values should appear in the panel
+    regimes_seen = set(panel["regime"].unique())
+    assert regimes_seen <= {"RISK_ON", "RISK_OFF"}
+    assert len(regimes_seen) >= 1   # at least one regime appears

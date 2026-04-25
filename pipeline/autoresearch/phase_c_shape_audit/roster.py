@@ -11,12 +11,15 @@ Per spec §4. Output is a pandas DataFrame with one row per
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from pipeline.autoresearch.phase_c_shape_audit import constants as C
+
+logger = logging.getLogger(__name__)
 
 ACTIONABLE_CLASSIFICATIONS = (
     "OPPORTUNITY_LAG",
@@ -46,14 +49,13 @@ def _load_closed_phase_c(path: Path) -> pd.DataFrame:
         if not ticker or not ts:
             continue
         open_dt = pd.to_datetime(ts)
-        side = "SHORT" if s.get("short_legs") else ("LONG" if s.get("long_legs") else None)
-        final_pnl = s.get("final_pnl") or {}
+        fp = s.get("final_pnl") or {}
+        side = "SHORT" if fp.get("short_legs") else ("LONG" if fp.get("long_legs") else None)
         rows.append({
             "signal_id": s.get("signal_id"),
             "ticker": ticker,
             "date": open_dt.normalize(),
-            "classification": meta.get("classification"),
-            "actual_pnl_pct": final_pnl.get("spread_pnl_pct"),
+            "actual_pnl_pct": fp.get("spread_pnl_pct"),
             "actual_open_time_ist": ts,
             "actual_close_time_ist": s.get("close_timestamp"),
             "actual_side": side,
@@ -100,7 +102,8 @@ def build_roster(
     regime = _load_regime(regime_path)
     hist = hist.merge(regime, on="date", how="left")
 
-    # Join closed onto roster on (ticker, date, classification).
+    # Join closed onto roster on (ticker, date) per spec §4 step 3.
+    # History classification wins; closed-side classification is not part of the key.
     if closed.empty:
         merged = hist.assign(
             source="missed",
@@ -113,7 +116,7 @@ def build_roster(
     else:
         merged = hist.merge(
             closed,
-            on=["ticker", "date", "classification"],
+            on=["ticker", "date"],
             how="left",
             suffixes=("", "_closed"),
         )
@@ -125,8 +128,20 @@ def build_roster(
         )
         merged["signal_id"] = merged["signal_id"].where(is_actual, synth_id)
 
-    # Promote regime_history regime over per-row history regime if mismatch
+    # Promote regime_history.csv over per-row history regime; log mismatches per §4 step 5 + §11.
     merged["regime_history_value"] = merged["regime_zone"]
-    merged["regime"] = merged["regime_zone"].fillna(merged.get("regime"))
+    both_present = merged["regime_zone"].notna() & merged["regime"].notna()
+    mismatch_mask = both_present & (merged["regime_zone"] != merged["regime"])
+    n_mismatch = int(mismatch_mask.sum())
+    if n_mismatch > 0:
+        sample = merged.loc[mismatch_mask, ["ticker", "date", "regime", "regime_zone"]].head(3).to_dict("records")
+        logger.warning(
+            "regime_mismatch: %d row(s) where per-row history regime disagrees with "
+            "regime_history.csv; preferring regime_history.csv. Sample: %s",
+            n_mismatch,
+            sample,
+        )
+    merged.attrs["regime_mismatch_count"] = n_mismatch
+    merged["regime"] = merged["regime_zone"].fillna(merged["regime"])
 
     return merged.reset_index(drop=True)

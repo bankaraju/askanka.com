@@ -50,7 +50,8 @@ def test_build_roster_unions_actual_and_missed(tmp_path: Path) -> None:
             "long_legs": [],
             "short_legs": [{"ticker": "TICKERA", "weight": 1.0}],
             "final_pnl": {"spread_pnl_pct": 1.85, "long_pnl_pct": 0.0,
-                          "short_pnl_pct": 1.85, "long_legs": [], "short_legs": []},
+                          "short_pnl_pct": 1.85, "long_legs": [],
+                          "short_legs": [{"ticker": "TICKERA", "weight": 1.0}]},
             "_break_metadata": {"symbol": "TICKERA", "regime": "RISK-OFF",
                                  "classification": "OPPORTUNITY_LAG", "z_score": -3.2,
                                  "oi_anomaly": False},
@@ -188,3 +189,76 @@ def test_build_roster_prefers_regime_history_over_per_row(tmp_path: Path) -> Non
 
     assert df.iloc[0]["regime"] == "RISK-OFF"
     assert df.iloc[0]["regime_history_value"] == "RISK-OFF"
+
+
+def test_build_roster_joins_closed_on_ticker_date_only(tmp_path: Path) -> None:
+    """Per spec §4 step 3: closed_signals join is (ticker, open_date) only —
+    closed-side classification metadata is NOT part of the key."""
+    hist = [
+        {"symbol": "TICKERA", "date": "2026-04-22", "time": "09:42",
+         "classification": "OPPORTUNITY_LAG", "trade_rec": "SHORT",
+         "z_score": -3.2, "expected_return": -0.4, "actual_return": 1.6,
+         "regime": "RISK-OFF", "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+    ]
+    # Closed row has DIFFERENT classification from history (legacy artifact).
+    closed = [{
+        "signal_id": "BRK-2026-04-22-TICKERA",
+        "category": "phase_c",
+        "open_timestamp": "2026-04-22 09:42:30",
+        "close_timestamp": "2026-04-23T06:12:00",
+        "long_legs": [],
+        "short_legs": [{"ticker": "TICKERA", "weight": 1.0}],
+        "final_pnl": {"spread_pnl_pct": 1.85, "long_pnl_pct": 0.0,
+                      "short_pnl_pct": 1.85, "long_legs": [],
+                      "short_legs": [{"ticker": "TICKERA", "weight": 1.0}]},
+        "_break_metadata": {"symbol": "TICKERA", "regime": "RISK-OFF",
+                            "classification": "POSSIBLE_OPPORTUNITY",
+                            "z_score": -3.2, "oi_anomaly": False},
+    }]
+    hist_path = tmp_path / "hist.json"; closed_path = tmp_path / "closed.json"; regime_path = tmp_path / "regime.csv"
+    _write_history_fixture(hist_path, hist)
+    _write_closed_fixture(closed_path, closed)
+    _write_regime_fixture(regime_path, [("2026-04-22", "RISK-OFF")])
+
+    df = roster.build_roster(
+        history_path=hist_path,
+        closed_path=closed_path,
+        regime_path=regime_path,
+        window_start=pd.Timestamp("2026-04-21"),
+        window_end=pd.Timestamp("2026-04-25"),
+    )
+    assert len(df) == 1
+    row = df.iloc[0]
+    assert row["source"] == "actual"
+    assert row["actual_pnl_pct"] == pytest.approx(1.85)
+    assert row["classification"] == "OPPORTUNITY_LAG"  # history wins
+
+
+def test_build_roster_logs_regime_mismatch_count(tmp_path: Path) -> None:
+    """Per spec §4 step 5 + §11: mismatch between per-row regime and regime_history.csv
+    must be counted and surfaced via DataFrame.attrs for the report header."""
+    hist = [
+        {"symbol": "T1", "date": "2026-04-22", "time": "10:00",
+         "classification": "OPPORTUNITY_LAG", "trade_rec": "SHORT",
+         "z_score": -3.0, "expected_return": -0.5, "actual_return": 1.0,
+         "regime": "RISK-ON",  # disagrees with regime_history below
+         "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+        {"symbol": "T2", "date": "2026-04-23", "time": "10:00",
+         "classification": "OPPORTUNITY_LAG", "trade_rec": "LONG",
+         "z_score": 3.0, "expected_return": 0.5, "actual_return": -0.7,
+         "regime": "NEUTRAL",  # agrees
+         "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+    ]
+    hist_path = tmp_path / "hist.json"; closed_path = tmp_path / "closed.json"; regime_path = tmp_path / "regime.csv"
+    _write_history_fixture(hist_path, hist)
+    _write_closed_fixture(closed_path, [])
+    _write_regime_fixture(regime_path, [("2026-04-22", "RISK-OFF"), ("2026-04-23", "NEUTRAL")])
+
+    df = roster.build_roster(
+        history_path=hist_path,
+        closed_path=closed_path,
+        regime_path=regime_path,
+        window_start=pd.Timestamp("2026-04-21"),
+        window_end=pd.Timestamp("2026-04-25"),
+    )
+    assert df.attrs["regime_mismatch_count"] == 1
