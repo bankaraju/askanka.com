@@ -11,12 +11,12 @@ from pipeline.autoresearch.etf_stock_tail.stock_features import (
 
 @pytest.fixture
 def stock_bars() -> pd.DataFrame:
-    """260-day stock panel, monotone close, constant volume."""
-    dates = pd.date_range("2024-01-01", periods=260, freq="D")
+    """550-day stock panel, monotone close, constant volume."""
+    dates = pd.date_range("2023-03-01", periods=550, freq="D")
     return pd.DataFrame({
         "date": dates,
-        "close": np.linspace(100.0, 130.0, 260),
-        "volume": np.full(260, 1_000_000.0),
+        "close": np.linspace(100.0, 130.0, 550),
+        "volume": np.full(550, 1_000_000.0),
     })
 
 

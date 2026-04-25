@@ -60,8 +60,8 @@ def build_stock_features_row(
     # sector_id pass-through
     out["stock_sector_id"] = float(sector_id)
 
-    # dist_from_52w_high_pct: use all available trailing data up to 252d; NaN only if none available
-    if len(last252) >= 1:
+    # dist_from_52w_high_pct: log(T-1 close / 252d trailing peak); NaN if fewer than 252 days available
+    if len(last252) >= 252:
         peak = float(last252["close"].max())
         latest = float(last252["close"].iloc[-1])
         out["stock_dist_from_52w_high_pct"] = float(latest / peak - 1.0) if peak > 0 else float("nan")
