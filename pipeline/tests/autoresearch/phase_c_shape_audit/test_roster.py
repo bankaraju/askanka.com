@@ -162,3 +162,29 @@ def test_build_roster_side_is_null_for_overshoot_and_possible(tmp_path: Path) ->
     assert pd.isna(by_class["OPPORTUNITY_OVERSHOOT"]["trade_rec"])
     assert pd.isna(by_class["POSSIBLE_OPPORTUNITY"]["trade_rec"])
     assert by_class["OPPORTUNITY_LAG"]["trade_rec"] == "LONG"
+
+
+def test_build_roster_prefers_regime_history_over_per_row(tmp_path: Path) -> None:
+    """Per spec §4 step 5: regime_history.csv wins on mismatch."""
+    hist = [
+        {"symbol": "T1", "date": "2026-04-22", "time": "10:00",
+         "classification": "OPPORTUNITY_LAG", "trade_rec": "SHORT",
+         "z_score": -3.0, "expected_return": -0.5, "actual_return": 1.0,
+         "regime": "RISK-ON",
+         "pcr": None, "pcr_class": "NEUTRAL", "oi_anomaly": False},
+    ]
+    hist_path = tmp_path / "hist.json"; closed_path = tmp_path / "closed.json"; regime_path = tmp_path / "regime.csv"
+    _write_history_fixture(hist_path, hist)
+    _write_closed_fixture(closed_path, [])
+    _write_regime_fixture(regime_path, [("2026-04-22", "RISK-OFF")])
+
+    df = roster.build_roster(
+        history_path=hist_path,
+        closed_path=closed_path,
+        regime_path=regime_path,
+        window_start=pd.Timestamp("2026-04-21"),
+        window_end=pd.Timestamp("2026-04-25"),
+    )
+
+    assert df.iloc[0]["regime"] == "RISK-OFF"
+    assert df.iloc[0]["regime_history_value"] == "RISK-OFF"
