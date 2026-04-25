@@ -64,4 +64,6 @@ def test_runner_smoke_writes_artifacts(tmp_path: Path):
     assert (tmp_path / "verdict.md").exists()
     assert (tmp_path / "permutations.json").exists()
     assert (tmp_path / "calibration.json").exists()
+    assert (tmp_path / "manifest.json").exists()
+    assert (tmp_path / "fragility.json").exists()  # SKIPPED stub when run_fragility=False
     assert result["decision"] in {"PASS", "FAIL"}

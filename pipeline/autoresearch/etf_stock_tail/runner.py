@@ -91,8 +91,21 @@ def run(
     # Fill with 0 (natural imputation for z-scores and percentile-rank deltas).
     # This is applied to train / val / holdout after split so the imputation uses no future data.
     stock_feat_cols = list(stock_feature_names())
-    for split_df in (train, val, holdout):
-        split_df[stock_feat_cols] = split_df[stock_feat_cols].fillna(0.0)
+    if smoke:
+        # Smoke panel is too small to absorb row drops cleanly; fill with 0.0 so smoke can complete.
+        for split_df in (train, val, holdout):
+            split_df[stock_feat_cols] = split_df[stock_feat_cols].fillna(0.0)
+    else:
+        # Production: drop rows with NaN stock features (early-history rows, std=0 volume, etc.).
+        # Imputing with 0.0 would treat invalid samples as valid z-score=0 observations, contaminating CE.
+        n_train_before = len(train)
+        n_val_before = len(val)
+        n_holdout_before = len(holdout)
+        train = train.dropna(subset=stock_feat_cols).reset_index(drop=True)
+        val = val.dropna(subset=stock_feat_cols).reset_index(drop=True)
+        holdout = holdout.dropna(subset=stock_feat_cols).reset_index(drop=True)
+        log.info("dropped NaN stock-feature rows: train %d→%d, val %d→%d, holdout %d→%d",
+                 n_train_before, len(train), n_val_before, len(val), n_holdout_before, len(holdout))
 
     # In smoke mode, limit epochs to avoid training divergence on tiny synthetic panels.
     max_epochs = 5 if smoke else C.MAX_EPOCHS
@@ -114,7 +127,12 @@ def run(
     # Guard against NaN probabilities (e.g. training diverged on tiny smoke panels).
     # Replace NaN rows with uniform class priors so Platt calibration can proceed.
     if np.isnan(val_probs_raw).any():
-        log.warning("val_probs_raw contains NaN (training may have diverged); replacing with uniform prior")
+        if not smoke:
+            raise RuntimeError(
+                "val_probs_raw contains NaN — training diverged. "
+                "This indicates an upstream bug; production runs must not silently substitute uniform priors."
+            )
+        log.warning("val_probs_raw contains NaN (smoke mode); replacing with uniform prior")
         nan_mask = np.isnan(val_probs_raw).any(axis=1)
         val_probs_raw[nan_mask] = 1.0 / C.N_CLASSES
     val_logits = np.log(val_probs_raw + 1e-12)
@@ -123,7 +141,12 @@ def run(
 
     holdout_probs_raw = predict_proba(model, holdout, feature_cols)
     if np.isnan(holdout_probs_raw).any():
-        log.warning("holdout_probs_raw contains NaN; replacing with uniform prior")
+        if not smoke:
+            raise RuntimeError(
+                "holdout_probs_raw contains NaN — training diverged. "
+                "This indicates an upstream bug; production runs must not silently substitute uniform priors."
+            )
+        log.warning("holdout_probs_raw contains NaN (smoke mode); replacing with uniform prior")
         nan_mask = np.isnan(holdout_probs_raw).any(axis=1)
         holdout_probs_raw[nan_mask] = 1.0 / C.N_CLASSES
     holdout_logits = np.log(holdout_probs_raw + 1e-12)
