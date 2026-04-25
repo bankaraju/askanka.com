@@ -75,3 +75,14 @@ def test_classify_choppy() -> None:
     bars = _make_bars(prices)
     feats = features.compute_shape_features(bars)
     assert features.classify_shape(feats) == "CHOPPY"
+
+
+def test_open_price_mismatch_flag() -> None:
+    bars = _make_bars([100.0] * 380)  # bars open at 100.0
+    feats = features.compute_shape_features(bars, persisted_open=99.5)  # diff = 0.5% > 0.05%
+    assert feats["validation"] == "OPEN_PRICE_MISMATCH"
+
+def test_open_price_within_tolerance_passes() -> None:
+    bars = _make_bars([100.0] * 380)
+    feats = features.compute_shape_features(bars, persisted_open=100.02)  # diff = 0.02% < 0.05%
+    assert feats["validation"] == "OK"
