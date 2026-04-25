@@ -1235,9 +1235,12 @@ def test_split_partitions_by_date():
 
 
 def test_regime_coverage_passes_when_all_regimes_present():
+    # Fix: use modular cycling so len(regimes) == len(days) regardless of date-range length
+    # (HOLDOUT window is 365 days; plain truncation of 250-element list mismatches)
     days = pd.date_range(C.HOLDOUT_START, C.HOLDOUT_END, freq="D")
-    regimes = (["DEEP_PAIN"] * 50 + ["PAIN"] * 50 + ["NEUTRAL"] * 50
-               + ["EUPHORIA"] * 50 + ["MEGA_EUPHORIA"] * 50)[: len(days)]
+    base = (["DEEP_PAIN"] * 50 + ["PAIN"] * 50 + ["NEUTRAL"] * 50
+            + ["EUPHORIA"] * 50 + ["MEGA_EUPHORIA"] * 50)
+    regimes = [base[i % len(base)] for i in range(len(days))]
     df = pd.DataFrame({"date": days, "regime": regimes})
     check_regime_coverage(df)  # should not raise
 
