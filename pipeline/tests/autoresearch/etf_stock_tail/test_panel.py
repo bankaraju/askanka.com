@@ -1,0 +1,93 @@
+import json
+import numpy as np
+import pandas as pd
+import pytest
+
+from pipeline.autoresearch.etf_stock_tail import constants as C
+from pipeline.autoresearch.etf_stock_tail.panel import (
+    PanelInputs,
+    PanelDropReason,
+    assemble_panel,
+)
+
+
+def _mk_etf_panel(start: str, n_days: int) -> pd.DataFrame:
+    dates = pd.date_range(start, periods=n_days, freq="D")
+    rows = []
+    for i, sym in enumerate(C.ETF_SYMBOLS):
+        for d in dates:
+            day = (d - dates[0]).days + 1
+            rows.append({"date": d, "etf": sym, "close": float((i + 1) * day)})
+    return pd.DataFrame(rows)
+
+
+def _mk_stock_bars(start: str, n_days: int, vol_scale: float = 0.005) -> pd.DataFrame:
+    dates = pd.date_range(start, periods=n_days, freq="D")
+    rng = np.random.default_rng(123)
+    rets = rng.normal(0, vol_scale, n_days)
+    closes = 100.0 * np.cumprod(1 + rets)
+    return pd.DataFrame({"date": dates, "close": closes, "volume": np.full(n_days, 1e6)})
+
+
+def _mk_universe(symbols, dates) -> dict:
+    return {d.strftime("%Y-%m-%d"): list(symbols) for d in dates}
+
+
+def _mk_sector_map(symbols) -> dict:
+    return {s: i % 5 for i, s in enumerate(symbols)}
+
+
+def test_panel_columns(tmp_path):
+    """Panel has all 90 ETF + 6 context + ticker_id + label cols."""
+    dates = pd.date_range("2024-01-01", periods=400, freq="D")
+    inputs = PanelInputs(
+        etf_panel=_mk_etf_panel("2024-01-01", 400),
+        stock_bars={"AAA": _mk_stock_bars("2024-01-01", 400)},
+        universe=_mk_universe(["AAA"], dates),
+        sector_map=_mk_sector_map(["AAA"]),
+    )
+    panel, manifest = assemble_panel(inputs, train_start=pd.Timestamp("2024-04-01"),
+                                     train_end=pd.Timestamp("2024-12-31"))
+    expected_etf_cols = 30 * 3
+    expected_ctx_cols = 6
+    assert "ticker_id" in panel.columns
+    assert "label" in panel.columns
+    assert "date" in panel.columns
+    assert "ticker" in panel.columns
+    assert "regime" in panel.columns
+    # ETF + context columns total 96
+    feature_cols = [c for c in panel.columns if c.startswith(("etf_", "stock_"))]
+    assert len(feature_cols) == expected_etf_cols + expected_ctx_cols
+
+
+def test_drops_ticker_with_too_few_tail_examples(tmp_path):
+    """A ticker with < MIN_TAIL_EXAMPLES_PER_SIDE in either direction is dropped."""
+    dates = pd.date_range("2024-01-01", periods=400, freq="D")
+    flat_bars = _mk_stock_bars("2024-01-01", 400, vol_scale=0.0001)  # near-zero vol → no tails
+    inputs = PanelInputs(
+        etf_panel=_mk_etf_panel("2024-01-01", 400),
+        stock_bars={"BBB": flat_bars},
+        universe=_mk_universe(["BBB"], dates),
+        sector_map=_mk_sector_map(["BBB"]),
+    )
+    panel, manifest = assemble_panel(inputs, train_start=pd.Timestamp("2024-04-01"),
+                                     train_end=pd.Timestamp("2024-12-31"))
+    assert "BBB" in manifest["dropped_tickers"]
+    assert manifest["dropped_tickers"]["BBB"] == PanelDropReason.INSUFFICIENT_TAIL_LABELS.value
+    assert (panel["ticker"] == "BBB").sum() == 0
+
+
+def test_manifest_contains_input_hashes(tmp_path):
+    dates = pd.date_range("2024-01-01", periods=400, freq="D")
+    inputs = PanelInputs(
+        etf_panel=_mk_etf_panel("2024-01-01", 400),
+        stock_bars={"AAA": _mk_stock_bars("2024-01-01", 400)},
+        universe=_mk_universe(["AAA"], dates),
+        sector_map=_mk_sector_map(["AAA"]),
+    )
+    _, manifest = assemble_panel(inputs, train_start=pd.Timestamp("2024-04-01"),
+                                 train_end=pd.Timestamp("2024-12-31"))
+    assert "etf_panel_sha256" in manifest
+    assert len(manifest["etf_panel_sha256"]) == 64
+    assert "config_sha256" in manifest
+    assert "n_rows" in manifest
