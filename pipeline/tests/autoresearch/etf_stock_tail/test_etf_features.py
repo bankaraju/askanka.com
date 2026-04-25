@@ -60,3 +60,16 @@ def test_missing_etf_returns_nan(synthetic_etf_panel):
     feats = build_etf_features_matrix(panel_partial, eval_date)
     assert np.isnan(feats["etf_natgas_ret_1d"])
     assert not np.isnan(feats["etf_brazil_ret_1d"])
+
+
+def test_duplicate_date_rows_are_deduplicated(synthetic_etf_panel):
+    """Inject a duplicate (etf, date) row with extreme close; result must equal the last-row value."""
+    panel = synthetic_etf_panel.copy()
+    # brazil at day 24 has close = 2 * 24 = 48; inject a duplicate row with close=99999.0
+    dup_row = pd.DataFrame([{"date": pd.Timestamp("2024-01-24"), "etf": "brazil", "close": 99999.0}])
+    panel = pd.concat([panel, dup_row], ignore_index=True)
+    eval_date = pd.Timestamp("2024-01-25")
+    feats = build_etf_features_matrix(panel, eval_date)
+    # With keep="last", the dup (close=99999) becomes the day-24 close, so ret_1d = (99999 - 46) / 46
+    expected = (99999.0 - 46.0) / 46.0
+    assert feats["etf_brazil_ret_1d"] == pytest.approx(expected)

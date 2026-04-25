@@ -3,6 +3,9 @@
 Every feature at eval_date t uses only rows where date < t (strict inequality).
 Unit-test `test_etf_features.py` asserts this pointwise via mutation test.
 
+Duplicate (etf, date) rows are deduplicated keeping the last; upstream is responsible
+for not introducing duplicates.
+
 Public API:
   etf_feature_names() -> tuple[str, ...]  — stable column order (90 names)
   build_etf_features_matrix(panel, eval_date) -> pd.Series  — one row of 90 features
@@ -56,7 +59,9 @@ def build_etf_features_matrix(panel: pd.DataFrame, eval_date: pd.Timestamp) -> p
     for sym in C.ETF_SYMBOLS:
         # STRICT causality: exclude eval_date itself
         df = panel[(panel["etf"] == sym) & (panel["date"] < eval_date)]
+        df = df.drop_duplicates(subset="date", keep="last")  # documented policy: keep latest if dup
         closes = df.sort_values("date")["close"]
         for w in C.ETF_RETURN_WINDOWS:
             out[f"etf_{sym}_ret_{w}d"] = _ret_n(closes, w)
-    return pd.Series(out, index=list(etf_feature_names()))
+    result = pd.Series(out)
+    return result[list(etf_feature_names())]   # raises KeyError on any missing column
