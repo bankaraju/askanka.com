@@ -34,6 +34,7 @@ ATR_FALLBACK_PCT = -1.0
 # Trail logic (mirrors signal_tracker.check_signal_status post-2026-04-22 B9 + B10)
 TRAIL_ARM_PCT = 2.0             # trail arms when peak >= trail_budget
 DAILY_STOP_FRACTION = 0.50      # daily_stop = -(avg_favorable_move * 0.50)
+TRAIL_GIVEBACK_PCT = 1.0        # exit when peak − close ≥ this (= 50% of arm, matches B9+B10)
 
 # Slippage (per backtesting-specs.txt §1)
 SLIPPAGE_BPS_ROUNDTRIP = 20
