@@ -65,3 +65,13 @@ def test_classify_one_way_up() -> None:
     feats = features.compute_shape_features(bars)
     assert feats["peak_in_first_15min"] is False  # peak is at the END
     assert features.classify_shape(feats) == "ONE_WAY_UP"
+
+
+def test_classify_choppy() -> None:
+    """Oscillating session, close near open — small peak, small trough, close ~= 0%."""
+    prices = []
+    for i in range(380):
+        prices.append(100.0 + 0.3 * np.sin(i / 7.0))
+    bars = _make_bars(prices)
+    feats = features.compute_shape_features(bars)
+    assert features.classify_shape(feats) == "CHOPPY"
