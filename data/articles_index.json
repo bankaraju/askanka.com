@@ -1,42 +1,6 @@
 {
   "articles": [
     {
-      "date": "2026-04-25",
-      "segment": "war",
-      "filename": "2026-04-25-war.html",
-      "headline": "Pakistan's Peacemaker Facade: A Deceptive Pivot Amidst US-Iran Escalation",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 25, 2026"
-    },
-    {
-      "date": "2026-04-25",
-      "segment": "epstein",
-      "filename": "2026-04-25-epstein.html",
-      "headline": "The Ghislaine Maxwell Pardon Play: Republicans Betray Justice for Political Expediency",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 25, 2026"
-    },
-    {
-      "date": "2026-04-24",
-      "segment": "war",
-      "filename": "2026-04-24-war.html",
-      "headline": "Trump's Firing Spree and the Kharg Island Backlash: A New Era of US Military Recklessness",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 24, 2026"
-    },
-    {
-      "date": "2026-04-24",
-      "segment": "epstein",
-      "filename": "2026-04-24-epstein.html",
-      "headline": "Lutnick's Evasive Silence on Epstein: A Wall of Omerta Around Wall Street's Elite",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 24, 2026"
-    },
-    {
       "date": "2026-04-23",
       "segment": "war",
       "filename": "2026-04-23-war.html",
@@ -152,6 +116,42 @@
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 17, 2026"
+    },
+    {
+      "date": "2026-04-16",
+      "segment": "war",
+      "filename": "2026-04-16-war.html",
+      "headline": "Hormuz Endgame: America's Oil Grab and India's Defence Dividend",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 16, 2026"
+    },
+    {
+      "date": "2026-04-16",
+      "segment": "epstein",
+      "filename": "2026-04-16-epstein.html",
+      "headline": "DOJ's Epstein Obstruction: Trump's Hoax Claims and the Silent Billionaire Cartel Undermining India",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 16, 2026"
+    },
+    {
+      "date": "2026-04-15",
+      "segment": "war",
+      "filename": "2026-04-15-war.html",
+      "headline": "Hormuz Endgame: America's Oil Grab Sparks Global Market Tremors, India's Defence Stocks Poised",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 15, 2026"
+    },
+    {
+      "date": "2026-04-15",
+      "segment": "epstein",
+      "filename": "2026-04-15-epstein.html",
+      "headline": "DOJ's Epstein Cover-Up Deepens: Bondi's Evasion, Trump's Lies, and India's Eroding Trust",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 15, 2026"
     }
   ]
 }
