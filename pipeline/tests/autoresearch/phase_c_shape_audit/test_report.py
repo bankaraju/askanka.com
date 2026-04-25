@@ -36,3 +36,20 @@ def test_verdict_null_on_baseline_distribution() -> None:
     df = pd.DataFrame(rows)
     rep = report.build_report(df)
     assert rep["verdict"] in ("NULL", "INSUFFICIENT_N")
+
+
+def test_verdict_confirmed_when_cell_lifts_above_baseline_in_two_regimes() -> None:
+    """REVERSE_V_HIGH × SHORT cell with n=15 in two regimes (NEUTRAL, RISK-OFF),
+    win rate 80% each. Above 56.4% baseline at p<0.05. No actual rows
+    (so actual-vs-cf delta gate vacuously passes). -> CONFIRMED."""
+    rows: list[dict] = []
+    for regime in ("NEUTRAL", "RISK-OFF"):
+        for _ in range(12):
+            rows.append(_synth_row("REVERSE_V_HIGH", "SHORT", regime, cf_pnl=2.0))
+        for _ in range(3):
+            rows.append(_synth_row("REVERSE_V_HIGH", "SHORT", regime, cf_pnl=-1.0))
+    for _ in range(20):
+        rows.append(_synth_row("CHOPPY", "SHORT", "NEUTRAL", cf_pnl=0.1))
+    df = pd.DataFrame(rows)
+    rep = report.build_report(df)
+    assert rep["verdict"] == "CONFIRMED"

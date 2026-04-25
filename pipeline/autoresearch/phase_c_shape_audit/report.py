@@ -75,6 +75,7 @@ def _pick_verdict(table_b_cf: pd.DataFrame, table_f: pd.DataFrame, df: pd.DataFr
     ]
 
     if not qualifying.empty:
+        best_survived = 0
         for _, row in qualifying.iterrows():
             n_wins = int(row["n"] * row["win_rate"])
             test = binomtest(n_wins, int(row["n"]), p=C.BASELINE_WIN_RATE, alternative="greater")
@@ -94,8 +95,10 @@ def _pick_verdict(table_b_cf: pd.DataFrame, table_f: pd.DataFrame, df: pd.DataFr
                 survived = len(cube_match)
                 if survived >= C.REGIME_SURVIVAL_MIN:
                     return "CONFIRMED"
-                if survived == 1:
-                    return "REGIME_CONDITIONAL_CONFIRMED"
+                if survived > best_survived:
+                    best_survived = survived
+        if best_survived == 1:
+            return "REGIME_CONDITIONAL_CONFIRMED"
 
     weak = table_b_cf[
         (table_b_cf["n"] >= C.MIN_CELL_N)
