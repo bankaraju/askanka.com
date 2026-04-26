@@ -1,0 +1,195 @@
+{
+  "generated_at": "2026-04-26T07:07:23+00:00",
+  "data_window": {
+    "regime_history_csv": "C:\\Users\\Claude_Anka\\askanka.com\\pipeline\\data\\regime_history.csv",
+    "n_days": 1256,
+    "date_min": "2021-04-23",
+    "date_max": "2026-04-23"
+  },
+  "transition_counts": {
+    "RISK-OFF": {
+      "RISK-OFF": 36,
+      "CAUTION": 40,
+      "NEUTRAL": 48,
+      "RISK-ON": 41,
+      "EUPHORIA": 52
+    },
+    "CAUTION": {
+      "RISK-OFF": 55,
+      "CAUTION": 53,
+      "NEUTRAL": 65,
+      "RISK-ON": 62,
+      "EUPHORIA": 45
+    },
+    "NEUTRAL": {
+      "RISK-OFF": 48,
+      "CAUTION": 81,
+      "NEUTRAL": 61,
+      "RISK-ON": 64,
+      "EUPHORIA": 42
+    },
+    "RISK-ON": {
+      "RISK-OFF": 48,
+      "CAUTION": 52,
+      "NEUTRAL": 66,
+      "RISK-ON": 31,
+      "EUPHORIA": 45
+    },
+    "EUPHORIA": {
+      "RISK-OFF": 30,
+      "CAUTION": 54,
+      "NEUTRAL": 57,
+      "RISK-ON": 43,
+      "EUPHORIA": 36
+    }
+  },
+  "transition_proba_pct": {
+    "RISK-OFF": {
+      "RISK-OFF": 16.59,
+      "CAUTION": 18.43,
+      "NEUTRAL": 22.12,
+      "RISK-ON": 18.89,
+      "EUPHORIA": 23.96
+    },
+    "CAUTION": {
+      "RISK-OFF": 19.64,
+      "CAUTION": 18.93,
+      "NEUTRAL": 23.21,
+      "RISK-ON": 22.14,
+      "EUPHORIA": 16.07
+    },
+    "NEUTRAL": {
+      "RISK-OFF": 16.22,
+      "CAUTION": 27.36,
+      "NEUTRAL": 20.61,
+      "RISK-ON": 21.62,
+      "EUPHORIA": 14.19
+    },
+    "RISK-ON": {
+      "RISK-OFF": 19.83,
+      "CAUTION": 21.49,
+      "NEUTRAL": 27.27,
+      "RISK-ON": 12.81,
+      "EUPHORIA": 18.6
+    },
+    "EUPHORIA": {
+      "RISK-OFF": 13.64,
+      "CAUTION": 24.55,
+      "NEUTRAL": 25.91,
+      "RISK-ON": 19.55,
+      "EUPHORIA": 16.36
+    }
+  },
+  "same_zone_persistence_pct": {
+    "RISK-OFF": 16.59,
+    "CAUTION": 18.93,
+    "NEUTRAL": 20.61,
+    "RISK-ON": 12.81,
+    "EUPHORIA": 16.36
+  },
+  "uniform_baseline_pct": 20.0,
+  "most_likely_next_zone": {
+    "RISK-OFF": {
+      "zone": "EUPHORIA",
+      "p_pct": 23.96
+    },
+    "CAUTION": {
+      "zone": "NEUTRAL",
+      "p_pct": 23.21
+    },
+    "NEUTRAL": {
+      "zone": "CAUTION",
+      "p_pct": 27.36
+    },
+    "RISK-ON": {
+      "zone": "NEUTRAL",
+      "p_pct": 27.27
+    },
+    "EUPHORIA": {
+      "zone": "NEUTRAL",
+      "p_pct": 25.91
+    }
+  },
+  "overnight_nifty_close_to_next_open": {
+    "RISK-OFF": {
+      "n": 209,
+      "mean_pct": -0.1778,
+      "median_pct": -0.0543,
+      "std_pct": 0.7143,
+      "p10": -0.8893,
+      "p25": -0.4222,
+      "p75": 0.2366,
+      "p90": 0.4212,
+      "worst_pct": -5.0036,
+      "best_pct": 1.6476,
+      "negative_pct_of_days": 55.02,
+      "loss_gt_1pct_pct_of_days": 9.09,
+      "loss_gt_2pct_pct_of_days": 3.35,
+      "sharpe_ann_overnight": -3.951
+    },
+    "CAUTION": {
+      "n": 262,
+      "mean_pct": 0.06,
+      "median_pct": 0.063,
+      "std_pct": 0.6058,
+      "p10": -0.5785,
+      "p25": -0.1535,
+      "p75": 0.3197,
+      "p90": 0.6322,
+      "worst_pct": -3.0144,
+      "best_pct": 3.5827,
+      "negative_pct_of_days": 40.84,
+      "loss_gt_1pct_pct_of_days": 2.67,
+      "loss_gt_2pct_pct_of_days": 0.38,
+      "sharpe_ann_overnight": 1.571
+    },
+    "NEUTRAL": {
+      "n": 276,
+      "mean_pct": 0.0786,
+      "median_pct": 0.1039,
+      "std_pct": 0.463,
+      "p10": -0.3457,
+      "p25": -0.0994,
+      "p75": 0.3326,
+      "p90": 0.5524,
+      "worst_pct": -2.4794,
+      "best_pct": 1.8099,
+      "negative_pct_of_days": 35.51,
+      "loss_gt_1pct_pct_of_days": 2.9,
+      "loss_gt_2pct_pct_of_days": 0.72,
+      "sharpe_ann_overnight": 2.696
+    },
+    "RISK-ON": {
+      "n": 233,
+      "mean_pct": 0.2012,
+      "median_pct": 0.1695,
+      "std_pct": 0.4731,
+      "p10": -0.3284,
+      "p25": -0.0635,
+      "p75": 0.4367,
+      "p90": 0.7407,
+      "worst_pct": -1.3051,
+      "best_pct": 2.3646,
+      "negative_pct_of_days": 27.9,
+      "loss_gt_1pct_pct_of_days": 0.86,
+      "loss_gt_2pct_pct_of_days": 0.0,
+      "sharpe_ann_overnight": 6.751
+    },
+    "EUPHORIA": {
+      "n": 210,
+      "mean_pct": 0.2677,
+      "median_pct": 0.2438,
+      "std_pct": 0.6202,
+      "p10": -0.2618,
+      "p25": 0.0415,
+      "p75": 0.4591,
+      "p90": 0.7849,
+      "worst_pct": -1.9168,
+      "best_pct": 4.8614,
+      "negative_pct_of_days": 21.9,
+      "loss_gt_1pct_pct_of_days": 2.38,
+      "loss_gt_2pct_pct_of_days": 0.0,
+      "sharpe_ann_overnight": 6.853
+    }
+  }
+}
