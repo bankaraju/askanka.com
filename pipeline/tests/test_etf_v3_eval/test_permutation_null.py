@@ -22,3 +22,12 @@ def test_permutation_null_no_signal_returns_p_near_05():
     b = rng.normal(0, 0.01, 200)
     p = permutation_test_mean(a, b, n_permutations=2000, rng=np.random.default_rng(1))
     assert 0.2 < p < 0.8
+
+
+def test_permutation_null_accepts_python_list_input():
+    """Function signature says ndarray but Python doesn't enforce it; lists must work."""
+    pos = [0.01] * 50 + [-0.01] * 50  # mean = 0
+    neg = [0.005] * 50 + [-0.005] * 50  # mean = 0
+    rng = np.random.default_rng(42)
+    p = permutation_test_mean(pos, neg, n_permutations=200, rng=rng)
+    assert 0.0 < p <= 1.0  # any valid p-value, just confirm no AttributeError
