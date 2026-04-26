@@ -34,3 +34,11 @@ def test_random_direction_uses_seeded_rng():
     out_a = random_direction(events, rng=np.random.default_rng(42))
     out_b = random_direction(events, rng=np.random.default_rng(42))
     assert out_a["benchmark_pnl"].equals(out_b["benchmark_pnl"])
+
+
+def test_random_direction_actually_mixes_signs():
+    """Confirm the coin produces both signs on a realistic seed."""
+    events = pd.DataFrame({"realized_pct": np.ones(100) * 0.01})  # all positive realized
+    out = random_direction(events, rng=np.random.default_rng(42))
+    signs = np.sign(out["benchmark_pnl"].to_numpy())
+    assert (signs == -1).any() and (signs == 1).any()
