@@ -14,10 +14,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-# Ensure pipeline/ is on sys.path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
-from autoresearch.unified_backtest import (
+# Use the canonical fully-qualified package path. The bare `autoresearch.*`
+# form collides with pipeline/tests/autoresearch/__init__.py during multi-test
+# collection (pytest treats the test subpackage as the canonical `autoresearch`
+# namespace and shadows pipeline/autoresearch/).
+from pipeline.autoresearch.unified_backtest import (
     SPREAD_DEFINITIONS,
     _avg_returns,
     _compute_daily_regimes,
@@ -38,7 +39,7 @@ from autoresearch.unified_backtest import (
 def test_signal_to_zone_boundaries():
     """_signal_to_zone correctly maps signal values to all 5 zones."""
     # Use the same center / band values as etf_reoptimize
-    from autoresearch.etf_reoptimize import _CALM_CENTER, _CALM_BAND
+    from pipeline.autoresearch.etf_reoptimize import _CALM_CENTER, _CALM_BAND
     c, b = _CALM_CENTER, _CALM_BAND
 
     assert _signal_to_zone(c + 2 * b + 1) == "EUPHORIA"

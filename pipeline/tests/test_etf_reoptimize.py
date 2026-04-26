@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 def test_load_indian_data_returns_dict(tmp_path):
     """load_indian_data() returns a dict with fii_net, india_vix, nifty_close
     populated from minimal daily + flows JSON fixtures."""
-    from autoresearch.etf_reoptimize import load_indian_data
+    from pipeline.autoresearch.etf_reoptimize import load_indian_data
 
     # --- build daily fixture ---
     daily_dir = tmp_path / "daily"
@@ -59,7 +59,7 @@ def test_load_indian_data_returns_dict(tmp_path):
 
 def test_load_indian_data_handles_missing_files(tmp_path):
     """load_indian_data() returns a dict with None values when dirs are empty."""
-    from autoresearch.etf_reoptimize import load_indian_data
+    from pipeline.autoresearch.etf_reoptimize import load_indian_data
 
     daily_dir = tmp_path / "daily"
     daily_dir.mkdir()
@@ -81,7 +81,7 @@ def test_load_indian_data_handles_missing_files(tmp_path):
 
 
 def test_optimize_weights_returns_valid_structure():
-    from autoresearch.etf_reoptimize import optimize_weights
+    from pipeline.autoresearch.etf_reoptimize import optimize_weights
     np.random.seed(42)
     dates = pd.date_range("2025-01-01", periods=100, freq="B")
     features = pd.DataFrame(
@@ -101,7 +101,7 @@ def test_optimize_weights_returns_valid_structure():
 
 
 def test_optimize_weights_beats_baseline():
-    from autoresearch.etf_reoptimize import optimize_weights
+    from pipeline.autoresearch.etf_reoptimize import optimize_weights
     np.random.seed(42)
     dates = pd.date_range("2025-01-01", periods=200, freq="B")
     target = pd.Series(np.random.choice([1, -1], size=200), index=dates)
