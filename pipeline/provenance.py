@@ -15,7 +15,7 @@ Schema (versioned via the ``schema`` field):
         "engine_version": "v3_curated",
         "git_sha": "abc1234",
         "started_at": "2026-04-27T04:45:02+05:30",
-        "output_path": "data/today_regime.json",
+        "output_path": "pipeline/data/today_regime.json",
         "expected_cadence_seconds": 86400,
         "extras": {...optional task-specific metadata...}
     }

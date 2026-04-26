@@ -31,7 +31,7 @@ _HERE = Path(__file__).resolve().parent.parent
 _REPO_ROOT = _HERE.parent.parent
 _LEDGER_PATH = _REPO_ROOT / "pipeline" / "data" / "research" / "phase_c" / "live_paper_ledger.json"
 _ATR_PATH = _REPO_ROOT / "pipeline" / "data" / "research" / "phase_c" / "atr_stops.json"
-_REGIME_PATH = _REPO_ROOT / "data" / "today_regime.json"
+_REGIME_PATH = _REPO_ROOT / "pipeline" / "data" / "today_regime.json"
 _EXPECTED_VERSIONS_PATH = _REPO_ROOT / "pipeline" / "config" / "expected_engine_versions.json"
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -179,7 +179,7 @@ def live_monitor():
         "live_paper_ledger": _badge_for(
             "pipeline/data/research/phase_c/live_paper_ledger.json", expected
         ),
-        "regime": _badge_for("data/today_regime.json", expected),
+        "regime": _badge_for("pipeline/data/today_regime.json", expected),
         "correlation_breaks": _badge_for(
             "pipeline/data/correlation_breaks.json", expected
         ),

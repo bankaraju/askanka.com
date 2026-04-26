@@ -2,11 +2,11 @@
   "schema": 1,
   "_comment": "Declares the engine_version each tracked output is expected to be running today. Consumers compare provenance.engine_version against the value here and render amber/red on mismatch. Update this file in the same commit as any engine cutover.",
   "outputs": {
-    "data/today_regime.json": {
+    "pipeline/data/today_regime.json": {
       "expected_engine_version": "v3_curated",
       "expected_cadence_seconds": 86400,
       "owner_task": "AnkaETFSignal",
-      "notes": "ETF v3 curated cutover landed 2026-04-27. Weights frozen at c93488b for H-2026-04-27 holdout window — AnkaETFReoptimize is intentionally disabled."
+      "notes": "ETF v3 curated cutover landed 2026-04-27. Weights frozen at c93488b for H-2026-04-27 holdout window — AnkaETFReoptimize is intentionally disabled. Canonical path is pipeline/data/, not data/."
     },
     "pipeline/data/correlation_breaks.json": {
       "expected_engine_version": "phase_c_v3.2",

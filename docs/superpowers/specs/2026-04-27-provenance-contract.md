@@ -8,7 +8,7 @@
 
 Every model output (JSON, CSV, parquet, anything a downstream consumer reads) gets a sibling **provenance sidecar** written by the producing scheduled task at start time, *before* the output itself is written.
 
-Sidecar path: `<output_path><.provenance.json>` — i.e., `data/today_regime.json` → `data/today_regime.json.provenance.json`.
+Sidecar path: `<output_path><.provenance.json>` — i.e., `pipeline/data/today_regime.json` → `pipeline/data/today_regime.json.provenance.json`.
 
 Single canonical helper: `pipeline/provenance.py`. Producers import `write`, consumers import `read` or `assess`.
 
@@ -20,7 +20,7 @@ At the very start of every scheduled-task entry point, before any heavy work:
 from pipeline import provenance
 
 provenance.write(
-    output_path="data/today_regime.json",
+    output_path="pipeline/data/today_regime.json",
     task_name="AnkaETFSignal",
     engine_version="v3_curated",          # bump on cutover
     expected_cadence_seconds=86400,       # 24h for daily outputs
@@ -82,7 +82,7 @@ The protocol explicitly puts the badge between "I think the cutover landed" and 
 Phase 1 (this commit): helper + config + contract doc + LIVE monitor consumer-side rendering. No producers opted in yet — every badge will be amber "unknown" until producers opt in. This is the right failure mode.
 
 Phase 2 (per-task, owned by each scheduled task's owner):
-- AnkaETFSignal → opts in, badge for `data/today_regime.json` goes green
+- AnkaETFSignal → opts in, badge for `pipeline/data/today_regime.json` goes green
 - AnkaCorrelationBreaks → opts in, badge for `pipeline/data/correlation_breaks.json` goes green
 - AnkaPhaseCShadowOpen → opts in, badge for `live_paper_ledger.json` goes green
 
