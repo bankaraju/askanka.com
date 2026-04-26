@@ -156,6 +156,7 @@ def run_rolling_refit(cfg: RollingRefitConfig) -> dict:
             "pred_edge_pp": float(correct / len(truth) * 100.0 - baseline) if len(truth) else 0.0,
             "train_in_fit_acc_pct": fit.accuracy,
             "train_in_fit_sharpe": fit.sharpe,
+            "weights": {k: float(v) for k, v in fit.weights.items()},
         })
         all_preds.extend(pred.tolist())
         all_truths.extend(truth.tolist())
