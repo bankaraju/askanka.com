@@ -1,0 +1,17 @@
+{
+  "run_id": "phase1_backfill_2026-02-26_2026-04-23",
+  "generated_at_utc": "2026-04-26T15:55:58.785748+00:00",
+  "git_commit": "0562334b1025696118e4114adc20d7c14691ee58",
+  "pip_freeze_sha256": "e3cc8b73f59184a4397a366dbe764dce261619798e9184a2efabf2858340bae2",
+  "seed": 0,
+  "config": {
+    "start": "2026-02-26",
+    "end": "2026-04-23",
+    "n_tickers": 1
+  },
+  "artifacts": {
+    "pipeline\\autoresearch\\data\\intraday_break_replay_60d_v0.2_minute_bars.parquet": "3ac43da4553987a04444e8cde8320edda6aa2c7eb89376b67d93c95cada2ae84",
+    "pipeline\\data\\research\\etf_v3_evaluation\\phase_1_universe\\tickers_failed.csv": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+    "pipeline\\data\\research\\etf_v3_evaluation\\phase_1_universe\\backfill_summary.json": "e3d26af1562864cb74d859b13c84e890f7dfc7065578a363c1939caebf51b57d"
+  }
+}
