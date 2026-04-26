@@ -1,0 +1,92 @@
+{
+  "max_delta_pct": 0.011570864703444223,
+  "n_rows_compared": 178,
+  "rows_above_threshold": 6,
+  "sample_tickers": [
+    "ABB",
+    "ACC",
+    "ADANIENT",
+    "ABFRL",
+    "ABBOTINDIA"
+  ],
+  "threshold_pct": 0.005,
+  "per_ticker": {
+    "ABB": {
+      "mean_delta_pct": 0.001612364074982013,
+      "max_delta_pct": 0.005638306824875873,
+      "n_rows": 35,
+      "n_above_threshold": 1
+    },
+    "ABBOTINDIA": {
+      "mean_delta_pct": 0.0016334650916655165,
+      "max_delta_pct": 0.006713912719134651,
+      "n_rows": 36,
+      "n_above_threshold": 1
+    },
+    "ABFRL": {
+      "mean_delta_pct": 0.002130024209997147,
+      "max_delta_pct": 0.009474577851663672,
+      "n_rows": 36,
+      "n_above_threshold": 3
+    },
+    "ACC": {
+      "mean_delta_pct": 0.0017101062774185097,
+      "max_delta_pct": 0.011570864703444223,
+      "n_rows": 36,
+      "n_above_threshold": 1
+    },
+    "ADANIENT": {
+      "mean_delta_pct": 0.0016378829322476391,
+      "max_delta_pct": 0.004044489383215369,
+      "n_rows": 35,
+      "n_above_threshold": 0
+    }
+  },
+  "failing_rows": [
+    {
+      "ticker": "ACC",
+      "trade_date": "2026-03-04",
+      "close_minute": 1512.0,
+      "close_eod": 1529.699951171875,
+      "delta_pct": 0.011570864703444223
+    },
+    {
+      "ticker": "ABFRL",
+      "trade_date": "2026-04-01",
+      "close_minute": 57.5,
+      "close_eod": 58.04999923706055,
+      "delta_pct": 0.009474577851663672
+    },
+    {
+      "ticker": "ABBOTINDIA",
+      "trade_date": "2026-03-10",
+      "close_minute": 26990.0,
+      "close_eod": 26810.0,
+      "delta_pct": 0.006713912719134651
+    },
+    {
+      "ticker": "ABFRL",
+      "trade_date": "2026-03-04",
+      "close_minute": 63.66,
+      "close_eod": 64.08999633789062,
+      "delta_pct": 0.006709258269007115
+    },
+    {
+      "ticker": "ABFRL",
+      "trade_date": "2026-03-11",
+      "close_minute": 62.15,
+      "close_eod": 61.7400016784668,
+      "delta_pct": 0.006640724172124501
+    },
+    {
+      "ticker": "ABB",
+      "trade_date": "2026-03-30",
+      "close_minute": 5975.0,
+      "close_eod": 5941.5,
+      "delta_pct": 0.005638306824875873
+    }
+  ],
+  "population_pass": true,
+  "strict_pass": false,
+  "note": "Strict \u00a713 = 0/178 rows above threshold; population \u00a713 = mean delta < threshold. Failures cluster on corp-action dates; Kite minute bars are \u00a710-Unadjusted while fno_historical CSV uses yfinance auto-adjustment. Phase 2 must use a single consistent adjustment treatment."
+}
