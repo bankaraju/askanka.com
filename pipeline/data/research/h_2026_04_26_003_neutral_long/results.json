@@ -1,0 +1,207 @@
+{
+  "generated_at": "2026-04-26T05:05:00+00:00",
+  "hypothesis": "H-2026-04-26-003 candidate (NEUTRAL-day long-intraday)",
+  "data": {
+    "regime_csv": "C:\\Users\\Claude_Anka\\askanka.com\\pipeline\\data\\regime_history.csv",
+    "n_total_days": 1256,
+    "n_neutral_days": 297,
+    "neutral_pct": 23.65,
+    "date_min": "2021-04-23",
+    "date_max": "2026-04-23"
+  },
+  "calibration": {
+    "n_samples": 121,
+    "n_valid_for_ratio": 113,
+    "resolve_pct": 0.925,
+    "ratio_median": 0.8927,
+    "ratio_std": 0.6412,
+    "intraday_pct_mean": 0.001771,
+    "full_pct_mean": 0.001568,
+    "note": "fitted from phase_c_shape_audit/bars sectoral-index minute bars"
+  },
+  "variant_a": {
+    "NIFTY": {
+      "symbol": "NIFTY",
+      "label": "NIFTY 50",
+      "target_regime": "NEUTRAL",
+      "intraday_neutral": {
+        "label": "NIFTY 50 09:30->14:30 (proxy\u00d70.925)",
+        "n": 277,
+        "mean_pct": -0.0279,
+        "std_pct": 0.5939,
+        "hit_rate_pct": 49.1,
+        "sharpe_ann": -0.745,
+        "t_stat": -0.781,
+        "cum_return_pct": -7.88
+      },
+      "fullday_neutral_baseline": {
+        "label": "NIFTY 50 09:15->15:30 NEUTRAL only",
+        "n": 277,
+        "mean_pct": -0.0301,
+        "std_pct": 0.6421,
+        "hit_rate_pct": 49.1,
+        "sharpe_ann": -0.745,
+        "t_stat": -0.781,
+        "cum_return_pct": -8.53
+      },
+      "fullday_all_regimes_baseline": {
+        "label": "NIFTY 50 09:15->15:30 all regimes",
+        "n": 1191,
+        "mean_pct": -0.038,
+        "std_pct": 0.6892,
+        "hit_rate_pct": 48.36,
+        "sharpe_ann": -0.876,
+        "t_stat": -1.903,
+        "cum_return_pct": -38.19
+      }
+    },
+    "NIFTYIT": {
+      "symbol": "NIFTYIT",
+      "label": "NIFTY IT",
+      "target_regime": "NEUTRAL",
+      "intraday_neutral": {
+        "label": "NIFTY IT 09:30->14:30 (proxy\u00d70.925)",
+        "n": 277,
+        "mean_pct": -0.0881,
+        "std_pct": 0.9743,
+        "hit_rate_pct": 45.49,
+        "sharpe_ann": -1.435,
+        "t_stat": -1.504,
+        "cum_return_pct": -22.68
+      },
+      "fullday_neutral_baseline": {
+        "label": "NIFTY IT 09:15->15:30 NEUTRAL only",
+        "n": 277,
+        "mean_pct": -0.0952,
+        "std_pct": 1.0533,
+        "hit_rate_pct": 45.49,
+        "sharpe_ann": -1.435,
+        "t_stat": -1.504,
+        "cum_return_pct": -24.36
+      },
+      "fullday_all_regimes_baseline": {
+        "label": "NIFTY IT 09:15->15:30 all regimes",
+        "n": 1191,
+        "mean_pct": -0.0602,
+        "std_pct": 1.0889,
+        "hit_rate_pct": 46.52,
+        "sharpe_ann": -0.878,
+        "t_stat": -1.908,
+        "cum_return_pct": -54.52
+      }
+    },
+    "NIFTYMETAL": {
+      "symbol": "NIFTYMETAL",
+      "label": "NIFTY METAL",
+      "target_regime": "NEUTRAL",
+      "intraday_neutral": {
+        "label": "NIFTY METAL 09:30->14:30 (proxy\u00d70.925)",
+        "n": 277,
+        "mean_pct": -0.0647,
+        "std_pct": 1.231,
+        "hit_rate_pct": 49.1,
+        "sharpe_ann": -0.834,
+        "t_stat": -0.875,
+        "cum_return_pct": -18.14
+      },
+      "fullday_neutral_baseline": {
+        "label": "NIFTY METAL 09:15->15:30 NEUTRAL only",
+        "n": 277,
+        "mean_pct": -0.0699,
+        "std_pct": 1.3308,
+        "hit_rate_pct": 49.1,
+        "sharpe_ann": -0.834,
+        "t_stat": -0.875,
+        "cum_return_pct": -19.61
+      },
+      "fullday_all_regimes_baseline": {
+        "label": "NIFTY METAL 09:15->15:30 all regimes",
+        "n": 1187,
+        "mean_pct": -0.1136,
+        "std_pct": 1.447,
+        "hit_rate_pct": 47.26,
+        "sharpe_ann": -1.247,
+        "t_stat": -2.705,
+        "cum_return_pct": -77.11
+      }
+    },
+    "NIFTYPSUBANK": {
+      "symbol": "NIFTYPSUBANK",
+      "label": "NIFTY PSU BANK",
+      "target_regime": "NEUTRAL",
+      "intraday_neutral": {
+        "label": "NIFTY PSU BANK 09:30->14:30 (proxy\u00d70.925)",
+        "n": 277,
+        "mean_pct": -0.1025,
+        "std_pct": 1.3456,
+        "hit_rate_pct": 47.29,
+        "sharpe_ann": -1.209,
+        "t_stat": -1.267,
+        "cum_return_pct": -26.58
+      },
+      "fullday_neutral_baseline": {
+        "label": "NIFTY PSU BANK 09:15->15:30 NEUTRAL only",
+        "n": 277,
+        "mean_pct": -0.1108,
+        "std_pct": 1.4548,
+        "hit_rate_pct": 47.29,
+        "sharpe_ann": -1.209,
+        "t_stat": -1.267,
+        "cum_return_pct": -28.56
+      },
+      "fullday_all_regimes_baseline": {
+        "label": "NIFTY PSU BANK 09:15->15:30 all regimes",
+        "n": 1187,
+        "mean_pct": -0.0743,
+        "std_pct": 1.5789,
+        "hit_rate_pct": 46.67,
+        "sharpe_ann": -0.747,
+        "t_stat": -1.621,
+        "cum_return_pct": -64.35
+      }
+    },
+    "NIFTYENERGY": {
+      "symbol": "NIFTYENERGY",
+      "label": "NIFTY ENERGY",
+      "target_regime": "NEUTRAL",
+      "intraday_neutral": {
+        "label": "NIFTY ENERGY 09:30->14:30 (proxy\u00d70.925)",
+        "n": 277,
+        "mean_pct": -0.0585,
+        "std_pct": 0.9624,
+        "hit_rate_pct": 46.21,
+        "sharpe_ann": -0.965,
+        "t_stat": -1.011,
+        "cum_return_pct": -16.04
+      },
+      "fullday_neutral_baseline": {
+        "label": "NIFTY ENERGY 09:15->15:30 NEUTRAL only",
+        "n": 277,
+        "mean_pct": -0.0632,
+        "std_pct": 1.0404,
+        "hit_rate_pct": 46.21,
+        "sharpe_ann": -0.965,
+        "t_stat": -1.011,
+        "cum_return_pct": -17.31
+      },
+      "fullday_all_regimes_baseline": {
+        "label": "NIFTY ENERGY 09:15->15:30 all regimes",
+        "n": 1188,
+        "mean_pct": -0.1017,
+        "std_pct": 1.1214,
+        "hit_rate_pct": 46.46,
+        "sharpe_ann": -1.44,
+        "t_stat": -3.126,
+        "cum_return_pct": -72.32
+      }
+    }
+  },
+  "variant_b": {
+    "runnable": false,
+    "reason": "ta_attractiveness_scores.json contains a CURRENT snapshot only (single 'updated_at' timestamp, no per-day history). No historical FCS / TA-attractiveness time-series exists in pipeline/data/. Backtesting Variant B requires per-day rank history of attractiveness scores for \u22651 year \u2014 not available.",
+    "snapshot_updated_at": "2026-04-25T16:00:07.555435",
+    "snapshot_ticker_count": 213,
+    "remediation": "To enable Variant B in a future run: write pipeline/data/feature_scorer_history.parquet with columns (date, ticker, score) populated daily by 16:00 IST EOD job. This is a green-field collector, not a backfillable derivation."
+  },
+  "verdict": "Across 5 sectoral indices, NEUTRAL-day 09:30->14:30 intraday long shows: average mean per-day return = -0.0683%, average annualized Sharpe = -1.038, 0/5 symbols positive in mean, 0/5 symbols with |t|>1.96. NIFTY 50: mean=-0.0279%, hit=49.1%, Sharpe=-0.745, t=-0.781. Passive full-day hold on the same NEUTRAL days has average Sharpe = -1.038.  DECISION: edge is **NOT convincing** \u2014 do NOT register H-2026-04-26-003 in its current form. The NEUTRAL-day long-only intraday on indices does not clear the bar (majority positive + Sharpe>0.5 + at least one |t|>1.96). Practical implication: sitting in cash on NEUTRAL days is a Sharpe-positive decision vs taking on undifferentiated market beta \u2014 UNLESS the FCS-stock Variant B (currently un-backtestable) reveals quality-persistence edge that the index-level test cannot see."
+}
