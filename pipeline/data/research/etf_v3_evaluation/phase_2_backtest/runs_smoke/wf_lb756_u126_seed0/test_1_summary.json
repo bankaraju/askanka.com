@@ -1,0 +1,73 @@
+{
+  "n_oos_days": 493,
+  "n_unique_zones": 5,
+  "zone_distribution": {
+    "EUPHORIA": 5,
+    "RISK-ON": 27,
+    "NEUTRAL": 413,
+    "CAUTION": 29,
+    "RISK-OFF": 19
+  },
+  "per_zone_table": [
+    {
+      "zone": "EUPHORIA",
+      "n": 5,
+      "pct_of_days": 1.02,
+      "mean_ret_pp": 0.3465,
+      "median_ret_pp": 0.1883,
+      "std_ret_pp": 1.3235,
+      "pct_up": 60.0,
+      "pct_down": 40.0,
+      "hypothesis_dir": -1,
+      "hypothesis_acc_pct": 40.0
+    },
+    {
+      "zone": "RISK-ON",
+      "n": 27,
+      "pct_of_days": 5.49,
+      "mean_ret_pp": -0.2646,
+      "median_ret_pp": -0.1932,
+      "std_ret_pp": 0.5863,
+      "pct_up": 18.52,
+      "pct_down": 81.48,
+      "hypothesis_dir": 1,
+      "hypothesis_acc_pct": 18.52
+    },
+    {
+      "zone": "NEUTRAL",
+      "n": 412,
+      "pct_of_days": 83.74,
+      "mean_ret_pp": 0.0291,
+      "median_ret_pp": 0.0477,
+      "std_ret_pp": 0.885,
+      "pct_up": 54.13,
+      "pct_down": 45.87,
+      "hypothesis_dir": 0,
+      "hypothesis_acc_pct": NaN
+    },
+    {
+      "zone": "CAUTION",
+      "n": 29,
+      "pct_of_days": 5.89,
+      "mean_ret_pp": 0.1884,
+      "median_ret_pp": 0.0421,
+      "std_ret_pp": 0.8838,
+      "pct_up": 51.72,
+      "pct_down": 44.83,
+      "hypothesis_dir": -1,
+      "hypothesis_acc_pct": 44.83
+    },
+    {
+      "zone": "RISK-OFF",
+      "n": 19,
+      "pct_of_days": 3.86,
+      "mean_ret_pp": -0.0604,
+      "median_ret_pp": -0.054,
+      "std_ret_pp": 1.2637,
+      "pct_up": 47.37,
+      "pct_down": 52.63,
+      "hypothesis_dir": -1,
+      "hypothesis_acc_pct": 52.63
+    }
+  ]
+}

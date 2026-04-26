@@ -1,0 +1,144 @@
+{
+  "n_neutral_days": 413,
+  "missing_proxies": [
+    "INFRA"
+  ],
+  "per_sector": [
+    {
+      "sector": "BANKNIFTY",
+      "n": 413,
+      "mean_pp": 0.0687,
+      "median_pp": 0.105,
+      "std_pp": 1.0411,
+      "pct_up": 55.21,
+      "pct_down": 44.79,
+      "IR_per_day": 0.066,
+      "fade_short_pp": -0.0687
+    },
+    {
+      "sector": "NIFTYAUTO",
+      "n": 409,
+      "mean_pp": 0.0283,
+      "median_pp": 0.0062,
+      "std_pp": 1.2615,
+      "pct_up": 50.12,
+      "pct_down": 49.88,
+      "IR_per_day": 0.0224,
+      "fade_short_pp": -0.0283
+    },
+    {
+      "sector": "NIFTYENERGY",
+      "n": 409,
+      "mean_pp": 0.0326,
+      "median_pp": 0.0749,
+      "std_pp": 1.347,
+      "pct_up": 54.52,
+      "pct_down": 45.48,
+      "IR_per_day": 0.0242,
+      "fade_short_pp": -0.0326
+    },
+    {
+      "sector": "NIFTYFMCG",
+      "n": 409,
+      "mean_pp": 0.0189,
+      "median_pp": 0.0006,
+      "std_pp": 0.8643,
+      "pct_up": 50.12,
+      "pct_down": 49.88,
+      "IR_per_day": 0.0219,
+      "fade_short_pp": -0.0189
+    },
+    {
+      "sector": "NIFTYIT",
+      "n": 413,
+      "mean_pp": 0.0141,
+      "median_pp": 0.0136,
+      "std_pp": 1.3748,
+      "pct_up": 51.09,
+      "pct_down": 48.91,
+      "IR_per_day": 0.0103,
+      "fade_short_pp": -0.0141
+    },
+    {
+      "sector": "NIFTYMEDIA",
+      "n": 409,
+      "mean_pp": -0.0699,
+      "median_pp": -0.0456,
+      "std_pp": 1.5417,
+      "pct_up": 48.9,
+      "pct_down": 51.1,
+      "IR_per_day": -0.0453,
+      "fade_short_pp": 0.0699
+    },
+    {
+      "sector": "NIFTYMETAL",
+      "n": 409,
+      "mean_pp": 0.1177,
+      "median_pp": 0.1849,
+      "std_pp": 1.6101,
+      "pct_up": 55.75,
+      "pct_down": 44.25,
+      "IR_per_day": 0.0731,
+      "fade_short_pp": -0.1177
+    },
+    {
+      "sector": "NIFTYPHARMA",
+      "n": 411,
+      "mean_pp": 0.0671,
+      "median_pp": 0.0758,
+      "std_pp": 0.9896,
+      "pct_up": 54.5,
+      "pct_down": 45.5,
+      "IR_per_day": 0.0678,
+      "fade_short_pp": -0.0671
+    },
+    {
+      "sector": "NIFTYPSUBANK",
+      "n": 409,
+      "mean_pp": 0.0906,
+      "median_pp": 0.018,
+      "std_pp": 1.7,
+      "pct_up": 50.37,
+      "pct_down": 49.63,
+      "IR_per_day": 0.0533,
+      "fade_short_pp": -0.0906
+    },
+    {
+      "sector": "NIFTYREALTY",
+      "n": 409,
+      "mean_pp": -0.0043,
+      "median_pp": 0.0596,
+      "std_pp": 1.7777,
+      "pct_up": 51.1,
+      "pct_down": 48.66,
+      "IR_per_day": -0.0024,
+      "fade_short_pp": 0.0043
+    }
+  ],
+  "buckets": [
+    {
+      "bucket": "fade_works",
+      "n_sectors": 2,
+      "sectors": "NIFTYPSUBANK,NIFTYENERGY",
+      "mean_pp": 0.0616,
+      "fade_short_pp": -0.0616,
+      "pct_up_avg": 52.45
+    },
+    {
+      "bucket": "fade_loses",
+      "n_sectors": 3,
+      "sectors": "NIFTYAUTO,NIFTYIT,NIFTYFMCG",
+      "mean_pp": 0.0204,
+      "fade_short_pp": -0.0204,
+      "pct_up_avg": 50.44
+    },
+    {
+      "bucket": "neutral_set",
+      "n_sectors": 5,
+      "sectors": "BANKNIFTY,NIFTYMETAL,NIFTYPHARMA,NIFTYMEDIA,NIFTYREALTY",
+      "mean_pp": 0.0359,
+      "fade_short_pp": -0.0359,
+      "pct_up_avg": 53.09
+    }
+  ]
+}

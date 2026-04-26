@@ -1,0 +1,4 @@
+bucket,n_sectors,sectors,mean_pp,fade_short_pp,pct_up_avg
+fade_works,2,"NIFTYPSUBANK,NIFTYENERGY",0.0616,-0.0616,52.45
+fade_loses,3,"NIFTYAUTO,NIFTYIT,NIFTYFMCG",0.0204,-0.0204,50.44
+neutral_set,5,"BANKNIFTY,NIFTYMETAL,NIFTYPHARMA,NIFTYMEDIA,NIFTYREALTY",0.0359,-0.0359,53.09
