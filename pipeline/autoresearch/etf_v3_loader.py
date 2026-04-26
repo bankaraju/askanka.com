@@ -58,6 +58,14 @@ FOREIGN_ETFS: dict[str, str] = {
     "agriculture": "commodity",
     "global_bonds": "rates",
     "india_etf": "india_proxy",
+    # Added 2026-04-26 to align with production v2 GLOBAL_ETFS weights.
+    # natgas + silver carry significant weight in current optimal_weights.json
+    # (natgas -8.21, silver -3.26). tech + yen carry small weights but are
+    # included for completeness so v2-faithful research matches production.
+    "tech": "us_sector",
+    "natgas": "commodity",
+    "silver": "commodity",
+    "yen": "fx",
 }
 
 INDIA_VIX_BUDGET_SATURDAY = pd.Timestamp("2025-02-01")

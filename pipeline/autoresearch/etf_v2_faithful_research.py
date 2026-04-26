@@ -69,12 +69,17 @@ OUT_DIR = REPO_ROOT / "pipeline" / "data" / "research" / "etf_v3"
 DEFAULT_SEED = 42
 DEFAULT_ITERATIONS = 2000
 
-# v2 columns we have in the parquet panel
+# v2 columns we have in the parquet panel.
+# Updated 2026-04-26 to include tech/natgas/silver/yen — these are weighted in
+# production etf_optimal_weights.json (natgas -8.21 and silver -3.26 are the
+# 2nd and 3rd largest weights after brazil), but were missing from the first
+# v2-faithful run, so that test was structurally different from production.
 FOREIGN_ETF_COLS = [
     "sp500", "treasury", "dollar", "gold", "crude_oil", "copper",
     "brazil", "china_etf", "korea_etf", "japan_etf", "developed", "em",
     "euro", "high_yield", "financials", "industrials", "kbw_bank",
     "agriculture", "global_bonds", "india_etf",
+    "tech", "natgas", "silver", "yen",
 ]
 # v2 Indian features as RAW LEVELS (matching production)
 INDIAN_LEVEL_COLS = ["india_vix", "fii_net", "dii_net", "nifty_close"]
