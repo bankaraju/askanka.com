@@ -1,0 +1,136 @@
+{
+  "hypothesis_id": "H-2026-04-26-001",
+  "in_sample_csv": "pipeline/data/research/mechanical_replay/v2/trades_no_zcross.csv",
+  "sigma_threshold": 2.0,
+  "n_observed_trades": 42,
+  "observed_hits": 39,
+  "observed_hit_rate_pct": 92.8571,
+  "n_perms": 100000,
+  "seed": 20260426,
+  "candidate_pool_size": 388,
+  "null_a_random_sampling": {
+    "p_value": 0.0,
+    "perm_hit_rates_min": 0.2857142857142857,
+    "perm_hit_rates_max": 0.9047619047619048,
+    "perm_hit_rates_mean": 0.6184785714285714,
+    "perm_hit_rates_p50": 0.6190476190476191,
+    "perm_hit_rates_p95": 0.7380952380952381,
+    "perm_hit_rates_p99": 0.7857142857142857
+  },
+  "null_b_within_ticker_shuffle": {
+    "min_ticker_days": 5,
+    "n_effective": 18,
+    "n_tickers_dropped_due_to_insufficient_days": 24,
+    "dropped_tickers": [
+      {
+        "ticker": "PETRONET",
+        "pool_size": 4
+      },
+      {
+        "ticker": "SHRIRAMFIN",
+        "pool_size": 4
+      },
+      {
+        "ticker": "ASIANPAINT",
+        "pool_size": 2
+      },
+      {
+        "ticker": "EICHERMOT",
+        "pool_size": 3
+      },
+      {
+        "ticker": "TRENT",
+        "pool_size": 3
+      },
+      {
+        "ticker": "ABB",
+        "pool_size": 3
+      },
+      {
+        "ticker": "ABCAPITAL",
+        "pool_size": 3
+      },
+      {
+        "ticker": "ICICIBANK",
+        "pool_size": 4
+      },
+      {
+        "ticker": "INDUSINDBK",
+        "pool_size": 2
+      },
+      {
+        "ticker": "POLYCAB",
+        "pool_size": 3
+      },
+      {
+        "ticker": "EICHERMOT",
+        "pool_size": 3
+      },
+      {
+        "ticker": "HEROMOTOCO",
+        "pool_size": 1
+      },
+      {
+        "ticker": "ICICIBANK",
+        "pool_size": 4
+      },
+      {
+        "ticker": "ICICIBANK",
+        "pool_size": 4
+      },
+      {
+        "ticker": "OFSS",
+        "pool_size": 3
+      },
+      {
+        "ticker": "AUBANK",
+        "pool_size": 3
+      },
+      {
+        "ticker": "SBILIFE",
+        "pool_size": 2
+      },
+      {
+        "ticker": "UNITDSPR",
+        "pool_size": 3
+      },
+      {
+        "ticker": "ADANIENSOL",
+        "pool_size": 2
+      },
+      {
+        "ticker": "HCLTECH",
+        "pool_size": 4
+      },
+      {
+        "ticker": "JUBLFOOD",
+        "pool_size": 2
+      },
+      {
+        "ticker": "HCLTECH",
+        "pool_size": 4
+      },
+      {
+        "ticker": "HINDUNILVR",
+        "pool_size": 3
+      },
+      {
+        "ticker": "INFY",
+        "pool_size": 3
+      }
+    ],
+    "observed_hits_eff": 17,
+    "observed_hit_rate_eff_pct": 94.4444,
+    "p_value": 0.00275,
+    "perm_hit_rates_min": 0.2222222222222222,
+    "perm_hit_rates_max": 1.0,
+    "perm_hit_rates_mean": 0.6499933333333333,
+    "perm_hit_rates_p50": 0.6666666666666666,
+    "perm_hit_rates_p95": 0.8333333333333334,
+    "perm_hit_rates_p99": 0.8888888888888888
+  },
+  "bonferroni_threshold": 0.000417,
+  "verdict_p_lt_0_000417": true,
+  "verdict_null_b_p_lt_0_000417": false,
+  "compute_time_seconds": 0.885
+}
