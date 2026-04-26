@@ -606,9 +606,9 @@ def run_export():
 
 DEPLOY_FILES = [
     "data/global_regime.json",
-    # "data/live_status.json",   # WITHHELD 2026-04-26: strategy under re-validation, no public live positions until pre-registered rule + holdout-validated results ship
-    "data/today_recommendations.json",
-    # "data/track_record.json",  # WITHHELD 2026-04-26: same reason — track record cleared on master, do not re-publish until new H-2026-04-26-001 forward test concludes
+    # "data/live_status.json",          # WITHHELD 2026-04-26: strategy under re-validation, no public live positions until pre-registered rule + holdout-validated results ship
+    # "data/today_recommendations.json",# WITHHELD 2026-04-26: contains active trade list (spreads/stocks/news_driven). H-2026-04-26-001 forward paper test runs locally only; nothing reaches the public site until 30-day holdout + Tier 1 null both clear.
+    # "data/track_record.json",         # WITHHELD 2026-04-26: same reason — track record cleared on master, do not re-publish until new H-2026-04-26-001 forward test concludes
     "data/trust_scores.json",
     "data/gap_risk.json",
     "data/spread_stats.json",

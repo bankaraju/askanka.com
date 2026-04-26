@@ -539,7 +539,7 @@ tr:hover td {{ background: var(--bg-card-hover); }}
 <div id="sidebar">
   <div class="logo">
     <h2>Anka Research</h2>
-    <p>AI-Augmented Market Intelligence<br>Bharat Ankaraju | {week_label}</p>
+    <p>AI-Augmented Market Intelligence<br>Anka Research | {week_label}</p>
   </div>
   <nav>
     <a href="/">Back to askanka.com</a>
@@ -570,7 +570,7 @@ tr:hover td {{ background: var(--bg-card-hover); }}
   </div>
 </div>
 <p class="subtitle">Wartime Market Analysis | {period['start']} to {period['end']}<br>
-<span style="font-size:12px;color:#9ca3af;">By Bharat Ankaraju | Published {period['end']} | Weekly Research Brief #{week_num:03d}</span></p>
+<span style="font-size:12px;color:#9ca3af;">Anka Research | Published {period['end']} | Weekly Research Brief #{week_num:03d}</span></p>
 
 <div class="dashboard">
   <div class="dash-card">
@@ -712,7 +712,7 @@ tr:hover td {{ background: var(--bg-card-hover); }}
 
 <div class="footer-section">
   <p><strong>Anka Research</strong> | AI-Augmented Market Intelligence</p>
-  <p>By Bharat Ankaraju | {week_label} | Published {period['end']}</p>
+  <p>Anka Research | {week_label} | Published {period['end']}</p>
   <p style="margin-top:12px;font-size:11px;max-width:600px;margin-left:auto;margin-right:auto;">
     This report is for informational purposes only and does not constitute investment advice.
     Past performance is not indicative of future results. All data sourced from public markets.
