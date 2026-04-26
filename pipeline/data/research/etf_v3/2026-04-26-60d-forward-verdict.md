@@ -94,8 +94,38 @@ Mechanical sigma-break SHORT trades carry the P&L (+50 bps avg gross under v2). 
 - Cycle-3 verdict (foundation): `pipeline/data/research/etf_v3/2026-04-26-etf-v3-verdict.md`
 - Cadence sweep verdict (cadence=5 production lock): `pipeline/data/research/etf_v3/2026-04-26-cadence-sweep-verdict.md`
 
+## Cadence=1 (daily refit) appendix — added 19:44 IST
+
+Same setup but rolling refit at int=1 (daily Karpathy fit, 95 refits over the 60-day window). Self-calibrated thresholds: center=14.24, band=59.71. Distribution: NEUTRAL=90, EUPHORIA=3, RISK-OFF=1, RISK-ON=1.
+
+### Cadence=1 cohort comparison
+
+| Cohort | n trades | n dates | cluster mean ± SE bps | hit rate |
+|---|---|---|---|---|
+| v2 pass | 627 | 22 | +7.9 ± 14.0 | 56.6% |
+| **v3 pass (cadence=1)** | **23** | **1** | **-19.8 ± 0.0** | 56.5% |
+| both pass | 23 | 1 | -19.8 | 56.5% |
+| v3-only | 0 | 0 | — | — |
+| v2-only | 604 | 21 | +9.2 ± 14.7 | 56.6% |
+
+### Cadence comparison head-to-head
+
+| Engine | active days / 27 | trades | direction | cluster mean bps | takeaway |
+|---|---|---|---|---|---|
+| v2 production | 22 | 627 | mixed | +7.9 ± 14.0 | mostly trades, tiny edge |
+| v3 cadence=5 (weekly) | 2 (04-16, 04-17) | 35 | LONG=1 SHORT=34 | +29.3 ± 6.6 | WINS on 2 days, n=2 too small |
+| v3 cadence=1 (daily) | 1 (04-15) | 23 | LONG=0 SHORT=23 | **-19.8 ± 0.0** | LOSES on 1 day |
+
+### Key cadence finding
+
+Daily refit on the 60-day window picks DIFFERENT days than weekly refit (04-15 only vs 04-16/04-17), and the days it picks LOSE money. The pooled directional accuracy of cadence=1 was higher (+5.26pp vs cadence=5's +1.83pp on the same 60d window), but the STOCK SELECTION via the regime gate is worse.
+
+This corroborates the broader cadence-sweep finding (cadence=1 = +0.20pp pooled over 2 years = overfits). On 60 days the pattern shows up not as low pooled accuracy but as bad stock selection — daily refit is chasing patterns that don't survive the trade-execution layer.
+
+**Conclusion on user's daily-refit hypothesis:** REFUTED on stock-selection grounds. Daily refit doesn't add new picks (still strict subset of v2), picks even less than weekly (1 day vs 2), and the picks LOSE money. **Production cadence=5 (weekly) remains the right choice.**
+
 ## Open threads
 
-- cadence=1 (daily refit) 60-day comparison still running; appended on completion
 - v2-faithful cadence=5 honest comparison run not yet executed (would replace `parquet.regime` with v2-faithful's reconstructed zone — needed if we suspect production v2's regime labels are not what an honest v2 would emit)
 - 30+ day forward shadow on v3-curated CURATED-30 is the right next step before any production cutover commitment
+- Both cadence=5's "+29 bps win" and cadence=1's "-20 bps loss" are on n_clusters ≤ 2 — directionally informative but not statistically significant
