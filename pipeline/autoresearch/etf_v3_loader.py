@@ -66,6 +66,24 @@ FOREIGN_ETFS: dict[str, str] = {
     "natgas": "commodity",
     "silver": "commodity",
     "yen": "fx",
+    # Curated-list expansion 2026-04-26 — see docs/superpowers/specs/cureated ETF.txt
+    # for per-ticker thesis. Each entry has an explicit India-channel rationale.
+    "taiwan_etf": "asia",       # EWT — TSMC/semiconductor foundry pulse
+    "qqq": "us_market",         # QQQ — Nasdaq 100 growth sentiment, leads Nifty IT
+    "aiq": "us_sector",         # AIQ — pure-play AI/software, distinct from XLK
+    "smh": "us_sector",         # SMH — semiconductor cycle leads Indian EMS (Dixon)
+    "iwm": "us_market",         # IWM — Russell 2000 small-caps, EM liquidity proxy
+    "xle": "us_sector",         # XLE — US Energy, Reliance/OMC proxy
+    "xlv": "us_sector",         # XLV — US Healthcare, Indian pharma defensive
+    "mchi": "asia",             # MCHI — broader China exposure than FXI
+    "dbb": "commodity",         # DBB — base metals, leads Tata Steel/JSW/Hindalco
+    "emb": "credit",            # EMB — EM USD bond, EM credit risk barometer
+    "krbn": "thematic",         # KRBN — global carbon prices, energy-transition cost
+    "lit": "thematic",          # LIT — lithium/battery, Tata Motors EV signal
+    "kweb": "asia",             # KWEB — China internet, Zomato/Nykaa sentiment
+    "vixy": "vol",              # VIXY — US VIX short-term, tail-risk magnitude
+    "ewg": "europe",            # EWG — Germany, Indian auto-parts trade partner
+    "bito": "thematic",         # BITO — Bitcoin ETF, EM liquidity canary
 }
 
 INDIA_VIX_BUDGET_SATURDAY = pd.Timestamp("2025-02-01")
