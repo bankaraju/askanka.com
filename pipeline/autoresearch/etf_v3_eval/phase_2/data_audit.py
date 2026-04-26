@@ -27,6 +27,11 @@ def audit_run_data(minute_df: pd.DataFrame, stale_window: int = 3) -> dict:
     not of all bars within stale runs (so a 4-bar identical run with
     stale_window=3 reports two tails — bars 2 and 3).
 
+    ``bad_data_pct`` is computed as ``sum_of_individual_counts / n_rows × 100``.
+    A bar matching multiple criteria (e.g. zero-volume AND stale) is counted
+    once per criterion, so this is an UPPER BOUND on the fraction of distinct
+    impaired bars.
+
     Parameters
     ----------
     minute_df:
@@ -41,43 +46,33 @@ def audit_run_data(minute_df: pd.DataFrame, stale_window: int = 3) -> dict:
         duplicate_timestamp_count, stale_quote_count_min{stale_window},
         bad_data_pct, tag.
     """
-    stale_key = f"stale_quote_count_min{stale_window}"
-
-    if minute_df.empty:
-        return {
-            "n_rows": 0,
-            "zero_volume_bar_count": 0,
-            "zero_or_negative_price_count": 0,
-            "duplicate_timestamp_count": 0,
-            stale_key: 0,
-            "bad_data_pct": 0.0,
-            "tag": "CLEAN",
-        }
-
     df = minute_df.copy()
     n = len(df)
 
-    zero_vol = int((df["volume"] == 0).sum())
-    neg_price = int(((df["open"] <= 0) | (df["close"] <= 0)).sum())
-    duplicates = int(df.duplicated(subset=["ticker", "timestamp"]).sum())
+    zero_vol = int((df["volume"] == 0).sum()) if n else 0
+    neg_price = int(((df["open"] <= 0) | (df["close"] <= 0)).sum()) if n else 0
+    duplicates = int(df.duplicated(subset=["ticker", "timestamp"]).sum()) if n else 0
 
-    df = df.sort_values(["ticker", "timestamp"]).reset_index(drop=True)
-    df["_ohlc"] = df[["open", "high", "low", "close"]].apply(tuple, axis=1)
+    if n:
+        df = df.sort_values(["ticker", "timestamp"]).reset_index(drop=True)
+        df["_ohlc"] = list(zip(df["open"], df["high"], df["low"], df["close"]))
 
-    # eq_prev[i] = True iff bar i has the same OHLC as bar i-1 (within ticker)
-    eq_prev = df.groupby("ticker")["_ohlc"].transform(lambda s: s.eq(s.shift()))
+        # eq_prev[i] = True iff bar i has the same OHLC as bar i-1 (within ticker)
+        eq_prev = df.groupby("ticker")["_ohlc"].transform(lambda s: s.eq(s.shift()))
 
-    # A bar is a stale-tail iff the prior (stale_window-1) consecutive bars
-    # are all eq_prev=True. Rolling sum over window=(stale_window-1) equals
-    # (stale_window-1) iff every value in the window is True.
-    target = stale_window - 1
-    stale_mask = (
-        eq_prev.groupby(df["ticker"])
-        .rolling(window=target, min_periods=target)
-        .sum()
-        .reset_index(level=0, drop=True)
-    ) >= target
-    stale = int(stale_mask.sum())
+        # A bar is a stale-tail iff the prior (stale_window-1) consecutive bars
+        # are all eq_prev=True. Rolling sum over window=(stale_window-1) equals
+        # (stale_window-1) iff every value in the window is True.
+        target = stale_window - 1
+        stale_mask = (
+            eq_prev.groupby(df["ticker"])
+            .rolling(window=target, min_periods=target)
+            .sum()
+            .reset_index(level=0, drop=True)
+        ) >= target
+        stale = int(stale_mask.sum())
+    else:
+        stale = 0
 
     impaired = zero_vol + neg_price + duplicates + stale
     pct = float(impaired) / max(n, 1) * 100.0
@@ -87,7 +82,7 @@ def audit_run_data(minute_df: pd.DataFrame, stale_window: int = 3) -> dict:
         "zero_volume_bar_count": zero_vol,
         "zero_or_negative_price_count": neg_price,
         "duplicate_timestamp_count": duplicates,
-        stale_key: stale,
+        f"stale_quote_count_min{stale_window}": stale,
         "bad_data_pct": pct,
         "tag": _tag_for_pct(pct),
     }
