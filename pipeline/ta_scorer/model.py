@@ -28,6 +28,16 @@ def build_interaction_columns(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def standardize_features(X: pd.DataFrame, stats: dict | None = None) -> tuple[pd.DataFrame, dict]:
+    """Z-score standardize features. If `stats` is provided (mean+std from a
+    training fit), reuse it to avoid leakage when standardizing a test set."""
+    if stats is None:
+        mean = X.mean()
+        std = X.std().replace(0, 1.0)
+        stats = {"mean": mean, "std": std}
+    return (X - stats["mean"]) / stats["std"], stats
+
+
 def fit_logistic(X: pd.DataFrame, y, C: float = 1.0, max_iter: int = 2000,
                  random_state: int = 42) -> LogisticRegression:
     """Fit logistic regression with specified regularization and solver."""
