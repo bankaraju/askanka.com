@@ -15,8 +15,22 @@ equivalents, BEFORE tomorrow morning's 04:45 IST signal window.
 - [x] `etf_v3_curated_signal.py` written (commit `4cfb9bd`)
 - [x] `etf_v3_curated_reoptimize.bat` written
 - [x] `etf_v3_curated_signal.bat` written
-- [ ] Cadence sweep verdict (3/5/7/10/15 days) — **BLOCKING** (#52)
+- [x] Cadence sweep verdict (3/5/7/10/15 days) — DONE (#52). Production cadence locked at 5 days. See `pipeline/data/research/etf_v3/2026-04-26-cadence-sweep-verdict.md`.
+- [x] 60-day forward stocks-comparison (cadence=5 + cadence=1) — DONE. Verdict: v3 picks 5% as often as v2, strict subset (zero v3-only picks), daily refit picks fewer days and loses money on its 1 active day. See `pipeline/data/research/etf_v3/2026-04-26-60d-forward-verdict.md`.
 - [ ] User approval to flip scheduler (production change)
+
+**60-day forward verdict summary (added 19:50 IST):**
+| Engine | trade-eligible days / 27 | trades | cluster mean bps | hit rate |
+|---|---|---|---|---|
+| v2 production | 22 | 627 | +7.9 ± 14.0 | 56.6% |
+| v3 cadence=5 (production) | 2 | 35 | +29.3 ± 6.6 | 71.4% |
+| v3 cadence=1 (overfit) | 1 | 23 | -19.8 ± 0.0 | 56.5% |
+| neither (both NEUTRAL) | 4 | 55 | -17.5 ± 15.2 | 47.3% |
+
+**The forward shows v3 is a strict pruning of v2 (no new ideas), so cutover risk profile is:**
+- Hard cutover: trade frequency drops ~95%, no new trade ideas surface, P&L exposure on n_clusters=2
+- Sidecar parallel: zero downside, accumulates evidence for ~30 trade-eligible days before commit
+- Recommendation: **SIDECAR**. The data does not yet justify the irreversible step.
 
 **Today's v3-curated dry-run (sanity check before any cutover):**
 - `today_zone`: NEUTRAL
