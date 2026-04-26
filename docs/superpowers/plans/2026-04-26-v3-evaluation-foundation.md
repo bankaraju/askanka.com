@@ -1347,7 +1347,7 @@ from pipeline.autoresearch.etf_v3_eval.schema_validator import (
     SchemaViolation,
     validate_minute_bars_schema,
 )
-from pipeline.kite_session import get_kite
+from pipeline.kite_client import get_kite
 
 logger = logging.getLogger(__name__)
 
