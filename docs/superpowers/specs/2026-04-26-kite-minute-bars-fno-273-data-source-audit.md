@@ -9,7 +9,7 @@
 ## §6.1 Source identification
 - **Vendor:** Zerodha Kite Connect
 - **Endpoint:** `kite.historical_data(token, from, to, interval='minute')`
-- **Wrapper:** `pipeline/kite_session.py`
+- **Wrapper:** `pipeline/kite_client.py`
 - **Authentication:** persisted session refresh (per AnkaRefreshKite 09:00 IST job)
 
 ## §6.2 Live verification at onboarding
