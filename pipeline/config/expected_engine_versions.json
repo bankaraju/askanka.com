@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "_comment": "Declares the engine_version each tracked output is expected to be running today. Consumers compare provenance.engine_version against the value here and render amber/red on mismatch. Update this file in the same commit as any engine cutover.",
+  "outputs": {
+    "data/today_regime.json": {
+      "expected_engine_version": "v3_curated",
+      "expected_cadence_seconds": 86400,
+      "owner_task": "AnkaETFSignal",
+      "notes": "ETF v3 curated cutover landed 2026-04-27. Weights frozen at c93488b for H-2026-04-27 holdout window — AnkaETFReoptimize is intentionally disabled."
+    },
+    "pipeline/data/correlation_breaks.json": {
+      "expected_engine_version": "phase_c_v3.2",
+      "expected_cadence_seconds": 900,
+      "owner_task": "AnkaCorrelationBreaks",
+      "notes": "15-min cadence intraday. Sectoral-index peer anchor wired 2026-04-25."
+    },
+    "pipeline/data/correlation_break_history.json": {
+      "expected_engine_version": "phase_c_v3.2",
+      "expected_cadence_seconds": 900,
+      "owner_task": "AnkaCorrelationBreaks",
+      "notes": "Append-only history of every break the engine has emitted."
+    },
+    "pipeline/data/research/phase_c/live_paper_ledger.json": {
+      "expected_engine_version": "phase_c_shadow_v1",
+      "expected_cadence_seconds": 86400,
+      "owner_task": "AnkaPhaseCShadowOpen",
+      "notes": "Forward shadow ledger. Open at 09:25, close at 14:30. Gating will tighten when H-2026-04-27-003 lands and POSSIBLE_OPPORTUNITY routing is approved."
+    },
+    "pipeline/data/research/track_record/recommendations.csv": {
+      "expected_engine_version": "derived_eod_v1",
+      "expected_cadence_seconds": 86400,
+      "owner_task": "AnkaRecommendationsBuild",
+      "notes": "Derived EOD aggregation, NOT canonical. Regenerable from live_paper_ledger.json + replay sources. Public-facing track record."
+    }
+  }
+}

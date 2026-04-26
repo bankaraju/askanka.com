@@ -1257,4 +1257,20 @@ cat pipeline/data/signals/open_signals.json | python -m json.tool
 
 ---
 
-*Document version: 2026-04-18. Auto-generated from code trace of askanka.com pipeline.*
+## Engine/Model Output Provenance Contract (2026-04-27)
+
+Every model output (today_regime.json, correlation_breaks.json, live_paper_ledger.json, recommendations.csv, etc.) is governed by the provenance contract. The producing scheduled task writes a sidecar `<output>.provenance.json` declaring `task_name`, `engine_version`, `git_sha`, `started_at`, and `expected_cadence_seconds`. Consumers (terminal pages, audit, exporters) read the sidecar and render an in-UI badge — **green** when version matches `pipeline/config/expected_engine_versions.json` and output age is within cadence, **amber** when sidecar is missing or output is stale, **red** when version does not match the expected config.
+
+The contract makes the running system the source of truth, not the docs. It exists because the AnkaETFSignal v1 → v3_curated cutover on 2026-04-27 left the docs and the actual scheduled task disagreeing for several minutes.
+
+Helper: `pipeline/provenance.py` (`write` / `read` / `assess`). Config: `pipeline/config/expected_engine_versions.json`. Full spec: [docs/superpowers/specs/2026-04-27-provenance-contract.md](superpowers/specs/2026-04-27-provenance-contract.md).
+
+**Cutover protocol:** when changing an engine version (e.g. v1 → v3 curated), update `expected_engine_versions.json` AND the producing task's `provenance.write(engine_version=...)` AND any .bat wrapper / inventory note **in the same commit**. Then watch the badge: it must go green within one cadence, otherwise the cutover did not actually land.
+
+**Roll-out:** Phase 1 lands the helper + config + LIVE monitor consumer rendering (this commit). Phase 2 is per-task producer opt-in, no deadline — until a producer opts in, its output's badge stays amber "unknown", which is the correct failure mode.
+
+Producers must NOT backfill provenance for outputs produced before the contract landed; the only honest answer for those is "we don't know which version generated this."
+
+---
+
+*Document version: 2026-04-27. Auto-generated from code trace of askanka.com pipeline.*

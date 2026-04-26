@@ -2,6 +2,7 @@
 import { getHealth } from './lib/api.js';
 import * as dashboard from './pages/dashboard.js';
 import * as trading from './pages/trading.js';
+import * as liveMonitor from './pages/live-monitor.js';
 import * as regime from './pages/regime.js';
 import * as scanner from './pages/scanner.js';
 import * as trust from './pages/trust.js';
@@ -15,6 +16,7 @@ import * as settings from './pages/settings.js';
 const PAGES = {
   dashboard, trading, regime, scanner, trust, news, options, risk, research,
   'track-record': trackRecord, settings,
+  'live-monitor': liveMonitor,
 };
 
 let currentPage = null;

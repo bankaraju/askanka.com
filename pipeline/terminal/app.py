@@ -22,6 +22,7 @@ from pipeline.terminal.api.oi import router as oi_router
 from pipeline.terminal.api.candidates import router as candidates_router
 from pipeline.terminal.api.risk import router as risk_router
 from pipeline.terminal.api import live as live_api
+from pipeline.terminal.api.live_monitor import router as live_monitor_router
 from pipeline.terminal.api.attractiveness import router as attractiveness_router
 from pipeline.terminal.api.ta_attractiveness import router as ta_attractiveness_router
 
@@ -44,6 +45,7 @@ app.include_router(oi_router, prefix="/api")
 app.include_router(candidates_router, prefix="/api")
 app.include_router(risk_router, prefix="/api")
 app.include_router(live_api.router, prefix="/api")
+app.include_router(live_monitor_router, prefix="/api")
 app.include_router(attractiveness_router, prefix="/api")
 app.include_router(ta_attractiveness_router, prefix="/api")
 
