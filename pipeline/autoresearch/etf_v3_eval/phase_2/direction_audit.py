@@ -46,9 +46,9 @@ def direction_audit(events: pd.DataFrame, annualization: int = 252) -> Direction
     Raises
     ------
     ValueError
-        If ``realized_pct`` or ``side`` columns are missing.
-    ValueError
-        If ``side`` contains values other than ``"LONG"`` or ``"SHORT"``.
+        If ``realized_pct`` or ``side`` columns are missing, or if fewer than
+        2 events are supplied (Sharpe requires ddof=1 std), or if ``side``
+        contains values other than ``"LONG"`` or ``"SHORT"``.
     """
     # Required-column guard
     missing = _REQUIRED_COLUMNS - set(events.columns)
@@ -56,6 +56,11 @@ def direction_audit(events: pd.DataFrame, annualization: int = 252) -> Direction
         raise ValueError(
             f"events missing required columns {sorted(missing)}; got {list(events.columns)}"
         )
+
+    # n>=2 guard — std(ddof=1) is NaN for n=1; matches peer-module contract
+    # (cluster_robust_se, naive_benchmarks reject degenerate inputs).
+    if len(events) < 2:
+        raise ValueError(f"direction_audit requires at least 2 events; got {len(events)}")
 
     sign = events["side"].map({"LONG": 1.0, "SHORT": -1.0})
 
@@ -72,7 +77,8 @@ def direction_audit(events: pd.DataFrame, annualization: int = 252) -> Direction
     s_mean = float(strat.mean())
     o_mean = float(opp.mean())
 
-    # Use max(..., 1e-12) to avoid boolean-coercion edge cases with `or 1e-12`
+    # Floor to avoid divide-by-zero for zero-variance returns (n>=2 already
+    # enforced above, so std cannot be NaN here).
     s_sd = max(float(strat.std(ddof=1)), 1e-12)
     o_sd = max(float(opp.std(ddof=1)), 1e-12)
 
