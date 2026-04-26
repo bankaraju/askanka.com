@@ -17,8 +17,12 @@ import pandas as pd
 class AdjustmentEvent:
     symbol: str
     event_date: date
-    kind: str   # "split" | "bonus" | "dividend"
-    ratio: float   # split: post-split shares per pre-split (e.g. 2.0 for 2-for-1)
+    kind: str
+    ratio: float
+
+    def __post_init__(self) -> None:
+        if self.ratio <= 0:
+            raise ValueError(f"AdjustmentEvent ratio must be > 0, got {self.ratio}")
 
 
 def unadjust_eod_series(eod: pd.DataFrame, events: Iterable[AdjustmentEvent]) -> pd.DataFrame:
