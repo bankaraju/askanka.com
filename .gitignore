@@ -9,6 +9,8 @@ pipeline/data/*
 !pipeline/data/earnings_calendar/
 pipeline/data/earnings_calendar/*
 !pipeline/data/earnings_calendar/peers_frozen.json
+# Universe pins (data validation policy §11.3 — point-in-time correctness)
+!pipeline/data/canonical_fno_research_v*.json
 pipeline/logs/
 pipeline/__pycache__/
 pipeline/lib/
