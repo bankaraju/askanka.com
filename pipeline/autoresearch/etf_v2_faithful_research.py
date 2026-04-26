@@ -69,17 +69,24 @@ OUT_DIR = REPO_ROOT / "pipeline" / "data" / "research" / "etf_v3"
 DEFAULT_SEED = 42
 DEFAULT_ITERATIONS = 2000
 
-# v2 columns we have in the parquet panel.
-# Updated 2026-04-26 to include tech/natgas/silver/yen — these are weighted in
-# production etf_optimal_weights.json (natgas -8.21 and silver -3.26 are the
-# 2nd and 3rd largest weights after brazil), but were missing from the first
-# v2-faithful run, so that test was structurally different from production.
+# v2 columns. Now includes the curated-list expansion (2026-04-26 cycle 2):
+#   Wave 1 (24): production-v2-matching set (tech/natgas/silver/yen added to
+#     align with production etf_optimal_weights.json which had natgas −8.21
+#     and silver −3.26 as #2/#3 weights).
+#   Wave 2 (40): + 16 from docs/superpowers/specs/cureated ETF.txt — each
+#     ticker has an explicit India-channel rationale (taiwan_etf for TSMC
+#     foundry pulse, qqq for Nasdaq leadership of Nifty IT, aiq for AI/
+#     software margin, smh for Indian EMS lead, etc.).
 FOREIGN_ETF_COLS = [
+    # Wave 1 (production-matching, 24)
     "sp500", "treasury", "dollar", "gold", "crude_oil", "copper",
     "brazil", "china_etf", "korea_etf", "japan_etf", "developed", "em",
     "euro", "high_yield", "financials", "industrials", "kbw_bank",
     "agriculture", "global_bonds", "india_etf",
     "tech", "natgas", "silver", "yen",
+    # Wave 2 (curated-list expansion, +16)
+    "taiwan_etf", "qqq", "aiq", "smh", "iwm", "xle", "xlv",
+    "mchi", "dbb", "emb", "krbn", "lit", "kweb", "vixy", "ewg", "bito",
 ]
 # v2 Indian features as RAW LEVELS (matching production)
 INDIAN_LEVEL_COLS = ["india_vix", "fii_net", "dii_net", "nifty_close"]
