@@ -8,17 +8,21 @@ from __future__ import annotations
 import json
 from datetime import date
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 
-def _load(path: Path) -> dict:
+def _load(path: Union[Path, str]) -> dict:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def eligible_universe_at(path: Path, asof: date) -> List[str]:
+def eligible_universe_at(path: Union[Path, str], asof: date) -> List[str]:
     """Return the most recent snapshot at or before ``asof`` (no future-leak).
 
-    If no snapshot is on or before ``asof``, returns an empty list.
+    Raises ValueError if no snapshot exists on or before ``asof``: that
+    indicates the backtest is asking for a universe predating the PIT history,
+    which is a config error, not a legitimate empty-universe case. Fail loud
+    rather than return ``[]`` and let downstream code silently produce zero
+    trades on a "no tickers" universe.
     """
     snaps = _load(path)["snapshots"]
     keys = sorted(snaps.keys())
@@ -28,10 +32,14 @@ def eligible_universe_at(path: Path, asof: date) -> List[str]:
             chosen = k
         else:
             break
-    return list(snaps[chosen]) if chosen else []
+    if chosen is None:
+        raise ValueError(
+            f"No snapshot on or before {asof}; earliest snapshot is {keys[0] if keys else 'none'}"
+        )
+    return list(snaps[chosen])
 
 
-def coverage_summary(path: Path) -> dict:
+def coverage_summary(path: Union[Path, str]) -> dict:
     """Return survivorship coverage ratios across all snapshots."""
     snaps = _load(path)["snapshots"]
     keys = sorted(snaps.keys())

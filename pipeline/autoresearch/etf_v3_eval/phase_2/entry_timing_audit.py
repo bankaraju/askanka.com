@@ -26,8 +26,12 @@ def audit_entry_timing(trades: pd.DataFrame, mode: EntryMode) -> dict:
 
     Raises ValueError if either required column is missing.
     """
-    if "signal_decidable_at" not in trades.columns or "filled_at" not in trades.columns:
-        raise ValueError("trades must contain signal_decidable_at + filled_at")
+    required = {"signal_decidable_at", "filled_at"}
+    missing = required - set(trades.columns)
+    if missing:
+        raise ValueError(
+            f"trades missing required columns {sorted(missing)}; got {list(trades.columns)}"
+        )
     lag = trades["filled_at"] - trades["signal_decidable_at"]
     n_neg = int((lag < pd.Timedelta(0)).sum())
     n_too_close = (
