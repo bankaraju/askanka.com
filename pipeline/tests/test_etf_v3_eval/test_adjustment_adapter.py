@@ -58,3 +58,17 @@ def test_adjustment_event_rejects_non_positive_ratio():
         AdjustmentEvent(symbol="X", event_date=date(2025, 1, 1), kind="split", ratio=0.0)
     with pytest.raises(ValueError, match="must be > 0"):
         AdjustmentEvent(symbol="X", event_date=date(2025, 1, 1), kind="split", ratio=-1.0)
+
+
+def test_eod_loader_calls_unadjuster(monkeypatch, tmp_path):
+    """The run_reconciliation EOD loader, when an adjustment-event source is
+    supplied, applies unadjust_eod_series to each ticker frame before merge."""
+    from pipeline.autoresearch.etf_v3_eval import run_reconciliation as rr
+
+    csv = tmp_path / "X.csv"
+    pd.DataFrame({"Date": ["2025-06-14", "2025-06-15"], "Close": [100.0, 50.0]}).to_csv(csv, index=False)
+    monkeypatch.setattr(rr, "EOD_DIR", tmp_path)
+
+    events_by_ticker = {"X": [AdjustmentEvent("X", date(2025, 6, 15), "split", 2.0)]}
+    out = rr.load_eod_for_tickers(["X"], events_by_ticker=events_by_ticker)
+    assert out.loc[out["trade_date"] == date(2025, 6, 14), "close"].iloc[0] == 200.0
