@@ -202,22 +202,30 @@ downstream runs on stale data. The watchdog flags this as CRITICAL.
 The foundation. Uses 28 global ETFs (US sectors, emerging markets, commodities,
 bonds, currencies) to build a composite signal that maps to a regime zone.
 
-> **⚠ KNOWN ISSUE — 62.3% accuracy claim is methodology-artifact (2026-04-26 audit)**
+> **⚠ KNOWN ISSUE — 62.3% accuracy claim superseded (2026-04-26 audit, REVISED)**
 >
 > The "62.3% accuracy vs 51.6% random" number was generated under a single
-> 70/30 train/test split with no permutation null and no walk-forward. Re-tested
-> under the canonical backtesting policy gate ladder (§11.4 fragility, §12 perm
-> null, §13.2 walk-forward) on 2026-04-26 (verdict at
-> `pipeline/data/research/etf_v3/2026-04-26-etf-v3-verdict.md`), the same model
-> class shows mean walk-forward edge **−0.73pp** vs majority baseline and a
-> permutation-null p-value of **0.770**. The qualitative regime label may still
-> have utility as a risk-state ranker (see `regime_transition_overnight`
-> overnight asymmetry finding) but the quantitative accuracy claim is not
-> currently defensible. v2-faithful re-evaluation under rolling weekly refit
-> is in flight (`pipeline/autoresearch/etf_v2_faithful_research.py`); update
-> this section when results land.
+> 70/30 train/test split where the test-set Sharpe was the weight-selection
+> criterion (i.e., the test set was effectively in-sample). Re-tested under
+> rolling weekly refit on the same 24-feature panel that production uses
+> (verdict at `pipeline/data/research/etf_v3/2026-04-26-etf-v3-verdict.md`):
 >
-> Deep-read findings + structural issues:
+> - **v2-faithful (production architecture):** 53.24% accuracy over 494 OOS
+>   predictions, +1.62pp edge vs majority baseline, 95% CI [48.79%, 57.69%]
+> - **v3 (engineered alternative):** 53.35% accuracy over 493 OOS, +1.62pp edge,
+>   95% CI [48.88%, 57.81%]
+> - **Both architectures match within bootstrap noise.** Neither hits 95%
+>   significance — both CIs include the baseline. One-sided P(acc > base) ~75%.
+>
+> The honest production-cadence number is **~53.2% with a +1.6pp edge over
+> majority class, not significant at 95%**. Cite this, not 62.3%.
+>
+> Year-on-year decay is the most concerning signal: 2024 ~58% → 2025 ~52% →
+> 2026 YTD ~48-52%. If decay continues, even the +1.6pp full-window edge will
+> disappear. The qualitative regime label (RISK-OFF / EUPHORIA ranking) may
+> still have utility — see `regime_transition_overnight` overnight asymmetry.
+>
+> Deep-read v2 findings + 5 structural issues:
 > `pipeline/data/research/etf_v3/2026-04-26-v2-deep-read-findings.md`
 
 **How it works:**
