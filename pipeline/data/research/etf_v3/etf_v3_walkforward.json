@@ -1,0 +1,88 @@
+{
+  "walk_forward": {
+    "n_folds": 5,
+    "fold_results": [
+      {
+        "fold": 1,
+        "train_size": 191,
+        "test_size": 191,
+        "train_acc_pct": 61.78010471204188,
+        "test_acc_pct": 50.78534031413613,
+        "test_sharpe": -0.20312577322932834,
+        "test_baseline_majority_pct": 50.26178010471204,
+        "test_edge_vs_majority_pp": 0.5235602094240903
+      },
+      {
+        "fold": 2,
+        "train_size": 382,
+        "test_size": 191,
+        "train_acc_pct": 60.47120418848168,
+        "test_acc_pct": 56.02094240837696,
+        "test_sharpe": 1.7727352711027018,
+        "test_baseline_majority_pct": 56.02094240837696,
+        "test_edge_vs_majority_pp": 0.0
+      },
+      {
+        "fold": 3,
+        "train_size": 573,
+        "test_size": 191,
+        "train_acc_pct": 58.1151832460733,
+        "test_acc_pct": 56.54450261780105,
+        "test_sharpe": 2.3895610443498736,
+        "test_baseline_majority_pct": 58.63874345549738,
+        "test_edge_vs_majority_pp": -2.0942408376963257
+      },
+      {
+        "fold": 4,
+        "train_size": 764,
+        "test_size": 191,
+        "train_acc_pct": 58.63874345549738,
+        "test_acc_pct": 47.64397905759162,
+        "test_sharpe": -0.9350235688761399,
+        "test_baseline_majority_pct": 50.26178010471204,
+        "test_edge_vs_majority_pp": -2.617801047120416
+      },
+      {
+        "fold": 5,
+        "train_size": 955,
+        "test_size": 191,
+        "train_acc_pct": 57.48691099476439,
+        "test_acc_pct": 52.879581151832454,
+        "test_sharpe": -0.23210818651387316,
+        "test_baseline_majority_pct": 52.35602094240838,
+        "test_edge_vs_majority_pp": 0.5235602094240761
+      }
+    ],
+    "mean_test_acc_pct": 52.774869109947645,
+    "std_test_acc_pct": 3.317901469686882,
+    "mean_edge_vs_majority_pp": -0.732984293193715,
+    "all_folds_positive_edge": false
+  },
+  "manifest": {
+    "run_id": "etf_v3_walk_forward_20260426T075659Z",
+    "model": "etf_v3",
+    "model_version": "v3.0.0",
+    "run_kind": "walk_forward",
+    "code_commit": "08f6aec93cf143954370dd603b4f8f2bb2c67527",
+    "config_hash": "23e6bfee2ba21cee",
+    "config": {
+      "n_iterations": 2000,
+      "seed": 42,
+      "n_folds": 5
+    },
+    "data_window": {
+      "window_start": "2021-04-23",
+      "window_end": "2026-04-23",
+      "in_sample_end": "2025-12-31",
+      "holdout_start": "2026-01-01"
+    },
+    "panel_shape": [
+      1236,
+      24
+    ],
+    "audit_pass": true,
+    "n_inputs_audited": 24,
+    "generated_at_utc": "2026-04-26T07:56:59.617303+00:00",
+    "extra": {}
+  }
+}

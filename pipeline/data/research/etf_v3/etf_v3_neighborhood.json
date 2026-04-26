@@ -1,0 +1,114 @@
+{
+  "neighborhood": {
+    "base_accuracy_pct": 56.63176265270506,
+    "base_sharpe": 1.9511780215176664,
+    "n_perturbations": 5,
+    "noise_scale": 0.1,
+    "perturbed_acc_mean_pct": 56.282722513089006,
+    "perturbed_acc_std_pct": 0.32649715416875635,
+    "perturbed_acc_min_pct": 55.93368237347295,
+    "perturbed_acc_max_pct": 56.8935427574171,
+    "max_drop_pp": 0.6980802792321157,
+    "stability_verdict": "STABLE",
+    "details": [
+      {
+        "perturbation_id": 1,
+        "noise_scale": 0.1,
+        "accuracy_pct": 56.195462478184986,
+        "sharpe": 1.934686083707486,
+        "edge_vs_majority_pp": 2.5305410122164034
+      },
+      {
+        "perturbation_id": 2,
+        "noise_scale": 0.1,
+        "accuracy_pct": 55.93368237347295,
+        "sharpe": 1.859646248111221,
+        "edge_vs_majority_pp": 2.2687609075043653
+      },
+      {
+        "perturbation_id": 3,
+        "noise_scale": 0.1,
+        "accuracy_pct": 56.10820244328097,
+        "sharpe": 1.8944998442107712,
+        "edge_vs_majority_pp": 2.4432809773123907
+      },
+      {
+        "perturbation_id": 4,
+        "noise_scale": 0.1,
+        "accuracy_pct": 56.282722513089,
+        "sharpe": 1.9122922347881315,
+        "edge_vs_majority_pp": 2.617801047120416
+      },
+      {
+        "perturbation_id": 5,
+        "noise_scale": 0.1,
+        "accuracy_pct": 56.8935427574171,
+        "sharpe": 1.9549550484653089,
+        "edge_vs_majority_pp": 3.228621291448519
+      }
+    ]
+  },
+  "base_fit": {
+    "weights": {
+      "sp500_ret_5d": -0.256593429582724,
+      "treasury_ret_5d": 0.6681821377889505,
+      "dollar_ret_5d": -0.00014452506216711776,
+      "gold_ret_5d": -1.0528758907522878e-06,
+      "crude_oil_ret_5d": -0.0001803535382393053,
+      "copper_ret_5d": -0.12309817355104258,
+      "brazil_ret_5d": -0.00017277856894014275,
+      "china_etf_ret_5d": -1.4694217412233909e-05,
+      "korea_etf_ret_5d": -0.31541081156652206,
+      "japan_etf_ret_5d": 6.283706068042423e-06,
+      "developed_ret_5d": -2.5554365319315793e-06,
+      "em_ret_5d": -1.6021135152028672e-06,
+      "euro_ret_5d": -1.9558395188258257e-07,
+      "high_yield_ret_5d": -1.648937772433877e-08,
+      "financials_ret_5d": 1.9111827999439628,
+      "industrials_ret_5d": 5.995276033166002e-08,
+      "kbw_bank_ret_5d": -0.548607689958016,
+      "agriculture_ret_5d": -0.03240240317160931,
+      "global_bonds_ret_5d": 6.292458787887189e-07,
+      "india_etf_ret_5d": 0.0007408020097354646,
+      "india_vix_level": 0.158511575434302,
+      "india_vix_chg_5d": -0.0017266430348468831,
+      "fii_net_5d": -3.371521426544159e-08,
+      "dii_net_5d": -4.874387266225426e-05,
+      "nifty_ret_1d": 1.1684617066337211e-05,
+      "nifty_ret_5d": 1.5646488908486911e-06,
+      "nifty_rsi_14": -5.523358860878001e-08
+    },
+    "accuracy": 56.63176265270506,
+    "sharpe": 1.9511780215176664,
+    "n_iterations": 2000,
+    "seed": 42
+  },
+  "manifest": {
+    "run_id": "etf_v3_neighborhood_20260426T075806Z",
+    "model": "etf_v3",
+    "model_version": "v3.0.0",
+    "run_kind": "neighborhood",
+    "code_commit": "08f6aec93cf143954370dd603b4f8f2bb2c67527",
+    "config_hash": "729c4e0e359682d3",
+    "config": {
+      "n_iterations": 2000,
+      "seed": 42,
+      "n_perturbations": 5,
+      "noise_scale": 0.1
+    },
+    "data_window": {
+      "window_start": "2021-04-23",
+      "window_end": "2026-04-23",
+      "in_sample_end": "2025-12-31",
+      "holdout_start": "2026-01-01"
+    },
+    "panel_shape": [
+      1236,
+      24
+    ],
+    "audit_pass": true,
+    "n_inputs_audited": 24,
+    "generated_at_utc": "2026-04-26T07:58:06.808011+00:00",
+    "extra": {}
+  }
+}

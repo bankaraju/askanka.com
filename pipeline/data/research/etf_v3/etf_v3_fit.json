@@ -1,0 +1,72 @@
+{
+  "fit": {
+    "weights": {
+      "sp500_ret_5d": -0.256593429582724,
+      "treasury_ret_5d": 0.6681821377889505,
+      "dollar_ret_5d": -0.00014452506216711776,
+      "gold_ret_5d": -1.0528758907522878e-06,
+      "crude_oil_ret_5d": -0.0001803535382393053,
+      "copper_ret_5d": -0.12309817355104258,
+      "brazil_ret_5d": -0.00017277856894014275,
+      "china_etf_ret_5d": -1.4694217412233909e-05,
+      "korea_etf_ret_5d": -0.31541081156652206,
+      "japan_etf_ret_5d": 6.283706068042423e-06,
+      "developed_ret_5d": -2.5554365319315793e-06,
+      "em_ret_5d": -1.6021135152028672e-06,
+      "euro_ret_5d": -1.9558395188258257e-07,
+      "high_yield_ret_5d": -1.648937772433877e-08,
+      "financials_ret_5d": 1.9111827999439628,
+      "industrials_ret_5d": 5.995276033166002e-08,
+      "kbw_bank_ret_5d": -0.548607689958016,
+      "agriculture_ret_5d": -0.03240240317160931,
+      "global_bonds_ret_5d": 6.292458787887189e-07,
+      "india_etf_ret_5d": 0.0007408020097354646,
+      "india_vix_level": 0.158511575434302,
+      "india_vix_chg_5d": -0.0017266430348468831,
+      "fii_net_5d": -3.371521426544159e-08,
+      "dii_net_5d": -4.874387266225426e-05,
+      "nifty_ret_1d": 1.1684617066337211e-05,
+      "nifty_ret_5d": 1.5646488908486911e-06,
+      "nifty_rsi_14": -5.523358860878001e-08
+    },
+    "accuracy": 56.63176265270506,
+    "sharpe": 1.9511780215176664,
+    "n_iterations": 2000,
+    "seed": 42
+  },
+  "in_sample_eval": {
+    "accuracy_pct": 56.63176265270506,
+    "sharpe": 1.9511780215176664,
+    "n_obs": 1146,
+    "n_up": 615,
+    "n_dn": 530,
+    "baseline_majority_pct": 53.66492146596858,
+    "edge_vs_majority_pp": 2.966841186736481
+  },
+  "manifest": {
+    "run_id": "etf_v3_fit_20260426T075615Z",
+    "model": "etf_v3",
+    "model_version": "v3.0.0",
+    "run_kind": "fit",
+    "code_commit": "08f6aec93cf143954370dd603b4f8f2bb2c67527",
+    "config_hash": "788dbbd4e0480df8",
+    "config": {
+      "n_iterations": 2000,
+      "seed": 42
+    },
+    "data_window": {
+      "window_start": "2021-04-23",
+      "window_end": "2026-04-23",
+      "in_sample_end": "2025-12-31",
+      "holdout_start": "2026-01-01"
+    },
+    "panel_shape": [
+      1236,
+      24
+    ],
+    "audit_pass": true,
+    "n_inputs_audited": 24,
+    "generated_at_utc": "2026-04-26T07:56:15.667965+00:00",
+    "extra": {}
+  }
+}

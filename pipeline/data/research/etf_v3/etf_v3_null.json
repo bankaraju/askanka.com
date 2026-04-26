@@ -1,0 +1,38 @@
+{
+  "null": {
+    "n_permutations": 200,
+    "real_test_acc_pct": 50.58139534883721,
+    "null_mean_pct": 50.62063953488372,
+    "null_std_pct": 1.507338923200177,
+    "null_p95_pct": 52.90697674418605,
+    "p_value_one_sided": 0.77,
+    "passes_alpha_0_05": false
+  },
+  "manifest": {
+    "run_id": "etf_v3_null_20260426T075756Z",
+    "model": "etf_v3",
+    "model_version": "v3.0.0",
+    "run_kind": "null",
+    "code_commit": "08f6aec93cf143954370dd603b4f8f2bb2c67527",
+    "config_hash": "eede55e534dbe23f",
+    "config": {
+      "n_perm": 200,
+      "n_iterations": 2000,
+      "seed": 42
+    },
+    "data_window": {
+      "window_start": "2021-04-23",
+      "window_end": "2026-04-23",
+      "in_sample_end": "2025-12-31",
+      "holdout_start": "2026-01-01"
+    },
+    "panel_shape": [
+      1236,
+      24
+    ],
+    "audit_pass": true,
+    "n_inputs_audited": 24,
+    "generated_at_utc": "2026-04-26T07:57:56.432268+00:00",
+    "extra": {}
+  }
+}
