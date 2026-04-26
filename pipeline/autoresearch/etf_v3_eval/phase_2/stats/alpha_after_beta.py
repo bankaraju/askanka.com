@@ -20,6 +20,8 @@ def regress_against_benchmark(
 
     Returns dict ``{alpha_annualized, beta, r_squared, residual_sharpe, n_obs}``.
     Inputs are coerced via ``np.asarray(..., dtype=float)`` so list inputs work.
+    Pass ``annualization=52`` for weekly returns or ``annualization=12`` for monthly.
+    Default 252 assumes daily returns.
     """
     y = np.asarray(strategy_returns, dtype=float)
     x = np.asarray(benchmark_returns, dtype=float)
@@ -32,7 +34,7 @@ def regress_against_benchmark(
     intercept, beta = float(model.params[0]), float(model.params[1])
     residuals = y - (intercept + beta * x)
     res_mean = float(residuals.mean())
-    res_sd = float(residuals.std(ddof=1) or 1e-12)  # guard zero-variance edge
+    res_sd = max(float(residuals.std(ddof=1)), 1e-12)  # guard zero-variance edge
     return {
         "alpha_annualized": intercept * annualization,
         "beta": beta,
