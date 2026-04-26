@@ -202,31 +202,41 @@ downstream runs on stale data. The watchdog flags this as CRITICAL.
 The foundation. Uses 28 global ETFs (US sectors, emerging markets, commodities,
 bonds, currencies) to build a composite signal that maps to a regime zone.
 
-> **⚠ KNOWN ISSUE — 62.3% accuracy claim superseded (2026-04-26 audit, REVISED)**
+> **⚠ KNOWN ISSUE — 62.3% accuracy claim is DEAD (2026-04-26 cycle 3 verdict)**
 >
-> The "62.3% accuracy vs 51.6% random" number was generated under a single
-> 70/30 train/test split where the test-set Sharpe was the weight-selection
-> criterion (i.e., the test set was effectively in-sample). Re-tested under
-> rolling weekly refit on the same 24-feature panel that production uses
-> (verdict at `pipeline/data/research/etf_v3/2026-04-26-etf-v3-verdict.md`):
+> The original 62.3% claim was an artifact of a single 70/30 split where
+> the test-set Sharpe selected weights (= effectively in-sample). The
+> first cycle-2 re-test (which claimed +1.62pp tied edge) was misled by
+> a hard-coded 20-ETF list in `etf_v3_research.py` that did NOT auto-pick
+> up loader expansions. Cycle-3 verdict (FINAL, see
+> `pipeline/data/research/etf_v3/2026-04-26-etf-v3-verdict.md`) evaluates
+> 4 configurations on identical panels and protocol:
 >
-> - **v2-faithful (production architecture):** 53.24% accuracy over 494 OOS
->   predictions, +1.62pp edge vs majority baseline, 95% CI [48.79%, 57.69%]
-> - **v3 (engineered alternative):** 53.35% accuracy over 493 OOS, +1.62pp edge,
->   95% CI [48.88%, 57.81%]
-> - **Both architectures match within bootstrap noise.** Neither hits 95%
->   significance — both CIs include the baseline. One-sided P(acc > base) ~75%.
+> | configuration | acc | base | edge | P(>base) | 2024 | 2025 | 2026 |
+> |---|---|---|---|---|---|---|---|
+> | v2-faithful FULL-40 | 48.99% | 51.62% | **−2.63pp** | 10.3% | 54.86% | 45.60% | 46.38% |
+> | v2-faithful CURATED-30 | 47.17% | 51.62% | **−4.45pp** | 2.6% | 54.29% | 44.40% | 39.13% |
+> | v3 FULL-40 | 51.52% | 51.72% | **−0.20pp** | 44.1% | 54.60% | 51.20% | 44.93% |
+> | **v3 CURATED-30** | **53.55%** | 51.72% | **+1.83pp** | **78.7%** | 54.60% | 53.20% | **52.17%** |
 >
-> The honest production-cadence number is **~53.2% with a +1.6pp edge over
-> majority class, not significant at 95%**. Cite this, not 62.3%.
+> v2 architecture is **broken at any feature count** (47-49% acc, well
+> below baseline). v3 + curated India-channel ETF list is the only
+> configuration with positive edge AND no year-decay (54.6→53.2→52.2%).
 >
-> Year-on-year decay is the most concerning signal: 2024 ~58% → 2025 ~52% →
-> 2026 YTD ~48-52%. If decay continues, even the +1.6pp full-window edge will
-> disappear. The qualitative regime label (RISK-OFF / EUPHORIA ranking) may
-> still have utility — see `regime_transition_overnight` overnight asymmetry.
+> v3 CURATED-30 95% CI [49.29%, 58.01%] still includes baseline so the
+> result is one-sided P(>base) = 78.7%, not 95%-significant. The
+> single-touch holdout is reserved.
 >
-> Deep-read v2 findings + 5 structural issues:
-> `pipeline/data/research/etf_v3/2026-04-26-v2-deep-read-findings.md`
+> **Production action items:**
+> 1. STOP citing 62.3% directional accuracy externally
+> 2. Build `etf_v3_curated_signal.py` daily-signal module (port v3
+>    feature engineering + CURATED_FOREIGN_ETFS selection)
+> 3. Forward-shadow v3-curated alongside production v2 for 30 trading
+>    days (2026-04-27 onwards) before promoting
+> 4. Do NOT consume holdout — use forward shadow for credibility
+>
+> Curated list source: `docs/superpowers/specs/cureated ETF.txt`
+> Deep-read v2 findings: `pipeline/data/research/etf_v3/2026-04-26-v2-deep-read-findings.md`
 
 **How it works:**
 - Takes daily returns of 28 ETFs (financials, innovation, treasury, VIX, developed
