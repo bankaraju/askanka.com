@@ -1,6 +1,6 @@
 {
-  "n_requested": 1,
-  "n_succeeded": 1,
-  "n_failed": 0,
+  "n_requested": 147,
+  "n_succeeded": 143,
+  "n_failed": 4,
   "raw_output": "pipeline\\autoresearch\\data\\intraday_break_replay_60d_v0.2_minute_bars.parquet"
 }

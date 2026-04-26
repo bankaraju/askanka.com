@@ -1,1 +1,5 @@
-
+ticker,reason
+L&TFH,backfill: no instrument_token for L&TFH
+LTIM,backfill: no instrument_token for LTIM
+MCDOWELL-N,backfill: no instrument_token for MCDOWELL-N
+ZOMATO,backfill: no instrument_token for ZOMATO
