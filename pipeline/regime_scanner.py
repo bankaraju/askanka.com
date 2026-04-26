@@ -193,6 +193,47 @@ def scan_regime() -> dict:
     Returns:
         Full regime snapshot dict (same content written to today_regime.json)
     """
+    # Provenance opt-in for data/today_regime.json. Engine version is
+    # propagated from the upstream regime_trade_map.json sidecar so this
+    # scanner never lies about what produced the zone label — if upstream
+    # was v2, this stays v2; if upstream was v3_curated, this is v3_curated.
+    # Falls back to "unknown_upstream" when the upstream producer hasn't
+    # opted in yet (badge stays amber, which is the contract).
+    #
+    # Ghost-sidecar guard: if the upstream FILE is newer than the upstream
+    # SIDECAR by more than 5 minutes, the sidecar is stale (likely a v2
+    # run on top of a stale v3 sidecar). Treat as unknown to prevent a
+    # false-green badge.
+    try:
+        from pipeline import provenance as _prov
+        _upstream = _prov.read(_TRADE_MAP) or {}
+        _engine = _upstream.get("engine_version", "unknown_upstream")
+        if _upstream and _TRADE_MAP.exists():
+            _sidecar = _TRADE_MAP.with_suffix(_TRADE_MAP.suffix + _prov.PROVENANCE_SUFFIX)
+            if _sidecar.is_file():
+                _file_mtime = _TRADE_MAP.stat().st_mtime
+                _side_mtime = _sidecar.stat().st_mtime
+                if _file_mtime - _side_mtime > 300:  # 5 min grace for clock skew
+                    log.warning(
+                        "regime_trade_map.json mtime %.0fs newer than sidecar — "
+                        "upstream producer didn't opt in, marking engine_version=unknown_upstream",
+                        _file_mtime - _side_mtime,
+                    )
+                    _engine = "unknown_upstream"
+        _prov.write(
+            _TODAY_REGIME_FILE,
+            task_name="AnkaETFSignal",
+            engine_version=_engine,
+            expected_cadence_seconds=86400,
+            extras={
+                "upstream_task": _upstream.get("task_name"),
+                "upstream_started_at": _upstream.get("started_at"),
+                "upstream_git_sha": _upstream.get("git_sha"),
+            },
+        )
+    except Exception as exc:
+        log.warning("provenance.write failed (non-fatal): %s", exc)
+
     # ---- 1. Load ETF regime (PRIMARY) ----
     eligible_spreads: dict = {}
     trade_map_key: str | None = None

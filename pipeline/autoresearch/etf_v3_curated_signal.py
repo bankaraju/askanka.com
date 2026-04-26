@@ -88,6 +88,29 @@ def compute_daily_signal(
         return {"status": "error",
                 "reason": "weights file missing zone_thresholds.center / .band"}
 
+    # Provenance opt-in (skip on dry_run so test invocations don't overwrite
+    # production sidecars). Per docs/superpowers/specs/2026-04-27-provenance-contract.md
+    # the call goes before heavy work — "this task started running at this
+    # time with this version", not "this task succeeded".
+    if not dry_run:
+        try:
+            from pipeline import provenance as _prov
+            _prov.write(
+                trade_map_path,
+                task_name="AnkaETFSignal",
+                engine_version="v3_curated",
+                expected_cadence_seconds=86400,
+                extras={
+                    "weights_frozen_at_commit": weights_data.get("frozen_at_commit"),
+                    "weights_frozen_for_hypothesis": "H-2026-04-27-001",
+                    "zone_center": center,
+                    "zone_band": band,
+                    "n_features": len(optimal_weights),
+                },
+            )
+        except Exception as exc:
+            logger.warning("provenance.write failed (non-fatal): %s", exc)
+
     # Build today's features the same way the reoptimizer did. No yfinance,
     # no silent drop — the canonical loader is the only data source.
     panel = build_panel(t1_anchor=True)
