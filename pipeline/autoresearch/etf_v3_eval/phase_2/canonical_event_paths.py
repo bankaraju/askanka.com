@@ -20,7 +20,7 @@ EARNINGS_HISTORY_PATH = Path("pipeline/data/earnings_calendar/history.parquet")
 def _parse_rfc2822_to_date(s: str) -> date | None:
     try:
         return parsedate_to_datetime(s).date()
-    except Exception:
+    except (TypeError, ValueError):
         return None
 
 

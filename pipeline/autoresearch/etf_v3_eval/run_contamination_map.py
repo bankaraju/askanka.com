@@ -29,12 +29,6 @@ BULK_DIR = Path("pipeline/data/bulk_deals")
 INSIDER_DIR = Path("pipeline/data/insider_trades")
 
 
-def _load_or_empty(path: Path, columns: list[str]) -> pd.DataFrame:
-    if path.exists() and path.is_file():
-        return pd.read_parquet(path)
-    return pd.DataFrame(columns=columns)
-
-
 def _load_dir_parquets(dir_path: Path) -> pd.DataFrame:
     if not dir_path.exists():
         return pd.DataFrame()
