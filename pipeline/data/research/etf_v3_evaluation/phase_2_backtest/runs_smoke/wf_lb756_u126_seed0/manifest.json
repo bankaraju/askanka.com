@@ -1,0 +1,21 @@
+{
+  "run_id": "wf_lb756_u126_seed0",
+  "strategy_version": "v3-CURATED-30",
+  "cost_model_version": "cm_2026-04-26_v1",
+  "random_seed": 0,
+  "lookback_days": 756,
+  "refit_interval_days": 5,
+  "n_iterations": 100,
+  "universe": "126",
+  "feature_set": "curated",
+  "git_commit_hash": "c93488b28e423d8847a4fc57ef70f51a8db5d969",
+  "config_hash": "c884eb9cdbfce1154b9927d49feda31affbb45ba742f8b58651f545c9e2bb52d",
+  "data_file_sha256_manifest": {
+    "replay_parquet": "241b0e249fa991818fd8768cc954eb4fda34c4df4cd6a758bd74274167c3fd75",
+    "nifty_close_daily": "bf42842765c82f46a855268b0c60b389f07086e72f26f708b4a40fdacda735e5",
+    "india_vix_daily": "7b12afe686885f15299a0e070de5a028c66db1413baaf629467bb56a762f3020",
+    "fii_net_daily": "e5ff0333dc03374145d5fb0b45f5faed1529a714713526d0dcf492faa24488c9",
+    "dii_net_daily": "5db1cb8bfa0b544d1d50ac05c7adc15ad9b9880b598982b257c4fe689909e11f"
+  },
+  "report_generated_at": "2026-04-26T18:31:32.316945+00:00"
+}
