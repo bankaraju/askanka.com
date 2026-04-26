@@ -73,12 +73,20 @@ ZONE_LABELS = ["RISK-OFF", "CAUTION", "NEUTRAL", "RISK-ON", "EUPHORIA"]
 # Feature engineering (from canonical T-1 anchored panel)
 # =============================================================================
 
-FOREIGN_RETURN_COLS = [
-    "sp500", "treasury", "dollar", "gold", "crude_oil", "copper",
-    "brazil", "china_etf", "korea_etf", "japan_etf", "developed", "em",
-    "euro", "high_yield", "financials", "industrials", "kbw_bank",
-    "agriculture", "global_bonds", "india_etf",
-]
+# Default foreign-ETF column list = full FOREIGN_ETFS dict from the loader.
+# Stays in sync with the canonical loader so v3 sees every ETF the loader is
+# configured to load. Pass `foreign_cols=` to build_features() to use a subset
+# (e.g. CURATED_FOREIGN_ETFS) without editing this constant.
+#
+# History (2026-04-26):
+#   - First v3 had a hard-coded 20-ETF list here and ignored loader expansions.
+#     The "v3 24-feature" and "v3 40-feature" runs from earlier today were
+#     actually all 20-ETF runs because of this lag. Fixed by importing from
+#     loader so the two stay coupled.
+from pipeline.autoresearch.etf_v3_loader import (
+    FOREIGN_ETFS as _LOADER_FOREIGN_ETFS,
+)
+FOREIGN_RETURN_COLS = list(_LOADER_FOREIGN_ETFS.keys())
 
 
 def _rsi(series: pd.Series, period: int = 14) -> pd.Series:
@@ -89,10 +97,18 @@ def _rsi(series: pd.Series, period: int = 14) -> pd.Series:
     return 100 - (100 / (1 + rs))
 
 
-def build_features(panel: pd.DataFrame) -> pd.DataFrame:
-    """Engineer the v3 feature matrix from the canonical T-1 anchored panel."""
+def build_features(panel: pd.DataFrame, foreign_cols: list[str] | None = None) -> pd.DataFrame:
+    """Engineer the v3 feature matrix from the canonical T-1 anchored panel.
+
+    Parameters
+    ----------
+    foreign_cols : list[str] | None
+        Subset of foreign ETF columns. Defaults to FOREIGN_RETURN_COLS (= full
+        loader FOREIGN_ETFS keys). Pass CURATED_FOREIGN_ETFS for the curated-30 run.
+    """
+    cols_to_use = foreign_cols if foreign_cols is not None else FOREIGN_RETURN_COLS
     feats = pd.DataFrame(index=panel.index)
-    for col in FOREIGN_RETURN_COLS:
+    for col in cols_to_use:
         feats[f"{col}_ret_5d"] = (panel[col] / panel[col].shift(5) - 1.0) * 100.0
     feats["india_vix_level"] = panel["india_vix"]
     feats["india_vix_chg_5d"] = panel["india_vix"] - panel["india_vix"].shift(5)

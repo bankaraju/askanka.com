@@ -41,6 +41,7 @@ import numpy as np
 import pandas as pd
 
 from pipeline.autoresearch.etf_v3_loader import (
+    CURATED_FOREIGN_ETFS,
     HOLDOUT_START,
     IN_SAMPLE_END,
     WINDOW_END,
@@ -69,6 +70,7 @@ class RollingRefitConfig:
     seed: int = 42
     eval_start: str = "2024-04-23"   # latest possible after 3yr lookback
     eval_end: str = "2026-04-23"
+    feature_set: str = "all"         # "all" or "curated"
 
 
 def run_rolling_refit(cfg: RollingRefitConfig) -> dict:
@@ -79,8 +81,17 @@ def run_rolling_refit(cfg: RollingRefitConfig) -> dict:
     audit = audit_panel()
     if any(r.status == "fail" for r in audit):
         raise RuntimeError("audit failed — cannot proceed")
+
+    if cfg.feature_set == "curated":
+        active_cols = [c for c in FOREIGN_RETURN_COLS if c in set(CURATED_FOREIGN_ETFS)]
+        logger.info("v3: curated feature set (%d / %d ETFs)",
+                    len(active_cols), len(FOREIGN_RETURN_COLS))
+    else:
+        active_cols = list(FOREIGN_RETURN_COLS)
+        logger.info("v3: full feature set (%d ETFs)", len(active_cols))
+
     panel = build_panel(t1_anchor=True)
-    feats = build_features(panel)
+    feats = build_features(panel, foreign_cols=active_cols)
     target = build_target(panel)
     common = feats.index.intersection(target.index)
     feats, target = feats.loc[common], target.loc[common]
@@ -207,6 +218,9 @@ def main() -> int:
     parser.add_argument("--eval-start", default="2024-04-23",
                         help="OOS evaluation window start (must be >= window_start + lookback)")
     parser.add_argument("--eval-end", default="2026-04-23")
+    parser.add_argument("--feature-set", choices=["all", "curated"], default="all",
+                        help="'all' = full FOREIGN_ETFS (40); 'curated' = "
+                             "30 ETFs from cureated ETF.txt")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -221,6 +235,7 @@ def main() -> int:
         seed=args.seed,
         eval_start=args.eval_start,
         eval_end=args.eval_end,
+        feature_set=args.feature_set,
     )
     result = run_rolling_refit(cfg)
     result["manifest"] = {
@@ -233,7 +248,8 @@ def main() -> int:
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUT_DIR / f"etf_v3_rolling_refit_int{cfg.refit_interval_days}_lb{cfg.lookback_days}.json"
+    fset_tag = "" if cfg.feature_set == "all" else f"_{cfg.feature_set}"
+    out_path = OUT_DIR / f"etf_v3_rolling_refit_int{cfg.refit_interval_days}_lb{cfg.lookback_days}{fset_tag}.json"
     out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     logger.info("wrote %s", out_path)
 

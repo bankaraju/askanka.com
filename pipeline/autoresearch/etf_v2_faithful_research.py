@@ -53,6 +53,7 @@ import numpy as np
 import pandas as pd
 
 from pipeline.autoresearch.etf_v3_loader import (
+    CURATED_FOREIGN_ETFS,
     HOLDOUT_START,
     IN_SAMPLE_END,
     WINDOW_END,
@@ -96,7 +97,7 @@ INDIAN_LEVEL_COLS = ["india_vix", "fii_net", "dii_net", "nifty_close"]
 # v2-faithful feature builder
 # ============================================================================
 
-def build_features_v2(panel: pd.DataFrame) -> pd.DataFrame:
+def build_features_v2(panel: pd.DataFrame, foreign_cols: list[str] | None = None) -> pd.DataFrame:
     """Replicate v2 production feature engineering on the parquet panel.
 
     Faithful to v2 production (etf_reoptimize.py:316):
@@ -111,10 +112,17 @@ def build_features_v2(panel: pd.DataFrame) -> pd.DataFrame:
     The panel passed in is already T-1 anchored by the loader; v2 production
     is NOT explicitly T-1 anchored, but this is an improvement (no same-day
     leak), not a behavior change in any meaningful sense for daily classification.
+
+    Parameters
+    ----------
+    foreign_cols : list[str] | None
+        Subset of foreign ETF columns to include. Defaults to FOREIGN_ETF_COLS.
+        Use this to restrict to the curated set or any other subset.
     """
+    cols_to_use = foreign_cols if foreign_cols is not None else FOREIGN_ETF_COLS
     feats = pd.DataFrame(index=panel.index)
     # 1-day returns for foreign ETFs (matches v2 line 451)
-    for col in FOREIGN_ETF_COLS:
+    for col in cols_to_use:
         feats[f"{col}_ret_1d"] = panel[col].pct_change() * 100.0
     # Indian features as RAW LEVELS (matches v2 _build_indian_features)
     for col in INDIAN_LEVEL_COLS:
@@ -242,6 +250,7 @@ class RollingConfig:
     seed: int = DEFAULT_SEED
     eval_start: str = "2024-04-23"   # earliest after 3yr lookback from window_start
     eval_end: str = "2026-04-23"
+    feature_set: str = "all"         # "all" (FOREIGN_ETF_COLS) or "curated" (CURATED_FOREIGN_ETFS)
 
 
 def run_rolling_refit_v2(cfg: RollingConfig) -> dict:
@@ -250,8 +259,18 @@ def run_rolling_refit_v2(cfg: RollingConfig) -> dict:
     if any(r.status == "fail" for r in audit):
         raise RuntimeError("audit failed — cannot proceed")
 
+    # Select feature set: "all" uses every FOREIGN_ETF_COLS column; "curated"
+    # restricts to the 30 tickers from cureated ETF.txt with India-channel rationale.
+    if cfg.feature_set == "curated":
+        active_cols = [c for c in FOREIGN_ETF_COLS if c in set(CURATED_FOREIGN_ETFS)]
+        logger.info("v2-faithful: curated feature set (%d / %d ETFs)",
+                    len(active_cols), len(FOREIGN_ETF_COLS))
+    else:
+        active_cols = list(FOREIGN_ETF_COLS)
+        logger.info("v2-faithful: full feature set (%d ETFs)", len(active_cols))
+
     panel = build_panel(t1_anchor=True)
-    feats = build_features_v2(panel)
+    feats = build_features_v2(panel, foreign_cols=active_cols)
     target = build_target_v2(panel)
     common = feats.index.intersection(target.index)
     feats, target = feats.loc[common], target.loc[common]
@@ -357,6 +376,9 @@ def main() -> int:
     p.add_argument("--seed", type=int, default=DEFAULT_SEED)
     p.add_argument("--eval-start", default="2024-04-23")
     p.add_argument("--eval-end", default="2026-04-23")
+    p.add_argument("--feature-set", choices=["all", "curated"], default="all",
+                   help="'all' = full FOREIGN_ETF_COLS (40); 'curated' = "
+                        "30 ETFs from cureated ETF.txt with India-channel rationale")
     args = p.parse_args()
 
     logging.basicConfig(level=logging.INFO,
@@ -373,6 +395,7 @@ def main() -> int:
         seed=args.seed,
         eval_start=args.eval_start,
         eval_end=args.eval_end,
+        feature_set=args.feature_set,
     )
     result = run_rolling_refit_v2(cfg)
     result["manifest"] = {
@@ -383,7 +406,8 @@ def main() -> int:
         "generated_at_utc": datetime.now(tz=timezone.utc).isoformat(),
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out = OUT_DIR / f"etf_v2_faithful_rolling_int{cfg.refit_interval_days}_lb{cfg.lookback_days}.json"
+    fset_tag = "" if cfg.feature_set == "all" else f"_{cfg.feature_set}"
+    out = OUT_DIR / f"etf_v2_faithful_rolling_int{cfg.refit_interval_days}_lb{cfg.lookback_days}{fset_tag}.json"
     out.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     logger.info("wrote %s", out)
     print(json.dumps({

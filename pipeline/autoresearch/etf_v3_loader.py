@@ -86,6 +86,44 @@ FOREIGN_ETFS: dict[str, str] = {
     "bito": "thematic",         # BITO — Bitcoin ETF, EM liquidity canary
 }
 
+# Curated subset of FOREIGN_ETFS — the 30 tickers from
+# docs/superpowers/specs/cureated ETF.txt with explicit India-channel rationale.
+# Note: india_etf (INDA) is intentionally excluded because the target IS NIFTY,
+# and INDA is essentially NIFTY with US-market timing offset (would be a
+# leakage-adjacent feature). The curated list also dropped it for that reason.
+CURATED_FOREIGN_ETFS: list[str] = [
+    "sp500",      # SPY
+    "qqq",        # QQQ
+    "aiq",        # AIQ
+    "smh",        # SMH
+    "tech",       # XLK
+    "financials", # XLF
+    "iwm",        # IWM
+    "xle",        # XLE
+    "xlv",        # XLV
+    "industrials",# XLI
+    "em",         # EEM
+    "china_etf",  # FXI
+    "mchi",       # MCHI
+    "japan_etf",  # EWJ
+    "korea_etf",  # EWY
+    "taiwan_etf", # EWT
+    "brazil",     # EWZ
+    "crude_oil",  # USO
+    "gold",       # GLD
+    "dbb",        # DBB
+    "agriculture",# DBA
+    "dollar",     # UUP
+    "treasury",   # TLT
+    "emb",        # EMB
+    "krbn",       # KRBN
+    "lit",        # LIT
+    "kweb",       # KWEB
+    "vixy",       # VIXY
+    "ewg",        # EWG
+    "bito",       # BITO
+]
+
 INDIA_VIX_BUDGET_SATURDAY = pd.Timestamp("2025-02-01")
 
 
