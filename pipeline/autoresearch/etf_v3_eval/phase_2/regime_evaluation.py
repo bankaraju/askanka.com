@@ -354,12 +354,15 @@ def run_test_1(
     panel = build_panel(t1_anchor=True)
     feats = build_features(panel, foreign_cols=list(CURATED_FOREIGN_ETFS)).dropna()
 
-    # NIFTY next-day percent return aligned to feature index (decision day = t,
-    # outcome = close[t+1] / close[t] - 1, in percent). The panel is
-    # T-1 anchored so we use the un-shifted nifty close to compute the next-day
-    # change of the *decision* day, which is panel index + 1 in raw calendar.
-    nifty_close = panel["nifty_close"].astype(float)
-    nifty_next_ret = (nifty_close.shift(-1) / nifty_close - 1.0) * 100.0
+    # NIFTY NEXT-DAY return computed from the RAW (un-shifted) panel, matching
+    # the model's training target in `etf_v3_research.build_target`. The
+    # t1-anchored panel.nifty_close[T] = raw.nifty_close[T-1], so using it
+    # directly with shift(-1) measures calendar day T's return instead of the
+    # calendar day T+1 return that the model actually predicts. We mirror
+    # build_target's shape: target[T] = raw.nifty[T+1] / raw.nifty[T] - 1.
+    raw_panel = build_panel(t1_anchor=False)
+    raw_nifty = raw_panel["nifty_close"].astype(float)
+    nifty_next_ret = (raw_nifty.shift(-1) / raw_nifty - 1.0) * 100.0
     nifty_next_ret = nifty_next_ret.reindex(feats.index)
 
     daily_signals = reconstruct_daily_signals(
