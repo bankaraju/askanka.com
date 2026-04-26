@@ -62,7 +62,8 @@ def test_adjustment_event_rejects_non_positive_ratio():
 
 def test_eod_loader_calls_unadjuster(monkeypatch, tmp_path):
     """The run_reconciliation EOD loader, when an adjustment-event source is
-    supplied, applies unadjust_eod_series to each ticker frame before merge."""
+    supplied, applies unadjust_eod_series to each ticker frame before merge.
+    Asserts BOTH directions: pre-event row scaled, post-event row unchanged."""
     from pipeline.autoresearch.etf_v3_eval import run_reconciliation as rr
 
     csv = tmp_path / "X.csv"
@@ -72,3 +73,27 @@ def test_eod_loader_calls_unadjuster(monkeypatch, tmp_path):
     events_by_ticker = {"X": [AdjustmentEvent("X", date(2025, 6, 15), "split", 2.0)]}
     out = rr.load_eod_for_tickers(["X"], events_by_ticker=events_by_ticker)
     assert out.loc[out["trade_date"] == date(2025, 6, 14), "close"].iloc[0] == 200.0
+    assert out.loc[out["trade_date"] == date(2025, 6, 15), "close"].iloc[0] == 50.0
+
+
+def test_parse_ratio_split_uses_new_over_old():
+    """A 5:1 split (5 new shares for every 1 old) should multiply pre-event by 5."""
+    from pipeline.autoresearch.etf_v3_eval.run_reconciliation import _parse_ratio_from_text
+    assert _parse_ratio_from_text("Stock Split 5:1", "split") == 5.0
+    assert _parse_ratio_from_text("Sub-Division 10:2", "split") == 5.0
+
+
+def test_parse_ratio_bonus_uses_total_over_old():
+    """A 1:1 bonus DOUBLES share count, so pre-event prices ×2 not ×1.
+    A 3:5 bonus → (3+5)/5 = 1.6, NOT 3/5 = 0.6 (which would invert direction)."""
+    from pipeline.autoresearch.etf_v3_eval.run_reconciliation import _parse_ratio_from_text
+    assert _parse_ratio_from_text("Bonus 1:1", "bonus") == 2.0
+    assert _parse_ratio_from_text("Bonus issue 3:5", "bonus") == pytest.approx(1.6)
+    assert _parse_ratio_from_text("Bonus 2:1", "bonus") == 3.0
+
+
+def test_parse_ratio_returns_none_for_unparseable():
+    from pipeline.autoresearch.etf_v3_eval.run_reconciliation import _parse_ratio_from_text
+    assert _parse_ratio_from_text("Quarterly Results", "split") is None
+    assert _parse_ratio_from_text("Stock Split From Rs 10 To Rs 2", "split") is None  # word-form, no m:n
+    assert _parse_ratio_from_text("Bonus 1:1", "unknown_kind") is None  # unrecognised kind

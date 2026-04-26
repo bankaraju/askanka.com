@@ -13,7 +13,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline.autoresearch.etf_v3_eval.cross_source_reconciliation import compare_to_eod
+from pipeline.autoresearch.etf_v3_eval.cross_source_reconciliation import (
+    MAX_DELTA_PCT,
+    aggregate_minute_to_daily,
+    compare_to_eod,
+)
 from pipeline.autoresearch.etf_v3_eval.phase_2.adjustment_adapter import (
     AdjustmentEvent,
     unadjust_eod_series,
@@ -38,17 +42,24 @@ _BONUS_RE = re.compile(r"\bbonus\s+(share|issue)", re.IGNORECASE)
 _RATIO_RE = re.compile(r"(\d+)\s*[:\-/]\s*(\d+)")  # e.g. "2:1", "5-1"
 
 
-def _parse_ratio_from_text(text: str) -> float | None:
-    """Try to extract a numeric split/bonus ratio from agenda_raw free text.
+def _parse_ratio_from_text(text: str, kind: str) -> float | None:
+    """Extract the unadjustment multiplier from agenda_raw free text.
 
-    Returns the factor to multiply pre-event prices (e.g. 2.0 for a 2:1 split),
-    or None if no ratio can be reliably parsed.
+    For a *split* "m:n", the multiplier is m/n (a 5:1 split scales pre-event
+    prices ×5). For a *bonus* "m:n" (m new shares per n held), the multiplier
+    is (m+n)/n (a 1:1 bonus doubles share count, so pre-event prices ×2).
+    Returns None if no parseable m:n pair is found OR if kind is unrecognised.
     """
     m = _RATIO_RE.search(text)
-    if m:
-        new_shares, old_shares = int(m.group(1)), int(m.group(2))
-        if old_shares > 0 and new_shares > 0:
-            return new_shares / old_shares
+    if not m:
+        return None
+    new_shares, old_shares = int(m.group(1)), int(m.group(2))
+    if old_shares <= 0 or new_shares <= 0:
+        return None
+    if kind == "split":
+        return new_shares / old_shares
+    if kind == "bonus":
+        return (new_shares + old_shares) / old_shares
     return None
 
 
@@ -57,8 +68,9 @@ def _load_corp_actions(tickers: list[str]) -> dict[str, list[AdjustmentEvent]]:
     *tickers* within the reconciliation window, and return a mapping of ticker →
     list[AdjustmentEvent].
 
-    The parquet only contains EventKind.QUARTERLY_EARNINGS rows; if the dataset
-    has no splits/bonuses for the window, returns an empty dict (not an error).
+    As of the current build, the parquet only contains EventKind.QUARTERLY_EARNINGS
+    rows; if the dataset has no splits/bonuses for the window, returns an empty
+    dict (not an error). Future ingest of structural-action sources may change this.
     """
     if not CORP_ACTION_PARQUET.exists():
         logger.warning("Corp-action parquet not found at %s — skipping adjustment", CORP_ACTION_PARQUET)
@@ -66,9 +78,10 @@ def _load_corp_actions(tickers: list[str]) -> dict[str, list[AdjustmentEvent]]:
 
     df = pd.read_parquet(CORP_ACTION_PARQUET)
     df["event_date"] = pd.to_datetime(df["event_date"]).dt.date
+    df["symbol"] = df["symbol"].astype(str).str.upper()
 
     mask = (
-        df["symbol"].isin(tickers)
+        df["symbol"].isin([t.upper() for t in tickers])
         & (df["event_date"] >= WINDOW_START)
         & (df["event_date"] <= WINDOW_END)
     )
@@ -82,14 +95,18 @@ def _load_corp_actions(tickers: list[str]) -> dict[str, list[AdjustmentEvent]]:
         is_bonus = bool(_BONUS_RE.search(raw) or _BONUS_RE.search(kind))
 
         if not (is_split or is_bonus):
-            continue  # Not a structural adjustment event — skip
+            logger.warning(
+                "Unrecognised corp-action kind for %s on %s (raw=%r) — skipping",
+                row["symbol"], row["event_date"], raw[:80],
+            )
+            continue
 
         ev_kind = "split" if is_split else "bonus"
-        ratio = _parse_ratio_from_text(raw)
+        ratio = _parse_ratio_from_text(raw, ev_kind)
         if ratio is None:
             logger.warning(
-                "Could not parse ratio for %s %s on %s — skipping event",
-                row["symbol"], ev_kind, row["event_date"],
+                "Could not parse ratio for %s %s on %s (raw=%r) — skipping event",
+                row["symbol"], ev_kind, row["event_date"], raw[:80],
             )
             continue
 
@@ -136,11 +153,6 @@ def main() -> int:
 
     events = _load_corp_actions(SAMPLE_TICKERS)
     eod_sample = load_eod_for_tickers(SAMPLE_TICKERS, events_by_ticker=events)
-
-    from pipeline.autoresearch.etf_v3_eval.cross_source_reconciliation import (
-        MAX_DELTA_PCT,
-        aggregate_minute_to_daily,
-    )
 
     report = compare_to_eod(minute_sample, eod_sample, raise_on_failure=False)
     report["sample_tickers"] = SAMPLE_TICKERS
