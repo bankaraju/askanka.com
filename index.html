@@ -985,7 +985,7 @@
                 </div>
                 <div>
                     <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">One model. Three signals. Zero guesswork.</strong><br>
-                    The Anka Trust Score synthesises all three layers into a single daily reading for Indian markets. We are currently shadow trading this model and will publish verified results on <strong style="color:#f1f5f9;">June 1, 2026</strong>.
+                    The Anka Trust Score synthesises all three layers into a single daily reading for Indian markets. The methodology is currently undergoing re-validation and updated results will be published once that work is complete.
                 </div>
             </div>
         </div>
@@ -1014,69 +1014,6 @@
             <span class="badge badge-count" style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';this.textContent=g.style.display==='none'?'Show':'Hide';">Show</span>
         </div>
         <div class="reports-grid" id="library-grid" style="display:none;">
-        </div>
-    </section>
-
-    <hr class="section-divider">
-
-<!-- ══════════════ TRACK RECORD ══════════════ -->
-<section id="track-record" class="positions-block">
-  <h2 class="block-title">Shadow Trading Record</h2>
-  <p class="tr-subtitle">Live model validation. Every position tracked from entry to exit with real market prices.</p>
-  <div class="tr-stats" id="tr-stats">
-    <div class="tr-stat"><span class="tr-stat-label">Closed</span><span class="tr-stat-value" id="tr-total">--</span></div>
-    <div class="tr-stat"><span class="tr-stat-label">Win rate</span><span class="tr-stat-value" id="tr-winrate">--</span></div>
-    <div class="tr-stat"><span class="tr-stat-label">Avg P&amp;L</span><span class="tr-stat-value" id="tr-avg">--</span></div>
-  </div>
-  <table class="positions-table">
-    <thead>
-      <tr>
-        <th>Strategy</th><th>Open</th><th>Close</th><th>Days</th><th>Peak</th><th>Final</th><th>Exit reason</th>
-      </tr>
-    </thead>
-    <tbody id="track-record-body">
-      <tr><td colspan="7">Shadow trading commenced April 2026. Full results published June 1.</td></tr>
-    </tbody>
-  </table>
-</section>
-
-    <hr class="section-divider">
-
-<!-- ══════════════ ABOUT ══════════════ -->
-    <section class="section">
-        <div style="max-width:720px; margin:0 auto;">
-            <h2 style="font-family:'DM Serif Display',serif; font-size:26px; color:#f1f5f9; margin-bottom:20px; text-align:center;">Built by a practitioner, not a pitch deck</h2>
-            <p style="font-size:15px; color:#9ca3af; line-height:1.8; margin-bottom:16px;">
-                Anka Research is the work of <strong style="color:#f1f5f9;">Bharat Ankaraju</strong> &mdash; a technologist who spent years building AI systems for enterprise before turning the same discipline toward financial markets. The thesis is simple: the tools that detect patterns in unstructured data, model regime shifts, and score management credibility should work just as well on equities as they do in any other domain.
-            </p>
-            <p style="font-size:15px; color:#9ca3af; line-height:1.8; margin-bottom:16px;">
-                The Anka engine is not a chatbot wrapper or a sentiment dashboard. It is a multi-layer system that combines <strong style="color:#d4a855;">forensic financial analysis</strong> (5 years of annual reports and earnings calls, scored for promise vs. delivery), <strong style="color:#d4a855;">global regime modelling</strong> (overnight macro signals from 31 cross-asset ETFs, ML-optimised), and <strong style="color:#d4a855;">stock-specific technical fingerprinting</strong> (15 pattern types backtested across 74,000+ historical events). Each layer uses a different AI architecture. Together, they produce a conviction signal that no single approach can match.
-            </p>
-            <p style="font-size:15px; color:#9ca3af; line-height:1.8;">
-                The entire pipeline &mdash; data collection, indicator computation, pattern detection, scoring, and signal generation &mdash; runs autonomously every trading day. No manual intervention. No discretionary overrides. The model trades the numbers it sees, not the narratives humans prefer.
-            </p>
-        </div>
-    </section>
-
-    <hr class="section-divider">
-
-<!-- ══════════════ GET ACCESS ══════════════ -->
-    <section class="section">
-        <div style="text-align:center; max-width:640px; margin:0 auto; padding: 40px 0;">
-            <h2 style="font-family:’DM Serif Display’,serif; font-size:28px; color:#f1f5f9; margin-bottom:16px;">Want the full terminal?</h2>
-            <p style="font-size:15px; color:#9ca3af; line-height:1.7; margin-bottom:24px;">
-                The research you see here is a fraction of what the model produces daily. The Anka Trading Terminal includes real-time recommendations, stop-loss management, options flow analysis, technical fingerprints, and emerging trade ideas &mdash; all driven by the same three-signal engine.
-            </p>
-            <p style="font-size:15px; color:#9ca3af; line-height:1.7; margin-bottom:24px;">
-                We are making the terminal available as an open-source download on GitHub. Currently built for Indian F&amp;O markets, with architecture designed to extend to any market with sufficient data.
-            </p>
-            <div style="margin-top:32px;">
-                <a href="mailto:info@askanka.com" style="display:inline-block; background: linear-gradient(135deg, #d4a855, #b8860b); color:#0a0e1a; padding:14px 36px; border-radius:8px; font-weight:700; font-size:15px; text-decoration:none; letter-spacing:0.5px;">Get in touch</a>
-            </div>
-            <p style="font-size:14px; color:#94a3b8; margin-top:16px; font-family:'JetBrains Mono',monospace; letter-spacing:0.5px;">
-                <span style="color:#64748b;">write to</span> <a href="mailto:info@askanka.com" style="color:#d4a855; text-decoration:none; border-bottom:1px solid rgba(212,168,85,0.3);">info@askanka.com</a>
-            </p>
-            <p style="font-size:12px; color:#64748b; margin-top:12px;">Shadow trading results and terminal download available June 1, 2026</p>
         </div>
     </section>
 </div>
@@ -1188,48 +1125,6 @@
         });
 
 })();
-</script>
-
-<!-- ═════════════ TRACK RECORD ═════════════ -->
-<script>
-async function loadTrackRecord() {
-  try {
-    const res = await fetch('data/track_record.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const d = await res.json();
-    document.getElementById('tr-total').textContent = d.total_closed || 0;
-    document.getElementById('tr-winrate').textContent = (d.win_rate_pct != null ? d.win_rate_pct.toFixed(1) : '0.0') + '%';
-    const avg = d.avg_pnl_pct || 0;
-    const avgEl = document.getElementById('tr-avg');
-    avgEl.textContent = (avg >= 0 ? '+' : '') + avg.toFixed(2) + '%';
-    avgEl.style.color = avg >= 0 ? '#69db7c' : '#ff6b6b';
-    const tbody = document.getElementById('track-record-body');
-    tbody.innerHTML = '';
-    if (!d.recent || d.recent.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7">No closed spreads yet</td></tr>';
-      return;
-    }
-    d.recent.forEach(r => {
-      const tr = document.createElement('tr');
-      const finalCls = r.final_pnl_pct >= 0 ? 'pos' : 'neg';
-      const peakCls = r.peak_pnl_pct >= 0 ? 'pos' : 'neg';
-      const fmt = v => (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%';
-      tr.innerHTML =
-        '<td>' + (r.spread_name || '') + '</td>' +
-        '<td>' + (r.open_date || '') + '</td>' +
-        '<td>' + (r.close_date || '') + '</td>' +
-        '<td>' + (r.days_open || 0) + '</td>' +
-        '<td class="' + peakCls + '">' + fmt(r.peak_pnl_pct) + '</td>' +
-        '<td class="' + finalCls + '">' + fmt(r.final_pnl_pct) + '</td>' +
-        '<td class="reason">' + (r.close_reason || '') + '</td>';
-      tbody.appendChild(tr);
-    });
-  } catch (e) {
-    document.getElementById('track-record-body').innerHTML = '<tr><td colspan="7">Offline</td></tr>';
-  }
-}
-loadTrackRecord();
-setInterval(loadTrackRecord, 120000);
 </script>
 
 <!-- ═════════════ DYNAMIC LIBRARY & TODAY RENDERER ═════════════
