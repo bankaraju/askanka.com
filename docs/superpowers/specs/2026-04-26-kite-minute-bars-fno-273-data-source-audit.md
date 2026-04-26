@@ -79,3 +79,34 @@ Channels mapped per ticker for the 60-day window:
 - Downstream model: v3-CURATED regime engine
 - Approved status of this dataset is REQUIRED for v3 Phase 2 backtest
 - Demotion of this dataset (e.g., schema drift, freshness violation) automatically demotes any v3 result built on it
+
+## §17 Acceptance — final status
+
+**Promoted to Approved-for-Tier-2-research-with-caveats on 2026-04-26.**
+
+Evidence (Phase 1 deliverables):
+- §6 + §7: `pipeline/data/research/etf_v3_evaluation/phase_1_universe/manifest.json` — git_commit, pip_freeze SHA256, per-artifact SHA256 captured
+- §8: schema validator unit tests pass (`pipeline/tests/test_etf_v3_eval/test_schema_validator.py` — 5/5 green)
+- §9: cleanliness gate runner integrated into orchestrator; per-ticker pass/fail logged in `tickers_failed.csv`
+  - 143/147 succeeded (97.3%). 4 failures all "no instrument_token" for renamed/aliased symbols (L&TFH, LTIM, MCDOWELL-N, ZOMATO) — alias resolution is a Phase 2 follow-up; not blocking acceptance
+  - Min bars-per-ticker = 13403 / median = 13500 / max = 13500 (375 min × 36 days = 13500 ideal). Worst-case missing-bar fraction = 0.7%, well under §9.2 5% threshold
+- §10: adjustment mode declared **Unadjusted** (Kite default). Phase 2 must apply consistent adjustment to BOTH minute bars AND any EOD comparison series
+- §11: bars written exactly as Kite emitted at retrieval time (2026-04-26 21:25-21:55 IST)
+- §12: 273-ticker universe from `canonical_fno_research_v3.json`; 5 active aliases listed in `memory/reference_pit_ticker_list.md`; the 4 unresolved aliases in `tickers_failed.csv` flag a registry gap
+- §13: reconciliation report at `pipeline/data/research/etf_v3_evaluation/phase_1_universe/reconciliation_report.json`
+  - 178 rows compared across 5 sample tickers (ABB, ACC, ADANIENT, ABFRL, ABBOTINDIA — sampled from v0.2; the original plan named RELIANCE/TCS/HDFCBANK/ICICIBANK/INFY which are in v0.1 not v0.2)
+  - **Population pass:** mean delta per ticker 0.16-0.21% — under 0.5% threshold
+  - **Strict fail:** 6/178 rows (3.4%) above 0.5% threshold, max = 1.16%. Failures cluster on dates with non-trivial price moves; root cause is §10 adjustment-mode mismatch (Kite minute = unadjusted, fno_historical CSV = yfinance auto-adjusted)
+  - Acceptance: passes §13 at population level only. Strict §13 requires Phase 2 to use a consistent adjustment treatment
+- §14: contamination map at `pipeline/data/research/etf_v3_evaluation/phase_1_universe/contamination_map.json`
+  - 143 tickers × 36 dates covered
+  - Channels resolved: insider (95 hits across 19 tickers from `pipeline/data/insider_trades/<YYYY-MM>.parquet`)
+  - Channels not yet resolved (data exists at non-canonical paths — Phase 2 follow-up): bulk_deals (only 2026-04-24+ collection per `memory/reference_nse_bulk_deals_history_unavailable.md`), news (`news_events_history.json` not `news_events.parquet`), earnings (IndianAPI corp_actions parquet history not `earnings_calendar.parquet`)
+- §21 binding: any v3 Phase 2 backtest that reads this dataset is bound by this acceptance status. Demotion (e.g., the strict §13 failures expanding) automatically demotes downstream results
+
+**Caveats explicitly declared:**
+1. §13 passes at population level only — strict 0.5% threshold has 6/178 failures attributable to §10 adjustment mismatch
+2. §14 currently covers insider channel only — bulk/news/earnings frames empty in this build
+3. Universe is 143/147 effective (97.3%) — 4 tickers blocked by alias gap
+
+**Phase 2 backtests are unblocked AT TIER-2-RESEARCH STATUS WITH CAVEATS.** Phase 2 must (a) declare a single adjustment treatment, (b) wire bulk/news/earnings to their actual canonical paths, (c) either resolve the 4 ticker aliases or document their exclusion in attribution.
