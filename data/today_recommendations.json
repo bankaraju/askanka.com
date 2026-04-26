@@ -1,43 +1,9 @@
 {
-  "updated_at": "2026-04-26T04:45:46.745399+05:30",
-  "regime_zone": "RISK-ON",
-  "regime_source_timestamp": "2026-04-26T04:45:24.765349+05:30",
+  "updated_at": "2026-04-26",
+  "regime_zone": null,
   "spreads": [],
-  "stocks": [
-    {
-      "ticker": "KAYNES",
-      "direction": "LONG",
-      "conviction": "HIGH",
-      "trigger": "CAUTION",
-      "source": "ranker",
-      "source_timestamp": "2026-04-24 09:31:12",
-      "is_stale": true,
-      "hit_rate": 1.0,
-      "episodes": 1
-    },
-    {
-      "ticker": "PGEL",
-      "direction": "LONG",
-      "conviction": "HIGH",
-      "trigger": "CAUTION",
-      "source": "ranker",
-      "source_timestamp": "2026-04-24 09:31:12",
-      "is_stale": true,
-      "hit_rate": 1.0,
-      "episodes": 1
-    },
-    {
-      "ticker": "MOTILALOFS",
-      "direction": "LONG",
-      "conviction": "MEDIUM",
-      "trigger": "CAUTION",
-      "source": "ranker",
-      "source_timestamp": "2026-04-24 09:31:12",
-      "is_stale": true,
-      "hit_rate": 1.0,
-      "episodes": 1
-    }
-  ],
+  "stocks": [],
   "news_driven": [],
-  "holiday_mode": false
+  "holiday_mode": false,
+  "note": "Recommendations withheld during methodology re-validation (H-2026-04-26-001 30-day forward paper test running 2026-04-27 -> 2026-05-26). Public surface does not display trade ideas until single-touch holdout + Tier 1 randomized null both clear."
 }
