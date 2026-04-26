@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-27",
+      "segment": "war",
+      "filename": "2026-04-27-war.html",
+      "headline": "Mohammad Marandi's Kharg Island Ultimatum: Iran's Nuclear Threat Shifts Market Calculus",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 27, 2026"
+    },
+    {
+      "date": "2026-04-27",
+      "segment": "epstein",
+      "filename": "2026-04-27-epstein.html",
+      "headline": "The Trump DOJ's Document Shredding: A Deliberate Eradication of Epstein's Network",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 27, 2026"
+    },
+    {
       "date": "2026-04-26",
       "segment": "war",
       "filename": "2026-04-26-war.html",
