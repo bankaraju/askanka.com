@@ -205,11 +205,12 @@ def main() -> int:
         print(f"ERROR: --seed must be >= 0; got {args.seed}")
         return 1
 
+    full_replay_parquets = {
+        "126": "pipeline/autoresearch/data/intraday_break_replay_60d_v0.1_ungated.parquet",
+        "273": "pipeline/autoresearch/data/intraday_break_replay_60d_v0.2_minute_bars.parquet",
+    }
     inputs = Phase2Inputs(
-        replay_parquets={
-            "126": "pipeline/autoresearch/data/intraday_break_replay_60d_v0.1_ungated.parquet",
-            "273": "pipeline/autoresearch/data/intraday_break_replay_60d_v0.2_minute_bars.parquet",
-        },
+        replay_parquets=({"126": full_replay_parquets["126"]} if args.quick else full_replay_parquets),
         lookbacks=(756,) if args.quick else (756, 1200, 1236),
         seed=args.seed,
         n_iterations=100 if args.quick else args.n_iterations,
