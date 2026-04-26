@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-04-26T04:45:25.025050+05:30",
-  "zone": "RISK-ON",
+  "updated_at": "2026-04-27T02:27:30.410208+05:30",
+  "zone": "NEUTRAL",
   "score": 53.8,
   "regime_source": "etf_engine",
-  "stable": true,
-  "consecutive_days": 2,
+  "stable": false,
+  "consecutive_days": 1,
   "components": {
     "inst_flow": {
       "raw": null,
@@ -19,8 +19,8 @@
       "contribution": 10.0
     },
     "usdinr": {
-      "raw": 1.77,
-      "norm": 0.754,
+      "raw": 1.78,
+      "norm": 0.756,
       "weight": 0.2,
       "contribution": 15.1
     },
@@ -42,5 +42,5 @@
     "inst_flow",
     "india_vix"
   ],
-  "source_timestamp": "2026-04-26T04:45:24.765349+05:30"
+  "source_timestamp": "2026-04-27T02:27:30.220814+05:30"
 }
