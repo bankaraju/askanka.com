@@ -25,13 +25,16 @@ def compute_weekly_delta_magnitude(
 def flag_high_rotation_dates(
     rotation_df: pd.DataFrame,
     percentile: float = 75.0,
-) -> pd.DataFrame:
+) -> tuple[pd.DataFrame, float]:
     """Add ``high_rotation`` bool column flagging rows whose ``delta_mag`` > Pₚ.
 
-    Threshold is stored on ``out.attrs["threshold"]`` so callers can persist it.
+    Returns ``(out, threshold)``. The threshold is also written to
+    ``out.attrs["threshold"]`` for direct callers, but ``attrs`` is not preserved
+    across most pandas operations (merge/groupby/copy), so the explicit return
+    value is the contract — callers must capture it from the tuple.
     """
     threshold = float(np.percentile(rotation_df["delta_mag"], percentile))
     out = rotation_df.copy()
     out["high_rotation"] = out["delta_mag"] > threshold
     out.attrs["threshold"] = threshold
-    return out
+    return out, threshold

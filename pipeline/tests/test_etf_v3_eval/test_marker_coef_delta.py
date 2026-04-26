@@ -21,6 +21,6 @@ def test_flag_high_rotation_dates_uses_p75_threshold():
         "refit_anchor": pd.to_datetime(["2026-01-01","2026-01-08","2026-01-15","2026-01-22"]),
         "delta_mag":    [0.1, 0.2, 0.3, 0.9],
     })
-    out = flag_high_rotation_dates(df, percentile=75)
-    # P75 = 0.45 → only 0.9 row passes
+    out, threshold = flag_high_rotation_dates(df, percentile=75)
     assert out["high_rotation"].tolist() == [False, False, False, True]
+    assert threshold == pytest.approx(0.45)
