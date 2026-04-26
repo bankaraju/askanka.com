@@ -26,3 +26,43 @@ def test_evaluate_pass_fail_s0_threshold():
     v = evaluate_pass_fail(metrics, SlippageLevel.S0)
     assert v["pass"] is False
     assert "sharpe" in v["failures"]
+
+
+def test_apply_slippage_raises_on_missing_column():
+    events = pd.DataFrame({"some_other_col": [0.01, -0.02]})
+    with pytest.raises(ValueError, match="not found"):
+        apply_slippage(events, SlippageLevel.S0)
+
+
+def test_evaluate_pass_fail_raises_on_missing_metric():
+    metrics = {"sharpe": 1.5, "hit_rate": 0.6}  # missing max_dd
+    with pytest.raises(ValueError, match="missing key 'max_dd'"):
+        evaluate_pass_fail(metrics, SlippageLevel.S0)
+
+
+def test_evaluate_pass_fail_s3_is_informational_and_passes():
+    """S3 always returns pass=True with informational flag, regardless of metrics."""
+    metrics = {"sharpe": -10.0, "hit_rate": 0.0, "max_dd": 0.99}  # garbage
+    v = evaluate_pass_fail(metrics, SlippageLevel.S3)
+    assert v["pass"] is True
+    assert v["informational"] is True
+    assert v["failures"] == []
+    assert v["level"] == "s3"
+
+
+def test_evaluate_pass_fail_collects_all_failures():
+    """When all 3 metrics fail at S0, all 3 should appear in failures list."""
+    metrics = {"sharpe": 0.5, "hit_rate": 0.40, "max_dd": 0.30}
+    v = evaluate_pass_fail(metrics, SlippageLevel.S0)
+    assert v["pass"] is False
+    assert set(v["failures"]) == {"sharpe", "hit_rate", "max_dd"}
+
+
+def test_pass_thresholds_are_publicly_importable_for_t23_reporting():
+    """T23 reports must state exact thresholds — confirm constants are public."""
+    from pipeline.autoresearch.etf_v3_eval.phase_2.slippage_grid import (
+        ROUND_TRIP_COST,
+        PASS_THRESHOLDS,
+    )
+    assert ROUND_TRIP_COST[SlippageLevel.S1] == 0.0030
+    assert PASS_THRESHOLDS[SlippageLevel.S0]["sharpe"] == 1.0

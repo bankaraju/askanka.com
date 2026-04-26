@@ -20,7 +20,7 @@ class SlippageLevel(str, Enum):
     S3 = "s3"
 
 
-_ROUND_TRIP_COST = {
+ROUND_TRIP_COST = {
     SlippageLevel.S0: 0.0010,
     SlippageLevel.S1: 0.0030,
     SlippageLevel.S2: 0.0050,
@@ -28,7 +28,7 @@ _ROUND_TRIP_COST = {
 }
 
 
-_PASS_THRESHOLDS = {
+PASS_THRESHOLDS = {
     SlippageLevel.S0: {"sharpe": 1.0, "hit_rate": 0.55, "max_dd": 0.20},
     SlippageLevel.S1: {"sharpe": 0.8, "hit_rate": 0.50, "max_dd": 0.25},
     SlippageLevel.S2: {"sharpe": 0.5, "hit_rate": 0.45, "max_dd": 0.30},
@@ -46,7 +46,7 @@ def apply_slippage(events: pd.DataFrame, level: SlippageLevel) -> pd.DataFrame:
             f"available: {list(events.columns)}"
         )
     out = events.copy()
-    out["net_pnl_pct"] = events["gross_pnl_pct"] - _ROUND_TRIP_COST[level]
+    out["net_pnl_pct"] = events["gross_pnl_pct"] - ROUND_TRIP_COST[level]
     return out
 
 
@@ -62,7 +62,7 @@ def evaluate_pass_fail(metrics: dict, level: SlippageLevel) -> dict:
     for required in ("sharpe", "hit_rate", "max_dd"):
         if required not in metrics:
             raise ValueError(f"evaluate_pass_fail: metrics missing key '{required}'")
-    th = _PASS_THRESHOLDS[level]
+    th = PASS_THRESHOLDS[level]
     failures = []
     if metrics["sharpe"] < th["sharpe"]:
         failures.append("sharpe")
