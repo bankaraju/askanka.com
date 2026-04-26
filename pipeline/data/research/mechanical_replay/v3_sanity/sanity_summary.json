@@ -1,0 +1,29 @@
+{
+  "dataset_id": "canonical_fno_research_v3",
+  "universe_size": 273,
+  "window_start": "2026-02-24",
+  "window_end": "2026-04-24",
+  "phase_c_roster_rows": 1736,
+  "simulated_rows": 1736,
+  "filled_rows": 389,
+  "fetch_fail_rows": 1347,
+  "ge_2sigma": {
+    "n": 42,
+    "hit_pct": 92.86,
+    "mean_pnl_pct": 1.6626,
+    "total_pnl_pp": 69.83
+  },
+  "v1_baseline_for_reference": {
+    "n": 42,
+    "hit_pct": 92.86,
+    "mean_pnl_pct": 1.66,
+    "total_pnl_pp": 69.83,
+    "source": "trades_no_zcross.csv on canonical_fno_research_v1"
+  },
+  "notes": [
+    "ADDITIVE sanity run; does not modify v2 artifacts.",
+    "PCR-stripped: per-day PCR archive empty \u2192 classify_break uses NEUTRAL default.",
+    "Z_CROSS exits disabled (TIME_STOP/TRAIL/ATR/HARD_CLOSE only).",
+    "Minute-bar cache is no_fetch=True; v3-new tickers without cached parquets fall to FETCH_FAILED."
+  ]
+}
