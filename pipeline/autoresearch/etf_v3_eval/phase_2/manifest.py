@@ -32,13 +32,13 @@ def _git_commit_hash() -> str:
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
-    except Exception:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return "unknown"
 
 
 def _file_sha256(path: Path) -> str:
     if not path.exists():
-        return "missing"
+        raise FileNotFoundError(f"Manifest input not found: {path}")
     h = hashlib.sha256()
     with path.open("rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
