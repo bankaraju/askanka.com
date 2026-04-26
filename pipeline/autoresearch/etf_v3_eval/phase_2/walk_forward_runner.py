@@ -116,12 +116,22 @@ def run_walk_forward(
         json.dumps(result, default=str, indent=2), encoding="utf-8"
     )
 
-    # §13A.1 manifest
+    # §13A.1 manifest — declare the actual canonical inputs the rolling-refit
+    # consumes. The panel is constructed in-memory by etf_v3_loader.build_panel()
+    # from per-file parquets in pipeline/data/research/phase_c/daily_bars/, NOT
+    # from a single etf_v3_panel.parquet (which never existed). We pin the four
+    # sentinel files that anchor the panel timeline (nifty calendar + India VIX
+    # + FII/DII flows). The 30 curated foreign ETFs are pinned by pipeline
+    # version; if those need per-run hashing, extend this dict in T22.
+    daily_bars = Path("pipeline/data/research/phase_c/daily_bars")
     input_files = {
         "replay_parquet": Path(
             "pipeline/autoresearch/data/intraday_break_replay_60d_v0.2_minute_bars.parquet"
         ),
-        "etf_panel": Path("pipeline/autoresearch/data/etf_v3_panel.parquet"),
+        "nifty_close_daily": daily_bars / "nifty_close_daily.parquet",
+        "india_vix_daily": daily_bars / "india_vix_daily.parquet",
+        "fii_net_daily": daily_bars / "fii_net_daily.parquet",
+        "dii_net_daily": daily_bars / "dii_net_daily.parquet",
     }
     write_run_manifest(
         out_dir / "manifest.json",
