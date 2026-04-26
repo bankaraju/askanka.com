@@ -41,8 +41,13 @@ def purged_train_dates(
     §10.3 holding-period purge: if holding_period_days > 0, train dates whose
     holding period (trade opened on train_date, closed on train_date +
     holding_period_days) closes *strictly inside* (test_start, test_end] are
-    dropped. A trade that closes exactly on test_start is NOT purged (the
-    position is flat before the test window opens).
+    dropped.
+
+    Boundary contract: a trade closing exactly on ``test_start`` is KEPT —
+    the position is already flat when the test window opens. The ``>`` (strictly
+    greater than) rather than ``>=`` comparison on line
+    ``(close_dates > test_start)`` is deliberate and encodes this invariant; a
+    future reader must not silently change it to ``>=``.
     """
     if len(train_dates) == 0:
         return train_dates
@@ -68,14 +73,24 @@ def purged_train_dates(
 def run_walk_forward(
     cfg: "pipeline.autoresearch.etf_v3_eval.phase_2.manifest.RunConfig",
     out_dir: Path,
-    purge: PurgeConfig = PurgeConfig(),
 ) -> dict:
     """Run a single (lookback, universe, feature_set) walk-forward and emit manifest.
 
     Composes the existing rolling-refit module; if the upstream API is unstable
     or unavailable from this branch, the function still emits the §13A.1 manifest
     and logs the gap so callers know the run is incomplete.
+
+    §10.2 / §10.3 purging (v1 limitation): this function does NOT apply embargo
+    or holding-period purging to the training data. ``run_rolling_refit`` builds
+    its own per-window training slices internally and does not accept a purge
+    hook. Until that is threaded into the rolling-refit core, callers (T21
+    orchestrator or a future wrapper) must pre-filter the input panel BEFORE
+    invoking this function. Use ``purged_train_dates`` for that pre-filtering
+    step. This is a known v1 limitation, not an intentional design choice.
     """
+    # Lazy import: keeps ``purged_train_dates`` testable without requiring the
+    # rolling-refit module (and its heavy data-loader dependencies) to import
+    # cleanly in every test environment.
     from pipeline.autoresearch.etf_v3_eval.phase_2.manifest import RunConfig, write_run_manifest
     from pipeline.autoresearch.etf_v3_rolling_refit import RollingRefitConfig, run_rolling_refit
 
