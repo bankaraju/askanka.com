@@ -22,9 +22,9 @@ def build_interaction_columns(df: pd.DataFrame) -> pd.DataFrame:
             out[name] = out[a] * out[b]
     # OR-of-flags × vol_spike_flag for engulfing confirmation
     if all(c in out.columns for c in ("bullish_engulfing_flag", "bearish_engulfing_flag", "vol_spike_flag")):
-        out["engulfing_x_vol_spike"] = (
-            (out["bullish_engulfing_flag"] | out["bearish_engulfing_flag"]) * out["vol_spike_flag"]
-        )
+        bull = out["bullish_engulfing_flag"].fillna(0).astype(bool)
+        bear = out["bearish_engulfing_flag"].fillna(0).astype(bool)
+        out["engulfing_x_vol_spike"] = (bull | bear).astype(int) * out["vol_spike_flag"]
     return out
 
 
