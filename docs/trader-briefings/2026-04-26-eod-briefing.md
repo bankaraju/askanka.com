@@ -29,7 +29,7 @@ laggard / short the leader, or vice versa).
 |---|---|---|
 | Trigger | \|z\| ≥ 2.0 correlation break vs sector index | Filters out daily noise; keeps clear signals |
 | Direction | Fade the leg that diverged (LONG laggard / SHORT leader). NOT regime-directional. | Pure mean-reversion. Edge comes from divergence reverting, not from regime side. |
-| Universe | F&O 270 (canonical_fno_research_v2: 243 full 5y + 20 short ≥3y) | Backfill complete tonight. 4 truly missing: TATAMOTORS-legacy, TMPV (only 6mo), GMRINFRA, IDFC, PEL — all need Kite-side backfill. |
+| Universe | F&O 273 (canonical_fno_research_v3: 247 full 5y + 20 short ≥3y) covering 237/239 PIT tickers (99.2%) | After PIT reconciliation tonight: 4 yfinance backfills (IRCON, STLTECH, TATACHEM, VGUARD), 4 name-change aliases (GMRINFRA→GMRAIRPORT, IDFC→IDFCFIRSTB, TATAMOTORS→TMPV, TATACHEMICALS→TATACHEM, IBULHSGFIN→SAMMAAN). Only PEL and SAMMAAN truly missing — both need Kite. |
 | **What we DO NOT use** | **PCR / OI / options sentiment** | **Indian options too sparse to extract reliable signal. Old PCR-confirmed slice was the loser (−3.30pp).** |
 | **What we DO NOT use** | **Z-cross exit (price returning to mean)** | **Costs more than it saves; TIME_STOP+TRAIL+ATR strictly dominates.** |
 | Entry | 09:30 IST market price | First clean print after open; avoid pre-open noise |
