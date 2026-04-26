@@ -20,3 +20,24 @@
 | D10 | ETF coefficient rotation magnitude is a real "regime change marker" — 51.8 std units on 2025-12-30, 37.2 on 2026-04-16 align with v3 zone shifts | `pipeline/data/research/etf_v3/2026-04-26-v3-only-60d-verdict.md` §2 | coef-delta marker should be tested as a second-tier signal | Phase 2 includes coef-delta marker test |
 | D11 | 5y vs 3y lookback is +6.3pp pooled OOS edge swing — v3 with longer history is materially better | `pipeline/data/research/etf_v3/etf_v3_rolling_refit_int5_lb1200_curated.json` | v3 evaluation tests 3y vs 5y vs full-panel | Phase 2 walk-forward includes lookback-variant sweep |
 | D12 | v3 NEUTRAL gate misapplied to H-001 SHORT engine kills P&L (NEUTRAL gate captures 4.3% of available SHORT P&L) | `pipeline/data/research/etf_v3/2026-04-26-v3-only-60d-verdict.md` §3 | v3 forecasts next-day NIFTY direction; H-001 fades intraday extremes — different time scales | Phase 2 must test v3 zone gate AND v3-direction-prior separately, not assume gate is the right application |
+
+## 2. Meta-lessons — gates v2 (and the spread engine) never had
+
+These are gates that v2 systematically lacked. v3 evaluation treats them as table-stakes.
+
+| # | Gate v2 lacked | Why it mattered | How v3 honors it |
+|---|---|---|---|
+| M1 | 5y training history | v2 trained on 3y → missed regime cycles; cycle-3 acc was 47% | Phase 2 walk-forward tests 3y / 5y / full-panel lookback variants; pooled OOS edge reported per variant |
+| M2 | Data validation policy (§6 registration) | ETF panel was used without §6 audit; bit us when SectorMapper artifacts went missing on Contabo | Phase 1 dataset registration is a HARD gate; Phase 2 backtests refuse to read parquet without §17 Approved-for-Tier-2-research stamp |
+| M3 | §13A run-manifest reproducibility | Spread engine results not reproducible — no commit hash, no requirements freeze, no seed disclosure | Every Phase 1+2+3 run produces a manifest with commit, pip_freeze, seed, config, file hashes |
+| M4 | §14 hypothesis pre-registration with §14.5 family denominator | ~20 spread variants tested without declaring family — multiplicity denominator was retroactive | Phase 3 hypothesis pre-registered with family denominator declared at lock; Phase 2 family declared at start of marker decomposition |
+| M5 | §11A implementation-risk simulation | v2 backtests assumed perfect execution; real Phase C had missed entries unmodeled | Phase 2 runs all 10 §11A.1 failure scenarios (missed entries, missed exits, delayed fills, halts, etc.) |
+| M6 | §10.4 single-use OOS | H-001/H-002/H-003 re-tested against same 60d window — 3 holdout burns this month | Phase 3 window single-use; rerun requires new window + new hypothesis ID |
+| M7 | §9A parameter fragility | Cadence-sweep verdict was on a single seed; never proved local stability | Phase 2 fragility test mandatory (3 stability conditions per §9A.2) |
+| M8 | Cross-source reconciliation (§13) | Kite minute bars never sample-checked against EOD parquet | Phase 1 mandates 5-ticker sample reconciliation (max delta < 0.5%) before §17 acceptance |
+
+## 3. How this catalog is used
+
+- Each Phase 1–4 task references the discoveries (Dn) and meta-lessons (Mn) it honors
+- At end of each phase: review this catalog; flag any unresolved discovery/lesson
+- Phase 4 final go/no-go must include a per-Dn and per-Mn pass/fail verdict
