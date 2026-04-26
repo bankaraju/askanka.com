@@ -1,0 +1,127 @@
+{
+  "hypothesis_id": "H-2026-04-26-001",
+  "in_sample_csv": "pipeline/data/research/mechanical_replay/v2/trades_no_zcross.csv",
+  "sigma_threshold": 2.0,
+  "n_observed_trades": 42,
+  "candidate_pool_size": 388,
+  "seed": 20260426,
+  "tier_a1_trend_follow_opposite": {
+    "n_trades": 42,
+    "observed": {
+      "hit_rate_pct": 92.8571,
+      "hits": 39,
+      "mean_pnl_pct": 1.662579,
+      "sum_pnl_pct": 69.8283
+    },
+    "flipped": {
+      "hit_rate_pct": 7.1429,
+      "hits": 3,
+      "mean_pnl_pct": -1.662579,
+      "sum_pnl_pct": -69.8283
+    },
+    "direction_integrity_threshold_pct": 0.3,
+    "direction_integrity_pass": true,
+    "flag_message": null
+  },
+  "tier_a2_random_direction": {
+    "n_trades": 42,
+    "n_perms": 10000,
+    "observed_hit_rate_pct": 92.8571,
+    "random_hit_rate_distribution_pct": {
+      "min": 21.4286,
+      "p01": 33.3333,
+      "p05": 38.0952,
+      "p50": 50.0,
+      "mean": 50.0993,
+      "p95": 61.9048,
+      "p99": 69.0476,
+      "max": 85.7143
+    },
+    "p_value_random_beats_observed": 0.0,
+    "direction_alpha_pass": true
+  },
+  "tier_a3_per_week_stationarity": {
+    "n_weeks": 7,
+    "min_positive_weeks_required": 4,
+    "max_single_week_share_allowed": 0.5,
+    "n_positive_weeks": 7,
+    "max_single_week_share": 0.366533,
+    "stationarity_pass": true,
+    "per_week": [
+      {
+        "week_label": "2026-W11",
+        "week_start": "2026-03-09",
+        "n_trades": 2,
+        "hits": 1,
+        "hit_rate_pct": 50.0,
+        "mean_pnl_pct": 1.63945,
+        "sum_pnl_pct": 3.2789,
+        "share_of_total_pnl": 0.046957
+      },
+      {
+        "week_label": "2026-W12",
+        "week_start": "2026-03-16",
+        "n_trades": 1,
+        "hits": 1,
+        "hit_rate_pct": 100.0,
+        "mean_pnl_pct": 1.2103,
+        "sum_pnl_pct": 1.2103,
+        "share_of_total_pnl": 0.017333
+      },
+      {
+        "week_label": "2026-W13",
+        "week_start": "2026-03-23",
+        "n_trades": 4,
+        "hits": 4,
+        "hit_rate_pct": 100.0,
+        "mean_pnl_pct": 1.870325,
+        "sum_pnl_pct": 7.4813,
+        "share_of_total_pnl": 0.107139
+      },
+      {
+        "week_label": "2026-W14",
+        "week_start": "2026-03-30",
+        "n_trades": 3,
+        "hits": 3,
+        "hit_rate_pct": 100.0,
+        "mean_pnl_pct": 0.6128,
+        "sum_pnl_pct": 1.8384,
+        "share_of_total_pnl": 0.026327
+      },
+      {
+        "week_label": "2026-W15",
+        "week_start": "2026-04-06",
+        "n_trades": 18,
+        "hits": 17,
+        "hit_rate_pct": 94.4444,
+        "mean_pnl_pct": 1.404194,
+        "sum_pnl_pct": 25.2755,
+        "share_of_total_pnl": 0.361966
+      },
+      {
+        "week_label": "2026-W16",
+        "week_start": "2026-04-13",
+        "n_trades": 3,
+        "hits": 3,
+        "hit_rate_pct": 100.0,
+        "mean_pnl_pct": 1.7165,
+        "sum_pnl_pct": 5.1495,
+        "share_of_total_pnl": 0.073745
+      },
+      {
+        "week_label": "2026-W17",
+        "week_start": "2026-04-20",
+        "n_trades": 11,
+        "hits": 10,
+        "hit_rate_pct": 90.9091,
+        "mean_pnl_pct": 2.326764,
+        "sum_pnl_pct": 25.5944,
+        "share_of_total_pnl": 0.366533
+      }
+    ],
+    "total_pnl_pct": 69.8283
+  },
+  "overall_tier_a_pass": true,
+  "compute_time_seconds": 0.0278,
+  "generated_at": "2026-04-26T05:02:32Z"
+}
