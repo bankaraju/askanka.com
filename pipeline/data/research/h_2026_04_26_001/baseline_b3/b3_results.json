@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-04-26T05:12:51+00:00",
+  "hypothesis": "H-2026-04-26-001",
+  "baseline": "B3 -- passive long index intraday",
+  "window": {
+    "start": "2026-02-24",
+    "end": "2026-04-24"
+  },
+  "calibration": {
+    "n_samples": 121,
+    "n_valid_for_ratio": 113,
+    "resolve_pct": 0.925,
+    "ratio_median": 0.8927,
+    "ratio_std": 0.6412,
+    "intraday_pct_mean": 0.001771,
+    "full_pct_mean": 0.001568,
+    "note": "fitted from phase_c_shape_audit/bars sectoral-index minute bars"
+  },
+  "n_window_days": 35,
+  "n_signal_days": 11,
+  "n_unique_trade_dates_in_window": 11,
+  "trade_dates_outside_window": [
+    "2026-04-21",
+    "2026-04-22",
+    "2026-04-23"
+  ],
+  "h001_per_trade_in_sample": {
+    "label": "H-2026-04-26-001 >=2sigma per-trade P&L",
+    "n": 42,
+    "mean_pct": 1.6626,
+    "std_pct": 1.5996,
+    "hit_rate_pct": 92.86,
+    "sharpe_ann": 16.5,
+    "t_stat": 6.736,
+    "cum_return_pct": 98.88
+  },
+  "b3_unconditional": {
+    "label": "NIFTY 09:30->14:30 every day in 2026-02-24->2026-04-24",
+    "n": 35,
+    "mean_pct": -0.0096,
+    "std_pct": 0.8159,
+    "hit_rate_pct": 51.43,
+    "sharpe_ann": -0.186,
+    "t_stat": -0.069,
+    "cum_return_pct": -0.45
+  },
+  "b3_matched_days": {
+    "label": "NIFTY 09:30->14:30 on signal-days only (n unique days)",
+    "n": 11,
+    "mean_pct": -0.0461,
+    "std_pct": 0.7921,
+    "hit_rate_pct": 54.55,
+    "sharpe_ann": -0.923,
+    "t_stat": -0.193,
+    "cum_return_pct": -0.54
+  },
+  "b3_matched_trades_paired": {
+    "label": "NIFTY 09:30->14:30 paired per-trade (one row per >=2sigma trade)",
+    "n": 31,
+    "mean_pct": 0.1635,
+    "std_pct": 0.6871,
+    "hit_rate_pct": 70.97,
+    "sharpe_ann": 3.777,
+    "t_stat": 1.325,
+    "cum_return_pct": 5.12
+  },
+  "matched_trade_coverage_pct": 73.81,
+  "margins_pct": {
+    "h001_minus_b3_paired_per_trade": 1.4991,
+    "h001_minus_b3_unconditional_window": 1.6722,
+    "h001_minus_b3_matched_signal_days": 1.7087
+  },
+  "spec_threshold_pct": 0.5,
+  "verdict": {
+    "paired_per_trade_clears_05pct": true,
+    "unconditional_window_clears_05pct": true,
+    "primary_pass": true
+  }
+}
