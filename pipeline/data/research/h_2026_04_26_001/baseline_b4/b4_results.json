@@ -1,0 +1,20 @@
+{
+  "baseline_id": "B4_random_day_same_direction",
+  "description": "Pick obs_n random (ticker, day) pairs from candidate pool of 388 in-sample trades; compare hit_rate and mean_pnl distributions to observed.",
+  "observed_n": 42,
+  "observed_hits": 39,
+  "observed_hit_rate_pct": 92.8571,
+  "observed_mean_pnl_pct": 1.6626,
+  "n_perms": 10000,
+  "seed": 20260426,
+  "candidate_pool_size": 388,
+  "p_value_hit_rate_geq_observed": 0.0,
+  "p_value_mean_pnl_geq_observed": 0.0,
+  "random_perm_max_hit_rate_pct": 90.48,
+  "random_perm_p99_hit_rate_pct": 78.57,
+  "random_perm_max_mean_pnl_pct": 1.427,
+  "random_perm_p99_mean_pnl_pct": 0.895,
+  "bonferroni_threshold": 0.000417,
+  "verdict_hit_rate_section_7_B4": "PASS",
+  "verdict_mean_pnl_section_7_B4": "PASS"
+}
