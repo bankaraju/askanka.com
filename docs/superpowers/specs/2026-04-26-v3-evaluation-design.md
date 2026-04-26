@@ -70,7 +70,7 @@ Things v2 (and the spread engine) never did, that v3 evaluation now treats as ta
 
 ### 4.3 Phase 0 deliverable
 
-`docs/v3-evaluation/phase-0-v2-lessons-catalog.md` — committed before Phase 1 starts. Re-read at start of each subsequent phase as constraint review.
+[`docs/v3-evaluation/phase-0-v2-lessons-catalog.md`](../../v3-evaluation/phase-0-v2-lessons-catalog.md) — committed before Phase 1 starts. Re-read at start of each subsequent phase as constraint review. **Status:** committed at Phase 0 task 3.
 
 ## 5. Phase 1 — Universe Extension
 

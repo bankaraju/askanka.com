@@ -1251,4 +1251,10 @@ cat pipeline/data/signals/open_signals.json | python -m json.tool
 
 ---
 
+## Research Projects (active)
+
+- **v3 Standalone Evaluation** — comprehensive backtest + forward-shadow project for the v3-CURATED ETF regime engine. Spec: [docs/superpowers/specs/2026-04-26-v3-evaluation-design.md](superpowers/specs/2026-04-26-v3-evaluation-design.md). Phase 0 catalog: [docs/v3-evaluation/phase-0-v2-lessons-catalog.md](v3-evaluation/phase-0-v2-lessons-catalog.md). Status: Phase 0 + Phase 1 in progress.
+
+---
+
 *Document version: 2026-04-18. Auto-generated from code trace of askanka.com pipeline.*
