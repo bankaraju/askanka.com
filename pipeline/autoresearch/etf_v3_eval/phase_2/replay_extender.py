@@ -10,14 +10,19 @@ Notes
 - The TIME_STOP convention takes the close of the bar whose ``time(hour, min)``
   equals 14:30 IST. If no 14:30 bar exists for a (ticker, date), TIME_STOP
   falls back to the day's last close (open_to_1430_pct == open_to_close_pct).
+  In this case ``time_stop_imputed`` is set to True so downstream can flag/filter.
 - Input timestamps are localised to Asia/Kolkata if naive.
 - Returns are signed percentages (positive when price > open_px).
+- Rows where open_px == 0 (delisted/bad data) are skipped with a WARNING log.
 """
 from __future__ import annotations
 
+import logging
 from datetime import time
 
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 def aggregate_minute_to_event_returns(minute_df: pd.DataFrame) -> pd.DataFrame:
@@ -33,9 +38,13 @@ def aggregate_minute_to_event_returns(minute_df: pd.DataFrame) -> pd.DataFrame:
     -------
     DataFrame with one row per (ticker, trade_date) and columns:
         ticker, trade_date,
-        open_px, close_px, time_stop_px, intraday_high, intraday_low,
+        open_px, close_px, time_stop_px, time_stop_imputed,
+        intraday_high, intraday_low,
         open_to_1430_pct, open_to_close_pct,
         intraday_high_pct, intraday_low_pct.
+
+    ``time_stop_imputed`` is True when no 14:30 bar existed and we fell back to
+    the day's last close price.
     """
     df = minute_df.copy()
     if df["timestamp"].dt.tz is None:
@@ -50,9 +59,19 @@ def aggregate_minute_to_event_returns(minute_df: pd.DataFrame) -> pd.DataFrame:
         first = g.iloc[0]
         last = g.iloc[-1]
         open_px = float(first["open"])
+
+        if open_px == 0:
+            logger.warning("Skipping zero-open row: ticker=%s trade_date=%s", t, d)
+            continue
+
         close_px = float(last["close"])
         bar_1430 = g[g["clock"] == time(14, 30)]
-        time_stop_px = float(bar_1430.iloc[0]["close"]) if len(bar_1430) else close_px
+        if len(bar_1430):
+            time_stop_px = float(bar_1430.iloc[0]["close"])
+            time_stop_imputed = False
+        else:
+            time_stop_px = close_px
+            time_stop_imputed = True
         intraday_high = float(g["high"].max())
         intraday_low = float(g["low"].min())
         rows.append({
@@ -61,6 +80,7 @@ def aggregate_minute_to_event_returns(minute_df: pd.DataFrame) -> pd.DataFrame:
             "open_px": open_px,
             "close_px": close_px,
             "time_stop_px": time_stop_px,
+            "time_stop_imputed": time_stop_imputed,
             "intraday_high": intraday_high,
             "intraday_low": intraday_low,
             "open_to_1430_pct": (time_stop_px - open_px) / open_px,
