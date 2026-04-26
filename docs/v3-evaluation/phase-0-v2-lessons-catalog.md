@@ -1,0 +1,22 @@
+# v3 Evaluation — Phase 0: v2 Lessons Catalog
+
+**Date:** 2026-04-26
+**Spec:** [2026-04-26-v3-evaluation-design.md](../superpowers/specs/2026-04-26-v3-evaluation-design.md) §4
+**Purpose:** Single constraint document referenced by every Phase 1–4 task. Re-read at the start of each phase.
+
+## 1. v2 Discoveries — what we learned from running v2 in production
+
+| # | Discovery | Evidence | Implication for v3 design | Test v3 must pass |
+|---|---|---|---|---|
+| D1 | regime_history.csv contamination — built with hindsight v2 weights, NOT a production audit trail | `memory/reference_regime_history_csv_contamination.md` | v3 must record zone-as-emitted, not zone-as-rebuilt | Phase 2 backtest reads only zone-as-emitted snapshots; Phase 3 shadow ledger writes zone at the moment of decision |
+| D2 | PCR/OI multi-confirmation throttled trades historically | `memory/project_etf_v3_failed_2026_04_26.md` | v3 must not bolt PCR/OI back on as a second gate | Phase 2 marker decomposition does NOT include a PCR/OI marker; if added later requires its own holdout |
+| D3 | OPPORTUNITY split into LAG/OVERSHOOT (#107 audit) — pooling masked failure | `memory/project_phase_c_follow_vs_fade_audit.md` | v3 gate must be tested separately on LAG vs OVERSHOOT slices | Phase 2 marker decomposition tables are stratified by LAG/OVERSHOOT; pooled-only verdicts are forbidden |
+| D4 | σ bucket × regime coupling — buckets are NOT regime-independent | session 2026-04-26 conversation | v3 evaluation must condition σ buckets on regime | Phase 2 marker decomposition includes σ × regime cross-tab |
+| D5 | POSSIBLE_OPPORTUNITY (+41.67pp/328) beat OPPORTUNITY_LAG (−3.30pp/60) — wrong slice was kept live | `memory/project_mechanical_60day_replay.md` | v3 gate granularity must match the actual P&L-bearing slice, not a category label | Phase 2 emits P&L per-slice; Phase 4 catalog flags any case where pooled verdict ≠ slice verdict |
+| D6 | Single-touch holdout discipline (§13.1) burned 3 times in April | hypothesis-registry.jsonl entries for H-2026-04-25-001/002, H-2026-04-26-003 | v3 forward-test window must be pre-registered, single-use | Phase 3 pre-registration document SHA-256 hashed before window opens; rerun requires new hypothesis ID |
+| D7 | SECTOR_FLIP exit reason is the leak (−69 bps mean, 9% hit, 83-min hold) | `pipeline/data/research/etf_v3/2026-04-26-exit-time-observations.md` | exit-rule changes interact with regime; v3 evaluation must hold exit rule fixed unless explicitly testing it | Phase 2 default exit = TIME_STOP 14:30 + ATR(14)×2 stop; alternative exits require their own marker entry |
+| D8 | Z_CROSS in NEUTRAL = +41 bps refinement candidate | `pipeline/data/research/etf_v3/2026-04-26-neutral-tradability.md` | v3-NEUTRAL-day refinements have unexploited room | Phase 2 marker decomposition includes Z_CROSS-conditional sub-marker |
+| D9 | Sector dynamics on NEUTRAL days are real — PSU BANK/BANK/PSE/ENERGY/INFRA SHORT-fades win (+200 to +390 bps); AUTO/IT/FMCG lose | `pipeline/data/research/etf_v3/2026-04-26-v3-only-60d-verdict.md` §3 | sector-conditional gating is a credible Phase 2 marker | Phase 2 includes sector-overlay marker with explicit per-sector P&L attribution |
+| D10 | ETF coefficient rotation magnitude is a real "regime change marker" — 51.8 std units on 2025-12-30, 37.2 on 2026-04-16 align with v3 zone shifts | `pipeline/data/research/etf_v3/2026-04-26-v3-only-60d-verdict.md` §2 | coef-delta marker should be tested as a second-tier signal | Phase 2 includes coef-delta marker test |
+| D11 | 5y vs 3y lookback is +6.3pp pooled OOS edge swing — v3 with longer history is materially better | `pipeline/data/research/etf_v3/etf_v3_rolling_refit_int5_lb1200_curated.json` | v3 evaluation tests 3y vs 5y vs full-panel | Phase 2 walk-forward includes lookback-variant sweep |
+| D12 | v3 NEUTRAL gate misapplied to H-001 SHORT engine kills P&L (NEUTRAL gate captures 4.3% of available SHORT P&L) | `pipeline/data/research/etf_v3/2026-04-26-v3-only-60d-verdict.md` §3 | v3 forecasts next-day NIFTY direction; H-001 fades intraday extremes — different time scales | Phase 2 must test v3 zone gate AND v3-direction-prior separately, not assume gate is the right application |
