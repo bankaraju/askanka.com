@@ -4,25 +4,52 @@ AutoResearch — ETF Re-Optimizer + Indian Market Data Loader
 This module serves two related purposes:
 
 1. **Indian Market Data Loader** (`load_indian_data`):
-   Reads the most recent daily dump (pipeline/data/daily/YYYY-MM-DD.json),
-   flows snapshot (pipeline/data/flows/YYYY-MM-DD.json), and positioning.json
-   to extract Indian-specific signals: FII/DII equity flows, India VIX, Nifty
-   close, Bank Nifty close, PCR, RSI-14, and breadth indicators.  These values
-   are used as additional inputs to the ETF regime engine so that global-ETF
-   signals are cross-checked against domestic participation data before a
-   regime call is finalised.
+   Reads the most recent daily dump and positioning snapshot to extract a
+   spot-reading of Indian market state: VIX, NIFTY close, FII/DII flows
+   (and slots for Bank Nifty / PCR / RSI / breadth which are mostly None
+   in the current data flow). Returns a flat dict suitable for narrative
+   generation. **Currently has no callers** in the rest of the pipeline —
+   the ETF reoptimizer below uses `_build_indian_features` instead, which
+   builds a historical TIME SERIES from the same source files.
 
 2. **ETF Re-Optimizer** (`run_reoptimize`):
-   Fetches 3 years of global ETF returns via yfinance, merges with Indian
-   market data time-series, runs Karpathy-style random search weight
-   optimisation, saves optimal weights to etf_optimal_weights.json, and
-   updates the today_zone in regime_trade_map.json.
+   Fetches 3 years of global ETF returns via yfinance and joins them with
+   a historical TIME SERIES of 4 Indian features (VIX close, NIFTY close,
+   FII net, DII net) built from `pipeline/data/daily/*.json` +
+   `pipeline/data/flows/*.json`. Runs Karpathy-style random search to
+   pick weights that maximise Sharpe of (signal × next-day-NIFTY-sign).
+   Saves to `etf_optimal_weights.json` and updates `today_zone` in
+   `regime_trade_map.json`.
+
+KNOWN STRUCTURAL LIMITATIONS (2026-04-26 deep-read audit, see
+`pipeline/data/research/etf_v3/2026-04-26-v2-deep-read-findings.md`):
+
+  - The Indian feature columns are RAW LEVELS (vix close ~17, nifty close
+    ~20000, fii/dii crores ~thousands) joined to 1-day percent returns
+    (~ -5 to +5). The matrix is fed to the optimizer WITHOUT
+    standardisation. Karpathy seed weights are correlations with the
+    target, so NIFTY level (which is highly autocorrelated with itself
+    shifted) dominates the seed.
+
+  - At signal time (`etf_daily_signal.compute_daily_signal`), only weights
+    whose key matches a GLOBAL_ETFS entry are actually applied. Weights
+    on the 4 Indian features are silently dropped. As of 2026-04-26 the
+    fit happens to put very small weight on Indian features (~0.1% of
+    total magnitude) so the leak is small in practice — but the
+    architecture is wrong. A loud warning has been added to
+    `compute_daily_signal` until this is fixed in v3.
+
+  - Production fit uses `pipeline/data/daily/*.json` which currently
+    contains only ~6 weeks of files (2026-03-02 onwards). The Indian
+    features are ffill'd backwards through the entire 3-year ETF window,
+    so they are effectively constant for ~94% of the fit window. Honest
+    re-evaluation must use `pipeline/autoresearch/etf_v2_faithful_research.py`
+    which reads from the 5y parquet panel.
 
 Usage:
     from pipeline.autoresearch.etf_reoptimize import load_indian_data, run_reoptimize
-    data = load_indian_data()   # uses default prod paths
-    print(data["india_vix"], data["fii_net"])
-    result = run_reoptimize()   # full pipeline, saves weights
+    data = load_indian_data()   # spot snapshot (no callers as of 2026-04-26)
+    result = run_reoptimize()   # weekly Saturday fit + save weights
 """
 
 from __future__ import annotations
@@ -82,34 +109,37 @@ def load_indian_data(
 ) -> dict:
     """Load the latest Indian market data from local JSON snapshots.
 
+    HONEST STATUS (2026-04-26 deep-read audit): this function has NO callers
+    in the rest of the pipeline. The ETF reoptimizer uses
+    `_build_indian_features` instead. Most of the fields below are typically
+    None because the source files don't contain them in current data flow:
+      - ``pcr`` — `positioning.json` is per-stock, has no top-level/NIFTY PCR
+      - ``nifty_rsi_14`` / ``pct_above_*dma`` / ``sector_breadth`` — read from
+        `metadata` block of daily dump, but writers don't currently emit them
+
     Parameters
     ----------
     daily_dir : Path, optional
-        Directory containing dated daily dump files (``YYYY-MM-DD.json``).
-        Defaults to ``pipeline/data/daily/``.
+        Directory of dated daily dump files. Default ``pipeline/data/daily/``.
     flows_dir : Path, optional
-        Directory containing dated FII/DII flow files (``YYYY-MM-DD.json``).
-        Defaults to ``pipeline/data/flows/``.
+        Directory of dated flow files. Default ``pipeline/data/flows/``.
     positioning_path : Path, optional
-        Path to the positioning snapshot (``positioning.json``).
-        Defaults to ``pipeline/data/positioning.json``.
+        Default ``pipeline/data/positioning.json``.
 
     Returns
     -------
     dict
-        Keys (all ``float | None``):
-        - ``fii_net``           — FII equity net (crore INR)
-        - ``dii_net``           — DII equity net (crore INR)
-        - ``india_vix``         — India VIX close
-        - ``nifty_close``       — Nifty 50 close
-        - ``banknifty_close``   — Bank Nifty close (if available)
-        - ``pcr``               — Market-wide put/call ratio
-        - ``nifty_rsi_14``      — Nifty 14-day RSI (if stored)
-        - ``pct_above_200dma``  — % of F&O stocks above 200 DMA (if stored)
-        - ``pct_above_50dma``   — % of F&O stocks above 50 DMA (if stored)
-        - ``sector_breadth``    — Advance/decline breadth score (if stored)
-
-    Missing fields are ``None`` — callers must handle ``None`` gracefully.
+        Reliable in current data flow:
+          - ``fii_net``         — FII equity net (crore INR)
+          - ``dii_net``         — DII equity net (crore INR)
+          - ``india_vix``       — India VIX close
+          - ``nifty_close``     — Nifty 50 close
+        Typically ``None`` (writer doesn't emit, or source format mismatch):
+          - ``banknifty_close`` — Bank Nifty close
+          - ``pcr``             — Market-wide put/call ratio
+          - ``nifty_rsi_14``    — Nifty 14-day RSI
+          - ``pct_above_200dma``, ``pct_above_50dma`` — F&O stock breadth
+          - ``sector_breadth``  — advance/decline breadth score
     """
     daily_dir = Path(daily_dir) if daily_dir is not None else _DAILY_DIR
     flows_dir = Path(flows_dir) if flows_dir is not None else _FLOWS_DIR

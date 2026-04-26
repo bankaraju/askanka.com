@@ -77,13 +77,35 @@ def compute_daily_signal(
     if not optimal_weights:
         return {"status": "error", "reason": "weights file contains no optimal_weights"}
 
+    # Detect the silent-weight-drop bug surfaced by the 2026-04-26 deep-read
+    # audit (pipeline/data/research/etf_v3/2026-04-26-v2-deep-read-findings.md).
+    # The optimizer puts non-zero weights on Indian features (vix, fii_net,
+    # dii_net, nifty_close) but _fetch_latest_returns only fetches keys present
+    # in GLOBAL_ETFS, so those weights are silently zeroed at decision time.
+    # This warns the operator until the architecture is fixed in v3.
+    from pipeline.autoresearch.etf_reoptimize import GLOBAL_ETFS as _GLOBAL_ETFS
+    _unfetchable = [k for k in optimal_weights if k not in _GLOBAL_ETFS]
+    if _unfetchable:
+        _dropped_mass = sum(abs(optimal_weights[k]) for k in _unfetchable)
+        _kept_mass = sum(abs(optimal_weights[k]) for k in optimal_weights if k in _GLOBAL_ETFS)
+        _frac = _dropped_mass / (_kept_mass + _dropped_mass) if (_kept_mass + _dropped_mass) else 0.0
+        logger.warning(
+            "compute_daily_signal: SILENT WEIGHT DROP — %d weights have no "
+            "yfinance ticker and will be zeroed at signal time: %s "
+            "(dropped magnitude %.4f / total %.4f = %.1f%%)",
+            len(_unfetchable), _unfetchable,
+            _dropped_mass, _kept_mass + _dropped_mass, _frac * 100.0,
+        )
+
     # 2. Fetch latest ETF prices
     logger.info("compute_daily_signal: fetching ETF prices for %d ETFs", len(optimal_weights))
     etf_returns = _fetch_latest_returns(list(optimal_weights.keys()))
     if etf_returns is None:
         return {"status": "error", "reason": "yfinance download failed or no data returned"}
 
-    # 3. Compute composite signal: sum(return * weight) for weighted ETFs
+    # 3. Compute composite signal: sum(return * weight) for weighted ETFs.
+    # Weights for non-GLOBAL_ETFS keys (Indian features) contribute 0 because
+    # they have no entry in etf_returns — the warning above flags this.
     today_signal = 0.0
     for etf_name, weight in optimal_weights.items():
         ret = etf_returns.get(etf_name, 0.0)
