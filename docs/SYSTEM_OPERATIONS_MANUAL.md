@@ -200,21 +200,49 @@ downstream runs on stale data. The watchdog flags this as CRITICAL.
 #### Step 2a: ETF Weight Optimizer (OFFLINE — runs manually, NOT scheduled)
 
 The foundation. Uses 28 global ETFs (US sectors, emerging markets, commodities,
-bonds, currencies) to build a composite signal that predicts next-day Nifty direction
-with 62.3% accuracy (vs 51.6% random).
+bonds, currencies) to build a composite signal that maps to a regime zone.
+
+> **⚠ KNOWN ISSUE — 62.3% accuracy claim is methodology-artifact (2026-04-26 audit)**
+>
+> The "62.3% accuracy vs 51.6% random" number was generated under a single
+> 70/30 train/test split with no permutation null and no walk-forward. Re-tested
+> under the canonical backtesting policy gate ladder (§11.4 fragility, §12 perm
+> null, §13.2 walk-forward) on 2026-04-26 (verdict at
+> `pipeline/data/research/etf_v3/2026-04-26-etf-v3-verdict.md`), the same model
+> class shows mean walk-forward edge **−0.73pp** vs majority baseline and a
+> permutation-null p-value of **0.770**. The qualitative regime label may still
+> have utility as a risk-state ranker (see `regime_transition_overnight`
+> overnight asymmetry finding) but the quantitative accuracy claim is not
+> currently defensible. v2-faithful re-evaluation under rolling weekly refit
+> is in flight (`pipeline/autoresearch/etf_v2_faithful_research.py`); update
+> this section when results land.
+>
+> Deep-read findings + structural issues:
+> `pipeline/data/research/etf_v3/2026-04-26-v2-deep-read-findings.md`
 
 **How it works:**
 - Takes daily returns of 28 ETFs (financials, innovation, treasury, VIX, developed
   markets, bonds, euro, Japan, S&P 500, India ETF, China, emerging markets, etc.)
-- Runs 2,000 random weight combinations to find the mix that best predicts Nifty
+- Runs 2,000 random weight combinations (Karpathy random search) to find the
+  mix that best predicts next-day Nifty direction
 - Optimizes by Sharpe ratio (risk-adjusted return)
-- Top weights: Financials (+0.39), Innovation (+0.31), Treasury (+0.25), VIX (-0.20)
-- Outputs a single composite number → maps to regime zone
+- Outputs a single composite number → maps to regime zone (RISK-OFF / CAUTION /
+  NEUTRAL / RISK-ON / EUPHORIA via thresholds in `_signal_to_zone`)
+
+**Known structural limitations (2026-04-26 deep-read audit):**
+- Indian features are joined as RAW LEVELS (vix close ~17, nifty close ~20000)
+  to 1-day percentage returns without standardisation — Karpathy seed dominated
+  by NIFTY level autocorrelation
+- `etf_daily_signal` silently drops Indian feature weights at signal time
+  (only fetches keys in `GLOBAL_ETFS` dict; Indian weights are zeroed). A
+  WARNING now fires when this happens (added 2026-04-26)
+- Production fit uses ~6 weeks of Indian data ffill'd over 3 years — Indian
+  features are constant for ~94% of the fit window
 
 **Output:** `autoresearch/etf_optimal_weights.json`
 
 **STATUS: SCHEDULED. AnkaETFReoptimize runs Saturday 22:00 IST (weekly).
-Now includes Indian data: FII flows, India VIX, Nifty close, PCR.
+Indian feature weights stored but currently dropped at signal time (see above).
 Deployed 2026-04-18 as part of Golden Goose Plan 1.**
 
 #### Step 2b: Regime Trade Map Builder (OFFLINE — runs manually, NOT scheduled)
