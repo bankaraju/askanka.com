@@ -177,6 +177,37 @@ def cmd_open() -> int:
     return 0
 
 
+def _close_options_sidecar(date_str: str) -> None:
+    """Best-effort paired-shadow options CLOSE. Never propagates (spec §5)."""
+    from pipeline.research.phase_c_backtest import live_paper
+    from pipeline import phase_c_options_shadow
+    closed_rows = [
+        e for e in live_paper._load()  # noqa: SLF001
+        if e.get("date") == date_str and e.get("status") == "CLOSED"
+    ]
+    n_ok = 0
+    n_err = 0
+    n_noop = 0
+    for row in closed_rows:
+        signal_id = phase_c_options_shadow.build_signal_id(row)
+        try:
+            result = phase_c_options_shadow.close_options_pair(signal_id)
+            if result is None:
+                n_noop += 1
+            else:
+                n_ok += 1
+        except Exception as exc:  # noqa: BLE001 — spec §5 mandates blanket catch
+            n_err += 1
+            log.warning(
+                "options sidecar CLOSE failed for %s: %s: %s",
+                signal_id, type(exc).__name__, exc,
+            )
+    log.info(
+        "options sidecar CLOSE: %d ok, %d no-match (no paired row), %d errors",
+        n_ok, n_noop, n_err,
+    )
+
+
 def cmd_close(date_override: str | None = None) -> int:
     """Close today's OPEN rows at live LTP (14:30 IST mechanical)."""
     from pipeline.research.phase_c_backtest import live_paper
@@ -194,6 +225,10 @@ def cmd_close(date_override: str | None = None) -> int:
         return 1
     n = live_paper.close_at_1430(date_str, ltp)
     log.info("live_paper ledger: %d entries transitioned OPEN -> CLOSED", n)
+
+    # Sidecar: paired-shadow options ledger close (spec §5 — exceptions caught here)
+    _close_options_sidecar(date_str)
+
     return 0
 
 

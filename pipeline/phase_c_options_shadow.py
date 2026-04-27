@@ -46,7 +46,7 @@ def _ensure_log_handler() -> None:
     log.setLevel(logging.INFO)
 
 
-def _build_signal_id(signal_row: dict) -> str:
+def build_signal_id(signal_row: dict) -> str:
     """Use signal_id from the row if present, else construct as
     {date}_{symbol}_{HHMM} from signal_time."""
     if signal_row.get("signal_id"):
@@ -114,7 +114,7 @@ def open_options_pair(
     Spec: §6.1, §8.1
     """
     _ensure_log_handler()
-    signal_id = _build_signal_id(signal_row)
+    signal_id = build_signal_id(signal_row)
 
     # Idempotency: return the existing row if already in ledger
     rows = _load_ledger()

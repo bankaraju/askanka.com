@@ -10,7 +10,7 @@ import pipeline.phase_c_options_shadow as phase_c_options_shadow
 from pipeline.phase_c_options_shadow import (
     open_options_pair,
     close_options_pair,
-    _build_signal_id,
+    build_signal_id,
 )
 
 
@@ -71,13 +71,13 @@ def _wide_quote_dict(token: int = 12345678):
 
 
 def test_build_signal_id_format(signal_row):
-    assert _build_signal_id(signal_row) == "2026-04-29_RELIANCE_0925"
+    assert build_signal_id(signal_row) == "2026-04-29_RELIANCE_0925"
 
 
 def test_build_signal_id_uses_existing_if_present():
     sid = "custom_id_xyz"
     row = {"date": "2026-04-29", "symbol": "X", "signal_time": "X", "signal_id": sid}
-    assert _build_signal_id(row) == sid
+    assert build_signal_id(row) == sid
 
 
 def test_open_writes_open_row_with_all_fields(tmp_path, signal_row, nfo_fixture, monkeypatch):
