@@ -60,11 +60,16 @@ def compute_atr_stop(
     direction: str,
     window: int = 14,
     mult: float = 2.0,
+    max_abs_pct: float | None = None,
 ) -> Dict[str, Any]:
     """Return {stop_pct, stop_price, atr_14, stop_source} for a single-ticker trade.
 
     `direction` must be "LONG" or "SHORT". `stop_pct` is SIGNED P&L impact:
     always negative, meaning "stop triggers when the trade's own P&L reaches this %".
+
+    If `max_abs_pct` is provided, |stop_pct| is capped at that value (with
+    `stop_price` recomputed to match). Used by intraday Phase C breaks where a
+    high-vol name's full 2×ATR stop would land outside the 5-hour close horizon.
     """
     assert direction in ("LONG", "SHORT"), f"invalid direction: {direction}"
     try:
@@ -93,9 +98,18 @@ def compute_atr_stop(
         stop_price = last_close + mult * atr
         stop_pct = -(stop_price - last_close) / last_close * 100.0
 
+    capped = False
+    if max_abs_pct is not None and abs(stop_pct) > max_abs_pct:
+        capped = True
+        stop_pct = -max_abs_pct
+        if direction == "LONG":
+            stop_price = last_close * (1.0 - max_abs_pct / 100.0)
+        else:
+            stop_price = last_close * (1.0 + max_abs_pct / 100.0)
+
     return {
         "stop_pct": round(stop_pct, 2),
         "stop_price": round(stop_price, 2),
         "atr_14": round(atr, 2),
-        "stop_source": f"atr_{window}",
+        "stop_source": f"atr_{window}_capped" if capped else f"atr_{window}",
     }
