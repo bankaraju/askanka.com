@@ -25,6 +25,7 @@ from pipeline.terminal.api import live as live_api
 from pipeline.terminal.api.live_monitor import router as live_monitor_router
 from pipeline.terminal.api.attractiveness import router as attractiveness_router
 from pipeline.terminal.api.ta_attractiveness import router as ta_attractiveness_router
+from pipeline.terminal.api.scanner_pattern import router as scanner_pattern_router
 
 app = FastAPI(title="Anka Terminal", version="0.1.0")
 
@@ -48,6 +49,7 @@ app.include_router(live_api.router, prefix="/api")
 app.include_router(live_monitor_router, prefix="/api")
 app.include_router(attractiveness_router, prefix="/api")
 app.include_router(ta_attractiveness_router, prefix="/api")
+app.include_router(scanner_pattern_router)  # route already includes /api/ — no prefix
 
 _STATIC_DIR = Path(__file__).parent / "static"
 
