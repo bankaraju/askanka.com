@@ -107,24 +107,6 @@
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 20, 2026"
-    },
-    {
-      "date": "2026-04-19",
-      "segment": "war",
-      "filename": "2026-04-19-war.html",
-      "headline": "Pope Leo XIV's Angolan Gambit: A Diplomatic Smoke Screen as Iran's Strait Grip Tightens",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 19, 2026"
-    },
-    {
-      "date": "2026-04-19",
-      "segment": "epstein",
-      "filename": "2026-04-19-epstein.html",
-      "headline": "Trump's Shredded Files and Bannon's Shadow: The Epstein Cover-up's New Frontier",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 19, 2026"
     }
   ]
 }
