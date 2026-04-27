@@ -1,11 +1,11 @@
-"""Phase C paired-shadow sidecar: OPEN path.
+"""Phase C paired-shadow sidecar: OPEN + CLOSE paths.
 
-Hooks into phase_c_shadow.cmd_open via a separate try/except wrapper (T5).
+Hooks into phase_c_shadow.cmd_open (T5) and phase_c_shadow.cmd_close (T7).
 On every futures-side OPEN row, opens a paired ATM-options leg (CE for
-LONG, PE for SHORT) and writes to a separate ledger artifact. Reads the
-futures ledger only as a join key — no write coupling.
+LONG, PE for SHORT) and writes to a separate ledger artifact. The CLOSE path
+transitions the matching OPEN row to CLOSED with cost-adjusted P&L at 14:30 IST.
 
-Spec: docs/superpowers/specs/2026-04-27-phase-c-options-paired-shadow-design.md §6.1, §8.1
+Spec: docs/superpowers/specs/2026-04-27-phase-c-options-paired-shadow-design.md §6.1, §8.1, §8.2
 """
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ import pandas as pd
 
 from pipeline import options_atm_helpers, options_quote, options_greeks
 from pipeline.kite_client import get_kite
+from pipeline.research.phase_c_v5 import cost_model
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
@@ -259,3 +260,88 @@ def open_options_pair(
     rows.append(base_row)
     _save_ledger(rows)
     return base_row
+
+
+def close_options_pair(
+    signal_id: str,
+    *,
+    kite_client=None,
+) -> dict | None:
+    """Called from phase_c_shadow.cmd_close after the futures row is updated.
+    Locates matching OPEN row by signal_id, fetches 14:30 quote, transitions
+    OPEN -> CLOSED with cost-adjusted P&L. Returns the updated row, or None
+    if no matching OPEN row exists.
+
+    Spec: §6.1, §8.2
+    """
+    _ensure_log_handler()
+    rows = _load_ledger()
+
+    idx = next((i for i, r in enumerate(rows) if r.get("signal_id") == signal_id), None)
+    if idx is None:
+        return None
+
+    row = rows[idx]
+    if row.get("status") != "OPEN":
+        log.info("close_options_pair: %s already in terminal state %s, skipping",
+                 signal_id, row.get("status"))
+        return row
+
+    if kite_client is None:
+        kite_client = get_kite()
+
+    try:
+        instrument_token = int(row["instrument_token"])
+        quote = options_quote.fetch_mid_with_liquidity_check(kite_client, instrument_token)
+
+        if not quote.liquidity_passed:
+            log.warning("close_options_pair: wide/illiquid spread at close for %s (%s) "
+                        "— closing anyway per spec §8.2", signal_id, quote.skip_reason)
+
+        exit_time = _ist_now()
+        entry_mid = float(row["entry_mid"])
+        lot_size = int(row["lot_size"])
+        lots = int(row["lots"])
+        notional_at_entry = float(row["notional_at_entry"])
+        exit_mid = quote.mid
+
+        pnl_gross_pct = (exit_mid - entry_mid) / entry_mid
+        pnl_gross_inr = (exit_mid - entry_mid) * lot_size * lots
+
+        # Options leg is always LONG — we buy CE (for LONG futures) or PE (for SHORT futures)
+        pnl_net_inr = cost_model.apply_to_pnl(
+            pnl_gross_inr, instrument="option",
+            notional_inr=notional_at_entry, side="LONG",
+        )
+        pnl_net_pct = pnl_net_inr / notional_at_entry
+
+        seconds_to_expiry_at_close = None
+        if row.get("is_expiry_day"):
+            market_close = exit_time.replace(hour=15, minute=30, second=0, microsecond=0)
+            seconds_to_expiry_at_close = int((market_close - exit_time).total_seconds())
+
+        row.update({
+            "exit_time": exit_time.isoformat(),
+            "exit_bid": quote.bid,
+            "exit_ask": quote.ask,
+            "exit_mid": exit_mid,
+            "seconds_to_expiry_at_close": seconds_to_expiry_at_close,
+            "pnl_gross_pct": pnl_gross_pct,
+            "pnl_net_pct": pnl_net_pct,
+            "pnl_gross_inr": pnl_gross_inr,
+            "pnl_net_inr": pnl_net_inr,
+            "status": "CLOSED",
+        })
+        log.info("closed %s @ exit_mid=%.4f pnl_gross_pct=%.4f pnl_net_pct=%.4f",
+                 signal_id, exit_mid, pnl_gross_pct, pnl_net_pct)
+
+    except Exception as exc:
+        log.error(
+            "close_options_pair %s fetch failed: %s\n%s",
+            signal_id, exc, traceback.format_exc(),
+        )
+        row["status"] = "TIME_STOP_FAIL_FETCH"
+
+    rows[idx] = row
+    _save_ledger(rows)
+    return row
