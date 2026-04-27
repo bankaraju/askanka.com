@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anka Research | Algorithmic Intelligence for Indian Markets</title>
-    <meta name="description" content="Proprietary AI-driven market research combining forensic financial analysis, global regime modelling, and technical fingerprinting for Indian equities.">
-    <meta property="og:title" content="Anka Research | Algorithmic Intelligence for Indian Markets">
-    <meta property="og:description" content="Where numbers, news, and sentiment converge. AI-powered research for the Indian F&O universe.">
+    <meta name="description" content="Independent algorithmic research for Indian markets. Numbers, news, and sentiment synthesised into a single daily reading — the Anka Trust Score. Pre-registered hypotheses. Single-touch holdouts. Honest verdicts.">
+    <meta property="og:title" content="Anka Research | The Trader's Companion">
+    <meta property="og:description" content="One model. Three signals. Zero guesswork. Numbers, news, and sentiment for the F&O universe — built with the discipline of a research lab.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://askanka.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -301,6 +301,363 @@
             gap: 8px;
         }
 
+
+        /* ── Hero status badge + inquiry CTA ── */
+        .hero-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 24px;
+            background: rgba(212,168,85,0.06);
+            border: 1px solid rgba(212,168,85,0.25);
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .hero-status .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent-gold-warm);
+            box-shadow: 0 0 8px rgba(212,168,85,0.6);
+            animation: pulse-dot 2.4s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212,168,85,0.5); }
+            50%     { opacity: 0.7; box-shadow: 0 0 0 6px rgba(212,168,85,0); }
+        }
+        .hero-status .status-label {
+            color: var(--accent-gold-warm);
+            font-weight: 700;
+        }
+        .hero-status .status-sep {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+        .hero-status .status-context {
+            color: var(--text-secondary);
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 26px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(212,168,85,0.18), rgba(184,134,11,0.10));
+            border: 1px solid rgba(212,168,85,0.4);
+            color: var(--accent-gold-warm);
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.25s ease;
+        }
+        .hero-cta:hover {
+            background: linear-gradient(135deg, rgba(212,168,85,0.28), rgba(184,134,11,0.18));
+            border-color: rgba(212,168,85,0.7);
+            box-shadow: 0 8px 28px rgba(212,168,85,0.18);
+            transform: translateY(-1px);
+        }
+        .hero-cta-mail {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--text-primary);
+            text-transform: none;
+            letter-spacing: 0.3px;
+            border-left: 1px solid rgba(212,168,85,0.3);
+            padding-left: 14px;
+        }
+
+        /* ── Three Signals (Numbers / News / Sentiment) ── */
+        .three-signals {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+        .signal-pillar {
+            position: relative;
+            padding: 28px 28px 28px 32px;
+            border-left: 2px solid rgba(212,168,85,0.25);
+            transition: border-color 0.3s ease;
+        }
+        .signal-pillar:hover {
+            border-left-color: var(--accent-gold-warm);
+        }
+        .pillar-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-gold-warm);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            opacity: 0.85;
+        }
+        .pillar-headline {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 26px;
+            font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+        }
+        .pillar-body {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .pillar-body em {
+            font-style: italic;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .synthesis-block {
+            margin-top: 24px;
+            padding: 44px 48px;
+            text-align: center;
+            background: linear-gradient(160deg, rgba(212,168,85,0.06) 0%, rgba(212,168,85,0.02) 60%, transparent 100%);
+            border: 1px solid rgba(212,168,85,0.2);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .synthesis-block::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.5), transparent);
+        }
+        .synthesis-headline {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 32px;
+            font-weight: 400;
+            background: linear-gradient(135deg, #f5f0e8, #d4a855);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            line-height: 1.25;
+            margin-bottom: 18px;
+        }
+        .synthesis-body {
+            font-size: 15.5px;
+            color: var(--text-secondary);
+            max-width: 720px;
+            margin: 0 auto 22px;
+            line-height: 1.7;
+        }
+        .synthesis-body strong {
+            color: var(--accent-gold-warm);
+            font-weight: 700;
+            font-family: 'DM Sans', 'Inter', sans-serif;
+        }
+        .synthesis-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 24px;
+            background: rgba(212,168,85,0.06);
+            border: 1px solid rgba(212,168,85,0.25);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-gold-warm);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .three-signals { grid-template-columns: 1fr; gap: 12px; }
+            .signal-pillar { padding: 20px 20px 20px 24px; }
+            .pillar-headline { font-size: 22px; }
+            .synthesis-block { padding: 32px 24px; }
+            .synthesis-headline { font-size: 24px; }
+        }
+
+        /* ── What We've Built (capability grid) ── */
+        .capability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .capability-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px 24px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .capability-card:hover {
+            border-color: rgba(212,168,85,0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .capability-card .cap-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-gold-warm);
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .capability-card h3 {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+        .capability-card p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+        .capability-card .cap-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            background: rgba(212,168,85,0.08);
+            border: 1px solid rgba(212,168,85,0.2);
+            color: var(--accent-gold-warm);
+            margin-top: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Methodology pillars ── */
+        .section-intro {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 720px;
+            margin: -10px 0 28px 16px;
+            line-height: 1.65;
+        }
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 14px;
+        }
+        .method-pillar {
+            background: linear-gradient(160deg, #0f1629, #111827);
+            border: 1px solid rgba(212,168,85,0.12);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .method-pillar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--accent-gold-warm), rgba(212,168,85,0.1));
+        }
+        .method-pillar h4 {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--accent-gold-warm);
+            margin-bottom: 8px;
+        }
+        .method-pillar p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+        .method-pillar code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .method-footer {
+            margin-top: 22px;
+            padding: 18px 22px;
+            border-radius: 10px;
+            background: rgba(212,168,85,0.04);
+            border: 1px dashed rgba(212,168,85,0.25);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .method-footer strong {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-gold-warm);
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .method-footer .mf-sep { color: var(--text-muted); opacity: 0.4; }
+
+        /* ── Inquiries block ── */
+        .inquiry-block {
+            background: linear-gradient(135deg, rgba(212,168,85,0.10) 0%, rgba(212,168,85,0.02) 100%);
+            border: 1px solid rgba(212,168,85,0.3);
+            border-radius: 16px;
+            padding: 44px 40px;
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .inquiry-block::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(212,168,85,0.5), transparent);
+        }
+        .inquiry-block h2 {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 32px;
+            font-weight: 400;
+            background: linear-gradient(135deg, #f5f0e8, #d4a855);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .inquiry-block p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin: 0 auto 26px;
+            line-height: 1.7;
+        }
+        .inquiry-mail {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: var(--accent-gold-warm);
+            color: #0a0e1a;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.25s;
+            letter-spacing: 0.3px;
+        }
+        .inquiry-mail:hover {
+            background: #f5c563;
+            box-shadow: 0 8px 24px rgba(212,168,85,0.3);
+            transform: translateY(-1px);
+        }
 
         /* ── Section Headers ── */
         .section {
@@ -741,18 +1098,25 @@
             background: linear-gradient(180deg, transparent, rgba(212,168,85,0.03));
         }
 
+        .footer-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .footer-brand {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 18px;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
         .footer-cta { margin-bottom: 24px; }
         .footer-disclaimer {
             font-size: 12px;
             color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto 16px;
-            line-height: 1.6;
-        }
-        .footer-powered {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
+            max-width: 720px;
+            margin: 0 auto 18px;
+            line-height: 1.7;
         }
         .footer-copy {
             font-size: 12px;
@@ -954,53 +1318,118 @@
         </div>
         <h1 class="hero-title">Anka Research</h1>
         <p class="hero-tagline">Algorithmic Intelligence for Indian Markets</p>
-        <p class="hero-subtitle">We built a proprietary model that reads numbers, news, and sentiment simultaneously. It sees what humans miss and moves before narratives form.</p>
+        <p class="hero-subtitle">A trader's companion built on regime-aware models, pre-registered hypotheses, and forward-shadow validation. Where geopolitics meets Indian equities, with the discipline of a research lab.</p>
 
-        <div class="hero-stats">
-            <div class="hero-stat"><div class="hero-stat-value" id="ats-value">--</div><div class="hero-stat-label">Anka Trust Score</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">213</div><div class="hero-stat-label">Stocks Under Lens</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">5yr</div><div class="hero-stat-label">Backtest Depth</div></div>
-            <div class="hero-stat"><div class="hero-stat-value">Live</div><div class="hero-stat-label">Shadow Trading</div></div>
+        <div class="hero-status">
+            <span class="status-dot"></span>
+            <span class="status-label">Shadow trading mode</span>
+            <span class="status-sep">•</span>
+            <span class="status-context">Independent research</span>
         </div>
 
+        <a href="mailto:info@askanka.com?subject=Anka%20Research%20Inquiry" class="hero-cta">
+            <span>Inquiries</span>
+            <span class="hero-cta-mail">info@askanka.com</span>
+        </a>
     </div>
 </section>
 
-<!-- ══════════════ THE MODEL ══════════════ -->
+<!-- ══════════════ THREE SIGNALS ══════════════ -->
 <div class="container">
-    <section class="section" style="padding-bottom:0;">
-        <div style="background: rgba(212,168,85,0.06); border: 1px solid rgba(212,168,85,0.12); border-radius: 12px; padding: 32px 28px;">
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px; font-size:15px; color:#9ca3af; line-height:1.7;">
-                <div>
-                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">Numbers tell one story.</strong><br>
-                    We read five years of financial data for every stock in the F&amp;O universe. Not just ratios &mdash; what management promised vs. what they actually delivered. The gap between words and numbers is where the edge lives.
-                </div>
-                <div>
-                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">News tells another.</strong><br>
-                    Global events don’t arrive pre-labelled as "bullish" or "bearish." Our system classifies them in real time, measures their historical impact, and knows which sectors move before the market digests the headline.
-                </div>
-                <div>
-                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">Sentiment completes it.</strong><br>
-                    Positioning data, options flow, and technical patterns for each individual stock &mdash; backtested across thousands of occurrences. Not generic indicators. Stock-specific fingerprints that reveal when a name is coiling for a move.
-                </div>
-                <div>
-                    <strong style="color:#d4a855; font-family:’DM Serif Display’,serif; font-size:17px;">One model. Three signals. Zero guesswork.</strong><br>
-                    The Anka Trust Score synthesises all three layers into a single daily reading for Indian markets. The methodology is currently undergoing re-validation and updated results will be published once that work is complete.
-                </div>
+    <section class="section">
+        <div class="three-signals">
+            <article class="signal-pillar">
+                <div class="pillar-eyebrow">01 · Numbers</div>
+                <h3 class="pillar-headline">Numbers tell one story.</h3>
+                <p class="pillar-body">
+                    We read five years of financial data for every stock in the F&amp;O universe. Not just ratios — <em>what management promised vs. what they actually delivered.</em> The gap between words and numbers is where the edge lives.
+                </p>
+            </article>
+
+            <article class="signal-pillar">
+                <div class="pillar-eyebrow">02 · News</div>
+                <h3 class="pillar-headline">News tells another.</h3>
+                <p class="pillar-body">
+                    Global events don’t arrive pre-labelled as <em>bullish</em> or <em>bearish.</em> Our system classifies them in real time, measures their historical impact, and knows which sectors move before the market digests the headline.
+                </p>
+            </article>
+
+            <article class="signal-pillar">
+                <div class="pillar-eyebrow">03 · Sentiment</div>
+                <h3 class="pillar-headline">Sentiment completes it.</h3>
+                <p class="pillar-body">
+                    Positioning data, options flow, and technical patterns for each individual stock — backtested across thousands of occurrences. Not generic indicators. <em>Stock-specific fingerprints</em> that reveal when a name is coiling for a move.
+                </p>
+            </article>
+        </div>
+
+        <div class="synthesis-block">
+            <div class="synthesis-headline">One model. Three signals. Zero guesswork.</div>
+            <p class="synthesis-body">
+                The <strong>Anka Trust Score</strong> synthesises all three layers into a single daily reading for Indian markets. The methodology is currently undergoing re-validation and updated results will be published once that work is complete.
+            </p>
+            <div class="synthesis-status">
+                <span class="status-dot"></span>
+                <span>Re-validation in progress</span>
             </div>
         </div>
     </section>
-</div>
 
     <hr class="section-divider">
 
-<!-- ══════════════ ARTICLES ══════════════ -->
-<div class="container">
+    <!-- ══════════════ METHODOLOGY ══════════════ -->
+    <section class="section">
+        <div class="section-header">
+            <h2>How We Know What We Know</h2>
+            <span class="badge badge-live">Methodology</span>
+        </div>
+        <p class="section-intro">
+            Anything can look like signal in-sample. We constrain ourselves to the few practices that actually distinguish edge from luck.
+        </p>
+        <div class="method-grid">
+            <div class="method-pillar">
+                <h4>Pre-registration</h4>
+                <p>Every hypothesis is written and committed to a public registry <em>before</em> data is touched. Spec specifies the rule, the universe, the holdout window, and the pass/fail thresholds. No fishing, no post-hoc story-telling.</p>
+            </div>
+            <div class="method-pillar">
+                <h4>Single-touch holdout</h4>
+                <p>Each hypothesis gets one out-of-sample window. Results are judged once. No re-running with adjusted parameters after a fail — that's the difference between research and rationalisation.</p>
+            </div>
+            <div class="method-pillar">
+                <h4>Label-permutation null</h4>
+                <p>Returns are permuted <code>10,000×</code> to build the no-skill distribution. We require <code>α = 0.05</code> against this null on the pre-specified statistic, not against a normal-theory approximation that almost never holds.</p>
+            </div>
+            <div class="method-pillar">
+                <h4>Comparator baselines</h4>
+                <p>A signal must beat random direction, always-prior, long-only, and a regime-conditional baseline — not just a coin flip. Most "edges" disappear once the right baseline is built.</p>
+            </div>
+            <div class="method-pillar">
+                <h4>Data validation gate</h4>
+                <p>No backtest may run on data that hasn't been registered, schema-checked, point-in-time-corrected, and contamination-mapped. The data policy is a hard prerequisite for any model decision.</p>
+            </div>
+            <div class="method-pillar">
+                <h4>Strategy registration kill-switch</h4>
+                <p>Any new trading-rule file in the codebase requires a matching registry entry in the same commit. Enforced by a pre-commit hook and a CI gate. No untraceable strategies, ever.</p>
+            </div>
+        </div>
+        <div class="method-footer">
+            <span><strong>27</strong> hypotheses currently registered</span>
+            <span class="mf-sep">·</span>
+            <span>Public registry · single-touch holdouts · honest verdicts (pass <em>and</em> fail)</span>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ══════════════ TODAY'S INTELLIGENCE ══════════════ -->
     <section class="section">
         <div class="section-header">
             <h2>Today’s Intelligence</h2>
             <span class="badge badge-live">Daily</span>
         </div>
+        <p class="section-intro">
+            Geopolitics, energy, and policy reshape Indian-market structure faster than fundamentals can. We publish a daily read on the macro and political surface that traders actually need to price.
+        </p>
         <div class="reports-grid">
             <div style="color:#64748b; font-size:14px; padding:20px;">Loading today's research...</div>
         </div>
@@ -1011,22 +1440,45 @@
     <section class="section">
         <div class="section-header">
             <h2 style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';">Library &amp; Archive</h2>
-            <span class="badge badge-count" style="cursor:pointer;" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';this.textContent=g.style.display==='none'?'Show':'Hide';">Show</span>
+            <span class="badge badge-count" style="cursor:pointer;" id="lib-toggle" onclick="var g=document.getElementById('library-grid');g.style.display=g.style.display==='none'?'grid':'none';this.textContent=g.style.display==='none'?'Show':'Hide';">Show</span>
         </div>
+        <p class="section-intro">
+            Every piece we’ve published, indexed by date and category. Open the archive for the full record.
+        </p>
         <div class="reports-grid" id="library-grid" style="display:none;">
         </div>
     </section>
+
+    <hr class="section-divider">
+
+    <!-- ══════════════ INQUIRIES ══════════════ -->
+    <section class="section">
+        <div class="inquiry-block">
+            <h2>Built for Operators</h2>
+            <p>
+                Anka Research is in active shadow-trading mode — every layer is live, every signal paper-traded with full audit. We work with select traders, allocators, and research partners who care about disciplined, falsifiable Indian-market research over packaged tip-sheets.
+            </p>
+            <a href="mailto:info@askanka.com?subject=Anka%20Research%20Inquiry" class="inquiry-mail">
+                <span>✉</span>
+                <span>info@askanka.com</span>
+            </a>
+        </div>
+    </section>
+
 </div>
 
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer class="footer">
+    <div class="footer-mark">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <path d="M50 8 C35 8, 20 20, 18 38 C16 52, 22 62, 30 70 L25 88 C25 88, 38 78, 50 78 C62 78, 75 88, 75 88 L70 70 C78 62, 84 52, 82 38 C80 20, 65 8, 50 8Z" fill="#d4a855" opacity="0.85"/>
+        </svg>
+        <span class="footer-brand">Anka Research</span>
+    </div>
     <p class="footer-disclaimer">
-        Anka Research provides algorithmic market analysis for educational and research purposes only.
-        Nothing on this website constitutes investment advice or a recommendation to trade.
-        Past performance and backtest results do not guarantee future outcomes. Consult a qualified financial advisor before making any investment decisions.
+        Anka Research is an independent research practice. The material on this website is published for information and is not investment advice, a solicitation, or a recommendation to trade any security. Past performance and backtest results are not indicative of future outcomes. Readers should consult a qualified financial adviser before making investment decisions.
     </p>
-    <p class="footer-powered">Powered by the Anka Research Engine</p>
-    <p class="footer-copy">&copy; 2026 Anka Research. All rights reserved.</p>
+    <p class="footer-copy">&copy; 2026 Anka Research · <a href="mailto:info@askanka.com" style="color: var(--accent-gold-warm); text-decoration: none;">info@askanka.com</a></p>
 </footer>
 
 <!-- ══════════════ TOOLTIP ══════════════ -->
@@ -1109,20 +1561,6 @@
         });
     }, { threshold: 0.1 });
     sections.forEach(s => observer.observe(s));
-
-    // ── Anka Trust Score (single index from trust_scores.json) ──
-    fetch('data/trust_scores.json?t=' + Date.now())
-        .then(r => r.ok ? r.json() : null)
-        .catch(() => null)
-        .then(data => {
-            if (!data || !data.stocks) return;
-            const el = document.getElementById('ats-value');
-            if (!el) return;
-            const avg = data.stocks.length
-                ? (data.stocks.reduce((a, s) => a + (s.trust_score || 0), 0) / data.stocks.length)
-                : 0;
-            animateValue(el, Math.round(avg), '', 1200);
-        });
 
 })();
 </script>
