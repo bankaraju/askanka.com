@@ -186,8 +186,9 @@ def _enrich_row(row: dict, ltps: dict[str, float], atr_map: dict[str, dict],
         "z_score": row.get("z_score"),
         "classification": row.get("classification"),
         "geometry": brk.get("event_geometry"),
-        "pcr": brk.get("pcr"),
-        "pcr_class": brk.get("pcr_class"),
+        # PCR fields removed 2026-04-27: per-stock PCR is illiquid and not
+        # used as a gate anywhere in the intraday pipeline. The geometric
+        # Class column already captures the actionable read.
         "regime": row.get("regime"),
         "tag": row.get("tag"),
     }
@@ -317,8 +318,7 @@ def _enrich_h001_row(row: dict, ltps: dict[str, float],
         "z_score": None,
         "classification": row.get("classification"),
         "geometry": brk.get("event_geometry"),
-        "pcr": brk.get("pcr"),
-        "pcr_class": brk.get("pcr_class"),
+        # PCR fields removed 2026-04-27 (per-stock PCR illiquid, not a gate).
         "regime": row.get("regime"),
         "regime_gate_pass": row.get("regime_gate_pass") == "True",
         "sigma_bucket": row.get("sigma_bucket"),

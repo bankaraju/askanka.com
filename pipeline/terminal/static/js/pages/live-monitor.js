@@ -33,7 +33,7 @@ const COLUMNS = [
   { key: 'geometry',      label: 'Geo',        numeric: false,
     title: 'Pure price-action geometry (LAG = stock behind peer / OVERSHOOT = stock past peer / DEGENERATE = move too small). PCR-free.' },
   { key: 'classification', label: 'Class',     numeric: false,
-    title: 'Class = Geo + PCR + OI anomaly. Can drift on illiquid options.' },
+    title: 'Geometric classification of the break (LAG / OVERSHOOT / DEGENERATE). PCR-free as of 2026-04-27 — per-stock PCR was illiquid and not a gate.' },
   { key: 'entry_time',    label: 'Open',       numeric: false },
 ];
 
@@ -260,12 +260,9 @@ function renderRow(r) {
   const geoCell = r.geometry
     ? `<span class="geo-pill geo-pill--${r.geometry.toLowerCase()}">${escapeHtml(r.geometry)}</span>`
     : '<span class="geo-pill geo-pill--stale" title="No longer in current breaks scan — may have reverted below 2σ">—</span>';
-  // Class cell: full classification with PCR illiquidity hint.
-  const pcrHint = r.pcr == null
-    ? ' (PCR illiquid)'
-    : (r.pcr_class === 'NEUTRAL' ? ' (PCR neutral)' : '');
+  // Class cell: PCR-free geometric classification (LAG / OVERSHOOT / DEGENERATE).
   const classCell = r.classification
-    ? `<span title="${escapeHtml(r.classification + pcrHint)}">${escapeHtml(r.classification)}</span>`
+    ? `<span title="${escapeHtml(r.classification)}">${escapeHtml(r.classification)}</span>`
     : '—';
   return `
     <tr class="row--${(r.status || 'unknown').toLowerCase()} row--engine-${engineCls}">

@@ -677,13 +677,22 @@ def check_signal_status(
     af = TRAIL_ARM_FACTOR
     trail_armed = (trail_budget > 0) and (peak_pnl >= trail_budget * af)
 
+    # 2026-04-27: CORRELATION_BREAK signals are intraday-only and use the
+    # H-001-aligned rule set: ATR stop (via the EXIT 1 branch below, where
+    # daily_stop = atr_stop["stop_pct"] for this source) + a hard 14:30 IST
+    # TIME_STOP (added at the bottom of this function). They skip TRAIL,
+    # 2-DAY, CONVICTION_DECAY, and Z_CROSS so the broad ledger is directly
+    # comparable to the pre-registered H-001 paper.
+    is_corr_break = signal.get("source") == "CORRELATION_BREAK"
+
     # ── EXIT 0: TRAIL STOP ─────────────────────────────────
     # Peak-relative give-back using ratcheted trail_stop (monotonic invariant).
     # We check the ratcheted trail_stop directly rather than re-deriving from
     # peak - budget, so that a holiday-gap budget expansion cannot lower the bar.
     # The arm guard (peak >= budget * arm_factor) still uses the live trail_budget
     # so a never-profitable position can't fire on a widened gap budget.
-    if TRAIL_STOP_ENABLED and trail_stop is not None:
+    # Skipped for CORRELATION_BREAK to align with H-001 (no trail).
+    if not is_corr_break and TRAIL_STOP_ENABLED and trail_stop is not None:
         if trail_stop_triggered(cumulative_spread, peak_pnl, trail_budget,
                                 ratcheted_stop=trail_stop):
             log.info(
@@ -708,7 +717,8 @@ def check_signal_status(
         return ("STOPPED_OUT", pnl)
 
     # ── EXIT 2: 2-DAY RUNNING STOP ──────────────────────────
-    if is_today_loss and was_yesterday_loss and two_day_combined is not None:
+    # Skipped for CORRELATION_BREAK (intraday-only, hard 14:30 close).
+    if not is_corr_break and is_today_loss and was_yesterday_loss and two_day_combined is not None:
         if two_day_combined <= two_day_stop:
             log.info(
                 f"Signal {signal.get('signal_id')}: 2-DAY RUNNING STOP "
@@ -721,11 +731,13 @@ def check_signal_status(
     # ── EXIT 3: CONVICTION DECAY ────────────────────────────
     # Thesis has measurably degraded. Requires BOTH absolute (score<45)
     # AND relative (drop>20pts) to fire — prevents noise flicker.
+    # Skipped for CORRELATION_BREAK to align with H-001 (no conviction gate).
     rescore = signal.get("rescore") or {}
     current_score = rescore.get("current_score")
     score_delta = rescore.get("score_delta")
     entry_score = signal.get("entry_score") or signal.get("conviction_score") or 0
-    if (current_score is not None and score_delta is not None
+    if (not is_corr_break
+            and current_score is not None and score_delta is not None
             and current_score < 45 and score_delta > 20 and entry_score > 0):
         log.info(
             f"Signal {signal.get('signal_id')}: CONVICTION DECAY "
@@ -733,27 +745,24 @@ def check_signal_status(
         )
         return ("STOPPED_OUT_CONVICTION", pnl)
 
-    # ── EXIT 4: Z_CROSS (CORRELATION_BREAK only) ────────────
-    # The thesis for a correlation-break trade is "the regime-stock gap
-    # will close." If the symbol no longer appears as a same-direction
-    # actionable break in today's correlation_breaks.json, the thesis has
-    # closed -- exit.
-    if signal.get("source") == "CORRELATION_BREAK":
-        direction = "LONG" if signal.get("long_legs") else "SHORT"
-        legs = signal.get("long_legs") or signal.get("short_legs") or [{}]
-        symbol = legs[0].get("ticker") if legs else None
-        if symbol:
-            current_breaks = _load_current_breaks_for_zcross()
-            still_active = any(
-                b.get("symbol") == symbol and _same_direction(b.get("trade_rec"), direction)
-                for b in current_breaks.get("breaks", [])
+    # ── EXIT 4: TIME_STOP at 14:30 IST (CORRELATION_BREAK only) ────────
+    # 2026-04-27: replaced the Z_CROSS exit with a mechanical 14:30 IST
+    # close, matching H-001 paper. Z_CROSS was chopping winners whenever
+    # the residual briefly dipped below 2σ; H-001 doesn't have it, so
+    # leaving it on the broad ledger destroyed comparability. Both
+    # surfaces now use the same rule set: ATR stop + 14:30 hard close,
+    # with the only difference being whether the position was added at
+    # 09:30 (H-001) or intraday (open_signals).
+    if is_corr_break:
+        from datetime import datetime as _dt_now, timezone as _tz, timedelta as _td
+        _IST = _tz(_td(hours=5, minutes=30))
+        now_ist = _dt_now.now(_IST)
+        if (now_ist.hour, now_ist.minute) >= (14, 30):
+            log.info(
+                f"Signal {signal.get('signal_id')}: TIME_STOP at "
+                f"{now_ist.strftime('%H:%M')} IST (cumulative {cumulative_spread:+.2f}%)"
             )
-            if not still_active:
-                log.info(
-                    f"Signal {signal.get('signal_id')}: Z_CROSS "
-                    f"({symbol} no longer an actionable {direction} break)"
-                )
-                return ("STOPPED_OUT_ZCROSS", pnl)
+            return ("STOPPED_OUT_TIME", pnl)
 
     return ("OPEN", None)
 

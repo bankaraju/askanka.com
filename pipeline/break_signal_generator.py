@@ -140,12 +140,14 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
                 "oi_anomaly": oi_anomaly,
             },
         }
-        # Phase C breaks are intraday — flattened mechanically at 14:30 IST.
-        # Use 1×ATR (not 2× overnight swing default) and cap |stop| at 3.5%
-        # so a high-vol name doesn't show a -8% stop that can't possibly
-        # trigger inside the 5-hour horizon. See atr_stops.py module docstring.
+        # 2026-04-27: aligned with H-001 paper rules (mult=2.0, no cap) so the
+        # broad open_signals ledger and the H-001 holdout produce comparable
+        # P&L. Combined with the new 14:30 TIME_STOP in signal_tracker, this
+        # gives Phase C correlation-break trades a single rule set across both
+        # forward-test surfaces. Prior version (1×ATR + 3.5% cap) is preserved
+        # in git history if a tighter intraday stop is wanted later.
         signal["_atr_stop"] = compute_atr_stop(
-            symbol, direction=trade_rec, mult=1.0, max_abs_pct=3.5,
+            symbol, direction=trade_rec, mult=2.0,
         )
         candidates.append(signal)
         logger.debug(
