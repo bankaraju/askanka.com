@@ -268,7 +268,15 @@ export function render(container, positions) {
     const fallbackDot = stopSource === 'fallback'
       ? ' <span title="using fallback stop — ATR unavailable" style="color: var(--colour-muted, #888); font-size: 0.7em;">◦</span>'
       : '';
-    const trail = trailStop != null ? fmtPct(trailStop) : '--';
+    // Mirror of the Stop INERT logic on line 261. The trail stop is
+    // a computed peer (peak − give-back budget) the backend updates every
+    // tick — but it only becomes the *active* guardrail once peak has
+    // crossed |daily_stop|. Showing the pre-arm number reads like a live
+    // stop level to the trader; it isn't. Render INERT until armed so the
+    // Stop and Trail cells are never both showing live numbers at once.
+    const trail = trailStop != null
+      ? (trailArmed ? fmtPct(trailStop) : 'INERT')
+      : '--';
     const peak = peakPnl != null ? fmtPct(peakPnl) : '--';
     const opened = p.open_date || (p.open_timestamp ? p.open_timestamp.split('T')[0] : '--');
     const computedDays = p.days_held != null ? p.days_held : daysHeld(p.open_date || p.open_timestamp);
@@ -336,7 +344,7 @@ export function render(container, positions) {
       <td class="mono ${pnlClass(pnl)}"${pnlLiveAttr}>${fmtPct(pnl)}${attractBadge ? ' ' + attractBadge : ''}</td>
       <td class="mono ${pnlClass(todayMove)}" title="${todayTip}">${todayTxt}${todayWarn}</td>
       <td class="mono ${trailArmed ? 'text-muted' : 'text-red'}" title="${trailArmed ? 'trail armed — daily stop inert. Active guardrail is the Trail column.' : 'Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.'}">${stop}${fallbackDot}</td>
-      <td class="mono ${pnlClass(trailStop)}" title="${trailArmed ? 'Active stop — ratcheted to peak minus give-back budget.' : 'Trail stop = peak - (avg_favorable × sqrt(days_since_check)). Arms when peak ≥ budget.'}">${trail}</td>
+      <td class="mono ${trailArmed ? pnlClass(trailStop) : 'text-muted'}" title="${trailArmed ? 'Active stop — ratcheted to peak minus give-back budget.' : 'Trail not armed yet — peak has not crossed |daily_stop|. Active guardrail is the Stop column.'}">${trail}</td>
       <td class="mono text-green" title="Running peak P&L since entry — trail stop ratchets off this.">${peak}</td>
       <td class="mono">${days}</td>
       <td>${sourceBadge(source, exitTrigger)}</td>
