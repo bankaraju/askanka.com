@@ -24,6 +24,21 @@ function _fmtPct(v) {
   return `${sign}${(v * 100).toFixed(2)}%`;
 }
 
+function _fmtNum(v, decimals) {
+  if (v == null || isNaN(v)) return '--';
+  return v.toFixed(decimals);
+}
+
+function _fmtPctInt(v) {
+  if (v == null || isNaN(v)) return '--';
+  return `${(v * 100).toFixed(0)}%`;
+}
+
+function _fmtPctOne(v) {
+  if (v == null || isNaN(v)) return '--';
+  return `${(v * 100).toFixed(1)}%`;
+}
+
 function _dirBadge(dir) {
   if (dir === 'LONG') {
     return '<span class="badge" style="font-size: 0.65rem; background: var(--colour-green, #4caf50); color: #000; margin-right: 0.4em;">L</span>';
@@ -47,22 +62,23 @@ function _renderTopRow(s) {
   const dirBadge = _dirBadge(s.direction);
   const zCls = _zClass(s.z_score);
   return `<tr class="scanner-row" data-ticker="${_esc(s.ticker)}"
-              title="composite ${s.composite_score} | n=${s.n_occurrences} | last seen ${_esc(s.last_seen)}"
+              title="composite ${_esc(s.composite_score)} | n=${_esc(s.n_occurrences)} | last seen ${_esc(s.last_seen)}"
               style="cursor: pointer;">
     <td>${dirBadge}</td>
     <td class="mono"><a href="#chart/${encodeURIComponent(s.ticker)}"
                        class="text-primary" style="text-decoration: none;">${_esc(s.ticker)}</a></td>
     <td>${_esc(s.pattern_id)}</td>
     <td class="mono">${s.n_occurrences}</td>
-    <td class="mono">${(s.win_rate * 100).toFixed(0)}%</td>
-    <td class="mono ${zCls}">${s.z_score.toFixed(2)}</td>
+    <td class="mono">${_fmtPctInt(s.win_rate)}</td>
+    <td class="mono ${zCls}">${_fmtNum(s.z_score, 2)}</td>
     <td class="mono">${_fmtPct(s.mean_pnl_pct)}</td>
-    <td class="mono">${(s.fold_stability * 100).toFixed(0)}%</td>
+    <td class="mono">${_fmtPctInt(s.fold_stability)}</td>
     <td class="mono text-muted">${_esc(s.last_seen)}</td>
   </tr>`;
 }
 
 export async function render(container) {
+  if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null; }
   if (_inflight) return;
   _inflight = true;
   if (!container.hasChildNodes()) {
@@ -95,7 +111,7 @@ export async function render(container) {
           <div class="digest-row"><span class="digest-row__label">Closed trades</span>
             <span class="digest-row__value mono">${cum.n_closed}</span></div>
           <div class="digest-row"><span class="digest-row__label">Win rate</span>
-            <span class="digest-row__value mono">${(cum.win_rate * 100).toFixed(1)}%</span></div>
+            <span class="digest-row__value mono">${_fmtPctOne(cum.win_rate)}</span></div>
           <div class="digest-row"><span class="digest-row__label">μ Options P&L</span>
             <span class="digest-row__value mono">${_fmtPct(cum.mean_options_pnl_pct)}</span></div>
           <div class="digest-row"><span class="digest-row__label">μ Futures P&L</span>
@@ -124,7 +140,6 @@ export async function render(container) {
       });
     });
 
-    if (_refreshTimer) clearInterval(_refreshTimer);
     _refreshTimer = setInterval(() => render(container), 60000);
   } catch (e) {
     console.error('scanner render failed', e);
