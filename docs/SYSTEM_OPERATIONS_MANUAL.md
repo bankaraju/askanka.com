@@ -963,7 +963,7 @@ When the watchdog finds issues:
 | 09:16 | AnkaOpenCapture | Capture today's opening prices (curated 23-stock subset) | CRITICAL |
 | 09:16 | AnkaSecrsiCaptureOpens | SECRSI: capture full F&O universe LTP for 11:00 snapshot. H-2026-04-27-003 holdout 2026-04-28 → 2026-07-31 | info |
 | 09:25 | AnkaMorningScan | THE BIG ONE — regime + tech + OI + news + signals | CRITICAL |
-| 09:25 | AnkaPhaseCShadowOpen | F3 live shadow: record OPEN rows for today's OPPORTUNITY signals | info |
+| 09:25 | AnkaPhaseCShadowOpen | F3 live shadow: record OPEN rows for today's OPPORTUNITY signals + paired-options sidecar (2026-04-27) | info |
 
 ### Market Hours (09:30-15:30)
 
@@ -976,10 +976,20 @@ Every 15 minutes, two tasks run as a pair:
 | AnkaWatchdogIntraday | (every 15 min) Check critical task freshness |
 | AnkaCorrelationBreaks | (every 15 min) Phase C: detect regime-stock divergence |
 | AnkaSecrsiBasketOpen | 11:00 IST — SECRSI: build market-neutral 8-leg basket from sector RS snapshot (H-2026-04-27-003) |
-| AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) |
+| AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) + paired-options sidecar (2026-04-27) |
 | AnkaSecrsiBasketClose | 14:30 IST — SECRSI: mechanical TIME_STOP close at Kite LTP (H-2026-04-27-003) |
 
 That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
+
+#### Paired-shadow options sidecar (added 2026-04-27, T1-T9 of the Phase C Options Paired-Shadow plan)
+
+Every futures-side OPEN/CLOSE call in `AnkaPhaseCShadowOpen` / `AnkaPhaseCShadowClose` now also opens/closes a paired ATM-options leg via `pipeline/phase_c_options_shadow.py`. Spec at `docs/superpowers/specs/2026-04-27-phase-c-options-paired-shadow-design.md`. Sidecar exceptions are caught at the call site — futures shadow proceeds unaffected on sidecar failure. Artifacts:
+
+- `pipeline/data/research/phase_c/live_paper_options_ledger.json` — paired ledger (written/updated on every OPEN + CLOSE cycle)
+- `pipeline/data/research/phase_c/options_paired_report.md` — stratified Markdown report (Tables A-E by `is_expiry_day`, bootstrap CI at N>=100) — **manually invoked** via `python -m pipeline.phase_c_options_report`; not yet wired into cmd_close
+- `pipeline/logs/phase_c_options_shadow.log` — sidecar lifecycle events and errors
+
+Endpoint: `GET /api/research/phase-c-options-shadow` (returns `{open_pairs, cumulative}`). UI: Options tab "Phase C Paired Shadow" card (`pipeline/terminal/static/js/components/phase-c-paired-shadow.js`). **Forensic-only — no edge claim, no kill-switch.** Verdict cadence: descriptive at N>=30, bootstrap-inference at N>=100.
 
 ### Post-Close
 
@@ -1046,6 +1056,14 @@ Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, e
 | `regime_trade_map.json` | STATIC: which spreads work in which regime |
 | `reverse_regime_profile.json` | Phase A: gap/drift patterns per regime transition |
 | `etf_optimal_weights.json` | 31-ETF composite weights for regime detection |
+
+### `pipeline/data/research/phase_c/` — Phase C forward-test artifacts
+
+| File | Written By | Purpose |
+|------|-----------|---------|
+| `live_paper_ledger.json` | phase_c_shadow.py (AnkaPhaseCShadowOpen/Close) | F3 live shadow futures-side paper ledger |
+| `live_paper_options_ledger.json` | phase_c_options_shadow.py (sidecar, 2026-04-27) | Paired ATM-options leg paper ledger — forensic OOS measurement layer, no edge claim |
+| `options_paired_report.md` | phase_c_options_report.py (manual CLI) | Stratified report: Tables A-E by is_expiry_day, bootstrap CI at N>=100 |
 
 ### `data/` — Website JSON files (served to askanka.com)
 

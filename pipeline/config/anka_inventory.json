@@ -953,20 +953,22 @@
       "tier": "info",
       "cadence_class": "daily",
       "outputs": [
-        "pipeline/data/research/phase_c/live_paper_ledger.json"
+        "pipeline/data/research/phase_c/live_paper_ledger.json",
+        "pipeline/data/research/phase_c/live_paper_options_ledger.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "09:25 IST daily. phase_c_shadow_open.bat \u00e2\u20ac\u201d F3 live shadow ledger: filters today's OPPORTUNITY Phase C signals, records OPEN rows at live Kite LTP. Purpose: forward-test the H1 OPPORTUNITY hypothesis (see docs/research/phase-c-validation/)."
+      "notes": "09:25 IST daily. phase_c_shadow_open.bat \u2014 F3 live shadow ledger: filters today's OPPORTUNITY Phase C signals, records OPEN rows at live Kite LTP. Purpose: forward-test the H1 OPPORTUNITY hypothesis (see docs/research/phase-c-validation/). + paired-options sidecar (2026-04-27): also opens ATM-options leg via phase_c_options_shadow.py."
     },
     {
       "task_name": "AnkaPhaseCShadowClose",
       "tier": "info",
       "cadence_class": "daily",
       "outputs": [
-        "pipeline/data/research/phase_c/live_paper_ledger.json"
+        "pipeline/data/research/phase_c/live_paper_ledger.json",
+        "pipeline/data/research/phase_c/live_paper_options_ledger.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "14:30 IST daily. phase_c_shadow_close.bat \u00e2\u20ac\u201d mechanical time-stop: transitions all OPEN rows to CLOSED at live Kite LTP. Realized net P&L via cost_model (\u00e2\u201a\u00b950k notional, 5 bps slippage)."
+      "notes": "14:30 IST daily. phase_c_shadow_close.bat \u2014 mechanical time-stop: transitions all OPEN rows to CLOSED at live Kite LTP. Realized net P&L via cost_model (\u20b950k notional, 5 bps slippage). + paired-options sidecar (2026-04-27): also closes ATM-options leg via phase_c_options_shadow.py."
     },
     {
       "task_name": "AnkaTAScorerFit",
