@@ -50,13 +50,31 @@ export async function render(container) {
       </div>`;
     }).join('');
 
-    const phaseBHtml = c.tradeable_candidates
-      .filter(x => x.source === 'regime_engine')
-      .slice(0, 8)
-      .map(p => `<div class="digest-row">
-        <span class="digest-row__label">${_esc(p.name)}</span>
-        <span class="digest-row__value">${_esc(p.conviction)} (${_esc(p.score)})</span>
-      </div>`).join('') || '<p class="text-muted" style="font-size: 0.8125rem;">No Phase B picks today</p>';
+    // Phase B picks — same actionable rule as Spread Watchlist:
+    // show only SIGNAL/EXPLORING tiers (action-eligible). Hide PROVISIONAL
+    // and NONE — they appear every day at score 20, never get traded, and
+    // are pure noise. Hidden count surfaces in a "+N below threshold" footer.
+    const phaseBAll = c.tradeable_candidates.filter(x => x.source === 'regime_engine');
+    const phaseBAction = phaseBAll.filter(p => {
+      const t = String(p.conviction || '').toUpperCase();
+      return t === 'SIGNAL' || t === 'EXPLORING';
+    });
+    const phaseBRows = phaseBAction.slice(0, 8).map(p => {
+      const tier = String(p.conviction || '').toUpperCase();
+      const tierBadge = tier === 'SIGNAL'
+        ? '<span class="badge" style="font-size: 0.65rem; background: var(--colour-amber, #d4a84b); color: #000; margin-right: 0.4em;">SIGNAL</span>'
+        : '<span class="badge badge--muted" style="font-size: 0.65rem; margin-right: 0.4em;">EXPLORING</span>';
+      return `<div class="digest-row" title="score ${_esc(p.score)}/100, tier ${_esc(p.conviction)}">
+        <span class="digest-row__label">${tierBadge}${_esc(p.name)}</span>
+        <span class="digest-row__value mono">${_esc(p.score)}</span>
+      </div>`;
+    }).join('');
+    const phaseBHidden = phaseBAll.length - phaseBAction.length;
+    const phaseBFooter = phaseBHidden > 0
+      ? `<p class="text-muted" style="font-size: 0.75rem; margin-top: 0.5em;">+ ${phaseBHidden} below action threshold (PROVISIONAL / NONE) — hidden</p>`
+      : '';
+    const phaseBHtml = phaseBRows
+      || '<p class="text-muted" style="font-size: 0.8125rem;">No Phase B picks at action threshold today</p>';
 
     // Spread Watchlist — actionable rule (Bharat 2026-04-27):
     //   1. OPEN trades from open_signals always show at top, with P&L
@@ -191,8 +209,9 @@ export async function render(container) {
           <div class="digest-column-header">Phase A/B/C (Reverse Regime)</div>
           <div class="digest-card">
             <div class="digest-card__title">Phase B: Stock Picks</div>
-            <div class="digest-card__subtitle">Today's regime-derived stock recommendations</div>
+            <div class="digest-card__subtitle">Action tier only (SIGNAL / EXPLORING). Dormant hidden.</div>
             ${phaseBHtml}
+            ${phaseBFooter}
           </div>
           <div class="digest-card">
             <div class="digest-card__title">Phase C: Correlation Breaks</div>
