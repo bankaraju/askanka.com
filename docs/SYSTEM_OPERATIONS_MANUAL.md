@@ -1355,26 +1355,29 @@ Shipped:
 - `pipeline/terminal/static/js/pages/scanner.js` — Top-10 table renderer + click-to-chart (closes regression #269)
 - `pipeline/cli_pattern_scanner.py` — `scan` / `fit` subcommands (CanonicalLoader v3 universe + DatetimeIndex bar adapter)
 - `pipeline/scripts/pattern_scanner_scan.bat` + `pattern_scanner_fit.bat`
-- `pipeline/pattern_scanner_report.py` — paired-shadow Markdown reporter (callable; not yet wired to a paired-close caller)
+- `pipeline/pattern_scanner_report.py` — paired-shadow Markdown reporter (callable; wired to `paired-close` subcommand)
+- `pipeline/scripts/scanner_paired_open.bat` + `scanner_paired_close.bat` — scheduler wrappers for paired-shadow (added Scanner T8 follow-up, 2026-04-27)
+- `pipeline/cli_pattern_scanner.py` — `paired-open` / `paired-close` subcommands (Scanner T8)
 
 Pending:
-- Paired-shadow sidecar (`pipeline/scanner_paired_shadow.py`) — blocked on Phase C helper modules (`options_atm_helpers`, `options_quote`, `options_greeks`); the Phase C paired-shadow plan must be written and its T1–T3 executed first.
-- First 5y full-universe fit run — `pipeline/data/scanner/pattern_stats.parquet` does not yet exist. Run `python -m pipeline.cli_pattern_scanner fit` to produce it.
-- 2-day end-to-end smoke run — depends on the two items above.
+- First 5y full-universe fit run — `pipeline/data/scanner/pattern_stats.parquet` does not yet exist. Run `python -m pipeline.cli_pattern_scanner fit` to produce it (T9).
+- 2-day end-to-end smoke run (T10/T11).
+
+**Paired-shadow ledger (added 2026-04-27, Scanner T8):** every Top-10 row from yesterday's scan fires a paired (futures + ATM monthly options) shadow trade. Opens at T+1 09:25 IST via `AnkaScannerPairedOpen` (`scanner_paired_open.bat`), closes at T+1 15:30 IST via `AnkaScannerPairedClose` (`scanner_paired_close.bat`). Artifacts: `pipeline/data/research/scanner/live_paper_scanner_futures_ledger.json` and `live_paper_scanner_options_ledger.json`. Sidecar pattern: futures shadow runs unaffected on options-side failure. Forensic-only -- no edge claim.
 
 **Schedule (registered):**
 - 02:00 IST Sun — `AnkaPatternScannerFit` (writes `pattern_stats.parquet`)
+- 09:25 IST daily — `AnkaScannerPairedOpen` (opens paired futures + options shadow; paper engine, exempt from 14:30 cutoff)
+- 15:30 IST daily — `AnkaScannerPairedClose` (mechanical close at Kite LTP)
 - 16:30 IST daily — `AnkaPatternScannerScan` (writes `pattern_signals_today.json`)
 
-**Schedule (NOT YET registered, depends on T8):**
-- 09:25 IST daily — `AnkaScannerPairedOpen`
-- 15:30 IST daily — `AnkaScannerPairedClose`
-
 **Artifacts produced:**
-- `pipeline/data/scanner/pattern_stats.parquet` — weekly fit (not yet generated)
+- `pipeline/data/scanner/pattern_stats.parquet` — weekly fit (not yet generated; run T9)
 - `pipeline/data/scanner/pattern_signals_today.json` — daily Top-10
-- `pipeline/data/research/scanner/live_paper_scanner_options_ledger.json` — paired-shadow ledger (deferred)
-- `pipeline/data/research/scanner/paired_shadow_report.md` — post-close one-pager (deferred)
+- `pipeline/data/research/scanner/live_paper_scanner_futures_ledger.json` — paired-shadow futures ledger
+- `pipeline/data/research/scanner/live_paper_scanner_options_ledger.json` — paired-shadow options ledger
+- `pipeline/data/research/scanner/paired_shadow_report.md` — post-close one-pager (written by reporter)
+- `pipeline/logs/scanner_paired_shadow.log` — combined open/close run log
 
 **Status flags:** Forward-only OOS measurement layer. No edge claim, no kill-switch trigger, no §0–16 compliance pass for v1. Reporting stratifies by `is_expiry_day`, `pattern_id`, `direction`. Verdict at N=30 (descriptive); N=100 (bootstrap CI).
 

@@ -66,6 +66,7 @@ The system runs automatically via Windows Scheduled Tasks:
 - 09:16 — AnkaSecrsiCaptureOpens: capture full F&O universe LTP for SECRSI 11:00 snapshot. Holdout 2026-04-28 → 2026-07-31 (info)
 - 09:25 — AnkaMorningScan: regime + technicals + OI + news + spread intelligence + Phase B ranker (CRITICAL)
 - 09:25 — AnkaPhaseCShadowOpen: F3 live shadow ledger — OPEN rows for today's Phase C OPPORTUNITY signals (info)
+- 09:25 — AnkaScannerPairedOpen: Scanner Top-10 paired-shadow open (futures + ATM options) for yesterday's scan; paper engine, exempt from 14:30 cutoff (info)
 - 09:30 — AnkaH20260426001PaperOpen: H-2026-04-26-001 + H-2026-04-26-002 forward paper test, OPEN leg, single-touch holdout 2026-04-27 → 2026-05-26 (info)
 - 11:00 — AnkaSecrsiBasketOpen: H-2026-04-27-003 SECRSI basket open — 8-leg market-neutral sector RS pair (info)
 
@@ -78,6 +79,7 @@ The system runs automatically via Windows Scheduled Tasks:
 - 14:30 — AnkaPhaseCShadowClose: F3 live shadow ledger — mechanical TIME_STOP close at live LTP (info)
 - 14:30 — AnkaH20260426001PaperClose: H-2026-04-26-001 + H-2026-04-26-002 forward paper test, CLOSE leg, mechanical TIME_STOP at Kite LTP (info)
 - 14:30 — AnkaSecrsiBasketClose: H-2026-04-27-003 SECRSI mechanical TIME_STOP close at Kite LTP (info)
+- 15:30 — AnkaScannerPairedClose: Scanner Top-10 paired-shadow mechanical close at Kite LTP (info)
 
 ## 14:30 IST New-Signal Cutoff (CRITICAL)
 No engine may OPEN a new live shadow position after **14:30 IST**. The mechanical TIME_STOPs run at 14:30, so anything opened later has under 60 min of execution window before forced close — not a tradeable trade. The cutoff is enforced at the source in three engines:

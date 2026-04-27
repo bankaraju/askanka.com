@@ -1124,6 +1124,28 @@
       ],
       "grace_multiplier": 2.0,
       "notes": "Sun 02:00 IST weekly. pattern_scanner_fit.bat -> python -m pipeline.cli_pattern_scanner fit. 5-year walk-forward fit of TA pattern stats across the F&O universe. Output consumed daily by AnkaPatternScannerScan. Wired in T9 amended."
+    },
+    {
+      "task_name": "AnkaScannerPairedOpen",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/research/scanner/live_paper_scanner_futures_ledger.json",
+        "pipeline/data/research/scanner/live_paper_scanner_options_ledger.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "T+1 09:25 IST after pattern scan. scanner_paired_open.bat -- opens paired (futures + options) shadow rows for yesterday's Top-10 from pattern_signals_today.json. Paper engine -- exempt from 14:30 IST cutoff per Q3 of Scanner spec §4."
+    },
+    {
+      "task_name": "AnkaScannerPairedClose",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/research/scanner/live_paper_scanner_futures_ledger.json",
+        "pipeline/data/research/scanner/live_paper_scanner_options_ledger.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "T+1 15:30 IST same session. scanner_paired_close.bat -- mechanical close of OPEN scanner paired rows at Kite LTP. Sidecar pattern: futures shadow runs unaffected on options-side failure."
     }
   ]
 }
