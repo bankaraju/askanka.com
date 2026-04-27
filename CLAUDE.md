@@ -99,6 +99,7 @@ Existing OPEN positions are still monitored, P&L still updates, stops still fire
 - 16:15 — AnkaEODTrackRecord: write official track record + run `website_exporter.py` (warn)
 - 16:20 — AnkaEODNews: backtest news predictions (warn)
 - 16:30 — AnkaBulkDeals: NSE bulk + block deals daily CSV pull → `bulk_deals/<date>.parquet` (info)
+- 16:30 — AnkaPatternScannerScan: daily F&O 12-pattern scan + Top-10 ranking, writes pattern_signals_today.json (info)
 - 16:35 — AnkaTrustEOD: OPUS ANKA EOD review + next-day outlook (warn)
 - 16:45 — AnkaWatchdogGate: watchdog gate run, check everything (warn)
 - 18:30 — AnkaInsiderTrades: NSE PIT insider disclosures, last 7 days rolling → `insider_trades/<YYYY-MM>.parquet` (info)
@@ -111,6 +112,7 @@ Note: website_exporter.py is invoked from morning_scan (09:25), every intraday c
 - 05:30 — AnkaAutoresearchHoldout: single-touch holdout runner (info)
 
 **Weekly:**
+- Sunday 02:00 — AnkaPatternScannerFit: weekly 5y F&O pattern fit, writes pattern_stats.parquet (warn)
 - Saturday 22:00 — AnkaETFReoptimize: reoptimize ETF weights with Indian data (CRITICAL)
 - Sunday 00:00 — AnkaUnifiedBacktest: 777-day historical replay backtest (CRITICAL)
 - Sunday 01:00 — AnkaFeatureScorerFit: weekly run of quarterly walk-forward Feature Coincidence Scorer fit (warn)

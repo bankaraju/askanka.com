@@ -1323,4 +1323,46 @@ Producers must NOT backfill provenance for outputs produced before the contract 
 
 ---
 
+## Pattern Scanner (Scanner TA tab)
+
+**Purpose:** Daily F&O-universe candlestick / structural / momentum pattern scan, ranked by historical occurrence stats (z-score × log(n) × |mean_pnl|). Replaces the broken "80% CI" Scanner-tab display with an interpretable Top-10 pattern board: "BPCL bullish hammer, n=156, won 62%, z=3.0."
+
+**Deployment status (as of 2026-04-27, branch `feat/phase-c-v5`):**
+
+Shipped:
+- `pipeline/pattern_scanner/` — 12 pattern detectors (4 bullish + 4 bearish candles, BB breakout/breakdown, MACD bull/bear cross), all hand-rolled in numpy/pandas (no pandas-ta dependency)
+- `pipeline/pattern_scanner/stats.py` — 5y per-(ticker × pattern) fit with binomial z-score against H0=0.5 and 4-fold walk-forward stability ratio
+- `pipeline/pattern_scanner/rank.py` + `runner.py` — daily Top-10 ranker (composite = z × log(1+n) × |mean_pnl|; min n=30; min fold_stability=0.5)
+- `pipeline/terminal/api/scanner_pattern.py` — `/api/scanner/pattern-signals` endpoint
+- `pipeline/terminal/static/js/pages/scanner.js` — Top-10 table renderer + click-to-chart (closes regression #269)
+- `pipeline/cli_pattern_scanner.py` — `scan` / `fit` subcommands (CanonicalLoader v3 universe + DatetimeIndex bar adapter)
+- `pipeline/scripts/pattern_scanner_scan.bat` + `pattern_scanner_fit.bat`
+- `pipeline/pattern_scanner_report.py` — paired-shadow Markdown reporter (callable; not yet wired to a paired-close caller)
+
+Pending:
+- Paired-shadow sidecar (`pipeline/scanner_paired_shadow.py`) — blocked on Phase C helper modules (`options_atm_helpers`, `options_quote`, `options_greeks`); the Phase C paired-shadow plan must be written and its T1–T3 executed first.
+- First 5y full-universe fit run — `pipeline/data/scanner/pattern_stats.parquet` does not yet exist. Run `python -m pipeline.cli_pattern_scanner fit` to produce it.
+- 2-day end-to-end smoke run — depends on the two items above.
+
+**Schedule (registered):**
+- 02:00 IST Sun — `AnkaPatternScannerFit` (writes `pattern_stats.parquet`)
+- 16:30 IST daily — `AnkaPatternScannerScan` (writes `pattern_signals_today.json`)
+
+**Schedule (NOT YET registered, depends on T8):**
+- 09:25 IST daily — `AnkaScannerPairedOpen`
+- 15:30 IST daily — `AnkaScannerPairedClose`
+
+**Artifacts produced:**
+- `pipeline/data/scanner/pattern_stats.parquet` — weekly fit (not yet generated)
+- `pipeline/data/scanner/pattern_signals_today.json` — daily Top-10
+- `pipeline/data/research/scanner/live_paper_scanner_options_ledger.json` — paired-shadow ledger (deferred)
+- `pipeline/data/research/scanner/paired_shadow_report.md` — post-close one-pager (deferred)
+
+**Status flags:** Forward-only OOS measurement layer. No edge claim, no kill-switch trigger, no §0–16 compliance pass for v1. Reporting stratifies by `is_expiry_day`, `pattern_id`, `direction`. Verdict at N=30 (descriptive); N=100 (bootstrap CI).
+
+**Spec:** `docs/superpowers/specs/2026-04-27-ta-scanner-pattern-paired-shadow-design.md`
+**Plan:** `docs/superpowers/plans/2026-04-27-ta-scanner-pattern-paired-shadow.md`
+
+---
+
 *Document version: 2026-04-27. Auto-generated from code trace of askanka.com pipeline.*
