@@ -109,12 +109,10 @@ def _detect_candles(ticker: str, bars: pd.DataFrame, scan_date: _date) -> list[P
     # --- SHOOTING_STAR ---
     # Mirror of hammer: small body at bottom of range, long upper shadow (≥2× body),
     # lower shadow ≤ body
-    upper_shadow_ss = h - max(o, c)
-    lower_shadow_ss = min(o, c) - l
     if (
         body <= 0.3 * rng
-        and upper_shadow_ss >= 2 * body
-        and lower_shadow_ss <= body + 1e-9
+        and upper_shadow >= 2 * body
+        and lower_shadow <= body + 1e-9
         and lookback_close is not None
         and c_prev > lookback_close  # uptrend
     ):
@@ -123,8 +121,8 @@ def _detect_candles(ticker: str, bars: pd.DataFrame, scan_date: _date) -> list[P
             pattern_id="SHOOTING_STAR", direction="SHORT",
             raw_features={
                 "body_pct": float(body / rng),
-                "upper_shadow_pct": float(upper_shadow_ss / rng),
-                "lower_shadow_pct": float(lower_shadow_ss / rng),
+                "upper_shadow_pct": float(upper_shadow / rng),
+                "lower_shadow_pct": float(lower_shadow / rng),
             },
         ))
 
@@ -292,8 +290,13 @@ def _detect_bb(ticker: str, bars: pd.DataFrame, scan_date: _date) -> list[Patter
     width_avg = width.rolling(BB_LENGTH).mean()
 
     # Need at least BB_LENGTH*2 bars for width_avg to be meaningful; but
-    # we already guaranteed ≥60 bars. Still guard NaN.
-    if width_avg.iloc[-2] != width_avg.iloc[-2]:  # NaN check
+    # we already guaranteed ≥60 bars. Still guard NaN on all computed series.
+    if (
+        pd.isna(width_avg.iloc[-2])
+        or pd.isna(width.iloc[-2])
+        or pd.isna(upper.iloc[-1])
+        or pd.isna(lower.iloc[-1])
+    ):
         return []
 
     flags: list[PatternFlag] = []
@@ -337,6 +340,9 @@ def _detect_macd(ticker: str, bars: pd.DataFrame, scan_date: _date) -> list[Patt
     ema_slow = close.ewm(span=MACD_SLOW, adjust=False).mean()
     line = ema_fast - ema_slow
     signal = line.ewm(span=MACD_SIGNAL, adjust=False).mean()
+
+    if pd.isna(line.iloc[-2]) or pd.isna(signal.iloc[-2]):
+        return []
 
     diff_prev = float(line.iloc[-2]) - float(signal.iloc[-2])
     diff_curr = float(line.iloc[-1]) - float(signal.iloc[-1])
