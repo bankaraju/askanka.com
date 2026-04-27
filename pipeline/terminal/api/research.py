@@ -310,6 +310,7 @@ def _project_open_pair(row: dict) -> dict:
         "side": row.get("side", ""),
         "option_type": row.get("option_type", ""),
         "tradingsymbol": row.get("tradingsymbol", ""),
+        "strike": row.get("strike"),
         "expiry_date": row.get("expiry_date", ""),
         "is_expiry_day": row.get("is_expiry_day", False),
         "drift_vs_rent_tier": row.get("drift_vs_rent_tier", "UNKNOWN"),

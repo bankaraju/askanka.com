@@ -219,3 +219,20 @@ def test_endpoint_skipped_liquidity_excluded_from_cumulative(tmp_path, monkeypat
     r = client.get("/research/phase-c-options-shadow")
     data = r.json()
     assert data["cumulative"]["n_closed"] == 1
+
+
+def test_endpoint_open_pair_includes_strike(tmp_path, monkeypatch):
+    """OPEN row with strike=2400 must surface strike on the projected open_pairs entry.
+
+    Regression guard for T9 code-review finding: JS card interpolates p.strike
+    but _project_open_pair previously omitted the field, causing empty strikes
+    in production (surfaced at commit 7c53f5e).
+    """
+    rows = [_open_row(strike=2400)]
+    client = _make_app(monkeypatch, rows, [], tmp_path)
+
+    r = client.get("/research/phase-c-options-shadow")
+    assert r.status_code == 200
+    data = r.json()
+    assert len(data["open_pairs"]) == 1
+    assert data["open_pairs"][0]["strike"] == 2400
