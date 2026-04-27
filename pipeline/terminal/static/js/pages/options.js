@@ -1,5 +1,6 @@
 import { get } from '../lib/api.js';
 import { renderLeverageCard, renderShadowStrip } from '../components/leverage-matrix.js';
+import { renderPhaseCPairedShadowCard } from '../components/phase-c-paired-shadow.js';
 
 function _isStale(isoTimestamp) {
   if (!isoTimestamp) return false;
@@ -13,9 +14,10 @@ function _isStale(isoTimestamp) {
 export async function render(container) {
   container.innerHTML = '<div class="skeleton skeleton--card"></div>';
   try {
-    const [digestData, shadows] = await Promise.all([
+    const [digestData, shadows, phaseCPairedData] = await Promise.all([
       get('/research/digest'),
       get('/research/options-shadow').catch(() => []),
+      get('/research/phase-c-options-shadow').catch(() => null),
     ]);
     const genTime = digestData.generated_at || '';
     const isStale = _isStale(genTime);
@@ -33,6 +35,7 @@ export async function render(container) {
       <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
         ${matrixCards}
         ${renderShadowStrip(shadows)}
+        ${renderPhaseCPairedShadowCard(phaseCPairedData)}
       </div>`;
   } catch {
     container.innerHTML = '<div class="empty-state"><p>Failed to load options intelligence</p></div>';

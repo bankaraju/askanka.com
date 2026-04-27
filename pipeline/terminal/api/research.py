@@ -11,6 +11,10 @@ router = APIRouter()
 
 _HERE = Path(__file__).resolve().parent.parent
 _DATA = _HERE.parent / "data"
+
+# Phase C paired-shadow ledger paths (spec §11.3)
+_PHASE_C_OPTIONS_LEDGER = _HERE.parent / "data" / "research" / "phase_c" / "live_paper_options_ledger.json"
+_PHASE_C_FUTURES_LEDGER = _HERE.parent / "data" / "research" / "phase_c" / "live_paper_ledger.json"
 _TODAY_REGIME = _DATA / "today_regime.json"
 _RECOMMENDATIONS = _DATA / "recommendations.json"
 _CORRELATION_BREAKS = _DATA / "correlation_breaks.json"
@@ -276,3 +280,118 @@ def options_shadow():
     if not isinstance(data, list):
         data = []
     return data
+
+
+# ---------------------------------------------------------------------------
+# Phase C paired-shadow endpoint (spec §11.3)
+# ---------------------------------------------------------------------------
+
+def _zero_expiry_bucket() -> dict:
+    return {"n": 0, "win_rate": 0.0, "mean_options_pnl_pct": 0.0}
+
+
+def _build_futures_signal_id_set(futures_rows: list) -> set:
+    """Derive signal_ids from futures ledger rows using build_signal_id helper."""
+    try:
+        from pipeline.phase_c_options_shadow import build_signal_id
+    except ImportError:
+        return set()
+    ids = set()
+    for row in futures_rows:
+        ids.add(build_signal_id(row))
+    return ids
+
+
+def _project_open_pair(row: dict) -> dict:
+    """Project an OPEN options ledger row to the endpoint's open_pairs schema."""
+    return {
+        "signal_id": row.get("signal_id", ""),
+        "symbol": row.get("symbol", ""),
+        "side": row.get("side", ""),
+        "option_type": row.get("option_type", ""),
+        "tradingsymbol": row.get("tradingsymbol", ""),
+        "expiry_date": row.get("expiry_date", ""),
+        "is_expiry_day": row.get("is_expiry_day", False),
+        "drift_vs_rent_tier": row.get("drift_vs_rent_tier", "UNKNOWN"),
+        "futures_pnl_pct": None,
+        "options_pnl_pct": None,
+        "entry_mid": row.get("entry_mid"),
+        "entry_iv": row.get("entry_iv"),
+        "entry_delta": row.get("entry_delta"),
+    }
+
+
+@router.get("/research/phase-c-options-shadow")
+def phase_c_options_shadow():
+    """Live OPEN paired-shadow rows + cumulative tier/expiry breakdown. Spec §11.3."""
+    opts_rows = _read_json(_PHASE_C_OPTIONS_LEDGER, default=[])
+    if not isinstance(opts_rows, list):
+        opts_rows = []
+
+    futs_rows = _read_json(_PHASE_C_FUTURES_LEDGER, default=[])
+    if not isinstance(futs_rows, list):
+        futs_rows = []
+
+    # Open pairs: OPEN status only, no live mark-to-market
+    open_pairs = [_project_open_pair(r) for r in opts_rows if r.get("status") == "OPEN"]
+
+    # Cumulative: CLOSED status only (SKIPPED_LIQUIDITY and others excluded)
+    closed = [r for r in opts_rows if r.get("status") == "CLOSED"]
+
+    # Unmatched: CLOSED options rows with no matching CLOSED futures row
+    futures_sig_ids = _build_futures_signal_id_set(
+        [r for r in futs_rows if r.get("status") == "CLOSED"]
+    )
+    n_unmatched = sum(1 for r in closed if r.get("signal_id", "") not in futures_sig_ids)
+
+    # by_tier aggregation
+    by_tier: dict = {}
+    for r in closed:
+        tier = r.get("drift_vs_rent_tier", "UNKNOWN") or "UNKNOWN"
+        pnl = r.get("pnl_net_pct", 0.0) or 0.0
+        win = 1 if pnl > 0 else 0
+        if tier not in by_tier:
+            by_tier[tier] = {"n": 0, "wins": 0, "pnl_sum": 0.0}
+        by_tier[tier]["n"] += 1
+        by_tier[tier]["wins"] += win
+        by_tier[tier]["pnl_sum"] += pnl
+
+    by_tier_out = {}
+    for tier, agg in by_tier.items():
+        n = agg["n"]
+        by_tier_out[tier] = {
+            "n": n,
+            "win_rate": round(agg["wins"] / n, 4) if n else 0.0,
+            "mean_options_pnl_pct": round(agg["pnl_sum"] / n, 6) if n else 0.0,
+        }
+
+    # by_expiry_day aggregation (string keys "true"/"false")
+    expiry_agg: dict = {
+        "true": {"n": 0, "wins": 0, "pnl_sum": 0.0},
+        "false": {"n": 0, "wins": 0, "pnl_sum": 0.0},
+    }
+    for r in closed:
+        key = "true" if r.get("is_expiry_day") else "false"
+        pnl = r.get("pnl_net_pct", 0.0) or 0.0
+        expiry_agg[key]["n"] += 1
+        expiry_agg[key]["wins"] += (1 if pnl > 0 else 0)
+        expiry_agg[key]["pnl_sum"] += pnl
+
+    by_expiry_day = {}
+    for key, agg in expiry_agg.items():
+        n = agg["n"]
+        by_expiry_day[key] = {
+            "n": n,
+            "win_rate": round(agg["wins"] / n, 4) if n else 0.0,
+            "mean_options_pnl_pct": round(agg["pnl_sum"] / n, 6) if n else 0.0,
+        }
+
+    return {
+        "open_pairs": open_pairs,
+        "cumulative": {
+            "n_closed": len(closed),
+            "n_unmatched": n_unmatched,
+            "by_tier": by_tier_out,
+            "by_expiry_day": by_expiry_day,
+        },
+    }
