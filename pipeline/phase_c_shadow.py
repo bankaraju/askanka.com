@@ -128,6 +128,27 @@ def build_open_signals(breaks_doc: dict, ltp: dict[str, float]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _open_options_sidecar(signals: pd.DataFrame) -> None:
+    """Best-effort paired-shadow options OPEN. Never propagates (spec §5)."""
+    from pipeline import phase_c_options_shadow
+    n_ok = 0
+    n_err = 0
+    for row in signals.to_dict("records"):
+        try:
+            phase_c_options_shadow.open_options_pair(row)
+            n_ok += 1
+        except Exception as exc:  # noqa: BLE001 — spec §5 mandates blanket catch
+            n_err += 1
+            log.warning(
+                "options sidecar OPEN failed for %s: %s: %s",
+                row.get("symbol"), type(exc).__name__, exc,
+            )
+    log.info(
+        "options sidecar: %d ok, %d errors out of %d signals",
+        n_ok, n_err, len(signals),
+    )
+
+
 def cmd_open() -> int:
     """Append OPEN rows to the live_paper ledger. Returns process exit code."""
     from pipeline.research.phase_c_backtest import live_paper
@@ -149,6 +170,10 @@ def cmd_open() -> int:
         return 0
     n = live_paper.record_opens(signals)
     log.info("live_paper ledger: %d new OPEN entries recorded", n)
+
+    # Sidecar: paired-shadow options ledger (spec §5 — exceptions caught here)
+    _open_options_sidecar(signals)
+
     return 0
 
 

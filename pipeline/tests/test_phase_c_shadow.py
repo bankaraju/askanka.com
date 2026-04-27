@@ -187,3 +187,130 @@ def test_cmd_close_ltp_failure_leaves_ledger_untouched(tmp_path, monkeypatch):
 
     data = json.loads(ledger_path.read_text(encoding="utf-8"))
     assert data[0]["status"] == "OPEN"  # unchanged
+
+
+# ---------------------------------------------------------------------------
+# T5: sidecar wiring tests
+# ---------------------------------------------------------------------------
+
+def _make_breaks_path(tmp_path, rows=None, date="2026-04-27"):
+    """Write a correlation_breaks.json with the given rows and return the path."""
+    if rows is None:
+        rows = [
+            {"symbol": "ACME", "classification": "OPPORTUNITY_LAG",
+             "expected_return": 0.5, "z_score": 2.0},
+            {"symbol": "FOO", "classification": "OPPORTUNITY_LAG",
+             "expected_return": -0.4, "z_score": -2.1},
+        ]
+    p = tmp_path / "correlation_breaks.json"
+    p.write_text(json.dumps(_breaks_doc(rows, date)), encoding="utf-8")
+    return p
+
+
+def test_cmd_open_calls_sidecar_for_each_signal(tmp_path, monkeypatch):
+    """open_options_pair must be called once per signal row that enters live_paper."""
+    from unittest.mock import patch, MagicMock
+
+    breaks_path = _make_breaks_path(tmp_path)
+    monkeypatch.setattr(phase_c_shadow, "_BREAKS_PATH", breaks_path)
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp",
+                        lambda syms: {"ACME": 100.0, "FOO": 200.0})
+    ledger_path = tmp_path / "ledger.json"
+    monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
+
+    mock_open_pair = MagicMock(return_value={"status": "OPEN"})
+    with patch("pipeline.phase_c_options_shadow.open_options_pair", mock_open_pair):
+        rc = phase_c_shadow.cmd_open()
+
+    assert rc == 0
+    assert mock_open_pair.call_count == 2
+    call_args = [c.args[0] for c in mock_open_pair.call_args_list]
+    symbols_called = {a["symbol"] for a in call_args}
+    assert symbols_called == {"ACME", "FOO"}
+    for row_dict in call_args:
+        for key in ("symbol", "side", "signal_time", "date", "entry_px"):
+            assert key in row_dict, f"expected key {key!r} in sidecar row"
+
+
+def test_cmd_open_continues_when_sidecar_raises(tmp_path, monkeypatch):
+    """If sidecar raises, cmd_open still returns 0 and record_opens was called."""
+    from unittest.mock import patch, MagicMock
+
+    breaks_path = _make_breaks_path(tmp_path)
+    monkeypatch.setattr(phase_c_shadow, "_BREAKS_PATH", breaks_path)
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp",
+                        lambda syms: {"ACME": 100.0, "FOO": 200.0})
+    ledger_path = tmp_path / "ledger.json"
+    monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
+
+    mock_open_pair = MagicMock(side_effect=RuntimeError("boom"))
+    with patch("pipeline.phase_c_options_shadow.open_options_pair", mock_open_pair):
+        rc = phase_c_shadow.cmd_open()
+
+    assert rc == 0
+    # Futures ledger must still have entries
+    data = json.loads(ledger_path.read_text(encoding="utf-8"))
+    assert len(data) == 2
+    assert all(r["status"] == "OPEN" for r in data)
+
+
+def test_cmd_open_sidecar_runs_after_record_opens(tmp_path, monkeypatch):
+    """record_opens must be called before any open_options_pair call."""
+    from unittest.mock import patch, MagicMock, call
+
+    call_order: list[str] = []
+
+    breaks_path = _make_breaks_path(
+        tmp_path,
+        rows=[{"symbol": "ACME", "classification": "OPPORTUNITY_LAG",
+               "expected_return": 0.5, "z_score": 2.0}],
+    )
+    monkeypatch.setattr(phase_c_shadow, "_BREAKS_PATH", breaks_path)
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp", lambda syms: {"ACME": 100.0})
+    ledger_path = tmp_path / "ledger.json"
+    monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
+
+    original_record_opens = live_paper.record_opens
+
+    def recording_record_opens(signals):
+        call_order.append("record_opens")
+        return original_record_opens(signals)
+
+    def recording_open_pair(row):
+        call_order.append("open_options_pair")
+        return {"status": "OPEN"}
+
+    with patch.object(live_paper, "record_opens", side_effect=recording_record_opens), \
+         patch("pipeline.phase_c_options_shadow.open_options_pair",
+               side_effect=recording_open_pair):
+        phase_c_shadow.cmd_open()
+
+    assert call_order[0] == "record_opens", (
+        f"record_opens must fire before sidecar; got order: {call_order}"
+    )
+    assert "open_options_pair" in call_order
+
+
+def test_cmd_open_skips_sidecar_when_signals_empty(tmp_path, monkeypatch):
+    """When build_open_signals returns empty (no LTP match), neither ledger nor sidecar fires."""
+    from unittest.mock import patch, MagicMock
+
+    # OPPORTUNITY_LAG row but LTP is missing — signals will be empty
+    breaks_path = _make_breaks_path(
+        tmp_path,
+        rows=[{"symbol": "GHOST", "classification": "OPPORTUNITY_LAG",
+               "expected_return": 0.5, "z_score": 2.0}],
+    )
+    monkeypatch.setattr(phase_c_shadow, "_BREAKS_PATH", breaks_path)
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp", lambda syms: {})  # no prices
+
+    mock_record_opens = MagicMock(return_value=0)
+    mock_open_pair = MagicMock(return_value={"status": "OPEN"})
+
+    with patch.object(live_paper, "record_opens", mock_record_opens), \
+         patch("pipeline.phase_c_options_shadow.open_options_pair", mock_open_pair):
+        rc = phase_c_shadow.cmd_open()
+
+    assert rc == 0
+    mock_record_opens.assert_not_called()
+    mock_open_pair.assert_not_called()
