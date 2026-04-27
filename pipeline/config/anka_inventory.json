@@ -1102,6 +1102,26 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "SECRSI 14:30 IST mechanical TIME_STOP close. Single-touch holdout 2026-04-28 -> 2026-07-31. NO PARAMETER CHANGES."
+    },
+    {
+      "task_name": "AnkaPatternScannerScan",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/scanner/pattern_signals_today.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "16:30 IST daily. pattern_scanner_scan.bat -> python -m pipeline.cli_pattern_scanner scan. Detects and ranks TA patterns across the F&O universe using pre-fitted stats. Requires pattern_stats.parquet (AnkaPatternScannerFit). Wired in T9 amended (paired-shadow deferred to T8)."
+    },
+    {
+      "task_name": "AnkaPatternScannerFit",
+      "tier": "warn",
+      "cadence_class": "weekly",
+      "outputs": [
+        "pipeline/data/scanner/pattern_stats.parquet"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Sun 02:00 IST weekly. pattern_scanner_fit.bat -> python -m pipeline.cli_pattern_scanner fit. 5-year walk-forward fit of TA pattern stats across the F&O universe. Output consumed daily by AnkaPatternScannerScan. Wired in T9 amended."
     }
   ]
 }
