@@ -868,6 +868,21 @@ h3 { font-size: 1.125rem; }
   font-size: 1.5rem;
   font-weight: 600;
 }
+.live-monitor__pnl-net {
+  font-size: 1rem;
+  font-weight: 500;
+  display: block;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+.live-monitor__pnl-tag {
+  font-size: 0.65rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
 .live-monitor__time-value {
   font-size: 1rem;
   color: var(--text-secondary);
@@ -934,6 +949,39 @@ h3 { font-size: 1.125rem; }
 .status--no_ltp { background: rgba(100, 116, 139, 0.12); color: var(--text-muted); }
 .status--unknown { background: rgba(100, 116, 139, 0.12); color: var(--text-muted); }
 
+/* Engine pills (H-001 / Phase C) */
+.engine-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  margin-right: 4px;
+}
+.engine-pill--phasec { background: rgba(59, 130, 246, 0.14); color: var(--accent-blue); }
+.engine-pill--h001   { background: rgba(168, 85, 247, 0.16); color: #c084fc; }
+.live-monitor__engine-breakdown {
+  margin: var(--spacing-sm) 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Geo pill (PCR-free geometric classification) */
+.geo-pill {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.geo-pill--lag        { background: rgba(34, 197, 94, 0.14); color: #4ade80; }
+.geo-pill--overshoot  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
+.geo-pill--degenerate { background: rgba(148, 163, 184, 0.12); color: var(--text-secondary); }
+.geo-pill--stale      { background: transparent; color: var(--text-secondary); }
+
 /* Side badges */
 .side {
   display: inline-block;
@@ -953,6 +1001,18 @@ h3 { font-size: 1.125rem; }
 
 .data-table--live th { font-size: 0.6875rem; }
 .data-table--live td { font-size: 0.8125rem; }
+
+.data-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.data-table th.sortable:hover {
+  background: rgba(212, 175, 55, 0.06);
+}
+.data-table th.sortable--active {
+  color: var(--accent-gold, #d4af37);
+}
 
 .skeleton--row { height: 96px; width: 100%; }
 

@@ -1,13 +1,16 @@
-"""GET /api/live_monitor — open Phase C shadow positions with stops + provenance.
+"""GET /api/live_monitor — open paper positions with stops + provenance.
 
 Reads:
-  - pipeline/data/research/phase_c/live_paper_ledger.json (canonical, open rows)
+  - pipeline/data/research/phase_c/live_paper_ledger.json (Phase C shadow)
+  - pipeline/data/research/h_2026_04_26_001/recommendations.csv (H-001/H-002 paper)
   - pipeline/data/research/phase_c/atr_stops.json (per-ticker ATR stops)
   - live_ltp endpoint (current prices)
   - pipeline/config/expected_engine_versions.json (config for badge)
   - <output>.provenance.json sidecars (running-system truth)
 
-Returns one row per OPEN position + a top-strip provenance badge state.
+Returns one row per OPEN position (across all paper engines) + a top-strip
+provenance badge state. Each row carries an `engine` field so the UI can
+distinguish Phase C shadow rows from H-001/H-002 paper rows.
 
 The badge is the user-visible answer to "did the cutover land?" — green if
 the running version matches config, amber on missing/stale, red on mismatch.
@@ -30,12 +33,24 @@ router = APIRouter()
 _HERE = Path(__file__).resolve().parent.parent
 _REPO_ROOT = _HERE.parent.parent
 _LEDGER_PATH = _REPO_ROOT / "pipeline" / "data" / "research" / "phase_c" / "live_paper_ledger.json"
+_H001_PATH = _REPO_ROOT / "pipeline" / "data" / "research" / "h_2026_04_26_001" / "recommendations.csv"
 _ATR_PATH = _REPO_ROOT / "pipeline" / "data" / "research" / "phase_c" / "atr_stops.json"
 _REGIME_PATH = _REPO_ROOT / "pipeline" / "data" / "today_regime.json"
+_BREAKS_PATH = _REPO_ROOT / "pipeline" / "data" / "correlation_breaks.json"
+_BREAKS_HIST_PATH = _REPO_ROOT / "pipeline" / "data" / "correlation_break_history.json"
 _EXPECTED_VERSIONS_PATH = _REPO_ROOT / "pipeline" / "config" / "expected_engine_versions.json"
 
 IST = timezone(timedelta(hours=5, minutes=30))
 TIME_STOP_HHMM = (14, 30)
+
+# Round-trip transaction cost haircut applied to every paper-trade P&L.
+# 10 bps = 0.10% — covers brokerage (₹40 RT discount-broker) + STT (sell-side
+# 0.0125% on F&O futures) + exchange fee (~0.00188% × 2) + SEBI (0.0001% × 2)
+# + stamp duty (0.002% buy-side) + 18% GST on (brokerage+exchange+SEBI), at
+# representative ₹6L notional per leg. Conservative (true intraday F&O RT is
+# ~5-7 bps; equity intraday MIS RT is ~10-12 bps depending on ticket size).
+# Adjust here to model a different broker/instrument.
+_ROUND_TRIP_COST_PCT = 0.10
 
 
 def _read_json(path: Path, default: Any = None) -> Any:
@@ -85,7 +100,6 @@ def _classify_status(
     if ltp is None:
         return "NO_LTP"
     if trail_stop is not None:
-        # AT_RISK if LTP within 30% of distance from entry to trail
         dist_full = abs(entry - trail_stop)
         dist_now = abs(ltp - trail_stop)
         if dist_full > 0 and dist_now / dist_full < 0.30:
@@ -106,7 +120,15 @@ def _pnl_pct(side: str, entry: float, ltp: float | None) -> float | None:
     return round(raw if side == "LONG" else -raw, 3)
 
 
-def _enrich_row(row: dict, ltps: dict[str, float], atr_map: dict[str, dict]) -> dict:
+def _net_of_costs(gross_pct: float | None) -> float | None:
+    """Subtract _ROUND_TRIP_COST_PCT from gross. None passes through."""
+    if gross_pct is None:
+        return None
+    return round(gross_pct - _ROUND_TRIP_COST_PCT, 3)
+
+
+def _enrich_row(row: dict, ltps: dict[str, float], atr_map: dict[str, dict],
+                breaks_map: dict[str, dict]) -> dict:
     sym = row.get("symbol") or row.get("ticker")
     side = row.get("side", "LONG")
     entry = float(row.get("entry_px") or row.get("entry_price") or 0.0)
@@ -116,33 +138,188 @@ def _enrich_row(row: dict, ltps: dict[str, float], atr_map: dict[str, dict]) -> 
     trail_stop = row.get("trail_stop_px")
     exit_reason = row.get("exit_reason") if row.get("status") == "CLOSED" else None
     status = _classify_status(side, ltp, entry, atr_stop, trail_stop, exit_reason)
+    brk = breaks_map.get((sym or "").upper(), {})
+    gross = _pnl_pct(side, entry, ltp)
     return {
+        "engine": "PhaseC",
         "ticker": sym,
         "side": side,
         "entry_time": row.get("opened_at") or row.get("signal_time"),
         "entry": entry,
         "ltp": ltp,
-        "pnl_pct": _pnl_pct(side, entry, ltp),
+        "pnl_pct": gross,
+        "pnl_net_pct": _net_of_costs(gross),
         "atr_stop": atr_stop,
         "trail_stop": trail_stop,
         "exit_reason": exit_reason,
         "status": status,
         "z_score": row.get("z_score"),
         "classification": row.get("classification"),
+        "geometry": brk.get("event_geometry"),
+        "pcr": brk.get("pcr"),
+        "pcr_class": brk.get("pcr_class"),
         "regime": row.get("regime"),
         "tag": row.get("tag"),
     }
 
 
-def _aggregate_pnl(rows: list[dict]) -> dict:
-    realized = [r["pnl_pct"] for r in rows if r["status"] in {"STOPPED", "TIME_CLOSED"} and r["pnl_pct"] is not None]
-    open_marks = [r["pnl_pct"] for r in rows if r["status"] in {"ACTIVE", "TRAIL_ARMED", "AT_RISK"} and r["pnl_pct"] is not None]
+def _load_breaks_by_ticker(today: str | None = None) -> dict[str, dict]:
+    """Index breaks by symbol, preferring earliest entry-time geometry.
+
+    Three-tier lookup, falling through if a ticker is missing:
+      1. correlation_break_history.json — earliest row per (ticker, today).
+         This is the entry-time geometry, captured at the first scan that
+         flagged the ticker. Stable across the day.
+      2. correlation_breaks.json — latest 15-min scan. Reflects current state.
+         Only used as a fallback when the archive doesn't have the ticker.
+      3. Empty — ticker not seen anywhere. UI shows dash.
+
+    Tier 1 is preferred because the live breaks file is overwritten every
+    15 min, drifting the displayed geometry away from what was true at
+    09:30 entry. The archive freezes the entry-time read.
+    """
+    if today is None:
+        today = datetime.now(IST).strftime("%Y-%m-%d")
+    out: dict[str, dict] = {}
+
+    # Tier 1: archive — earliest scan today for each ticker
+    hist_doc = _read_json(_BREAKS_HIST_PATH, default=[])
+    today_rows = []
+    if isinstance(hist_doc, list):
+        today_rows = [r for r in hist_doc if r.get("date") == today]
+    elif isinstance(hist_doc, dict):
+        today_rows = hist_doc.get(today, []) or []
+    for r in today_rows:
+        sym = (r.get("symbol") or "").upper()
+        if not sym:
+            continue
+        existing = out.get(sym)
+        if existing is None or r.get("time", "zz") < existing.get("time", "zz"):
+            out[sym] = r
+
+    # Tier 2: current scan — fill any tickers archive didn't capture
+    cur_doc = _read_json(_BREAKS_PATH, default={})
+    for b in cur_doc.get("breaks", []) or []:
+        sym = (b.get("symbol") or "").upper()
+        if sym and sym not in out:
+            out[sym] = b
+    return out
+
+
+def _read_h001_today_rows(today: str) -> list[dict]:
+    """Read today's H-001/H-002 paper rows from recommendations.csv.
+
+    Returns a list of dicts in the live-monitor row shape. The H-001 CSV
+    schema differs from Phase C shadow JSON, so we transform here. Marks
+    each row with `engine="H-001"` and exposes the H-002 cohort flag via
+    `regime_gate_pass` so the frontend can label rows as in-cohort or out.
+    """
+    import csv
+    if not _H001_PATH.is_file():
+        return []
+    out: list[dict] = []
+    try:
+        with _H001_PATH.open("r", encoding="utf-8", newline="") as f:
+            for r in csv.DictReader(f):
+                if r.get("date") != today:
+                    continue
+                out.append(r)
+    except (OSError, csv.Error):
+        return []
+    return out
+
+
+def _enrich_h001_row(row: dict, ltps: dict[str, float],
+                     breaks_map: dict[str, dict]) -> dict:
+    """Transform an H-001 CSV row into the live-monitor row shape."""
+    sym = row.get("ticker", "")
+    side = row.get("side", "LONG")
+    try:
+        entry = float(row.get("entry_px") or 0.0)
+    except (TypeError, ValueError):
+        entry = 0.0
+    ltp = ltps.get(sym)
+    try:
+        atr_stop = float(row.get("stop_px")) if row.get("stop_px") else None
+    except (TypeError, ValueError):
+        atr_stop = None
+    try:
+        trail_stop = float(row.get("trail_arm_px")) if row.get("trail_arm_px") else None
+    except (TypeError, ValueError):
+        trail_stop = None
+    csv_status = row.get("status", "OPEN")
+    exit_reason = row.get("exit_reason") if csv_status == "CLOSED" else None
+    if csv_status == "CLOSED":
+        status = "STOPPED" if exit_reason and exit_reason != "TIME_STOP" else "TIME_CLOSED"
+    else:
+        status = _classify_status(side, ltp, entry, atr_stop, trail_stop, None)
+    pnl_pct: float | None
+    if csv_status == "CLOSED" and row.get("pnl_pct"):
+        try:
+            pnl_pct = round(float(row["pnl_pct"]), 3)
+        except (TypeError, ValueError):
+            pnl_pct = _pnl_pct(side, entry, ltp)
+    else:
+        pnl_pct = _pnl_pct(side, entry, ltp)
+    brk = breaks_map.get((sym or "").upper(), {})
+    # H-001 v1 doesn't enforce trail stops (TODO(v2) in h_2026_04_26_001_paper.py).
+    # For a hard-14:30-close day-trade, trail is structurally unnecessary anyway.
+    # Suppress trail in the UI surface; ATR stop remains as the meaningful
+    # historical-volatility cut-loss reference.
+    status = _classify_status(side, ltp, entry, atr_stop, None, None) \
+        if csv_status != "CLOSED" else status
     return {
-        "n_open": sum(1 for r in rows if r["status"] in {"ACTIVE", "TRAIL_ARMED", "AT_RISK"}),
-        "n_closed": sum(1 for r in rows if r["status"] in {"STOPPED", "TIME_CLOSED"}),
+        "engine": "H-001",
+        "ticker": sym,
+        "side": side,
+        "entry_time": row.get("entry_time"),
+        "entry": entry,
+        "ltp": ltp,
+        "pnl_pct": pnl_pct,
+        "pnl_net_pct": _net_of_costs(pnl_pct),
+        "atr_stop": atr_stop,
+        "trail_stop": None,
+        "exit_reason": exit_reason,
+        "status": status,
+        "z_score": None,
+        "classification": row.get("classification"),
+        "geometry": brk.get("event_geometry"),
+        "pcr": brk.get("pcr"),
+        "pcr_class": brk.get("pcr_class"),
+        "regime": row.get("regime"),
+        "regime_gate_pass": row.get("regime_gate_pass") == "True",
+        "sigma_bucket": row.get("sigma_bucket"),
+        "tag": "H-001" + ("/H-002" if row.get("regime_gate_pass") == "True" else ""),
+    }
+
+
+def _aggregate_pnl(rows: list[dict]) -> dict:
+    """Equal-weighted average P&L across all trades with a usable mark.
+
+    Average (not sum) is the right portfolio number: if you sized equally
+    across N positions, the average per-trade % == your portfolio % return.
+    Sum-of-percents is meaningless — it scales with N and isn't a return.
+    """
+    closed_rows = [r for r in rows if r["status"] in {"STOPPED", "TIME_CLOSED"}]
+    open_rows = [r for r in rows if r["status"] in {"ACTIVE", "TRAIL_ARMED", "AT_RISK"}]
+    all_marked = [r for r in (closed_rows + open_rows) if r.get("pnl_pct") is not None]
+    gross_vals = [r["pnl_pct"] for r in all_marked]
+    net_vals = [r["pnl_net_pct"] for r in all_marked if r.get("pnl_net_pct") is not None]
+
+    def _mean(xs):
+        return round(sum(xs) / len(xs), 3) if xs else 0.0
+
+    return {
+        "n_open": len(open_rows),
+        "n_closed": len(closed_rows),
         "n_no_ltp": sum(1 for r in rows if r["status"] == "NO_LTP"),
-        "realized_pnl_pp_sum": round(sum(realized), 3) if realized else 0.0,
-        "open_marked_pnl_pp_sum": round(sum(open_marks), 3) if open_marks else 0.0,
+        "n_with_pnl": len(all_marked),
+        "mean_pnl_pct_gross": _mean(gross_vals),
+        "mean_pnl_pct_net": _mean(net_vals),
+        "round_trip_cost_pct": _ROUND_TRIP_COST_PCT,
+        # Kept for back-compat with anything still reading the sums:
+        "realized_pnl_pp_sum": round(sum(r["pnl_pct"] for r in closed_rows if r.get("pnl_pct") is not None), 3),
+        "open_marked_pnl_pp_sum": round(sum(r["pnl_pct"] for r in open_rows if r.get("pnl_pct") is not None), 3),
     }
 
 
@@ -170,8 +347,25 @@ def live_monitor():
             ltps = {}
 
     atr_map = _read_json(_ATR_PATH, default={})
+    breaks_map = _load_breaks_by_ticker(today)
 
-    rows = [_enrich_row(r, ltps, atr_map) for r in today_rows]
+    rows = [_enrich_row(r, ltps, atr_map, breaks_map) for r in today_rows]
+
+    # H-001/H-002 paper rows. LTPs are pulled in a second batch since the
+    # ticker universe overlaps but isn't identical to Phase C.
+    h001_rows_raw = _read_h001_today_rows(today)
+    if h001_rows_raw:
+        h001_tickers = sorted({(r.get("ticker") or "").upper()
+                               for r in h001_rows_raw if r.get("ticker")})
+        h001_ltps: dict[str, float] = {}
+        if h001_tickers:
+            try:
+                from pipeline.terminal.api.live import fetch_ltps
+                h001_ltps = fetch_ltps(h001_tickers) or {}
+            except Exception:
+                h001_ltps = {}
+        rows.extend(_enrich_h001_row(r, h001_ltps, breaks_map) for r in h001_rows_raw)
+
     rows.sort(key=lambda r: r.get("entry_time") or "")
 
     expected = _load_expected_versions()

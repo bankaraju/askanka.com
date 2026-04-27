@@ -7,6 +7,41 @@ import { get } from '../lib/api.js';
 const POLL_INTERVAL_MS = 5000;
 
 let pollHandle = null;
+// Sort state persists across polls so the user's chosen ordering survives the
+// 5s refresh. `key=null` means "default ordering" (entry_time ascending).
+let sortKey = null;
+let sortDir = 'asc';
+
+// Column registry. `key` is the field on the row dict; `numeric` decides the
+// comparator. `getter` is optional override for derived/composite values.
+const COLUMNS = [
+  { key: 'engine',        label: 'Engine',     numeric: false },
+  { key: 'status',        label: 'Status',     numeric: false },
+  { key: 'ticker',        label: 'Ticker',     numeric: false },
+  { key: 'side',          label: 'Side',       numeric: false },
+  { key: 'entry',         label: 'Entry',      numeric: true  },
+  { key: 'ltp',           label: 'LTP',        numeric: true  },
+  { key: 'pnl_pct',       label: 'P&L',        numeric: true  },
+  { key: 'atr_stop',      label: 'ATR stop',   numeric: true  },
+  { key: 'trail_stop',    label: 'Trail stop', numeric: true  },
+  { key: 'zsort',         label: 'Z / σ',      numeric: true,
+    getter: (r) => r.z_score != null
+      ? Math.abs(r.z_score)
+      : sigmaBucketSortKey(r.sigma_bucket) },
+  { key: 'geometry',      label: 'Geo',        numeric: false,
+    title: 'Pure price-action geometry (LAG = stock behind peer / OVERSHOOT = stock past peer / DEGENERATE = move too small). PCR-free.' },
+  { key: 'classification', label: 'Class',     numeric: false,
+    title: 'Class = Geo + PCR + OI anomaly. Can drift on illiquid options.' },
+  { key: 'entry_time',    label: 'Open',       numeric: false },
+];
+
+// Sigma bucket strings ("[2.0,3.0)", "[3.0,4.0)", ...) sorted by lower bound
+// so they order numerically alongside z_score values.
+function sigmaBucketSortKey(b) {
+  if (!b) return null;
+  const m = String(b).match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : null;
+}
 
 export async function render(container) {
   container.innerHTML = `
@@ -48,8 +83,13 @@ function renderStrip(data) {
     ? 'after 14:30'
     : `${Math.floor(ttc / 3600)}h ${Math.floor((ttc % 3600) / 60)}m to 14:30`;
   const agg = data.aggregate || {};
-  const totalPnl = (agg.realized_pnl_pp_sum || 0) + (agg.open_marked_pnl_pp_sum || 0);
-  const pnlClass = totalPnl >= 0 ? 'text-green' : 'text-red';
+  const meanGross = agg.mean_pnl_pct_gross == null ? 0 : agg.mean_pnl_pct_gross;
+  const meanNet = agg.mean_pnl_pct_net == null ? 0 : agg.mean_pnl_pct_net;
+  const pnlClass = meanGross >= 0 ? 'text-green' : 'text-red';
+  const pnlClassNet = meanNet >= 0 ? 'text-green' : 'text-red';
+  const rtCost = agg.round_trip_cost_pct == null ? 0.10 : agg.round_trip_cost_pct;
+  const nWithPnl = agg.n_with_pnl || 0;
+  const nTrades = (agg.n_open || 0) + (agg.n_closed || 0);
 
   const badges = data.badges || {};
   const badgeHtml = Object.entries(badges).map(([key, b]) => renderBadge(key, b)).join('');
@@ -61,12 +101,16 @@ function renderStrip(data) {
         <span class="live-monitor__regime-value">${escapeHtml(data.regime || 'UNKNOWN')}</span>
       </div>
       <div class="live-monitor__pnl">
-        <span class="live-monitor__label">Today P&amp;L (mark-to-LTP)</span>
-        <span class="live-monitor__pnl-value mono ${pnlClass}">
-          ${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(2)}pp
+        <span class="live-monitor__label">Avg P&amp;L per trade (mark-to-LTP)</span>
+        <span class="live-monitor__pnl-value mono ${pnlClass}" title="Equal-weighted average across ${nWithPnl} marked trades. Same as portfolio % return if sized equally.">
+          ${meanGross >= 0 ? '+' : ''}${meanGross.toFixed(2)}% <span class="live-monitor__pnl-tag">gross</span>
+        </span>
+        <span class="live-monitor__pnl-net mono ${pnlClassNet}" title="Net of ${(rtCost * 100).toFixed(0)} bps round-trip cost per trade. Covers brokerage + STT + exchange + SEBI + stamp duty + GST.">
+          ${meanNet >= 0 ? '+' : ''}${meanNet.toFixed(2)}% <span class="live-monitor__pnl-tag">net</span>
         </span>
         <span class="live-monitor__sub">
           ${agg.n_open || 0} open · ${agg.n_closed || 0} closed · ${agg.n_no_ltp || 0} no LTP
+          · ${nWithPnl} marked · cost ${(rtCost * 100).toFixed(0)} bps/trade
         </span>
       </div>
       <div class="live-monitor__time">
@@ -116,37 +160,82 @@ function renderTable(data) {
   if (!rows.length) {
     wrap.innerHTML = `
       <div class="empty-state">
-        <p>No open Phase C shadow positions for today.</p>
+        <p>No open paper positions for today.</p>
         <p class="empty-state__sub">
-          Phase C shadow opens at 09:25 IST. If today is a trading day past that time
-          and this is empty, check the <code>live_paper_ledger.json</code> badge above.
+          Phase C shadow opens at 09:25 IST and H-001/H-002 paper opens at 09:30 IST.
+          If today is a trading day past those times and this is empty, check the
+          provenance badges above.
         </p>
       </div>
     `;
     return;
   }
+  // Engine breakdown for the small caption above the table.
+  const byEngine = rows.reduce((acc, r) => {
+    const e = r.engine || 'Phase C';
+    acc[e] = (acc[e] || 0) + 1;
+    return acc;
+  }, {});
+  const breakdownStr = Object.entries(byEngine)
+    .map(([e, n]) => `<span class="engine-pill engine-pill--${e.toLowerCase().replace(/[^a-z0-9]/g,'')}">${escapeHtml(e)} ${n}</span>`)
+    .join(' ');
+  const sortedRows = sortRows(rows);
+  const headHtml = COLUMNS.map((c) => {
+    const isActive = sortKey === c.key;
+    const arrow = isActive ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+    const cls = `sortable${isActive ? ' sortable--active' : ''}`;
+    const title = c.title ? ` title="${escapeHtml(c.title)}"` : '';
+    return `<th class="${cls}" data-sort-key="${escapeHtml(c.key)}"${title}>${escapeHtml(c.label)}${arrow}</th>`;
+  }).join('');
   wrap.innerHTML = `
+    <div class="live-monitor__engine-breakdown">${breakdownStr}</div>
     <table class="data-table data-table--live">
       <thead>
-        <tr>
-          <th>Status</th>
-          <th>Ticker</th>
-          <th>Side</th>
-          <th>Entry</th>
-          <th>LTP</th>
-          <th>P&amp;L</th>
-          <th>ATR stop</th>
-          <th>Trail stop</th>
-          <th>Z</th>
-          <th>Class</th>
-          <th>Open</th>
-        </tr>
+        <tr>${headHtml}</tr>
       </thead>
       <tbody>
-        ${rows.map(renderRow).join('')}
+        ${sortedRows.map(renderRow).join('')}
       </tbody>
     </table>
   `;
+  wrap.querySelectorAll('th.sortable').forEach((th) => {
+    th.addEventListener('click', () => {
+      const k = th.getAttribute('data-sort-key');
+      if (sortKey === k) {
+        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortKey = k;
+        // Numeric columns default desc (highest first — most useful for P&L);
+        // text columns default asc (alphabetical).
+        const col = COLUMNS.find((c) => c.key === k);
+        sortDir = col && col.numeric ? 'desc' : 'asc';
+      }
+      renderTable(data);
+    });
+  });
+}
+
+function sortRows(rows) {
+  if (!sortKey) {
+    return [...rows].sort((a, b) => (a.entry_time || '').localeCompare(b.entry_time || ''));
+  }
+  const col = COLUMNS.find((c) => c.key === sortKey);
+  if (!col) return rows;
+  const getter = col.getter || ((r) => r[col.key]);
+  const dir = sortDir === 'asc' ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    const va = getter(a);
+    const vb = getter(b);
+    // Nulls always sort last regardless of direction — keeps "no LTP" rows
+    // out of the way whether you want best-first or worst-first.
+    const aNull = va == null || va === '';
+    const bNull = vb == null || vb === '';
+    if (aNull && bNull) return 0;
+    if (aNull) return 1;
+    if (bNull) return -1;
+    if (col.numeric) return (va - vb) * dir;
+    return String(va).localeCompare(String(vb)) * dir;
+  });
 }
 
 function renderRow(r) {
@@ -154,8 +243,31 @@ function renderRow(r) {
   const pnlClass = r.pnl_pct == null ? '' : (r.pnl_pct >= 0 ? 'text-green' : 'text-red');
   const pnlStr = r.pnl_pct == null ? '—' : `${r.pnl_pct >= 0 ? '+' : ''}${r.pnl_pct.toFixed(2)}%`;
   const sideClass = r.side === 'LONG' ? 'side side--long' : 'side side--short';
+  const engine = r.engine || 'PhaseC';
+  const enginePill = engine === 'H-001'
+    ? (r.regime_gate_pass ? 'H-001/H-002' : 'H-001')
+    : 'Phase C';
+  const engineCls = engine.toLowerCase().replace(/[^a-z0-9]/g,'');
+  // For H-001 use sigma_bucket as the "Z / σ" cell (no z_score available).
+  const zCell = r.z_score != null
+    ? r.z_score.toFixed(1)
+    : (r.sigma_bucket || '—');
+  // Geo cell: pure-price-action classification (PCR-free). Empty when the
+  // ticker is no longer in correlation_breaks.json (|z| dropped below 2.0
+  // since entry).
+  const geoCell = r.geometry
+    ? `<span class="geo-pill geo-pill--${r.geometry.toLowerCase()}">${escapeHtml(r.geometry)}</span>`
+    : '<span class="geo-pill geo-pill--stale" title="No longer in current breaks scan — may have reverted below 2σ">—</span>';
+  // Class cell: full classification with PCR illiquidity hint.
+  const pcrHint = r.pcr == null
+    ? ' (PCR illiquid)'
+    : (r.pcr_class === 'NEUTRAL' ? ' (PCR neutral)' : '');
+  const classCell = r.classification
+    ? `<span title="${escapeHtml(r.classification + pcrHint)}">${escapeHtml(r.classification)}</span>`
+    : '—';
   return `
-    <tr class="row--${(r.status || 'unknown').toLowerCase()}">
+    <tr class="row--${(r.status || 'unknown').toLowerCase()} row--engine-${engineCls}">
+      <td><span class="engine-pill engine-pill--${engineCls}">${escapeHtml(enginePill)}</span></td>
       <td><span class="${statusClass}">${escapeHtml(r.status || '—')}</span></td>
       <td class="mono">${escapeHtml(r.ticker || '')}</td>
       <td><span class="${sideClass}">${escapeHtml(r.side || '')}</span></td>
@@ -164,8 +276,9 @@ function renderRow(r) {
       <td class="mono ${pnlClass}">${pnlStr}</td>
       <td class="mono">${fmtPrice(r.atr_stop)}</td>
       <td class="mono">${fmtPrice(r.trail_stop)}</td>
-      <td class="mono">${r.z_score == null ? '—' : r.z_score.toFixed(1)}</td>
-      <td>${escapeHtml(r.classification || '')}</td>
+      <td class="mono">${escapeHtml(String(zCell))}</td>
+      <td>${geoCell}</td>
+      <td>${classCell}</td>
       <td class="mono">${escapeHtml(timeOnly(r.entry_time))}</td>
     </tr>
   `;
