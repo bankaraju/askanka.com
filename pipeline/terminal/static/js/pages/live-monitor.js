@@ -18,6 +18,8 @@ const COLUMNS = [
   { key: 'engine',        label: 'Engine',     numeric: false },
   { key: 'status',        label: 'Status',     numeric: false },
   { key: 'ticker',        label: 'Ticker',     numeric: false },
+  { key: 'sector_display', label: 'Sector',    numeric: false,
+    title: 'Normalized sector from sector_taxonomy.json (resolved at module load via SectorMapper).' },
   { key: 'side',          label: 'Side',       numeric: false },
   { key: 'entry',         label: 'Entry',      numeric: true  },
   { key: 'ltp',           label: 'LTP',        numeric: true  },
@@ -270,6 +272,9 @@ function renderRow(r) {
       <td><span class="engine-pill engine-pill--${engineCls}">${escapeHtml(enginePill)}</span></td>
       <td><span class="${statusClass}">${escapeHtml(r.status || '—')}</span></td>
       <td class="mono">${escapeHtml(r.ticker || '')}</td>
+      <td>${r.sector_display
+        ? `<span class="sector-pill" title="${escapeHtml(r.sector || '')}">${escapeHtml(r.sector_display)}</span>`
+        : '<span class="sector-pill sector-pill--unknown">—</span>'}</td>
       <td><span class="${sideClass}">${escapeHtml(r.side || '')}</span></td>
       <td class="mono">${fmtPrice(r.entry)}</td>
       <td class="mono">${fmtPrice(r.ltp)}</td>

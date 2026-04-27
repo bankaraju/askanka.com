@@ -30,6 +30,33 @@ from pipeline import provenance
 
 router = APIRouter()
 
+
+def _build_sector_lookup() -> dict[str, dict]:
+    """Build symbol -> {sector, display_name} once at module load.
+
+    Falls back to an empty dict on any failure (e.g. opus/artifacts not yet
+    populated on a fresh clone), so the API stays up — the Sector column
+    just shows "—" until the next overnight refresh fills the artifacts.
+    """
+    try:
+        from pipeline.scorecard_v2.sector_mapper import SectorMapper
+        return SectorMapper().map_all()
+    except Exception:
+        return {}
+
+
+_SECTOR_LOOKUP = _build_sector_lookup()
+
+
+def _sector_for(symbol: str | None) -> tuple[str | None, str | None]:
+    """Return (sector_key, display_name) or (None, None) if unknown."""
+    if not symbol:
+        return None, None
+    info = _SECTOR_LOOKUP.get(symbol.upper())
+    if not info:
+        return None, None
+    return info.get("sector"), info.get("display_name")
+
 _HERE = Path(__file__).resolve().parent.parent
 _REPO_ROOT = _HERE.parent.parent
 _LEDGER_PATH = _REPO_ROOT / "pipeline" / "data" / "research" / "phase_c" / "live_paper_ledger.json"
@@ -140,9 +167,12 @@ def _enrich_row(row: dict, ltps: dict[str, float], atr_map: dict[str, dict],
     status = _classify_status(side, ltp, entry, atr_stop, trail_stop, exit_reason)
     brk = breaks_map.get((sym or "").upper(), {})
     gross = _pnl_pct(side, entry, ltp)
+    sector_key, sector_display = _sector_for(sym)
     return {
         "engine": "PhaseC",
         "ticker": sym,
+        "sector": sector_key,
+        "sector_display": sector_display,
         "side": side,
         "entry_time": row.get("opened_at") or row.get("signal_time"),
         "entry": entry,
@@ -268,9 +298,12 @@ def _enrich_h001_row(row: dict, ltps: dict[str, float],
     # historical-volatility cut-loss reference.
     status = _classify_status(side, ltp, entry, atr_stop, None, None) \
         if csv_status != "CLOSED" else status
+    sector_key, sector_display = _sector_for(sym)
     return {
         "engine": "H-001",
         "ticker": sym,
+        "sector": sector_key,
+        "sector_display": sector_display,
         "side": side,
         "entry_time": row.get("entry_time"),
         "entry": entry,
