@@ -63,9 +63,11 @@ The system runs automatically via Windows Scheduled Tasks:
 - 08:30 — AnkaGapPredictor: overnight gap risk analysis (info)
 - 09:00 — AnkaRefreshKite: refresh Zerodha broker session (CRITICAL)
 - 09:16 — AnkaOpenCapture: capture today's opening prices (CRITICAL)
+- 09:16 — AnkaSecrsiCaptureOpens: capture full F&O universe LTP for SECRSI 11:00 snapshot. Holdout 2026-04-28 → 2026-07-31 (info)
 - 09:25 — AnkaMorningScan: regime + technicals + OI + news + spread intelligence + Phase B ranker (CRITICAL)
 - 09:25 — AnkaPhaseCShadowOpen: F3 live shadow ledger — OPEN rows for today's Phase C OPPORTUNITY signals (info)
 - 09:30 — AnkaH20260426001PaperOpen: H-2026-04-26-001 + H-2026-04-26-002 forward paper test, OPEN leg, single-touch holdout 2026-04-27 → 2026-05-26 (info)
+- 11:00 — AnkaSecrsiBasketOpen: H-2026-04-27-003 SECRSI basket open — 8-leg market-neutral sector RS pair (info)
 
 **Market Hours (09:30-15:30, every 15 min):**
 - AnkaIntraday####: re-scan technicals, OI, news, spreads, correlation breaks
@@ -75,10 +77,13 @@ The system runs automatically via Windows Scheduled Tasks:
 - AnkaTrustIntra####: OPUS ANKA model portfolio intraday monitor
 - 14:30 — AnkaPhaseCShadowClose: F3 live shadow ledger — mechanical TIME_STOP close at live LTP (info)
 - 14:30 — AnkaH20260426001PaperClose: H-2026-04-26-001 + H-2026-04-26-002 forward paper test, CLOSE leg, mechanical TIME_STOP at Kite LTP (info)
+- 14:30 — AnkaSecrsiBasketClose: H-2026-04-27-003 SECRSI mechanical TIME_STOP close at Kite LTP (info)
 
 **F3 Phase C live shadow:** purpose is forward-test the H1 OPPORTUNITY hypothesis from `docs/research/phase-c-validation/`. Records paper trades at Kite LTP, flattens at 14:30. After ~100 forward trades (≈3–5 months) the binomial test becomes statistically decisive.
 
 **H-2026-04-26-001 / H-2026-04-26-002 forward paper test:** new pre-registered hypothesis pair started 2026-04-27. Same signal stream (|z|≥2.0 mechanical correlation breaks, fade direction, ATR(14)×2 stop, TIME_STOP 14:30); H-001 unconditional, H-002 reads only `regime_gate_pass=True` rows (regime ≠ NEUTRAL). Single-touch holdout window: 2026-04-27 → 2026-05-26. Spec: `docs/superpowers/specs/2026-04-26-sigma-break-mechanical-v1-design.md`. Ledger: `pipeline/data/research/h_2026_04_26_001/recommendations.csv`. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.**
+
+**H-2026-04-27-003 SECRSI (Sector RS Intraday Pair):** trend-continuation, regime-agnostic, market-neutral. 11:00 IST sector snapshot ranks ~25 sectors by median per-stock %chg-from-open; LONG top-2 stocks of top-2 sectors + SHORT bottom-2 stocks of bottom-2 sectors (8 legs, equal-weight). ATR(14)×2 per-leg stop, mechanical TIME_STOP at 14:30 IST. Single-touch holdout 2026-04-28 → 2026-07-31 (auto-extends if n < 40). Spec: `docs/superpowers/specs/2026-04-27-intraday-sector-rs-pair-design.md`. Ledger: `pipeline/data/research/h_2026_04_27_secrsi/recommendations.csv`. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.** Distinct from H-001 (fade direction) — designed as portfolio diversifier.
 
 **Post-Close:**
 - 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL); also runs `oi_scanner --archive-only` and `website_exporter.py`

@@ -823,6 +823,53 @@ _profile.json           _state.json                  ↓
 
 ---
 
+## 3c. Forward Paper Tests — Pre-Registered Hypotheses
+
+These run on Windows Scheduled Tasks during single-touch holdout windows
+under `backtesting-specs.txt §10.4`. **No parameter changes during the
+window.** Each hypothesis writes a CSV ledger that becomes the single
+source of truth for the verdict.
+
+### H-2026-04-26-001 / H-2026-04-26-002 (Sigma-Break Mechanical, fade)
+
+- **Direction:** Fade (mean-reversion) on per-stock |z|≥2 correlation breaks.
+- **Schedule:** OPEN 09:30, CLOSE 14:30 — daily.
+- **Driver:** `pipeline/h_2026_04_26_001_paper.py`.
+- **Ledger:** `pipeline/data/research/h_2026_04_26_001/recommendations.csv`.
+- **Holdout:** 2026-04-27 → 2026-05-26 (single-touch).
+- **Spec:** `docs/superpowers/specs/2026-04-26-sigma-break-mechanical-v1-design.md`.
+- **Sister cohort:** H-2026-04-26-002 reads only `regime_gate_pass=True` rows
+  (regime ≠ NEUTRAL). Same ledger, filtered slice for verdict.
+
+### H-2026-04-27-003 SECRSI (Sector RS Intraday Pair, continuation)
+
+- **Direction:** Continuation, market-neutral. Opposite sign from H-001
+  by construction — designed as portfolio diversifier.
+- **Schedule:**
+  - 09:16 IST — `AnkaSecrsiCaptureOpens` captures full F&O LTP.
+  - 11:00 IST — `AnkaSecrsiBasketOpen` aggregates per-stock %chg-from-open
+    to per-sector medians, ranks sectors, picks top-2 LONG sectors / bottom-2
+    SHORT sectors, picks 2 best/worst stocks each (8 legs equal-weight,
+    dollar-neutral). Computes ATR(14)×2 stops.
+  - 14:30 IST — `AnkaSecrsiBasketClose` mechanical TIME_STOP close.
+- **Driver:** `pipeline/research/h_2026_04_27_secrsi/forward_shadow.py`.
+- **Pure logic units:** `sector_snapshot.py` + `basket_builder.py` (24 tests).
+- **Ledger:** `pipeline/data/research/h_2026_04_27_secrsi/recommendations.csv`
+  (one row per leg; 19 columns including basket_id, leg_id, sector,
+  sector_score, side, weight, stock_pct_at_snap, regime, entry_px, atr_14,
+  stop_px, exit_px, exit_reason=TIME_STOP, pnl_pct, status).
+- **Forensic snapshots:** `pipeline/data/research/h_2026_04_27_secrsi/snapshots/<date>.json`
+  records the full sector-score panel + selected basket each day.
+- **Holdout:** 2026-04-28 → 2026-07-31 (single-touch; auto-extends if
+  n < 40).
+- **Spec:** `docs/superpowers/specs/2026-04-27-intraday-sector-rs-pair-design.md`.
+- **Pass thresholds (locked at pre-registration):** net mean ≥ +0.30 pp/
+  basket (S1 = 5 bps/side), hit rate ≥ 55%, annualised Sharpe ≥ 1.0.
+  Statistical test: label-permutation null, 10k perms, α=0.05 (single
+  hypothesis, no multiplicity correction).
+
+---
+
 ## 4. The Watchdog — What It Is and Why It Exists
 
 ### The Problem It Solves
@@ -913,7 +960,8 @@ When the watchdog finds issues:
 | 08:00 | AnkaEarningsCalendarFetch | IndianAPI corporate_actions sweep, classify quarterly results, append parquet history. Feeds H-2026-04-25-001. | warn |
 | 08:30 | AnkaGapPredictor | Overnight gap risk analysis | info |
 | 09:00 | AnkaRefreshKite | Refresh Zerodha broker session | CRITICAL |
-| 09:16 | AnkaOpenCapture | Capture today's opening prices | CRITICAL |
+| 09:16 | AnkaOpenCapture | Capture today's opening prices (curated 23-stock subset) | CRITICAL |
+| 09:16 | AnkaSecrsiCaptureOpens | SECRSI: capture full F&O universe LTP for 11:00 snapshot. H-2026-04-27-003 holdout 2026-04-28 → 2026-07-31 | info |
 | 09:25 | AnkaMorningScan | THE BIG ONE — regime + tech + OI + news + signals | CRITICAL |
 | 09:25 | AnkaPhaseCShadowOpen | F3 live shadow: record OPEN rows for today's OPPORTUNITY signals | info |
 
@@ -927,7 +975,9 @@ Every 15 minutes, two tasks run as a pair:
 | AnkaSignal#### | Score signals, apply gates, send Telegram alerts |
 | AnkaWatchdogIntraday | (every 15 min) Check critical task freshness |
 | AnkaCorrelationBreaks | (every 15 min) Phase C: detect regime-stock divergence |
+| AnkaSecrsiBasketOpen | 11:00 IST — SECRSI: build market-neutral 8-leg basket from sector RS snapshot (H-2026-04-27-003) |
 | AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) |
+| AnkaSecrsiBasketClose | 14:30 IST — SECRSI: mechanical TIME_STOP close at Kite LTP (H-2026-04-27-003) |
 
 That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
