@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-04-28",
+      "segment": "war",
+      "filename": "2026-04-28-war.html",
+      "headline": "Pakistan's Hormuz Gambit: A Deceptive Peace Offer as India Navigates Trump's Iran Trap",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "epstein",
+      "filename": "2026-04-28-epstein.html",
+      "headline": "Epstein's Ghost: The Unexplained Gaps in the White House Shooter's 'Hit List' Point to Deeper Concealment",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 28, 2026"
+    },
+    {
       "date": "2026-04-27",
       "segment": "war",
       "filename": "2026-04-27-war.html",
