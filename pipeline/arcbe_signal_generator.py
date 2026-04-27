@@ -18,13 +18,18 @@ Stop logic:
 
 import json
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, time, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 log = logging.getLogger("anka.arcbe.signals")
 
 IST = timezone(timedelta(hours=5, minutes=30))
+
+# Hard cutoff for opening NEW intraday positions. ARCBE normally fires from
+# the 07:15 IST pre-market scan, well before this line, but the gate is
+# defensive in case the generator is invoked from an intraday code path.
+NEW_SIGNAL_CUTOFF_IST = time(14, 30)
 
 
 def _next_signal_id() -> str:
@@ -69,6 +74,18 @@ def generate_arcbe_signals(
     Signals include ARCBE-specific metadata for overnight structural stop checks.
     """
     from config import INDIA_SIGNAL_STOCKS
+
+    # 14:30 IST hard cutoff — defensive. If invoked intraday after 14:30,
+    # do not OPEN new ARCBE signals; existing ones still get monitored
+    # by the generic signal_monitor + nightly structural-stop check.
+    now_t = datetime.now(IST).time()
+    if now_t >= NEW_SIGNAL_CUTOFF_IST:
+        log.info(
+            "ARCBE: skipping signal generation — current time %s is past "
+            "14:30 IST new-signal cutoff",
+            now_t.strftime("%H:%M"),
+        )
+        return []
 
     signals: list[dict] = []
     regime_score = regime.get("score", 0)

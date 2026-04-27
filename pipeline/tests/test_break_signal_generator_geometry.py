@@ -1,7 +1,15 @@
 """Routing tests for the post-§3.1 geometry-aware signal generator."""
 import json
+from datetime import time
 import pytest
 from pathlib import Path
+
+
+@pytest.fixture(autouse=True)
+def _bypass_intraday_cutoff(monkeypatch):
+    """Pin IST clock to pre-cutoff so the 14:30 IST guard does not block tests."""
+    from pipeline import break_signal_generator as bsg
+    monkeypatch.setattr(bsg, "_now_ist_time", lambda: time(10, 0))
 
 
 class TestGeometryRouting:

@@ -24,7 +24,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, time, timezone, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -52,6 +52,13 @@ from shadow_pnl import create_shadow_trade, update_shadow_trade, generate_daily_
 
 
 IST = timezone(timedelta(hours=5, minutes=30))
+
+# Hard cutoff for opening NEW signal positions intraday.
+# Signals firing after this leave under 60 min of execution window before
+# the 14:30 IST mechanical close, so they are not realistically tradeable.
+# Existing open positions are still monitored, P&L still updates, closes
+# still fire — only NEW OPENs are blocked past this line.
+NEW_SIGNAL_CUTOFF_IST = time(14, 30)
 
 _LOCK_FILE = Path(__file__).parent / "logs" / "signals.lock"
 _LOCK_MAX_AGE_MINUTES = 25  # if lock is older than this, it's stale (previous run crashed)
@@ -211,10 +218,21 @@ def _run_once_inner(send_telegram=False):
     regime = _load_current_regime()
     stock_probs = _load_stock_probs()
 
+    # Hard cutoff: do not OPEN new positions after 14:30 IST.
+    # Phase C closes mechanically at 14:30; spread/news fires later than
+    # this leave too little execution window to be a real trade.
+    now_ist_t = _ist_now().time()
+    past_new_signal_cutoff = now_ist_t >= NEW_SIGNAL_CUTOFF_IST
+
     # Skip new signal detection if we already have open positions —
     # focus on monitoring existing trades, not churning new ideas.
     existing_open = load_open_signals()
-    if existing_open:
+    if past_new_signal_cutoff:
+        print(f"  ⏸  Past 14:30 IST cutoff (now {now_ist_t.strftime('%H:%M')}) "
+              f"— blocking new OPENs, monitoring existing positions only")
+        new_signals = []
+        raw_signals = []
+    elif existing_open:
         print(f"  {len(existing_open)} open position(s) — skipping new signal scan, monitoring only")
         new_signals = []
         raw_signals = []
@@ -439,24 +457,30 @@ def _run_once_inner(send_telegram=False):
         print(f"  [trace] heartbeat done @ {_ist_now().strftime('%H:%M:%S')}", flush=True)
 
     # 1b. Phase C break → standalone signal candidates
-    try:
-        from break_signal_generator import generate_break_candidates
-        existing_ids = {s.get("signal_id") for s in load_open_signals()}
-        for cand in generate_break_candidates():
-            if cand["signal_id"] in existing_ids:
-                continue  # already registered — skip dedup
-            save_signal(cand)
-            existing_ids.add(cand["signal_id"])
-            print(f"  📊 Phase C break signal: {cand['spread_name']}")
-            if send_telegram:
-                try:
-                    msg = f"📊 PHASE C BREAK\n{cand['spread_name']}\n{cand.get('event_headline', '')}"
-                    send_message(msg, parse_mode=None)
-                except Exception as e:
-                    print(f"  Failed to send break signal: {e}")
-    except Exception as e:
-        import logging
-        logging.getLogger(__name__).warning("break_signal_generator failed: %s", e)
+    # Same 14:30 IST cutoff as the news-spread path: do not OPEN new
+    # Phase C break positions intraday past 14:30 — too little execution
+    # window before the mechanical close.
+    if past_new_signal_cutoff:
+        print(f"  ⏸  Past 14:30 IST cutoff — skipping Phase C break candidate generation")
+    else:
+        try:
+            from break_signal_generator import generate_break_candidates
+            existing_ids = {s.get("signal_id") for s in load_open_signals()}
+            for cand in generate_break_candidates():
+                if cand["signal_id"] in existing_ids:
+                    continue  # already registered — skip dedup
+                save_signal(cand)
+                existing_ids.add(cand["signal_id"])
+                print(f"  📊 Phase C break signal: {cand['spread_name']}")
+                if send_telegram:
+                    try:
+                        msg = f"📊 PHASE C BREAK\n{cand['spread_name']}\n{cand.get('event_headline', '')}"
+                        send_message(msg, parse_mode=None)
+                    except Exception as e:
+                        print(f"  Failed to send break signal: {e}")
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning("break_signal_generator failed: %s", e)
     print(f"  [trace] break_gen done @ {_ist_now().strftime('%H:%M:%S')}", flush=True)
 
     # 2. Check existing open signals for stop-outs / expiry

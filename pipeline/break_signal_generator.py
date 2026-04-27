@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -26,6 +27,17 @@ from atr_stops import compute_atr_stop
 from config import TIER_EXPLORING
 
 logger = logging.getLogger(__name__)
+
+_IST = timezone(timedelta(hours=5, minutes=30))
+# Hard cutoff for opening NEW Phase C break positions. After 14:30 IST the
+# mechanical TIME_STOP closes anything we'd open within minutes, so the trade
+# is not realistically tradeable. Existing positions are still monitored.
+NEW_SIGNAL_CUTOFF_IST = time(14, 30)
+
+
+def _now_ist_time() -> time:
+    """Return current IST wall-clock time. Indirection so tests can patch it."""
+    return datetime.now(_IST).time()
 
 _ACTIONABLE_DIRECTIONS = {"LONG", "SHORT"}
 _ACTIONABLE_CLASSIFICATIONS = {"OPPORTUNITY_LAG"}
@@ -57,6 +69,18 @@ def generate_break_candidates(breaks_path: Path = BREAKS_PATH) -> List[Dict[str,
         List of signal-shaped dicts ready for ``signal_tracker.save_signal()``,
         or ``[]`` when the file is missing, empty, or contains no actionable breaks.
     """
+    # ------------------------------------------------------------------
+    # 14:30 IST hard cutoff — defensive at the source.
+    # ------------------------------------------------------------------
+    now_t = _now_ist_time()
+    if now_t >= NEW_SIGNAL_CUTOFF_IST:
+        logger.info(
+            "generate_break_candidates: skipping — current time %s past "
+            "14:30 IST new-signal cutoff",
+            now_t.strftime("%H:%M"),
+        )
+        return []
+
     # ------------------------------------------------------------------
     # Load
     # ------------------------------------------------------------------

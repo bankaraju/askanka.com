@@ -6,6 +6,7 @@ TDD: tests written before implementation.
 from __future__ import annotations
 
 import json
+from datetime import time
 import pytest
 from pathlib import Path
 
@@ -13,6 +14,14 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
+
+
+@pytest.fixture(autouse=True)
+def _bypass_intraday_cutoff(monkeypatch):
+    """Pin the IST clock to a pre-cutoff time so the 14:30 IST guard in
+    generate_break_candidates does not block tests run at any wall-clock time."""
+    from pipeline import break_signal_generator as bsg
+    monkeypatch.setattr(bsg, "_now_ist_time", lambda: time(10, 0))
 
 SAMPLE_BREAKS = {
     "date": "2026-04-16",

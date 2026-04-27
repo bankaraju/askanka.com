@@ -79,6 +79,14 @@ The system runs automatically via Windows Scheduled Tasks:
 - 14:30 — AnkaH20260426001PaperClose: H-2026-04-26-001 + H-2026-04-26-002 forward paper test, CLOSE leg, mechanical TIME_STOP at Kite LTP (info)
 - 14:30 — AnkaSecrsiBasketClose: H-2026-04-27-003 SECRSI mechanical TIME_STOP close at Kite LTP (info)
 
+## 14:30 IST New-Signal Cutoff (CRITICAL)
+No engine may OPEN a new live shadow position after **14:30 IST**. The mechanical TIME_STOPs run at 14:30, so anything opened later has under 60 min of execution window before forced close — not a tradeable trade. The cutoff is enforced at the source in three engines:
+- `pipeline/run_signals.py` — gates news-event-triggered spreads (`_run_once_inner`, lines ~213-238) and the Phase C break candidate path (`generate_break_candidates` call at lines ~466-487)
+- `pipeline/break_signal_generator.py` — defensive guard inside `generate_break_candidates` itself (`_now_ist_time()` indirection lets tests bypass)
+- `pipeline/arcbe_signal_generator.py` — defensive guard inside `generate_arcbe_signals` (ARCBE normally fires from 07:15 IST pre-market, so the gate is belt-and-braces)
+
+Existing OPEN positions are still monitored, P&L still updates, stops still fire — only NEW OPENs are blocked. Holdout-test paper engines (H-2026-04-26-001, SECRSI) have their own pre-registered open windows and are unaffected.
+
 **F3 Phase C live shadow:** purpose is forward-test the H1 OPPORTUNITY hypothesis from `docs/research/phase-c-validation/`. Records paper trades at Kite LTP, flattens at 14:30. After ~100 forward trades (≈3–5 months) the binomial test becomes statistically decisive.
 
 **H-2026-04-26-001 / H-2026-04-26-002 forward paper test:** new pre-registered hypothesis pair started 2026-04-27. Same signal stream (|z|≥2.0 mechanical correlation breaks, fade direction, ATR(14)×2 stop, TIME_STOP 14:30); H-001 unconditional, H-002 reads only `regime_gate_pass=True` rows (regime ≠ NEUTRAL). Single-touch holdout window: 2026-04-27 → 2026-05-26. Spec: `docs/superpowers/specs/2026-04-26-sigma-break-mechanical-v1-design.md`. Ledger: `pipeline/data/research/h_2026_04_26_001/recommendations.csv`. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.**
