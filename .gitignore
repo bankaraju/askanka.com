@@ -11,6 +11,11 @@ pipeline/data/earnings_calendar/*
 !pipeline/data/earnings_calendar/peers_frozen.json
 # Universe pins (data validation policy §11.3 — point-in-time correctness)
 !pipeline/data/canonical_fno_research_v*.json
+# PIT regime tape package (loader code is tracked; daily snapshots are runtime data)
+!pipeline/data/pit_regime_tape/
+pipeline/data/pit_regime_tape/*
+!pipeline/data/pit_regime_tape/__init__.py
+!pipeline/data/pit_regime_tape/README.md
 pipeline/logs/
 pipeline/__pycache__/
 pipeline/lib/
