@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline import options_atm_helpers, options_quote, options_greeks
+from pipeline import options_atm_helpers, options_quote, options_greeks, synthetic_options
 from pipeline.kite_client import get_kite
 from pipeline.research.phase_c_v5 import cost_model
 
@@ -96,6 +96,28 @@ def _resolve_instrument_token(tradingsymbol: str, nfo_master_df: pd.DataFrame) -
     return int(sub.iloc[0])
 
 
+_REGIME_PROFILE_PATH = Path("pipeline/autoresearch/reverse_regime_profile.json")
+_POSITIONING_PATH = Path("pipeline/data/positioning.json")
+
+
+def _load_regime_profiles() -> dict:
+    if not _REGIME_PROFILE_PATH.exists():
+        return {}
+    try:
+        return json.loads(_REGIME_PROFILE_PATH.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+def _load_oi_data() -> dict:
+    if not _POSITIONING_PATH.exists():
+        return {}
+    try:
+        return json.loads(_POSITIONING_PATH.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return {}
+
+
 def open_options_pair(
     signal_row: dict,
     *,
@@ -150,9 +172,6 @@ def open_options_pair(
         "entry_theta": None,
         "entry_vega": None,
         "drift_vs_rent_tier": "UNKNOWN",
-        # TODO(spec §13 risk #4): tier snapshot deferred — classify_tier expects
-        # a spread-shaped signal (long_legs / short_legs), not a single-leg
-        # Phase C correlation-break row. Adapter task pending.
         "drift_vs_rent_matrix": None,
         "status": None,
         "skip_reason": None,
@@ -202,6 +221,37 @@ def open_options_pair(
             "instrument_token": instrument_token,
             "entry_time": _ist_now().isoformat(),
         })
+
+        # Tier snapshot (spec ss13 risk #4): frozen at entry, non-blocking
+        try:
+            profiles = _load_regime_profiles()
+            oi_data = _load_oi_data()
+            matrix = synthetic_options.classify_single_leg_tier(
+                ticker=ticker,
+                side=signal_row["side"],
+                spot=spot,
+                regime_profiles=profiles,
+                oi_data=oi_data,
+            )
+            if matrix.get("grounding_ok"):
+                month_tier = next(
+                    (t for t in matrix["tiers"] if t["horizon"] == "1_month"), None
+                )
+                base_row["drift_vs_rent_tier"] = (
+                    month_tier["classification"] if month_tier else "UNKNOWN"
+                )
+                base_row["drift_vs_rent_matrix"] = {
+                    t["horizon"]: {
+                        "drift_pct": t["expected_drift_pct"],
+                        "rent_pct": t["total_rent_pct"],
+                        "net_edge_pct": t["net_edge_pct"],
+                    }
+                    for t in matrix["tiers"]
+                }
+        except Exception as exc:  # noqa: BLE001
+            log.warning("drift-vs-rent tier classify failed for %s: %s", signal_id, exc)
+            base_row["drift_vs_rent_tier"] = "UNKNOWN"
+            base_row["drift_vs_rent_matrix"] = None
 
         # Step 6: fetch quote
         quote = options_quote.fetch_mid_with_liquidity_check(

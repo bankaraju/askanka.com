@@ -467,7 +467,7 @@ def test_close_non_expiry_day_seconds_none(tmp_path, monkeypatch):
 
 
 def test_close_persists_to_ledger(tmp_path, monkeypatch):
-    """After close, re-load ledger from disk → same row updated in-place, not appended."""
+    """After close, re-load ledger from disk -> same row updated in-place, not appended."""
     ledger = tmp_path / "ledger.json"
     row = _open_row()
     # Pre-seed with an extra row to check in-place update
@@ -486,3 +486,173 @@ def test_close_persists_to_ledger(tmp_path, monkeypatch):
     assert updated["status"] == "CLOSED"
     other = next(r for r in rows if r["signal_id"] == "other_signal")
     assert other["status"] == "OPEN"  # untouched
+
+
+# ---------------------------------------------------------------------------
+# Wire-in tests: drift_vs_rent tier adapter (spec ss13 risk #4)
+# ---------------------------------------------------------------------------
+
+def _make_full_tier_matrix(classification: str = "HIGH-ALPHA SYNTHETIC") -> dict:
+    """Helper: build a grounding_ok matrix with 3 tiers."""
+    def _tier(horizon, days, net_edge):
+        return {
+            "horizon": horizon,
+            "days_to_expiry": days,
+            "premium_cost_pct": 2.0,
+            "five_day_theta_pct": 1.5,
+            "friction_pct": 0.04,
+            "total_rent_pct": 1.54,
+            "expected_drift_pct": 4.0,
+            "net_edge_pct": net_edge,
+            "classification": classification if net_edge > 0 else "NEGATIVE CARRY",
+            "experimental": horizon == "same_day",
+        }
+
+    return {
+        "ticker": "RELIANCE",
+        "side": "LONG",
+        "spot": 2398.0,
+        "stock_vol": 0.20,
+        "vol_scalar_applied": 1.0,
+        "expected_drift_pct": 4.0,
+        "grounding_ok": True,
+        "tiers": [
+            _tier("1_month", 30, 2.46),
+            _tier("15_day", 15, 1.0),
+            _tier("same_day", 1, 0.5),
+        ],
+        "caution_badges": [],
+    }
+
+
+def test_open_pair_snapshots_real_tier(tmp_path, signal_row, nfo_fixture, monkeypatch):
+    """classify_single_leg_tier returns high-alpha matrix -> tier written to ledger."""
+    ledger = tmp_path / "ledger.json"
+    ledger.write_text("[]")
+    monkeypatch.setattr(phase_c_options_shadow, "LEDGER_PATH", ledger)
+
+    matrix = _make_full_tier_matrix("HIGH-ALPHA SYNTHETIC")
+
+    import pipeline.synthetic_options as synthetic_options_mod
+    monkeypatch.setattr(
+        synthetic_options_mod, "classify_single_leg_tier", lambda **kw: matrix
+    )
+    monkeypatch.setattr(phase_c_options_shadow, "_load_regime_profiles", lambda: {})
+    monkeypatch.setattr(phase_c_options_shadow, "_load_oi_data", lambda: {})
+
+    kite = MagicMock()
+    kite.quote.return_value = _good_quote_dict()
+
+    row = open_options_pair(
+        signal_row, kite_client=kite,
+        nfo_master_df=nfo_fixture, lot_size=500,
+    )
+
+    assert row["drift_vs_rent_tier"] == "HIGH-ALPHA SYNTHETIC"
+    assert row["drift_vs_rent_matrix"] is not None
+    assert set(row["drift_vs_rent_matrix"].keys()) == {"1_month", "15_day", "same_day"}
+    for horizon_key, horizon_data in row["drift_vs_rent_matrix"].items():
+        assert "drift_pct" in horizon_data
+        assert "rent_pct" in horizon_data
+        assert "net_edge_pct" in horizon_data
+
+
+def test_open_pair_tier_failure_non_blocking(tmp_path, signal_row, nfo_fixture, monkeypatch):
+    """classify_single_leg_tier raises -> tier=UNKNOWN but status still OPEN."""
+    ledger = tmp_path / "ledger.json"
+    ledger.write_text("[]")
+    monkeypatch.setattr(phase_c_options_shadow, "LEDGER_PATH", ledger)
+
+    import pipeline.synthetic_options as synthetic_options_mod
+    monkeypatch.setattr(
+        synthetic_options_mod, "classify_single_leg_tier",
+        lambda **kw: (_ for _ in ()).throw(RuntimeError("vol engine unavailable")),
+    )
+    monkeypatch.setattr(phase_c_options_shadow, "_load_regime_profiles", lambda: {})
+    monkeypatch.setattr(phase_c_options_shadow, "_load_oi_data", lambda: {})
+
+    kite = MagicMock()
+    kite.quote.return_value = _good_quote_dict()
+
+    row = open_options_pair(
+        signal_row, kite_client=kite,
+        nfo_master_df=nfo_fixture, lot_size=500,
+    )
+
+    assert row["status"] == "OPEN"       # non-blocking: trade proceeds
+    assert row["drift_vs_rent_tier"] == "UNKNOWN"
+    assert row["drift_vs_rent_matrix"] is None
+
+
+def test_open_pair_grounding_false_falls_back_to_unknown(
+    tmp_path, signal_row, nfo_fixture, monkeypatch
+):
+    """grounding_ok=False -> tier='UNKNOWN', matrix=None."""
+    ledger = tmp_path / "ledger.json"
+    ledger.write_text("[]")
+    monkeypatch.setattr(phase_c_options_shadow, "LEDGER_PATH", ledger)
+
+    bad_matrix = {
+        "grounding_ok": False,
+        "reason": "vol unavailable for RELIANCE",
+        "tiers": [],
+        "caution_badges": [],
+    }
+
+    import pipeline.synthetic_options as synthetic_options_mod
+    monkeypatch.setattr(
+        synthetic_options_mod, "classify_single_leg_tier", lambda **kw: bad_matrix
+    )
+    monkeypatch.setattr(phase_c_options_shadow, "_load_regime_profiles", lambda: {})
+    monkeypatch.setattr(phase_c_options_shadow, "_load_oi_data", lambda: {})
+
+    kite = MagicMock()
+    kite.quote.return_value = _good_quote_dict()
+
+    row = open_options_pair(
+        signal_row, kite_client=kite,
+        nfo_master_df=nfo_fixture, lot_size=500,
+    )
+
+    assert row["drift_vs_rent_tier"] == "UNKNOWN"
+    assert row["drift_vs_rent_matrix"] is None
+
+
+def test_open_pair_lazy_loads_profiles_and_oi(
+    tmp_path, signal_row, nfo_fixture, monkeypatch
+):
+    """_load_regime_profiles and _load_oi_data each called exactly once per open."""
+    ledger = tmp_path / "ledger.json"
+    ledger.write_text("[]")
+    monkeypatch.setattr(phase_c_options_shadow, "LEDGER_PATH", ledger)
+
+    matrix = _make_full_tier_matrix("HIGH-ALPHA SYNTHETIC")
+    import pipeline.synthetic_options as synthetic_options_mod
+    monkeypatch.setattr(
+        synthetic_options_mod, "classify_single_leg_tier", lambda **kw: matrix
+    )
+
+    profile_calls = []
+    oi_calls = []
+
+    def _load_profiles():
+        profile_calls.append(1)
+        return {}
+
+    def _load_oi():
+        oi_calls.append(1)
+        return {}
+
+    monkeypatch.setattr(phase_c_options_shadow, "_load_regime_profiles", _load_profiles)
+    monkeypatch.setattr(phase_c_options_shadow, "_load_oi_data", _load_oi)
+
+    kite = MagicMock()
+    kite.quote.return_value = _good_quote_dict()
+
+    open_options_pair(
+        signal_row, kite_client=kite,
+        nfo_master_df=nfo_fixture, lot_size=500,
+    )
+
+    assert len(profile_calls) == 1, f"_load_regime_profiles called {len(profile_calls)} times"
+    assert len(oi_calls) == 1, f"_load_oi_data called {len(oi_calls)} times"

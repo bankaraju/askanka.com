@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Literal
 
 from pipeline import vol_engine
 from pipeline import options_pricer
@@ -153,6 +154,83 @@ def build_leverage_matrix(signal: dict, regime_profiles: dict, oi_data: dict | N
         "long_side_vol": round(long_vol, 4),
         "short_side_vol": round(short_vol, 4),
         "vol_scalar_applied": round(vol_scalar, 4),
+    }
+
+
+def classify_single_leg_tier(
+    ticker: str,
+    side: Literal["LONG", "SHORT"],
+    spot: float,
+    regime_profiles: dict,
+    oi_data: dict | None = None,
+) -> dict:
+    """Tier classification for a single-leg directional bet (Phase C correlation-break).
+
+    Phase C signals are single-leg (LONG or SHORT one ticker), not spreads.
+    This wrapper computes drift-vs-rent tiers using the same horizons as
+    build_leverage_matrix but specialised to a single ticker.
+
+    Drift is always abs(avg_drift_5d) -- mirrors build_leverage_matrix which uses
+    abs() in _avg_drift. Direction correctness is a separate question handled by
+    classify_break, not by this tier classifier.
+
+    Returns the same tiers list shape as build_leverage_matrix so downstream
+    consumers (Phase C reporter Table B, Options tab card) can join transparently.
+
+    Spec ss13 risk #4.
+    """
+    vol_scalar = _load_vol_scalar()
+    raw_vol = vol_engine.get_stock_vol(ticker)
+
+    if raw_vol is None:
+        return {
+            "ticker": ticker,
+            "side": side,
+            "spot": spot,
+            "stock_vol": None,
+            "vol_scalar_applied": round(vol_scalar, 4),
+            "expected_drift_pct": 0.0,
+            "grounding_ok": False,
+            "reason": f"vol unavailable for {ticker}",
+            "tiers": [],
+            "caution_badges": [],
+        }
+
+    stock_vol = raw_vol * vol_scalar
+
+    stock_profile = regime_profiles.get("stock_profiles", {}).get(ticker, {})
+    raw_drift = stock_profile.get("summary", {}).get("avg_drift_5d", 0.0)
+    expected_drift_pct = abs(raw_drift) * 100.0
+
+    tiers = []
+    for t in TIERS:
+        rent = options_pricer.five_day_rent(spot, stock_vol, t["days"])
+        net_edge = expected_drift_pct - rent["total_rent_pct"]
+        tiers.append({
+            "horizon": t["horizon"],
+            "days_to_expiry": t["days"],
+            "premium_cost_pct": round(rent["premium_pct"], 3),
+            "five_day_theta_pct": round(rent["theta_decay_5d_pct"], 3),
+            "friction_pct": round(rent["friction_pct"], 3),
+            "total_rent_pct": round(rent["total_rent_pct"], 3),
+            "expected_drift_pct": round(expected_drift_pct, 3),
+            "net_edge_pct": round(net_edge, 3),
+            "classification": classify_tier(net_edge, t["horizon"]),
+            "experimental": t["experimental"],
+        })
+
+    badges = build_caution_badges(tiers, oi_data)
+
+    return {
+        "ticker": ticker,
+        "side": side,
+        "spot": spot,
+        "stock_vol": round(stock_vol, 4),
+        "vol_scalar_applied": round(vol_scalar, 4),
+        "expected_drift_pct": round(expected_drift_pct, 3),
+        "grounding_ok": True,
+        "tiers": tiers,
+        "caution_badges": badges,
     }
 
 
