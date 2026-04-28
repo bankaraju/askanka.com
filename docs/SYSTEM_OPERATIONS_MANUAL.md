@@ -900,6 +900,29 @@ source of truth for the verdict.
   Statistical test: label-permutation null, 10k perms, α=0.05 (single
   hypothesis, no multiplicity correction).
 
+### H-2026-04-29 Intraday-V1 Framework (Data-Driven)
+
+**Purpose:** Replace news-driven spread framework with a 6-feature pooled-Karpathy intraday signal stack. Twin hypothesis on NIFTY-50 stocks + options-liquid index futures.
+
+**Daily lifecycle:**
+- 04:30 — `AnkaIntradayV1LoaderRefresh` (Kite 1-min cache delta-refresh, ~60 instruments)
+- 09:30 — `AnkaIntradayV1Open` (live_v1 batch + paired-options sidecar; HOLDOUT-OF-RECORD)
+- 09:30, 09:45, ..., 13:00 — `AnkaIntradayV1Shadow_HHMM` (15-min continuous shadow ledger)
+- 14:30 — `AnkaIntradayV1Close` (mechanical exit, all 3 ledgers)
+
+**Weekly:**
+- Last Sunday of month 02:00 — `AnkaIntradayV1Recalibrate` (Karpathy refit on prior 60-trading-day window)
+
+**End-of-holdout (2026-07-04):**
+- `python -m pipeline.research.intraday_v1.runner verdict` → `verdict_2026_07_04.json`
+- On pass: news-driven kill-switch flips, archive `news_driven_archive_2026_07/`, V2 spec drafted
+- On fail: news-driven incumbent stays, V1 returns to drawing board
+
+**Critical guardrails:**
+- 14:30 IST cutoff for new opens (per `feedback_1430_ist_signal_cutoff.md`)
+- Single-touch holdout per `backtesting-specs.txt §10.4` — no parameter changes mid-window
+- Holdout extends 1 day per `STATUS=NO_KITE_SESSION/STALE_FEED/PARTIAL_COVERAGE_ABORT/INTEGRITY_ISSUE` row
+
 ### Gemma 4 Pilot (2026-04-29 → 2026-05-19)
 
 A 20-day forward-only Tier 2 evaluation of **Gemma 4 26B-A4B local
