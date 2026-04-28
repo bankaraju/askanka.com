@@ -80,3 +80,47 @@ def test_no_kite_session_writes_status_row(tmp_path, monkeypatch):
     assert csv_path.exists()
     df = pd.read_csv(csv_path)
     assert (df["status"] == "NO_KITE_SESSION").any()
+
+
+def test_live_open_idempotent_on_retry(tmp_path, monkeypatch):
+    """Fix #8: scheduler retries (timeout, network blip) of the 09:30 task
+    must NOT duplicate rows in recommendations.csv. The (open_date, instrument)
+    pair is the dedup key; NO_KITE_SESSION is also deduped by (open_date, _GLOBAL_).
+    """
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(runner, "_resolve_universe", lambda: {"stocks": ["RELIANCE", "INFY"], "indices": []})
+    monkeypatch.setattr(runner, "_compute_signals_at", lambda eval_t, universe: [
+        {"instrument": "RELIANCE", "instrument_class": "stocks", "score": 1.5,
+         "decision": "LONG", "entry_price": 2500.0, "atr14": 50.0,
+         "weights_used": [0.5, -0.3, 0.2, 0.1, 0.0, 0.4]},
+        {"instrument": "INFY", "instrument_class": "stocks", "score": -1.2,
+         "decision": "SHORT", "entry_price": 1800.0, "atr14": 30.0,
+         "weights_used": [0.5, -0.3, 0.2, 0.1, 0.0, 0.4]},
+    ])
+    eval_t = datetime(2026, 4, 29, 9, 30, tzinfo=IST)
+    runner.live_open(eval_t=eval_t)
+    runner.live_open(eval_t=eval_t)  # retry — must be a no-op
+    csv_path = tmp_path / "recommendations.csv"
+    df = pd.read_csv(csv_path)
+    # Exactly one row per instrument, not two.
+    assert len(df) == 2
+    assert sorted(df["instrument"].tolist()) == ["INFY", "RELIANCE"]
+    # Dedup key: (open_date, instrument)
+    assert df.groupby(["open_date", "instrument"]).size().max() == 1
+
+
+def test_live_open_idempotent_no_kite_session(tmp_path, monkeypatch):
+    """Fix #8 corollary: NO_KITE_SESSION sentinel is also deduped on retry."""
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(runner, "_resolve_universe", lambda: {"stocks": ["RELIANCE"], "indices": []})
+    def raise_no_session(*args, **kwargs):
+        raise runner.KiteSessionError("no session")
+    monkeypatch.setattr(runner, "_compute_signals_at", raise_no_session)
+    eval_t = datetime(2026, 4, 29, 9, 30, tzinfo=IST)
+    runner.live_open(eval_t=eval_t)
+    runner.live_open(eval_t=eval_t)
+    df = pd.read_csv(tmp_path / "recommendations.csv")
+    # Only one NO_KITE_SESSION row for today's open_date.
+    today = eval_t.date().isoformat()
+    mask = (df["status"] == "NO_KITE_SESSION") & (df["open_date"].astype(str) == today)
+    assert int(mask.sum()) == 1

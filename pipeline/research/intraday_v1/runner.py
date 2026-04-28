@@ -76,7 +76,6 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
         log.warning(f"no stocks weights at {weights_path}, skipping")
         return []
     weights_data = json.loads(weights_path.read_text(encoding="utf-8"))
-    weights = pd.array(weights_data["weights"], dtype="float64") if hasattr(pd, "array") else None
     import numpy as _np
     weights = _np.array(weights_data["weights"], dtype=float)
     long_t = float(weights_data["long_threshold"])
@@ -108,9 +107,14 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
             continue
         sector_sym = SECTOR_INDEX_MAP.get(sym, "NIFTY")
         sector_bars = _read_bars(sector_sym)
-        # If sector cache not available (early-kickoff window), use broad NIFTY;
-        # if NIFTY also missing, RS feature returns NaN per features.py contract.
-        sector_df = sector_bars if sector_bars is not None else bars
+        # No synthetic fallback: when the sector cache is missing we cannot compute
+        # rs_vs_sector against the stock's own bars (that would silently return 0
+        # and produce a bogus signal). Skip the instrument; NaN propagates via
+        # score.apply when sector data is absent.
+        if sector_bars is None:
+            log.info(f"sector cache missing for {sym} -> {sector_sym}, skipping")
+            continue
+        sector_df = sector_bars
         try:
             today_pcr = json.loads((PCR_DIR / f"{sym}_today.json").read_text(encoding="utf-8"))
             two_d_pcr = json.loads((PCR_DIR / f"{sym}_2d_ago.json").read_text(encoding="utf-8"))
@@ -158,15 +162,39 @@ def _append_csv(path: Path, row: Dict) -> None:
         df.to_csv(path, index=False)
 
 
+def _already_open_today(rec_path: Path, open_date: str, instrument: str) -> bool:
+    """Idempotency check for live_open: True if a row with this (open_date, instrument)
+    is already present in recommendations.csv. Survives scheduler retries.
+    """
+    if not rec_path.exists():
+        return False
+    try:
+        df = pd.read_csv(rec_path)
+    except (pd.errors.EmptyDataError, FileNotFoundError):
+        return False
+    if df.empty:
+        return False
+    if "open_date" not in df.columns or "instrument" not in df.columns:
+        return False
+    return ((df["open_date"].astype(str) == open_date) & (df["instrument"] == instrument)).any()
+
+
 def live_open(eval_t: datetime) -> None:
-    """09:30 IST batch — open paper trades, write to recommendations.csv."""
+    """09:30 IST batch — open paper trades, write to recommendations.csv.
+
+    Idempotent on (open_date, instrument): re-runs of the 09:30 task on the same
+    date will not duplicate rows. NO_KITE_SESSION sentinel is also deduped.
+    """
     rec_path = _ledger_path("recommendations.csv")
+    open_date = eval_t.date().isoformat()
     try:
         univ = _resolve_universe()
         signals = _compute_signals_at(eval_t, univ)
     except KiteSessionError as e:
+        if _already_open_today(rec_path, open_date, "_GLOBAL_"):
+            return
         _append_csv(rec_path, {
-            "open_date": eval_t.date().isoformat(),
+            "open_date": open_date,
             "instrument": "_GLOBAL_",
             "instrument_class": "_GLOBAL_",
             "direction": "",
@@ -182,8 +210,10 @@ def live_open(eval_t: datetime) -> None:
     for sig in signals:
         if sig["decision"] == "SKIP":
             continue
+        if _already_open_today(rec_path, open_date, sig["instrument"]):
+            continue
         _append_csv(rec_path, {
-            "open_date": eval_t.date().isoformat(),
+            "open_date": open_date,
             "instrument": sig["instrument"],
             "instrument_class": sig["instrument_class"],
             "direction": sig["decision"],
@@ -224,6 +254,12 @@ def live_close(eval_t: datetime) -> None:
     if not rec_path.exists():
         return
     df = pd.read_csv(rec_path)
+    # Coerce string-bearing columns to object dtype before .loc assignment to
+    # avoid pandas FutureWarning: "Setting an item of incompatible dtype"
+    # when these columns are inferred as float64 from empty/NaN values.
+    for col in ("status", "exit_reason", "exit_price", "pnl_pct"):
+        if col in df.columns:
+            df[col] = df[col].astype("object")
     for idx, row in df.iterrows():
         if row.get("status") != "OPEN":
             continue

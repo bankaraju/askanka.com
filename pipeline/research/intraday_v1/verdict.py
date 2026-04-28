@@ -38,7 +38,9 @@ def compute_sharpe(df: pd.DataFrame) -> float:
     closed = df[df["status"] == "CLOSED"]
     if closed.empty:
         return 0.0
-    daily = closed.groupby("instrument")["pnl_pct"].mean()  # crude proxy if no date col
+    # Spec §4: Sharpe = mean(daily_return) / std(daily_return) * sqrt(252),
+    # where daily_return = average P&L across positions opened that day.
+    daily = closed.groupby("open_date")["pnl_pct"].mean()
     if daily.std() == 0:
         return 0.0
     return float(daily.mean() / daily.std() * sqrt(252))
