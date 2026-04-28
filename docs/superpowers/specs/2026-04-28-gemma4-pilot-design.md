@@ -228,3 +228,54 @@ These don't need to be resolved before the spec is written but must be answered 
 - How exactly the routing layer hands off prompt + retrieved context. Wrapper pattern or middleware pattern.
 - Concrete EOD report-card aggregator format — Markdown to memory file, or HTML on terminal, or both.
 - Exact pairwise-UI sample-selection algorithm: pure random, stratified by hour, or stratified by rubric-score bucket.
+
+## 11 — Librarian mode (deferred Phase 2, separate pilot)
+
+**Status:** captured 2026-04-28; not in scope for the current 20-day pilot. Will get its own spec after the day-20 cutover decision if Gemma clears the §6 bar on at least one task.
+
+### 11.1 What it is
+
+A second role for Gemma 4 that is **distinct** from the terminal-generator role evaluated in §3. In librarian mode, Gemma is the *pre-processor* sitting in front of a cloud LLM call: it reads bulk local context (transcripts, memory files, RAG hits, vault chats), emits a small **structured brief**, and the cloud LLM consumes the brief instead of the raw corpus.
+
+> Mental model: Gemma is the librarian who reads everything; the cloud LLM is the analyst who only sees the librarian's note.
+
+This pattern is additive to §3, not a replacement. A task can run in:
+- **Terminal mode** (§3) — Gemma generates the final user-facing output.
+- **Librarian mode** (this section) — Gemma compresses context for a cloud LLM, which generates the final output.
+- **Both** — Gemma pre-processes context AND the cloud handoff is itself a Gemma terminal call (only viable once Gemma is provably reliable on terminal mode).
+
+### 11.2 Why it lands well in our system
+
+- **Token economics.** Concall transcripts run 25–35 K tokens. Sending raw to Gemini for trust-score scoring costs roughly $0.05 per stock. A Gemma-emitted 1-page structured brief drops that to ~$0.001, and the brief is itself an auditable artifact (we can show subscribers what the model "saw").
+- **Co-location.** Per the 2026-04-28 architectural pivot (Contabo as primary execution host), Gemma and every consumer of cloud LLM output live on the same machine. The librarian step adds zero network hops — it's a function call.
+- **Separation of concerns.** Cloud LLMs are good at reasoning, mediocre at parsing 30 K tokens of mixed-format input. Putting the structured-extraction work where it's cheap (local) and the reasoning where it's expensive (cloud) follows the cost gradient correctly.
+- **Privacy header room.** Not the live use case for market-public data, but it future-proofs the design for any path where customer-side data flows through the system. Gemma can redact identifiers before anything reaches a cloud API.
+
+### 11.3 Three concrete first-targets (in priority order)
+
+1. **Trust-score concall supplement (librarian feeds Gemini).** Gemma reads the concall transcript + last 4 quarters of guidance + the ticker's memory file → emits a brief with sections {promises_kept, promises_broken, new_guidance, risk_flags, capex_intent}. Gemini consumes the brief and emits the supplement JSON. The current §3 task #1 evaluates Gemma as the JSON producer; this evaluates a Gemma → Gemini chain. Different ground truth, different cost model.
+2. **EOD Telegram narrative (librarian feeds Claude/Gemini).** Gemma reads `live_paper_ledger.json` + `today_regime.json` + the day's news → emits a 5-bullet structured brief. Cloud writes the 300-character prose. Removes the cloud's data-wrangling tax entirely.
+3. **Daily markets article (librarian feeds Gemini).** Gemma reads ObsidianVault chats (last 30 days) + RAG corpus + global_regime.json + today's news → emits a structured outline with cited facts. Cloud writes the prose only. Highest token-ratio of the three; also the most likely to make a quality difference.
+
+### 11.4 Success metric (different from §6)
+
+Librarian mode is not evaluated on pairwise prose quality. The metric is:
+
+```
+librarian_lift = (cost_reduction_pct) × (cloud_accuracy_preservation)
+```
+
+Where:
+- `cost_reduction_pct` — measured against same-task baseline cost from §3 reporting.
+- `cloud_accuracy_preservation` — for tasks with a deterministic rubric (e.g. concall supplement schema), the librarian-fed cloud output's rubric pass-rate divided by the raw-context cloud output's rubric pass-rate. Must be ≥ 0.95.
+
+A librarian config that cuts cost 80% but drops cloud rubric pass-rate from 95% to 70% is **rejected** — token savings cannot come from compressing away the signal.
+
+### 11.5 Activation gate
+
+Librarian mode does NOT enter pilot until:
+- The current 20-day pilot has reached its day-20 decision.
+- At least one of the four §3 tasks has cleared the §6 cutover bar (Gemma is provably useful in *some* role).
+- A standalone spec `docs/superpowers/specs/<date>-gemma-librarian-mode-design.md` is written and reviewed.
+
+Capturing this in §11 keeps the design idea on file without diluting the current evaluation. Do not add librarian-mode wiring to the §3 pilot codepath.
