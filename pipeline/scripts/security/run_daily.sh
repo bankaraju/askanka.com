@@ -23,6 +23,7 @@ run auth_triage     sudo "$S/auth_triage.sh"
 run port_audit      sudo "$S/port_audit.sh"
 run ssh_keys_audit  "$S/ssh_keys_audit.sh"
 run resource_watch  "$S/resource_watch.sh"
+run venv_health     "$S/venv_health.sh"
 
 if [ "$errors" -eq 0 ]; then
     msg="✅ Anka VPS daily security check: all green ($(date '+%Y-%m-%d %H:%M IST'))"
