@@ -57,12 +57,29 @@ def compute_max_drawdown(df: pd.DataFrame) -> float:
 
 
 def compute_baseline_hit_rate(df: pd.DataFrame) -> float:
-    """Better of always-long / always-short hit rates on the same instruments."""
+    """Better of always-long / always-short hit rates on the closed positions.
+
+    Reads ENTRY_PRICE and EXIT_PRICE columns directly to recover the raw,
+    un-signed price move; then evaluates the always-long and always-short
+    decision rules on the same instrument×day population.
+    """
     closed = df[df["status"] == "CLOSED"]
     if closed.empty:
         return 0.0
-    always_long_hits = float((closed["pnl_pct"] > 0).mean())  # implementations may vary
-    always_short_hits = 1.0 - always_long_hits
+    if "entry_price" not in closed.columns or "exit_price" not in closed.columns:
+        raise ValueError(
+            "compute_baseline_hit_rate requires entry_price and exit_price columns "
+            "in the recommendations ledger; missing one or both. Cannot fabricate."
+        )
+    # Coerce to float; missing exit_price (i.e., still OPEN rows mis-flagged) → NaN → drop
+    entry = pd.to_numeric(closed["entry_price"], errors="coerce")
+    exit_ = pd.to_numeric(closed["exit_price"], errors="coerce")
+    raw_move = (exit_ - entry) / entry  # un-signed, fractional
+    raw_move = raw_move.dropna()
+    if raw_move.empty:
+        return 0.0
+    always_long_hits = float((raw_move > 0).mean())   # always-LONG wins when price goes up
+    always_short_hits = float((raw_move < 0).mean())  # always-SHORT wins when price goes down
     return max(always_long_hits, always_short_hits)
 
 

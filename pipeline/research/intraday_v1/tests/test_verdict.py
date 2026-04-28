@@ -14,6 +14,12 @@ def _ledger(hit_rate=0.58, sharpe=0.8, maxdd=0.03, n_trades=400):
     Includes an `open_date` column rotating across ~20 distinct dates so the
     Sharpe-by-open-date computation (post Fix #6) has a well-defined daily
     series to operate on.
+
+    Also emits `entry_price` (=100.0) and `exit_price` consistent with each
+    row's signed `pnl_pct` and `direction`, so the §9B baseline path
+    (post Fix #5) can recover the un-signed raw price move:
+      LONG  : exit = 100 * (1 + pnl_pct/100)   (price up ⇒ strategy won)
+      SHORT : exit = 100 * (1 - pnl_pct/100)   (price down ⇒ strategy won)
     """
     np.random.seed(42)
     n_wins = int(hit_rate * n_trades)
@@ -22,12 +28,20 @@ def _ledger(hit_rate=0.58, sharpe=0.8, maxdd=0.03, n_trades=400):
     np.random.shuffle(pnl)
     base = pd.Timestamp("2026-04-29")
     open_dates = [(base + pd.Timedelta(days=i % 20)).date().isoformat() for i in range(n_trades)]
+    directions = ["LONG"] * (n_trades // 2) + ["SHORT"] * (n_trades - n_trades // 2)
+    entry_price = [100.0] * n_trades
+    exit_price = [
+        100.0 * (1.0 + p / 100.0) if d == "LONG" else 100.0 * (1.0 - p / 100.0)
+        for p, d in zip(pnl, directions)
+    ]
     return pd.DataFrame({
-        "open_date":  open_dates,
-        "instrument": [f"INST{i % 50}" for i in range(n_trades)],
-        "direction":  ["LONG"] * (n_trades // 2) + ["SHORT"] * (n_trades - n_trades // 2),
-        "pnl_pct":    pnl,
-        "status":     ["CLOSED"] * n_trades,
+        "open_date":   open_dates,
+        "instrument":  [f"INST{i % 50}" for i in range(n_trades)],
+        "direction":   directions,
+        "entry_price": entry_price,
+        "exit_price":  exit_price,
+        "pnl_pct":     pnl,
+        "status":      ["CLOSED"] * n_trades,
     })
 
 
@@ -68,6 +82,51 @@ def test_compute_baseline_hit_rate():
     df = _ledger(hit_rate=0.58)
     bl = verdict.compute_baseline_hit_rate(df)
     assert 0.0 <= bl <= 1.0
+    # Post Fix #5: with half LONG / half SHORT and a moderate strategy hit-rate,
+    # the un-signed price-move distribution is approximately symmetric so the
+    # better-of-always-long/always-short baseline lands near 0.5 — well away
+    # from the strategy's own hit_rate of 0.58 (which the broken function
+    # would have returned).
+    assert abs(bl - 0.5) < 0.10, f"baseline {bl} should be near 0.5, far from 0.58"
+    assert abs(bl - 0.58) > 0.03, f"baseline {bl} must NOT equal strategy hit_rate"
+
+
+def test_baseline_uses_unsigned_raw_move_not_signed_pnl():
+    """Fix #5: §9B baseline must use raw un-signed price move, NOT signed pnl_pct.
+
+    With n=200 trades, half LONG and half SHORT, strategy hit_rate=0.65, the raw
+    price-move distribution is approximately half-up / half-down, so the
+    better-of-always-long-or-always-short baseline is ~0.5. The broken
+    implementation re-used signed `pnl_pct` and so always returned
+    max(0.65, 0.35) = 0.65 (i.e., the strategy's own hit_rate), guaranteeing
+    margin <= 0 and a structural §9B FAIL.
+    """
+    df = _ledger(hit_rate=0.65, n_trades=200)
+    bl = verdict.compute_baseline_hit_rate(df)
+    assert 0.0 <= bl <= 1.0
+    assert abs(bl - 0.5) < 0.10, (
+        f"baseline {bl} must be near 0.5 (half LONGs + half SHORTs, symmetric "
+        f"raw-move distribution); broken impl would return ~0.65"
+    )
+    # Confirm the broken behaviour is gone: baseline must NOT equal strategy hit_rate.
+    strategy_hit = float((df[df["status"] == "CLOSED"]["pnl_pct"] > 0).mean())
+    assert abs(bl - strategy_hit) > 0.05, (
+        f"baseline {bl} must differ from strategy hit_rate {strategy_hit}"
+    )
+    # Confirm §9B gate would PASS for a winning strategy (margin > 0).
+    margin = strategy_hit - bl
+    assert margin > 0.0, (
+        f"margin {margin} must be positive for a winning strategy "
+        f"(was always <= 0 in broken version)"
+    )
+
+
+def test_baseline_raises_when_columns_missing():
+    """Fix #5: no fabrication path. If entry_price or exit_price missing, raise."""
+    df = _ledger(hit_rate=0.58)
+    df_no_prices = df.drop(columns=["entry_price", "exit_price"])
+    with pytest.raises(ValueError, match="entry_price and exit_price"):
+        verdict.compute_baseline_hit_rate(df_no_prices)
 
 
 def test_compute_sharpe_groups_by_open_date():
