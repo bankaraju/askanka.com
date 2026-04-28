@@ -352,12 +352,31 @@ export function render(container, positions) {
   }).join('');
 
   const totalPnl = positions.reduce((sum, p) => sum + (p.spread_pnl_pct ?? p.pnl_pct ?? 0), 0);
+  // Today's basket P&L — sum of per-position todays_move. Positions where the
+  // backend prev-close snapshot is missing fall back to cumulative-since-entry
+  // (signal_tracker._compute_todays_spread_move), so this can read high on a
+  // mixed-age book if any prev-close is stale. The per-row ⚠ marker flags it.
+  const todayContribs = positions
+    .map(p => p.todays_move)
+    .filter(v => v != null && Number.isFinite(v));
+  const totalToday = todayContribs.length === positions.length
+    ? todayContribs.reduce((s, v) => s + v, 0)
+    : null;
   const headerCls = totalPnl >= 0 ? 'text-green' : 'text-red';
+  const todayCls = totalToday == null ? 'text-muted'
+    : totalToday >= 0 ? 'text-green' : 'text-red';
+  const todayBlock = totalToday == null
+    ? `<span class="text-muted" style="font-size: 0.875rem;" title="Daily P&L unavailable for ≥1 position (prev-close snapshot missing).">Today: —</span>`
+    : `<span class="mono ${todayCls}" style="font-size: 1rem;" title="Sum of per-position 'Today' moves vs yesterday's close. Day-1 positions count move since entry.">Today: ${fmtPct(totalToday)}</span>`;
 
   container.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--spacing-md);">
       <h3 style="margin: 0;">Open Positions <span class="text-muted" style="font-size: 0.875rem;">(${positions.length})</span></h3>
-      <div class="mono ${headerCls}" style="font-size: 1rem;">Total P&L: ${fmtPct(totalPnl)}</div>
+      <div style="display: flex; gap: var(--spacing-md); align-items: baseline;">
+        ${todayBlock}
+        <span class="text-muted" style="font-size: 0.875rem;">·</span>
+        <div class="mono ${headerCls}" style="font-size: 1rem;" title="Cumulative P&L summed across all open positions since their respective entry dates. With trades opened on different days, prefer 'Today' for a same-period read.">Total P&L: ${fmtPct(totalPnl)}</div>
+      </div>
     </div>
     <table class="data-table">
       <thead><tr>
