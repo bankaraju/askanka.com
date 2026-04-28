@@ -10,13 +10,30 @@
 
 **Spec:** None — locked decisions are captured in this plan's preamble. Brainstorming happened in conversation 2026-04-28: laptop = thinking, Contabo = execution, auto-backup mandatory, security cadence mandatory, future GPU desktop will reconsider Contabo's role.
 
-**Hard prerequisites (already done):**
+**Hard prerequisites (already done as of 2026-04-28 probe):**
 - VPS hardened (root SSH disabled, ufw enabled, fail2ban running, IST timezone, 4 GB swap) per `memory/reference_contabo_vps.md`.
-- Repo cloned to Contabo, venv built, 30 deps installed per `memory/project_vps_phase1.md`.
-- Cohort B + Cohort F already on Contabo systemd per `memory/project_vps_phase2*.md`.
+- Repo cloned to Contabo at `/home/anka/askanka.com`, venv at `.venv/` with `uvicorn 0.46.0` + `fastapi 0.136.1` (installed 2026-04-28 alongside this plan).
+- 9+ anka-* systemd timers already running (autoresearch-mode2, daily-dump, ta-karpathy-predict, autoresearch-bhfdr, autoresearch-holdout, correlation-scan, morning-brief, earnings-calendar-fetch, gap-predictor) — Cohort C/D/E migration is more advanced than memory files suggested.
+- `pipeline/.env` has `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_CHANNEL_ID`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY` set.
+- Existing systemd units use `EnvironmentFile=/home/anka/askanka.com/pipeline/.env` — match that pattern.
+- ed25519 deploy keypair generated at `~/.ssh/anka_github_deploy{,.pub}` on VPS 2026-04-28.
 
-**Hard prerequisites (separate track, not blocked by this plan):**
-- Cohorts C/D/E migration to VPS systemd. That work proceeds independently.
+**Hard prerequisite (USER ACTION REQUIRED before Task A1):**
+- Add the public key (printed below) as a GitHub deploy key with WRITE access on the askanka.com repo. Once added, `ssh -i ~/.ssh/anka_github_deploy git@github.com` from the VPS returns the `Hi <user>! You've successfully authenticated` banner. Plan execution blocked on this step.
+
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIByVBwIq4oLCWY9Lv4D0DPu8ozi5VrAdULcLcaJ8qAOd anka-vps-auto-push@anka-vps
+```
+
+Steps:
+1. Open https://github.com/bankaraju/askanka.com/settings/keys/new in a browser.
+2. Title: `Contabo VPS auto-push`.
+3. Paste the public key above into the Key field.
+4. Tick **Allow write access**.
+5. Click **Add key**.
+
+**Hard prerequisite (separate track, not blocked by this plan):**
+- Cohorts C/D/E migration of remaining laptop scheduled tasks. Independent.
 
 **Forward-compatibility note:** Bharat may acquire a GPU desktop soon. Everything in this plan uses `$REPO_ROOT` and `$DATA_ROOT` env vars in systemd units instead of hardcoded `/home/anka/...` paths, so a future migration is `clone repo + copy /etc/systemd/system/anka-* + reboot`, not a rewrite.
 
@@ -371,13 +388,13 @@ WATCHLIST=(
     "anka-security-weekly.service"
 )
 
-source "$REPO/.env" 2>/dev/null || true   # picks up TELEGRAM_BOT_TOKEN, TELEGRAM_OPS_CHAT_ID
+source "$REPO/.env" 2>/dev/null || true   # picks up TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
 alert() {
     local msg="$1"
-    if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_OPS_CHAT_ID:-}" ]; then
+    if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CHAT_ID:-}" ]; then
         curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-            --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
             --data-urlencode "text=$msg" >/dev/null || echo "telegram post failed"
     else
         echo "[failure-watcher] no Telegram token — would alert: $msg"
@@ -410,7 +427,7 @@ sudo chown anka:anka /var/lib/anka/failure-flags
 - [ ] **Step 2: Verify .env on Contabo has Telegram credentials**
 
 ```bash
-grep -E '^TELEGRAM_(BOT_TOKEN|OPS_CHAT_ID)' /home/anka/askanka.com/.env
+grep -E '^TELEGRAM_(BOT_TOKEN|OPS_CHAT_ID)' /home/anka/askanka.com/pipeline/.env
 ```
 
 Expected: both vars set. If missing, copy them from the laptop `.env` (Bharat already uses Telegram for ops alerts elsewhere — same token).
@@ -521,7 +538,7 @@ Expected: dry-run reports what would be installed, no errors.
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 apt list --upgradable 2>/dev/null | tail -n +2 > /tmp/apt-upgradable.txt
 n_upgradable=$(wc -l < /tmp/apt-upgradable.txt)
@@ -533,7 +550,7 @@ last_run="$(stat -c %y /var/log/unattended-upgrades/unattended-upgrades.log 2>/d
 if [ "$n_upgradable" -gt 0 ] || [ "$sec_upgradable" -gt 0 ]; then
     msg="📦 Anka VPS apt: $n_upgradable upgradable ($sec_upgradable security). Last unattended run: $last_run"
     curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-        --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+        --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
         --data-urlencode "text=$msg" >/dev/null
 fi
 ```
@@ -565,7 +582,7 @@ git commit -m "feat(infra): Phase B — apt upgradable reporter"
 # Alert if the failed-SSH count is anomalous OR if a sudo command appears
 # from a user other than 'anka'.
 set -euo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 LOG=/var/log/auth.log
 [ -f "$LOG" ] || { echo "no /var/log/auth.log"; exit 0; }
@@ -607,7 +624,7 @@ $suspect_sudo
 "
     fi
     curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-        --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+        --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
         --data-urlencode "text=⚠️ $body" >/dev/null
 fi
 
@@ -657,7 +674,7 @@ ssh -i ~/.ssh/contabo_vmi3256563 anka@185.182.8.107 "sudo ss -tlnpH | awk '{prin
 #!/usr/bin/env bash
 # Compare current listening ports against baseline. Alert on diff.
 set -euo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 BASELINE=/home/anka/askanka.com/pipeline/config/security/baseline_listening_ports.txt
 [ -f "$BASELINE" ] || { echo "no baseline file"; exit 1; }
@@ -672,7 +689,7 @@ $diff_out
 
 Update baseline if intentional: pipeline/config/security/baseline_listening_ports.txt"
     curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-        --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+        --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
         --data-urlencode "text=$msg" >/dev/null
 fi
 
@@ -719,7 +736,7 @@ sha256sum /home/anka/.ssh/authorized_keys | awk '{print $1}' \
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 BASELINE_FILE=/home/anka/askanka.com/pipeline/config/security/authorized_keys.sha256
 KEYS_FILE=/home/anka/.ssh/authorized_keys
@@ -735,7 +752,7 @@ Got      $current
 Verify: cat $KEYS_FILE
 Update baseline if intentional: $BASELINE_FILE"
     curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-        --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+        --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
         --data-urlencode "text=$msg" >/dev/null
     exit 1
 fi
@@ -773,7 +790,7 @@ git commit -m "feat(infra): Phase B — SSH authorized_keys integrity check"
 #!/usr/bin/env bash
 # Disk and memory thresholds. Alert when crossed.
 set -euo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 DISK_PCT_THRESHOLD=85
 MEM_PCT_THRESHOLD=92
@@ -792,7 +809,7 @@ fi
 if [ "${#alerts[@]}" -gt 0 ]; then
     body="📈 Anka VPS resource pressure: ${alerts[*]}"
     curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-        --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+        --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
         --data-urlencode "text=$body" >/dev/null
 fi
 
@@ -830,7 +847,7 @@ sudo rkhunter --propupd
 #!/usr/bin/env bash
 # Weekly deep scan. Posts a one-line summary to Telegram; full reports kept on disk.
 set -euo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 OUT_DIR=/var/log/anka-security
 mkdir -p "$OUT_DIR"
@@ -854,7 +871,7 @@ msg="🧪 Anka VPS weekly audit ($ts):
   full: $lynis_log, $rkh_log"
 
 curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-    --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+    --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
     --data-urlencode "text=$msg" >/dev/null
 
 echo "$msg"
@@ -902,7 +919,7 @@ Goal: tie B1–B6 together under two systemd units — one daily, one weekly. Ea
 ```bash
 #!/usr/bin/env bash
 set -uo pipefail
-source /home/anka/askanka.com/.env 2>/dev/null || true
+source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
 
 S=/home/anka/askanka.com/pipeline/scripts/security
 errors=0
@@ -919,7 +936,7 @@ run resource_watch          "$S/resource_watch.sh"
 if [ "$errors" -eq 0 ]; then
     msg="✅ Anka VPS daily security check: all green ($(date '+%Y-%m-%d %H:%M IST'))"
     curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-        --data-urlencode "chat_id=${TELEGRAM_OPS_CHAT_ID}" \
+        --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
         --data-urlencode "text=$msg" >/dev/null || true
 fi
 exit "$errors"
@@ -1034,7 +1051,7 @@ Goal: the FastAPI terminal app currently lives on the laptop. With laptop crash 
 
 **Files:**
 - Create: `/etc/systemd/system/anka-terminal.service`
-- Modify: `/home/anka/askanka.com/.env` (add `ANKA_TERMINAL_PORT=8000`)
+- Modify: `/home/anka/askanka.com/pipeline/.env` (add `ANKA_TERMINAL_PORT=8000`)
 
 - [ ] **Step 1: Verify the venv on Contabo can start the terminal**
 
@@ -1074,7 +1091,7 @@ Type=simple
 User=anka
 Group=anka
 WorkingDirectory=/home/anka/askanka.com
-EnvironmentFile=/home/anka/askanka.com/.env
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
 ExecStart=/home/anka/askanka.com/.venv/bin/uvicorn pipeline.terminal.app:app --host 127.0.0.1 --port 8000
 Restart=on-failure
 RestartSec=10
@@ -1239,7 +1256,7 @@ Plan: `docs/superpowers/plans/2026-04-28-contabo-execution-foundation.md`.
 - Default new schedules to Contabo systemd, never Windows Task Scheduler.
 - New always-on services bind to 127.0.0.1 and rely on SSH tunnel for laptop access. Do not expose to 0.0.0.0 until TLS + auth wired.
 - Any new systemd unit MUST be added to anka_inventory.json (per CLAUDE.md doc-sync rule) AND to WATCHLIST in check_systemd_failures.sh.
-- Telegram alerts use TELEGRAM_BOT_TOKEN + TELEGRAM_OPS_CHAT_ID from /home/anka/askanka.com/.env.
+- Telegram alerts use TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID from /home/anka/askanka.com/pipeline/.env.
 - Auth-key changes, port-listen changes, and ssh authorized_keys changes all alert on diff vs baseline file in pipeline/config/security/. Update baseline only when change is intentional.
 - Weekly lynis hardening index is reported but not gated. If it drops below 70, plan a follow-up; do not auto-fix.
 
