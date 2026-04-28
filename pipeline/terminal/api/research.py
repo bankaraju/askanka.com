@@ -1,4 +1,5 @@
 """GET /api/research/digest — intelligence digest with grounding enforcement."""
+import csv
 import json
 import logging
 from datetime import datetime, timezone, timedelta
@@ -23,6 +24,14 @@ _FLOWS_DIR = _DATA / "flows"
 _REGIME_PROFILE = _HERE.parent / "autoresearch" / "reverse_regime_profile.json"
 _OPEN_SIGNALS = _DATA / "signals" / "open_signals.json"
 _OPTIONS_SHADOW = _DATA / "signals" / "synthetic_options_shadow.json"
+
+# Karpathy v1 holdout ledger (spec H-2026-04-29-ta-karpathy-v1)
+_KARP_DIR = _HERE.parent / "data" / "research" / "h_2026_04_29_ta_karpathy_v1"
+_KARP_LEDGER = _KARP_DIR / "recommendations.csv"
+_KARP_TEST_LEDGER = _KARP_DIR / "recommendations_test.csv"
+_KARP_PREDICTIONS = _KARP_DIR / "today_predictions.json"
+_KARP_HOLDOUT_START = "2026-04-29"
+_KARP_HOLDOUT_END = "2026-05-28"
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
@@ -395,4 +404,112 @@ def phase_c_options_shadow():
             "by_tier": by_tier_out,
             "by_expiry_day": by_expiry_day,
         },
+    }
+
+
+# ---------------------------------------------------------------------------
+# Karpathy v1 holdout endpoint (spec H-2026-04-29-ta-karpathy-v1)
+# ---------------------------------------------------------------------------
+
+def _read_karp_csv(path: Path) -> list[dict]:
+    if not path.is_file():
+        return []
+    try:
+        with path.open("r", encoding="utf-8", newline="") as f:
+            return list(csv.DictReader(f))
+    except OSError:
+        return []
+
+
+def _coerce_float(v):
+    if v in (None, ""):
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _project_karp_row(r: dict, *, is_test: bool) -> dict:
+    return {
+        "signal_id": r.get("signal_id", ""),
+        "ticker": r.get("ticker", ""),
+        "date": r.get("date", ""),
+        "direction": r.get("direction", ""),
+        "side": r.get("side", ""),
+        "regime": r.get("regime", ""),
+        "p_long": _coerce_float(r.get("p_long")),
+        "p_short": _coerce_float(r.get("p_short")),
+        "entry_time": r.get("entry_time", ""),
+        "entry_px": _coerce_float(r.get("entry_px")),
+        "atr_14": _coerce_float(r.get("atr_14")),
+        "stop_px": _coerce_float(r.get("stop_px")),
+        "exit_time": r.get("exit_time", ""),
+        "exit_px": _coerce_float(r.get("exit_px")),
+        "exit_reason": r.get("exit_reason", ""),
+        "pnl_pct": _coerce_float(r.get("pnl_pct")),
+        "status": r.get("status", ""),
+        "is_test": is_test,
+    }
+
+
+def _karp_summary(rows: list[dict]) -> dict:
+    closed = [r for r in rows if r["status"] == "CLOSED" and r["pnl_pct"] is not None]
+    n_closed = len(closed)
+    n_open = sum(1 for r in rows if r["status"] == "OPEN")
+    n_test = sum(1 for r in rows if r["is_test"])
+    if n_closed:
+        wins = sum(1 for r in closed if r["pnl_pct"] > 0)
+        avg = sum(r["pnl_pct"] for r in closed) / n_closed
+        win_rate = wins / n_closed * 100.0
+    else:
+        wins = 0
+        avg = None
+        win_rate = None
+    return {
+        "n_open": n_open,
+        "n_closed": n_closed,
+        "n_test": n_test,
+        "wins": wins,
+        "win_rate_pct": round(win_rate, 2) if win_rate is not None else None,
+        "avg_pnl_pct": round(avg, 4) if avg is not None else None,
+    }
+
+
+@router.get("/research/karpathy-v1")
+def karpathy_v1():
+    """Per-stock TA Lasso (top-10 NIFTY pilot) holdout ledger.
+
+    Spec: docs/superpowers/specs/2026-04-29-ta-karpathy-v1-design.md
+    Holdout: 2026-04-29 -> 2026-05-28 (single-touch).
+    """
+    real = [_project_karp_row(r, is_test=False)
+            for r in _read_karp_csv(_KARP_LEDGER)]
+    test = [_project_karp_row(r, is_test=True)
+            for r in _read_karp_csv(_KARP_TEST_LEDGER)]
+
+    rows = real + test
+    rows.sort(key=lambda r: (r["date"] or "", r["ticker"] or "", r["direction"] or ""))
+
+    today_iso = datetime.now(IST).date().isoformat()
+    in_holdout = _KARP_HOLDOUT_START <= today_iso <= _KARP_HOLDOUT_END
+
+    n_predictions = None
+    if _KARP_PREDICTIONS.is_file():
+        try:
+            doc = json.loads(_KARP_PREDICTIONS.read_text(encoding="utf-8"))
+            preds = doc.get("predictions", []) or []
+            n_predictions = len(preds)
+        except (OSError, json.JSONDecodeError):
+            n_predictions = None
+
+    return {
+        "engine_label": "ta_karpathy_v1",
+        "spec_id": "H-2026-04-29-ta-karpathy-v1",
+        "holdout_window": [_KARP_HOLDOUT_START, _KARP_HOLDOUT_END],
+        "in_holdout": in_holdout,
+        "today_iso": today_iso,
+        "n_predictions": n_predictions,
+        "rows": rows,
+        "summary": _karp_summary(rows),
     }

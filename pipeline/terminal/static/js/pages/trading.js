@@ -4,6 +4,7 @@ import { get } from '../lib/api.js';
 import * as filterChips from '../components/filter-chips.js';
 import * as candidatesTable from '../components/candidates-table.js';
 import * as attractiveness from '../components/attractiveness-cell.js';
+import * as karpathyCard from '../components/karpathy-v1-card.js';
 
 let _allCandidates = [];
 
@@ -15,7 +16,13 @@ export async function render(container) {
     </div>
     <div id="trading-filters" style="margin-bottom: var(--spacing-md); display: flex; flex-wrap: wrap; gap: var(--spacing-sm);"></div>
     <div id="trading-count" class="text-muted" style="font-size: 0.75rem; margin-bottom: var(--spacing-sm);"></div>
-    <div id="trading-table"></div>`;
+    <div id="trading-table"></div>
+    <div id="karpathy-card" style="margin-top: var(--spacing-xl);"></div>`;
+
+  // Render Karpathy v1 card concurrently with main data load.
+  karpathyCard.render(document.getElementById('karpathy-card')).catch(err => {
+    console.warn('karpathy-v1 card failed:', err);
+  });
 
   await loadData();
 }

@@ -270,3 +270,98 @@ def test_stale_timestamp_detected(digest_files, tmp_path, monkeypatch):
     data = TestClient(app).get("/api/research/digest").json()
     assert data["generated_at"] == "2026-04-17T09:25:00+05:30"
     assert data["regime_thesis"]["zone"] == "NEUTRAL"
+
+
+# ---------------------------------------------------------------------------
+# /api/research/karpathy-v1 — H-2026-04-29-ta-karpathy-v1 holdout ledger
+# ---------------------------------------------------------------------------
+
+def _write_karp_csv(path, rows):
+    import csv as _csv
+    cols = [
+        "signal_id", "ticker", "date", "direction", "regime",
+        "p_long", "p_short", "side", "entry_time", "entry_px",
+        "atr_14", "stop_px", "exit_time", "exit_px", "exit_reason",
+        "pnl_pct", "status",
+    ]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        w = _csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in cols})
+
+
+def test_karpathy_v1_empty(tmp_path, monkeypatch):
+    """Endpoint returns empty rows + null aggregates when no ledger present."""
+    import pipeline.terminal.api.research as res_mod
+    monkeypatch.setattr(res_mod, "_KARP_LEDGER", tmp_path / "missing.csv")
+    monkeypatch.setattr(res_mod, "_KARP_TEST_LEDGER", tmp_path / "missing_test.csv")
+    monkeypatch.setattr(res_mod, "_KARP_PREDICTIONS", tmp_path / "missing_pred.json")
+
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/karpathy-v1").json()
+    assert data["engine_label"] == "ta_karpathy_v1"
+    assert data["spec_id"] == "H-2026-04-29-ta-karpathy-v1"
+    assert data["holdout_window"] == ["2026-04-29", "2026-05-28"]
+    assert data["rows"] == []
+    assert data["summary"]["n_open"] == 0
+    assert data["summary"]["n_closed"] == 0
+    assert data["summary"]["win_rate_pct"] is None
+    assert data["summary"]["avg_pnl_pct"] is None
+
+
+def test_karpathy_v1_real_and_test_rows(tmp_path, monkeypatch):
+    """Real + test rows merge; is_test flag propagates; summary aggregates correctly."""
+    import pipeline.terminal.api.research as res_mod
+
+    real_rows = [
+        {"signal_id": "KARP-2026-04-29-RELIANCE-LONG", "ticker": "RELIANCE",
+         "date": "2026-04-29", "direction": "long", "regime": "NEUTRAL",
+         "p_long": "0.6234", "p_short": "0.3766", "side": "LONG",
+         "entry_time": "2026-04-29T09:15:00+05:30", "entry_px": "1380.50",
+         "atr_14": "20.0", "stop_px": "1340.50",
+         "exit_time": "2026-04-29T15:25:00+05:30", "exit_px": "1395.00",
+         "exit_reason": "TIME_STOP", "pnl_pct": "1.0500", "status": "CLOSED"},
+        {"signal_id": "KARP-2026-04-30-INFY-LONG", "ticker": "INFY",
+         "date": "2026-04-30", "direction": "long", "regime": "NEUTRAL",
+         "p_long": "0.5500", "p_short": "0.4500", "side": "LONG",
+         "entry_time": "2026-04-30T09:15:00+05:30", "entry_px": "1100.00",
+         "atr_14": "12.0", "stop_px": "1076.00",
+         "exit_time": "", "exit_px": "", "exit_reason": "",
+         "pnl_pct": "", "status": "OPEN"},
+    ]
+    test_rows = [
+        {"signal_id": "TEST-2026-04-28-TCS-SHORT", "ticker": "TCS",
+         "date": "2026-04-28", "direction": "short", "regime": "NEUTRAL",
+         "p_long": "0.4000", "p_short": "0.6000", "side": "SHORT",
+         "entry_time": "2026-04-28T09:15:00+05:30", "entry_px": "2400.00",
+         "atr_14": "30.0", "stop_px": "2460.00",
+         "exit_time": "2026-04-28T15:25:00+05:30", "exit_px": "2380.00",
+         "exit_reason": "TIME_STOP", "pnl_pct": "0.8333", "status": "CLOSED"},
+    ]
+    real_path = tmp_path / "recommendations.csv"
+    test_path = tmp_path / "recommendations_test.csv"
+    _write_karp_csv(real_path, real_rows)
+    _write_karp_csv(test_path, test_rows)
+
+    monkeypatch.setattr(res_mod, "_KARP_LEDGER", real_path)
+    monkeypatch.setattr(res_mod, "_KARP_TEST_LEDGER", test_path)
+    monkeypatch.setattr(res_mod, "_KARP_PREDICTIONS", tmp_path / "missing_pred.json")
+
+    from pipeline.terminal.app import app
+    data = TestClient(app).get("/api/research/karpathy-v1").json()
+    assert len(data["rows"]) == 3
+    by_id = {r["signal_id"]: r for r in data["rows"]}
+    assert by_id["KARP-2026-04-29-RELIANCE-LONG"]["is_test"] is False
+    assert by_id["TEST-2026-04-28-TCS-SHORT"]["is_test"] is True
+    assert by_id["KARP-2026-04-29-RELIANCE-LONG"]["entry_px"] == 1380.50
+    assert by_id["KARP-2026-04-29-RELIANCE-LONG"]["pnl_pct"] == 1.05
+
+    s = data["summary"]
+    assert s["n_open"] == 1
+    assert s["n_closed"] == 2
+    assert s["n_test"] == 1
+    assert s["wins"] == 2  # RELIANCE +1.05, TCS +0.8333
+    assert s["win_rate_pct"] == 100.0
+    assert abs(s["avg_pnl_pct"] - (1.05 + 0.8333) / 2) < 1e-3
