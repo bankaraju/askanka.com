@@ -1,6 +1,150 @@
 import { get } from '../lib/api.js';
 
 let chartInstance = null;
+let _state = { engineFilter: null, trades: [], byEngine: [], curve: [] };
+
+const fmtPct = (n, signed = true) => {
+  const v = Number(n) || 0;
+  return (signed && v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+};
+const pnlClass = (n) => ((Number(n) || 0) >= 0 ? 'text-green' : 'text-red');
+
+function sparkline(values, color, w = 120, h = 28) {
+  if (!values || values.length < 2) return '';
+  const min = Math.min(...values, 0);
+  const max = Math.max(...values, 0);
+  const span = max - min || 1;
+  const stepX = w / (values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = (i * stepX).toFixed(1);
+    const y = (h - ((v - min) / span) * h).toFixed(1);
+    return `${x},${y}`;
+  }).join(' ');
+  const zeroY = (h - ((0 - min) / span) * h).toFixed(1);
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <line x1="0" y1="${zeroY}" x2="${w}" y2="${zeroY}" stroke="rgba(148,163,184,0.25)" stroke-dasharray="2 2"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.6"/>
+  </svg>`;
+}
+
+function engineCardHtml(b) {
+  const winColor = b.win_rate_pct >= 50 ? 'text-green' : 'text-amber';
+  const sumColor = pnlClass(b.sum_pnl_pct);
+  return `
+    <div class="engine-card" data-engine="${b.engine_key}" title="${b.description}">
+      <div class="engine-card__head">
+        <span class="engine-card__dot" style="background:${b.color}"></span>
+        <div class="engine-card__title">
+          <div class="engine-card__label">${b.label}</div>
+          <div class="engine-card__theme">${b.theme}</div>
+        </div>
+        <div class="engine-card__cum ${sumColor} mono">${fmtPct(b.sum_pnl_pct)}</div>
+      </div>
+      <div class="engine-card__spark">${sparkline(b.sparkline, b.color)}</div>
+      <div class="engine-card__stats">
+        <div><span class="engine-card__stat-label">Trades</span><span class="mono">${b.trades}</span></div>
+        <div><span class="engine-card__stat-label">Win rate</span><span class="${winColor} mono">${b.win_rate_pct.toFixed(1)}%</span></div>
+        <div><span class="engine-card__stat-label">Avg P&L</span><span class="${pnlClass(b.avg_pnl_pct)} mono">${fmtPct(b.avg_pnl_pct)}</span></div>
+        <div><span class="engine-card__stat-label">Best</span><span class="text-green mono">${fmtPct(b.best_trade_pct)}</span></div>
+      </div>
+    </div>`;
+}
+
+function metricsRowHtml(m, byEngine) {
+  if (!m) return '';
+  const bestEngine = byEngine.slice().sort((a, b) => b.sum_pnl_pct - a.sum_pnl_pct)[0];
+  const worstEngine = byEngine.slice().sort((a, b) => a.sum_pnl_pct - b.sum_pnl_pct)[0];
+  const cells = [
+    ['Profit Factor', m.profit_factor === null ? '--' : (m.profit_factor === Infinity ? '∞' : m.profit_factor.toFixed(2)), m.profit_factor > 1 ? 'text-green' : 'text-red'],
+    ['Expectancy', fmtPct(m.expectancy_pct), pnlClass(m.expectancy_pct)],
+    ['Avg Win', fmtPct(m.avg_win_pct), 'text-green'],
+    ['Avg Loss', fmtPct(m.avg_loss_pct), 'text-red'],
+    ['Best Trade', fmtPct(m.best_trade_pct), 'text-green'],
+    ['Worst Trade', fmtPct(m.worst_trade_pct), 'text-red'],
+    ['Best Day', fmtPct(m.best_day_pnl_pct), 'text-green'],
+    ['Worst Day', fmtPct(m.worst_day_pnl_pct), 'text-red'],
+    ['Avg Hold', `${m.avg_hold_days.toFixed(1)}d`, 'text-muted'],
+    ['Win Streak', `${m.win_streak}`, 'text-green'],
+    ['Loss Streak', `${m.loss_streak}`, 'text-red'],
+    ['Best Engine', bestEngine ? bestEngine.label.split('—')[0].trim() : '--', 'text-gold'],
+  ];
+  return `
+    <div class="metrics-row">
+      ${cells.map(([k, v, cls]) => `
+        <div class="metrics-cell">
+          <div class="metrics-cell__label">${k}</div>
+          <div class="metrics-cell__value mono ${cls}">${v}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function chipsHtml(byEngine) {
+  const all = `<span class="chip ${_state.engineFilter === null ? 'chip--active' : ''}" data-engine="">All (${_state.trades.length})</span>`;
+  const chips = byEngine.map(b => `
+    <span class="chip ${_state.engineFilter === b.engine_key ? 'chip--active' : ''}"
+          data-engine="${b.engine_key}"
+          style="border-color:${b.color}; ${_state.engineFilter === b.engine_key ? `background:${b.color}1f; color:${b.color}` : ''}">
+      <span class="chip__dot" style="background:${b.color}"></span>${b.label.split('—')[0].trim()} (${b.trades})
+    </span>`).join('');
+  return `<div class="chip-row">${all}${chips}</div>`;
+}
+
+function tradesTableHtml(trades) {
+  const rows = trades.map(t => {
+    const pnl = t.final_pnl_pct || 0;
+    const reasonMap = {
+      'target_hit': '<span class="badge badge--green">TARGET</span>',
+      'stopped': '<span class="badge badge--red">STOPPED</span>',
+      'stopped_out': '<span class="badge badge--red">STOPPED</span>',
+      'stopped_out_zcross': '<span class="badge badge--amber">Z-CROSS</span>',
+      'stopped_out_time': '<span class="badge badge--muted">TIME</span>',
+      'stopped_out_trail': '<span class="badge badge--amber">TRAIL</span>',
+      'trailing_stop': '<span class="badge badge--amber">TRAIL</span>',
+      'expired': '<span class="badge badge--muted">EXPIRED</span>',
+    };
+    const reasonKey = (t.close_reason || '').split(':')[0].trim().toLowerCase().replace(/\s/g, '_');
+    const reasonBadge = reasonMap[reasonKey] || `<span class="badge badge--muted" title="${(t.close_reason || '').replace(/"/g, '&quot;')}">${(t.close_reason || '--').split(':')[0].slice(0, 14)}</span>`;
+    return `<tr>
+      <td><span class="engine-tag" style="background:${t.engine_color}1f;color:${t.engine_color};border:1px solid ${t.engine_color}40">${(t.engine_label || '').split('—')[0].trim()}</span></td>
+      <td style="font-family: var(--font-body);">${t.spread_name || t.signal_id || '--'}</td>
+      <td class="mono text-muted">${t.open_date || '--'}</td>
+      <td class="mono text-muted">${t.close_date || '--'}</td>
+      <td class="mono">${t.days_open == null ? '--' : t.days_open}d</td>
+      <td class="${pnlClass(pnl)} mono">${pnl >= 0 ? '▲' : '▼'} ${pnl.toFixed(2)}%</td>
+      <td class="mono text-muted">${(t.peak_pnl_pct || 0).toFixed(2)}%</td>
+      <td>${reasonBadge}</td>
+    </tr>`;
+  }).join('');
+  return `
+    <table class="data-table">
+      <thead><tr>
+        <th>Engine</th><th>Trade</th><th>Open</th><th>Close</th><th>Days</th><th>P&L</th><th>Peak</th><th>Exit</th>
+      </tr></thead>
+      <tbody>${rows || '<tr><td colspan="8" class="text-muted">No trades match this filter</td></tr>'}</tbody>
+    </table>`;
+}
+
+function rerenderTrades() {
+  const tableEl = document.getElementById('trades-table');
+  const chipsEl = document.getElementById('engine-chips');
+  if (!tableEl || !chipsEl) return;
+  const filtered = _state.engineFilter
+    ? _state.trades.filter(t => t.engine_key === _state.engineFilter)
+    : _state.trades;
+  chipsEl.innerHTML = chipsHtml(_state.byEngine);
+  tableEl.innerHTML = tradesTableHtml(filtered);
+  attachChipHandlers();
+}
+
+function attachChipHandlers() {
+  document.querySelectorAll('#engine-chips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const k = chip.dataset.engine || null;
+      _state.engineFilter = (_state.engineFilter === k || k === '') ? null : k;
+      rerenderTrades();
+    });
+  });
+}
 
 export async function render(container) {
   container.innerHTML = '<div class="skeleton skeleton--card"></div>';
@@ -12,124 +156,91 @@ export async function render(container) {
     ]);
 
     const trades = trData.trades || [];
+    const byEngine = trData.by_engine || [];
+    const m = trData.metrics || {};
+    _state = { engineFilter: null, trades, byEngine, curve: curveData.curve || [] };
+
+    const cumReturn = trData.cum_pnl_pct ?? curveData.total_return ?? 0;
+    const cumColor = cumReturn >= 0 ? 'text-green' : 'text-red';
+    const sharpeColor = m.sharpe == null ? 'text-muted' : (m.sharpe > 1.5 ? 'text-green' : m.sharpe > 1.0 ? 'text-gold' : 'text-red');
     const wins = trades.filter(t => (t.final_pnl_pct || 0) > 0).length;
-    const losses = trades.length - wins;
-
-    // Calculate Sharpe (simplified)
-    const returns = trades.map(t => t.final_pnl_pct || 0);
-    const mean = returns.length ? returns.reduce((a, b) => a + b, 0) / returns.length : 0;
-    const std = returns.length > 1
-      ? Math.sqrt(returns.reduce((s, r) => s + (r - mean) ** 2, 0) / (returns.length - 1))
-      : 1;
-    const sharpe = std > 0 ? (mean / std * Math.sqrt(252)).toFixed(2) : '--';
-
-    // Max drawdown
-    let peak = 0, maxDD = 0;
-    let cumul = 0;
-    for (const t of trades.sort((a, b) => (a.close_date || '').localeCompare(b.close_date || ''))) {
-      cumul += t.final_pnl_pct || 0;
-      if (cumul > peak) peak = cumul;
-      const dd = peak - cumul;
-      if (dd > maxDD) maxDD = dd;
-    }
-
-    const sharpeColor = parseFloat(sharpe) > 1.5 ? 'text-green' : parseFloat(sharpe) > 1.0 ? 'text-gold' : 'text-red';
 
     container.innerHTML = `
-      <div class="kpi-grid" style="margin-bottom: var(--spacing-lg);">
+      <div class="kpi-grid kpi-grid--5" style="margin-bottom: var(--spacing-lg);">
         <div class="kpi-card">
-          <div class="kpi-card__label">Cumulative Return</div>
-          <div class="kpi-card__value ${(curveData.total_return || 0) >= 0 ? 'text-green' : 'text-red'} mono">
-            ${(curveData.total_return || 0) >= 0 ? '+' : ''}${(curveData.total_return || 0).toFixed(2)}%
-          </div>
+          <div class="kpi-card__label">Cumulative P&L</div>
+          <div class="kpi-card__value ${cumColor} mono">${fmtPct(cumReturn)}</div>
           <div class="kpi-card__sub">${trData.total_closed || 0} trades closed</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-card__label">Win Rate</div>
           <div class="kpi-card__value mono">${(trData.win_rate_pct || 0).toFixed(1)}%</div>
-          <div class="kpi-card__sub">${wins}W / ${losses}L</div>
+          <div class="kpi-card__sub">${wins}W / ${trades.length - wins}L</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-card__label">Sharpe Ratio</div>
-          <div class="kpi-card__value ${sharpeColor} mono">${sharpe}</div>
-          <div class="kpi-card__sub">Annualized</div>
+          <div class="kpi-card__label">Sharpe</div>
+          <div class="kpi-card__value ${sharpeColor} mono">${m.sharpe == null ? '--' : m.sharpe.toFixed(2)}</div>
+          <div class="kpi-card__sub">Trade-level, annualised</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-card__label">Max Drawdown</div>
-          <div class="kpi-card__value text-red mono">-${maxDD.toFixed(2)}%</div>
+          <div class="kpi-card__value text-red mono">-${(m.max_drawdown_pct || 0).toFixed(2)}%</div>
           <div class="kpi-card__sub">Peak to trough</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__label">Avg P&L / Trade</div>
+          <div class="kpi-card__value ${pnlClass(trData.avg_pnl_pct)} mono">${fmtPct(trData.avg_pnl_pct)}</div>
+          <div class="kpi-card__sub">Expectancy per signal</div>
         </div>
       </div>
 
-      <div id="equity-curve" style="height: 300px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: var(--spacing-lg);"></div>
+      <h3 class="section-heading">Trade Engines
+        <span class="section-heading__sub">— each engine has its own thesis and risk profile</span>
+      </h3>
+      <div class="engine-grid">${byEngine.map(engineCardHtml).join('')}</div>
 
-      <h3 style="margin-bottom: var(--spacing-md);">Closed Trades</h3>
+      <h3 class="section-heading" style="margin-top: var(--spacing-lg);">Portfolio Metrics</h3>
+      ${metricsRowHtml(m, byEngine)}
+
+      <h3 class="section-heading" style="margin-top: var(--spacing-lg);">Equity Curve</h3>
+      <div id="equity-curve" style="height: 280px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: var(--spacing-lg);"></div>
+
+      <h3 class="section-heading">Closed Trades <span class="section-heading__sub">— click an engine chip to filter</span></h3>
+      <div id="engine-chips"></div>
       <div id="trades-table"></div>`;
 
-    // Equity curve chart
+    // Equity curve.
     const curveEl = document.getElementById('equity-curve');
     if (curveEl && window.LightweightCharts && curveData.curve && curveData.curve.length > 0) {
       chartInstance = LightweightCharts.createChart(curveEl, {
         width: curveEl.clientWidth,
-        height: 300,
+        height: 280,
         layout: { background: { color: '#111827' }, textColor: '#94a3b8' },
         grid: { vertLines: { color: '#1e293b' }, horzLines: { color: '#1e293b' } },
         rightPriceScale: { borderColor: '#1e293b' },
         timeScale: { borderColor: '#1e293b' },
       });
-
       const areaSeries = chartInstance.addAreaSeries({
         topColor: 'rgba(16, 185, 129, 0.4)',
         bottomColor: 'rgba(16, 185, 129, 0.0)',
         lineColor: '#10b981',
         lineWidth: 2,
       });
-
       areaSeries.setData(curveData.curve.filter(c => c.time));
       chartInstance.timeScale().fitContent();
     } else if (curveEl) {
       curveEl.innerHTML = '<div class="empty-state" style="height: 100%;"><p>Not enough data for equity curve</p></div>';
     }
 
-    // Trades table
-    const tableEl = document.getElementById('trades-table');
-    if (tableEl) {
-      const sorted = [...trades].sort((a, b) => (b.close_date || '').localeCompare(a.close_date || ''));
-      const rows = sorted.map(t => {
-        const pnl = t.final_pnl_pct || 0;
-        const pnlClass = pnl >= 0 ? 'text-green' : 'text-red';
-        const pnlIcon = pnl >= 0 ? '&#9650;' : '&#9660;';
-        const reasonMap = {
-          'target_hit': '<span class="badge badge--green">TARGET</span>',
-          'stopped': '<span class="badge badge--red">STOPPED</span>',
-          'trailing_stop': '<span class="badge badge--amber">TRAILING</span>',
-          'expired': '<span class="badge badge--muted">EXPIRED</span>',
-        };
-        const reason = reasonMap[(t.close_reason || '').toLowerCase()] || `<span class="badge badge--muted">${t.close_reason || '--'}</span>`;
-
-        return `<tr>
-          <td style="font-family: var(--font-body);">${t.spread_name || t.signal_id || '--'}</td>
-          <td class="mono">${t.open_date || '--'}</td>
-          <td class="mono">${t.close_date || '--'}</td>
-          <td class="mono">${t.days_open == null ? '--' : t.days_open}d</td>
-          <td class="${pnlClass} mono">${pnlIcon} ${pnl.toFixed(2)}%</td>
-          <td class="mono text-muted">${(t.peak_pnl_pct || 0).toFixed(2)}%</td>
-          <td>${reason}</td>
-        </tr>`;
-      }).join('');
-
-      tableEl.innerHTML = `
-        <table class="data-table">
-          <thead><tr><th>Trade</th><th>Open</th><th>Close</th><th>Days</th><th>P&L</th><th>Peak</th><th>Exit</th></tr></thead>
-          <tbody>${rows || '<tr><td colspan="7" class="text-muted">No closed trades yet</td></tr>'}</tbody>
-        </table>`;
-    }
+    rerenderTrades();
 
   } catch (err) {
+    console.error('track-record render error:', err);
     container.innerHTML = '<div class="empty-state"><p>Failed to load track record</p></div>';
   }
 }
 
 export function destroy() {
   if (chartInstance) { chartInstance.remove(); chartInstance = null; }
+  _state = { engineFilter: null, trades: [], byEngine: [], curve: [] };
 }

@@ -455,12 +455,278 @@ def _derive_close_reason(sig: dict) -> str:
     return status or "Closed"
 
 
+# Engine taxonomy — maps closed-signal sources to user-facing engine families.
+# Each engine has a stable key (used by the UI for filtering + colour),
+# a display label, a short theme tag (the trade thesis in 4-6 words), and
+# a longer description that surfaces on hover so a layperson understands
+# what the engine actually does.
+_ENGINE_META = {
+    "phase_c": {
+        "key": "phase_c",
+        "label": "Phase C — Z-Break",
+        "theme": "Catch the laggard",
+        "description": "Intraday correlation breaks. When a stock diverges >2σ from its sector peer it's traded back toward fair value (LAG continuation, OVERSHOOT fade). Mechanical 14:30 IST close.",
+        "cadence": "intraday",
+        "color": "#10b981",  # emerald
+    },
+    "spread_hormuz": {
+        "key": "spread_hormuz",
+        "label": "Sovereign Shield Alpha",
+        "theme": "Defence > IT — geopolitics",
+        "description": "Long Defence basket / Short IT services basket — fired by Strait of Hormuz / Israel–Iran headlines. Multi-day hold with trailing stop.",
+        "cadence": "multi-day",
+        "color": "#f59e0b",  # amber
+    },
+    "spread_sanctions": {
+        "key": "spread_sanctions",
+        "label": "Energy Chain Divergence",
+        "theme": "Upstream > Downstream — sanctions",
+        "description": "Long Upstream oil & gas / Short Downstream refiners — fired by sanctions / supply-side oil headlines. Multi-day hold.",
+        "cadence": "multi-day",
+        "color": "#ef4444",  # red
+    },
+    "spread_commodity": {
+        "key": "spread_commodity",
+        "label": "Fossil Arbitrage",
+        "theme": "Coal/OMC chain — commodities",
+        "description": "Pair trades along the fossil-fuel chain (Coal vs OMCs, Reliance vs OMCs) when commodity-price regimes shift.",
+        "cadence": "multi-day",
+        "color": "#8b5cf6",  # violet
+    },
+    "spread_other": {
+        "key": "spread_other",
+        "label": "Other Spreads",
+        "theme": "Cross-sector arb",
+        "description": "Other regime-gated cross-sector spread baskets (PSU Banks vs Private, IT vs Banks, etc.).",
+        "cadence": "multi-day",
+        "color": "#0ea5e9",  # sky
+    },
+    "sigma_break": {
+        "key": "sigma_break",
+        "label": "H-001 Sigma Break",
+        "theme": "Mechanical mean-reversion",
+        "description": "Pre-registered |z|≥2.0 mechanical break fade — single-touch holdout 2026-04-27 → 2026-05-26. Fade direction, ATR(14)×2 stop, 14:30 TIME_STOP.",
+        "cadence": "intraday",
+        "color": "#06b6d4",  # cyan
+    },
+    "secrsi": {
+        "key": "secrsi",
+        "label": "SECRSI Pair",
+        "theme": "Sector RS pair, market-neutral",
+        "description": "11:00 IST sector snapshot → long top-2 stocks of top-2 sectors / short bottom-2 of bottom-2 (8 legs). Holdout 2026-04-28 → 2026-07-31.",
+        "cadence": "intraday",
+        "color": "#14b8a6",  # teal
+    },
+    "ta_karpathy": {
+        "key": "ta_karpathy",
+        "label": "TA-Karpathy Lasso",
+        "theme": "Per-stock TA, 09:15→15:25",
+        "description": "Per-stock daily TA Lasso (top-10 NIFTY pilot). Frozen models, 5-gate qualifier. Holdout 2026-04-29 → 2026-05-28.",
+        "cadence": "intraday",
+        "color": "#a855f7",  # purple
+    },
+    "pattern_scanner": {
+        "key": "pattern_scanner",
+        "label": "Pattern Scanner",
+        "theme": "Daily TA patterns, Top-10",
+        "description": "Daily F&O 12-pattern scan. Top-10 patterns fire paired (futures + ATM options) shadow trades, mechanical 15:30 close.",
+        "cadence": "intraday",
+        "color": "#ec4899",  # pink
+    },
+    "other": {
+        "key": "other",
+        "label": "Other",
+        "theme": "Uncategorised",
+        "description": "Trades that pre-date the engine taxonomy.",
+        "cadence": "—",
+        "color": "#94a3b8",  # slate
+    },
+}
+
+
+def _classify_engine(sig: dict) -> str:
+    """Map a closed signal to its engine family key (see _ENGINE_META)."""
+    sid = (sig.get("signal_id") or "").upper()
+    cat = (sig.get("category") or "").lower()
+    name = (sig.get("spread_name") or "")
+
+    # Hypothesis-test ledgers (only present when those engines write into closed_signals.json).
+    if sid.startswith("H-2026-04-26") or sid.startswith("H-2026-04-26-001") or sid.startswith("H-2026-04-26-002"):
+        return "sigma_break"
+    if sid.startswith("H-2026-04-27-003") or "SECRSI" in sid:
+        return "secrsi"
+    if sid.startswith("H-2026-04-29") or "KARPATHY" in sid:
+        return "ta_karpathy"
+    if sid.startswith("SCN-") or "PATTERN" in sid:
+        return "pattern_scanner"
+
+    # Phase C — single-ticker correlation breaks.
+    if sid.startswith("BRK-") or cat == "phase_c":
+        return "phase_c"
+
+    # Spread baskets — bucket by category, fall back to spread_name keyword match.
+    if cat == "hormuz" or "Defence vs IT" in name:
+        return "spread_hormuz"
+    if cat == "sanctions" or "Upstream" in name:
+        return "spread_sanctions"
+    if cat in ("oil_positive", "oil_negative") or "Coal" in name or "Reliance vs OMCs" in name:
+        return "spread_commodity"
+    if sid.startswith("SIG-"):
+        return "spread_other"
+
+    return "other"
+
+
+def _compute_metrics(rows: list) -> dict:
+    """Extended portfolio metrics across the full closed-trade list.
+
+    rows is the list of dicts emitted by export_track_record (already
+    has final_pnl_pct, days_open, close_date, etc.).
+    """
+    import math
+
+    if not rows:
+        return {
+            "sharpe": None, "max_drawdown_pct": 0.0,
+            "profit_factor": None, "expectancy_pct": 0.0,
+            "avg_win_pct": 0.0, "avg_loss_pct": 0.0,
+            "best_trade_pct": 0.0, "worst_trade_pct": 0.0,
+            "best_day_pnl_pct": 0.0, "worst_day_pnl_pct": 0.0,
+            "avg_hold_days": 0.0, "win_streak": 0, "loss_streak": 0,
+            "best_engine": None, "worst_engine": None,
+            "daily_pnl": [],
+        }
+
+    pnls = [r.get("final_pnl_pct", 0) or 0 for r in rows]
+    wins = [p for p in pnls if p > 0]
+    losses = [p for p in pnls if p <= 0]
+
+    # Annualised Sharpe — sample stdev across closed trades, scale by sqrt(252).
+    n = len(pnls)
+    mean = sum(pnls) / n
+    var = sum((p - mean) ** 2 for p in pnls) / max(n - 1, 1)
+    std = math.sqrt(var)
+    sharpe = (mean / std * math.sqrt(252)) if std > 0 else None
+
+    # Max drawdown over close-date-ordered cumulative curve.
+    chrono = sorted(rows, key=lambda r: r.get("close_date", ""))
+    peak = 0.0
+    cum = 0.0
+    max_dd = 0.0
+    for r in chrono:
+        cum += r.get("final_pnl_pct", 0) or 0
+        if cum > peak:
+            peak = cum
+        dd = peak - cum
+        if dd > max_dd:
+            max_dd = dd
+
+    # Profit factor = sum(wins) / |sum(losses)|.
+    sum_wins = sum(wins)
+    sum_losses = abs(sum(losses))
+    profit_factor = (sum_wins / sum_losses) if sum_losses > 0 else (float("inf") if sum_wins > 0 else None)
+
+    # Daily P&L — sum trades closed on each calendar day.
+    by_day: dict = {}
+    for r in rows:
+        d = r.get("close_date") or ""
+        if not d:
+            continue
+        by_day[d] = by_day.get(d, 0.0) + (r.get("final_pnl_pct", 0) or 0)
+    daily_pnl = [{"date": d, "pnl_pct": round(v, 2)} for d, v in sorted(by_day.items())]
+
+    # Streaks (longest consecutive win / loss in chronological order).
+    win_streak = loss_streak = 0
+    cur_w = cur_l = 0
+    for r in chrono:
+        p = r.get("final_pnl_pct", 0) or 0
+        if p > 0:
+            cur_w += 1; cur_l = 0
+        else:
+            cur_l += 1; cur_w = 0
+        win_streak = max(win_streak, cur_w)
+        loss_streak = max(loss_streak, cur_l)
+
+    return {
+        "sharpe": round(sharpe, 2) if sharpe is not None else None,
+        "max_drawdown_pct": round(max_dd, 2),
+        "profit_factor": round(profit_factor, 2) if profit_factor not in (None, float("inf")) else profit_factor,
+        "expectancy_pct": round(mean, 2),
+        "avg_win_pct": round(sum_wins / len(wins), 2) if wins else 0.0,
+        "avg_loss_pct": round(sum(losses) / len(losses), 2) if losses else 0.0,
+        "best_trade_pct": round(max(pnls), 2),
+        "worst_trade_pct": round(min(pnls), 2),
+        "best_day_pnl_pct": round(max((d["pnl_pct"] for d in daily_pnl), default=0.0), 2),
+        "worst_day_pnl_pct": round(min((d["pnl_pct"] for d in daily_pnl), default=0.0), 2),
+        "avg_hold_days": round(sum(r.get("days_open", 0) or 0 for r in rows) / n, 1),
+        "win_streak": win_streak,
+        "loss_streak": loss_streak,
+        "daily_pnl": daily_pnl,
+    }
+
+
+def _build_engine_buckets(rows: list) -> list:
+    """Aggregate closed trades into per-engine buckets with stats + sparkline."""
+    buckets: dict = {}
+    for r in rows:
+        ek = r.get("engine_key") or "other"
+        buckets.setdefault(ek, []).append(r)
+
+    out = []
+    for ek, items in buckets.items():
+        meta = _ENGINE_META.get(ek, _ENGINE_META["other"])
+        pnls = [it.get("final_pnl_pct", 0) or 0 for it in items]
+        wins = sum(1 for p in pnls if p > 0)
+        n = len(pnls)
+        sum_pnl = sum(pnls)
+        # Sparkline = chronological cumulative P&L (8-12 points).
+        chrono = sorted(items, key=lambda r: r.get("close_date", ""))
+        cum = 0.0
+        spark = []
+        for it in chrono:
+            cum += it.get("final_pnl_pct", 0) or 0
+            spark.append(round(cum, 2))
+        out.append({
+            "engine_key": ek,
+            "label": meta["label"],
+            "theme": meta["theme"],
+            "description": meta["description"],
+            "cadence": meta["cadence"],
+            "color": meta["color"],
+            "trades": n,
+            "wins": wins,
+            "losses": n - wins,
+            "win_rate_pct": round(wins / n * 100, 1) if n else 0,
+            "avg_pnl_pct": round(sum_pnl / n, 2) if n else 0,
+            "sum_pnl_pct": round(sum_pnl, 2),
+            "best_trade_pct": round(max(pnls), 2) if pnls else 0,
+            "worst_trade_pct": round(min(pnls), 2) if pnls else 0,
+            "sparkline": spark,
+        })
+    # Order: most-active engine first.
+    out.sort(key=lambda b: (-b["trades"], -b["sum_pnl_pct"]))
+    return out
+
+
 def export_track_record(limit: int = 20) -> dict:
-    """Export the most recent N closed signals for the Track Record section."""
+    """Export closed-signal track record with engine taxonomy + extended metrics.
+
+    Returns:
+        - total_closed / win_rate_pct / avg_pnl_pct — top-line KPIs.
+        - metrics — extended portfolio metrics (sharpe, max_dd, profit_factor,
+          expectancy, avg_win/loss, best/worst trade, best/worst day, streaks,
+          daily_pnl[]).
+        - by_engine — per-engine buckets (Phase C, spreads, hypothesis tests, …)
+          with theme + colour + sparkline + per-engine stats.
+        - trades — ALL closed trades, most-recent-first, enriched with engine_key.
+        - recent — back-compat: most recent N (limit) for older callers.
+    """
     closed_raw = _load_json(CLOSED_FILE) or []
     rows = []
     for sig in closed_raw:
         fp = sig.get("final_pnl", {}) or {}
+        engine_key = _classify_engine(sig)
+        meta = _ENGINE_META.get(engine_key, _ENGINE_META["other"])
         rows.append({
             "signal_id": sig.get("signal_id", ""),
             "spread_name": _cryptic_name(sig.get("spread_name", "")),
@@ -473,28 +739,34 @@ def export_track_record(limit: int = 20) -> dict:
             "peak_pnl_pct": sig.get("peak_spread_pnl_pct", 0) or 0,
             "final_pnl_pct": fp.get("spread_pnl_pct", 0) or 0,
             "close_reason": _derive_close_reason(sig),
+            "engine_key": engine_key,
+            "engine_label": meta["label"],
+            "engine_color": meta["color"],
         })
-    # Most recent first by close_date desc
+    # Most recent first by close_date desc.
     rows.sort(key=lambda r: r["close_date"], reverse=True)
-    rows = rows[:limit]
 
-    # Aggregate stats over all closed (not just the shown N)
-    all_final = [
-        (s.get("final_pnl") or {}).get("spread_pnl_pct", 0) or 0
-        for s in closed_raw
-    ]
+    # Aggregate stats over all closed (not just the shown N).
+    all_final = [r["final_pnl_pct"] for r in rows]
     wins = sum(1 for p in all_final if p > 0)
-    losses = sum(1 for p in all_final if p <= 0)
     total = len(all_final)
     win_rate = (wins / total * 100) if total else 0
     avg_pnl = (sum(all_final) / total) if total else 0
+    sum_pnl = sum(all_final) if total else 0
+
+    metrics = _compute_metrics(rows)
+    by_engine = _build_engine_buckets(rows)
 
     return {
         "updated_at": datetime.now(IST).isoformat(),
         "total_closed": total,
         "win_rate_pct": round(win_rate, 1),
         "avg_pnl_pct": round(avg_pnl, 2),
-        "recent": rows,
+        "cum_pnl_pct": round(sum_pnl, 2),
+        "metrics": metrics,
+        "by_engine": by_engine,
+        "trades": rows,
+        "recent": rows[:limit],
     }
 
 

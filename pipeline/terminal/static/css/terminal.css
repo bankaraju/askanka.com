@@ -1040,3 +1040,182 @@ h3 { font-size: 1.125rem; }
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: var(--accent-red);
 }
+
+/* ── Track Record Dashboard ─────────────────────────────────────── */
+
+/* 5-up KPI grid for the hero strip on Track Record. */
+.kpi-grid--5 {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.section-heading {
+  font-family: var(--font-display, var(--font-body));
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+.section-heading__sub {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: var(--spacing-xs);
+}
+
+/* Engine cards — one per trade-engine family. */
+.engine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.engine-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  cursor: default;
+}
+.engine-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.engine-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.engine-card__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+.engine-card__title { flex: 1; min-width: 0; }
+.engine-card__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.engine-card__theme {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.engine-card__cum {
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.engine-card__spark {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 28px;
+}
+.engine-card__spark .spark { display: block; }
+
+.engine-card__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px var(--spacing-sm);
+  font-size: 0.8125rem;
+}
+.engine-card__stats > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.engine-card__stats > div:nth-last-child(-n+2) { border-bottom: none; }
+.engine-card__stat-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* Extended-metrics row — 4 to 6 across, depending on width. */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+.metrics-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-right: 1px solid var(--border);
+}
+.metrics-cell:last-child { border-right: none; }
+.metrics-cell__label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.metrics-cell__value {
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Filter chips for the trades table. */
+.chip-row {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-sm);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+.chip:hover { color: var(--text-primary); }
+.chip--active {
+  color: var(--text-primary);
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--accent-gold);
+}
+.chip__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Per-trade engine pill in the trades table. */
+.engine-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
