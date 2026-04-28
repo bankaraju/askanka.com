@@ -33,40 +33,63 @@
       </div>
       <div class="sidebar__nav">
         <button class="sidebar__item sidebar__item--active" data-tab="dashboard" aria-label="Dashboard">
-          <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+          <i data-lucide="layout-dashboard"></i><span class="sidebar__label">Dashboard</span>
+          <span class="sidebar__badge" data-badge-for="dashboard"></span>
+          <span class="sidebar__dot" data-dot-for="dashboard" aria-hidden="true"></span>
         </button>
+        <!-- Trading tab hidden 2026-04-27: mixed-meaning evidence buffet, no actions taken from it, no outcomes. Code retained at pages/trading.js + components/candidates-table.js — re-enable by uncommenting this block. -->
+        <!--
         <button class="sidebar__item" data-tab="trading" aria-label="Trading">
           <i data-lucide="trending-up"></i><span>Trading</span>
         </button>
+        -->
         <button class="sidebar__item" data-tab="live-monitor" aria-label="Live Monitor">
-          <i data-lucide="radio"></i><span>Live</span>
+          <i data-lucide="radio"></i><span class="sidebar__label">Live</span>
+          <span class="sidebar__badge" data-badge-for="live-monitor"></span>
+          <span class="sidebar__dot" data-dot-for="live-monitor" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="regime" aria-label="Regime">
-          <i data-lucide="activity"></i><span>Regime</span>
+          <i data-lucide="activity"></i><span class="sidebar__label">Regime</span>
+          <span class="sidebar__badge" data-badge-for="regime"></span>
+          <span class="sidebar__dot" data-dot-for="regime" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="scanner" aria-label="Scanner">
-          <i data-lucide="radar"></i><span>Scanner</span>
+          <i data-lucide="radar"></i><span class="sidebar__label">Scanner</span>
+          <span class="sidebar__badge" data-badge-for="scanner"></span>
+          <span class="sidebar__dot" data-dot-for="scanner" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="trust" aria-label="Trust Scores">
-          <i data-lucide="shield-check"></i><span>Trust</span>
+          <i data-lucide="shield-check"></i><span class="sidebar__label">Trust</span>
+          <span class="sidebar__badge" data-badge-for="trust"></span>
+          <span class="sidebar__dot" data-dot-for="trust" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="news" aria-label="News">
-          <i data-lucide="newspaper"></i><span>News</span>
+          <i data-lucide="newspaper"></i><span class="sidebar__label">News</span>
+          <span class="sidebar__badge" data-badge-for="news"></span>
+          <span class="sidebar__dot" data-dot-for="news" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="options" aria-label="Options">
-          <i data-lucide="layers"></i><span>Options</span>
+          <i data-lucide="layers"></i><span class="sidebar__label">Options</span>
+          <span class="sidebar__badge" data-badge-for="options"></span>
+          <span class="sidebar__dot" data-dot-for="options" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="risk" aria-label="Risk">
-          <i data-lucide="shield-alert"></i><span>Risk</span>
+          <i data-lucide="shield-alert"></i><span class="sidebar__label">Risk</span>
+          <span class="sidebar__badge" data-badge-for="risk"></span>
+          <span class="sidebar__dot" data-dot-for="risk" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="research" aria-label="Research">
-          <i data-lucide="brain"></i><span>Research</span>
+          <i data-lucide="brain"></i><span class="sidebar__label">Research</span>
+          <span class="sidebar__badge" data-badge-for="research"></span>
+          <span class="sidebar__dot" data-dot-for="research" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="track-record" aria-label="Track Record">
-          <i data-lucide="bar-chart-2"></i><span>Track Record</span>
+          <i data-lucide="bar-chart-2"></i><span class="sidebar__label">Track Record</span>
+          <span class="sidebar__badge" data-badge-for="track-record"></span>
+          <span class="sidebar__dot" data-dot-for="track-record" aria-hidden="true"></span>
         </button>
         <button class="sidebar__item" data-tab="settings" aria-label="Settings">
-          <i data-lucide="settings"></i><span>Settings</span>
+          <i data-lucide="settings"></i><span class="sidebar__label">Settings</span>
         </button>
       </div>
     </nav>

@@ -13,6 +13,7 @@ import * as research from './pages/research.js';
 import * as trackRecord from './pages/track-record.js';
 import * as settings from './pages/settings.js';
 import * as tickerChartModal from './components/ticker-chart-modal.js';
+import * as sidebarStatus from './sidebar-status.js';
 
 const PAGES = {
   dashboard, trading, regime, scanner, trust, news, options, risk, research,
@@ -136,6 +137,7 @@ function init() {
   setInterval(checkHealth, 60000);
   initKeyboard();
   initTickerChartDelegate();
+  sidebarStatus.start();
   switchTab('dashboard');
 }
 
