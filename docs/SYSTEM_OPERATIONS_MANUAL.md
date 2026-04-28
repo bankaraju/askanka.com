@@ -438,6 +438,38 @@ The sequence inside `intraday_scan.bat` is: technicals → OI → news → fno_n
 - `data/open_signals.json` — currently active signals
 - `data/closed_signals.json` — signals that hit target/stop today
 
+**Stop hierarchy (B9 + B10, shipped 2026-04-22).** Every open position carries
+four candidate stops; only one fires per bar, in this priority order:
+
+1. **TARGET** — fixed take-profit (signal-specified or default 4.5%).
+2. **TRAIL** — peak-ratchet trail. Arms once unrealised return ≥
+   `TRAIL_ARM_PCT` (default 2.0%); thereafter the stop ratchets up to
+   `peak − TRAIL_GIVEBACK_PCT` (default 1.0%). Once `trail_armed=true`,
+   trail dominates `daily_stop` (B9) and the `daily_stop` field is hidden in
+   the UI to avoid contradictory signals.
+3. **DAILY_STOP** — ATR(14) × 2.0 per-ticker stop for directional single-leg
+   trades (Phase C breaks); the legacy −1.00% fallback was removed when
+   `pipeline/atr_stops.py` shipped 2026-04-22.
+4. **TIME_STOP** — mechanical close at the bar nearest the configured cutoff.
+   `TIME_STOP_HHMM` defaults to 14:30 IST for live shadow engines and
+   matches the global 14:30 IST new-signal cutoff (CLAUDE.md). Holdout paper
+   engines (H-001/SECRSI) and Karpathy v1 (15:25 IST) override this via
+   their own pre-registered windows.
+
+The hierarchy is enforced uniformly across `pipeline/signal_tracker.py`
+(live shadow), `pipeline/h_2026_04_26_001_paper.py` (H-001 paper engine),
+and the mechanical 60-day replay
+(`pipeline/autoresearch/mechanical_replay/simulator.py`).
+
+**News verdict export → website (A12, shipped 2026-04-22).**
+`website_exporter.export_fno_news()` derives `data/fno_news.json` from
+`pipeline/data/news_verdicts.json` on every export call (intraday +
+`AnkaEODNews` post-close). Only `HIGH_IMPACT` and `MODERATE` verdicts with
+`ADD`/`CUT` recommendations are emitted, sorted by impact tier then
+\|hit_rate\| descending. Empty days yield `[]`. The terminal News tab and
+the website news card share this same file. See backlog #37 for the
+upstream classifier fix that currently produces all-NO_IMPACT verdicts.
+
 ### Station 8: Post-Close Processing (15:30-16:45)
 
 **What it does:** End-of-day wrap-up.
