@@ -31,8 +31,9 @@ def objective(weights: np.ndarray, df: pd.DataFrame) -> float:
     score = feat @ weights  # per-row signal strength
     df = df.copy()
     df["score"] = score
-    # daily basket return = mean of next_return_pct of rows whose score > daily-90th-percentile
-    # (long-only proxy here — full direction handled at runner; objective stays simple)
+    # daily basket return = mean of next_return_pct of rows in the daily top-30%
+    # (score >= per-day 0.7 quantile). Long-only proxy — full direction handled
+    # at runner; objective stays simple.
     daily = []
     for date, group in df.groupby("date", sort=True):
         if group.empty:
@@ -80,6 +81,11 @@ def run(df: pd.DataFrame, seed: int = 42, n_iters: int = 2000) -> Dict:
     scores = feat @ best["weights"]
     long_thresh = float(np.quantile(scores, 0.7))
     short_thresh = float(np.quantile(scores, 0.3))
+    if long_thresh <= short_thresh:
+        raise ValueError(
+            "Degenerate thresholds: long_threshold <= short_threshold. "
+            "In-sample feature variance is near-zero — check loader output."
+        )
     return {
         "weights": best["weights"],
         "objective": best["objective"],
