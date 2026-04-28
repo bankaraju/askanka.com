@@ -28,8 +28,10 @@ function sparkline(values, color, w = 120, h = 28) {
 }
 
 function engineCardHtml(b) {
+  // Big number = average P&L per trade (the meaningful per-position return).
+  // Sum-of-trade-returns is shown small as a secondary "if 1 unit per trade" view.
   const winColor = b.win_rate_pct >= 50 ? 'text-green' : 'text-amber';
-  const sumColor = pnlClass(b.sum_pnl_pct);
+  const avgColor = pnlClass(b.avg_pnl_pct);
   return `
     <div class="engine-card" data-engine="${b.engine_key}" title="${b.description}">
       <div class="engine-card__head">
@@ -38,35 +40,40 @@ function engineCardHtml(b) {
           <div class="engine-card__label">${b.label}</div>
           <div class="engine-card__theme">${b.theme}</div>
         </div>
-        <div class="engine-card__cum ${sumColor} mono">${fmtPct(b.sum_pnl_pct)}</div>
+        <div class="engine-card__cum ${avgColor} mono">${fmtPct(b.avg_pnl_pct)}</div>
       </div>
       <div class="engine-card__spark">${sparkline(b.sparkline, b.color)}</div>
       <div class="engine-card__stats">
         <div><span class="engine-card__stat-label">Trades</span><span class="mono">${b.trades}</span></div>
         <div><span class="engine-card__stat-label">Win rate</span><span class="${winColor} mono">${b.win_rate_pct.toFixed(1)}%</span></div>
-        <div><span class="engine-card__stat-label">Avg P&L</span><span class="${pnlClass(b.avg_pnl_pct)} mono">${fmtPct(b.avg_pnl_pct)}</span></div>
         <div><span class="engine-card__stat-label">Best</span><span class="text-green mono">${fmtPct(b.best_trade_pct)}</span></div>
+        <div><span class="engine-card__stat-label">Worst</span><span class="text-red mono">${fmtPct(b.worst_trade_pct)}</span></div>
+      </div>
+      <div class="engine-card__footer">
+        <span class="engine-card__stat-label">Sum (1 unit/trade)</span>
+        <span class="${pnlClass(b.sum_pnl_pct)} mono">${fmtPct(b.sum_pnl_pct)}</span>
       </div>
     </div>`;
 }
 
 function metricsRowHtml(m, byEngine) {
   if (!m) return '';
-  const bestEngine = byEngine.slice().sort((a, b) => b.sum_pnl_pct - a.sum_pnl_pct)[0];
-  const worstEngine = byEngine.slice().sort((a, b) => a.sum_pnl_pct - b.sum_pnl_pct)[0];
+  // Best engine ranked by avg P&L per trade (not sum) — sum is biased by
+  // engine activity, average reflects actual per-position edge.
+  const bestEngine = byEngine.slice().sort((a, b) => b.avg_pnl_pct - a.avg_pnl_pct)[0];
   const cells = [
-    ['Profit Factor', m.profit_factor === null ? '--' : (m.profit_factor === Infinity ? '∞' : m.profit_factor.toFixed(2)), m.profit_factor > 1 ? 'text-green' : 'text-red'],
-    ['Expectancy', fmtPct(m.expectancy_pct), pnlClass(m.expectancy_pct)],
     ['Avg Win', fmtPct(m.avg_win_pct), 'text-green'],
     ['Avg Loss', fmtPct(m.avg_loss_pct), 'text-red'],
     ['Best Trade', fmtPct(m.best_trade_pct), 'text-green'],
     ['Worst Trade', fmtPct(m.worst_trade_pct), 'text-red'],
-    ['Best Day', fmtPct(m.best_day_pnl_pct), 'text-green'],
-    ['Worst Day', fmtPct(m.worst_day_pnl_pct), 'text-red'],
+    ['Best Day Avg', fmtPct(m.best_day_avg_pct), 'text-green'],
+    ['Worst Day Avg', fmtPct(m.worst_day_avg_pct), 'text-red'],
     ['Avg Hold', `${m.avg_hold_days.toFixed(1)}d`, 'text-muted'],
     ['Win Streak', `${m.win_streak}`, 'text-green'],
     ['Loss Streak', `${m.loss_streak}`, 'text-red'],
     ['Best Engine', bestEngine ? bestEngine.label.split('—')[0].trim() : '--', 'text-gold'],
+    ['Sum P&L (1u/trade)', fmtPct(m.sum_pnl_pct), pnlClass(m.sum_pnl_pct)],
+    ['Max DD (avg curve)', `-${(m.max_drawdown_pct || 0).toFixed(2)}%`, 'text-red'],
   ];
   return `
     <div class="metrics-row">
@@ -160,16 +167,21 @@ export async function render(container) {
     const m = trData.metrics || {};
     _state = { engineFilter: null, trades, byEngine, curve: curveData.curve || [] };
 
-    const cumReturn = trData.cum_pnl_pct ?? curveData.total_return ?? 0;
-    const cumColor = cumReturn >= 0 ? 'text-green' : 'text-red';
     const sharpeColor = m.sharpe == null ? 'text-muted' : (m.sharpe > 1.5 ? 'text-green' : m.sharpe > 1.0 ? 'text-gold' : 'text-red');
+    const pf = m.profit_factor;
+    const pfDisplay = pf == null ? '--' : (pf === Infinity ? '∞' : pf.toFixed(2));
+    const pfColor = pf != null && pf > 1 ? 'text-green' : 'text-red';
     const wins = trades.filter(t => (t.final_pnl_pct || 0) > 0).length;
 
+    // The hero strip surfaces per-trade metrics, not portfolio aggregates.
+    // Each closed signal is a standalone paper position at 1 unit of
+    // notional, so summing per-trade returns into a "cumulative" headline
+    // overstates what a real portfolio would have done. Average is honest.
     container.innerHTML = `
       <div class="kpi-grid kpi-grid--5" style="margin-bottom: var(--spacing-lg);">
         <div class="kpi-card">
-          <div class="kpi-card__label">Cumulative P&L</div>
-          <div class="kpi-card__value ${cumColor} mono">${fmtPct(cumReturn)}</div>
+          <div class="kpi-card__label">Avg P&L per Trade</div>
+          <div class="kpi-card__value ${pnlClass(trData.avg_pnl_pct)} mono">${fmtPct(trData.avg_pnl_pct)}</div>
           <div class="kpi-card__sub">${trData.total_closed || 0} trades closed</div>
         </div>
         <div class="kpi-card">
@@ -178,19 +190,19 @@ export async function render(container) {
           <div class="kpi-card__sub">${wins}W / ${trades.length - wins}L</div>
         </div>
         <div class="kpi-card">
+          <div class="kpi-card__label">Profit Factor</div>
+          <div class="kpi-card__value ${pfColor} mono">${pfDisplay}</div>
+          <div class="kpi-card__sub">Wins ÷ |Losses|</div>
+        </div>
+        <div class="kpi-card">
           <div class="kpi-card__label">Sharpe</div>
           <div class="kpi-card__value ${sharpeColor} mono">${m.sharpe == null ? '--' : m.sharpe.toFixed(2)}</div>
-          <div class="kpi-card__sub">Trade-level, annualised</div>
+          <div class="kpi-card__sub">Per-trade, annualised</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-card__label">Max Drawdown</div>
-          <div class="kpi-card__value text-red mono">-${(m.max_drawdown_pct || 0).toFixed(2)}%</div>
-          <div class="kpi-card__sub">Peak to trough</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-card__label">Avg P&L / Trade</div>
-          <div class="kpi-card__value ${pnlClass(trData.avg_pnl_pct)} mono">${fmtPct(trData.avg_pnl_pct)}</div>
-          <div class="kpi-card__sub">Expectancy per signal</div>
+          <div class="kpi-card__label">Best / Worst Trade</div>
+          <div class="kpi-card__value mono"><span class="text-green">${fmtPct(m.best_trade_pct)}</span> <span class="text-muted">/</span> <span class="text-red">${fmtPct(m.worst_trade_pct)}</span></div>
+          <div class="kpi-card__sub">Range across all closes</div>
         </div>
       </div>
 
@@ -202,7 +214,9 @@ export async function render(container) {
       <h3 class="section-heading" style="margin-top: var(--spacing-lg);">Portfolio Metrics</h3>
       ${metricsRowHtml(m, byEngine)}
 
-      <h3 class="section-heading" style="margin-top: var(--spacing-lg);">Equity Curve</h3>
+      <h3 class="section-heading" style="margin-top: var(--spacing-lg);">Avg P&L per Trade — Over Time
+        <span class="section-heading__sub">— running mean of per-trade returns; flat = consistent edge</span>
+      </h3>
       <div id="equity-curve" style="height: 280px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: var(--spacing-lg);"></div>
 
       <h3 class="section-heading">Closed Trades <span class="section-heading__sub">— click an engine chip to filter</span></h3>

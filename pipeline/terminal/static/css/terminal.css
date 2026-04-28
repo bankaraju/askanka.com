@@ -1146,6 +1146,16 @@ h3 { font-size: 1.125rem; }
   font-size: 0.75rem;
 }
 
+.engine-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem;
+}
+
 /* Extended-metrics row — 4 to 6 across, depending on width. */
 .metrics-row {
   display: grid;

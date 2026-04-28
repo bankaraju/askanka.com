@@ -602,38 +602,52 @@ def _compute_metrics(rows: list) -> dict:
     losses = [p for p in pnls if p <= 0]
 
     # Annualised Sharpe — sample stdev across closed trades, scale by sqrt(252).
+    # IMPORTANT: this is a per-trade Sharpe scaled to annual; it does NOT
+    # represent a portfolio Sharpe (which would need a single equity curve).
     n = len(pnls)
     mean = sum(pnls) / n
     var = sum((p - mean) ** 2 for p in pnls) / max(n - 1, 1)
     std = math.sqrt(var)
     sharpe = (mean / std * math.sqrt(252)) if std > 0 else None
 
-    # Max drawdown over close-date-ordered cumulative curve.
-    chrono = sorted(rows, key=lambda r: r.get("close_date", ""))
-    peak = 0.0
-    cum = 0.0
-    max_dd = 0.0
-    for r in chrono:
-        cum += r.get("final_pnl_pct", 0) or 0
-        if cum > peak:
-            peak = cum
-        dd = peak - cum
-        if dd > max_dd:
-            max_dd = dd
-
     # Profit factor = sum(wins) / |sum(losses)|.
     sum_wins = sum(wins)
     sum_losses = abs(sum(losses))
     profit_factor = (sum_wins / sum_losses) if sum_losses > 0 else (float("inf") if sum_wins > 0 else None)
 
-    # Daily P&L — sum trades closed on each calendar day.
+    # Per-day stats — average P&L across trades closed that day, NOT the sum.
+    # Summing 17 same-day trades at +3% each into "+51% best day" double-counts
+    # because each trade was paper-traded as a standalone position, not 17×
+    # leverage. The honest per-day metric is the mean.
+    chrono = sorted(rows, key=lambda r: r.get("close_date", ""))
     by_day: dict = {}
     for r in rows:
         d = r.get("close_date") or ""
         if not d:
             continue
-        by_day[d] = by_day.get(d, 0.0) + (r.get("final_pnl_pct", 0) or 0)
-    daily_pnl = [{"date": d, "pnl_pct": round(v, 2)} for d, v in sorted(by_day.items())]
+        by_day.setdefault(d, []).append(r.get("final_pnl_pct", 0) or 0)
+    daily_avg = [
+        {"date": d, "avg_pnl_pct": round(sum(v) / len(v), 2), "trades": len(v)}
+        for d, v in sorted(by_day.items())
+    ]
+    best_day_avg = max((d["avg_pnl_pct"] for d in daily_avg), default=0.0)
+    worst_day_avg = min((d["avg_pnl_pct"] for d in daily_avg), default=0.0)
+
+    # Drawdown of per-trade-average curve. Track the running average as new
+    # trades land; max drawdown is the largest fall from the running peak.
+    cum = 0.0
+    avg_curve = []
+    for i, r in enumerate(chrono, start=1):
+        cum += r.get("final_pnl_pct", 0) or 0
+        avg_curve.append(cum / i)
+    peak = 0.0
+    max_dd = 0.0
+    for v in avg_curve:
+        if v > peak:
+            peak = v
+        dd = peak - v
+        if dd > max_dd:
+            max_dd = dd
 
     # Streaks (longest consecutive win / loss in chronological order).
     win_streak = loss_streak = 0
@@ -649,19 +663,20 @@ def _compute_metrics(rows: list) -> dict:
 
     return {
         "sharpe": round(sharpe, 2) if sharpe is not None else None,
-        "max_drawdown_pct": round(max_dd, 2),
+        "max_drawdown_pct": round(max_dd, 2),  # of per-trade-average curve
         "profit_factor": round(profit_factor, 2) if profit_factor not in (None, float("inf")) else profit_factor,
         "expectancy_pct": round(mean, 2),
         "avg_win_pct": round(sum_wins / len(wins), 2) if wins else 0.0,
         "avg_loss_pct": round(sum(losses) / len(losses), 2) if losses else 0.0,
         "best_trade_pct": round(max(pnls), 2),
         "worst_trade_pct": round(min(pnls), 2),
-        "best_day_pnl_pct": round(max((d["pnl_pct"] for d in daily_pnl), default=0.0), 2),
-        "worst_day_pnl_pct": round(min((d["pnl_pct"] for d in daily_pnl), default=0.0), 2),
+        "best_day_avg_pct": round(best_day_avg, 2),
+        "worst_day_avg_pct": round(worst_day_avg, 2),
+        "sum_pnl_pct": round(sum(pnls), 2),  # raw sum, for "if sized 1 unit per trade" view
         "avg_hold_days": round(sum(r.get("days_open", 0) or 0 for r in rows) / n, 1),
         "win_streak": win_streak,
         "loss_streak": loss_streak,
-        "daily_pnl": daily_pnl,
+        "daily_avg": daily_avg,
     }
 
 
@@ -679,13 +694,15 @@ def _build_engine_buckets(rows: list) -> list:
         wins = sum(1 for p in pnls if p > 0)
         n = len(pnls)
         sum_pnl = sum(pnls)
-        # Sparkline = chronological cumulative P&L (8-12 points).
+        # Sparkline = chronological RUNNING AVERAGE of per-trade returns.
+        # Plotting running sum overstates engine performance because each
+        # trade is a standalone paper position, not portfolio-sized.
         chrono = sorted(items, key=lambda r: r.get("close_date", ""))
         cum = 0.0
         spark = []
-        for it in chrono:
+        for i, it in enumerate(chrono, start=1):
             cum += it.get("final_pnl_pct", 0) or 0
-            spark.append(round(cum, 2))
+            spark.append(round(cum / i, 2))
         out.append({
             "engine_key": ek,
             "label": meta["label"],

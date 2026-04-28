@@ -45,19 +45,31 @@ def track_record():
 
 @router.get("/track-record/equity-curve")
 def equity_curve():
-    """Cumulative equity curve across ALL closed trades, chronological."""
+    """Per-trade-average curve across all closed trades, chronological.
+
+    Each trade is a standalone paper position, so we plot the *running mean*
+    of per-trade returns rather than the sum (which would imply portfolio-
+    sized exposure on every signal). The sum is also returned as
+    `total_pnl_sum_pct` for the "if sized 1 unit per trade" view.
+    """
     raw = _read_json(_TRACK_FILE)
     trades = raw.get("trades") or raw.get("recent", [])
 
     curve = []
-    cumulative = 0.0
-    for t in sorted(trades, key=lambda x: x.get("close_date", "")):
+    cumulative_sum = 0.0
+    chrono = sorted(trades, key=lambda x: x.get("close_date", ""))
+    for i, t in enumerate(chrono, start=1):
         pnl = t.get("final_pnl_pct", 0) or 0
-        cumulative += pnl
+        cumulative_sum += pnl
         curve.append({
             "time": t.get("close_date", ""),
-            "value": round(cumulative, 2),
+            "value": round(cumulative_sum / i, 3),  # running per-trade average
             "engine": t.get("engine_key", ""),
         })
 
-    return {"curve": curve, "total_return": round(cumulative, 2)}
+    return {
+        "curve": curve,
+        "avg_pnl_pct": round(cumulative_sum / len(chrono), 2) if chrono else 0.0,
+        "total_pnl_sum_pct": round(cumulative_sum, 2),
+        "n": len(chrono),
+    }
