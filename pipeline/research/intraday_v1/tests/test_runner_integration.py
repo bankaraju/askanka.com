@@ -55,8 +55,21 @@ def test_compute_signals_at_returns_per_instrument_scores(monkeypatch, tmp_path)
     (pcr_dir / "RELIANCE_2d_ago.json").write_text(
         '{"put_oi_total_next_month": 10000, "call_oi_total_next_month": 11000}', encoding="utf-8")
 
+    # volume_history fixture — required after the synthetic stub was removed
+    # from runner._compute_signals_at. Provide a real (small but valid) frame
+    # spanning every minute of the 09:15–15:29 session so feature 3 can read it.
+    vol_dir = tmp_path / "volume_history"
+    vol_dir.mkdir()
+    vol_hist = pd.DataFrame({
+        "minute_of_day_idx": list(range(375)),
+        "mean_cum_volume_20d": [1000.0 * (i + 1) for i in range(375)],
+        "std_cum_volume_20d":  [200.0] * 375,
+    })
+    vol_hist.to_parquet(vol_dir / "volume_history_RELIANCE.parquet", index=False)
+
     monkeypatch.setattr(runner, "CACHE_DIR", cache_dir)
     monkeypatch.setattr(runner, "PCR_DIR", pcr_dir)
+    monkeypatch.setattr(runner, "VOLUME_HISTORY_DIR", vol_dir)
 
     out = runner._compute_signals_at(
         eval_t=datetime(2026, 4, 29, 9, 30, tzinfo=IST),

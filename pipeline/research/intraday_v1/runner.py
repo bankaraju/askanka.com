@@ -25,7 +25,7 @@ import pandas as pd
 
 from pipeline.research.intraday_v1 import (
     exit_engine, features, karpathy_fit, loader, options_paired, pcr_producer,
-    score, universe, verdict,
+    score, universe, verdict, volume_aggregator,
 )
 
 PIPELINE_ROOT = Path(__file__).resolve().parents[2]
@@ -33,6 +33,7 @@ DATA_DIR = PIPELINE_ROOT / "data" / "research" / "h_2026_04_29_intraday_v1"
 WEIGHTS_DIR = DATA_DIR / "weights"
 CACHE_DIR = DATA_DIR / "cache_1min"
 PCR_DIR = DATA_DIR / "pcr"
+VOLUME_HISTORY_DIR = DATA_DIR / "volume_history"
 IST = timezone(timedelta(hours=5, minutes=30))
 
 log = logging.getLogger("intraday_v1.runner")
@@ -125,12 +126,15 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
             # appear as a real signal downstream.
             log.info(f"PCR snapshot missing for {sym}, skipping")
             continue
-        # Stub volume_history — production reads 20d aggregated cache
-        history = pd.DataFrame({
-            "minute_of_day_idx": list(range(60)),
-            "mean_cum_volume_20d": [1000.0 * (i + 1) for i in range(60)],
-            "std_cum_volume_20d":  [200.0] * 60,
-        })
+        # Real 20-day volume_history — produced by volume_aggregator.produce_all
+        # in loader_refresh(). Per feedback_no_hallucination_mandate.md, when
+        # the per-symbol file is missing (insufficient history, missing cache,
+        # etc.), the instrument is SKIPped — no synthetic stub, no defaults.
+        vol_path = VOLUME_HISTORY_DIR / f"volume_history_{sym}.parquet"
+        if not vol_path.exists():
+            log.info(f"volume history missing for {sym}, skipping")
+            continue
+        history = pd.read_parquet(vol_path)
         feats = features.compute_all(
             instrument_df=bars, sector_df=sector_df, eval_t=eval_t,
             today_pcr=today_pcr, two_days_ago_pcr=two_d_pcr,
@@ -304,6 +308,17 @@ def loader_refresh() -> None:
         )
     except Exception as e:  # noqa: BLE001
         log.warning(f"PCR snapshot refresh failed: {e}")
+    try:
+        vol_summary = volume_aggregator.produce_all(
+            CACHE_DIR, VOLUME_HISTORY_DIR, datetime.now(IST).date(), lookback_days=20
+        )
+        log.info(
+            f"volume_history refreshed: written={vol_summary.get('written')} "
+            f"skipped={len(vol_summary.get('skipped', []))} "
+            f"lookback={vol_summary.get('lookback_days')}"
+        )
+    except Exception as e:  # noqa: BLE001
+        log.warning(f"volume_history refresh failed: {e}")
 
 
 def recalibrate(pool: str) -> None:
