@@ -21,7 +21,12 @@ if ! command -v git >/dev/null; then exit 0; fi
 STAGED=$(git diff --cached --name-only --diff-filter=A 2>/dev/null || true)
 [[ -z "$STAGED" ]] && exit 0
 
-TRADING_PATTERNS='(_strategy\.py|_signal_generator\.py|_backtest\.py|_ranker\.py|_engine\.py)$'
+PATTERNS_FILE="$REPO/pipeline/scripts/hooks/strategy_patterns.txt"
+if [[ ! -f "$PATTERNS_FILE" ]]; then
+  echo "ERROR: missing $PATTERNS_FILE — repo install incomplete" >&2
+  exit 1
+fi
+TRADING_PATTERNS=$(cat "$PATTERNS_FILE")
 NEW_STRATEGY_FILES=$(echo "$STAGED" | grep -E "$TRADING_PATTERNS" || true)
 [[ -z "$NEW_STRATEGY_FILES" ]] && exit 0
 

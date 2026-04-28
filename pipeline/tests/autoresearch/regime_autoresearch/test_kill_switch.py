@@ -8,7 +8,17 @@ from pathlib import Path
 import pytest
 
 HOOK = Path("pipeline/scripts/hooks/pre-commit-strategy-gate.sh")
+PATTERNS = Path("pipeline/scripts/hooks/strategy_patterns.txt")
 REGISTRY = Path("docs/superpowers/hypothesis-registry.jsonl")
+
+
+def _provision_patterns_file(repo: Path) -> None:
+    """Real-mode tests run the hook inside a fresh tmp repo. The hook reads
+    the trading-rule patterns from $REPO/pipeline/scripts/hooks/strategy_patterns.txt,
+    so the test repo needs the same file laid out at the same relative path."""
+    dest = repo / "pipeline" / "scripts" / "hooks" / "strategy_patterns.txt"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(PATTERNS.resolve().read_bytes())
 
 
 def test_hook_script_exists():
@@ -61,6 +71,7 @@ def test_hook_refuses_real_staged_strategy_file_without_registry(tmp_path):
 
     hook_copy = repo / "pre-commit-strategy-gate.sh"
     hook_copy.write_bytes(HOOK.resolve().read_bytes())
+    _provision_patterns_file(repo)
 
     result = subprocess.run(
         ["bash", str(hook_copy)],
@@ -93,6 +104,7 @@ def test_hook_allows_real_staged_strategy_file_with_registry(tmp_path):
 
     hook_copy = repo / "pre-commit-strategy-gate.sh"
     hook_copy.write_bytes(HOOK.resolve().read_bytes())
+    _provision_patterns_file(repo)
 
     result = subprocess.run(
         ["bash", str(hook_copy)],

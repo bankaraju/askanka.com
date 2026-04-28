@@ -10,8 +10,11 @@ jobs:
           fetch-depth: 0
       - name: Simulate pre-commit scan vs main
         run: |
+          # Single source of truth for trading-rule filename patterns.
+          # Same file is read by pipeline/scripts/hooks/pre-commit-strategy-gate.sh.
+          TRADING_PATTERNS=$(cat pipeline/scripts/hooks/strategy_patterns.txt)
           git diff --name-only --diff-filter=A origin/${{ github.base_ref }}...HEAD > /tmp/new_files.txt
-          NEW=$(grep -E '(_strategy\.py|_signal_generator\.py|_backtest\.py|_ranker\.py|_engine\.py)$' /tmp/new_files.txt || true)
+          NEW=$(grep -E "$TRADING_PATTERNS" /tmp/new_files.txt || true)
           if [[ -n "$NEW" ]]; then
             if ! git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -qE '(^|/)hypothesis-registry\.jsonl$'; then
               echo "ERROR: new strategy files without registry entry:"
