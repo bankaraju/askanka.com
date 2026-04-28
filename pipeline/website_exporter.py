@@ -288,11 +288,18 @@ _CRYPTIC_NAMES = {
 
 
 def _cryptic_name(spread_name: str) -> str:
+    """Return the public-facing label for a spread/strategy.
+
+    Curated cryptic alias if this is one of the marketed spread baskets
+    (Defence vs IT -> Sovereign Shield Alpha, etc.). Otherwise return the
+    upstream name verbatim — Phase C single-ticker breaks already arrive
+    as "Phase C: TATAELXSI OPPORTUNITY_LAG" and other engines name their
+    own positions, so anonymising them as "Strategy 734" was destroying
+    information the rest of the terminal needs to disambiguate rows.
+    """
     if spread_name in _CRYPTIC_NAMES:
         return _CRYPTIC_NAMES[spread_name]
-    # md5 for stable IDs across process restarts (Python's hash() is randomized).
-    digest = hashlib.md5(spread_name.encode("utf-8")).hexdigest()
-    return f"Strategy {int(digest[:8], 16) % 900 + 100}"
+    return spread_name or "Unnamed strategy"
 
 
 def _refresh_trust(sig: dict, fresh_trust: dict) -> dict:

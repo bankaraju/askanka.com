@@ -111,7 +111,7 @@ export async function render(container) {
           <td style="font-family: var(--font-body);">${t.spread_name || t.signal_id || '--'}</td>
           <td class="mono">${t.open_date || '--'}</td>
           <td class="mono">${t.close_date || '--'}</td>
-          <td class="mono">${t.days_open || '--'}d</td>
+          <td class="mono">${t.days_open == null ? '--' : t.days_open}d</td>
           <td class="${pnlClass} mono">${pnlIcon} ${pnl.toFixed(2)}%</td>
           <td class="mono text-muted">${(t.peak_pnl_pct || 0).toFixed(2)}%</td>
           <td>${reason}</td>
