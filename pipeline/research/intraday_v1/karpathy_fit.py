@@ -31,19 +31,24 @@ def objective(weights: np.ndarray, df: pd.DataFrame) -> float:
     score = feat @ weights  # per-row signal strength
     df = df.copy()
     df["score"] = score
-    # daily basket return = mean of next_return_pct of rows in the daily top-30%
-    # (score >= per-day 0.7 quantile). Long-only proxy — full direction handled
-    # at runner; objective stays simple.
+    # Long-short basket return per spec §4: long when score >= per-day 0.7 quantile,
+    # short when score <= per-day 0.3 quantile. Daily P&L = mean(longs.next_return) -
+    # mean(shorts.next_return). Matches runtime direction-handling so in-sample
+    # weights actually optimize the deployed payoff.
     daily = []
     for date, group in df.groupby("date", sort=True):
         if group.empty:
             continue
-        thresh = group["score"].quantile(0.7)
-        firers = group[group["score"] >= thresh]
-        if firers.empty:
-            daily.append(0.0)
-            continue
-        daily.append(float(firers["next_return_pct"].mean()))
+        long_thresh = group["score"].quantile(0.7)
+        short_thresh = group["score"].quantile(0.3)
+        longs = group[group["score"] >= long_thresh]
+        shorts = group[group["score"] <= short_thresh]
+        long_ret = float(longs["next_return_pct"].mean()) if not longs.empty else 0.0
+        short_ret = float(shorts["next_return_pct"].mean()) if not shorts.empty else 0.0
+        # Long-short payoff: gain on longs going up, gain on shorts going down.
+        # Zero-variance day (long_thresh == short_thresh) → both baskets equal →
+        # contribution mean - mean = 0, which degrades naturally without a special case.
+        daily.append(long_ret - short_ret)
     if len(daily) < ROLLING_WINDOW_DAYS:
         return float("-inf")
     daily_arr = np.array(daily)
@@ -64,6 +69,13 @@ def objective(weights: np.ndarray, df: pd.DataFrame) -> float:
 
 def run(df: pd.DataFrame, seed: int = 42, n_iters: int = 2000) -> Dict:
     """Random search over weight space, return best weight vector + thresholds.
+
+    Optimizes the long-short objective per spec §4: longs are rows in the daily
+    top-30% of score (score >= per-day 0.7 quantile), shorts are rows in the
+    daily bottom-30% (score <= per-day 0.3 quantile), and the daily P&L is
+    mean(longs.next_return_pct) - mean(shorts.next_return_pct). Threshold
+    extraction below uses the in-sample pooled scores (0.3 / 0.7 quantiles) and
+    is independent of the per-day objective computation.
 
     Returns: {"weights": ndarray(6,), "objective": float,
               "long_threshold": float, "short_threshold": float, "seed": int}
