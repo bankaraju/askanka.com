@@ -24,7 +24,8 @@ from typing import Dict, List
 import pandas as pd
 
 from pipeline.research.intraday_v1 import (
-    exit_engine, features, karpathy_fit, loader, options_paired, score, universe, verdict,
+    exit_engine, features, karpathy_fit, loader, options_paired, pcr_producer,
+    score, universe, verdict,
 )
 
 PIPELINE_ROOT = Path(__file__).resolve().parents[2]
@@ -119,8 +120,11 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
             today_pcr = json.loads((PCR_DIR / f"{sym}_today.json").read_text(encoding="utf-8"))
             two_d_pcr = json.loads((PCR_DIR / f"{sym}_2d_ago.json").read_text(encoding="utf-8"))
         except FileNotFoundError:
-            today_pcr = {"put_oi_total_next_month": 0, "call_oi_total_next_month": 0}
-            two_d_pcr = today_pcr
+            # Per feedback_no_hallucination_mandate.md: never substitute fake zeros
+            # for missing OI snapshots. Skip the instrument so NaN does not silently
+            # appear as a real signal downstream.
+            log.info(f"PCR snapshot missing for {sym}, skipping")
+            continue
         # Stub volume_history — production reads 20d aggregated cache
         history = pd.DataFrame({
             "minute_of_day_idx": list(range(60)),
@@ -277,13 +281,29 @@ def live_close(eval_t: datetime) -> None:
 
 
 def loader_refresh() -> None:
-    """04:30 IST nightly cache refresh for the V1 universe."""
+    """04:30 IST nightly cache refresh for the V1 universe.
+
+    Also produces fresh PCR snapshots from the EOD oi_history_stocks archives
+    so the ``delta_pcr_2d`` feature has real inputs at 09:30 live-open.
+    """
     univ = _resolve_universe()
     for sym in univ["stocks"] + univ["indices"]:
         try:
             loader.refresh_cache(sym, days=60)
         except loader.LoaderError as e:
             log.warning(f"loader-refresh failed for {sym}: {e}")
+    try:
+        summary = pcr_producer.produce_pcr_snapshots(
+            datetime.now(IST).date(), PCR_DIR
+        )
+        log.info(
+            f"PCR snapshots refreshed: today={summary.get('today_date')} "
+            f"2d_ago={summary.get('two_d_ago_date')} "
+            f"written={summary.get('symbols_written')} "
+            f"skipped={len(summary.get('skipped', []))}"
+        )
+    except Exception as e:  # noqa: BLE001
+        log.warning(f"PCR snapshot refresh failed: {e}")
 
 
 def recalibrate(pool: str) -> None:
