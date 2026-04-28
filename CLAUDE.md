@@ -51,6 +51,7 @@ The system runs automatically via Windows Scheduled Tasks:
 
 **Overnight Batch:**
 - 04:30 — AnkaDailyDump: fetch global prices, fundamentals, FII flows (CRITICAL)
+- 04:30 — AnkaTAKarpathyPredict: H-2026-04-29-ta-karpathy-v1 daily forward prediction; emits today_predictions.json from frozen Lasso models (info, VPS systemd)
 - 04:45 — AnkaETFSignal: compute daily regime zone from stored ETF weights (CRITICAL)
 - 04:45 — AnkaReverseRegimeProfile: regime transition patterns, Phase A (CRITICAL)
 - 04:45 — AnkaDailyArticles: generate research articles (warn)
@@ -64,6 +65,7 @@ The system runs automatically via Windows Scheduled Tasks:
 - 09:00 — AnkaRefreshKite: refresh Zerodha broker session (CRITICAL)
 - 09:16 — AnkaOpenCapture: capture today's opening prices (CRITICAL)
 - 09:16 — AnkaSecrsiCaptureOpens: capture full F&O universe LTP for SECRSI 11:00 snapshot. Holdout 2026-04-28 → 2026-07-31 (info)
+- 09:15 — AnkaTAKarpathyOpen: H-2026-04-29-ta-karpathy-v1 holdout OPEN — opens trades for cells passing all 5 qualifier gates at Kite LTP. Holdout 2026-04-29 → 2026-05-28 (info, VPS systemd)
 - 09:25 — AnkaMorningScan: regime + technicals + OI + news + spread intelligence + Phase B ranker (CRITICAL)
 - 09:25 — AnkaPhaseCShadowOpen: F3 live shadow ledger — OPEN rows for today's Phase C OPPORTUNITY signals (info)
 - 09:25 — AnkaScannerPairedOpen: Scanner Top-10 paired-shadow open (futures + ATM options) for yesterday's scan; paper engine, exempt from 14:30 cutoff (info)
@@ -79,6 +81,7 @@ The system runs automatically via Windows Scheduled Tasks:
 - 14:30 — AnkaPhaseCShadowClose: F3 live shadow ledger — mechanical TIME_STOP close at live LTP (info)
 - 14:30 — AnkaH20260426001PaperClose: H-2026-04-26-001 + H-2026-04-26-002 forward paper test, CLOSE leg, mechanical TIME_STOP at Kite LTP (info)
 - 14:30 — AnkaSecrsiBasketClose: H-2026-04-27-003 SECRSI mechanical TIME_STOP close at Kite LTP (info)
+- 15:25 — AnkaTAKarpathyClose: H-2026-04-29-ta-karpathy-v1 holdout TIME_STOP close at Kite LTP. Holdout 2026-04-29 → 2026-05-28 (info, VPS systemd)
 - 15:30 — AnkaScannerPairedClose: Scanner Top-10 paired-shadow mechanical close at Kite LTP (info)
 
 ## 14:30 IST New-Signal Cutoff (CRITICAL)
@@ -96,6 +99,8 @@ Existing OPEN positions are still monitored, P&L still updates, stops still fire
 **H-2026-04-26-001 / H-2026-04-26-002 forward paper test:** new pre-registered hypothesis pair started 2026-04-27. Same signal stream (|z|≥2.0 mechanical correlation breaks, fade direction, ATR(14)×2 stop, TIME_STOP 14:30); H-001 unconditional, H-002 reads only `regime_gate_pass=True` rows (regime ≠ NEUTRAL). Single-touch holdout window: 2026-04-27 → 2026-05-26. Spec: `docs/superpowers/specs/2026-04-26-sigma-break-mechanical-v1-design.md`. Ledger: `pipeline/data/research/h_2026_04_26_001/recommendations.csv`. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.**
 
 **H-2026-04-27-003 SECRSI (Sector RS Intraday Pair):** trend-continuation, regime-agnostic, market-neutral. 11:00 IST sector snapshot ranks ~25 sectors by median per-stock %chg-from-open; LONG top-2 stocks of top-2 sectors + SHORT bottom-2 stocks of bottom-2 sectors (8 legs, equal-weight). ATR(14)×2 per-leg stop, mechanical TIME_STOP at 14:30 IST. Single-touch holdout 2026-04-28 → 2026-07-31 (auto-extends if n < 40). Spec: `docs/superpowers/specs/2026-04-27-intraday-sector-rs-pair-design.md`. Ledger: `pipeline/data/research/h_2026_04_27_secrsi/recommendations.csv`. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.** Distinct from H-001 (fade direction) — designed as portfolio diversifier.
+
+**H-2026-04-29-ta-karpathy-v1 (per-stock TA Lasso, top-10 NIFTY pilot):** per-stock Lasso L1 logistic regression on ~60 daily TA features, 4-fold walk-forward + BH-FDR permutation null + qualifier gate. Frozen universe: RELIANCE/HDFCBANK/ICICIBANK/INFY/TCS/BHARTIARTL/KOTAKBANK/LT/AXISBANK/SBIN. T+1 09:15→15:25 IST intraday only (no overnight). Per-cell ATR(14)×2 stop. Single-touch holdout 2026-04-29 → 2026-05-28 (≈21 trading days). Spec: `docs/superpowers/specs/2026-04-29-ta-karpathy-v1-design.md` (v1.1 — Deflated Sharpe metric report-only at v1, gate-blocking at v2 when N≥100 days). Honest expectation: 0–3 stocks qualify. Predecessor H-2026-04-24-001 FAILED on RELIANCE — distinct family widening. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.** Runs on VPS systemd (predict 04:30 / open 09:15 / close 15:25). Ledger: `pipeline/data/research/h_2026_04_29_ta_karpathy_v1/recommendations.csv`.
 
 **Post-Close:**
 - 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL); also runs `oi_scanner --archive-only` and `website_exporter.py`

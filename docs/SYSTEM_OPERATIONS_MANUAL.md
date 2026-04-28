@@ -946,6 +946,7 @@ When the watchdog finds issues:
 | Time (IST) | Task Name | What It Does | Critical? |
 |------------|-----------|-------------|-----------|
 | 04:30 | AnkaDailyDump | Fetch global prices, fundamentals, FII flows | CRITICAL |
+| 04:30 | AnkaTAKarpathyPredict | H-2026-04-29-ta-karpathy-v1 daily forward prediction — frozen Lasso models → today_predictions.json. **VPS systemd**. Holdout 2026-04-29 → 2026-05-28. | info |
 | 04:45 | AnkaETFSignal | Compute daily regime zone from stored ETF weights | CRITICAL |
 | 04:45 | AnkaReverseRegimeProfile | Compute regime transition patterns (Phase A) | CRITICAL |
 | 04:45 | AnkaDailyArticles | Generate research articles | warn |
@@ -962,6 +963,7 @@ When the watchdog finds issues:
 | 09:00 | AnkaRefreshKite | Refresh Zerodha broker session | CRITICAL |
 | 09:16 | AnkaOpenCapture | Capture today's opening prices (curated 23-stock subset) | CRITICAL |
 | 09:16 | AnkaSecrsiCaptureOpens | SECRSI: capture full F&O universe LTP for 11:00 snapshot. H-2026-04-27-003 holdout 2026-04-28 → 2026-07-31 | info |
+| 09:15 | AnkaTAKarpathyOpen | H-2026-04-29-ta-karpathy-v1 holdout OPEN — opens trades for cells passing all 5 qualifier gates at Kite LTP. Holdout 2026-04-29 → 2026-05-28. **VPS systemd**. | info |
 | 09:25 | AnkaMorningScan | THE BIG ONE — regime + tech + OI + news + signals | CRITICAL |
 | 09:25 | AnkaPhaseCShadowOpen | F3 live shadow: record OPEN rows for today's OPPORTUNITY signals + paired-options sidecar (2026-04-27) | info |
 
@@ -978,6 +980,7 @@ Every 15 minutes, two tasks run as a pair:
 | AnkaSecrsiBasketOpen | 11:00 IST — SECRSI: build market-neutral 8-leg basket from sector RS snapshot (H-2026-04-27-003) |
 | AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) + paired-options sidecar (2026-04-27) |
 | AnkaSecrsiBasketClose | 14:30 IST — SECRSI: mechanical TIME_STOP close at Kite LTP (H-2026-04-27-003) |
+| AnkaTAKarpathyClose | 15:25 IST — H-2026-04-29-ta-karpathy-v1: mechanical TIME_STOP close at Kite LTP (VPS systemd) |
 
 That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
