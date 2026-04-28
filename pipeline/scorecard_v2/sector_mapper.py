@@ -30,34 +30,45 @@ class SectorMapper:
         self._stock_map = {}
         self._sector_stocks = {}
 
-        for sym_dir in sorted(self._artifacts.iterdir()):
-            if not sym_dir.is_dir() or sym_dir.name in ("transcripts",):
-                continue
-            symbol = sym_dir.name
+        if self._artifacts.exists():
+            for sym_dir in sorted(self._artifacts.iterdir()):
+                if not sym_dir.is_dir() or sym_dir.name in ("transcripts",):
+                    continue
+                symbol = sym_dir.name
 
-            if symbol in overrides:
-                sector = overrides[symbol]
-            else:
-                ia_path = sym_dir / "indianapi_stock.json"
-                if ia_path.exists():
-                    try:
-                        ia = json.loads(ia_path.read_text(encoding="utf-8"))
-                        raw_industry = ia.get("industry", "Unknown")
-                        sector = self._industry_to_sector.get(raw_industry, "Unmapped")
-                    except Exception:
-                        sector = "Unmapped"
+                if symbol in overrides:
+                    sector = overrides[symbol]
                 else:
-                    sector = "Unmapped"
+                    ia_path = sym_dir / "indianapi_stock.json"
+                    if ia_path.exists():
+                        try:
+                            ia = json.loads(ia_path.read_text(encoding="utf-8"))
+                            raw_industry = ia.get("industry", "Unknown")
+                            sector = self._industry_to_sector.get(raw_industry, "Unmapped")
+                        except Exception:
+                            sector = "Unmapped"
+                    else:
+                        sector = "Unmapped"
 
-            sector_def = self._taxonomy.get("sectors", {}).get(sector, {})
-            self._stock_map[symbol] = {
-                "sector": sector,
-                "display_name": sector_def.get("display_name", sector),
-                "subsector": "",
-            }
-            self._sector_stocks.setdefault(sector, []).append(symbol)
+                self._record(symbol, sector)
+
+        # Emit overrides-only tickers (no opus/artifacts directory). This is the
+        # canonical fallback that lets us cover the full F&O universe even when
+        # opus has not yet ingested a name.
+        for symbol, sector in overrides.items():
+            if symbol not in self._stock_map:
+                self._record(symbol, sector)
 
         return self._stock_map
+
+    def _record(self, symbol: str, sector: str) -> None:
+        sector_def = self._taxonomy.get("sectors", {}).get(sector, {})
+        self._stock_map[symbol] = {
+            "sector": sector,
+            "display_name": sector_def.get("display_name", sector),
+            "subsector": "",
+        }
+        self._sector_stocks.setdefault(sector, []).append(symbol)
 
     def get_sector_peers(self, sector: str) -> list[str]:
         return self._sector_stocks.get(sector, [])
