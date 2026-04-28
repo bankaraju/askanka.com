@@ -29,22 +29,31 @@ LATENCY_BUDGET_S = 60.0
 
 
 def _ping_ollama() -> dict[str, Any]:
+    """Native Ollama /api/chat with think=false. The OpenAI-compat
+    /v1/chat/completions endpoint does not honor think=false on models
+    that emit a reasoning channel (Gemma 4), so the assistant content
+    arrives empty until the CoT budget is exhausted. Native API gives
+    a clean 1-2s PONG.
+    """
     try:
         t0 = dt.datetime.now()
         r = requests.post(
-            "http://127.0.0.1:11434/v1/chat/completions",
+            "http://127.0.0.1:11434/api/chat",
             json={
                 "model": "gemma4:26b",
-                "messages": [{"role": "user", "content": "Reply: PONG"}],
-                "temperature": 0.0,
-                "max_tokens": 8,
+                "messages": [
+                    {"role": "user", "content": "Reply with exactly the single word: PONG"}
+                ],
+                "think": False,
+                "stream": False,
+                "options": {"temperature": 0.0, "num_predict": 12},
             },
             timeout=120,
         )
         latency_s = (dt.datetime.now() - t0).total_seconds()
         if r.status_code != 200:
             return {"ok": False, "error": f"HTTP {r.status_code}"}
-        text = r.json()["choices"][0]["message"]["content"].strip()
+        text = r.json()["message"]["content"].strip()
         if "PONG" not in text.upper():
             return {"ok": False, "error": f"bad response: {text!r}"}
         return {"ok": True, "latency_s": latency_s, "text": text}
