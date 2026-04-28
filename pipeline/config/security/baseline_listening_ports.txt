@@ -1,4 +1,5 @@
 0.0.0.0:22 sshd
+127.0.0.1:8000 uvicorn
 127.0.0.53%lo:53 systemd-resolve
 127.0.0.54:53 systemd-resolve
 [::]:22 sshd
