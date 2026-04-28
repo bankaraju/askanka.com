@@ -12,6 +12,7 @@ import * as risk from './pages/risk.js';
 import * as research from './pages/research.js';
 import * as trackRecord from './pages/track-record.js';
 import * as settings from './pages/settings.js';
+import * as tickerChartModal from './components/ticker-chart-modal.js';
 
 const PAGES = {
   dashboard, trading, regime, scanner, trust, news, options, risk, research,
@@ -75,8 +76,9 @@ async function checkHealth() {
 }
 
 function initKeyboard() {
+  // Trading tab hidden 2026-04-27 — '2' now jumps to live-monitor instead.
   const tabKeys = {
-    '1': 'dashboard', '2': 'trading', '3': 'regime', '4': 'scanner',
+    '1': 'dashboard', '2': 'live-monitor', '3': 'regime', '4': 'scanner',
     '5': 'trust', '6': 'news', '7': 'options', '8': 'risk',
     '9': 'research', '0': 'track-record',
   };
@@ -84,6 +86,41 @@ function initKeyboard() {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (tabKeys[e.key]) { e.preventDefault(); switchTab(tabKeys[e.key]); }
     if (e.key === 'Escape') closeContextPanel();
+  });
+}
+
+// Delegated ticker-click handler: any element with [data-ticker] or any
+// anchor whose href starts with #chart/<TICKER> opens the chart modal.
+// Single delegated listener instead of per-table wiring so newly-rendered
+// tickers (Track Record, Trading, Scanner, Dashboard, anywhere) just work.
+function initTickerChartDelegate() {
+  document.addEventListener('click', (e) => {
+    let el = e.target;
+    while (el && el !== document.body) {
+      const tk = el.dataset && el.dataset.ticker;
+      if (tk) {
+        e.preventDefault();
+        tickerChartModal.open(tk);
+        return;
+      }
+      if (el.tagName === 'A' && el.getAttribute('href') && el.getAttribute('href').startsWith('#chart/')) {
+        const t = decodeURIComponent(el.getAttribute('href').slice('#chart/'.length));
+        if (t) {
+          e.preventDefault();
+          tickerChartModal.open(t);
+          return;
+        }
+      }
+      el = el.parentElement;
+    }
+  });
+  // Direct-link support: navigating to #chart/RELIANCE opens the modal.
+  window.addEventListener('hashchange', () => {
+    const h = window.location.hash || '';
+    if (h.startsWith('#chart/')) {
+      const t = decodeURIComponent(h.slice('#chart/'.length));
+      if (t) tickerChartModal.open(t);
+    }
   });
 }
 
@@ -98,6 +135,7 @@ function init() {
   checkHealth();
   setInterval(checkHealth, 60000);
   initKeyboard();
+  initTickerChartDelegate();
   switchTab('dashboard');
 }
 
