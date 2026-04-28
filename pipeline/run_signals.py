@@ -213,6 +213,14 @@ def run_once(send_telegram=False):
 
 def _run_once_inner(send_telegram=False):
     """Inner body of run_once — called only when lock is held."""
+    from pipeline.research.intraday_v1.kill_switch import is_news_driven_killed
+    if is_news_driven_killed():
+        import logging
+        logging.getLogger("run_signals").info("KILLED_NEWS_DRIVEN_FRAMEWORK")
+        # Soft signal per spec §13: news-event-triggered spread path is empty
+        # because INDIA_SPREAD_PAIRS resolves to [] via the config.py shim
+        # when the kill-switch is active. Correlation-break path stays alive.
+
     print(f"\n[{_ist_now().strftime('%H:%M IST')}] Running signal check...")
 
     regime = _load_current_regime()

@@ -1098,6 +1098,12 @@ def generate_signal_card(
 
     Returns a signal card dict with all spreads, or None if confidence too low.
     """
+    from pipeline.research.intraday_v1.kill_switch import is_news_driven_killed
+    if is_news_driven_killed():
+        import logging
+        logging.getLogger("political_signals").info("KILLED_2026_07_04_PER_V1_PROMOTE")
+        return None  # no signal — news-driven framework deprecated per spec §13
+
     global _signal_counter
 
     category = event.get("category")

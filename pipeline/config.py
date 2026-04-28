@@ -116,7 +116,7 @@ INDIA_SIGNAL_STOCKS = {
 }
 
 # === INDIA SPREAD PAIRS ===
-INDIA_SPREAD_PAIRS = [
+INDIA_SPREAD_PAIRS_DEPRECATED = [
     # ── Active spread universe ──────────────────────────────────────────
     {
         "name": "Upstream vs Downstream",
@@ -200,6 +200,26 @@ INDIA_SPREAD_PAIRS = [
         "triggers": ["infra_capex", "tax_reform"],
     },
 ]
+
+# Compatibility shim — importers that still reference INDIA_SPREAD_PAIRS get
+# an empty list when the V1 kill-switch is active, otherwise see the legacy
+# list. Importers should be migrated off this name in a follow-up PR.
+def _india_spread_pairs():
+    # Import is tried both as package path and bare path because callers use
+    # both `from config import ...` (bare, when pipeline/ is on sys.path) and
+    # `from pipeline.config import ...` (package). On any failure we
+    # conservatively return the legacy list (kill-switch inactive).
+    try:
+        from pipeline.research.intraday_v1.kill_switch import is_news_driven_killed
+    except ModuleNotFoundError:
+        try:
+            from research.intraday_v1.kill_switch import is_news_driven_killed
+        except ModuleNotFoundError:
+            return INDIA_SPREAD_PAIRS_DEPRECATED
+    return [] if is_news_driven_killed() else INDIA_SPREAD_PAIRS_DEPRECATED
+
+
+INDIA_SPREAD_PAIRS = _india_spread_pairs()
 
 # === ARCBE — Sector correlation groups (restored from commit 9aa7455) ===
 ARCBE_SECTOR_GROUPS: dict[str, list[str]] = {
