@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka Gemma 4 auto-disable guardrail hourly 09:00–22:00 IST
+
+[Timer]
+OnCalendar=*-*-* 09..22:00:00 Asia/Kolkata
+Persistent=true
+Unit=anka-gemma4-auto-disable.service
+
+[Install]
+WantedBy=timers.target

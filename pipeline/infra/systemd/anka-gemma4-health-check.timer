@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka Gemma 4 health check daily at 05:30 IST
+
+[Timer]
+OnCalendar=*-*-* 05:30:00 Asia/Kolkata
+Persistent=true
+Unit=anka-gemma4-health-check.service
+
+[Install]
+WantedBy=timers.target

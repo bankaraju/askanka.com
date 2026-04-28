@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka Gemma 4 daily report at 22:00 IST
+
+[Timer]
+OnCalendar=*-*-* 22:00:00 Asia/Kolkata
+Persistent=true
+Unit=anka-gemma4-daily-report.service
+
+[Install]
+WantedBy=timers.target

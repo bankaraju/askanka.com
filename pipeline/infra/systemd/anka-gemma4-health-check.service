@@ -1,0 +1,16 @@
+[Unit]
+Description=Anka Gemma 4 Pilot — daily 05:30 IST health check
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+ExecStart=/home/anka/askanka.com/.venv/bin/python pipeline/scripts/gemma4_health_check.py
+StandardOutput=append:/home/anka/askanka.com/opus/logs/gemma4_pilot.log
+StandardError=append:/home/anka/askanka.com/opus/logs/gemma4_pilot.log
+Nice=10
+TimeoutStartSec=10min

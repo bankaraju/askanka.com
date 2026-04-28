@@ -1,0 +1,16 @@
+[Unit]
+Description=Anka Gemma 4 Pilot — EOD 22:00 IST report card aggregator
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+ExecStart=/home/anka/askanka.com/.venv/bin/python pipeline/scripts/gemma4_daily_report.py
+StandardOutput=append:/home/anka/askanka.com/opus/logs/gemma4_pilot.log
+StandardError=append:/home/anka/askanka.com/opus/logs/gemma4_pilot.log
+Nice=10
+TimeoutStartSec=10min
