@@ -4,6 +4,7 @@
 **Strategy class:** `per-stock-ta-lasso`
 **Family scope:** ticker-family, n=10 (BH-FDR-corrected)
 **Standards version:** 1.0_2026-04-23 (`docs/superpowers/specs/backtesting-specs.txt`)
+**Spec version:** v1.1 (amended 2026-04-28 with §12 Deflated Sharpe gate; original v1.0 frozen at registry append)
 
 ---
 
@@ -210,12 +211,35 @@ H-2026-04-29-ta-karpathy-v1 must clear **B0, B1, B3, B4 simultaneously AND B2 mu
 | §11A — implementation risk | LTP-vs-VWAP slippage < 15 bps on the 21-day window |
 | §11B — NIFTY-beta neutral | Residual Sharpe ≥ 0 after regressing out NIFTY beta |
 | §12 — decay | Recent-7-day hit-rate not catastrophically below early-7-day |
+| §12B — Deflated Sharpe (v1.1) | PSR(SR_observed; SR\* = E[max SR over 180 trials]) ≥ 0.95 on basket-level daily P&L (Bailey & Lopez de Prado 2014) |
+
+### 12.1 Deflated Sharpe Ratio gate (v1.1 amendment, 2026-04-28)
+
+Per user feedback (`docs/superpowers/specs/Sharpe_ Ratio _ Karparthy.txt`), raw Sharpe is inflated when many configurations are searched per stock. With 9 alphas × 20 (stock × direction) cells = 180 trial configs, the expected maximum Sharpe under the null is materially above zero. The Deflated Sharpe Ratio (Bailey & Lopez de Prado 2014, JPM 40(5)) corrects for this selection bias.
+
+**Implementation:**
+- Compute SR\* = E[max(SR_i)] over N=180 trials assuming independent Normal(0,1) Sharpes (eq. 6 in Bailey-LdP).
+- Compute PSR(SR\* = computed threshold) on the basket-level daily return series across the 21-day holdout.
+- **Gate threshold: PSR ≥ 0.95.** This is the literature-standard threshold and is NOT derived from any observed data of this hypothesis (per §0.3).
+- Also report raw SR, sample skewness g3, sample kurtosis g4 in the verdict artifact for transparency.
+
+**Why this is a pre-holdout amendment, not a parameter change (§10.4):**
+- Threshold (0.95) inherited from published literature, not from observed numbers.
+- Adds a STRICTER gate; cannot make a previously-failing strategy pass.
+- Spec amended on 2026-04-28 BEFORE the holdout window opens 2026-04-29 09:15 IST.
+- Original §15.1 gates remain in force. v1.1 only ADDS the §12B gate.
+
+### 12.2 Stability discount (v1.1 amendment, 2026-04-28)
+
+When ranking qualifying cells for basket inclusion, apply a stability multiplier:
+`stability(c) = max(0, 1 - std(fold_aucs_c) / 0.10)` — cells whose AUC is unstable across folds get downweighted at the basket-construction stage. Cells with stability < 0.5 are excluded from the basket even if they passed the §9 qualifier gate. This is a NEW filter that ADDS conservatism.
 
 **Failure modes recognised in advance:**
 - **0 stocks qualify (zero-survivor):** TERMINAL_STATE = `FAIL_NO_QUALIFIERS`. Genuine learning that per-stock TA edges don't exist at daily frequency in NIFTY-10. No re-run with relaxed gates.
 - **Some qualify but P&L < 0.5% mean:** TERMINAL_STATE = `FAIL_INSUFFICIENT_EDGE`.
 - **Hit-rate ≥ 55% but P&L < 0.5%:** TERMINAL_STATE = `FAIL_THIN_EDGE` — directional sense exists but profit-per-trade too thin to clear costs.
 - **Statistically significant but B2 P&L ≥ 0:** TERMINAL_STATE = `FAIL_VOLATILITY_PROXY` — we're picking volatile days, not direction.
+- **All §6/§7/§9 gates pass but PSR < 0.95 (v1.1):** TERMINAL_STATE = `FAIL_DEFLATED_SHARPE` — observed P&L is plausibly the maximum-of-many-trials illusion. No re-run; v2 must use Sharpe-aware objective during fit, not just post-hoc deflation.
 
 ## 13. Power analysis
 
@@ -286,3 +310,28 @@ T12: Docs sync — SYSTEM_OPERATIONS_MANUAL.md + memory files
 - [x] Single-touch holdout discipline locked
 
 **This spec is complete and pre-registered as of git commit timestamp at append.**
+
+---
+
+## 18. Forward roadmap — alignment with `nse_fo_universe_technical_spec.md`
+
+H-2026-04-29-ta-karpathy-v1 is the **"Signal Research Engine" layer** of the broader NSE F&O Universe spec (`docs/superpowers/specs/nse_fo_universe_technical_spec.md`). It deliberately scopes a top-10 NIFTY pilot at 1 strategy per stock to keep the single-touch holdout small and cheap. The full engine adds the following layers, each gated on v1 not failing in a way that kills the architecture:
+
+| Stage | Name | Adds | Trigger |
+|---|---|---|---|
+| v1 (this spec) | Signal Research Engine, single-strategy | Per-stock Lasso, 10 stocks, 1 model per direction | Holdout 2026-04-29 → 2026-05-28 |
+| v2 | Per-stock Top-10 candidate basket | Composite score (Sharpe^net + stability − turnover − fragility), retain 10 strategies per stock instead of 1 | If v1 yields ≥ 3 qualifying cells AND PSR ≥ 0.95 |
+| v3 | Universe expansion to ~220 F&O names | PIT eligibility, monthly reconstitution, internal liquidity filters | If v2 maintains net Sharpe across walk-forward folds |
+| v4 | Dependence Engine | Shrunk covariance + Student-t copula overlay for joint downside probability | If v3 candidate baskets exceed 30 stocks |
+| v5 | Portfolio Optimizer | SCO with turnover/JDP/CVaR penalties, max-1-strategy-per-stock | If v4 produces non-degenerate joint-loss diagnostics |
+
+**v1.1 amendment (2026-04-28) explicitly aligns with the broader spec on:**
+- Multiple-testing control via deflated Sharpe (broader spec §Validation Framework / Multiple-Testing Control)
+- Stability/fragility-aware composite score (broader spec §Per-Stock Candidate Basket)
+- Walk-forward train / validation / test discipline (broader spec §Data Splits)
+
+What v1 deliberately defers to v2+: copula-based dependence, portfolio optimizer, top-10 basket per stock, ~220-stock universe, multi-regime stratification. This is to keep v1's experimental budget tight and the holdout window short.
+
+**Source files referenced for v1.1 framing:**
+- `docs/superpowers/specs/Sharpe_ Ratio _ Karparthy.txt` — deflated Sharpe + meta-learning + portfolio-aware selection insight
+- `docs/superpowers/specs/nse_fo_universe_technical_spec.md` — full multi-layer engine design

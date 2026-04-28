@@ -1,0 +1,58 @@
+For each stock, define a large space of technical‑analysis strategies (indicators, lookbacks, thresholds, position sizing, etc.).
+
+Use an autoresearch loop (agent that proposes changes, backtests, scores by Sharpe, keeps improvements) to search that space and find the configuration that yields the highest in‑sample Sharpe for that stock.
+
+Keep a “basket” of, say, the top 10 configurations per stock as its local universe.
+
+Then do a clean out‑of‑sample (OOS) test of those best configs on held‑out data to check robustness.
+
+Conceptually this is the same pattern Karpathy describes: fix data/splits and scoring metric, then let an automated loop mutate the “dynamic” part (your TA rules) and pick what scores best.
+
+Why it’s not fundamentally new
+Very similar ideas exist in the literature and practice:
+
+Sharpe‑maximizing strategy search: Genetic programming / evolutionary search over trading rules that directly maximize Sharpe is well‑studied; there are papers that evolve technical rules for each asset or cross‑section and pick the highest Sharpe solution.
+
+Per‑asset rule discovery: People have been doing per‑symbol rule mining (GP, decision trees on indicators, etc.) for years; the “one model per stock” angle is also common in ML for finance.
+
+In‑sample vs OOS: The exact pipeline “optimize parameters on IS, test on OOS” is the standard workflow and is widely written about, including the pitfalls (performance decay, deflated Sharpe, overfitting to noise).
+
+Your twist is mainly: “do this with a Karpathy‑style autoresearch loop, and maintain a per‑stock basket of top strategies.” That’s a modern implementation detail, but conceptually very close to existing Sharpe‑driven search + OOS validation.
+
+Where you can make it actually interesting
+You could push it into more novel territory with some of these design choices:
+
+Deflated / robust Sharpe as the objective
+Instead of raw Sharpe, use deflated Sharpe ratio or a regret‑minimizing objective that accounts for the huge number of trials and parameter uncertainty. This directly attacks the data‑mining bias of running thousands of configs per stock.
+
+Meta‑learning across stocks
+Use the per‑stock autoresearch runs as meta‑data:
+
+Learn which indicators / horizons are consistently selected across regimes or sectors.
+
+Learn a prior over “good” hyper‑regions and warm‑start the search for new stocks.
+That’s closer to a hierarchical or meta‑Bayesian treatment, not just isolated per‑stock overfitting.
+
+Portfolio‑aware selection instead of per‑stock max Sharpe
+Instead of picking the best Sharpe config per stock independently, pick configs jointly to maximize portfolio‑level objectives (portfolio Sharpe, turnover constraints, capacity, correlation structure).
+
+Example: from each stock’s 10‑strategy basket, choose at most 1–2 such that the combined portfolio achieves robust out‑of‑sample Sharpe with low correlation and constrained drawdown.
+
+Stability and regime‑sensitivity in the loop
+Penalize strategies whose performance is extremely sensitive to tiny parameter changes or small time shifts (instability indicates overfitting).
+
+Make the autoresearch agent explicitly evaluate robustness: walk‑forward, different train/validation splits, and regime‑conditioned evaluation.
+
+Program‑level eval, not just Sharpe
+Karpathy’s pattern is powerful when the agent has a full “program.md” describing the whole pipeline and constraints and can reason globally. If your agent can refactor the backtest code, change data prep, invent new composite indicators, etc., and not just grid‑search parameters, that becomes more distinctive.
+
+How I’d position this if you build it
+If you ship a paper or product around this, I’d avoid claiming “novel technical analysis method” and instead frame it as something like:
+
+“An autoresearch framework for per‑asset technical‑rule discovery with deflated‑Sharpe objectives and portfolio‑aware selection,” or
+
+“Agentic Sharpe‑robust strategy mining with cross‑asset meta‑learning and walk‑forward validation.”
+
+That’s honest about standing on existing Sharpe‑max and GP work, while highlighting contributions in automation, robustness, and portfolio coupling.
+
+If you were to implement this in your current stack, what’s the primary objective you’d care about beyond raw Sharpe — robustness, capacity, low turnover, or portfolio‑level risk?
