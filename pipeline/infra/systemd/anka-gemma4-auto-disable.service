@@ -9,6 +9,7 @@ User=anka
 Group=anka
 WorkingDirectory=/home/anka/askanka.com
 EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+Environment=PYTHONPATH=/home/anka/askanka.com
 ExecStart=/home/anka/askanka.com/.venv/bin/python pipeline/scripts/gemma4_auto_disable_check.py
 StandardOutput=append:/home/anka/askanka.com/opus/logs/gemma4_pilot.log
 StandardError=append:/home/anka/askanka.com/opus/logs/gemma4_pilot.log
