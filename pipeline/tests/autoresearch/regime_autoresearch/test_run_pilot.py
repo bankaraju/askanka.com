@@ -547,6 +547,98 @@ def test_verdict_blocks_pass_when_insufficient_for_folds():
     assert "single-pass fallback" in v["verdict_reason"]
 
 
+# Backlog #195 — MIN_NET_SHARPE floor on passes_delta_in.
+# The v2 null-basket hurdle in NEUTRAL h=1 runs deeply negative (-1.6 to -3.5
+# Sharpe across constructions) because random-pick baskets at h=1 lose to
+# transaction friction. Without an absolute floor, a strategy with
+# net_sharpe ≈ 0 clears delta_in trivially. The floor adds the deployment
+# question ("are you tradeable at all?") on top of the delta_in
+# information question ("do you beat random selection?").
+# Diagnosis: docs/research/regime_autoresearch/2026-04-28-neutral-hurdle-semantics.md
+
+def test_verdict_blocks_pass_when_net_sharpe_negative_even_if_gap_clears():
+    """Diagnosis-doc case 1: net_sharpe=-0.05, hurdle=-1.5.
+    Gap = +1.45 >> 0.15, so delta_in *gap* would clear under v2's hurdle
+    semantics. But net_sharpe < 0 — strategy is itself net-negative and
+    not deployable. Floor must veto.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=80, net_sharpe=-0.05, hurdle_sharpe=-1.5,
+        fold_n_events=[20, 20, 20, 20], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is False, (
+        "MIN_NET_SHARPE floor must veto: gap +1.45 clears delta_in but "
+        "net_sharpe=-0.05 < 0 makes the strategy un-tradeable"
+    )
+    assert v["verdict_pass"] is False
+    assert "net_sharpe below floor" in v["verdict_reason"], (
+        f"expected reason to mention net_sharpe floor, got "
+        f"{v['verdict_reason']!r}"
+    )
+
+
+def test_verdict_passes_when_net_sharpe_positive_with_negative_hurdle():
+    """Diagnosis-doc case 2: net_sharpe=+0.30, hurdle=-1.5.
+    Gap = +1.80 clears delta_in; net_sharpe ≥ 0 clears the floor.
+    Both gates green — verdict PASS.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=80, net_sharpe=+0.30, hurdle_sharpe=-1.5,
+        fold_n_events=[20, 20, 20, 20], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["passes_min_events"] is True
+    assert v["passes_all_folds_populated"] is True
+    assert v["verdict_pass"] is True
+    assert v["verdict_reason"] == ""
+
+
+def test_verdict_passes_when_low_positive_net_sharpe_clears_both_gates():
+    """Diagnosis-doc case 3 (numbers corrected — original doc had
+    net_sharpe=+0.10, hurdle=+0.50 which gives gap=-0.40, failing
+    delta_in; intent was a just-positive net_sharpe with a small positive
+    hurdle where gap > 0.15). net_sharpe=+0.30, hurdle=+0.10 → gap=+0.20
+    > 0.15 and net_sharpe ≥ 0 → both gates green.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=80, net_sharpe=+0.30, hurdle_sharpe=+0.10,
+        fold_n_events=[20, 20, 20, 20], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["verdict_pass"] is True
+    assert v["verdict_reason"] == ""
+
+
+def test_verdict_passes_when_comfortably_positive_with_positive_hurdle():
+    """Diagnosis-doc case 4: net_sharpe=+0.80, hurdle=+0.20.
+    Gap = +0.60 clears; floor clears. Both gates green.
+    """
+    v = run_pilot._compute_verdict(
+        n_events=80, net_sharpe=+0.80, hurdle_sharpe=+0.20,
+        fold_n_events=[20, 20, 20, 20], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["verdict_pass"] is True
+    assert v["verdict_reason"] == ""
+
+
+def test_verdict_floor_boundary_zero_net_sharpe_passes_floor():
+    """Boundary: net_sharpe = 0.0 exactly. MIN_NET_SHARPE = 0.0 means
+    `>= 0.0` so the floor passes. Combined with negative hurdle it still
+    clears the gap — passes_delta_in is True.
+
+    This preserves the historical behaviour exercised by
+    test_verdict_blocks_spurious_pass_on_zero_events at the gap level
+    (that test gates the verdict on min_events, not on the floor).
+    """
+    v = run_pilot._compute_verdict(
+        n_events=80, net_sharpe=0.0, hurdle_sharpe=-0.6,
+        fold_n_events=[20, 20, 20, 20], insufficient_for_folds=False,
+    )
+    assert v["passes_delta_in"] is True
+    assert v["verdict_pass"] is True
+
+
 def _dup_proposal(feature="ret_5d", construction_type="long_short_basket",
                   threshold_op="top_k", threshold_value=15, hold_horizon=5,
                   regime="NEUTRAL", pair_id=None) -> Proposal:

@@ -40,7 +40,7 @@ _load_env_file()
 
 from pipeline.autoresearch.regime_autoresearch.constants import (
     DATA_DIR, DELTA_IN_SAMPLE, MIN_EVENTS_FOR_PASS,
-    MIN_EVENTS_PER_FOLD_FOR_PASS, PROPOSER_MODEL, REGIMES,
+    MIN_EVENTS_PER_FOLD_FOR_PASS, MIN_NET_SHARPE, PROPOSER_MODEL, REGIMES,
     REPO_ROOT, TRAIN_VAL_END, TRAIN_VAL_START,
 )
 from pipeline.autoresearch.regime_autoresearch.dsl import (
@@ -550,6 +550,7 @@ def _compute_verdict(n_events: int | None, net_sharpe: float | None,
 
     Returns a dict with:
       - passes_delta_in: net_sharpe - hurdle >= DELTA_IN_SAMPLE
+        AND net_sharpe >= MIN_NET_SHARPE (absolute floor, Backlog #195)
       - passes_min_events: n_events >= MIN_EVENTS_FOR_PASS
       - passes_all_folds_populated: every fold had at least
         MIN_EVENTS_PER_FOLD_FOR_PASS events AND the runner did not fall
@@ -571,12 +572,22 @@ def _compute_verdict(n_events: int | None, net_sharpe: float | None,
     events. insufficient_for_folds (single-pass fallback rows) auto-fail
     because the rule's in-sample window is too short for a trustworthy
     cross-time Sharpe.
+
+    The MIN_NET_SHARPE absolute floor (Backlog #195, 2026-04-28) is
+    folded into passes_delta_in: even if the gap clears, a net-negative
+    proposal is not deployable. v2's null-basket hurdle in NEUTRAL h=1
+    runs deeply negative (-1.6 to -3.5 Sharpe), so without the floor
+    proposals with net_sharpe ≈ 0 cleared delta_in by ~9× the threshold.
     """
-    passes_delta_in = (
+    passes_delta_in_gap = (
         net_sharpe is not None
         and hurdle_sharpe is not None
         and (net_sharpe - hurdle_sharpe) >= DELTA_IN_SAMPLE
     )
+    passes_min_net_sharpe = (
+        net_sharpe is not None and net_sharpe >= MIN_NET_SHARPE
+    )
+    passes_delta_in = bool(passes_delta_in_gap and passes_min_net_sharpe)
     passes_min_events = (
         n_events is not None and n_events >= MIN_EVENTS_FOR_PASS
     )
@@ -597,7 +608,12 @@ def _compute_verdict(n_events: int | None, net_sharpe: float | None,
                 f"insufficient events (n={n_events} < {MIN_EVENTS_FOR_PASS})"
             )
         if not passes_delta_in:
-            reasons.append("delta_in gap below hurdle")
+            if not passes_delta_in_gap:
+                reasons.append("delta_in gap below hurdle")
+            if not passes_min_net_sharpe:
+                reasons.append(
+                    f"net_sharpe below floor (need >= {MIN_NET_SHARPE})"
+                )
         if not passes_all_folds_populated:
             if insufficient_for_folds:
                 reasons.append(

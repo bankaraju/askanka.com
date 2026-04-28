@@ -172,3 +172,36 @@ the same fix applies.
 This document closes the diagnosis half of #195. The implementation half
 (adding the `MIN_NET_SHARPE` floor + test + commit) needs explicit user
 approval per model-governance rules before shipping.
+
+## Update — Option A shipped 2026-04-28
+
+User approval received 2026-04-28 same day. Option A landed:
+
+- `pipeline/autoresearch/regime_autoresearch/constants.py` — added
+  `MIN_NET_SHARPE = 0.0` with docstring.
+- `pipeline/autoresearch/regime_autoresearch/scripts/run_pilot.py` —
+  imported the constant; `_compute_verdict` now folds the floor into
+  `passes_delta_in` (split internally as `passes_delta_in_gap` AND
+  `passes_min_net_sharpe` so the verdict_reason can distinguish
+  gap-failure from floor-failure). Public dict shape unchanged.
+- `pipeline/tests/autoresearch/regime_autoresearch/test_run_pilot.py` —
+  added 5 new tests covering the diagnosis-doc cases plus a
+  net_sharpe=0.0 boundary check (5 not 4: the boundary case was added
+  to lock the `>=` semantic).
+
+The legacy fallback path through `incumbents.hurdle_sharpe_for_regime`
+is unaffected — the floor is applied to `net_sharpe`, not to
+`hurdle_sharpe`, so it works against any hurdle source.
+
+Reanalyze script (`scripts/reanalyze_log.py`) calls `_compute_verdict`
+directly so it inherits the floor automatically; no separate change
+needed there.
+
+The case-3 numbers in the test plan above were corrected on the way to
+shipping — the original `net_sharpe=+0.10, hurdle=+0.50` gave
+gap=−0.40, which fails delta_in regardless of the floor. The shipped
+test uses `net_sharpe=+0.30, hurdle=+0.10` (gap=+0.20) to preserve the
+intent: a just-positive net_sharpe with a small positive hurdle that
+clears both gates. Test docstring records the correction.
+
+Option C (NIFTY-residual hurdle) remains deferred to a v3 design.

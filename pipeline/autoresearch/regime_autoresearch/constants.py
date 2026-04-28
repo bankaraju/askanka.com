@@ -45,6 +45,16 @@ MIN_EVENTS_FOR_PASS = 20
 # delta_in outcome. Prevents silent fold-0-empty passes on 252-bar features.
 MIN_EVENTS_PER_FOLD_FOR_PASS = 5
 
+# Absolute floor on net Sharpe required to pass the in-sample verdict gate.
+# The delta_in gate measures information content (do you beat random
+# selection?) but says nothing about whether the strategy is itself
+# tradeable in absolute terms. v2's null-basket hurdle in NEUTRAL h=1 runs
+# deeply negative (-1.6 to -3.5 Sharpe), so a strategy with net_sharpe ≈ 0
+# can clear delta_in trivially despite being net-negative. This floor
+# rejects net-negative-or-flat proposals regardless of how much margin
+# they carry over a deeply-negative hurdle. Backlog #195.
+MIN_NET_SHARPE = 0.0
+
 # Proposer budget
 PROPOSALS_PER_REGIME_HARD_CAP = 500
 CONSECUTIVE_NO_IMPROVE_SOFT_CAP = 50
