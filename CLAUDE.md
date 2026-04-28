@@ -24,7 +24,7 @@ Every task follows: brainstorm → plan → build → verify → review. No exce
 - Section 21 of the data policy binds this gate to the model governance ladder: a model cannot reach Approved status if any data dependency is below Approved-for-deployment at the corresponding tier.
 
 ## Kill Switch: No Un-Registered Trading Rules
-Any NEW file matching `*_strategy.py`, `*_signal_generator.py`, `*_backtest.py`, `*_ranker.py`, or `*_engine.py` MUST ship with a matching entry in `docs/superpowers/hypothesis-registry.jsonl` in the SAME commit. Enforced by `pipeline/scripts/hooks/pre-commit-strategy-gate.sh` (local pre-commit) AND `.github/workflows/strategy-gate.yml` on pull_request. Renaming or refactoring an existing file matching the pattern is not "new" per the `diff-filter=A` test — the gate only triggers on additions. Install the local hook once per clone:
+Any NEW file matching the regex in `pipeline/scripts/hooks/strategy_patterns.txt` (currently: `*_strategy.py`, `*_signal_generator.py`, `*_backtest.py`, `*_ranker.py`, `*_engine.py`) MUST ship with a matching entry in `docs/superpowers/hypothesis-registry.jsonl` in the SAME commit. Both the local pre-commit hook (`pipeline/scripts/hooks/pre-commit-strategy-gate.sh`) and the CI workflow (`.github/workflows/strategy-gate.yml`) read the regex from the same patterns file — when adding a new suffix, edit `strategy_patterns.txt` ONLY. Renaming or refactoring an existing file matching the pattern is not "new" per the `diff-filter=A` test — the gate only triggers on additions. Install the local hook once per clone:
 ```
 cp pipeline/scripts/hooks/pre-commit-strategy-gate.sh .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
