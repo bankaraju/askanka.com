@@ -1,4 +1,5 @@
 import { get } from '../lib/api.js';
+import { renderTabHeader, renderEmptyState } from '../components/tab-header.js';
 
 function _esc(s) {
   if (s == null) return '';
@@ -14,13 +15,29 @@ const SENTIMENT_CLASS = {
   neutral: 'muted', MEDIUM: 'amber',
 };
 
+const HEADER_PROPS = {
+  title: 'News',
+  subtitle: 'Corporate-action verdicts from EOD news classifier — HIGH_IMPACT and MODERATE rows with ADD/CUT recommendations.',
+  cadence: 'Source: news_verdicts.json · Refreshes 16:20 IST daily (AnkaEODNews) + intraday at every 15-min cycle.',
+};
+
 export async function render(container) {
-  container.innerHTML = '<div class="skeleton skeleton--card"></div>';
+  container.innerHTML = renderTabHeader(HEADER_PROPS) + '<div class="skeleton skeleton--card"></div>';
   try {
     const data = await get('/news/macro');
     const items = data.items || [];
+    const lastUpdated = data.generated_at || data.timestamp || null;
+    const headerHtml = renderTabHeader({
+      ...HEADER_PROPS,
+      lastUpdated,
+      status: items.length === 0 ? 'empty' : 'fresh',
+    });
     if (items.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>No news available</p></div>';
+      container.innerHTML = headerHtml + renderEmptyState({
+        title: 'No actionable news verdicts',
+        reason: 'Yesterday\'s EOD classifier produced 0 rows that pass the HIGH_IMPACT+MODERATE × ADD/CUT filter. Backlog #37 (news_backtest impact classification audit) addresses why the classifier is grading every event NO_IMPACT.',
+        nextUpdate: 'Next refresh: today 16:20 IST after AnkaEODNews completes.',
+      });
       return;
     }
     const newsHtml = items.slice(0, 50).map(item => {
@@ -38,9 +55,13 @@ export async function render(container) {
         <div class="text-muted" style="font-size: 0.6875rem; margin-top: 2px;">${_esc(time)}</div>
       </div>`;
     }).join('');
-    container.innerHTML = `<div class="card">${newsHtml}</div>`;
-  } catch {
-    container.innerHTML = '<div class="empty-state"><p>Failed to load news</p></div>';
+    container.innerHTML = headerHtml + `<div class="card">${newsHtml}</div>`;
+  } catch (e) {
+    container.innerHTML = renderTabHeader(HEADER_PROPS) + renderEmptyState({
+      title: 'Failed to load news',
+      reason: `API error: ${_esc(e.message || String(e))}`,
+      nextUpdate: 'Check that the terminal server is running and news_verdicts.json exists.',
+    });
   }
 }
 

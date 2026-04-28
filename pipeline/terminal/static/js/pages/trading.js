@@ -5,15 +5,19 @@ import * as filterChips from '../components/filter-chips.js';
 import * as candidatesTable from '../components/candidates-table.js';
 import * as attractiveness from '../components/attractiveness-cell.js';
 import * as karpathyCard from '../components/karpathy-v1-card.js';
+import { renderTabHeader } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Trading',
+  subtitle: 'Read-only browser of every tradeable candidate (regime-engine, news-event, static spread). FCS / TA / Spread / Correlation analyses attached per row. No actions taken from this surface.',
+  cadence: 'Candidates rebuild 09:25 IST (AnkaMorningScan) + every intraday cycle (15 min). Attractiveness re-scores on each cycle.',
+};
 
 let _allCandidates = [];
 
 export async function render(container) {
   container.innerHTML = `
-    <div style="margin-bottom: var(--spacing-md);">
-      <h2 style="margin-bottom: var(--spacing-xs); font-size: 1.125rem;">Trading — All Tradeable Candidates</h2>
-      <div class="text-muted" style="font-size: 0.75rem;">Read-only. Filter and study; no actions taken from this surface.</div>
-    </div>
+    ${renderTabHeader(HEADER_PROPS)}
     <div id="trading-filters" style="margin-bottom: var(--spacing-md); display: flex; flex-wrap: wrap; gap: var(--spacing-sm);"></div>
     <div id="trading-count" class="text-muted" style="font-size: 0.75rem; margin-bottom: var(--spacing-sm);"></div>
     <div id="trading-table"></div>

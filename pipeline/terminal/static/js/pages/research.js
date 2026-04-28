@@ -1,4 +1,11 @@
 import { get } from '../lib/api.js';
+import { renderTabHeader, renderEmptyState } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Research',
+  subtitle: 'Intelligence digest: thesis (regime + spread) on the left, evidence (correlation breaks + backtest validation) on the right. The "why" behind today\'s positions.',
+  cadence: 'Recomputes 09:25 IST (AnkaMorningScan) + every intraday cycle (15 min). In-page polling 5 min during market hours, off after-hours.',
+};
 
 let _refreshTimer = null;
 
@@ -29,14 +36,6 @@ function _fmt(n) {
   return n.toLocaleString('en-IN', { maximumFractionDigits: 1 });
 }
 
-function _digestHeader(genTime, isStale) {
-  const timeStr = genTime ? new Date(genTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : '--';
-  const staleBadge = isStale ? ' <span class="badge badge--stale">STALE</span>' : '';
-  return `<div class="digest-header">
-    <h2 class="digest-header__title">Intelligence Digest</h2>
-    <span class="digest-header__time">Last computed: ${timeStr}${staleBadge}</span>
-  </div>`;
-}
 
 function _regimeCard(r) {
   if (!r) return '<div class="digest-card"><p class="text-muted">No regime data</p></div>';
@@ -182,7 +181,7 @@ export async function render(container) {
     const genTime = data.generated_at || '';
     const isStale = _isStale(genTime);
     container.innerHTML = `
-      ${_digestHeader(genTime, isStale)}
+      ${renderTabHeader({ ...HEADER_PROPS, lastUpdated: genTime || null, status: isStale ? 'stale' : 'fresh' })}
       <div class="digest-grid">
         <div>
           <div class="digest-column-header">Thesis — The Claim</div>
@@ -201,8 +200,12 @@ export async function render(container) {
     if (inMarket) {
       _refreshTimer = setInterval(() => render(container), 5 * 60 * 1000);
     }
-  } catch {
-    container.innerHTML = '<div class="empty-state"><p>Failed to load research digest</p></div>';
+  } catch (e) {
+    container.innerHTML = renderTabHeader(HEADER_PROPS) + renderEmptyState({
+      title: 'Failed to load research digest',
+      reason: `API error: ${e && e.message ? e.message : String(e)}`,
+      nextUpdate: 'Check that the terminal server is running.',
+    });
   }
 }
 

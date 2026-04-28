@@ -11,6 +11,13 @@
 // Design rule (Bharat 2026-04-27): a row earns its place by being OPEN,
 // state-changed today, or close to a threshold. Static inventory is noise.
 import { get } from '../lib/api.js';
+import { renderTabHeader } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Regime',
+  subtitle: 'ETF-engine zone (primary) + MSI (secondary) + Phase A/B/C reverse-regime picks. Spread watchlist hides anything below score 60.',
+  cadence: 'Zone refreshes 04:45 IST daily (AnkaETFSignal). MSI + Phase B/C re-score every 15 min during market hours; in-page polling 60s.',
+};
 
 let _refreshTimer = null;
 let _inflight = false;
@@ -177,8 +184,13 @@ export async function render(container) {
     const stableLabel = r.stable ? 'LOCKED' : 'UNSTABLE';
     const stableCls = r.stable ? 'text-green' : 'text-amber';
 
+    const headerHtml = renderTabHeader({
+      ...HEADER_PROPS,
+      lastUpdated: r.updated_at || null,
+      status: r.stable ? 'fresh' : (r.zone ? 'stale' : 'empty'),
+    });
     container.innerHTML = `
-      <h2 style="margin-bottom: var(--spacing-md);">Regime — Where is the market?</h2>
+      ${headerHtml}
       <div class="digest-grid">
         <div>
           <div class="digest-column-header">ETF Engine (Primary)</div>

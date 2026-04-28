@@ -7,6 +7,13 @@
 //
 // Spec: docs/superpowers/specs/2026-04-27-ta-scanner-pattern-paired-shadow-design.md
 import { get } from '../lib/api.js';
+import { renderTabHeader, renderEmptyState } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Scanner (TA)',
+  subtitle: 'Daily F&O 12-pattern scan ranked by composite (z × log(n) × |mean P&L|). Click any ticker for chart. Top-10 fires a paired (futures + ATM options) forward-shadow at T+1.',
+  cadence: 'Pattern detect: 16:30 IST daily (AnkaPatternScannerScan). Stats refit: Sun 02:00 IST (AnkaPatternScannerFit, 5y window). Paired-shadow: 09:25 OPEN / 15:30 CLOSE.',
+};
 
 let _refreshTimer = null;
 let _inflight = false;
@@ -121,8 +128,13 @@ export async function render(container) {
         </div>`
       : '';
 
+    const headerHtml = renderTabHeader({
+      ...HEADER_PROPS,
+      lastUpdated: data.as_of || null,
+      status: top10.length === 0 ? 'empty' : 'fresh',
+    });
     container.innerHTML = `
-      <h2 style="margin-bottom: var(--spacing-md);">Scanner (TA) — Today's Top Patterns</h2>
+      ${headerHtml}
       <div class="digest-card">
         <div class="digest-card__title">Top ${top10.length} of ${data.qualified_count} qualified fires</div>
         <div class="digest-card__subtitle">Universe ${data.universe_size} F&amp;O stocks | as of ${_esc(data.as_of?.slice(0, 16) || '--')}</div>
@@ -143,7 +155,11 @@ export async function render(container) {
     _refreshTimer = setInterval(() => render(container), 60000);
   } catch (e) {
     console.error('scanner render failed', e);
-    container.innerHTML = '<div class="empty-state"><p>Failed to load scanner data</p></div>';
+    container.innerHTML = renderTabHeader(HEADER_PROPS) + renderEmptyState({
+      title: 'Failed to load scanner data',
+      reason: `API error: ${e && e.message ? e.message : String(e)}`,
+      nextUpdate: 'Check that the terminal server is running and pattern_signals_today.json exists.',
+    });
   } finally {
     _inflight = false;
   }

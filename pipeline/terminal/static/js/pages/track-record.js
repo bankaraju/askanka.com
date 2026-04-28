@@ -1,4 +1,11 @@
 import { get } from '../lib/api.js';
+import { renderTabHeader, renderEmptyState } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Track Record',
+  subtitle: 'Per-trade averages across every paper engine (Phase C / H-001 / H-002 / Spread / SECRSI / Karpathy / Scanner). Shadow only — no real money. Sum-of-trade-returns shown small as secondary "1 unit/trade" view.',
+  cadence: 'Closed-trade ledger refreshes 16:15 IST (AnkaEODTrackRecord) + on every CLOSE during the day. Equity curve recomputes with each new close.',
+};
 
 let chartInstance = null;
 let _state = { engineFilter: null, trades: [], byEngine: [], curve: [] };
@@ -96,6 +103,19 @@ function chipsHtml(byEngine) {
   return `<div class="chip-row">${all}${chips}</div>`;
 }
 
+function _tickerFromTrade(t) {
+  // Phase C signal_ids look like BRK-2026-04-23-TATAELXSI; extract last segment
+  // and validate as an upper-case ticker. spread_name "Phase C: TATAELXSI ..."
+  // also exposes the symbol — use that fallback when signal_id is non-conforming.
+  const sid = t.signal_id || '';
+  const m = sid.match(/^BRK-\d{4}-\d{2}-\d{2}-([A-Z0-9&-]+)$/);
+  if (m) return m[1];
+  const sn = (t.spread_name || '');
+  const m2 = sn.match(/Phase C:\s+([A-Z0-9&-]+)/);
+  if (m2) return m2[1];
+  return null;
+}
+
 function tradesTableHtml(trades) {
   const rows = trades.map(t => {
     const pnl = t.final_pnl_pct || 0;
@@ -111,9 +131,13 @@ function tradesTableHtml(trades) {
     };
     const reasonKey = (t.close_reason || '').split(':')[0].trim().toLowerCase().replace(/\s/g, '_');
     const reasonBadge = reasonMap[reasonKey] || `<span class="badge badge--muted" title="${(t.close_reason || '').replace(/"/g, '&quot;')}">${(t.close_reason || '--').split(':')[0].slice(0, 14)}</span>`;
+    const ticker = _tickerFromTrade(t);
+    const tradeCell = ticker
+      ? `<a class="ticker-link" data-ticker="${ticker}" href="#" role="button" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--text-muted);">${t.spread_name || t.signal_id || '--'}</a>`
+      : (t.spread_name || t.signal_id || '--');
     return `<tr>
       <td><span class="engine-tag" style="background:${t.engine_color}1f;color:${t.engine_color};border:1px solid ${t.engine_color}40">${(t.engine_label || '').split('—')[0].trim()}</span></td>
-      <td style="font-family: var(--font-body);">${t.spread_name || t.signal_id || '--'}</td>
+      <td style="font-family: var(--font-body);">${tradeCell}</td>
       <td class="mono text-muted">${t.open_date || '--'}</td>
       <td class="mono text-muted">${t.close_date || '--'}</td>
       <td class="mono">${t.days_open == null ? '--' : t.days_open}d</td>
@@ -178,6 +202,7 @@ export async function render(container) {
     // notional, so summing per-trade returns into a "cumulative" headline
     // overstates what a real portfolio would have done. Average is honest.
     container.innerHTML = `
+      ${renderTabHeader({ ...HEADER_PROPS, lastUpdated: trData.generated_at || null, status: trades.length === 0 ? 'empty' : 'fresh' })}
       <div class="kpi-grid kpi-grid--5" style="margin-bottom: var(--spacing-lg);">
         <div class="kpi-card">
           <div class="kpi-card__label">Avg P&L per Trade</div>
@@ -250,7 +275,11 @@ export async function render(container) {
 
   } catch (err) {
     console.error('track-record render error:', err);
-    container.innerHTML = '<div class="empty-state"><p>Failed to load track record</p></div>';
+    container.innerHTML = renderTabHeader(HEADER_PROPS) + renderEmptyState({
+      title: 'Failed to load track record',
+      reason: `API error: ${err && err.message ? err.message : String(err)}`,
+      nextUpdate: 'Check that the terminal server is running and track_record.json exists.',
+    });
   }
 }
 

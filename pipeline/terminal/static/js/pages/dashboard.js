@@ -4,6 +4,13 @@ import * as positionsTable from '../components/positions-table.js';
 import * as scenarioStrip from '../components/scenario-strip.js';
 import * as attractiveness from '../components/attractiveness-cell.js';
 import { startLivePolling } from '../components/live-ticker.js';
+import { renderTabHeader } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Dashboard',
+  subtitle: 'Today\'s shadow positions across all engines + regime banner + scenario strip (per-trade averages, gross & net of round-trip cost). The "what is the system holding right now" surface.',
+  cadence: 'Backend snapshot refreshes 30s. LTP cells patch live every 5s via the live-ticker. SHADOW mode — no real orders.',
+};
 
 let refreshTimer = null;
 let _mounted = false;
@@ -15,6 +22,7 @@ let _stopLiveTicker = null;
 export async function render(container) {
   _mounted = true;
   container.innerHTML = `
+    ${renderTabHeader(HEADER_PROPS)}
     <div id="dash-regime"></div>
     <div id="dash-mode-badge" style="margin: var(--spacing-sm) 0;"></div>
     <div id="dash-positions"></div>

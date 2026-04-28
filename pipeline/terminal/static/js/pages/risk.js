@@ -2,6 +2,13 @@
 // Risk gates dashboard: current level (L0/L1/L2), sizing factor, cumulative P&L,
 // trades in window, breach thresholds. Read-only.
 import { get } from '../lib/api.js';
+import { renderTabHeader, renderEmptyState } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Risk',
+  subtitle: 'Capital-preservation gate state (L0 normal / L1 50% sizing / L2 halted) + sizing factor + cumulative P&L over 20-day window vs L1/L2 breach thresholds.',
+  cadence: 'Re-evaluated every intraday cycle (15 min) and on each closed trade. In-page polling 60s.',
+};
 
 let _refreshTimer = null;
 let _inflight = false;
@@ -40,7 +47,7 @@ export async function render(container) {
     const tradesInWindow = data.trades_in_window ?? 0;
 
     container.innerHTML = `
-      <h2 style="margin-bottom: var(--spacing-md);">Risk — Am I within bounds?</h2>
+      ${renderTabHeader({ ...HEADER_PROPS, lastUpdated: data.evaluated_at || null, status: 'fresh' })}
       <div class="digest-grid">
         <div>
           <div class="digest-card">
@@ -87,7 +94,11 @@ export async function render(container) {
     _refreshTimer = setInterval(() => render(container), 60000);
   } catch (e) {
     console.error('risk render failed', e);
-    container.innerHTML = '<div class="empty-state"><p>Failed to load risk gates</p></div>';
+    container.innerHTML = renderTabHeader(HEADER_PROPS) + renderEmptyState({
+      title: 'Failed to load risk gates',
+      reason: `API error: ${e && e.message ? e.message : String(e)}`,
+      nextUpdate: 'Check that the terminal server is running.',
+    });
   } finally {
     _inflight = false;
   }

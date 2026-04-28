@@ -1,4 +1,11 @@
 import { get } from '../lib/api.js';
+import { renderTabHeader, renderEmptyState } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Trust',
+  subtitle: 'OPUS ANKA management-credibility scores for the F&O universe. Composite (0-100), financial sub-score, management sub-score, sector grade and rank. Used as a NEUTRAL-regime conviction modifier — not a standalone alpha.',
+  cadence: 'Mass re-score: ad-hoc (last full batch via Gemini Flash + Haiku 4.5 fallback). Per-stock refresh on management-event news.',
+};
 
 const GRADE_COLORS = {
   'A+': 'badge--green', 'A': 'badge--green',
@@ -25,7 +32,7 @@ function _heatmapBg(score) {
 }
 
 export async function render(container) {
-  container.innerHTML = '<div class="skeleton skeleton--card"></div>';
+  container.innerHTML = renderTabHeader(HEADER_PROPS) + '<div class="skeleton skeleton--card"></div>';
 
   try {
     const [data, sectorsData] = await Promise.all([
@@ -33,6 +40,12 @@ export async function render(container) {
       get('/trust-scores/sectors').catch(() => ({ sectors: {} })),
     ]);
     const stocks = data.stocks || [];
+    const lastUpdated = data.generated_at || data.last_updated || null;
+    const headerHtml = renderTabHeader({
+      ...HEADER_PROPS,
+      lastUpdated,
+      status: stocks.length === 0 ? 'empty' : 'fresh',
+    });
     const sectorsRaw = sectorsData.sectors || {};
     const sectors = Array.isArray(sectorsRaw)
       ? sectorsRaw
@@ -41,7 +54,11 @@ export async function render(container) {
         }));
 
     if (stocks.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>No trust scores available</p></div>';
+      container.innerHTML = headerHtml + renderEmptyState({
+        title: 'No trust scores available',
+        reason: 'opus/data/trust_scores.json is empty or unreadable.',
+        nextUpdate: 'Trust mass re-score runs ad-hoc via OPUS ANKA. Most recent batch covered 207/210 F&O names.',
+      });
       return;
     }
 
@@ -51,6 +68,7 @@ export async function render(container) {
     ).join('');
 
     container.innerHTML = `
+      ${headerHtml}
       <div class="filter-bar" style="display:flex; align-items:center; gap: var(--spacing-sm); flex-wrap:wrap; margin-bottom: var(--spacing-sm);">
         <input type="text" id="trust-search" class="filter-search" placeholder="Search ticker..." style="min-width:140px;">
         <select id="trust-sector" class="filter-search" style="min-width:160px;">
@@ -144,8 +162,12 @@ export async function render(container) {
     renderTable();
     container.querySelector('#trust-search').addEventListener('input', renderTable);
     container.querySelector('#trust-sector').addEventListener('change', renderTable);
-  } catch {
-    container.innerHTML = '<div class="empty-state"><p>Failed to load trust scores</p></div>';
+  } catch (e) {
+    container.innerHTML = renderTabHeader(HEADER_PROPS) + renderEmptyState({
+      title: 'Failed to load trust scores',
+      reason: `API error: ${e && e.message ? e.message : String(e)}`,
+      nextUpdate: 'Check that the terminal server is running.',
+    });
   }
 }
 

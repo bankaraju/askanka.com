@@ -11,6 +11,13 @@
 // is the 14:30 mechanical close, and that fires from the scheduler, not
 // the UI.
 import { get } from '../lib/api.js';
+import { renderTabHeader } from '../components/tab-header.js';
+
+const HEADER_PROPS = {
+  title: 'Live Monitor',
+  subtitle: 'Open paper positions across Phase C + H-001/H-002. Live LTP, P&L marked-to-LTP (gross + net of round-trip cost), ATR + trail stops, time-to-14:30 mechanical close. Shadow only.',
+  cadence: 'Server LTP refresh: every poll, 3s in-process cache. Frontend poll: 10s. Mechanical close: 14:30 IST (AnkaPhaseCShadowClose, AnkaH20260426001PaperClose).',
+};
 
 const POLL_INTERVAL_MS = 10000;
 
@@ -55,6 +62,7 @@ function sigmaBucketSortKey(b) {
 
 export async function render(container) {
   container.innerHTML = `
+    ${renderTabHeader(HEADER_PROPS)}
     <div class="live-monitor">
       <div id="live-monitor-strip" class="live-monitor__strip">
         <div class="skeleton skeleton--row"></div>
