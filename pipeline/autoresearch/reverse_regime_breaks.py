@@ -50,6 +50,7 @@ log = logging.getLogger("anka.reverse_regime_breaks")
 # File paths
 # ---------------------------------------------------------------------------
 PROFILE_FILE = AUTORESEARCH_DIR / "reverse_regime_profile.json"
+TODAY_REGIME_FILE = DATA_DIR / "today_regime.json"
 REGIME_STATE_FILE = DATA_DIR / "regime_ranker_state.json"
 POSITIONING_FILE = DATA_DIR / "positioning.json"
 BREAKS_FILE = DATA_DIR / "correlation_breaks.json"
@@ -256,13 +257,49 @@ def load_profile() -> dict:
 
 
 def load_regime_state() -> dict:
-    """Load current regime from Phase B state file."""
-    if not REGIME_STATE_FILE.exists():
-        log.warning("Regime state file not found: %s — will try VIX fallback",
-                     REGIME_STATE_FILE)
-        return {}
-    with open(REGIME_STATE_FILE, "r") as f:
-        return json.load(f)
+    """Load the current regime from the canonical regime tape.
+
+    Reads today_regime.json first — that's what regime_scanner.py writes at
+    09:25 IST and what every other engine on the system treats as the source
+    of truth for "what regime are we in today". Falls back to the legacy
+    Phase B state file (regime_ranker_state.json) only if today_regime.json
+    is missing, then to VIX.
+
+    Returns a normalised dict with `current_regime` and `days_in_regime`
+    populated so the caller does not need to know about the underlying
+    field-name differences between the two files.
+
+    Bug history: prior to 2026-04-28 this read regime_ranker_state.json,
+    which uses `last_zone` (not `current_regime`/`regime`) at the top level
+    and has no `days_in_regime`. Both .get() calls fell through to the
+    literal defaults "NEUTRAL" / 1, so every break stamped on a non-NEUTRAL
+    day silently mis-tagged. Fix: read today_regime.json first. (Backlog #110.)
+    """
+    if TODAY_REGIME_FILE.exists():
+        try:
+            with open(TODAY_REGIME_FILE, "r", encoding="utf-8") as f:
+                today = json.load(f)
+            regime = today.get("regime") or today.get("zone")
+            days = today.get("consecutive_days")
+            if regime:
+                return {
+                    "current_regime": regime,
+                    "days_in_regime": days if days is not None else 1,
+                    "transition": today.get("transition"),
+                    "_source": "today_regime.json",
+                }
+        except (json.JSONDecodeError, OSError) as e:
+            log.warning("today_regime.json unreadable (%s) — trying ranker state", e)
+
+    if REGIME_STATE_FILE.exists():
+        with open(REGIME_STATE_FILE, "r") as f:
+            return json.load(f)
+
+    log.warning(
+        "Neither today_regime.json nor %s found — will try VIX fallback",
+        REGIME_STATE_FILE,
+    )
+    return {}
 
 
 def load_positioning() -> dict:
@@ -325,9 +362,23 @@ def get_current_regime(force_regime: str = None, force_transition: str = None) -
 
     state = load_regime_state()
     if state:
-        regime = state.get("current_regime", state.get("regime", "NEUTRAL"))
-        days = state.get("days_in_regime", state.get("days", 1))
+        # Field names vary across producers; today_regime.json (canonical, set
+        # by load_regime_state) writes `current_regime`. Legacy ranker state
+        # uses `last_zone`; older builds used `regime`.
+        regime = (
+            state.get("current_regime")
+            or state.get("regime")
+            or state.get("last_zone")
+            or "NEUTRAL"
+        )
+        days = (
+            state.get("days_in_regime")
+            if state.get("days_in_regime") is not None
+            else state.get("days", 1)
+        )
         transition = state.get("transition")
+        if state.get("_source"):
+            log.info("Regime: %s (day %s) from %s", regime, days, state["_source"])
         return regime, days, transition
 
     # Fallback to VIX
@@ -565,8 +616,19 @@ def print_breaks(breaks: list, regime: str, days_in_regime: int):
     print(f"\n{'='*60}")
 
 
-def save_breaks(breaks: list, dry_run: bool = False):
-    """Save breaks to state files."""
+def save_breaks(
+    breaks: list,
+    regime: str | None = None,
+    days_in_regime: int | None = None,
+    dry_run: bool = False,
+):
+    """Save breaks to state files.
+
+    Top-level `regime`/`days_in_regime`/`scan_time` are stamped onto
+    correlation_breaks.json so a downstream consumer can confirm the breaks
+    file matches today_regime.json without having to crack open every break.
+    Per-break `regime` continues to be set inside scan_for_breaks.
+    """
     if dry_run:
         log.info("Dry run — skipping state file writes")
         return
@@ -580,6 +642,8 @@ def save_breaks(breaks: list, dry_run: bool = False):
     today_data = {
         "date": today,
         "scan_time": datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S"),
+        "regime": regime,
+        "days_in_regime": days_in_regime,
         "breaks": breaks,
     }
 
@@ -707,10 +771,12 @@ def main():
 
     # 8. Save state
     if breaks:
-        save_breaks(breaks, dry_run=args.dry_run)
+        save_breaks(breaks, regime=regime, days_in_regime=days_in_regime,
+                    dry_run=args.dry_run)
     elif not args.dry_run:
         # Still write today's file even if no breaks (indicates scan ran)
-        save_breaks([], dry_run=args.dry_run)
+        save_breaks([], regime=regime, days_in_regime=days_in_regime,
+                    dry_run=args.dry_run)
 
 
 if __name__ == "__main__":
