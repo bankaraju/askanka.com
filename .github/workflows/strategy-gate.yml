@@ -1,5 +1,8 @@
 name: strategy-gate
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches: [master]
 
 jobs:
   strategy-gate:
@@ -8,15 +11,35 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Simulate pre-commit scan vs main
+      - name: Simulate pre-commit scan
         run: |
           # Single source of truth for trading-rule filename patterns.
           # Same file is read by pipeline/scripts/hooks/pre-commit-strategy-gate.sh.
           TRADING_PATTERNS=$(cat pipeline/scripts/hooks/strategy_patterns.txt)
-          git diff --name-only --diff-filter=A origin/${{ github.base_ref }}...HEAD > /tmp/new_files.txt
+
+          # Pick the comparison range based on event type:
+          #   pull_request -> base_ref vs HEAD (whole PR, like the original gate)
+          #   push (to master) -> previous commit vs HEAD (just-pushed work,
+          #                       so the gate runs on direct pushes too — #187)
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            RANGE="origin/${{ github.base_ref }}...HEAD"
+          else
+            # github.event.before is the SHA before this push.
+            # On the very first push to a fresh branch it is all-zeros; in
+            # that edge case fall back to a single-commit diff.
+            BEFORE="${{ github.event.before }}"
+            if [[ "$BEFORE" =~ ^0+$ ]]; then
+              RANGE="HEAD~1...HEAD"
+            else
+              RANGE="$BEFORE...HEAD"
+            fi
+          fi
+          echo "diff range: $RANGE"
+
+          git diff --name-only --diff-filter=A "$RANGE" > /tmp/new_files.txt
           NEW=$(grep -E "$TRADING_PATTERNS" /tmp/new_files.txt || true)
           if [[ -n "$NEW" ]]; then
-            if ! git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -qE '(^|/)hypothesis-registry\.jsonl$'; then
+            if ! git diff --name-only "$RANGE" | grep -qE '(^|/)hypothesis-registry\.jsonl$'; then
               echo "ERROR: new strategy files without registry entry:"
               echo "$NEW"
               exit 1
