@@ -34,7 +34,7 @@ from signal_tracker import (
     load_open_signals, check_signal_status, close_signal,
     fetch_current_prices, get_signal_dashboard, run_signal_monitor,
     get_portfolio_snapshot, get_cumulative_pnl, check_tier_promotions,
-    save_signal,
+    save_signal, run_eod_review,
 )
 from telegram_bot import (
     format_signal_card, format_followup_message, send_message,
@@ -788,6 +788,14 @@ def run_eod(send_telegram=False):
         return
 
     print(f"\n[{_ist_now().strftime('%H:%M IST')}] Running EOD review...")
+
+    # Persist closing-price snapshot for tomorrow's daily-stop / 2-day stop math.
+    # Without this, _prev_close_long/short never get written and morning regen
+    # falls back to entry prices (#97).
+    try:
+        run_eod_review()
+    except Exception as e:
+        print(f"  EOD price snapshot failed: {e}")
 
     regime = _load_current_regime()
     portfolio = get_portfolio_snapshot()
