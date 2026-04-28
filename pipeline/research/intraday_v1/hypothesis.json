@@ -1,0 +1,40 @@
+{
+  "stocks": {
+    "hypothesis_id": "H-2026-04-29-intraday-data-driven-v1-stocks",
+    "author": "bharatankaraju",
+    "date_registered": "2026-04-29",
+    "status": "PRE_REGISTERED",
+    "spec": "docs/superpowers/specs/2026-04-29-data-driven-intraday-framework-design.md",
+    "data_audit": "docs/superpowers/specs/2026-04-29-kite-1min-data-source-audit.md",
+    "holdout_start": "2026-04-29",
+    "holdout_end": "2026-06-27",
+    "verdict_by": "2026-07-04",
+    "universe_class": "stocks",
+    "universe_source": "opus/config/nifty50.json",
+    "universe_size": 50,
+    "feature_count": 6,
+    "model": "karpathy-random-search-pooled",
+    "objective": "robust_sharpe",
+    "exit_rule": "atr14_x2_stop_or_1430_mechanical",
+    "single_touch": true
+  },
+  "indices": {
+    "hypothesis_id": "H-2026-04-29-intraday-data-driven-v1-indices",
+    "author": "bharatankaraju",
+    "date_registered": "2026-04-29",
+    "status": "PRE_REGISTERED",
+    "spec": "docs/superpowers/specs/2026-04-29-data-driven-intraday-framework-design.md",
+    "data_audit": "docs/superpowers/specs/2026-04-29-kite-1min-data-source-audit.md",
+    "holdout_start": "2026-04-29",
+    "holdout_end": "2026-06-27",
+    "verdict_by": "2026-07-04",
+    "universe_class": "indices",
+    "universe_source": "options-liquidity-gate at kickoff",
+    "universe_size": "8-12 (resolved at kickoff)",
+    "feature_count": 6,
+    "model": "karpathy-random-search-pooled",
+    "objective": "robust_sharpe",
+    "exit_rule": "atr14_x2_stop_or_1430_mechanical",
+    "single_touch": true
+  }
+}
