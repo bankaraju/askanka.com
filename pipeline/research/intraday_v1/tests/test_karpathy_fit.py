@@ -128,6 +128,39 @@ def test_objective_is_long_short_not_long_only():
     )
 
 
+def test_run_accepts_smaller_rolling_window_for_kickoff():
+    """Kickoff path: when in-sample has < ROLLING_WINDOW_DAYS distinct dates,
+    the caller may pass a smaller ``rolling_window_days`` and the fit still
+    completes. The default value (10) remains unchanged for production.
+    """
+    # 6 days of in-sample — below the default 10-day rolling window.
+    df = _synthetic_in_sample(n_days=6, n_inst=10, seed=0)
+    fit = karpathy_fit.run(df, seed=42, n_iters=50, rolling_window_days=3)
+    assert "weights" in fit
+    assert fit["rolling_window_days"] == 3
+    # Default still 10 (spec constant unchanged)
+    assert karpathy_fit.ROLLING_WINDOW_DAYS == 10
+
+
+def test_run_default_rolling_window_unchanged_at_10():
+    """Sanity: production monthly recalibrate uses the default — 10 days."""
+    df = _synthetic_in_sample(n_days=30, n_inst=10, seed=0)
+    fit = karpathy_fit.run(df, seed=42, n_iters=50)
+    assert fit["rolling_window_days"] == 10
+
+
+def test_objective_returns_neg_inf_below_rolling_window_days():
+    """If distinct dates < rolling_window_days, objective returns -inf."""
+    import numpy as _np
+    df = _synthetic_in_sample(n_days=4, n_inst=5, seed=0)
+    weights = _np.array([0.1, 0.2, -0.1, 0.0, 0.3, -0.2])
+    j = karpathy_fit.objective(weights, df, rolling_window_days=10)
+    assert j == float("-inf")
+    # With smaller window, finite.
+    j2 = karpathy_fit.objective(weights, df, rolling_window_days=3)
+    assert _np.isfinite(j2)
+
+
 def test_run_recovers_long_short_optimal_weights_on_synthetic():
     """Optimizer should learn weights[0] > 0.5 when f1 ranks rows long-short-correctly.
 

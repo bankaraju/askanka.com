@@ -22,10 +22,19 @@ WEIGHT_BOUND = 2.0
 FEATURE_COLS = ["f1", "f2", "f3", "f4", "f5", "f6"]
 
 
-def objective(weights: np.ndarray, df: pd.DataFrame) -> float:
+def objective(
+    weights: np.ndarray,
+    df: pd.DataFrame,
+    rolling_window_days: int = ROLLING_WINDOW_DAYS,
+) -> float:
     """Robust-Sharpe scalar objective per §5.
 
     `df` columns: date, instrument, f1..f6, next_return_pct.
+
+    ``rolling_window_days`` defaults to the spec constant (10). Pass a smaller
+    value ONLY at kickoff (insufficient in-sample days) — production monthly
+    recalibrate keeps the default. Returns -inf when fewer than
+    ``rolling_window_days`` distinct dates are present.
     """
     feat = df[FEATURE_COLS].to_numpy()
     score = feat @ weights  # per-row signal strength
@@ -49,12 +58,12 @@ def objective(weights: np.ndarray, df: pd.DataFrame) -> float:
         # Zero-variance day (long_thresh == short_thresh) → both baskets equal →
         # contribution mean - mean = 0, which degrades naturally without a special case.
         daily.append(long_ret - short_ret)
-    if len(daily) < ROLLING_WINDOW_DAYS:
+    if len(daily) < rolling_window_days:
         return float("-inf")
     daily_arr = np.array(daily)
     rolling_sharpes = []
-    for i in range(len(daily_arr) - ROLLING_WINDOW_DAYS + 1):
-        win = daily_arr[i:i + ROLLING_WINDOW_DAYS]
+    for i in range(len(daily_arr) - rolling_window_days + 1):
+        win = daily_arr[i:i + rolling_window_days]
         s = float(win.mean()) / (float(win.std()) + 1e-9)
         rolling_sharpes.append(s)
     rolling = np.array(rolling_sharpes)
@@ -67,7 +76,12 @@ def objective(weights: np.ndarray, df: pd.DataFrame) -> float:
     return avg_sharpe - LAMBDA_VAR * std_sharpe - LAMBDA_TURNOVER * turnover - LAMBDA_DD * dd
 
 
-def run(df: pd.DataFrame, seed: int = 42, n_iters: int = 2000) -> Dict:
+def run(
+    df: pd.DataFrame,
+    seed: int = 42,
+    n_iters: int = 2000,
+    rolling_window_days: int = ROLLING_WINDOW_DAYS,
+) -> Dict:
     """Random search over weight space, return best weight vector + thresholds.
 
     Optimizes the long-short objective per spec §4: longs are rows in the daily
@@ -77,14 +91,20 @@ def run(df: pd.DataFrame, seed: int = 42, n_iters: int = 2000) -> Dict:
     extraction below uses the in-sample pooled scores (0.3 / 0.7 quantiles) and
     is independent of the per-day objective computation.
 
+    ``rolling_window_days`` defaults to the spec constant (10). The kickoff
+    fit may pass a smaller value when the in-sample window does not yet
+    contain 10 distinct trading days — the default is preserved for
+    production monthly recalibrate.
+
     Returns: {"weights": ndarray(6,), "objective": float,
-              "long_threshold": float, "short_threshold": float, "seed": int}
+              "long_threshold": float, "short_threshold": float, "seed": int,
+              "rolling_window_days": int}
     """
     rng = np.random.default_rng(seed)
     best = {"weights": None, "objective": float("-inf")}
     for _ in range(n_iters):
         w = rng.uniform(-WEIGHT_BOUND, WEIGHT_BOUND, size=6)
-        j = objective(w, df)
+        j = objective(w, df, rolling_window_days=rolling_window_days)
         if j > best["objective"]:
             best = {"weights": w, "objective": j}
     if best["weights"] is None:
@@ -104,4 +124,5 @@ def run(df: pd.DataFrame, seed: int = 42, n_iters: int = 2000) -> Dict:
         "long_threshold": long_thresh,
         "short_threshold": short_thresh,
         "seed": seed,
+        "rolling_window_days": rolling_window_days,
     }
