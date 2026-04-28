@@ -115,56 +115,58 @@
       "strategy_name": "Spread Intelligence sector-neutral"
     },
     {
+      "backing_artefact_kind": "pooled_cross_regime",
+      "backing_artefact_note": "H-2026-04-23-002 was a POOLED cross-regime FAIL, not a regime-stratified pass. Per-regime metrics were not produced (no fabrication). Cells stay CROSS_REGIME_FAIL until a regime-stratified re-run.",
       "per_regime": {
         "CAUTION": {
-          "compliance_artifact_path": null,
+          "compliance_artifact_path": "pipeline/autoresearch/results/compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z",
           "n_obs": 0,
           "p_value_vs_buy_hold": null,
           "p_value_vs_zero": null,
           "sharpe_ci_high": null,
           "sharpe_ci_low": null,
           "sharpe_point": null,
-          "status_flag": "INSUFFICIENT_POWER"
+          "status_flag": "CROSS_REGIME_FAIL"
         },
         "EUPHORIA": {
-          "compliance_artifact_path": null,
+          "compliance_artifact_path": "pipeline/autoresearch/results/compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z",
           "n_obs": 0,
           "p_value_vs_buy_hold": null,
           "p_value_vs_zero": null,
           "sharpe_ci_high": null,
           "sharpe_ci_low": null,
           "sharpe_point": null,
-          "status_flag": "INSUFFICIENT_POWER"
+          "status_flag": "CROSS_REGIME_FAIL"
         },
         "NEUTRAL": {
-          "compliance_artifact_path": null,
+          "compliance_artifact_path": "pipeline/autoresearch/results/compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z",
           "n_obs": 0,
           "p_value_vs_buy_hold": null,
           "p_value_vs_zero": null,
           "sharpe_ci_high": null,
           "sharpe_ci_low": null,
           "sharpe_point": null,
-          "status_flag": "INSUFFICIENT_POWER"
+          "status_flag": "CROSS_REGIME_FAIL"
         },
         "RISK-OFF": {
-          "compliance_artifact_path": null,
+          "compliance_artifact_path": "pipeline/autoresearch/results/compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z",
           "n_obs": 0,
           "p_value_vs_buy_hold": null,
           "p_value_vs_zero": null,
           "sharpe_ci_high": null,
           "sharpe_ci_low": null,
           "sharpe_point": null,
-          "status_flag": "INSUFFICIENT_POWER"
+          "status_flag": "CROSS_REGIME_FAIL"
         },
         "RISK-ON": {
-          "compliance_artifact_path": null,
+          "compliance_artifact_path": "pipeline/autoresearch/results/compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z",
           "n_obs": 0,
           "p_value_vs_buy_hold": null,
           "p_value_vs_zero": null,
           "sharpe_ci_high": null,
           "sharpe_ci_low": null,
           "sharpe_point": null,
-          "status_flag": "INSUFFICIENT_POWER"
+          "status_flag": "CROSS_REGIME_FAIL"
         }
       },
       "status": "LIVE_ALERT_ONLY",

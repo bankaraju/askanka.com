@@ -1,11 +1,16 @@
 """Task 9 — incumbent re-qualification audit (read-only).
 
 For every (strategy_id, regime) cell in strategy_results_10.json this script
-classifies the cell as one of four verdicts:
+classifies the cell as one of five verdicts:
 
   BACKED_BY_ARTEFACT         — a current compliance artefact exists that
                                backs this cell (post-cutoff, correct regime or
                                explicit cross-regime manifest flag)
+  BACKED_AS_CROSS_REGIME_FAIL — cell has status_flag=CROSS_REGIME_FAIL and
+                               compliance_artifact_path pointing at a current
+                               pooled artefact. Per-regime numbers are
+                               legitimately absent (pooled FAIL, not regime-
+                               stratified). Closed verdict; priority NONE.
   CORRECTLY_INSUFFICIENT_POWER — row says INSUFFICIENT_POWER AND no artefact
                                exists; acceptable placeholder
   SHOULD_HAVE_BEEN_RUN       — row claims a Sharpe number but no backing
@@ -111,6 +116,13 @@ def _classify_cell(
     """Return the verdict for a single (strategy, regime) cell."""
     status_flag = row_cell.get("status_flag")
     claims_sharpe = row_cell.get("sharpe_point") is not None
+    cell_artefact_path = row_cell.get("compliance_artifact_path")
+
+    # CROSS_REGIME_FAIL is a closed verdict: cell explicitly documents that
+    # the backing artefact is a pooled cross-regime FAIL. Per-regime metrics
+    # are correctly absent. Requires both the sentinel and the artefact link.
+    if status_flag == "CROSS_REGIME_FAIL" and cell_artefact_path:
+        return "BACKED_AS_CROSS_REGIME_FAIL"
 
     if artefact_path is None:
         if status_flag == "INSUFFICIENT_POWER" and not claims_sharpe:
@@ -136,6 +148,8 @@ def _priority(per_regime_verdict: dict[str, str]) -> str:
         return "NONE"
     if verdicts == {"CORRECTLY_INSUFFICIENT_POWER"}:
         return "NONE"
+    if verdicts == {"BACKED_AS_CROSS_REGIME_FAIL"}:
+        return "NONE"
     return "MEDIUM"
 
 
@@ -144,6 +158,8 @@ def _notes(strategy_id: str, per_regime_verdict: dict[str, str],
     bits: list[str] = []
     should_run = [r for r, v in per_regime_verdict.items() if v == "SHOULD_HAVE_BEEN_RUN"]
     stale = [r for r, v in per_regime_verdict.items() if v == "STALE"]
+    cross_regime = [r for r, v in per_regime_verdict.items()
+                    if v == "BACKED_AS_CROSS_REGIME_FAIL"]
     if should_run:
         if artefact_path is None:
             bits.append(f"no compliance artefact on disk for {strategy_id}; "
@@ -156,6 +172,12 @@ def _notes(strategy_id: str, per_regime_verdict: dict[str, str],
         bits.append(f"artefact {artefact_path.name if artefact_path else '?'} "
                     f"predates {CUTOFF_DATE_ISO} framework cutoff "
                     f"(regimes {sorted(stale)})")
+    if cross_regime and not should_run and not stale:
+        bits.append(
+            f"backing artefact is a pooled cross-regime FAIL "
+            f"(per-regime metrics correctly absent); "
+            f"refresh requires a regime-stratified re-run"
+        )
     if not bits:
         bits.append("placeholder accepted; retest when per-regime data available")
     return "; ".join(bits)
@@ -172,7 +194,8 @@ def audit(
     ).timestamp()
 
     per_strategy: list[dict[str, Any]] = []
-    counts = {"cells_backed": 0, "cells_correctly_insufficient": 0,
+    counts = {"cells_backed": 0, "cells_backed_cross_regime_fail": 0,
+              "cells_correctly_insufficient": 0,
               "cells_should_have_been_run": 0, "cells_stale": 0}
 
     for inc in table.get("incumbents", []):
@@ -185,6 +208,8 @@ def audit(
             per_regime_verdict[regime] = verdict
             if verdict == "BACKED_BY_ARTEFACT":
                 counts["cells_backed"] += 1
+            elif verdict == "BACKED_AS_CROSS_REGIME_FAIL":
+                counts["cells_backed_cross_regime_fail"] += 1
             elif verdict == "CORRECTLY_INSUFFICIENT_POWER":
                 counts["cells_correctly_insufficient"] += 1
             elif verdict == "SHOULD_HAVE_BEEN_RUN":
@@ -232,6 +257,8 @@ def _write_md(report: dict[str, Any], out_md: Path) -> None:
     lines.append(f"- Rows: {summ['total_rows']}")
     lines.append(f"- Cells: {summ['total_cells']} (rows x 5 regimes)")
     lines.append(f"- BACKED_BY_ARTEFACT: {summ['cells_backed']}")
+    lines.append(f"- BACKED_AS_CROSS_REGIME_FAIL: "
+                 f"{summ['cells_backed_cross_regime_fail']}")
     lines.append(f"- CORRECTLY_INSUFFICIENT_POWER: {summ['cells_correctly_insufficient']}")
     lines.append(f"- SHOULD_HAVE_BEEN_RUN: {summ['cells_should_have_been_run']}")
     lines.append(f"- STALE: {summ['cells_stale']}")
@@ -290,6 +317,7 @@ def _print_summary(report: dict[str, Any]) -> None:
     print(f"total rows                      : {s['total_rows']}")
     print(f"total cells (rows * 5 regimes)  : {s['total_cells']}")
     print(f"BACKED_BY_ARTEFACT              : {s['cells_backed']}")
+    print(f"BACKED_AS_CROSS_REGIME_FAIL     : {s['cells_backed_cross_regime_fail']}")
     print(f"CORRECTLY_INSUFFICIENT_POWER    : {s['cells_correctly_insufficient']}")
     print(f"SHOULD_HAVE_BEEN_RUN            : {s['cells_should_have_been_run']}")
     print(f"STALE                           : {s['cells_stale']}")

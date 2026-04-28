@@ -1,6 +1,6 @@
 {
-  "audit_commit_sha": "01997b03be279c661bae00f9ebcaaabbbb9e2124",
-  "audit_timestamp_iso": "2026-04-24T07:42:25.433369+00:00",
+  "audit_commit_sha": "3cd177887987cf68b6fc7eb0a617e8a182b2f32e",
+  "audit_timestamp_iso": "2026-04-28T10:12:48.047758+00:00",
   "cutoff_date_iso": "2026-04-23",
   "per_strategy": [
     {
@@ -38,15 +38,15 @@
     {
       "artefact_mtime_iso": "2026-04-23T18:41:10.280308+00:00",
       "backing_artefact_path": "pipeline/autoresearch/results/compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z",
-      "notes": "artefact compliance_phase_c_lag_H-2026-04-23-002_20260423T183858Z exists but strategy_results_10 cells for ['CAUTION', 'EUPHORIA', 'NEUTRAL', 'RISK-OFF', 'RISK-ON'] were not refreshed",
+      "notes": "backing artefact is a pooled cross-regime FAIL (per-regime metrics correctly absent); refresh requires a regime-stratified re-run",
       "per_regime_verdict": {
-        "CAUTION": "SHOULD_HAVE_BEEN_RUN",
-        "EUPHORIA": "SHOULD_HAVE_BEEN_RUN",
-        "NEUTRAL": "SHOULD_HAVE_BEEN_RUN",
-        "RISK-OFF": "SHOULD_HAVE_BEEN_RUN",
-        "RISK-ON": "SHOULD_HAVE_BEEN_RUN"
+        "CAUTION": "BACKED_AS_CROSS_REGIME_FAIL",
+        "EUPHORIA": "BACKED_AS_CROSS_REGIME_FAIL",
+        "NEUTRAL": "BACKED_AS_CROSS_REGIME_FAIL",
+        "RISK-OFF": "BACKED_AS_CROSS_REGIME_FAIL",
+        "RISK-ON": "BACKED_AS_CROSS_REGIME_FAIL"
       },
-      "re_qualification_priority": "HIGH",
+      "re_qualification_priority": "NONE",
       "status": "LIVE_ALERT_ONLY",
       "strategy_id": "PHASE_C_LAG",
       "strategy_name": "Phase C LAG (alert-only post H-107 FAIL)"
@@ -166,8 +166,9 @@
   ],
   "summary": {
     "cells_backed": 0,
+    "cells_backed_cross_regime_fail": 5,
     "cells_correctly_insufficient": 45,
-    "cells_should_have_been_run": 5,
+    "cells_should_have_been_run": 0,
     "cells_stale": 0,
     "total_cells": 50,
     "total_rows": 10

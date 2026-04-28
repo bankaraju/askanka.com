@@ -42,6 +42,17 @@ def _write_table(tmp_path: Path, incumbents: list[dict]) -> Path:
     return p
 
 
+def _cross_regime_fail_cell(artefact_path: str = "fake/path") -> dict:
+    """Cell explicitly tagged as backed by a pooled cross-regime FAIL artefact."""
+    return {
+        "n_obs": 0, "sharpe_point": None,
+        "sharpe_ci_low": None, "sharpe_ci_high": None,
+        "p_value_vs_zero": None, "p_value_vs_buy_hold": None,
+        "compliance_artifact_path": artefact_path,
+        "status_flag": "CROSS_REGIME_FAIL",
+    }
+
+
 def test_audit_classifies_insufficient_power_as_correct(tmp_path):
     """INSUFFICIENT_POWER row + no artefact on disk -> CORRECTLY_INSUFFICIENT_POWER."""
     table_path = _write_table(tmp_path, [{
@@ -127,6 +138,50 @@ def test_audit_detects_stale_artefact(tmp_path):
     assert row["backing_artefact_path"] is not None
 
 
+def test_audit_classifies_cross_regime_fail_as_backed(tmp_path):
+    """CROSS_REGIME_FAIL cell + compliance_artifact_path -> BACKED_AS_CROSS_REGIME_FAIL.
+
+    Validates the closed-verdict path: cell explicitly documents that backing
+    artefact is a pooled cross-regime FAIL, per-regime metrics correctly absent.
+    Priority should drop to NONE (not HIGH like SHOULD_HAVE_BEEN_RUN).
+    """
+    # Use a real path under tmp_path so the artefact exists on disk and is
+    # found by _find_artefact_for_strategy. The strategy_id is matched to
+    # the directory name via case-insensitive substring search.
+    results_dir = tmp_path / "results"
+    art_dir = results_dir / "compliance_xreg_strategy_pooled"
+    art_dir.mkdir(parents=True)
+    (art_dir / "gate_checklist.json").write_text(
+        '{"decision":"FAIL"}', encoding="utf-8"
+    )
+
+    artefact_rel_path = "compliance_xreg_strategy_pooled"
+    table_path = _write_table(tmp_path, [{
+        "strategy_id": "XREG_STRATEGY",
+        "strategy_name": "Cross-regime",
+        "status": "LIVE",
+        "backing_artefact_kind": "pooled_cross_regime",
+        "per_regime": {r: _cross_regime_fail_cell(artefact_rel_path)
+                       for r in REGIMES},
+    }])
+
+    report = audit_incumbents.audit(
+        table_path=table_path,
+        results_dir=results_dir,
+        cutoff_date_iso="2026-04-23",
+    )
+    row = report["per_strategy"][0]
+    assert all(v == "BACKED_AS_CROSS_REGIME_FAIL"
+               for v in row["per_regime_verdict"].values()), \
+        f"expected all BACKED_AS_CROSS_REGIME_FAIL, got {row['per_regime_verdict']}"
+    assert row["re_qualification_priority"] == "NONE"
+    assert report["summary"]["cells_backed_cross_regime_fail"] == 5
+    assert report["summary"]["cells_should_have_been_run"] == 0
+    assert report["summary"]["cells_stale"] == 0
+    # Note string mentions pooled cross-regime FAIL.
+    assert "cross-regime" in row["notes"].lower()
+
+
 def test_audit_emits_valid_json_schema(tmp_path):
     """Report top-level keys exist and per_strategy rows have required fields."""
     table_path = _write_table(tmp_path, [{
@@ -149,6 +204,7 @@ def test_audit_emits_valid_json_schema(tmp_path):
         assert key in report, f"missing top-level key: {key}"
 
     for key in ("total_rows", "total_cells", "cells_backed",
+                "cells_backed_cross_regime_fail",
                 "cells_correctly_insufficient", "cells_should_have_been_run",
                 "cells_stale"):
         assert key in report["summary"], f"missing summary key: {key}"
