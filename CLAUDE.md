@@ -52,6 +52,7 @@ The system runs automatically via Windows Scheduled Tasks:
 **Overnight Batch:**
 - 04:30 — AnkaDailyDump: fetch global prices, fundamentals, FII flows (CRITICAL)
 - 04:30 — AnkaTAKarpathyPredict: H-2026-04-29-ta-karpathy-v1 daily forward prediction; emits today_predictions.json from frozen Lasso models (info, VPS systemd)
+- 05:30 — AnkaGemma4HealthCheck: ollama + Gemma 4 26B-A4B daily PONG ping (warn, pilot 2026-04-29 → 2026-05-19)
 - 04:45 — AnkaETFSignal: compute daily regime zone from stored ETF weights (CRITICAL)
 - 04:45 — AnkaReverseRegimeProfile: regime transition patterns, Phase A (CRITICAL)
 - 04:45 — AnkaDailyArticles: generate research articles (warn)
@@ -83,6 +84,7 @@ The system runs automatically via Windows Scheduled Tasks:
 - 14:30 — AnkaSecrsiBasketClose: H-2026-04-27-003 SECRSI mechanical TIME_STOP close at Kite LTP (info)
 - 15:25 — AnkaTAKarpathyClose: H-2026-04-29-ta-karpathy-v1 holdout TIME_STOP close at Kite LTP. Holdout 2026-04-29 → 2026-05-28 (info, VPS systemd)
 - 15:30 — AnkaScannerPairedClose: Scanner Top-10 paired-shadow mechanical close at Kite LTP (info)
+- Hourly 09:00–22:00 — AnkaGemma4AutoDisable: pilot guardrail check; trips a task to disabled if 24h shadow rubric <90% (n>=5), flags manual review if 7d pairwise <40% (n>=10) (info, pilot)
 
 ## 14:30 IST New-Signal Cutoff (CRITICAL)
 No engine may OPEN a new live shadow position after **14:30 IST**. The mechanical TIME_STOPs run at 14:30, so anything opened later has under 60 min of execution window before forced close — not a tradeable trade. The cutoff is enforced at the source in three engines:
@@ -102,6 +104,8 @@ Existing OPEN positions are still monitored, P&L still updates, stops still fire
 
 **H-2026-04-29-ta-karpathy-v1 (per-stock TA Lasso, top-10 NIFTY pilot):** per-stock Lasso L1 logistic regression on ~60 daily TA features, 4-fold walk-forward + BH-FDR permutation null + qualifier gate. Frozen universe: RELIANCE/HDFCBANK/ICICIBANK/INFY/TCS/BHARTIARTL/KOTAKBANK/LT/AXISBANK/SBIN. T+1 09:15→15:25 IST intraday only (no overnight). Per-cell ATR(14)×2 stop. Single-touch holdout 2026-04-29 → 2026-05-28 (≈21 trading days). Spec: `docs/superpowers/specs/2026-04-29-ta-karpathy-v1-design.md` (v1.1 — Deflated Sharpe metric report-only at v1, gate-blocking at v2 when N≥100 days). Honest expectation: 0–3 stocks qualify. Predecessor H-2026-04-24-001 FAILED on RELIANCE — distinct family widening. **No parameter changes during the holdout window per backtesting-specs.txt §10.4 strict.** Runs on VPS systemd (predict 04:30 / open 09:15 / close 15:25). Ledger: `pipeline/data/research/h_2026_04_29_ta_karpathy_v1/recommendations.csv`.
 
+**Gemma 4 Pilot (2026-04-29 → 2026-05-19):** 20-day forward-only Tier 2 evaluation of Gemma 4 26B-A4B local inference (Contabo VPS, Ollama at `127.0.0.1:11434/v1` via SSH tunnel from laptop) as the LLM provider for four mundane/volume tasks: trust-score concall supplement, news classification, EOD Telegram narrative, and the **markets** daily article (Epstein + war stay on the current Gemini stack). Routing per-task in `pipeline/config/llm_routing.json` (modes: `live` / `shadow` / `disabled`). All 4 tasks start in `shadow` (primary=Gemini, shadow=Gemma) so production output is unchanged while we accumulate audit data. Day-8 promotion to `live` requires rubric ≥95% + pairwise ≥60%; day-20 cutover requires rubric ≥90% AND pairwise ≥50% AND ≥80% cost reduction. Audit: `pipeline/data/research/gemma4_pilot/audit/<task>/<YYYY-MM-DD>.jsonl`. Report cards (daily 22:00 IST): `pipeline/data/research/gemma4_pilot/report_cards/<date>.{json,md}`. Auto-disable guardrail (hourly 09–22 IST): rubric <90% (24h, n≥5) flips a task to `disabled`; pairwise <40% (7d, n≥10) writes `manual_review/<task>.flag`. Spec: `docs/superpowers/specs/2026-04-28-gemma4-pilot-design.md`. Plan: `docs/superpowers/plans/2026-04-28-gemma4-pilot.md`. **Tier 1 (architecting / discipline) stays on frontier APIs — do not migrate.** Apache 2.0 license certainty + zero per-token cost are the two reasons; speed is NOT — local CPU is 5–10× slower.
+
 **Post-Close:**
 - 16:00 — AnkaEODReview: P&L dashboard → Telegram (CRITICAL); also runs `oi_scanner --archive-only` and `website_exporter.py`
 - 16:00 — AnkaTAScorerScore: TA Coincidence Scorer daily apply — writes `ta_attractiveness_scores.json` (warn)
@@ -112,6 +116,7 @@ Existing OPEN positions are still monitored, P&L still updates, stops still fire
 - 16:35 — AnkaTrustEOD: OPUS ANKA EOD review + next-day outlook (warn)
 - 16:45 — AnkaWatchdogGate: watchdog gate run, check everything (warn)
 - 18:30 — AnkaInsiderTrades: NSE PIT insider disclosures, last 7 days rolling → `insider_trades/<YYYY-MM>.parquet` (info)
+- 22:00 — AnkaGemma4DailyReport: pilot rubric + pairwise aggregation, writes `report_cards/<today>.{json,md}` + Telegram one-liner (warn, pilot)
 
 Note: website_exporter.py is invoked from morning_scan (09:25), every intraday cycle (09:30–15:30), eod_review (16:00), eod_track_record (16:15), and daily_dump (04:30) — it is NOT a standalone scheduled task. It auto-deploys data/*.json to the GitHub Pages branch.
 

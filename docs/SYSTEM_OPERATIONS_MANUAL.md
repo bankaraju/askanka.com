@@ -900,6 +900,63 @@ source of truth for the verdict.
   Statistical test: label-permutation null, 10k perms, α=0.05 (single
   hypothesis, no multiplicity correction).
 
+### Gemma 4 Pilot (2026-04-29 → 2026-05-19)
+
+A 20-day forward-only Tier 2 evaluation of **Gemma 4 26B-A4B local
+inference** (Contabo VPS, Ollama at `127.0.0.1:11434/v1` via SSH tunnel
+from laptop) as the LLM provider for four mundane/volume tasks. Tier 1
+(architecting / discipline) stays on frontier APIs and is NOT in scope.
+
+**The four pilot tasks:**
+
+| Task | Rubric (mechanical pass/fail) |
+|------|------------------------------|
+| `concall_supplement` | Valid JSON `{ticker, signal_points: [{point, stance}]}`, 3+ signal points, no hallucinated tickers |
+| `news_classification` | label ∈ {BULLISH,BEARISH,NEUTRAL,NOT_RELEVANT}, confidence ∈ [0,1], sector in canonical list |
+| `eod_narrative` | 200–600 chars, mentions today's regime, mentions ≥1 ledger position, per-ticker pnl within 0.5pp of ledger |
+| `article_draft` | 800–2500 words, macro anchors (Brent/WTI/USDINR/US10Y) within tolerance of `global_regime`, no hallucinated tickers. **Markets only — Epstein and war stay on the current Gemini stack.** |
+
+**Routing:** `pipeline/config/llm_routing.json` (modes: `live` / `shadow`
+/ `disabled` per task). All four start in `shadow` so production output
+is unchanged while audit data accumulates.
+
+**Audit trail:** Append-only JSONL at
+`pipeline/data/research/gemma4_pilot/audit/<task>/<YYYY-MM-DD>.jsonl`
+(one row per dispatch — primary + shadow blocks, rubric scores,
+latency, usage).
+
+**Pairwise audit UI:** Terminal `/gemma_pilot` tab (Tasks 15-16 — depends
+on Infra CC's terminal-on-Contabo migration).
+
+**Daily report card:** 22:00 IST, written to
+`pipeline/data/research/gemma4_pilot/report_cards/<date>.{json,md}`.
+Telegram one-liner posted on success.
+
+**Auto-disable guardrails (hourly 09–22 IST):**
+- 24h shadow rubric pass rate < 90% (n≥5) → flip task to `disabled`
+  in `llm_routing.json` + Telegram alert.
+- 7d pairwise win rate < 40% (n≥10) → write
+  `manual_review/<task>.flag` (no auto-flip; human must read first).
+
+**Health check (daily 05:30 IST):** PONG ping to local Ollama with
+60s latency budget. FAIL → rc=1 + Telegram. Watchdog reads
+`gemma4_health.json` as a freshness contract.
+
+**Activation pattern:**
+- Days 1–7: shadow mode (primary stays Gemini).
+- Day 8: per-task promotion to `live` requires rubric ≥95% AND
+  pairwise ≥60%.
+- Day 20: cutover decision — keep `live` if rubric ≥90% AND pairwise
+  ≥50% AND ≥80% cost reduction; otherwise `disabled` and
+  follow-up spec.
+
+**Why Apache 2.0 license + zero per-token cost — not speed.** Local CPU
+inference is 5–10× slower than Gemini Flash; this is a cost / license
+play, not a latency play.
+
+**Spec:** `docs/superpowers/specs/2026-04-28-gemma4-pilot-design.md`.
+**Plan:** `docs/superpowers/plans/2026-04-28-gemma4-pilot.md`.
+
 ---
 
 ## 4. The Watchdog — What It Is and Why It Exists
@@ -979,6 +1036,7 @@ When the watchdog finds issues:
 |------------|-----------|-------------|-----------|
 | 04:30 | AnkaDailyDump | Fetch global prices, fundamentals, FII flows | CRITICAL |
 | 04:30 | AnkaTAKarpathyPredict | H-2026-04-29-ta-karpathy-v1 daily forward prediction — frozen Lasso models → today_predictions.json. **VPS systemd**. Holdout 2026-04-29 → 2026-05-28. | info |
+| 05:30 | AnkaGemma4HealthCheck | Daily PONG ping at `127.0.0.1:11434/v1/chat/completions`. Writes `gemma4_pilot/gemma4_health.json`. FAIL → rc=1 + Telegram. Pilot 2026-04-29 → 2026-05-19. | warn |
 | 04:45 | AnkaETFSignal | Compute daily regime zone from stored ETF weights | CRITICAL |
 | 04:45 | AnkaReverseRegimeProfile | Compute regime transition patterns (Phase A) | CRITICAL |
 | 04:45 | AnkaDailyArticles | Generate research articles | warn |
@@ -1013,6 +1071,7 @@ Every 15 minutes, two tasks run as a pair:
 | AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) + paired-options sidecar (2026-04-27) |
 | AnkaSecrsiBasketClose | 14:30 IST — SECRSI: mechanical TIME_STOP close at Kite LTP (H-2026-04-27-003) |
 | AnkaTAKarpathyClose | 15:25 IST — H-2026-04-29-ta-karpathy-v1: mechanical TIME_STOP close at Kite LTP (VPS systemd) |
+| AnkaGemma4AutoDisable | Hourly 09:00–22:00 IST — Gemma 4 Pilot guardrail. 24h shadow rubric <90% (n≥5) → flip task to `disabled` in `llm_routing.json`; 7d pairwise <40% (n≥10) → write `manual_review/<task>.flag`. Pilot 2026-04-29 → 2026-05-19. |
 
 That's 25 intraday cycles x 4 tasks = 100 task executions per market day.
 
@@ -1038,6 +1097,7 @@ Endpoint: `GET /api/research/phase-c-options-shadow` (returns `{open_pairs, cumu
 | 16:35 | AnkaTrustEOD | OPUS ANKA EOD review + next-day outlook | warn |
 | 16:45 | AnkaWatchdogGate | Watchdog gate run — check everything | warn |
 | 18:30 | AnkaInsiderTrades | NSE PIT (insider trading) disclosures, 7-day rolling pull | info |
+| 22:00 | AnkaGemma4DailyReport | Gemma 4 Pilot EOD aggregation — reads `audit/<task>/<today>.jsonl` + `audit/pairwise/<today>.jsonl`, writes `report_cards/<today>.{json,md}`, posts Telegram one-liner. Pilot 2026-04-29 → 2026-05-19. | warn |
 
 Note: `website_exporter.py` is folded into morning_scan, every intraday cycle, eod_review, eod_track_record, and daily_dump — it is not a standalone scheduled task. Auto-pushes data/*.json to the GitHub Pages branch.
 
