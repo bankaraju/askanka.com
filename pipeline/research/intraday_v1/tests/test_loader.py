@@ -30,11 +30,18 @@ def _fake_kite_response(start: datetime, n_minutes: int):
     return rows
 
 
+def _make_fake_kite(historical_rows):
+    """Build a MagicMock that mimics the _KiteAdapter interface."""
+    fake = MagicMock()
+    fake.resolve_token.return_value = 12345
+    fake.historical_data.return_value = historical_rows
+    return fake
+
+
 def test_paged_fetch_concatenates_pages(tmp_path, monkeypatch):
-    fake_kite = MagicMock()
-    fake_kite.fetch_historical.return_value = _fake_kite_response(
+    fake_kite = _make_fake_kite(_fake_kite_response(
         datetime(2026, 4, 25, 9, 15, tzinfo=IST), 100
-    )
+    ))
     monkeypatch.setattr(loader, "_kite_client", lambda: fake_kite)
     monkeypatch.setattr(loader, "CACHE_DIR", tmp_path)
 
@@ -42,6 +49,19 @@ def test_paged_fetch_concatenates_pages(tmp_path, monkeypatch):
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 100
     assert {"timestamp", "open", "high", "low", "close", "volume"}.issubset(df.columns)
+
+
+def test_paged_fetch_makes_one_call_per_window(tmp_path, monkeypatch):
+    """A 21-day request must invoke historical_data three times (3×7-day pages)."""
+    fake_kite = _make_fake_kite(_fake_kite_response(
+        datetime(2026, 4, 25, 9, 15, tzinfo=IST), 10
+    ))
+    monkeypatch.setattr(loader, "_kite_client", lambda: fake_kite)
+    monkeypatch.setattr(loader, "CACHE_DIR", tmp_path)
+
+    loader.fetch_1min("RELIANCE", days=21)
+    # 21 / PAGE_DAYS(7) = exactly 3 pages
+    assert fake_kite.historical_data.call_count == 3
 
 
 def test_cache_round_trip(tmp_path, monkeypatch):
@@ -71,23 +91,20 @@ def test_delta_refresh_only_fetches_new_bars(tmp_path, monkeypatch):
     })
     loader.write_cache("RELIANCE", df_old)
 
-    fake_kite = MagicMock()
-    fake_kite.fetch_historical.return_value = _fake_kite_response(
+    fake_kite = _make_fake_kite(_fake_kite_response(
         datetime(2026, 4, 25, 9, 16, tzinfo=IST), 5
-    )
+    ))
     monkeypatch.setattr(loader, "_kite_client", lambda: fake_kite)
 
     df = loader.refresh_cache("RELIANCE", days=60)
     assert len(df) == 6  # 1 old + 5 new
-    # Confirm fetch was called for delta window only
-    call_args = fake_kite.fetch_historical.call_args
-    assert call_args is not None
+    # Confirm fetch was called exactly once (delta path, not full re-fetch)
+    assert fake_kite.historical_data.call_count == 1
 
 
 def test_aborts_when_kite_returns_empty(monkeypatch, tmp_path):
     monkeypatch.setattr(loader, "CACHE_DIR", tmp_path)
-    fake_kite = MagicMock()
-    fake_kite.fetch_historical.return_value = []
+    fake_kite = _make_fake_kite([])
     monkeypatch.setattr(loader, "_kite_client", lambda: fake_kite)
 
     with pytest.raises(loader.LoaderError, match="empty response"):
