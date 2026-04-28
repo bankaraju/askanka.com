@@ -1259,29 +1259,29 @@
       ],
       "grace_multiplier": 1.5,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "04:30 IST daily. anka_intraday_v1_loader.bat -> runner loader-refresh. Refreshes Kite 1-min cache for V1 universe (stocks + indices) per data audit §9.1."
+      "notes": "04:30 IST Mon-Fri. anka_intraday_v1_loader.bat -> runner loader-refresh. Refreshes Kite 1-min cache for V1 universe (stocks + indices) per data audit §9.1. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
       "task_name": "AnkaIntradayV1Open",
       "tier": "critical",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [
         "pipeline/data/research/h_2026_04_29_intraday_v1/recommendations.csv"
       ],
-      "grace_multiplier": 1.2,
+      "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "09:30 IST daily. anka_intraday_v1_open.bat -> runner live-open. Opens V1 holdout paper trades. Writes/appends to recommendations.csv."
+      "notes": "09:30 IST Mon-Fri. anka_intraday_v1_open.bat -> runner live-open. Opens V1 holdout paper trades. Writes/appends to recommendations.csv. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
       "task_name": "AnkaIntradayV1Close",
       "tier": "critical",
-      "cadence_class": "daily",
+      "cadence_class": "intraday",
       "outputs": [
         "pipeline/data/research/h_2026_04_29_intraday_v1/recommendations.csv"
       ],
-      "grace_multiplier": 1.5,
+      "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "14:30 IST daily. anka_intraday_v1_close.bat -> runner live-close. Mechanical TIME_STOP close at Kite LTP for V1 holdout trades."
+      "notes": "14:30 IST Mon-Fri. anka_intraday_v1_close.bat -> runner live-close. Mechanical TIME_STOP close at Kite LTP for V1 holdout trades. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
       "task_name": "AnkaIntradayV1Recalibrate",
@@ -1295,7 +1295,7 @@
       "notes": "Sunday 02:00 IST (last of month). anka_intraday_v1_recalibrate.bat -> runner recalibrate --pool stocks then --pool indices. Refits per-instrument weights."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow0930",
+      "task_name": "AnkaIntradayV1Shadow_0930",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1303,10 +1303,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "09:30 IST. anka_intraday_v1_shadow_0930.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "09:30 IST. anka_intraday_v1_shadow_0930.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow0945",
+      "task_name": "AnkaIntradayV1Shadow_0945",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1314,10 +1314,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "09:45 IST. anka_intraday_v1_shadow_0945.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "09:45 IST. anka_intraday_v1_shadow_0945.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1000",
+      "task_name": "AnkaIntradayV1Shadow_1000",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1325,10 +1325,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "10:00 IST. anka_intraday_v1_shadow_1000.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "10:00 IST. anka_intraday_v1_shadow_1000.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1015",
+      "task_name": "AnkaIntradayV1Shadow_1015",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1336,10 +1336,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "10:15 IST. anka_intraday_v1_shadow_1015.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "10:15 IST. anka_intraday_v1_shadow_1015.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1030",
+      "task_name": "AnkaIntradayV1Shadow_1030",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1347,10 +1347,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "10:30 IST. anka_intraday_v1_shadow_1030.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "10:30 IST. anka_intraday_v1_shadow_1030.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1045",
+      "task_name": "AnkaIntradayV1Shadow_1045",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1358,10 +1358,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "10:45 IST. anka_intraday_v1_shadow_1045.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "10:45 IST. anka_intraday_v1_shadow_1045.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1100",
+      "task_name": "AnkaIntradayV1Shadow_1100",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1369,10 +1369,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "11:00 IST. anka_intraday_v1_shadow_1100.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "11:00 IST. anka_intraday_v1_shadow_1100.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1115",
+      "task_name": "AnkaIntradayV1Shadow_1115",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1380,10 +1380,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "11:15 IST. anka_intraday_v1_shadow_1115.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "11:15 IST. anka_intraday_v1_shadow_1115.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1130",
+      "task_name": "AnkaIntradayV1Shadow_1130",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1391,10 +1391,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "11:30 IST. anka_intraday_v1_shadow_1130.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "11:30 IST. anka_intraday_v1_shadow_1130.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1145",
+      "task_name": "AnkaIntradayV1Shadow_1145",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1402,10 +1402,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "11:45 IST. anka_intraday_v1_shadow_1145.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "11:45 IST. anka_intraday_v1_shadow_1145.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1200",
+      "task_name": "AnkaIntradayV1Shadow_1200",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1413,10 +1413,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "12:00 IST. anka_intraday_v1_shadow_1200.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "12:00 IST. anka_intraday_v1_shadow_1200.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1215",
+      "task_name": "AnkaIntradayV1Shadow_1215",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1424,10 +1424,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "12:15 IST. anka_intraday_v1_shadow_1215.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "12:15 IST. anka_intraday_v1_shadow_1215.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1230",
+      "task_name": "AnkaIntradayV1Shadow_1230",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1435,10 +1435,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "12:30 IST. anka_intraday_v1_shadow_1230.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "12:30 IST. anka_intraday_v1_shadow_1230.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1245",
+      "task_name": "AnkaIntradayV1Shadow_1245",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1446,10 +1446,10 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "12:45 IST. anka_intraday_v1_shadow_1245.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "12:45 IST. anka_intraday_v1_shadow_1245.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
-      "task_name": "AnkaIntradayV1Shadow1300",
+      "task_name": "AnkaIntradayV1Shadow_1300",
       "tier": "info",
       "cadence_class": "intraday",
       "outputs": [
@@ -1457,7 +1457,7 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "13:00 IST. anka_intraday_v1_shadow_1300.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout."
+      "notes": "13:00 IST. anka_intraday_v1_shadow_1300.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
     }
   ]
 }
