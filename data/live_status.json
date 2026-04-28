@@ -1,180 +1,732 @@
 {
-  "updated_at": "2026-04-23T04:45:32.856978+05:30",
+  "updated_at": "2026-04-28T12:20:58.284295+05:30",
   "positions": [
     {
-      "signal_id": "SIG-2026-04-15-015-Defence_vs_IT",
-      "spread_name": "Sovereign Shield Alpha",
-      "category": "hormuz",
+      "signal_id": "SIG-2026-04-27-015-Pharma_vs_Cyclicals",
+      "spread_name": "Defensive Rotation",
+      "category": "escalation",
       "tier": "SIGNAL",
-      "open_date": "2026-04-15",
+      "open_date": "2026-04-27",
       "long_legs": [
         {
-          "ticker": "HAL",
-          "entry": 4284.8,
-          "current": 4394.0,
-          "pnl_pct": 2.55
+          "ticker": "SUNPHARMA",
+          "entry": 1625.0,
+          "current": 1755.8,
+          "pnl_pct": 8.05
         },
         {
-          "ticker": "BEL",
-          "entry": 449.85,
-          "current": 448.95,
-          "pnl_pct": -0.2
-        },
-        {
-          "ticker": "BDL",
-          "entry": 1374.2,
-          "current": 1379.5,
-          "pnl_pct": 0.39
+          "ticker": "DRREDDY",
+          "entry": 1320.4,
+          "current": 1356.5,
+          "pnl_pct": 2.73
         }
       ],
       "short_legs": [
         {
-          "ticker": "TCS",
-          "entry": 2572.0,
-          "current": 2535.3,
-          "pnl_pct": 1.43
+          "ticker": "TMPV",
+          "entry": 351.0,
+          "current": 351.15,
+          "pnl_pct": -0.04
         },
         {
-          "ticker": "INFY",
-          "entry": 1322.1,
-          "current": 1268.8,
-          "pnl_pct": 4.03
-        },
-        {
-          "ticker": "WIPRO",
-          "entry": 212.98,
-          "current": 204.0,
-          "pnl_pct": 4.22
+          "ticker": "M&M",
+          "entry": 3050.0,
+          "current": 3081.1,
+          "pnl_pct": -1.02
         }
       ],
-      "spread_pnl_pct": 4.89,
-      "todays_move": 4.89,
-      "daily_stop": -0.97,
-      "two_day_stop": -1.95,
-      "trail_stop": 3.19,
-      "trail_budget": 1.95,
-      "avg_favorable": 1.95,
+      "spread_pnl_pct": 4.59,
+      "todays_move": 4.59,
+      "daily_stop": -1.09,
+      "two_day_stop": -2.19,
+      "trail_stop": 2.4,
+      "trail_budget": 2.19,
+      "avg_favorable": 2.19,
       "stop_source": "spread_stats",
-      "peak_pnl": 5.14,
+      "peak_pnl": 4.59,
       "source": "SPREAD",
       "trust_scores": {
-        "WIPRO": {
+        "M&M": {
           "trust_grade": "A",
-          "trust_score": 83.7,
+          "trust_score": 82.8,
           "opus_side": null,
-          "thesis": "**Operating margin resilience and cash generation durability.** Despite a flat full-year net profit growth of 0.36% YoY in FY26 (Mar 2026: 13,266 Cr vs Mar 2025: 13,218 Cr), Wipro has expanded operating margins from 20.2% in Mar 2025 to 19.2% in Mar 2026 (per Screener), and delivered 17.6% operating margin in Q3 FY26 at the high end of the 17-17.5% guided band. This is achieved despite HARMAN DTS integration (which management said would be 'margin-dilutive') and restructuring charges of INR 263 Cr in Q3. **Operating cash flow remained robust at 135% of net income in Q3 and 127.7% for full year FY26** (16,943 Cr OCF vs 13,266 Cr net profit), enabling the company to distribute >$1.3B in dividends (INR 11 per share equivalent) in FY26 while maintaining a gross cash position of $6.5B. This demonstrates **operational discipline and financial stability** even amid demand headwinds. The company is not sacrificing profitability or financial flexibility to chase revenue growth\u2014a disciplined stance that protects shareholder interests."
+          "thesis": "OPERATIONAL DELIVERY ON MARGIN AND MARKET SHARE EXPANSION: M&M achieved 180 bps auto margin improvement in Q1FY25 (vs prior year Q1), full-year OPM of 19% (up 100 bps from 18%), and gained 130 bps in SUV market share, 180 bps in tractor market share, and 160 bps in LCV market share. This was driven by three levers: (1) capacity expansion from 18,000 to 49,000 units/month over 3 years enabling operating leverage; (2) cost actions (chip premiums, value engineering) offsetting XUV700 price reduction by 180 bps; (3) product mix upside (Thar 5-door ramp, 3XO penetration at 25% first-time buyers). Mahindra Finance PAT also surged 37% with asset quality remaining under control (GNPA 3.6%), confirming the turnaround credibility. Page reference: Q1FY25 Concall Pages 3-4 (Dr. Anish Shah and Rajesh Jejurikar); Screener OPM% series Mar 2025."
         },
-        "INFY": {
+        "SUNPHARMA": {
           "trust_grade": "F",
-          "trust_score": 17.5,
+          "trust_score": 5.6,
           "opus_side": null,
-          "thesis": "Infosys's consistent achievement of carbon neutrality for 6 years in a row (as of FY2024-25 AR) and the significant progress in increasing green certified space (29.7 million sq.ft. by FY2024-25, well ahead of pro-rata for the 2030 target) demonstrate a strong and verifiable commitment to environmental sustainability."
+          "thesis": "Management demonstrates a commitment to providing updates on key product development milestones, such as the Ilumya Phase-3 clinical trials for psoriatic arthritis, where the topline data was consistently guided for H2CY25 in both FY24 and FY25 annual reports, indicating a stable and delivered timeline for this significant asset."
         },
-        "BDL": {
+        "TMPV": {
+          "trust_grade": "D",
+          "trust_score": 35.4,
+          "opus_side": null,
+          "thesis": "The biggest strength is the successful financial turnaround and consistent improvement in profitability, particularly for JLR, achieving EBIT margins over 6% for six consecutive quarters and strong consolidated PAT of \u20b931,807 crore in FY2023-24. This demonstrates effective cost management and operational efficiency in core business segments, even amidst supply chain challenges."
+        },
+        "DRREDDY": {
           "trust_grade": "C",
-          "trust_score": 56.8,
-          "opus_side": null,
-          "thesis": "BDL dramatically exceeded its GeM (Government e-Marketplace) procurement target, achieving \u20b95,841.7 Crore in GMV procurement against a \u20b91,602 Crore target in FY2023-24\u2014a 364.6% achievement rate. This demonstrates exceptional execution capability in government procurement processes and strong vendor ecosystem engagement. Additionally, the company exceeded its MSME procurement mandate, achieving 27.70% (\u20b9450.38 Crore) against a 25% statutory target, signalling both policy compliance and supply chain resilience (FY2023-24 AR, Directors' Report - Procurement from MSMEs, Page 16). These routine targets are delivered consistently, indicating reliable operational management at the tactical level."
-        },
-        "TCS": {
-          "trust_grade": "B+",
-          "trust_score": 72.4,
-          "opus_side": null,
-          "thesis": "TCS has significantly exceeded its critical environmental target of reducing Scope 1 and Scope 2 emissions by 70% by 2025, achieving an 80% reduction (vs 2016 baseline) by FY2024. This demonstrates strong commitment and effective execution on sustainability goals, which are increasingly important for long-term value creation and stakeholder trust."
-        },
-        "BEL": {
-          "trust_grade": "C",
-          "trust_score": 55.0,
+          "trust_score": 41.4,
           "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
-        },
-        "HAL": {
-          "trust_grade": "B",
-          "trust_score": 69.5,
-          "opus_side": "LONG",
-          "thesis": "Atmanirbhar Bharat + rising defence budget. But verify production capacity vs order book."
+          "thesis": "Defensive sector. Outperforms in RISK-OFF. Strong management credibility in top names."
         }
       },
       "regime_rank": {
-        "HAL": {
-          "episode_count": 35,
-          "tradeable_rate": 0.9412,
-          "persistence_rate": 0.3824,
-          "hit_rate": 0.5,
-          "avg_drift_1d": 0.000936
+        "SUNPHARMA": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8929,
+          "persistence_rate": 0.4405,
+          "hit_rate": 0.5952,
+          "avg_drift_1d": -8.7e-05
         },
-        "BEL": {
-          "episode_count": 35,
-          "tradeable_rate": 0.8235,
-          "persistence_rate": 0.4706,
-          "hit_rate": 0.6176,
-          "avg_drift_1d": 0.002941
+        "DRREDDY": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8571,
+          "persistence_rate": 0.5119,
+          "hit_rate": 0.5357,
+          "avg_drift_1d": 5e-05
         },
-        "BDL": {
-          "episode_count": 35,
-          "tradeable_rate": 0.8824,
-          "persistence_rate": 0.5588,
-          "hit_rate": 0.5882,
-          "avg_drift_1d": 0.002958
+        "TMPV": {
+          "episode_count": 19,
+          "tradeable_rate": 1.0,
+          "persistence_rate": 0.4667,
+          "hit_rate": 0.3333,
+          "avg_drift_1d": 0.001768
         },
-        "TCS": {
-          "episode_count": 35,
-          "tradeable_rate": 0.7941,
-          "persistence_rate": 0.4706,
-          "hit_rate": 0.3235,
-          "avg_drift_1d": -0.000227
-        },
-        "INFY": {
-          "episode_count": 35,
-          "tradeable_rate": 0.7941,
-          "persistence_rate": 0.4706,
-          "hit_rate": 0.5,
-          "avg_drift_1d": -0.001396
-        },
-        "WIPRO": {
-          "episode_count": 35,
-          "tradeable_rate": 0.8235,
-          "persistence_rate": 0.6176,
-          "hit_rate": 0.5588,
-          "avg_drift_1d": -0.001946
+        "M&M": {
+          "episode_count": 88,
+          "tradeable_rate": 0.9048,
+          "persistence_rate": 0.4524,
+          "hit_rate": 0.5595,
+          "avg_drift_1d": 0.001985
         }
       },
       "correlation_breaks": {
-        "HAL": null,
-        "BEL": null,
-        "BDL": null,
-        "TCS": null,
-        "INFY": null,
-        "WIPRO": null
+        "SUNPHARMA": {
+          "classification": "UNCERTAIN",
+          "action": "HOLD",
+          "z_score": 5.66,
+          "expected_return": -0.15,
+          "actual_return": 6.85,
+          "oi_anomaly": false,
+          "trade_rec": null
+        },
+        "DRREDDY": {
+          "classification": "UNCERTAIN",
+          "action": "HOLD",
+          "z_score": 1.97,
+          "expected_return": -0.55,
+          "actual_return": 1.18,
+          "oi_anomaly": false,
+          "trade_rec": null
+        },
+        "TMPV": {
+          "classification": "UNCERTAIN",
+          "action": "HOLD",
+          "z_score": 2.34,
+          "expected_return": -0.71,
+          "actual_return": 1.05,
+          "oi_anomaly": false,
+          "trade_rec": null
+        },
+        "M&M": null
       },
       "oi_anomalies": {
-        "HAL": {
+        "SUNPHARMA": {
           "anomaly_type": "OI_SPIKE",
-          "pcr": 0.4922,
-          "sentiment": "BEARISH",
-          "oi_change": 597900,
+          "pcr": 0.6956,
+          "sentiment": "MILD_BEAR",
+          "oi_change": 3929100,
           "pcr_flip": false
         },
-        "BEL": null,
-        "BDL": {
+        "DRREDDY": {
           "anomaly_type": "OI_SPIKE",
-          "pcr": 0.4321,
-          "sentiment": "BEARISH",
-          "oi_change": 415800,
+          "pcr": 0.6159,
+          "sentiment": "MILD_BEAR",
+          "oi_change": 1793750,
           "pcr_flip": false
         },
-        "TCS": null,
-        "INFY": null,
-        "WIPRO": {
+        "TMPV": {
           "anomaly_type": "OI_SPIKE",
-          "pcr": 0.2775,
+          "pcr": 0.4933,
           "sentiment": "BEARISH",
-          "oi_change": 16443000,
+          "oi_change": 16600800,
+          "pcr_flip": false
+        },
+        "M&M": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.5201,
+          "sentiment": "MILD_BEAR",
+          "oi_change": 2181000,
           "pcr_flip": false
         }
       },
-      "conviction_score": 49.405,
+      "conviction_score": 50.0,
+      "gate_reason": "BLOCKED: long leg SUNPHARMA has trust_grade F (rank 0 <= 2)"
+    },
+    {
+      "signal_id": "SIG-2026-04-27-014-PSU_Commodity_vs_Banks",
+      "spread_name": "Commodity-Credit Divergence",
+      "category": "sanctions",
+      "tier": "SIGNAL",
+      "open_date": "2026-04-27",
+      "long_legs": [
+        {
+          "ticker": "ONGC",
+          "entry": 286.0,
+          "current": 295.75,
+          "pnl_pct": 3.41
+        },
+        {
+          "ticker": "COALINDIA",
+          "entry": 458.5,
+          "current": 469.3,
+          "pnl_pct": 2.36
+        }
+      ],
+      "short_legs": [
+        {
+          "ticker": "HDFCBANK",
+          "entry": 787.5,
+          "current": 786.35,
+          "pnl_pct": 0.15
+        },
+        {
+          "ticker": "ICICIBANK",
+          "entry": 1327.9,
+          "current": 1301.9,
+          "pnl_pct": 1.96
+        }
+      ],
+      "spread_pnl_pct": 3.72,
+      "todays_move": 3.72,
+      "daily_stop": -1.01,
+      "two_day_stop": -2.01,
+      "trail_stop": 1.71,
+      "trail_budget": 2.01,
+      "avg_favorable": 2.01,
+      "stop_source": "spread_stats",
+      "peak_pnl": 3.72,
+      "source": "SPREAD",
+      "trust_scores": {
+        "ONGC": {
+          "trust_grade": "F",
+          "trust_score": 11.5,
+          "opus_side": null,
+          "thesis": "The company's progress in increasing its overall renewable energy capacity to 2.5 GW by FY2024-25, which is ahead of the pro-rata trajectory needed to achieve the 10 GW target by 2030, demonstrates a commitment to its long-term green energy goals. This indicates that while specific projects may face challenges, the broader strategic direction is being pursued."
+        },
+        "HDFCBANK": {
+          "trust_grade": "D",
+          "trust_score": 21.2,
+          "opus_side": null,
+          "thesis": "The consistent delivery on proposed dividend per share (e.g., FY24-25 guidance of H22.0 was delivered) and the achievement of the 'women in workforce' aspiration (26.1% by FY25 vs. 25% target) from the FY22-23 AR (Page 19) demonstrates reliability in shareholder returns and certain HR/ESG commitments."
+        },
+        "COALINDIA": {
+          "trust_grade": "D",
+          "trust_score": 22.1,
+          "opus_side": "LONG",
+          "thesis": "Direct oil/coal price beneficiaries. Crude above $80 = earnings tailwind."
+        },
+        "ICICIBANK": {
+          "trust_grade": "F",
+          "trust_score": 0.0,
+          "opus_side": null,
+          "thesis": "The consistent and strong growth in Net Profit and EPS over the past few years (e.g., Net Profit grew from 35461 Cr in Mar 2023 to 46081 Cr in Mar 2024, and projected 54569 Cr in Mar 2025, as per Screener data). This indicates robust core business performance and effective overall financial management."
+        }
+      },
+      "regime_rank": {
+        "ONGC": {
+          "episode_count": 88,
+          "tradeable_rate": 0.9643,
+          "persistence_rate": 0.4405,
+          "hit_rate": 0.4643,
+          "avg_drift_1d": -0.002982
+        },
+        "COALINDIA": {
+          "episode_count": 88,
+          "tradeable_rate": 0.9167,
+          "persistence_rate": 0.5357,
+          "hit_rate": 0.5119,
+          "avg_drift_1d": -0.002922
+        },
+        "HDFCBANK": {
+          "episode_count": 88,
+          "tradeable_rate": 0.7976,
+          "persistence_rate": 0.5595,
+          "hit_rate": 0.5714,
+          "avg_drift_1d": 8.7e-05
+        },
+        "ICICIBANK": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8452,
+          "persistence_rate": 0.5238,
+          "hit_rate": 0.5357,
+          "avg_drift_1d": 0.000652
+        }
+      },
+      "correlation_breaks": {
+        "ONGC": null,
+        "COALINDIA": null,
+        "HDFCBANK": null,
+        "ICICIBANK": null
+      },
+      "oi_anomalies": {
+        "ONGC": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.3683,
+          "sentiment": "BEARISH",
+          "oi_change": 27985500,
+          "pcr_flip": false
+        },
+        "COALINDIA": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.8053,
+          "sentiment": "NEUTRAL",
+          "oi_change": 19689750,
+          "pcr_flip": false
+        },
+        "HDFCBANK": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.5485,
+          "sentiment": "MILD_BEAR",
+          "oi_change": 34502050,
+          "pcr_flip": false
+        },
+        "ICICIBANK": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.6801,
+          "sentiment": "MILD_BEAR",
+          "oi_change": 12826100,
+          "pcr_flip": false
+        }
+      },
+      "conviction_score": 50.0,
+      "gate_reason": "BLOCKED: long leg ONGC has trust_grade F (rank 0 <= 2)"
+    },
+    {
+      "signal_id": "BRK-2026-04-28-IEX",
+      "spread_name": "Phase C: IEX OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "IEX",
+          "entry": 126.41,
+          "current": 126.28,
+          "pnl_pct": 0.1
+        }
+      ],
+      "spread_pnl_pct": 0.31,
+      "todays_move": 0.31,
+      "daily_stop": -6.35,
+      "two_day_stop": -12.7,
+      "trail_stop": -1.69,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 0.31,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "IEX": {
+          "trust_grade": "F",
+          "trust_score": 12.0,
+          "opus_side": null,
+          "thesis": "The company's ability to exceed the GDP growth forecast for FY2025-26 (IMF revised to 7.3% vs. guidance of 6.2-6.5%) demonstrates a strong underlying economic environment that could eventually benefit the exchange. Furthermore, the progress in BESS capacity awarded (13.2 GWH awarded) indicates a positive long-term trend for energy storage, which IEX is positioning itself to capitalize on, even if the immediate 'needed' capacity target is still in progress."
+        }
+      },
+      "regime_rank": {
+        "IEX": {
+          "episode_count": 88,
+          "tradeable_rate": 0.881,
+          "persistence_rate": 0.4762,
+          "hit_rate": 0.4643,
+          "avg_drift_1d": -0.003644
+        }
+      },
+      "correlation_breaks": {
+        "IEX": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 2.33,
+          "expected_return": -2.07,
+          "actual_return": -0.17,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "IEX": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.785,
+          "sentiment": "NEUTRAL",
+          "oi_change": 12457500,
+          "pcr_flip": false
+        }
+      },
+      "conviction_score": 58.0,
       "gate_reason": null
+    },
+    {
+      "signal_id": "BRK-2026-04-28-RECLTD",
+      "spread_name": "Phase C: RECLTD OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "RECLTD",
+          "entry": 377.0,
+          "current": 377.6,
+          "pnl_pct": -0.16
+        }
+      ],
+      "spread_pnl_pct": -0.28,
+      "todays_move": -0.28,
+      "daily_stop": -6.01,
+      "two_day_stop": -12.02,
+      "trail_stop": -2.0,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": -0.16,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "RECLTD": {
+          "trust_grade": "D",
+          "trust_score": 20.5,
+          "opus_side": null,
+          "thesis": "REC has consistently exceeded or delivered on its fund-raising targets through private placement of bonds/debentures. In FY2024-25, it raised \u20b91,42,204 crore against a target of \u20b91,05,000 crore (FY22-23 guidance) and \u20b91,45,000 crore (FY23-24 guidance), demonstrating strong market access and financial agility."
+        }
+      },
+      "regime_rank": {
+        "RECLTD": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8929,
+          "persistence_rate": 0.4643,
+          "hit_rate": 0.4524,
+          "avg_drift_1d": -0.003968
+        }
+      },
+      "correlation_breaks": {
+        "RECLTD": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.98,
+          "expected_return": -1.15,
+          "actual_return": 0.31,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "RECLTD": null
+      },
+      "conviction_score": 58.0,
+      "gate_reason": null
+    },
+    {
+      "signal_id": "BRK-2026-04-28-TATAELXSI",
+      "spread_name": "Phase C: TATAELXSI OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "TATAELXSI",
+          "entry": 4188.7,
+          "current": 4150.1,
+          "pnl_pct": 0.92
+        }
+      ],
+      "spread_pnl_pct": 1.0,
+      "todays_move": 1.0,
+      "daily_stop": -6.7,
+      "two_day_stop": -13.4,
+      "trail_stop": -1.0,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 1.0,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "TATAELXSI": {
+          "trust_grade": "C",
+          "trust_score": 50.6,
+          "opus_side": null,
+          "thesis": "**Automotive/Transportation vertical has achieved demonstrable ramp-up of large SDV-led deals with sustainable momentum.** Transportation revenue grew 13.8% YoY in 9M FY26 (Rs 1,961.9 Cr) and accelerated 7.7% QoQ in Q3, driven by: (1) successful execution on 'large deals won earlier in the year', (2) 'normalization of work streams' with strategic OEM client that recovered from prior quarter disruption, (3) entry into 'adjacency businesses' (off-road, construction equipment, railway) with 7.5-8% current mix targeting 20% over 2-3 years. This vertical now represents 55%+ of revenue and is delivering both volume growth and geographic/customer diversification (Europe, U.S., Japan, India all showing growth per concall). The segment is also validated by management's credible track record: CEO states 'our share in the overall spend of this customer has only increased' over 5+ years, indicating durable value capture. Operating leverage from transportation growth (200 bps margin benefit in Q3) is concrete and replicable, unlike Media/Healthcare recovery promises which remain unverified."
+        }
+      },
+      "regime_rank": {
+        "TATAELXSI": {
+          "episode_count": 88,
+          "tradeable_rate": 0.8095,
+          "persistence_rate": 0.3929,
+          "hit_rate": 0.4167,
+          "avg_drift_1d": -0.005234
+        }
+      },
+      "correlation_breaks": {
+        "TATAELXSI": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.86,
+          "expected_return": -1.16,
+          "actual_return": -0.02,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "TATAELXSI": null
+      },
+      "conviction_score": 53.835,
+      "gate_reason": null
+    },
+    {
+      "signal_id": "BRK-2026-04-28-NMDC",
+      "spread_name": "Phase C: NMDC OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "NMDC",
+          "entry": 90.84,
+          "current": 91.14,
+          "pnl_pct": -0.33
+        }
+      ],
+      "spread_pnl_pct": -0.25,
+      "todays_move": -0.25,
+      "daily_stop": -5.26,
+      "two_day_stop": -10.52,
+      "trail_stop": -2.0,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": -0.33,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "NMDC": {
+          "trust_grade": "F",
+          "trust_score": 16.2,
+          "opus_side": null,
+          "thesis": "NMDC demonstrates a strong commitment to long-term capacity expansion, with INR40,000 crores of projects sanctioned by Q2 FY26 and another INR31,000-32,000 crores on the drawing board. The highest-ever capex of INR3,700 crores in FY25 and plans for INR4,000 crores in FY26, coupled with the successful turnaround of the Nagarnar steel plant to EBITDA positive on a monthly basis (March and April 2025), highlight management's execution capability on large-scale projects despite initial challenges."
+        }
+      },
+      "regime_rank": {
+        "NMDC": {
+          "episode_count": 88,
+          "tradeable_rate": 0.9286,
+          "persistence_rate": 0.4762,
+          "hit_rate": 0.4762,
+          "avg_drift_1d": -0.005617
+        }
+      },
+      "correlation_breaks": {
+        "NMDC": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.84,
+          "expected_return": -1.48,
+          "actual_return": 0.41,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "NMDC": null
+      },
+      "conviction_score": 58.0,
+      "gate_reason": null
+    },
+    {
+      "signal_id": "BRK-2026-04-28-MOTILALOFS",
+      "spread_name": "Phase C: MOTILALOFS OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "MOTILALOFS",
+          "entry": 793.85,
+          "current": 800.0,
+          "pnl_pct": -0.77
+        }
+      ],
+      "spread_pnl_pct": -0.77,
+      "todays_move": -0.77,
+      "daily_stop": -6.95,
+      "two_day_stop": -13.9,
+      "trail_stop": -1.96,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 0.04,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "MOTILALOFS": {
+          "trust_grade": "A+",
+          "trust_score": 93.3,
+          "opus_side": null,
+          "thesis": "Exceptional execution on CRITICAL profitability and AUM growth metrics. In FY2024-25, consolidated ROE delivered 25% (vs 20%+ target) with PAT of \u20b92,508 Cr (+2.5% YoY). AMC AUM surged 72% YoY to \u20b91,23,397 Cr, HFC disbursements grew 76% YoY to \u20b91,794 Cr (with GNPA/NNPA at 0.8%/0.4% within targets), and distribution AUM expanded 33% YoY to \u20b931,551 Cr. Revenue growth of 18.4% (\u20b98,417 Cr) with annuity revenue >60% of total demonstrates successful business model diversification. The company has also consistently beaten guidance on retail client acquisition (48 Lakh, +14% YoY in FY25) and market share metrics (cash 7.6%, FO 8.5%), proving operational execution excellence."
+        }
+      },
+      "regime_rank": {
+        "MOTILALOFS": {
+          "episode_count": 88,
+          "tradeable_rate": 0.9286,
+          "persistence_rate": 0.4762,
+          "hit_rate": 0.4762,
+          "avg_drift_1d": -0.004749
+        }
+      },
+      "correlation_breaks": {
+        "MOTILALOFS": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.64,
+          "expected_return": -2.29,
+          "actual_return": 0.28,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "MOTILALOFS": null
+      },
+      "conviction_score": 50.0,
+      "gate_reason": "BLOCKED: short leg MOTILALOFS has trust_grade A+ (rank 7 >= 6)"
+    },
+    {
+      "signal_id": "BRK-2026-04-28-HCLTECH",
+      "spread_name": "Phase C: HCLTECH OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "HCLTECH",
+          "entry": 1227.9,
+          "current": 1208.9,
+          "pnl_pct": 1.55
+        }
+      ],
+      "spread_pnl_pct": 1.6,
+      "todays_move": 1.6,
+      "daily_stop": -7.0,
+      "two_day_stop": -14.0,
+      "trail_stop": -0.4,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 1.6,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "HCLTECH": {
+          "trust_grade": "B+",
+          "trust_score": 75.2,
+          "opus_side": null,
+          "thesis": "HCLTech's exceptional performance in upskilling employees in GenAI (116,200 actual vs. 50,000+ target for FY25, a 132.4% beat) and achieving 83% renewable energy usage by FY25 against an 80% target for 2030 (FY23-24 AR, Page 57) demonstrates strong execution on strategic human capital and environmental sustainability initiatives, well ahead of schedule."
+        }
+      },
+      "regime_rank": {
+        "HCLTECH": {
+          "episode_count": 88,
+          "tradeable_rate": 0.7619,
+          "persistence_rate": 0.5357,
+          "hit_rate": 0.5357,
+          "avg_drift_1d": -8.6e-05
+        }
+      },
+      "correlation_breaks": {
+        "HCLTECH": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.63,
+          "expected_return": -0.88,
+          "actual_return": 0.06,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "HCLTECH": {
+          "anomaly_type": "OI_SPIKE",
+          "pcr": 0.7578,
+          "sentiment": "NEUTRAL",
+          "oi_change": 4149600,
+          "pcr_flip": false
+        }
+      },
+      "conviction_score": 58.0,
+      "gate_reason": null
+    },
+    {
+      "signal_id": "BRK-2026-04-28-HDFCAMC",
+      "spread_name": "Phase C: HDFCAMC OPPORTUNITY_LAG",
+      "category": "phase_c",
+      "tier": "EXPLORING",
+      "open_date": "2026-04-28",
+      "long_legs": [],
+      "short_legs": [
+        {
+          "ticker": "HDFCAMC",
+          "entry": 2756.0,
+          "current": 2764.6,
+          "pnl_pct": -0.31
+        }
+      ],
+      "spread_pnl_pct": -0.36,
+      "todays_move": -0.36,
+      "daily_stop": -6.72,
+      "two_day_stop": -13.44,
+      "trail_stop": -1.54,
+      "trail_budget": 2.0,
+      "avg_favorable": 2.0,
+      "stop_source": "atr_14",
+      "peak_pnl": 0.46,
+      "source": "CORRELATION_BREAK",
+      "trust_scores": {
+        "HDFCAMC": {
+          "trust_grade": "A+",
+          "trust_score": 95.0,
+          "opus_side": null,
+          "thesis": "The company's ability to consistently maintain its operating margin within the guided 33-36 basis point range (actual 36 bps in Q3 FY26) despite telescopic pricing impacts, coupled with disciplined OPEX growth (12% TTM vs 12-15% guidance), highlights exceptional financial management and operating leverage. This is further supported by significant expansion in unique investors (15.4 million in Q3 FY26) and digital transaction adoption (94% in FY25)."
+        }
+      },
+      "regime_rank": {
+        "HDFCAMC": {
+          "episode_count": 88,
+          "tradeable_rate": 0.881,
+          "persistence_rate": 0.5238,
+          "hit_rate": 0.5357,
+          "avg_drift_1d": -0.001753
+        }
+      },
+      "correlation_breaks": {
+        "HDFCAMC": {
+          "classification": "OPPORTUNITY_LAG",
+          "action": "ADD",
+          "z_score": 1.5,
+          "expected_return": -1.49,
+          "actual_return": 0.02,
+          "oi_anomaly": false,
+          "trade_rec": "SHORT"
+        }
+      },
+      "oi_anomalies": {
+        "HDFCAMC": null
+      },
+      "conviction_score": 50.0,
+      "gate_reason": "BLOCKED: short leg HDFCAMC has trust_grade A+ (rank 7 >= 6)"
     }
   ],
   "fragility": {

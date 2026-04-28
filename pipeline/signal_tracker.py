@@ -254,10 +254,15 @@ def _yf_history_with_timeout(yf_sym: str, timeout_s: float = 8.0):
 def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     """Fetch current prices for Indian stock tickers.
 
-    Primary: EODHD real-time API (eodhd_client.fetch_realtime).
-    Fallback: yfinance .history(period="1d") with hard 8s timeout.
-
-    Tickers are plain names like "HAL", "BPCL" — resolved via INDIA_SIGNAL_STOCKS.
+    Source priority:
+      1. EODHD real-time   — only when ticker is in INDIA_SIGNAL_STOCKS (spread universe).
+      2. yfinance          — hard 8s timeout, frequently rate-limited.
+      3. Kite Connect bulk — covers the full F&O universe, batched for any
+         ticker the first two paths missed. Phase C correlation breaks
+         routinely hit F&O tickers outside INDIA_SIGNAL_STOCKS, so EODHD
+         and yfinance both miss and live_status.json sat at pnl=0
+         indefinitely until this stage was wired (memory:
+         feedback_kite_api_fallback).
     """
     from eodhd_client import fetch_realtime
 
@@ -269,14 +274,12 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
 
         price = None
 
-        # 1. Try EODHD real-time
         if eodhd_sym:
             rt = fetch_realtime(eodhd_sym)
             if rt and rt.get("close"):
                 price = float(rt["close"])
                 log.debug("Price %s = %.2f (EODHD RT)", ticker, price)
 
-        # 2. Fallback: yfinance with 8s hard timeout (cross-platform)
         if price is None:
             try:
                 hist = _yf_history_with_timeout(yf_sym, timeout_s=8.0)
@@ -291,6 +294,20 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                 log.error("yfinance error for %s: %s", yf_sym, e)
 
         prices[ticker] = price
+
+    # Stage 3: Kite bulk-LTP for any ticker still unpriced. Single batched call.
+    # Failures are non-fatal — the leg simply stays at entry price.
+    missing = [t for t, p in prices.items() if p is None]
+    if missing:
+        try:
+            from kite_client import fetch_ltp
+            kite_prices = fetch_ltp(missing) or {}
+            for t, p in kite_prices.items():
+                if p is not None:
+                    prices[t] = float(p)
+                    log.info("Price %s = %.2f (Kite fallback)", t, p)
+        except Exception as e:
+            log.warning("Kite fallback failed: %s — %d tickers unpriced", e, len(missing))
 
     return prices
 
