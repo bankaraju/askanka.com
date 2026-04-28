@@ -1134,7 +1134,24 @@ Source: `pipeline/terminal/api/candidates.py`. Trading consumes `tradeable_candi
 
 `GET /api/live_ltp?tickers=HAL,BEL,TCS` → `{"HAL": 4284.30, "BEL": 449.85, "TCS": 2576.70}`.
 
-Backend for a future 5s poll that patches the Dashboard's `current` column between 15-min batches. Backed by `signal_tracker.fetch_current_prices` (same Kite session the batch uses). Unknown tickers return `null` so the frontend falls back to the `live_status.json` snapshot rather than painting a fake `₹0.00`. Input is capped at 50 tickers per request. Frontend JS poller is a deferred follow-up. Source: `pipeline/terminal/api/live.py`.
+Backend for the 5s poll that patches the Dashboard's `current` column between 15-min batches. Backed by `signal_tracker.fetch_current_prices` (same Kite session the batch uses). Unknown tickers return `null` so the frontend falls back to the `live_status.json` snapshot rather than painting a fake `₹0.00`. Input is capped at 50 tickers per request. Source: `pipeline/terminal/api/live.py`. Frontend poller: `static/js/components/live-ticker.js` (started by `dashboard.js` at 5s cadence).
+
+#### Frontend polling cadence (canonical)
+
+Each tab's in-page refresh interval is set to balance freshness against server load. The Live Monitor poll path now sits behind a 3s in-process LTP cache (`_LTP_CACHE` in `pipeline/terminal/api/live_monitor.py`) and skips closed rows so the typical post-14:30 tick costs <50 ms. Numbers below are the *frontend* loop, not the underlying scheduled task cadence:
+
+| Tab | Frontend poll | Why this number |
+|-----|---------------|-----------------|
+| Dashboard | 30s data + 5s LTP-only patch | 30s is enough for status changes; the 5s loop only repaints LTP cells, not the table |
+| Live Monitor | 10s | Each poll triggers a Kite bulk LTP fetch on the server. 5s stacked requests; 10s gives breathing room and is still useful for paper-trade monitoring |
+| Regime, Risk, Scanner | 60s | Underlying data only changes every 15-min cycle; sub-minute polling is wasted work |
+| Research (digest) | 5 min during market hours, off after-hours | Digest only re-computes per intraday cycle; in-page polling above that adds nothing |
+| Trust | none (load on mount) | Re-scores happen ad-hoc, not intraday — refreshing on tab-mount is sufficient |
+| Track Record | none (load on mount) | Updates on every CLOSE — page is consulted, not stared at |
+| Trading | none (load on mount) | Candidates rebuild on the 15-min server cycle; user can hard-refresh if needed |
+| News, Options, Settings | none (static or daily) | Data files refresh once-per-cycle or once-per-day; per-page polling is overkill |
+
+Live Monitor heaviness fix (2026-04-28): server now caches LTPs for 3s and skips closed rows; client poll moved 5s → 10s. Verified ~100x speedup post-cutoff (12.3s → 110ms typical). Commits: 5d53b04, eeb328b.
 
 #### `/api/risk/regime-flip` (new 2026-04-22)
 
