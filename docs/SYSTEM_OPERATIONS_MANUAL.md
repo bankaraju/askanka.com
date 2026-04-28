@@ -1257,6 +1257,43 @@ Design tokens defined in `pipeline/terminal/static/css/terminal.css`. Locked: DM
 
 ---
 
+## 7b. Contabo Execution Foundation (VPS systemd)
+
+The laptop is treated as **disposable context** — it can crash any day. The Contabo VPS at `185.182.8.107` is the **execution host** for everything that needs to run on a schedule. This split is enforced by five systemd units installed at `/etc/systemd/system/anka-*.{service,timer}`. Source-of-truth unit files are tracked under `pipeline/infra/systemd/`.
+
+### Unit catalogue
+
+| Unit | Purpose | Cadence | Tier |
+|------|---------|---------|------|
+| `anka-auto-push.timer/.service` | Run `auto_push_branches.sh` — pushes every local branch on the VPS clone to `origin`. RPO ≤ 10 min. | every 10 min | CRITICAL |
+| `anka-failure-watcher.timer/.service` | Run `check_systemd_failures.sh` — Telegram alert on any anka-* service `failed` transition. Flag-file in `/var/lib/anka/failure-flags/` makes alerting idempotent. | every 15 min | CRITICAL |
+| `anka-security-daily.timer/.service` | Run `pipeline/scripts/security/run_daily.sh` — sequences apt status, auth triage, port audit, ssh keys audit, resource watch. Green-tick to Telegram on `errors=0`. | 06:00 IST daily | WARN |
+| `anka-security-weekly.timer/.service` | Run `pipeline/scripts/security/weekly_audit.sh` — lynis quick audit + rkhunter check. Logs in `/var/log/anka-security/`. | Sun 04:00 IST | INFO |
+| `anka-terminal.service` | Continuous `uvicorn pipeline.terminal.app:app --host 127.0.0.1 --port 8000`. Restart=on-failure. Foundational for the pairwise audit UI (Gemma4 pilot Tasks 15-16). | continuous | WARN |
+
+### Telegram cred handling
+
+All scripts source `pipeline/scripts/load_telegram_creds.sh` rather than `source .env`. The helper extracts `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` via `grep | cut | tr -d '\r"'` so it survives:
+- CRLF line endings (laptop-edited .env transferred to VPS),
+- stray `$reference` substrings inside other env values that would break `set -u`,
+- non-Telegram secrets the daily security cadence has no business reading.
+
+### Drift baselines
+
+Two committed files anchor the security daily cadence:
+- `pipeline/config/security/baseline_listening_ports.txt` — expected `addr:port process_name` set. The capture function strips PID and FD so file-descriptor churn (e.g. `fd=160` vs `fd=151` on the same sshd) does not trigger false-positive drift.
+- `pipeline/config/security/authorized_keys.sha256` — sha256 of the canonical `~/.ssh/authorized_keys`. Daily check fails if the live hash diverges.
+
+Update intentionally: re-capture the baseline, commit, push, pull on VPS — never bypass with `--no-verify` or by editing in place on the VPS without committing back.
+
+### What this buys
+
+- **Laptop-disposability:** if the laptop dies, RPO ≤ 10 min. No work is stranded on the laptop because every branch lives on origin.
+- **No silent VPS failures:** failure-watcher cycles every 15 min. Any anka-* service that flips to `failed` triggers exactly one Telegram alert (next success transition resets the flag).
+- **Hands-off security:** Bharat is not a security engineer — the daily green-tick is the noise floor. Any deviation surfaces as a typed alert that says exactly what changed.
+
+---
+
 ## 8. Known Gaps and Limitations
 
 ### Gap 1 (CRITICAL): ETF Engine and Regime Trade Map Are Frozen

@@ -1191,6 +1191,54 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "15:25 IST daily during holdout 2026-04-29 -> 2026-05-28. anka-ta-karpathy-close.timer + .service. python -m pipeline.ta_scorer.karpathy_holdout close -- mechanical TIME_STOP at Kite LTP per spec section 10.6. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
+      "task_name": "AnkaAutoPush",
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "host": "vps",
+      "outputs": [],
+      "grace_multiplier": 2.0,
+      "notes": "Every 10 min. anka-auto-push.timer -> auto_push_branches.sh. Pushes every local branch on the VPS clone to origin so RPO <= 10 min. Foundational for laptop=context / VPS=execution split (CLAUDE.md), so a laptop crash never costs more than the last push interval. Watchdog has no output file to inspect; failure-watcher service alerts on systemd failure transitions instead."
+    },
+    {
+      "task_name": "AnkaFailureWatcher",
+      "tier": "critical",
+      "cadence_class": "intraday",
+      "host": "vps",
+      "outputs": [],
+      "grace_multiplier": 2.0,
+      "notes": "Every 15 min. anka-failure-watcher.timer -> check_systemd_failures.sh. WATCHLIST = anka-{auto-push,mirror-push,security-daily,security-weekly,terminal}.service. Flag-file pattern in /var/lib/anka/failure-flags/ ensures one Telegram alert per failure transition (idempotent). The meta-watchdog for VPS-side cron jobs."
+    },
+    {
+      "task_name": "AnkaSecurityDaily",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "host": "vps",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "06:00 IST daily. anka-security-daily.timer -> run_daily.sh. Sequences: report_apt_status (upgradable + last unattended run), auth_triage (24h failed-ssh + suspect sudo, fail2ban summary), port_audit (diff vs baseline_listening_ports.txt), ssh_keys_audit (sha256 vs authorized_keys.sha256), resource_watch (disk/mem). Greentick to Telegram on errors=0; per-check alerts on anomalies."
+    },
+    {
+      "task_name": "AnkaSecurityWeekly",
+      "tier": "info",
+      "cadence_class": "weekly",
+      "host": "vps",
+      "outputs": [
+        "/var/log/anka-security/lynis-{today}.log",
+        "/var/log/anka-security/rkhunter-{today}.log"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "Sun 04:00 IST. anka-security-weekly.timer -> weekly_audit.sh. lynis audit system --quick + rkhunter --check --report-warnings-only. Telegram one-liner with hardening index, warnings, suggestions, rkhunter warnings; full logs kept in /var/log/anka-security/."
+    },
+    {
+      "task_name": "AnkaTerminal",
+      "tier": "warn",
+      "cadence_class": "intraday",
+      "host": "vps",
+      "outputs": [],
+      "grace_multiplier": 2.0,
+      "notes": "Continuous service (anka-terminal.service, simple type, Restart=on-failure). uvicorn pipeline.terminal.app:app --host 127.0.0.1 --port 8000. Reverse-proxied access TBD (not yet exposed). Foundational for unblocking pairwise audit UI (Gemma4 pilot Tasks 15-16) which will run on the same web app."
     }
   ]
 }

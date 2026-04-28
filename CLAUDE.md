@@ -134,7 +134,14 @@ Note: website_exporter.py is invoked from morning_scan (09:25), every intraday c
 - Sunday 22:00 — AnkaWeeklyAgg + AnkaWeeklyStats: weekly spread statistics (warn)
 - Friday 16:00 — AnkaWeeklyReport: weekly performance report → Telegram (warn)
 
-Total: 77+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
+**VPS Execution Foundation (Contabo, systemd timers — runs continuously regardless of laptop state):**
+- Every 10 min — AnkaAutoPush: push every local branch on VPS to GitHub (RPO ≤ 10 min). `pipeline/scripts/auto_push_branches.sh` (CRITICAL)
+- Every 15 min — AnkaFailureWatcher: alert on any anka-*.service failure transition via Telegram (idempotent flag-file). `pipeline/scripts/check_systemd_failures.sh` (CRITICAL)
+- 06:00 IST daily — AnkaSecurityDaily: apt status + auth triage + port audit + ssh keys + resource watch → green-tick or per-check alert. `pipeline/scripts/security/run_daily.sh` (warn)
+- Sun 04:00 IST — AnkaSecurityWeekly: lynis + rkhunter deep scan, summary to Telegram. `pipeline/scripts/security/weekly_audit.sh` (info)
+- Continuous — AnkaTerminal: anka-terminal.service runs uvicorn on 127.0.0.1:8000 (warn)
+
+Total: 80+ scheduled tasks (see `pipeline/config/anka_inventory.json` for canonical list)
 
 ## Scheduler Inventory (Canonical)
 
