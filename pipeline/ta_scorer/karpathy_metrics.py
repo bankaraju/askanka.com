@@ -97,6 +97,30 @@ def expected_max_sharpe(n_trials: int) -> float:
     )
 
 
+def _se_sharpe(returns: np.ndarray, periods_per_year: int) -> float:
+    """Standard error of annualised Sharpe per Bailey-Lopez de Prado (2014) eq. 8.
+
+    Accounts for non-normality: SE = sqrt((1 - g3*SR_d + (g4)/4*SR_d^2) / (T-1))
+    where g3 = skew, g4 = excess kurtosis, SR_d = daily Sharpe, then scaled
+    to annualised units via sqrt(periods_per_year).
+    """
+    r = returns[~np.isnan(returns)]
+    T = len(r)
+    if T < 4:
+        return float("nan")
+    mu = np.mean(r)
+    sigma = np.std(r, ddof=1)
+    if sigma == 0:
+        return float("nan")
+    sr_d = mu / sigma
+    g3 = float(sps.skew(r, bias=False))
+    g4 = float(sps.kurtosis(r, fisher=True, bias=False))
+    var = (1.0 - g3 * sr_d + (g4 / 4.0) * sr_d ** 2) / (T - 1)
+    if var <= 0 or not np.isfinite(var):
+        return float("nan")
+    return math.sqrt(var) * math.sqrt(periods_per_year)
+
+
 def deflated_sharpe_ratio(
     returns: np.ndarray | pd.Series,
     *,
@@ -104,36 +128,47 @@ def deflated_sharpe_ratio(
     periods_per_year: int = 252,
     sr_estimates_std: float | None = None,
 ) -> dict:
-    """Deflated Sharpe Ratio.
+    """Deflated Sharpe Ratio per Bailey & Lopez de Prado (2014).
 
-    Computes PSR with the benchmark set to E[max(SR)] across `n_trials`. This
-    asks: given that we searched N configurations, is the OBSERVED SR still
-    plausibly real?
+    Tests: given that we searched N configurations, is the OBSERVED SR still
+    plausibly above the maximum-of-trials null benchmark?
 
     Args:
-      returns: realised return series of the SELECTED config (e.g. forward
-               holdout daily P&L)
-      n_trials: number of independent backtest configurations searched (e.g.
-               9 alphas x 20 cells = 180 for this hypothesis)
+      returns: realised daily return series of the SELECTED config (forward
+               holdout basket P&L)
+      n_trials: number of independent backtest configurations searched
       periods_per_year: 252 for daily intraday returns
-      sr_estimates_std: if provided, scales the deflation. Default 1.0
-                        treats trials as iid Normal(0,1) Sharpes.
+      sr_estimates_std: explicit standard deviation of the SR estimates across
+                        trials, in ANNUALISED-SR units. If None, we estimate
+                        SE(SR_hat) from the observed return series via the
+                        Mertens-Bailey-LdP formula -- a conservative proxy
+                        when we don't have the full trial-level SR distribution.
 
-    Returns dict with: sr_observed, sr_max_expected, psr_vs_max, dsr_pass
-    where dsr_pass = (psr_vs_max >= 0.95).
+    The deflation threshold is sr_threshold = sr_estimates_std * E[max(z)]
+    where E[max(z)] is the expected max of N iid standard normals. PSR is
+    then computed with sr_benchmark = sr_threshold.
+
+    Returns dict with: sr_observed, sr_threshold, n_trials,
+    se_sr_used, psr_vs_threshold, dsr_pass (= psr >= 0.95).
     """
-    sr_obs = sharpe_ratio(returns, periods_per_year=periods_per_year)
-    sr_max = expected_max_sharpe(n_trials)
+    r = np.asarray(returns, dtype=float)
+    sr_obs = sharpe_ratio(r, periods_per_year=periods_per_year)
+    z_max = expected_max_sharpe(n_trials)
     if sr_estimates_std is not None and sr_estimates_std > 0:
-        sr_max = sr_max * float(sr_estimates_std)
+        se_sr = float(sr_estimates_std)
+    else:
+        se_sr = _se_sharpe(r, periods_per_year)
+    sr_threshold = z_max * se_sr if not np.isnan(se_sr) else float("nan")
     psr = probabilistic_sharpe_ratio(
-        returns, sr_benchmark=sr_max, periods_per_year=periods_per_year,
-    )
+        r, sr_benchmark=sr_threshold, periods_per_year=periods_per_year,
+    ) if not np.isnan(sr_threshold) else float("nan")
     return {
         "sr_observed": sr_obs,
-        "sr_max_expected": sr_max,
+        "sr_threshold": sr_threshold,
+        "z_max_n_trials": float(z_max),
+        "se_sr_used": float(se_sr) if not np.isnan(se_sr) else None,
         "n_trials": int(n_trials),
-        "psr_vs_max": psr,
+        "psr_vs_threshold": psr,
         "dsr_pass": bool(psr >= 0.95) if not np.isnan(psr) else False,
     }
 

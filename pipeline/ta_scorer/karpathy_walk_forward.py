@@ -261,12 +261,25 @@ def evaluate_cell(
     n_folds: int = N_FOLDS,
     n_permutations: int = N_PERMUTATIONS,
     rng_seed: int = 42,
+    skip_perm_below_auc: float | None = 0.55,
+    skip_perm_above_std: float | None = 0.05,
 ) -> CellResult:
-    """Run the full walk-forward + permutation null for one (ticker, direction) cell."""
+    """Run the full walk-forward + permutation null for one (ticker, direction) cell.
+
+    Two-stage gate (default): if walk-forward fails the qualifier AUC/std gate,
+    skip the expensive permutation null and return p_value=NaN. This is spec
+    compliant per section 9 -- BH-FDR is computed across CELLS THAT QUALIFIED
+    on AUC, not across the full 20. To force permutation regardless, pass
+    skip_perm_below_auc=None.
+    """
     folds = walk_forward(X, y, dates=dates, n_folds=n_folds)
     mean_auc, std_auc = fold_summary(folds)
     if np.isnan(mean_auc):
         p = float("nan")
+    elif (skip_perm_below_auc is not None and mean_auc < skip_perm_below_auc) or (
+        skip_perm_above_std is not None and std_auc > skip_perm_above_std
+    ):
+        p = float("nan")  # cell fails walk-forward gate, no need to permute
     else:
         p = permutation_pvalue(
             X, y, dates=dates,

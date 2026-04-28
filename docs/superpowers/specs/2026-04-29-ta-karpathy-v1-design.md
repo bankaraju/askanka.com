@@ -211,23 +211,28 @@ H-2026-04-29-ta-karpathy-v1 must clear **B0, B1, B3, B4 simultaneously AND B2 mu
 | §11A — implementation risk | LTP-vs-VWAP slippage < 15 bps on the 21-day window |
 | §11B — NIFTY-beta neutral | Residual Sharpe ≥ 0 after regressing out NIFTY beta |
 | §12 — decay | Recent-7-day hit-rate not catastrophically below early-7-day |
-| §12B — Deflated Sharpe (v1.1) | PSR(SR_observed; SR\* = E[max SR over 180 trials]) ≥ 0.95 on basket-level daily P&L (Bailey & Lopez de Prado 2014) |
+| §12B — Deflated Sharpe (v1.1) | **REPORT-ONLY at v1.** Compute and emit PSR + DSR on basket-level daily P&L; do not gate-block. |
 
-### 12.1 Deflated Sharpe Ratio gate (v1.1 amendment, 2026-04-28)
+### 12.1 Deflated Sharpe Ratio metric (v1.1 amendment, 2026-04-28)
 
-Per user feedback (`docs/superpowers/specs/Sharpe_ Ratio _ Karparthy.txt`), raw Sharpe is inflated when many configurations are searched per stock. With 9 alphas × 20 (stock × direction) cells = 180 trial configs, the expected maximum Sharpe under the null is materially above zero. The Deflated Sharpe Ratio (Bailey & Lopez de Prado 2014, JPM 40(5)) corrects for this selection bias.
+Per user feedback (`docs/superpowers/specs/Sharpe_ Ratio _ Karparthy.txt`), raw Sharpe is inflated when many configurations are searched per stock. With 9 alphas × 20 (stock × direction) cells = 180 trial configs, the expected maximum Sharpe under the null is ~2.73 standard errors above zero — for a 21-day holdout that translates to ≈+9.6 annualised SR threshold, which is essentially impossible to clear empirically.
 
-**Implementation:**
-- Compute SR\* = E[max(SR_i)] over N=180 trials assuming independent Normal(0,1) Sharpes (eq. 6 in Bailey-LdP).
-- Compute PSR(SR\* = computed threshold) on the basket-level daily return series across the 21-day holdout.
-- **Gate threshold: PSR ≥ 0.95.** This is the literature-standard threshold and is NOT derived from any observed data of this hypothesis (per §0.3).
-- Also report raw SR, sample skewness g3, sample kurtosis g4 in the verdict artifact for transparency.
+**v1 stance: report DSR, do not gate on it.** Adopting the gate at v1 with only 21 days of data would mathematically guarantee `FAIL_DEFLATED_SHARPE` regardless of true edge — making the gate uninformative. Instead:
 
-**Why this is a pre-holdout amendment, not a parameter change (§10.4):**
-- Threshold (0.95) inherited from published literature, not from observed numbers.
-- Adds a STRICTER gate; cannot make a previously-failing strategy pass.
-- Spec amended on 2026-04-28 BEFORE the holdout window opens 2026-04-29 09:15 IST.
-- Original §15.1 gates remain in force. v1.1 only ADDS the §12B gate.
+- Compute and emit PSR + DSR + raw SR + skew + kurtosis on the holdout basket P&L.
+- Surface the numbers in `terminal_state.json` and the EOD report for transparency.
+- **DSR becomes gate-blocking at v2** (when the holdout window grows to ≥100 days and the deflation threshold falls into a testable range). v2 spec must explicitly fix N (number of trials) at the v2 search-space cardinality.
+
+**Implementation (Bailey & Lopez de Prado 2014):**
+- z_max = (1-γ)·Φ⁻¹(1 - 1/N) + γ·Φ⁻¹(1 - 1/(N·e)),  γ = Euler-Mascheroni ≈ 0.5772
+- SR_threshold (annualised) = z_max × SE(SR_hat) where SE per Bailey-LdP eq. 8
+- PSR = Φ((SR_hat - SR_threshold) × √(T-1) / √(1 - g3·SR_hat + (g4/4)·SR_hat²))
+- All inputs are observable at verdict time; threshold (0.95) is literature-standard and not derived from observed numbers.
+
+**Why this is a pre-holdout amendment compatible with §10.4:**
+- Threshold inherited from published literature (not from observed data).
+- Adds a NEW report-only metric; does not change any existing PASS criterion.
+- Spec amended 2026-04-28 BEFORE the holdout window opens 2026-04-29 09:15 IST.
 
 ### 12.2 Stability discount (v1.1 amendment, 2026-04-28)
 
@@ -239,7 +244,7 @@ When ranking qualifying cells for basket inclusion, apply a stability multiplier
 - **Some qualify but P&L < 0.5% mean:** TERMINAL_STATE = `FAIL_INSUFFICIENT_EDGE`.
 - **Hit-rate ≥ 55% but P&L < 0.5%:** TERMINAL_STATE = `FAIL_THIN_EDGE` — directional sense exists but profit-per-trade too thin to clear costs.
 - **Statistically significant but B2 P&L ≥ 0:** TERMINAL_STATE = `FAIL_VOLATILITY_PROXY` — we're picking volatile days, not direction.
-- **All §6/§7/§9 gates pass but PSR < 0.95 (v1.1):** TERMINAL_STATE = `FAIL_DEFLATED_SHARPE` — observed P&L is plausibly the maximum-of-many-trials illusion. No re-run; v2 must use Sharpe-aware objective during fit, not just post-hoc deflation.
+- **§6/§7/§9 gates pass with low PSR (v1.1):** NOT a terminal state at v1 — PSR is report-only here (§12.1). Low PSR at v1 is documented in `terminal_state.json` and forwards to v2's gate budget if v1 PASSes.
 
 ## 13. Power analysis
 
