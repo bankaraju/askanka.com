@@ -34,7 +34,7 @@ def _ping_ollama() -> dict[str, Any]:
         r = requests.post(
             "http://127.0.0.1:11434/v1/chat/completions",
             json={
-                "model": "gemma4:26b-a4b-q4_k_m",
+                "model": "gemma4:26b",
                 "messages": [{"role": "user", "content": "Reply: PONG"}],
                 "temperature": 0.0,
                 "max_tokens": 8,

@@ -18,7 +18,7 @@ import time
 import requests
 
 OLLAMA_URL = "http://127.0.0.1:11434/v1/chat/completions"
-MODEL = "gemma4:26b-a4b-q4_k_m"
+MODEL = "gemma4:26b"
 
 
 def main() -> int:

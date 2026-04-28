@@ -32,7 +32,7 @@ def mock_ollama():
                     "completion_tokens": 2,
                     "total_tokens": 7,
                 },
-                "model": "gemma4:26b-a4b-q4_k_m",
+                "model": "gemma4:26b",
             },
             status_code=200,
         )
@@ -43,13 +43,13 @@ def test_generate_no_context(mock_ollama):
     p = OpenAICompatProvider(
         name="gemma4-local",
         base_url="http://127.0.0.1:11434/v1",
-        model="gemma4:26b-a4b-q4_k_m",
+        model="gemma4:26b",
         api_key="ollama",
     )
     r = p.generate("say hello", retrieved_context=None)
     assert r.text == "hello world"
     assert r.provider == "gemma4-local"
-    assert r.model == "gemma4:26b-a4b-q4_k_m"
+    assert r.model == "gemma4:26b"
     assert r.usage["input_tokens"] == 5
     assert r.usage["output_tokens"] == 2
     assert r.latency_s >= 0
@@ -59,7 +59,7 @@ def test_generate_includes_retrieved_context_in_system(mock_ollama):
     p = OpenAICompatProvider(
         name="gemma4-local",
         base_url="http://127.0.0.1:11434/v1",
-        model="gemma4:26b-a4b-q4_k_m",
+        model="gemma4:26b",
         api_key="ollama",
     )
     p.generate(
@@ -86,7 +86,7 @@ def test_http_error_raises():
         p = OpenAICompatProvider(
             name="gemma4-local",
             base_url="http://127.0.0.1:11434/v1",
-            model="gemma4:26b-a4b-q4_k_m",
+            model="gemma4:26b",
             api_key="ollama",
         )
         with pytest.raises(RuntimeError, match="503"):

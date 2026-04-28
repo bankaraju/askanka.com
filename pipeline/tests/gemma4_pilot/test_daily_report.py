@@ -42,7 +42,7 @@ def _row(
     else:
         rec["shadow"] = {
             "provider": shadow_provider,
-            "model": "gemma4:26b-a4b-q4_k_m",
+            "model": "gemma4:26b",
             "text": shadow_text,
             "rubric_score": 1.0 if shadow_pass else 0.0,
             "rubric_pass": shadow_pass,

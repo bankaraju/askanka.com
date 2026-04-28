@@ -47,7 +47,7 @@ def _build_providers() -> dict:
         "gemma4-local": OpenAICompatProvider(
             name="gemma4-local",
             base_url="http://127.0.0.1:11434/v1",
-            model="gemma4:26b-a4b-q4_k_m",
+            model="gemma4:26b",
             api_key="ollama",
         ),
     }

@@ -42,7 +42,7 @@ def test_ollama_pong():
     r = requests.post(
         "http://127.0.0.1:11434/v1/chat/completions",
         json={
-            "model": "gemma4:26b-a4b-q4_k_m",
+            "model": "gemma4:26b",
             "messages": [
                 {"role": "user", "content": "Reply with exactly: PONG"},
             ],
