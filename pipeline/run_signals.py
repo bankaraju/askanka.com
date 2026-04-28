@@ -820,6 +820,7 @@ def run_eod(send_telegram=False):
         regime=regime,
         open_positions=portfolio.get("open_positions", []),
         portfolio_pnl=portfolio.get("portfolio_pnl_pct", 0.0),
+        daily_pnl_pct=portfolio.get("daily_pnl_pct"),
         cumulative_pnl=cumulative.get("cumulative_pnl_pct", 0.0),
         days_active=cumulative.get("days_active", 0),
         signal_stats=cumulative.get("signal_stats", {}),

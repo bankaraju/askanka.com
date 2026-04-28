@@ -1071,8 +1071,12 @@ def get_portfolio_snapshot() -> Dict[str, Any]:
     """Compute aggregate P&L across all open positions.
 
     Returns dict with:
-        - open_positions: list of {signal_id, spread_name, tier, spread_pnl_pct, days_open}
-        - portfolio_pnl_pct: weighted average P&L across open positions
+        - open_positions: list of {signal_id, spread_name, tier,
+          spread_pnl_pct, todays_move, days_open}
+        - portfolio_pnl_pct: cumulative-since-entry sum across open positions
+        - daily_pnl_pct: sum of per-position todays_move; None when any
+          position is missing it (no partial sums — see memory
+          feedback_daily_pnl_alongside_total.md)
         - signal_tier_pnl: avg P&L for SIGNAL tier trades
         - exploring_tier_pnl: avg P&L for EXPLORING tier trades
     """
@@ -1081,6 +1085,7 @@ def get_portfolio_snapshot() -> Dict[str, Any]:
         return {
             "open_positions": [],
             "portfolio_pnl_pct": 0.0,
+            "daily_pnl_pct": 0.0,
             "signal_tier_pnl": 0.0,
             "exploring_tier_pnl": 0.0,
         }
@@ -1125,11 +1130,17 @@ def get_portfolio_snapshot() -> Dict[str, Any]:
                     spread.get("short_leg", []),
                     current_prices,
                 )
+                # V2 cards do not yet persist todays_move per spread; surface
+                # whatever the spread row carries (None falls through to
+                # daily_pnl_pct=None at the basket level — partial sums are
+                # forbidden).
+                today_v2 = spread.get("todays_move")
                 positions.append({
                     "signal_id": sig.get("signal_id", "?"),
                     "spread_name": spread.get("spread_name", "?"),
                     "tier": tier,
                     "spread_pnl_pct": pnl,
+                    "todays_move": today_v2,
                     "days_open": days_open,
                 })
                 if tier == "SIGNAL":
@@ -1142,11 +1153,14 @@ def get_portfolio_snapshot() -> Dict[str, Any]:
             pnl_val = pnl_dict.get("spread_pnl_pct", 0.0)
             tier = sig.get("tier", "SIGNAL" if sig.get("trade", {}).get("backtest_validated") else "EXPLORING")
             spread_name = sig.get("trade", {}).get("spread_name", sig.get("spread_name", "?"))
+            # todays_move is persisted by the intraday tick under _data_levels.
+            today_v1 = sig.get("_data_levels", {}).get("todays_move")
             positions.append({
                 "signal_id": sig.get("signal_id", "?"),
                 "spread_name": spread_name,
                 "tier": tier,
                 "spread_pnl_pct": pnl_val,
+                "todays_move": today_v1,
                 "days_open": days_open,
             })
             if tier == "SIGNAL":
@@ -1157,9 +1171,19 @@ def get_portfolio_snapshot() -> Dict[str, Any]:
     all_pnls = [p["spread_pnl_pct"] for p in positions]
     portfolio_pnl = round(sum(all_pnls) / len(all_pnls), 2) if all_pnls else 0.0
 
+    # Daily aggregate: sum of per-position todays_move, or None when ANY
+    # position is missing it. Partial sums under-represent the day and break
+    # trust (memory: feedback_daily_pnl_alongside_total.md).
+    today_moves = [p["todays_move"] for p in positions]
+    if any(t is None for t in today_moves):
+        daily_pnl = None
+    else:
+        daily_pnl = round(sum(today_moves), 2)
+
     return {
         "open_positions": positions,
         "portfolio_pnl_pct": portfolio_pnl,
+        "daily_pnl_pct": daily_pnl,
         "signal_tier_pnl": round(sum(signal_pnls) / len(signal_pnls), 2) if signal_pnls else 0.0,
         "exploring_tier_pnl": round(sum(exploring_pnls) / len(exploring_pnls), 2) if exploring_pnls else 0.0,
     }

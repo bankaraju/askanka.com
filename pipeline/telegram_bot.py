@@ -371,10 +371,17 @@ def format_eod_dashboard(
     days_active: int,
     signal_stats: Dict[str, Any],
     exploring_stats: Dict[str, Any],
+    daily_pnl_pct: Optional[float] = None,
 ) -> str:
     """Format the enhanced EOD dashboard with regime + portfolio P&L.
 
     All P&L shown in both % and ₹ terms using consistent unit sizing.
+
+    `portfolio_pnl` is cumulative-since-entry (Total). `daily_pnl_pct` is the
+    sum of per-position `todays_move` for the day. When None, the daily figure
+    renders as an em-dash — partial sums are forbidden because they
+    under-represent the day and break trust (memory:
+    feedback_daily_pnl_alongside_total.md).
     """
     from datetime import datetime, timezone, timedelta
     IST = timezone(timedelta(hours=5, minutes=30))
@@ -399,14 +406,29 @@ def format_eod_dashboard(
             pnl_inr = _inr_pnl(pnl, tier)
             days = pos.get("days_open", 0)
             name = pos.get("spread_name", "?")
-            lines.append(f"  {tier_icon} {name}: {pnl:+.2f}% ({pnl_inr}) day {days}/5")
+            today_move = pos.get("todays_move")
+            today_str = (
+                f"today {today_move:+.2f}%"
+                if today_move is not None
+                else "today —"
+            )
+            lines.append(
+                f"  {tier_icon} {name}: {pnl:+.2f}% ({pnl_inr}) | "
+                f"{today_str} | day {days}/5"
+            )
         lines.append("")
 
-    # Portfolio P&L in ₹ (weighted across all positions)
-    # Use SIGNAL units for portfolio-level since it's a blend
+    # Basket-level header: Daily alongside Total. Daily = sum of per-position
+    # todays_move (caller supplies; None when any position is missing it).
+    # Total = cumulative-since-entry portfolio_pnl.
     portfolio_inr = _inr_pnl(portfolio_pnl, "SIGNAL")
     cumulative_inr = _inr_pnl(cumulative_pnl, "SIGNAL")
-    lines.append(f"TODAY'S P&L: {portfolio_pnl:+.2f}% ({portfolio_inr})")
+    if daily_pnl_pct is None:
+        lines.append("TODAY: —")
+    else:
+        daily_inr = _inr_pnl(daily_pnl_pct, "SIGNAL")
+        lines.append(f"TODAY: {daily_pnl_pct:+.2f}% ({daily_inr})")
+    lines.append(f"TOTAL: {portfolio_pnl:+.2f}% ({portfolio_inr})")
     lines.append(f"CUMULATIVE: {cumulative_pnl:+.2f}% ({cumulative_inr}) over {days_active} days")
     lines.append("")
 
