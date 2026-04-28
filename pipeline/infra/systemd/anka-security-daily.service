@@ -1,0 +1,9 @@
+[Unit]
+Description=Anka — Daily security cadence
+
+[Service]
+Type=oneshot
+User=anka
+ExecStart=/home/anka/askanka.com/pipeline/scripts/security/run_daily.sh
+StandardOutput=journal
+StandardError=journal

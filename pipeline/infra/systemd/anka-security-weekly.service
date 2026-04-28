@@ -1,0 +1,9 @@
+[Unit]
+Description=Anka — Weekly deep audit
+
+[Service]
+Type=oneshot
+User=anka
+ExecStart=/home/anka/askanka.com/pipeline/scripts/security/run_weekly.sh
+StandardOutput=journal
+StandardError=journal

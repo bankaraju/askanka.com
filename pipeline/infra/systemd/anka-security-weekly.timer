@@ -1,0 +1,11 @@
+[Unit]
+Description=Anka — Weekly deep audit timer (Sun 04:00 IST)
+
+[Timer]
+OnCalendar=Sun *-*-* 04:00:00
+AccuracySec=30min
+Unit=anka-security-weekly.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

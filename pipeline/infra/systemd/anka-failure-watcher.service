@@ -1,0 +1,10 @@
+[Unit]
+Description=Anka — Watch listed systemd units and alert Telegram on failure
+
+[Service]
+Type=oneshot
+User=anka
+Environment=ANKA_REPO_ROOT=/home/anka/askanka.com
+ExecStart=/home/anka/askanka.com/pipeline/scripts/check_systemd_failures.sh
+StandardOutput=journal
+StandardError=journal

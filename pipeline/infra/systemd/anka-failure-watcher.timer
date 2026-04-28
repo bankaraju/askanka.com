@@ -1,0 +1,12 @@
+[Unit]
+Description=Anka — Failure watcher timer (every 15 min)
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+AccuracySec=2min
+Unit=anka-failure-watcher.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

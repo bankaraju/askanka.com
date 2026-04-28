@@ -1,0 +1,19 @@
+[Unit]
+Description=Anka — Terminal FastAPI app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+ExecStart=/home/anka/askanka.com/.venv/bin/uvicorn pipeline.terminal.app:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

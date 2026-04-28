@@ -1,0 +1,12 @@
+[Unit]
+Description=Anka — Auto-push timer (every 10 minutes)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=10min
+AccuracySec=1min
+Unit=anka-auto-push.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Anka — Daily security timer (06:00 IST)
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+AccuracySec=15min
+Unit=anka-security-daily.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target
