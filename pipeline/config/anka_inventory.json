@@ -78,6 +78,7 @@
       "task_name": "AnkaFeatureScorerFit",
       "tier": "warn",
       "cadence_class": "weekly",
+      "host": "vps",
       "outputs": [
         "pipeline/data/ticker_feature_models.json"
       ],
@@ -897,12 +898,10 @@
       "task_name": "AnkaETFReoptimize",
       "tier": "critical",
       "cadence_class": "weekly",
-      "outputs": [
-        "pipeline/autoresearch/etf_optimal_weights.json",
-        "pipeline/autoresearch/regime_trade_map.json"
-      ],
+      "host": "vps",
+      "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "Saturday 22:00 IST. etf_reoptimize.py \u00e2\u20ac\u201d weekly weight optimization with Indian data. Golden Goose Plan 1."
+      "notes": "Saturday 22:00 IST. MIGRATED TO VPS 2026-04-25 (anka-etf-reoptimize.timer). Golden Goose Plan 1 v2 system DEPRECATED 2026-04-26 (project_etf_v3_failed_2026_04_26.md) \u2014 v3 CURATED-30 supersedes; this task remains scheduled but its outputs are not load-bearing this week. outputs[] empty until v3 production engine wired; reverse-sync then needs etf_optimal_weights.json + regime_trade_map.json added to vps_sync_weekly.bat."
     },
     {
       "task_name": "AnkaETFSignal",
@@ -918,12 +917,10 @@
       "task_name": "AnkaUnifiedBacktest",
       "tier": "critical",
       "cadence_class": "weekly",
-      "outputs": [
-        "pipeline/autoresearch/backtest_results.json",
-        "pipeline/autoresearch/backtest_summary.json"
-      ],
+      "host": "vps",
+      "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "Sunday 00:00 IST. unified_backtest.py \u00e2\u20ac\u201d 777-day historical replay. Golden Goose Plan 2."
+      "notes": "Sunday 00:00 IST. MIGRATED TO VPS 2026-04-25 (anka-unified-backtest.timer). 777-day historical replay. DEFERRED until system stabilizes per 2026-04-28 ops decision; outputs[] empty until reverse-sync wires backtest_results.json + backtest_summary.json into vps_sync_weekly.bat. Reactivate when needed."
     },
     {
       "task_name": "AnkaPhaseCShadowOpen",
@@ -951,6 +948,7 @@
       "task_name": "AnkaTAScorerFit",
       "tier": "warn",
       "cadence_class": "weekly",
+      "host": "vps",
       "outputs": [
         "pipeline/data/ta_feature_models.json"
       ],
@@ -971,6 +969,7 @@
       "task_name": "AnkaAutoresearchMode2",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/autoresearch/regime_autoresearch/data/proposal_log_risk_off.jsonl",
         "pipeline/autoresearch/regime_autoresearch/data/proposal_log_caution.jsonl",
@@ -985,6 +984,7 @@
       "task_name": "AnkaAutoresearchBHFDR",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/autoresearch/regime_autoresearch/data/bh_fdr_batch_state.json"
       ],
@@ -995,6 +995,7 @@
       "task_name": "AnkaAutoresearchHoldout",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/autoresearch/regime_autoresearch/data/holdout_run_log.jsonl"
       ],

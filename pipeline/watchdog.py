@@ -118,7 +118,14 @@ def _eval_task(task: dict, live_by_name: dict, now: datetime) -> list:
                 tier=tier,
             ))
 
-    # Task liveness (only if task is in live scheduler)
+    # Task liveness (only if task is in live scheduler).
+    # VPS-hosted tasks live as systemd timers on Contabo, not in Windows Task
+    # Scheduler. Their disabled Windows entries (kept around so PowerShell
+    # enumeration doesn't ghost-flag them) freeze LastRunTime at the last run
+    # before disablement, so the Windows liveness check is misleading. Skip it
+    # — file-freshness on the synced artifact is the real signal.
+    if task.get("host") == "vps":
+        return issues
     if task_name in live_by_name:
         result = check_task_liveness(
             live_by_name[task_name], cadence, grace,

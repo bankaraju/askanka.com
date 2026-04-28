@@ -100,6 +100,21 @@ class TestDriftDetection:
         assert orphans == ["Y"]
         assert ghosts == ["X"]
 
+    def test_vps_hosted_task_not_flagged_as_ghost(self):
+        # VPS-hosted tasks live as systemd timers on Contabo; they're absent
+        # from Windows Task Scheduler by design. They must not show up as
+        # inventory ghosts.
+        inv = {"version": 1, "updated": "2026-04-28", "tasks": [
+            {"task_name": "A", "tier": "info", "cadence_class": "daily",
+             "outputs": [], "grace_multiplier": 1.5, "notes": ""},
+            {"task_name": "VPSTask", "tier": "info", "cadence_class": "weekly",
+             "host": "vps", "outputs": [], "grace_multiplier": 1.5, "notes": ""},
+        ]}
+        live = self._live(["A"])  # VPSTask deliberately absent from Windows
+        orphans, ghosts = check_drift(inv, live)
+        assert orphans == []
+        assert ghosts == []  # VPSTask excluded from ghost set
+
 
 class TestCheckTaskLiveness:
     def test_result_0_recent_run_is_alive(self):

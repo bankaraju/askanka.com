@@ -71,11 +71,19 @@ def check_drift(inventory: dict, live_tasks: list[dict]) -> tuple[list[str], lis
 
     orphans = Anka* tasks in scheduler but not in inventory.
     ghosts  = inventory entries whose task_name is not in scheduler.
+
+    Tasks marked ``host: vps`` are excluded from the ghost set: they run as
+    systemd timers on Contabo and are deliberately absent from Windows Task
+    Scheduler. They still count as "known" inventory entries, so a Windows
+    Anka* task with the same name would still register as orphan / not flagged.
     """
+    vps_hosted = {
+        t["task_name"] for t in inventory["tasks"] if t.get("host") == "vps"
+    }
     inv_names = {t["task_name"] for t in inventory["tasks"]}
     live_names = {t["TaskName"] for t in live_tasks}
     orphans = sorted(live_names - inv_names)
-    ghosts = sorted(inv_names - live_names)
+    ghosts = sorted((inv_names - live_names) - vps_hosted)
     return orphans, ghosts
 
 
