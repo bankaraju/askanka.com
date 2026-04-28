@@ -1,0 +1,17 @@
+[Unit]
+Description=Anka — PIT regime tape capture (05:00 IST daily)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+Environment=PYTHONPATH=/home/anka/askanka.com
+ExecStart=/home/anka/askanka.com/.venv/bin/python pipeline/scripts/capture_pit_regime_tape_forward.py
+StandardOutput=append:/home/anka/askanka.com/pipeline/logs/pit_regime_tape.log
+StandardError=append:/home/anka/askanka.com/pipeline/logs/pit_regime_tape.log
+Nice=10
+TimeoutStartSec=10min

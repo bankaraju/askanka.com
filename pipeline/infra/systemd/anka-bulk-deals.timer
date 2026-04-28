@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka bulk deals daily at 16:30 IST
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 16:30:00 Asia/Kolkata
+Persistent=true
+Unit=anka-bulk-deals.service
+
+[Install]
+WantedBy=timers.target

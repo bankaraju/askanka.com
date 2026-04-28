@@ -1,0 +1,17 @@
+[Unit]
+Description=Anka — NSE PIT insider disclosures daily fetch (18:30 IST)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+Environment=PYTHONPATH=/home/anka/askanka.com
+ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.insider_trades
+StandardOutput=append:/home/anka/askanka.com/pipeline/logs/insider_trades.log
+StandardError=append:/home/anka/askanka.com/pipeline/logs/insider_trades.log
+Nice=10
+TimeoutStartSec=10min

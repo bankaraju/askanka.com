@@ -1,0 +1,17 @@
+[Unit]
+Description=Anka — NSE bulk + block deals daily fetch (16:30 IST)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+Environment=PYTHONPATH=/home/anka/askanka.com
+ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.bulk_deals
+StandardOutput=append:/home/anka/askanka.com/pipeline/logs/bulk_deals.log
+StandardError=append:/home/anka/askanka.com/pipeline/logs/bulk_deals.log
+Nice=10
+TimeoutStartSec=10min

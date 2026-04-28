@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka pattern scanner daily at 16:30 IST
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 16:30:00 Asia/Kolkata
+Persistent=true
+Unit=anka-pattern-scanner-scan.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run SECRSI basket-close at 14:30 IST Mon-Fri
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 14:30:00 Asia/Kolkata
+Persistent=true
+Unit=anka-secrsi-basket-close.service
+
+[Install]
+WantedBy=timers.target

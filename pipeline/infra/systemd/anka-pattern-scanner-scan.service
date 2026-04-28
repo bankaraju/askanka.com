@@ -1,0 +1,17 @@
+[Unit]
+Description=Anka — daily F&O 12-pattern scan + Top-10 ranking (16:30 IST)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+Environment=PYTHONPATH=/home/anka/askanka.com
+ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.cli_pattern_scanner scan
+StandardOutput=append:/home/anka/askanka.com/pipeline/logs/pattern_scanner.log
+StandardError=append:/home/anka/askanka.com/pipeline/logs/pattern_scanner.log
+Nice=10
+TimeoutStartSec=30min

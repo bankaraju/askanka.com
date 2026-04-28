@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka insider trades daily at 18:30 IST
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 18:30:00 Asia/Kolkata
+Persistent=true
+Unit=anka-insider-trades.service
+
+[Install]
+WantedBy=timers.target

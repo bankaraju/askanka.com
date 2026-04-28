@@ -1,0 +1,10 @@
+[Unit]
+Description=Run SECRSI capture-opens at 09:16 IST Mon-Fri
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 09:16:00 Asia/Kolkata
+Persistent=true
+Unit=anka-secrsi-capture-opens.service
+
+[Install]
+WantedBy=timers.target

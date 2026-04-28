@@ -1,0 +1,10 @@
+[Unit]
+Description=Run SECRSI basket-open at 11:00 IST Mon-Fri
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 11:00:00 Asia/Kolkata
+Persistent=true
+Unit=anka-secrsi-basket-open.service
+
+[Install]
+WantedBy=timers.target
