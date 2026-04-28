@@ -256,47 +256,34 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
 
     Source priority:
       1. EODHD real-time   — only when ticker is in INDIA_SIGNAL_STOCKS (spread universe).
-      2. yfinance          — hard 8s timeout, frequently rate-limited.
-      3. Kite Connect bulk — covers the full F&O universe, batched for any
-         ticker the first two paths missed. Phase C correlation breaks
-         routinely hit F&O tickers outside INDIA_SIGNAL_STOCKS, so EODHD
-         and yfinance both miss and live_status.json sat at pnl=0
-         indefinitely until this stage was wired (memory:
-         feedback_kite_api_fallback).
+      2. Kite Connect bulk — single batched call, covers the full F&O universe.
+      3. yfinance per-ticker — last-resort fallback for what Kite couldn't resolve
+         (e.g. indices in non-Kite naming, equity tickers missing from instrument
+         master). Hard 8s timeout per call; frequently rate-limited under load.
+
+    Why Kite before yfinance: with 60+ H-001 tickers most outside the spread
+    universe, the prior order (yfinance per-ticker, then Kite bulk for misses)
+    serialised yfinance for every signal — 26s+ at best, 9 minutes worst-case
+    under rate-limiting, blowing past the live_monitor frontend timeout and
+    leaving rows at NO_LTP. Kite bulk does the same 60+ tickers in <2s.
     """
     from eodhd_client import fetch_realtime
 
     prices: Dict[str, Optional[float]] = {}
+
+    # Stage 1: EODHD real-time for tickers in the spread universe.
     for ticker in tickers:
         stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
-        eodhd_sym  = stock_info.get("eodhd", "")
-        yf_sym     = stock_info.get("yf", f"{ticker}.NS")
-
+        eodhd_sym = stock_info.get("eodhd", "")
         price = None
-
         if eodhd_sym:
             rt = fetch_realtime(eodhd_sym)
             if rt and rt.get("close"):
                 price = float(rt["close"])
                 log.debug("Price %s = %.2f (EODHD RT)", ticker, price)
-
-        if price is None:
-            try:
-                hist = _yf_history_with_timeout(yf_sym, timeout_s=8.0)
-                if hist is None:
-                    log.warning("yfinance timed out for %s after 8s — skipping", yf_sym)
-                elif not hist.empty:
-                    price = float(hist["Close"].iloc[-1])
-                    log.debug("Price %s = %.2f (yfinance fallback)", ticker, price)
-                else:
-                    log.warning("No price data for %s (yfinance returned empty)", ticker)
-            except Exception as e:
-                log.error("yfinance error for %s: %s", yf_sym, e)
-
         prices[ticker] = price
 
-    # Stage 3: Kite bulk-LTP for any ticker still unpriced. Single batched call.
-    # Failures are non-fatal — the leg simply stays at entry price.
+    # Stage 2: Kite bulk-LTP for everything still unpriced. Single batched call.
     missing = [t for t, p in prices.items() if p is None]
     if missing:
         try:
@@ -305,9 +292,27 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
             for t, p in kite_prices.items():
                 if p is not None:
                     prices[t] = float(p)
-                    log.info("Price %s = %.2f (Kite fallback)", t, p)
+                    log.debug("Price %s = %.2f (Kite bulk)", t, p)
         except Exception as e:
-            log.warning("Kite fallback failed: %s — %d tickers unpriced", e, len(missing))
+            log.warning("Kite bulk failed: %s — %d tickers fall through to yfinance",
+                        e, len(missing))
+
+    # Stage 3: yfinance per-ticker for whatever Kite couldn't resolve.
+    still_missing = [t for t, p in prices.items() if p is None]
+    for ticker in still_missing:
+        stock_info = INDIA_SIGNAL_STOCKS.get(ticker, {})
+        yf_sym = stock_info.get("yf", f"{ticker}.NS")
+        try:
+            hist = _yf_history_with_timeout(yf_sym, timeout_s=8.0)
+            if hist is None:
+                log.warning("yfinance timed out for %s after 8s — skipping", yf_sym)
+            elif not hist.empty:
+                prices[ticker] = float(hist["Close"].iloc[-1])
+                log.debug("Price %s = %.2f (yfinance fallback)", ticker, prices[ticker])
+            else:
+                log.warning("No price data for %s (yfinance returned empty)", ticker)
+        except Exception as e:
+            log.error("yfinance error for %s: %s", yf_sym, e)
 
     return prices
 

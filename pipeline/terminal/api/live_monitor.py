@@ -369,13 +369,21 @@ def live_monitor():
         if (r.get("date") or r.get("opened_at", "")[:10]) == today
     ]
 
-    tickers = sorted({(r.get("symbol") or r.get("ticker", "")).upper()
-                      for r in today_rows if (r.get("symbol") or r.get("ticker"))})
+    # Union Phase C and H-001 ticker sets so we make ONE fetch_ltps call. The
+    # universes overlap heavily — splitting them into two serial batches doubles
+    # Kite/yfinance latency for nothing.
+    h001_rows_raw = _read_h001_today_rows(today)
+    phase_c_tickers = {(r.get("symbol") or r.get("ticker", "")).upper()
+                       for r in today_rows if (r.get("symbol") or r.get("ticker"))}
+    h001_tickers = {(r.get("ticker") or "").upper()
+                    for r in h001_rows_raw if r.get("ticker")}
+    all_tickers = sorted(phase_c_tickers | h001_tickers)
+
     ltps: dict[str, float] = {}
-    if tickers:
+    if all_tickers:
         try:
             from pipeline.terminal.api.live import fetch_ltps
-            ltps = fetch_ltps(tickers) or {}
+            ltps = fetch_ltps(all_tickers) or {}
         except Exception:
             ltps = {}
 
@@ -383,21 +391,8 @@ def live_monitor():
     breaks_map = _load_breaks_by_ticker(today)
 
     rows = [_enrich_row(r, ltps, atr_map, breaks_map) for r in today_rows]
-
-    # H-001/H-002 paper rows. LTPs are pulled in a second batch since the
-    # ticker universe overlaps but isn't identical to Phase C.
-    h001_rows_raw = _read_h001_today_rows(today)
     if h001_rows_raw:
-        h001_tickers = sorted({(r.get("ticker") or "").upper()
-                               for r in h001_rows_raw if r.get("ticker")})
-        h001_ltps: dict[str, float] = {}
-        if h001_tickers:
-            try:
-                from pipeline.terminal.api.live import fetch_ltps
-                h001_ltps = fetch_ltps(h001_tickers) or {}
-            except Exception:
-                h001_ltps = {}
-        rows.extend(_enrich_h001_row(r, h001_ltps, breaks_map) for r in h001_rows_raw)
+        rows.extend(_enrich_h001_row(r, ltps, breaks_map) for r in h001_rows_raw)
 
     rows.sort(key=lambda r: r.get("entry_time") or "")
 
