@@ -1,0 +1,16 @@
+[Unit]
+Description=Anka TA Karpathy v1 — holdout TIME_STOP CLOSE at 15:25 IST
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+Group=anka
+WorkingDirectory=/home/anka/askanka.com
+EnvironmentFile=/home/anka/askanka.com/pipeline/.env
+ExecStart=/home/anka/askanka.com/.venv/bin/python -X utf8 -m pipeline.ta_scorer.karpathy_holdout close
+StandardOutput=append:/home/anka/askanka.com/pipeline/logs/ta_karpathy_close.log
+StandardError=append:/home/anka/askanka.com/pipeline/logs/ta_karpathy_close.log
+Nice=10
+TimeoutStartSec=10min

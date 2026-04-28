@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Anka TA Karpathy holdout CLOSE daily 15:25 IST
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 15:25:00
+Persistent=true
+Unit=anka-ta-karpathy-close.service
+
+[Install]
+WantedBy=timers.target

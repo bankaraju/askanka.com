@@ -28,12 +28,13 @@
       "task_name": "AnkaDailyDump",
       "tier": "critical",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/daily/{prev_biz_day}.json",
         "pipeline/data/daily/{prev_biz_day}_fundamentals.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "04:30 IST Mon-Fri. run_daily.py \u00e2\u20ac\u201d prices/fundamentals/FII flows. Writes date-stamped files in pipeline/data/daily/. Watchdog checks the PREVIOUS business day's files so alerts are robust against being run before today's 04:30 firing."
+      "notes": "04:30 IST Mon-Fri. MIGRATED TO VPS 2026-04-28 (anka-daily-dump.timer + .service systemd unit on Contabo 185.182.8.107). run_daily.py prices/fundamentals/FII flows. Writes date-stamped files in pipeline/data/daily/ on VPS. Laptop pulls back via AnkaVPSSyncDaily 04:50 IST. Watchdog checks the PREVIOUS business day's files so alerts are robust against being run before today's 04:30 firing."
     },
     {
       "task_name": "AnkaEarningsCalendarFetch",
@@ -1119,11 +1120,12 @@
       "task_name": "AnkaPatternScannerFit",
       "tier": "warn",
       "cadence_class": "weekly",
+      "host": "vps",
       "outputs": [
         "pipeline/data/scanner/pattern_stats.parquet"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Sun 02:00 IST weekly. pattern_scanner_fit.bat -> python -m pipeline.cli_pattern_scanner fit. 5-year walk-forward fit of TA pattern stats across the F&O universe. Output consumed daily by AnkaPatternScannerScan. Wired in T9 amended."
+      "notes": "Sun 02:00 IST weekly. MIGRATED TO VPS 2026-04-28 (anka-pattern-scanner-fit.timer + .service systemd unit on Contabo). python -m pipeline.cli_pattern_scanner fit. 5-year walk-forward fit of TA pattern stats across the F&O universe. ~14-min wall on VPS (vs ~71 min on laptop). Output consumed daily by AnkaPatternScannerScan. Laptop pulls back via AnkaVPSSyncWeekly 04:00 IST Sun. Wired in T9 amended."
     },
     {
       "task_name": "AnkaScannerPairedOpen",
@@ -1146,6 +1148,39 @@
       ],
       "grace_multiplier": 1.5,
       "notes": "T+1 15:30 IST same session. scanner_paired_close.bat -- mechanical close of OPEN scanner paired rows at Kite LTP. Sidecar pattern: futures shadow runs unaffected on options-side failure."
+    },
+    {
+      "task_name": "AnkaTAKarpathyPredict",
+      "tier": "info",
+      "cadence_class": "daily",
+      "host": "vps",
+      "outputs": [
+        "pipeline/data/research/h_2026_04_29_ta_karpathy_v1/today_predictions.json"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "04:30 IST daily during holdout 2026-04-29 -> 2026-05-28. anka-ta-karpathy-predict.timer + .service systemd unit on Contabo. python -m pipeline.ta_scorer.karpathy_predict -- emits per-stock p_long/p_short and signal flags from frozen Lasso models. H-2026-04-29-ta-karpathy-v1. Spec: docs/superpowers/specs/2026-04-29-ta-karpathy-v1-design.md."
+    },
+    {
+      "task_name": "AnkaTAKarpathyOpen",
+      "tier": "info",
+      "cadence_class": "daily",
+      "host": "vps",
+      "outputs": [
+        "pipeline/data/research/h_2026_04_29_ta_karpathy_v1/recommendations.csv"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "09:15 IST daily during holdout 2026-04-29 -> 2026-05-28. anka-ta-karpathy-open.timer + .service. python -m pipeline.ta_scorer.karpathy_holdout open -- reads today_predictions.json + manifest.json, opens trades for cells passing all 5 qualifier gates. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
+      "task_name": "AnkaTAKarpathyClose",
+      "tier": "info",
+      "cadence_class": "daily",
+      "host": "vps",
+      "outputs": [
+        "pipeline/data/research/h_2026_04_29_ta_karpathy_v1/recommendations.csv"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "15:25 IST daily during holdout 2026-04-29 -> 2026-05-28. anka-ta-karpathy-close.timer + .service. python -m pipeline.ta_scorer.karpathy_holdout close -- mechanical TIME_STOP at Kite LTP per spec section 10.6. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
     }
   ]
 }
