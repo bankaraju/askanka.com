@@ -37,14 +37,29 @@ def check_flat_bars(df: pd.DataFrame) -> float:
 
 
 def check_max_consecutive_gaps(df: pd.DataFrame) -> int:
-    """Max consecutive missing 1-min bars during 09:15-15:30."""
+    """Max consecutive missing 1-min bars WITHIN A SINGLE TRADING DAY (09:15-15:30).
+
+    The diff is computed per-day so cross-day gaps (overnight, weekend, holiday)
+    are NOT counted as "missing bars" — those are by-design absences of data,
+    not quality issues. An earlier version of this check returned the
+    Friday-15:30 -> Monday-09:15 weekend gap (~5385 min) for every instrument,
+    masking real intraday gaps with a constant calendar artefact.
+    """
     sess = df[(df["timestamp"].dt.time >= pd.Timestamp("09:15").time()) &
-              (df["timestamp"].dt.time <= pd.Timestamp("15:30").time())]
+              (df["timestamp"].dt.time <= pd.Timestamp("15:30").time())].copy()
     if sess.empty:
         return 9999
-    diffs = sess["timestamp"].diff().dt.total_seconds().fillna(60)
-    gap_minutes = (diffs / 60 - 1).clip(lower=0)
-    return int(gap_minutes.max())
+    sess["trading_day"] = sess["timestamp"].dt.date
+    max_gap = 0
+    for _, day_df in sess.groupby("trading_day"):
+        if len(day_df) < 2:
+            continue
+        diffs = day_df["timestamp"].diff().dt.total_seconds()
+        gap_minutes = (diffs / 60 - 1).clip(lower=0)
+        day_max = int(gap_minutes.max()) if not gap_minutes.empty else 0
+        if day_max > max_gap:
+            max_gap = day_max
+    return max_gap
 
 
 def check_ohlc_consistency(df: pd.DataFrame) -> float:

@@ -35,9 +35,12 @@ def test_compute_signals_at_returns_per_instrument_scores(monkeypatch, tmp_path)
         "volume": np.linspace(1000, 5000, 20),
     })
     bars.to_parquet(cache_dir / "RELIANCE.parquet", index=False)
-    # Sector index cache (RELIANCE -> NIFTYENERGY) — required after Fix #4:
-    # missing sector cache now skips the instrument rather than silently
-    # using the stock's own bars as the sector proxy.
+    # Sector index cache — required after Fix #4 (missing sector cache now skips
+    # the instrument rather than silently using the stock's own bars as the
+    # sector proxy). Filename uses the Kite space-separated convention
+    # ("NIFTY ENERGY") that runner.SECTOR_INDEX_MAP (sourced from
+    # in_sample_panel.SECTOR_INDEX_MAP_KITE) looks up. Earlier no-space form
+    # (NIFTYENERGY) silently produced 0 signals at 09:30 kickoff.
     sector_bars = pd.DataFrame({
         "timestamp": pd.date_range("2026-04-29 09:15", periods=20, freq="1min", tz="Asia/Kolkata"),
         "open":   np.linspace(20000, 20050, 20),
@@ -46,7 +49,7 @@ def test_compute_signals_at_returns_per_instrument_scores(monkeypatch, tmp_path)
         "close":  np.linspace(20005, 20055, 20),
         "volume": np.linspace(100000, 500000, 20),
     })
-    sector_bars.to_parquet(cache_dir / "NIFTYENERGY.parquet", index=False)
+    sector_bars.to_parquet(cache_dir / "NIFTY ENERGY.parquet", index=False)
     # PCR snapshot (simplified)
     pcr_dir = tmp_path / "pcr"
     pcr_dir.mkdir()
