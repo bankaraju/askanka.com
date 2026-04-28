@@ -2,8 +2,8 @@
 # Weekly deep scan with lynis + rkhunter. One-line summary to Telegram, full
 # logs kept under /var/log/anka-security/.
 set -euo pipefail
-# shellcheck disable=SC1091
-source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 OUT_DIR=/var/log/anka-security
 sudo mkdir -p "$OUT_DIR"

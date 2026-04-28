@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Alert if ~anka/.ssh/authorized_keys changes from baseline hash.
 set -euo pipefail
-# shellcheck disable=SC1091
-source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 BASELINE_FILE=/home/anka/askanka.com/pipeline/config/security/authorized_keys.sha256
 KEYS_FILE=/home/anka/.ssh/authorized_keys

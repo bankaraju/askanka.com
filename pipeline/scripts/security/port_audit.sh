@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Compare current listening ports against baseline. Alert on diff.
 set -euo pipefail
-# shellcheck disable=SC1091
-source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 BASELINE=/home/anka/askanka.com/pipeline/config/security/baseline_listening_ports.txt
 if [ ! -f "$BASELINE" ]; then

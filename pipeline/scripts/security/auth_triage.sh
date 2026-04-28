@@ -3,8 +3,8 @@
 # Alerts if failed-SSH count is anomalous OR if a sudo command appears from a
 # user other than 'anka'.
 set -euo pipefail
-# shellcheck disable=SC1091
-source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 LOG=/var/log/auth.log
 [ -f "$LOG" ] || { echo "no /var/log/auth.log"; exit 0; }

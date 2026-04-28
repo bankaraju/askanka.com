@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Daily apt status reporter — only alerts when there are upgradable packages.
 set -euo pipefail
-# shellcheck disable=SC1091
-source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 apt list --upgradable 2>/dev/null | tail -n +2 > /tmp/apt-upgradable.txt
 n_upgradable=$(wc -l < /tmp/apt-upgradable.txt)

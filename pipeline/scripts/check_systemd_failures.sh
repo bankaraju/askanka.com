@@ -17,8 +17,8 @@ WATCHLIST=(
     "anka-terminal.service"
 )
 
-# shellcheck disable=SC1091
-source "$REPO/pipeline/.env" 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 alert() {
     local msg="$1"

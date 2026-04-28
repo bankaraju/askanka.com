@@ -2,8 +2,8 @@
 # Daily security cadence master runner — sequence all the small checks,
 # emit a single Telegram green-tick when everything passes.
 set -uo pipefail
-# shellcheck disable=SC1091
-source /home/anka/askanka.com/pipeline/.env 2>/dev/null || true
+# shellcheck source=/dev/null
+. /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 S=/home/anka/askanka.com/pipeline/scripts/security
 errors=0
