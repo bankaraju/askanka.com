@@ -7,6 +7,7 @@ NSE F&O additions/removals are NOT applied.
 from __future__ import annotations
 
 import json
+import statistics
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict, List
@@ -72,6 +73,10 @@ def passes_options_liquidity_gate(snapshot: Dict) -> bool:
     return True
 
 
+def _median_or_zero(xs):
+    return statistics.median(xs) if xs else 0
+
+
 def _build_options_snapshot(symbol: str) -> Dict:
     """Build a 20-day-rolling options-liquidity snapshot from oi_scanner archive.
 
@@ -108,16 +113,14 @@ def _build_options_snapshot(symbol: str) -> Dict:
         if d.get("atm_bid_ask_spread_pct") is not None:
             spreads.append(d["atm_bid_ask_spread_pct"])
         strike_counts.append(d.get("active_strikes_count", 0))
-    import statistics
-    median_or_zero = lambda xs: statistics.median(xs) if xs else 0
     return {
-        "atm_call_volume_median_20d": median_or_zero(atm_call_vols),
-        "atm_put_volume_median_20d": median_or_zero(atm_put_vols),
-        "near_month_total_oi": median_or_zero(total_ois),
+        "atm_call_volume_median_20d": _median_or_zero(atm_call_vols),
+        "atm_put_volume_median_20d": _median_or_zero(atm_put_vols),
+        "near_month_total_oi": _median_or_zero(total_ois),
         "atm_bid_ask_spread_pct_median": (
             statistics.median(spreads) if spreads else 99.0
         ),
-        "active_strikes_count": int(median_or_zero(strike_counts)),
+        "active_strikes_count": int(_median_or_zero(strike_counts)),
     }
 
 

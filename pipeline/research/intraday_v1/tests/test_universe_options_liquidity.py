@@ -81,3 +81,39 @@ def test_load_v1_universe_returns_combined_pools(tmp_path, monkeypatch):
                       "NIFTYNXT50", "NIFTYIT", "NIFTYAUTO", "NIFTYPHARMA",
                       "NIFTYFMCG", "NIFTYBANK", "NIFTYMETAL", "NIFTYENERGY",
                       "NIFTYREALTY", "NIFTYMEDIA", "NIFTYPSUBANK"}
+
+
+def test_options_snapshot_aggregates_recent_files(tmp_path, monkeypatch):
+    """The 20-day rolling aggregation reads `*_near_chain.json` files,
+    medians the per-day fields, and feeds the gate. This is the live
+    kickoff path — the empty-directory branch is exercised elsewhere."""
+    monkeypatch.setattr(universe, "OI_SNAPSHOT_DIR", tmp_path)
+    sym_dir = tmp_path / "NIFTY"
+    sym_dir.mkdir()
+
+    # Two conformant daily snapshots
+    (sym_dir / "20260427_near_chain.json").write_text(json.dumps({
+        "atm_call_volume": 30_000,
+        "atm_put_volume": 40_000,
+        "total_oi": 600_000,
+        "atm_bid_ask_spread_pct": 0.4,
+        "active_strikes_count": 11,
+    }), encoding="utf-8")
+    (sym_dir / "20260428_near_chain.json").write_text(json.dumps({
+        "atm_call_volume": 50_000,
+        "atm_put_volume": 60_000,
+        "total_oi": 700_000,
+        "atm_bid_ask_spread_pct": 0.6,
+        "active_strikes_count": 13,
+    }), encoding="utf-8")
+
+    snap = universe._build_options_snapshot("NIFTY")
+    # Medians of the 2-file aggregation
+    assert snap["atm_call_volume_median_20d"] == 40_000   # median(30k, 50k)
+    assert snap["atm_put_volume_median_20d"] == 50_000    # median(40k, 60k)
+    assert snap["near_month_total_oi"] == 650_000         # median(600k, 700k)
+    assert abs(snap["atm_bid_ask_spread_pct_median"] - 0.5) < 1e-9  # median(0.4, 0.6)
+    assert snap["active_strikes_count"] == 12             # int(median(11, 13))
+
+    # And it clears the gate
+    assert universe.passes_options_liquidity_gate(snap) is True
