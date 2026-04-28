@@ -135,3 +135,22 @@ def test_compute_all_deterministic():
         if np.isnan(a[k]) and np.isnan(b[k]):
             continue
         assert a[k] == b[k]
+
+
+def test_features_return_nan_on_naive_eval_t():
+    """Naive eval_t (no tzinfo) must yield NaN, not TypeError, per contract."""
+    inst_df = _trading_day_minute_bars()
+    sector_df = _trading_day_minute_bars()
+    naive_t = datetime(2026, 4, 25, 9, 30)  # tz-naive
+    history = pd.DataFrame({
+        "minute_of_day_idx": list(range(16)),
+        "mean_cum_volume_20d": [1000.0 * (i + 1) for i in range(16)],
+        "std_cum_volume_20d":  [200.0] * 16,
+    })
+    chain_a = {"put_oi_total_next_month": 12000, "call_oi_total_next_month": 10000}
+    chain_b = {"put_oi_total_next_month": 10000, "call_oi_total_next_month": 11000}
+    out = features.compute_all(inst_df, sector_df, naive_t, chain_a, chain_b, history)
+    # delta_pcr_2d uses no eval_t and remains finite; the other 5 must be NaN.
+    assert np.isfinite(out["delta_pcr_2d"])
+    for k in ("orb_15min", "volume_z", "vwap_dev", "rs_vs_sector", "trend_slope_15min"):
+        assert np.isnan(out[k]), f"{k} should be NaN on naive eval_t, got {out[k]}"

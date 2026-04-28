@@ -6,10 +6,23 @@ NaN-handling at scoring time (instrument excluded with EXCLUDED=feature_nan_*).
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict
 
 import numpy as np
 import pandas as pd
+
+
+def _session_window(df: pd.DataFrame, eval_t: datetime) -> pd.DataFrame:
+    """Return ``df`` rows in ``[09:15 IST today, eval_t)``.
+
+    Returns an empty DataFrame when ``eval_t`` is timezone-naive — the
+    feature contract is "never raise", so a caller bug yields a NaN row
+    rather than a TypeError from pandas.
+    """
+    if eval_t.tzinfo is None:
+        return df.iloc[0:0]
+    start = eval_t.replace(hour=9, minute=15, second=0, microsecond=0)
+    return df[(df["timestamp"] >= start) & (df["timestamp"] < eval_t)]
 
 
 def delta_pcr_2d(today_chain: Dict, two_days_ago_chain: Dict) -> float:
@@ -33,15 +46,14 @@ def orb_15min(df: pd.DataFrame, eval_t: datetime) -> float:
     (last_close in [09:15, eval_t) - open at 09:15) / open at 09:15.
     Returns NaN if eval_t < 09:30 (window not yet closed).
     """
-    if eval_t.time() < pd.Timestamp("09:30:00").time():
+    if eval_t.tzinfo is None or eval_t.time() < pd.Timestamp("09:30:00").time():
         return float("nan")
-    window = df[(df["timestamp"] >= eval_t.replace(hour=9, minute=15, second=0, microsecond=0)) &
-                (df["timestamp"] < eval_t)]
+    window = _session_window(df, eval_t)
     if window.empty:
         return float("nan")
     open_915 = window.iloc[0]["open"]
     last_close = window.iloc[-1]["close"]
-    if not open_915 or open_915 == 0:
+    if not open_915:
         return float("nan")
     return (last_close - open_915) / open_915
 
@@ -52,8 +64,7 @@ def volume_z(df: pd.DataFrame, eval_t: datetime, volume_history: pd.DataFrame) -
     (cum_volume at eval_t - mu_20d_at_same_minute_of_day) / sigma_20d_at_same_minute.
     `volume_history` columns: minute_of_day_idx, mean_cum_volume_20d, std_cum_volume_20d.
     """
-    window = df[(df["timestamp"] >= eval_t.replace(hour=9, minute=15, second=0, microsecond=0)) &
-                (df["timestamp"] < eval_t)]
+    window = _session_window(df, eval_t)
     cum_vol = float(window["volume"].sum()) if not window.empty else float("nan")
     minute_idx = (eval_t.hour - 9) * 60 + (eval_t.minute - 15)
     if minute_idx < 0:
@@ -73,8 +84,7 @@ def vwap_dev(df: pd.DataFrame, eval_t: datetime) -> float:
 
     (close at eval_t-1min - VWAP today through eval_t-1min) / VWAP.
     """
-    window = df[(df["timestamp"] >= eval_t.replace(hour=9, minute=15, second=0, microsecond=0)) &
-                (df["timestamp"] < eval_t)]
+    window = _session_window(df, eval_t)
     if window.empty:
         return float("nan")
     px = window["close"]
@@ -94,8 +104,7 @@ def rs_vs_sector(instrument_df: pd.DataFrame, sector_df: pd.DataFrame, eval_t: d
     (instrument_ret 09:15 → eval_t-1min) - (sector_ret 09:15 → eval_t-1min).
     """
     def _ret(d):
-        w = d[(d["timestamp"] >= eval_t.replace(hour=9, minute=15, second=0, microsecond=0)) &
-              (d["timestamp"] < eval_t)]
+        w = _session_window(d, eval_t)
         if len(w) < 2:
             return float("nan")
         return (w.iloc[-1]["close"] - w.iloc[0]["open"]) / w.iloc[0]["open"]
@@ -108,6 +117,8 @@ def trend_slope_15min(df: pd.DataFrame, eval_t: datetime) -> float:
     OLS slope of close prices on minute-index over [eval_t-15min, eval_t),
     normalized by close at start of window.
     """
+    if eval_t.tzinfo is None:
+        return float("nan")
     start = eval_t - pd.Timedelta(minutes=15)
     window = df[(df["timestamp"] >= start) & (df["timestamp"] < eval_t)]
     if len(window) < 5:
