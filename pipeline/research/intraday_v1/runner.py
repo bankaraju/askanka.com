@@ -24,8 +24,8 @@ from typing import Dict, List
 import pandas as pd
 
 from pipeline.research.intraday_v1 import (
-    exit_engine, features, karpathy_fit, loader, options_paired, pcr_producer,
-    score, universe, verdict, volume_aggregator,
+    exit_engine, features, in_sample_panel, karpathy_fit, loader, options_paired,
+    pcr_producer, score, universe, verdict, volume_aggregator,
 )
 
 PIPELINE_ROOT = Path(__file__).resolve().parents[2]
@@ -83,31 +83,21 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
     long_t = float(weights_data["long_threshold"])
     short_t = float(weights_data["short_threshold"])
 
-    # Sector mapping: stock symbol → sector index symbol. Production wiring
-    # reads opus/artifacts/sectors/ (per reference_sector_mapper_artifact_dependency.md).
-    # Hard-coded fallback for V1 kickoff; expanded to full NIFTY-50 in production.
-    SECTOR_INDEX_MAP = {
-        "HDFCBANK": "NIFTYBANK", "ICICIBANK": "NIFTYBANK", "AXISBANK": "NIFTYBANK",
-        "KOTAKBANK": "NIFTYBANK", "SBIN": "NIFTYBANK", "INDUSINDBK": "NIFTYBANK",
-        "INFY": "NIFTYIT", "TCS": "NIFTYIT", "HCLTECH": "NIFTYIT",
-        "TECHM": "NIFTYIT", "WIPRO": "NIFTYIT",
-        "RELIANCE": "NIFTYENERGY", "ONGC": "NIFTYENERGY", "BPCL": "NIFTYENERGY",
-        "GAIL": "NIFTYENERGY", "COALINDIA": "NIFTYENERGY", "NTPC": "NIFTYENERGY",
-        "SUNPHARMA": "NIFTYPHARMA", "CIPLA": "NIFTYPHARMA", "DRREDDY": "NIFTYPHARMA",
-        "DIVISLAB": "NIFTYPHARMA", "APOLLOHOSP": "NIFTYPHARMA",
-        "MARUTI": "NIFTYAUTO", "TMPV": "NIFTYAUTO", "BAJAJ-AUTO": "NIFTYAUTO",
-        "EICHERMOT": "NIFTYAUTO", "HEROMOTOCO": "NIFTYAUTO", "M&M": "NIFTYAUTO",
-        "HINDUNILVR": "NIFTYFMCG", "ITC": "NIFTYFMCG", "NESTLEIND": "NIFTYFMCG",
-        "BRITANNIA": "NIFTYFMCG", "TATACONSUM": "NIFTYFMCG",
-        "TATASTEEL": "NIFTYMETAL", "JSWSTEEL": "NIFTYMETAL", "HINDALCO": "NIFTYMETAL",
-        # Stocks not mapped fall back to NIFTY (broad market) for RS computation
-    }
+    # Sector mapping: stock symbol → sector index symbol. Single source of truth
+    # is in_sample_panel.SECTOR_INDEX_MAP_KITE — both the in-sample panel and the
+    # live engine MUST use the same convention (Kite naming with spaces, e.g.
+    # "NIFTY BANK", "NIFTY ENERGY"), because the on-disk cache filenames are
+    # produced by Kite's instrument map. Drift between the two maps was an
+    # earlier bug: runner used "NIFTYBANK" while cache had "NIFTY BANK.parquet",
+    # so every stock silently skipped RS-vs-sector at 09:30 kickoff.
+    SECTOR_INDEX_MAP = in_sample_panel.SECTOR_INDEX_MAP_KITE
+    SECTOR_FALLBACK = in_sample_panel.DEFAULT_SECTOR_FALLBACK  # "NIFTY 50"
     out: List[Dict] = []
     for sym in univ["stocks"]:
         bars = _read_bars(sym)
         if bars is None or bars.empty:
             continue
-        sector_sym = SECTOR_INDEX_MAP.get(sym, "NIFTY")
+        sector_sym = SECTOR_INDEX_MAP.get(sym, SECTOR_FALLBACK)
         sector_bars = _read_bars(sector_sym)
         # No synthetic fallback: when the sector cache is missing we cannot compute
         # rs_vs_sector against the stock's own bars (that would silently return 0

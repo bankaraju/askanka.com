@@ -206,3 +206,40 @@ def test_live_open_idempotent_no_kite_session(tmp_path, monkeypatch):
     today = eval_t.date().isoformat()
     mask = (df["status"] == "NO_KITE_SESSION") & (df["open_date"].astype(str) == today)
     assert int(mask.sum()) == 1
+
+
+def test_runner_sector_map_matches_in_sample_panel():
+    """The live engine and the in-sample panel must use the SAME sector mapping
+    convention. Drift between the two was a kickoff blocker: runner used the
+    no-space form ("NIFTYBANK") while the on-disk cache files use the Kite
+    space-separated form ("NIFTY BANK.parquet"), so every stock would silently
+    skip RS-vs-sector at 09:30 live-open. Single source of truth is
+    ``in_sample_panel.SECTOR_INDEX_MAP_KITE``.
+    """
+    from pipeline.research.intraday_v1 import in_sample_panel as isp
+    # The two maps must be the same object (DRY): runner imports from isp.
+    # If a future refactor accidentally re-defines a local SECTOR_INDEX_MAP in
+    # runner with stale values, this test fires.
+    src = (Path(runner.__file__)).read_text(encoding="utf-8")
+    assert "SECTOR_INDEX_MAP = in_sample_panel.SECTOR_INDEX_MAP_KITE" in src, (
+        "runner._compute_signals_at must source SECTOR_INDEX_MAP from "
+        "in_sample_panel.SECTOR_INDEX_MAP_KITE — drift here causes silent "
+        "skip of every stock at 09:30 live-open."
+    )
+    # And the Kite map must use space-separated names (matches on-disk cache).
+    sample_values = set(isp.SECTOR_INDEX_MAP_KITE.values())
+    assert "NIFTY BANK" in sample_values, "expected Kite naming with spaces"
+    assert "NIFTYBANK" not in sample_values, "no-space form would not match cache"
+
+
+def test_runner_sector_fallback_matches_real_cache_filename():
+    """The fallback sector ('NIFTY 50') must match an actual on-disk cache file
+    (or be the documented production-time absent default). At kickoff the cache
+    file is ``NIFTY 50.parquet``; the earlier bug used 'NIFTY' which mapped to
+    no file. This test fixes the contract.
+    """
+    from pipeline.research.intraday_v1 import in_sample_panel as isp
+    assert isp.DEFAULT_SECTOR_FALLBACK == "NIFTY 50", (
+        f"DEFAULT_SECTOR_FALLBACK is {isp.DEFAULT_SECTOR_FALLBACK!r}; "
+        f"the cache file is 'NIFTY 50.parquet' so the fallback must match."
+    )
