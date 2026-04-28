@@ -31,6 +31,40 @@ from pipeline import provenance
 router = APIRouter()
 
 
+# In-process LTP cache. The frontend polls /api/live_monitor every 10s, and
+# this endpoint also gets hit ad-hoc from other pages — without a TTL cache,
+# successive calls inside one poll window each fired a fresh Kite bulk
+# round-trip. 3s TTL means at most one fetch per 3s regardless of caller
+# count, and successive 10s polls always fall outside the window so the
+# user always sees a current quote.
+_LTP_CACHE: dict[str, Any] = {"key": None, "value": {}, "ts": 0.0}
+_LTP_CACHE_TTL_S = 3.0
+
+
+def _cached_fetch_ltps(tickers: list[str]) -> dict[str, float]:
+    """fetch_ltps with a 3s in-process TTL cache keyed on ticker set."""
+    import time
+
+    if not tickers:
+        return {}
+    key = tuple(sorted(tickers))
+    now = time.time()
+    if (
+        _LTP_CACHE["key"] == key
+        and (now - _LTP_CACHE["ts"]) < _LTP_CACHE_TTL_S
+    ):
+        return _LTP_CACHE["value"]
+    try:
+        from pipeline.terminal.api.live import fetch_ltps
+        value = fetch_ltps(list(key)) or {}
+    except Exception:
+        value = {}
+    _LTP_CACHE["key"] = key
+    _LTP_CACHE["value"] = value
+    _LTP_CACHE["ts"] = now
+    return value
+
+
 def _build_sector_lookup() -> dict[str, dict]:
     """Build symbol -> {sector, display_name} once at module load.
 
@@ -369,23 +403,30 @@ def live_monitor():
         if (r.get("date") or r.get("opened_at", "")[:10]) == today
     ]
 
-    # Union Phase C and H-001 ticker sets so we make ONE fetch_ltps call. The
-    # universes overlap heavily — splitting them into two serial batches doubles
-    # Kite/yfinance latency for nothing.
+    # Union Phase C and H-001 ticker sets, but only for OPEN rows. Closed
+    # rows already have realized P&L — fetching their LTP burns the Kite
+    # round-trip for cosmetic display value. After 14:30 IST every paper
+    # engine has CLOSED everything, so on the post-close polling burst the
+    # endpoint returns instantly with no network IO at all.
     h001_rows_raw = _read_h001_today_rows(today)
-    phase_c_tickers = {(r.get("symbol") or r.get("ticker", "")).upper()
-                       for r in today_rows if (r.get("symbol") or r.get("ticker"))}
-    h001_tickers = {(r.get("ticker") or "").upper()
-                    for r in h001_rows_raw if r.get("ticker")}
-    all_tickers = sorted(phase_c_tickers | h001_tickers)
 
-    ltps: dict[str, float] = {}
-    if all_tickers:
-        try:
-            from pipeline.terminal.api.live import fetch_ltps
-            ltps = fetch_ltps(all_tickers) or {}
-        except Exception:
-            ltps = {}
+    def _is_open_phase_c(r: dict) -> bool:
+        # Phase C ledger uses status field; rows missing exit_at are still open.
+        return (r.get("status") or "OPEN") == "OPEN" and not r.get("exit_at")
+
+    phase_c_open_tickers = {
+        (r.get("symbol") or r.get("ticker", "")).upper()
+        for r in today_rows
+        if (r.get("symbol") or r.get("ticker")) and _is_open_phase_c(r)
+    }
+    h001_open_tickers = {
+        (r.get("ticker") or "").upper()
+        for r in h001_rows_raw
+        if r.get("ticker") and r.get("status") == "OPEN"
+    }
+    all_open_tickers = sorted(phase_c_open_tickers | h001_open_tickers)
+
+    ltps = _cached_fetch_ltps(all_open_tickers)
 
     atr_map = _read_json(_ATR_PATH, default={})
     breaks_map = _load_breaks_by_ticker(today)

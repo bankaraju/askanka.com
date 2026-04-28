@@ -1,10 +1,18 @@
 // LIVE Monitor — open Phase C shadow positions with stops + provenance.
-// Polls /api/live_monitor every 5s. Top strip shows engine/data provenance
+// Polls /api/live_monitor every 10s. Top strip shows engine/data provenance
 // badges (the "did the cutover land?" answer); rows show entry, LTP, P&L,
 // stops, and time-to-14:30. Status badges colour-code the active risk state.
+//
+// Why 10s and not 5s: each poll triggers a Kite bulk LTP fetch on the
+// server (~2s warm, longer first call). 5s polling stacked requests because
+// successive calls landed before the prior one returned. 10s gives the
+// server breathing room and still feels live for paper-trade monitoring.
+// LTP precision under 10s isn't actionable — the only time-critical event
+// is the 14:30 mechanical close, and that fires from the scheduler, not
+// the UI.
 import { get } from '../lib/api.js';
 
-const POLL_INTERVAL_MS = 5000;
+const POLL_INTERVAL_MS = 10000;
 
 let pollHandle = null;
 // Sort state persists across polls so the user's chosen ordering survives the
