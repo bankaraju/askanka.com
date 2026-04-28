@@ -9,7 +9,7 @@ User=anka
 Group=anka
 WorkingDirectory=/home/anka/askanka.com
 EnvironmentFile=/home/anka/askanka.com/pipeline/.env
-Environment=PYTHONPATH=/home/anka/askanka.com
+Environment=PYTHONPATH=/home/anka/askanka.com:/home/anka/askanka.com/pipeline
 ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.research.h_2026_04_27_secrsi.forward_shadow basket-open
 StandardOutput=append:/home/anka/askanka.com/pipeline/logs/secrsi.log
 StandardError=append:/home/anka/askanka.com/pipeline/logs/secrsi.log

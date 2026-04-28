@@ -9,7 +9,7 @@ User=anka
 Group=anka
 WorkingDirectory=/home/anka/askanka.com
 EnvironmentFile=/home/anka/askanka.com/pipeline/.env
-Environment=PYTHONPATH=/home/anka/askanka.com
+Environment=PYTHONPATH=/home/anka/askanka.com:/home/anka/askanka.com/pipeline
 ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.cli_pattern_scanner scan
 StandardOutput=append:/home/anka/askanka.com/pipeline/logs/pattern_scanner.log
 StandardError=append:/home/anka/askanka.com/pipeline/logs/pattern_scanner.log
