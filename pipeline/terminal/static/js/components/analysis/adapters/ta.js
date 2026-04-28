@@ -1,5 +1,6 @@
 // pipeline/terminal/static/js/components/analysis/adapters/ta.js
 import { makeEnvelope } from '../envelope.js';
+import { modelEdgePhrases } from '../lay_language.js';
 
 function _verdict(score) {
   if (score == null) return 'UNAVAILABLE';
@@ -19,7 +20,7 @@ export function adapt(ticker, raw) {
   }
   if (raw.score == null || raw.health === 'RED' || raw.health === 'UNAVAILABLE') {
     const reason = raw.health === 'RED'
-      ? 'Model health RED — mean AUC below calibration threshold.'
+      ? 'Model unreliable — edge below calibration threshold.'
       : 'Model not calibrated — insufficient history or unstable folds.';
     return makeEnvelope({
       engine: 'ta', ticker, verdict: 'UNAVAILABLE',
@@ -29,10 +30,9 @@ export function adapt(ticker, raw) {
     });
   }
   const score = Number.isFinite(raw.score) ? raw.score : null;
-  const detailBits = ['daily bars, EOD cadence'];
-  if (raw.mean_auc != null) detailBits.push(`mean AUC ${Number(raw.mean_auc).toFixed(2)}`);
-  if (raw.min_fold_auc != null) detailBits.push(`min ${Number(raw.min_fold_auc).toFixed(2)}`);
-  if (raw.n_folds != null) detailBits.push(`${raw.n_folds} folds`);
+  const detailBits = ['daily bars, EOD cadence', ...modelEdgePhrases({
+    mean_auc: raw.mean_auc, min_fold_auc: raw.min_fold_auc, n_folds: raw.n_folds,
+  })];
   return makeEnvelope({
     engine: 'ta', ticker,
     verdict: _verdict(score),
