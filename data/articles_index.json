@@ -1,6 +1,33 @@
 {
   "articles": [
     {
+      "date": "2026-04-29",
+      "segment": "war",
+      "filename": "2026-04-29-war.html",
+      "headline": "Trump's Pardons and the Iran War: A Reckless Endorsement of Military Adventurism",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 29, 2026"
+    },
+    {
+      "date": "2026-04-29",
+      "segment": "epstein",
+      "filename": "2026-04-29-epstein.html",
+      "headline": "Trump's DOJ Under Audit: The Epstein Files Cover-Up Unravels with Forensic Precision",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "April 29, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "war",
+      "filename": "2026-04-28-war.html",
+      "headline": "Pakistan's Hormuz Gambit: A Deceptive Peace Offer as India Navigates Trump's Iran Trap",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "April 28, 2026"
+    },
+    {
       "date": "2026-04-28",
       "segment": "postmortem",
       "filename": "postmortem-2026-04-28-phase-c-hdfcamc-opportunity-lag.md",
@@ -61,15 +88,6 @@
       "headline": "Phase C: IEX OPPORTUNITY_LAG: post-mortem (+0.19%)",
       "category": "TRADE POST-MORTEM",
       "color": "#6b7280",
-      "published_at": "April 28, 2026"
-    },
-    {
-      "date": "2026-04-28",
-      "segment": "war",
-      "filename": "2026-04-28-war.html",
-      "headline": "Pakistan's Hormuz Gambit: A Deceptive Peace Offer as India Navigates Trump's Iran Trap",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
       "published_at": "April 28, 2026"
     },
     {
