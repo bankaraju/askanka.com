@@ -111,30 +111,33 @@
       "task_name": "AnkaGemma4HealthCheck",
       "tier": "warn",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/research/gemma4_pilot/gemma4_health.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "05:30 IST daily. POSTs PONG to local Ollama at 127.0.0.1:11434/v1/chat/completions (laptop -> Contabo via SSH tunnel). FAIL -> rc=1 + Telegram alert. DEGRADED (lat>60s) -> rc=0 + Telegram alert. Pilot: 2026-04-29 -> 2026-05-19."
+      "notes": "05:30 IST daily. anka-gemma4-health-check.timer + .service on VPS systemd (migrated 2026-04-28). POSTs PONG to local Ollama at 127.0.0.1:11434/v1/chat/completions. FAIL -> rc=1 + Telegram. DEGRADED (lat>60s) -> rc=0 + Telegram. Service unit shipped but not enabled until install_gemma4_contabo.sh has been run. Pilot: 2026-04-29 -> 2026-05-19."
     },
     {
       "task_name": "AnkaGemma4DailyReport",
       "tier": "warn",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/research/gemma4_pilot/report_cards/{today}.json",
         "pipeline/data/research/gemma4_pilot/report_cards/{today}.md"
       ],
       "grace_multiplier": 1.5,
-      "notes": "22:00 IST daily. EOD aggregation of rubric pass-rates + pairwise win-rates per pilot task; emits Telegram one-liner. Pilot: 2026-04-29 -> 2026-05-19."
+      "notes": "22:00 IST daily. anka-gemma4-daily-report.timer + .service on VPS systemd (migrated 2026-04-28; enabled 2026-04-28 17:30 IST). EOD aggregation of rubric pass-rates + pairwise win-rates per pilot task; emits Telegram one-liner. Pilot: 2026-04-29 -> 2026-05-19."
     },
     {
       "task_name": "AnkaGemma4AutoDisable",
       "tier": "info",
       "cadence_class": "intraday",
+      "host": "vps",
       "outputs": [],
       "grace_multiplier": 2.0,
-      "notes": "Hourly 09:00-22:00 IST guardrail. Disables a pilot task in llm_routing.json if 24h shadow rubric <90% (n>=5); flags manual_review/<task>.flag if 7d pairwise <40% (n>=10). Pilot: 2026-04-29 -> 2026-05-19."
+      "notes": "Hourly 09:00-22:00 IST guardrail. anka-gemma4-auto-disable.timer + .service on VPS systemd (migrated 2026-04-28; enabled 2026-04-28 17:30 IST). Disables a pilot task in llm_routing.json if 24h shadow rubric <90% (n>=5); flags manual_review/<task>.flag if 7d pairwise <40% (n>=10). Pilot: 2026-04-29 -> 2026-05-19."
     },
     {
       "task_name": "AnkaIntraday0930",
