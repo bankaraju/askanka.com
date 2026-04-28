@@ -5,14 +5,24 @@ set -euo pipefail
 . /home/anka/askanka.com/pipeline/scripts/load_telegram_creds.sh
 
 BASELINE=/home/anka/askanka.com/pipeline/config/security/baseline_listening_ports.txt
+capture() {
+    # Print "addr:port process_name" — stable across pid/fd churn
+    sudo ss -tlnpH | awk '{
+        addr = $4
+        proc = "?"
+        if (match($0, /\("([^"]+)"/, m)) proc = m[1]
+        print addr, proc
+    }' | sort -u
+}
+
 if [ ! -f "$BASELINE" ]; then
     echo "[port_audit] no baseline file — capturing current state as baseline"
-    sudo ss -tlnpH | awk '{print $4, $6}' | sort -u > "$BASELINE"
+    capture > "$BASELINE"
     echo "[port_audit] baseline created at $BASELINE — review and commit"
     exit 0
 fi
 
-current=$(sudo ss -tlnpH | awk '{print $4, $6}' | sort -u)
+current=$(capture)
 diff_out=$(diff <(echo "$current") "$BASELINE" || true)
 
 if [ -n "$diff_out" ]; then
