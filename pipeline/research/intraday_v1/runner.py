@@ -322,10 +322,82 @@ def loader_refresh() -> None:
 
 
 def recalibrate(pool: str) -> None:
-    """Monthly weight refit on prior 60-day window for the named pool."""
+    """Monthly weight refit on prior 60-day window for the named pool.
+
+    Pipeline:
+    1. Assemble in-sample panel via ``in_sample_panel.assemble_for_pool(pool)``.
+    2. Adjust ``rolling_window_days`` downward if fewer than the spec default
+       distinct trading days are present (kickoff scenario only — production
+       monthly recalibrate has 60 days).
+    3. Run Karpathy random search (``n_iters=2000``, ``seed=42``).
+    4. Persist ``weights/<eval_date>_<pool>.json`` and refresh
+       ``weights/latest_<pool>.json`` (atomic copy via os.replace).
+
+    Hard contract: empty in-sample panel raises ``RuntimeError`` (per
+    feedback_no_hallucination_mandate.md — fail loud, don't impute).
+    """
     if pool not in ("stocks", "indices"):
         raise ValueError(f"pool must be stocks or indices, got {pool}")
-    raise NotImplementedError("Recalibration in-sample assembly is wired in subsequent commit")
+
+    from pipeline.research.intraday_v1 import in_sample_panel
+    df = in_sample_panel.assemble_for_pool(pool)
+
+    if df.empty:
+        log.error(f"in-sample panel empty for pool={pool}, cannot fit")
+        raise RuntimeError(f"in-sample panel empty for {pool}")
+
+    n_days = df["date"].nunique()
+    n_rows = len(df)
+    n_inst = df["instrument"].nunique()
+    log.info(
+        f"in-sample panel for {pool}: {n_days} days, {n_rows} rows, "
+        f"{n_inst} instruments"
+    )
+
+    # Kickoff guard: shrink rolling window if in-sample has fewer than the
+    # spec-default 10 distinct trading days. Production monthly recalibrate
+    # always has 60 days and falls through with the spec constant intact.
+    rolling_window = min(
+        karpathy_fit.ROLLING_WINDOW_DAYS, max(3, n_days // 3)
+    )
+    if rolling_window < karpathy_fit.ROLLING_WINDOW_DAYS:
+        log.warning(
+            f"reducing ROLLING_WINDOW_DAYS from {karpathy_fit.ROLLING_WINDOW_DAYS} "
+            f"to {rolling_window} for kickoff fit (insufficient in-sample days). "
+            f"Will revert to {karpathy_fit.ROLLING_WINDOW_DAYS} on monthly "
+            f"recalibrate once OI archive grows."
+        )
+
+    fit = karpathy_fit.run(
+        df, seed=42, n_iters=2000, rolling_window_days=rolling_window,
+    )
+
+    eval_date_iso = datetime.now(IST).date().isoformat()
+    WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
+    weights_path = WEIGHTS_DIR / f"{eval_date_iso}_{pool}.json"
+    payload = {
+        "weights": list(map(float, fit["weights"])),
+        "long_threshold": float(fit["long_threshold"]),
+        "short_threshold": float(fit["short_threshold"]),
+        "objective": float(fit["objective"]),
+        "seed": int(fit["seed"]),
+        "n_in_sample_days": int(n_days),
+        "n_in_sample_rows": int(n_rows),
+        "rolling_window_days": int(fit["rolling_window_days"]),
+        "pool": pool,
+        "fit_date": eval_date_iso,
+    }
+    weights_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    latest_path = WEIGHTS_DIR / f"latest_{pool}.json"
+    # Atomic Windows-safe replace: write a sibling temp, then rename.
+    import os
+    tmp_latest = WEIGHTS_DIR / f".latest_{pool}.json.tmp"
+    tmp_latest.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    os.replace(tmp_latest, latest_path)
+    log.info(
+        f"recalibrate({pool}) wrote {weights_path.name} + latest_{pool}.json: "
+        f"obj={payload['objective']:.4f} window={payload['rolling_window_days']}"
+    )
 
 
 def evaluate_verdict() -> Dict:

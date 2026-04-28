@@ -109,6 +109,88 @@ def test_live_open_idempotent_on_retry(tmp_path, monkeypatch):
     assert df.groupby(["open_date", "instrument"]).size().max() == 1
 
 
+def _synthetic_panel(n_days: int = 30, n_inst: int = 10, seed: int = 0) -> pd.DataFrame:
+    """Pick a fixed-shape panel for recalibrate tests."""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    rows = []
+    for d in range(n_days):
+        for i in range(n_inst):
+            f = rng.normal(0, 1, 6)
+            label = float(np.dot(f, [0.5, -0.3, 0.2, 0.1, 0.0, 0.4])) + rng.normal(0, 0.5)
+            rows.append({
+                "date": f"2026-03-{1+d:02d}",
+                "instrument": f"INST{i}",
+                "f1": f[0], "f2": f[1], "f3": f[2],
+                "f4": f[3], "f5": f[4], "f6": f[5],
+                "next_return_pct": label,
+            })
+    return pd.DataFrame(rows)
+
+
+def test_recalibrate_writes_weights_file_for_each_pool(tmp_path, monkeypatch):
+    """End-to-end: synthetic in-sample panel -> recalibrate -> weights JSON
+    + latest_<pool>.json on disk with valid weights and thresholds.
+    """
+    import json as _json
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(runner, "WEIGHTS_DIR", tmp_path / "weights")
+    from pipeline.research.intraday_v1 import in_sample_panel as isp
+    monkeypatch.setattr(isp, "assemble_for_pool", lambda pool: _synthetic_panel())
+    runner.recalibrate(pool="stocks")
+    weights_dir = tmp_path / "weights"
+    latest = weights_dir / "latest_stocks.json"
+    assert latest.exists()
+    payload = _json.loads(latest.read_text(encoding="utf-8"))
+    assert "weights" in payload
+    assert len(payload["weights"]) == 6
+    assert "long_threshold" in payload
+    assert "short_threshold" in payload
+    assert payload["long_threshold"] > payload["short_threshold"]
+    assert payload["pool"] == "stocks"
+    assert payload["seed"] == 42
+    # The dated file is also present.
+    dated_files = [p for p in weights_dir.iterdir() if p.name.endswith("_stocks.json") and p.name != "latest_stocks.json"]
+    assert len(dated_files) == 1
+
+
+def test_recalibrate_raises_on_empty_panel(tmp_path, monkeypatch):
+    """Per feedback_no_hallucination_mandate.md: empty panel must fail loud."""
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(runner, "WEIGHTS_DIR", tmp_path / "weights")
+    from pipeline.research.intraday_v1 import in_sample_panel as isp
+    monkeypatch.setattr(isp, "assemble_for_pool", lambda pool: pd.DataFrame())
+    with pytest.raises(RuntimeError, match="empty"):
+        runner.recalibrate(pool="stocks")
+
+
+def test_recalibrate_uses_smaller_rolling_window_when_insufficient_days(
+    tmp_path, monkeypatch, caplog,
+):
+    """Kickoff scenario: 8-day in-sample panel triggers a window shrink.
+
+    The fit must complete and emit a weights file whose
+    ``rolling_window_days`` is < 10 (the spec default).
+    """
+    import json as _json
+    import logging as _logging
+    caplog.set_level(_logging.WARNING)
+
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(runner, "WEIGHTS_DIR", tmp_path / "weights")
+    from pipeline.research.intraday_v1 import in_sample_panel as isp
+    monkeypatch.setattr(isp, "assemble_for_pool", lambda pool: _synthetic_panel(n_days=8))
+    runner.recalibrate(pool="stocks")
+    payload = _json.loads(
+        (tmp_path / "weights" / "latest_stocks.json").read_text(encoding="utf-8")
+    )
+    assert payload["rolling_window_days"] < 10
+    assert payload["rolling_window_days"] >= 3
+    assert payload["n_in_sample_days"] == 8
+    # Caller logged the warning.
+    assert any("reducing ROLLING_WINDOW_DAYS" in r.message for r in caplog.records)
+
+
 def test_live_open_idempotent_no_kite_session(tmp_path, monkeypatch):
     """Fix #8 corollary: NO_KITE_SESSION sentinel is also deduped on retry."""
     monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
