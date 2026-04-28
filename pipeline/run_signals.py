@@ -797,6 +797,21 @@ def run_eod(send_telegram=False):
     except Exception as e:
         print(f"  EOD price snapshot failed: {e}")
 
+    # Per-trade post-mortems for today's closes (#30 / C14). Reads
+    # closed_signals.json AFTER run_eod_review() has settled the day's
+    # closes. Failure-tolerant: one bad row doesn't sink the EOD path.
+    try:
+        from trade_postmortem import render_today_closes
+        closed_path = Path(__file__).parent / "data" / "signals" / "closed_signals.json"
+        if closed_path.exists():
+            closed = json.loads(closed_path.read_text(encoding="utf-8"))
+            today_iso = _ist_now().strftime("%Y-%m-%d")
+            written = render_today_closes(closed, today_iso)
+            if written:
+                print(f"  Wrote {len(written)} post-mortem(s) for today's closes")
+    except Exception as e:
+        print(f"  Post-mortem render failed: {e}")
+
     regime = _load_current_regime()
     portfolio = get_portfolio_snapshot()
     cumulative = get_cumulative_pnl()
