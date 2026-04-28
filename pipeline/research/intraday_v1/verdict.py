@@ -19,7 +19,7 @@ import pandas as pd
 from scipy.stats import binomtest
 
 SHARPE_FLOOR = 0.5
-MAXDD_CEILING = 0.15  # 15% cumulative equity-curve drawdown (pnl_pct units / 100)
+MAXDD_CEILING = 0.05  # 5% cumulative equity-curve drawdown (pnl_pct units / 100)
 HITRATE_NULL = 0.5
 HITRATE_ALPHA = 0.05
 FRAGILITY_PASS_MIN = 8  # of 12 perturbations

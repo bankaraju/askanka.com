@@ -13,7 +13,7 @@ def _ledger(hit_rate=0.58, sharpe=0.8, maxdd=0.03, n_trades=400):
     np.random.seed(42)
     n_wins = int(hit_rate * n_trades)
     n_losses = n_trades - n_wins
-    pnl = list(np.random.normal(0.5, 1.0, n_wins)) + list(np.random.normal(-0.4, 1.0, n_losses))
+    pnl = list(np.random.normal(0.4, 0.2, n_wins)) + list(np.random.normal(-0.2, 0.2, n_losses))
     np.random.shuffle(pnl)
     return pd.DataFrame({
         "instrument": [f"INST{i % 50}" for i in range(n_trades)],
