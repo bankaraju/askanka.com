@@ -1,0 +1,26 @@
+{
+  "default_primary": "gemini-flash",
+  "default_fallback": "claude-haiku",
+  "tasks": {
+    "concall_supplement": {
+      "mode": "shadow",
+      "primary": "gemini-flash",
+      "shadow": "gemma4-local"
+    },
+    "news_classification": {
+      "mode": "shadow",
+      "primary": "gemini-flash",
+      "shadow": "gemma4-local"
+    },
+    "eod_narrative": {
+      "mode": "shadow",
+      "primary": "gemini-flash",
+      "shadow": "gemma4-local"
+    },
+    "article_draft": {
+      "mode": "shadow",
+      "primary": "gemini-flash",
+      "shadow": "gemma4-local"
+    }
+  }
+}
