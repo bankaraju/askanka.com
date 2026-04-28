@@ -1042,21 +1042,23 @@
       "task_name": "AnkaBulkDeals",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/bulk_deals/{prev_biz_day}.parquet"
       ],
       "grace_multiplier": 2.0,
-      "notes": "16:30 IST daily. AnkaBulkDeals.bat â€” pulls NSE rolling-today bulk + block deals CSVs from nsearchives.nseindia.com and writes one parquet per trade-date. Forward-only (no historical backfill exists from NSE direct, see memory/reference_nse_bulk_deals_history_unavailable.md). Feeds forensic card v2 bulk_deal_T channel."
+      "notes": "16:30 IST Mon-Fri. anka-bulk-deals.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.bulk_deals — pulls NSE rolling-today bulk + block deals CSVs from nsearchives.nseindia.com and writes one parquet per trade-date. Forward-only (see memory/reference_nse_bulk_deals_history_unavailable.md). Feeds forensic card v2 bulk_deal_T channel."
     },
     {
       "task_name": "AnkaInsiderTrades",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/insider_trades/{this_month}.parquet"
       ],
       "grace_multiplier": 2.0,
-      "notes": "18:30 IST daily. AnkaInsiderTrades.bat â€” pulls NSE PIT (insider trading) disclosures from /api/corporates-pit. Pulls last 7 days each run because PIT filings often arrive 1-3 days late. Backfill 2021+ is one-shot. Feeds forensic card v2 insider channel."
+      "notes": "18:30 IST Mon-Fri. anka-insider-trades.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.insider_trades — pulls NSE PIT (insider trading) disclosures from /api/corporates-pit. Pulls last 7 days each run because PIT filings often arrive 1-3 days late. Backfill 2021+ is one-shot. Feeds forensic card v2 insider channel."
     },
     {
       "task_name": "AnkaH20260426001PaperOpen",
@@ -1082,52 +1084,57 @@
       "task_name": "AnkaPitRegimeTapeCapture",
       "tier": "warn",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/pit_regime_tape/forward/{today}.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "05:00 IST daily. capture_pit_regime_tape_forward.py â€” freezes today_regime.json into PIT tape forward feed. Load-bearing for NEUTRAL_OVERLAY family (H-2026-04-28-001..004). Audit: 2026-04-28-pit-regime-tape-data-source-audit.md"
+      "notes": "05:00 IST daily. anka-pit-regime-tape.timer + .service on VPS systemd (Cohort G 2026-04-28). pipeline/scripts/capture_pit_regime_tape_forward.py — freezes today_regime.json into PIT tape forward feed. Load-bearing for NEUTRAL_OVERLAY family (H-2026-04-28-001..004). Audit: 2026-04-28-pit-regime-tape-data-source-audit.md"
     },
     {
       "task_name": "AnkaSecrsiCaptureOpens",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/research/h_2026_04_27_secrsi/opens/"
       ],
       "grace_multiplier": 1.5,
-      "notes": "SECRSI 09:16 IST F&O universe LTP capture. Required by basket-open. H-2026-04-27-003 holdout 2026-04-28 -> 2026-07-31."
+      "notes": "SECRSI 09:16 IST Mon-Fri F&O universe LTP capture. anka-secrsi-capture-opens.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.research.h_2026_04_27_secrsi.forward_shadow capture-opens. Required by basket-open. H-2026-04-27-003 holdout 2026-04-28 -> 2026-07-31."
     },
     {
       "task_name": "AnkaSecrsiBasketOpen",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/research/h_2026_04_27_secrsi/recommendations.csv",
         "pipeline/data/research/h_2026_04_27_secrsi/snapshots/"
       ],
       "grace_multiplier": 1.5,
-      "notes": "SECRSI 11:00 IST snapshot + basket open. Builds 8-leg market-neutral basket per spec section 3. H-2026-04-27-003."
+      "notes": "SECRSI 11:00 IST Mon-Fri snapshot + basket open. anka-secrsi-basket-open.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.research.h_2026_04_27_secrsi.forward_shadow basket-open. Builds 8-leg market-neutral basket per spec section 3. H-2026-04-27-003."
     },
     {
       "task_name": "AnkaSecrsiBasketClose",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/research/h_2026_04_27_secrsi/recommendations.csv"
       ],
       "grace_multiplier": 1.5,
-      "notes": "SECRSI 14:30 IST mechanical TIME_STOP close. Single-touch holdout 2026-04-28 -> 2026-07-31. NO PARAMETER CHANGES."
+      "notes": "SECRSI 14:30 IST Mon-Fri mechanical TIME_STOP close. anka-secrsi-basket-close.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.research.h_2026_04_27_secrsi.forward_shadow basket-close. Single-touch holdout 2026-04-28 -> 2026-07-31. NO PARAMETER CHANGES."
     },
     {
       "task_name": "AnkaPatternScannerScan",
       "tier": "info",
       "cadence_class": "daily",
+      "host": "vps",
       "outputs": [
         "pipeline/data/scanner/pattern_signals_today.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "16:30 IST daily. pattern_scanner_scan.bat -> python -m pipeline.cli_pattern_scanner scan. Detects and ranks TA patterns across the F&O universe using pre-fitted stats. Requires pattern_stats.parquet (AnkaPatternScannerFit). Wired in T9 amended (paired-shadow deferred to T8)."
+      "notes": "16:30 IST Mon-Fri. anka-pattern-scanner-scan.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.cli_pattern_scanner scan. Detects and ranks TA patterns across the F&O universe using pre-fitted stats. Requires pattern_stats.parquet (AnkaPatternScannerFit). Wired in T9 amended (paired-shadow deferred to T8)."
     },
     {
       "task_name": "AnkaPatternScannerFit",

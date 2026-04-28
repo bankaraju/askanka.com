@@ -1267,9 +1267,19 @@ The laptop is treated as **disposable context** — it can crash any day. The Co
 |------|---------|---------|------|
 | `anka-auto-push.timer/.service` | Run `auto_push_branches.sh` — pushes every local branch on the VPS clone to `origin`. RPO ≤ 10 min. | every 10 min | CRITICAL |
 | `anka-failure-watcher.timer/.service` | Run `check_systemd_failures.sh` — Telegram alert on any anka-* service `failed` transition. Flag-file in `/var/lib/anka/failure-flags/` makes alerting idempotent. | every 15 min | CRITICAL |
-| `anka-security-daily.timer/.service` | Run `pipeline/scripts/security/run_daily.sh` — sequences apt status, auth triage, port audit, ssh keys audit, resource watch. Green-tick to Telegram on `errors=0`. | 06:00 IST daily | WARN |
+| `anka-security-daily.timer/.service` | Run `pipeline/scripts/security/run_daily.sh` — sequences apt status, auth triage, port audit, ssh keys audit, resource watch, **venv health**. Green-tick to Telegram on `errors=0`. | 06:00 IST daily | WARN |
 | `anka-security-weekly.timer/.service` | Run `pipeline/scripts/security/weekly_audit.sh` — lynis quick audit + rkhunter check. Logs in `/var/log/anka-security/`. | Sun 04:00 IST | INFO |
 | `anka-terminal.service` | Continuous `uvicorn pipeline.terminal.app:app --host 127.0.0.1 --port 8000`. Restart=on-failure. Foundational for the pairwise audit UI (Gemma4 pilot Tasks 15-16). | continuous | WARN |
+| `anka-bulk-deals.timer/.service` | `python -m pipeline.bulk_deals` — NSE bulk + block deals daily fetch. | 16:30 IST Mon-Fri | INFO |
+| `anka-insider-trades.timer/.service` | `python -m pipeline.insider_trades` — NSE PIT insider disclosures, last 7 days rolling. | 18:30 IST Mon-Fri | INFO |
+| `anka-pattern-scanner-scan.timer/.service` | `python -m pipeline.cli_pattern_scanner scan` — daily F&O 12-pattern scan + Top-10 ranking. Requires `pattern_stats.parquet` from weekly fit. | 16:30 IST Mon-Fri | INFO |
+| `anka-pit-regime-tape.timer/.service` | `pipeline/scripts/capture_pit_regime_tape_forward.py` — freezes today_regime.json into PIT tape forward feed (load-bearing for NEUTRAL_OVERLAY family). | 05:00 IST daily | WARN |
+| `anka-secrsi-capture-opens.timer/.service` | SECRSI 09:16 IST F&O LTP capture (required input for basket-open). | 09:16 IST Mon-Fri | INFO |
+| `anka-secrsi-basket-open.timer/.service` | SECRSI 11:00 IST snapshot + 8-leg basket open. After=anka-secrsi-capture-opens. | 11:00 IST Mon-Fri | INFO |
+| `anka-secrsi-basket-close.timer/.service` | SECRSI 14:30 IST mechanical TIME_STOP close. Single-touch holdout 2026-04-28 → 2026-07-31. | 14:30 IST Mon-Fri | INFO |
+| `anka-gemma4-auto-disable.timer/.service` | Hourly Gemma 4 pilot guardrail — disables a task in llm_routing.json if 24h shadow rubric <90%. | hourly 09–22 IST | INFO |
+| `anka-gemma4-daily-report.timer/.service` | EOD Gemma 4 pilot rubric + pairwise aggregation, Telegram one-liner. | 22:00 IST daily | WARN |
+| `anka-gemma4-health-check.timer/.service` | Daily PONG ping to local Ollama at 127.0.0.1:11434. Service-unit shipped; timer enabled when Ollama install completes. | 05:30 IST daily | WARN |
 
 ### Telegram cred handling
 

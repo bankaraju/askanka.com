@@ -46,9 +46,10 @@ if ! systemctl is-active --quiet ollama; then
 fi
 log "ollama service active"
 
-# 4. Pull Gemma 4 26B-A4B Q4_K_M (~16 GB)
-# Tag verified at https://ollama.com/library — confirm exact tag at runtime.
-MODEL_TAG="${GEMMA4_TAG:-gemma4:26b-a4b-q4_k_m}"
+# 4. Pull Gemma 4 26B (~18 GB; MoE A4B per https://ollama.com/library/gemma4:26b)
+# Ollama only publishes coarse tags (gemma4:26b, gemma4:31b, gemma4:e2b/e4b);
+# the spec's "26B-A4B Q4_K_M" maps to the default `gemma4:26b` blob.
+MODEL_TAG="${GEMMA4_TAG:-gemma4:26b}"
 if ! ollama list 2>/dev/null | grep -q "${MODEL_TAG}"; then
     log "Pulling ${MODEL_TAG} (~16 GB, may take 10-30 min on Contabo network)..."
     ollama pull "${MODEL_TAG}"
