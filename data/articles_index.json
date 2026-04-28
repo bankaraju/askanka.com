@@ -2,6 +2,69 @@
   "articles": [
     {
       "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-hdfcamc-opportunity-lag.md",
+      "headline": "Phase C: HDFCAMC OPPORTUNITY_LAG: post-mortem (-0.71%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-hcltech-opportunity-lag.md",
+      "headline": "Phase C: HCLTECH OPPORTUNITY_LAG: post-mortem (+2.68%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-motilalofs-opportunity-lag.md",
+      "headline": "Phase C: MOTILALOFS OPPORTUNITY_LAG: post-mortem (+0.59%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-nmdc-opportunity-lag.md",
+      "headline": "Phase C: NMDC OPPORTUNITY_LAG: post-mortem (-0.06%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-tataelxsi-opportunity-lag.md",
+      "headline": "Phase C: TATAELXSI OPPORTUNITY_LAG: post-mortem (+1.46%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-recltd-opportunity-lag.md",
+      "headline": "Phase C: RECLTD OPPORTUNITY_LAG: post-mortem (-0.66%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-28-phase-c-iex-opportunity-lag.md",
+      "headline": "Phase C: IEX OPPORTUNITY_LAG: post-mortem (+0.19%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 28, 2026"
+    },
+    {
+      "date": "2026-04-28",
       "segment": "war",
       "filename": "2026-04-28-war.html",
       "headline": "Pakistan's Hormuz Gambit: A Deceptive Peace Offer as India Navigates Trump's Iran Trap",
