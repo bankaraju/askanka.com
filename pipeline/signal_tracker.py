@@ -815,8 +815,18 @@ def close_signal(
     ]
     save_open_signals(open_signals)
 
-    # Add to closed
+    # Idempotent append: if the same signal_id already exists in closed_signals,
+    # the upstream cycle re-detected an exit and re-called close_signal. Keep
+    # the earliest close (first moment of truth) and ignore the re-close. This
+    # prevents the duplicate-CLOSED-rows bug where ZCROSS ticks fired the close
+    # path once per 15-min cycle for hours after the actual exit.
     closed_signals = load_closed_signals()
+    sid = signal.get("signal_id")
+    if sid and any(c.get("signal_id") == sid for c in closed_signals):
+        log.info(
+            f"close_signal: {sid} already in closed_signals — skipping duplicate append"
+        )
+        return signal
     closed_signals.append(signal)
     save_closed_signals(closed_signals)
 
