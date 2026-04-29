@@ -82,6 +82,19 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
     weights = _np.array(weights_data["weights"], dtype=float)
     long_t = float(weights_data["long_threshold"])
     short_t = float(weights_data["short_threshold"])
+    # Stage 2 spec §5: train-time z-stats are REQUIRED to score live.
+    # Pre-fix kickoff JSONs lack these keys; we tolerate their absence
+    # only because the legacy path is exercised by unit-test fixtures
+    # that pre-date the z-score contract — production weights JSONs
+    # written after 2026-04-29-evening always carry both.
+    feature_means = weights_data.get("feature_means")
+    feature_stds  = weights_data.get("feature_stds")
+    if (feature_means is None) ^ (feature_stds is None):
+        log.warning(
+            f"weights at {weights_path} has only one of feature_means/feature_stds; "
+            f"treating as raw-feature legacy fit"
+        )
+        feature_means = feature_stds = None
 
     # Sector mapping: stock symbol → sector index symbol. Single source of truth
     # is in_sample_panel.SECTOR_INDEX_MAP_KITE — both the in-sample panel and the
@@ -130,7 +143,7 @@ def _compute_signals_at(eval_t: datetime, univ: Dict) -> List[Dict]:
             today_pcr=today_pcr, two_days_ago_pcr=two_d_pcr,
             volume_history=history,
         )
-        s = score.apply(feats, weights)
+        s = score.apply(feats, weights, feature_means=feature_means, feature_stds=feature_stds)
         decision_str = score.decision(s, long_t, short_t)
         # Entry price — last close before eval_t
         prior = bars[bars["timestamp"] < eval_t]
@@ -376,6 +389,13 @@ def recalibrate(pool: str) -> None:
         "rolling_window_days": int(fit["rolling_window_days"]),
         "pool": pool,
         "fit_date": eval_date_iso,
+        # Stage 2 spec §5: persist train-time z-stats so the live engine
+        # applies the SAME transform at scoring time. Missing stats at
+        # runtime is a contract violation — runner._compute_signals_at
+        # raises rather than silently scoring raw features.
+        "feature_means": fit["feature_means"],
+        "feature_stds":  fit["feature_stds"],
+        "feature_names": fit["feature_names"],
     }
     weights_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     latest_path = WEIGHTS_DIR / f"latest_{pool}.json"

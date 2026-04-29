@@ -6,10 +6,19 @@ Per spec §5:
 - Rolling window 10 trading days, sliding by 1 day across in-sample.
 - Reproducible: fixed seed yields identical fit.
 - Pooled fit: one weight vector across all instruments in the pool.
+
+Z-scoring contract (spec §5 — was missing pre-2026-04-29-evening):
+- ``run`` computes per-feature mean/std on the in-sample panel
+- All features are z-scored BEFORE the optimizer sees them
+- The fitted weights are therefore weights on z-scored inputs
+- The mean/std vectors are persisted in the returned payload so the
+  live engine can apply the SAME transform at decision time
+- The downstream consumer (runner._compute_signals_at) MUST z-score
+  using these saved stats; raw-feature scoring is a contract violation
 """
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -20,6 +29,46 @@ LAMBDA_DD = 1.0
 ROLLING_WINDOW_DAYS = 10
 WEIGHT_BOUND = 2.0
 FEATURE_COLS = ["f1", "f2", "f3", "f4", "f5", "f6"]
+# Canonical feature names — must mirror score.FEATURE_ORDER positionally.
+# Used as keys in the persisted feature_means / feature_stds dicts so the
+# live engine can recover the right transform regardless of column order.
+FEATURE_NAMES = (
+    "delta_pcr_2d",
+    "orb_15min",
+    "volume_z",
+    "vwap_dev",
+    "rs_vs_sector",
+    "trend_slope_15min",
+)
+
+
+def compute_zstats(df: pd.DataFrame) -> Tuple[Dict[str, float], Dict[str, float]]:
+    """Per-feature population mean and population std (ddof=0).
+
+    Population (ddof=0) chosen so the train-time z-score is exactly
+    reproducible at scoring time without bias-correction trickery.
+    Zero-variance features get std=1.0 — this collapses their column
+    to a constant zero z-score, which the optimizer naturally
+    down-weights to zero (a constant column has no objective gradient).
+    """
+    means: Dict[str, float] = {}
+    stds: Dict[str, float] = {}
+    for col, name in zip(FEATURE_COLS, FEATURE_NAMES):
+        m = float(df[col].mean())
+        s = float(df[col].std(ddof=0))
+        if s == 0.0 or not np.isfinite(s):
+            s = 1.0  # collapse to constant-zero column
+        means[name] = m
+        stds[name] = s
+    return means, stds
+
+
+def apply_zscore(df: pd.DataFrame, means: Dict[str, float], stds: Dict[str, float]) -> pd.DataFrame:
+    """Return a new dataframe with f1..f6 z-scored using the supplied stats."""
+    out = df.copy()
+    for col, name in zip(FEATURE_COLS, FEATURE_NAMES):
+        out[col] = (out[col] - means[name]) / stds[name]
+    return out
 
 
 def objective(
@@ -100,16 +149,25 @@ def run(
               "long_threshold": float, "short_threshold": float, "seed": int,
               "rolling_window_days": int}
     """
+    # Stage 2 (autonomous_intraday_research_framework.md): z-score features
+    # ONCE on the in-sample panel and persist the train-time mean/std so the
+    # live engine applies the same transform. Earlier kickoff fits operated
+    # on raw features and produced a scale-biased fit (volume_z dominated
+    # because the other 5 features were ~3 orders of magnitude smaller in
+    # raw units). This call MUST happen before the optimizer iterates.
+    means, stds = compute_zstats(df)
+    df_z = apply_zscore(df, means, stds)
+
     rng = np.random.default_rng(seed)
     best = {"weights": None, "objective": float("-inf")}
     for _ in range(n_iters):
         w = rng.uniform(-WEIGHT_BOUND, WEIGHT_BOUND, size=6)
-        j = objective(w, df, rolling_window_days=rolling_window_days)
+        j = objective(w, df_z, rolling_window_days=rolling_window_days)
         if j > best["objective"]:
             best = {"weights": w, "objective": j}
     if best["weights"] is None:
         raise RuntimeError("Random search failed to find any weight vector — empty in-sample?")
-    feat = df[FEATURE_COLS].to_numpy()
+    feat = df_z[FEATURE_COLS].to_numpy()
     scores = feat @ best["weights"]
     long_thresh = float(np.quantile(scores, 0.7))
     short_thresh = float(np.quantile(scores, 0.3))
@@ -125,4 +183,7 @@ def run(
         "short_threshold": short_thresh,
         "seed": seed,
         "rolling_window_days": rolling_window_days,
+        "feature_means": means,
+        "feature_stds": stds,
+        "feature_names": list(FEATURE_NAMES),
     }
