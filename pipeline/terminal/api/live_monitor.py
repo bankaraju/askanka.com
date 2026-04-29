@@ -356,6 +356,8 @@ def _enrich_h001_row(row: dict, ltps: dict[str, float],
         "regime": row.get("regime"),
         "regime_gate_pass": row.get("regime_gate_pass") == "True",
         "sigma_bucket": row.get("sigma_bucket"),
+        "vwap_dev_signed_pct": row.get("vwap_dev_signed_pct") or None,
+        "filter_tag": row.get("filter_tag") or "WATCH",
         "tag": "H-001" + ("/H-002" if row.get("regime_gate_pass") == "True" else ""),
     }
 

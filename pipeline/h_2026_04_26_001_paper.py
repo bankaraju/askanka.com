@@ -43,15 +43,19 @@ log = logging.getLogger("anka.h_2026_04_26_001_paper")
 _IST = timezone(timedelta(hours=5, minutes=30))
 _PIPELINE_DIR = Path(__file__).resolve().parent
 _BREAKS_PATH = _PIPELINE_DIR / "data" / "correlation_breaks.json"
-_REGIME_PATH = _PIPELINE_DIR / "data" / "regime_history.csv"
+_TODAY_REGIME_PATH = _PIPELINE_DIR / "data" / "today_regime.json"
 _RECS_PATH = _PIPELINE_DIR / "data" / "research" / "h_2026_04_26_001" / "recommendations.csv"
 
-# Spec section 14: locked column order
+# Spec section 14: locked column order. Two display-only columns appended
+# 2026-04-29 — vwap_dev_signed_pct + filter_tag (KEEP/DROP/WATCH). Tag is
+# informational during the holdout per §10.4 strict; existing rows that
+# pre-date the addition write empty strings for both.
 _CSV_COLUMNS = [
     "signal_id", "ticker", "date", "sigma_bucket", "regime", "sectoral_index",
     "side", "classification", "regime_gate_pass", "entry_time", "entry_px",
     "atr_14", "stop_px", "trail_arm_px", "trail_dist_pct", "exit_time",
     "exit_px", "exit_reason", "pnl_pct", "status",
+    "vwap_dev_signed_pct", "filter_tag",
 ]
 
 # Spec section 4-5 locked parameters
@@ -84,19 +88,25 @@ def _compute_atr_stop(symbol: str, direction: str) -> dict:
     return compute_atr_stop(symbol, direction, window=14, mult=2.0)
 
 
-def _regime_for_date(date_str: str) -> str:
-    """V4 regime label for `date_str`; 'UNKNOWN' if missing."""
-    if not _REGIME_PATH.is_file():
-        log.warning("regime_history.csv not found at %s", _REGIME_PATH)
+def _load_today_regime_zone() -> str:
+    """Today's regime zone from the live engine's today_regime.json.
+
+    Canonical live source — written by AnkaETFSignal at 04:45 IST. Returns
+    'UNKNOWN' when the file is missing or zone is absent. Not a fallback to
+    regime_history.csv: that file is built with hindsight v2 weights (see
+    memory/reference_regime_history_csv_contamination.md) and is unsuitable
+    for live trade-tagging.
+    """
+    if not _TODAY_REGIME_PATH.is_file():
+        log.warning("today_regime.json not found at %s", _TODAY_REGIME_PATH)
         return "UNKNOWN"
     try:
-        with _REGIME_PATH.open("r", encoding="utf-8", newline="") as f:
-            for row in csv.DictReader(f):
-                if row.get("date") == date_str:
-                    return row.get("regime_zone", "UNKNOWN") or "UNKNOWN"
-    except Exception as exc:
-        log.warning("regime_history read failed: %s", exc)
-    return "UNKNOWN"
+        d = json.loads(_TODAY_REGIME_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        log.warning("today_regime.json read failed: %s", exc)
+        return "UNKNOWN"
+    zone = d.get("zone") or d.get("regime") or d.get("regime_zone")
+    return zone or "UNKNOWN"
 
 
 # ---- Pure helpers ---------------------------------------------------------
@@ -176,6 +186,23 @@ def _append_rec(row: dict) -> None:
 
 # ---- OPEN command ---------------------------------------------------------
 
+def _compute_filter_tag(symbol: str, side: str) -> tuple[str, str]:
+    """Return (vwap_dev_signed_pct_str, filter_tag) for the row.
+
+    Display-only — never raises; on any error returns ("", "WATCH"). The
+    H-001 holdout (§10.4 strict) does not gate on this tag.
+    """
+    try:
+        from pipeline.research.vwap_filter import compute_filter_tag
+        dev, tag = compute_filter_tag(symbol, side)
+        if dev is None:
+            return "", tag
+        return f"{dev * 100.0:.4f}", tag
+    except Exception as exc:
+        log.warning("vwap_filter failed for %s/%s: %s -- WATCH", symbol, side, exc)
+        return "", "WATCH"
+
+
 def _build_open_row(signal: dict, entry_px: float, atr_info: dict,
                     regime: str, today: str, now: str) -> dict:
     z = float(signal["z_score"])
@@ -185,6 +212,7 @@ def _build_open_row(signal: dict, entry_px: float, atr_info: dict,
                       or signal.get("sector_index") or "UNKNOWN")
     atr_14 = atr_info.get("atr_14")
     stop_px = atr_info.get("stop_price")
+    vwap_dev_str, filter_tag = _compute_filter_tag(ticker, side)
     return {
         "signal_id": f"BRK-{today}-{ticker}",
         "ticker": ticker, "date": today,
@@ -199,6 +227,7 @@ def _build_open_row(signal: dict, entry_px: float, atr_info: dict,
         "trail_dist_pct": f"{_TRAIL_DIST_PCT:.2f}",
         "exit_time": "", "exit_px": "", "exit_reason": "",
         "pnl_pct": "", "status": "OPEN",
+        "vwap_dev_signed_pct": vwap_dev_str, "filter_tag": filter_tag,
     }
 
 
@@ -235,7 +264,7 @@ def cmd_open() -> int:
     log.info("fetching LTP for %d >=%.1f-sigma symbols", len(syms), _SIGMA_THRESHOLD)
     ltp = _fetch_ltp(syms)
 
-    regime = _regime_for_date(today)
+    regime = _load_today_regime_zone()
     now = _now_iso()
     n_written = 0
     for sym in syms:
