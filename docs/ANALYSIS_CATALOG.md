@@ -140,6 +140,7 @@ Each row has a status, last verdict, and code path. Three states matter:
 | H-2026-04-25-002 (etf-stock-tail) | DEAD | 2026-04-26 | §9A FRAGILE 0/6, §9B margin negative |
 | ETF v2 (62.3% claim) | RETIRED | 2026-04-26 | v3-CURATED-30 supersedes (54.6→53.2→52.2% no decay) |
 | Phase C OPPORTUNITY_LAG slice (when read live) | KILLED | 2026-04-23 | both slice hypotheses FAIL Bonferroni; live now routes only LAG |
+| 248 FETCH_FAILED replay rows (recovery) | UNRECOVERABLE | 2026-04-29 | All 5 dates are market holidays (Holi, Eid, Mahavir Jayanti, Ambedkar Jayanti). Replay calendar bug — fires Phase C signals on closed days. 388 is the complete sample. See `memory/reference_replay_calendar_bug_2026_04_29.md`. |
 | V1 fixed-batch (intraday data-driven, twin) | POSTPONED | 2026-04-29 | LOO + walk-forward dispersion didn't survive train/test |
 
 ---
