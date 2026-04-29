@@ -18,6 +18,7 @@ _CADENCE_BASE = {
     "intraday": (15 * 60, 30 * 60),       # 15 min expected, 30 min base grace
     "daily":    (24 * 3600, 4 * 3600),    # 24 h, 4 h base grace
     "weekly":   (7 * 86400, 1 * 86400),   # 7 d, 1 d base grace
+    "monthly":  (30 * 86400, 4 * 86400),  # 30 d, 4 d base grace
 }
 
 _MARKET_OPEN = time(9, 15)

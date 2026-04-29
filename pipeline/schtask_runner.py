@@ -10,6 +10,13 @@ if _lib not in sys.path:
 _pipeline = os.path.dirname(os.path.abspath(__file__))
 if _pipeline not in sys.path:
     sys.path.insert(0, _pipeline)
+
+# Repo root must be on sys.path so `from pipeline.X import Y` resolves.
+# Without this, scripts launched via runpy.run_path that touch any
+# pipeline.* sub-package fail with ModuleNotFoundError: No module named 'pipeline'.
+_repo_root = os.path.dirname(_pipeline)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
 os.chdir(_pipeline)
 
 if __name__ == "__main__":

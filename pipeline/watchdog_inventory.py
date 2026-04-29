@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 VALID_TIERS = {"critical", "warn", "info"}
-VALID_CADENCES = {"intraday", "daily", "weekly"}
+VALID_CADENCES = {"intraday", "daily", "weekly", "monthly"}
 REQUIRED_TASK_FIELDS = {
     "task_name", "tier", "cadence_class", "outputs", "grace_multiplier", "notes",
 }
