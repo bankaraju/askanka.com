@@ -46,6 +46,23 @@ Each row has a status, last verdict, and code path. Three states matter:
 - **Status:** PENDING — backfill in flight 2026-04-29
 - **Plan:** Add BB(20,2) z-position at 09:30 to `neutral_cohort_tracker`. Test if "long-fade when price below lower band" creates additional PUBLISH cell.
 
+### A.4. Panel-wide intraday TA descriptive backtest
+- **Status:** PUBLISH (descriptive only — NOT a forward edge claim, NOT pre-registered)
+- **Code:** `pipeline/research/intraday_panel_v1.py`
+- **Sample:** 8,223 (ticker, day) rows = 273 F&O × ~38 trading days (2026-03-02 → 2026-04-29)
+- **Ledger:** `pipeline/data/research/intraday_panel_v1/{panel,cells,summary}_<date>.{parquet,csv,json}`
+- **Question answered:** "For the average F&O stock, what does fading the 09:15→09:45 move into 14:30 look like, conditional on VWAP/ORB/slope/volume tertiles?"
+- **Headline cells (FADE rule, hold 09:45 → 14:30):**
+  - ALL/fade: 52.72% wins, +0.104% mean — universe baseline
+  - intraday_slope_pct_HI/fade: 55.38%, +0.175%, n=2,741 — fade strongest momentum
+  - vwap_dev_signed_pct_HI/fade: 54.89%, +0.157%, n=2,742 — fade biggest VWAP extensions
+  - orb_15min_pct_LO/fade: 54.70%, +0.220%, n=2,742 — fade biggest down-opens
+  - side=LONG+vwap_dev_signed_pct_LONG_HI/fade: 55.93%, +0.130%, n=1,273
+  - All FOLLOW cells underperform (mirror image by construction)
+- **Compare with H-001 NEUTRAL filter (A.1):** H-001 |z|≥2σ trigger + VWAP cooperation hits 77% on n=35 forward; the panel says the universe baseline is only ~3pp above coin-flip. The H-001 trigger is doing the heavy lifting.
+- **What this is NOT:** This is NOT a tradeable signal. No costs, no slippage, no regime conditioning, no entry trigger. Treat as a descriptive baseline that contextualizes the H-001 edge claim.
+- **Missing:** Regime conditioning (regime_history.csv contaminated per `memory/reference_regime_history_csv_contamination.md`). Rebuild with PIT regime tape from 2026-04-27 forward when N permits.
+
 ---
 
 ## B. Forward paper hypotheses (single-touch holdouts)

@@ -200,6 +200,25 @@ For each dataset row, you can answer:
 
 ---
 
+## 8a. Intraday panel v1 (descriptive, all-F&O)
+
+**Path:** `pipeline/data/research/intraday_panel_v1/{panel,cells,summary}_<date>.{parquet,csv,json}`
+
+**Schema (panel):** ticker, date, open_px, orb_close_px (09:45), exit_px (14:30), orb_15min_pct, vwap_dev_pct, intraday_slope_pct, volume_z, hold_pct.
+
+**Schema (cells):** cell, N, win_pct, mean_pnl_pct, median_pnl_pct, status, rule (follow|fade).
+
+**Source:** Aggregation of §1 minute bars over 273 F&O tickers × ~38 trading days.
+
+**Refresh:** On-demand via `python -m pipeline.research.intraday_panel_v1 --print`. Re-run after each minute-bar cache refresh.
+
+**Used by:**
+- `docs/ANALYSIS_CATALOG.md` §A.4 — universe-level baseline that contextualizes H-001 NEUTRAL filter cells
+
+**Quality gate:** PASS as research artifact. FAIL as a forward edge claim — not pre-registered, not regime-conditioned (regime_history.csv contamination), no costs/slippage. Treat as descriptive only.
+
+---
+
 ## 9. Other ledgers (lower priority)
 
 - **SECRSI** (`h_2026_04_27_secrsi/recommendations.csv`) — sector-RS market-neutral pair, holdout 2026-04-28 → 2026-07-31
