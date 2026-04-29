@@ -183,7 +183,7 @@ def resolve_token(symbol: str) -> Optional[int]:
 
 def get_kite():
     """Return an authenticated KiteConnect instance (auto-refreshes token)."""
-    from kite_auth import get_kite_client
+    from pipeline.kite_auth import get_kite_client
     return get_kite_client()
 
 
