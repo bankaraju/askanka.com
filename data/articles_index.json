@@ -170,24 +170,6 @@
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 22, 2026"
-    },
-    {
-      "date": "2026-04-21",
-      "segment": "war",
-      "filename": "2026-04-21-war.html",
-      "headline": "Jeffries' Blunt Question: Why is Hegseth Still Around as Trump's Seizures Escalate?",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 21, 2026"
-    },
-    {
-      "date": "2026-04-21",
-      "segment": "epstein",
-      "filename": "2026-04-21-epstein.html",
-      "headline": "Kash Patel's Bombshell Threat: The Epstein Cover-up Escalates Towards Imminent Arrests",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 21, 2026"
     }
   ]
 }
