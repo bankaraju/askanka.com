@@ -108,15 +108,21 @@ class TestUpdateState:
 
 
 class TestBuildDigest:
-    def test_clean_digest_has_all_section_headers(self):
+    def test_clean_digest_has_status_header_and_no_buckets(self):
+        # Quiet cycle: no NEW, no ESCALATED, no RESOLVED, no ONGOING.
+        # Header shows the four counts; no bucket sections render when empty.
         state = State(last_run="", active_issues={})
         digest = build_digest(
             run_label="Gate run", now_iso="2026-04-16T09:20:00+05:30",
             current_issues=[], resolved_keys=[], state=state, is_new={},
         )
-        assert "CRITICAL (0)" in digest
-        assert "WARN (0)" in digest
-        assert "DRIFT (0)" in digest
+        assert "NEW: 0" in digest
+        assert "ESCALATED: 0" in digest
+        assert "RESOLVED: 0" in digest
+        assert "ONGOING: 0" in digest
+        # No bucket subsections when empty (silence is the default)
+        assert "CRITICAL (" not in digest
+        assert "WARN (" not in digest
 
     def test_new_critical_renders_loud_block(self):
         i = Issue(
@@ -136,8 +142,12 @@ class TestBuildDigest:
         )
         assert "AnkaReverseRegimeProfile" in digest
         assert "42h old" in digest
+        assert "NEW: 1" in digest
 
-    def test_persistent_issue_renders_compact_reminder(self):
+    def test_persistent_issue_suppressed_unless_escalated(self):
+        # Steady-state issue (alert_count=3, not at escalation threshold) MUST NOT
+        # appear by name in the digest. It is counted in the ONGOING header only.
+        # This is the core anti-spam reform — see feedback_watchdog_must_be_actionable.
         i = Issue(
             kind=IssueKind.OUTPUT_STALE, task_name="AnkaMorningScan",
             output_path="data/global_regime.json", detail="",
@@ -152,7 +162,11 @@ class TestBuildDigest:
             current_issues=[i], resolved_keys=[], state=state,
             is_new={key: False},
         )
-        assert "still stale" in digest.lower() or "3rd run" in digest or "run 3" in digest.lower()
+        # Suppressed: name does not appear, count is rolled into ONGOING
+        assert "AnkaMorningScan" not in digest
+        assert "ONGOING: 1" in digest
+        assert "NEW: 0" in digest
+        assert "ESCALATED: 0" in digest
 
     def test_escalation_at_count_6(self):
         i = Issue(
@@ -214,5 +228,65 @@ class TestBuildDigest:
         )
         # Info-tier issues must not appear in any section
         assert "AnkaBackfill" not in digest
-        # And must not be counted in header total
-        assert "0 issue" in digest
+        # And must not be counted in any header bucket
+        assert "NEW: 0" in digest
+        assert "ONGOING: 0" in digest
+
+    def test_fanout_collapse_by_output_path(self):
+        # When N tasks all flag the same stale output_path, collapse to a single
+        # source-of-truth line "(affects N tasks: A, B, +M more)" rather than
+        # rendering N separate alerts. Root cause once, not fan-out 25 times.
+        common_path = "pipeline/data/technicals.json"
+        consumers = [
+            "AnkaIntraday0930", "AnkaIntraday0945", "AnkaIntraday1000",
+            "AnkaIntraday1015", "AnkaSignal0945",
+        ]
+        issues = [
+            Issue(
+                kind=IssueKind.OUTPUT_STALE, task_name=t,
+                output_path=common_path, detail="mtime 2026-04-29 12:00 (23h old)",
+                tier="critical",
+            )
+            for t in consumers
+        ]
+        # All NEW this cycle
+        is_new = {stable_key(i): True for i in issues}
+        state = State(last_run="", active_issues={stable_key(i): {
+            "first_seen": "", "last_seen": "", "alert_count": 1,
+        } for i in issues})
+        digest = build_digest(
+            run_label="Gate run", now_iso="2026-04-30T11:00:00+05:30",
+            current_issues=issues, resolved_keys=[], state=state, is_new=is_new,
+        )
+        # The path appears exactly once in the body (header + footer mentions allowed)
+        body = digest.split("CRITICAL")[1].split("RESOLVED")[0] if "CRITICAL" in digest else digest
+        assert body.count(common_path) == 1, f"path should appear once in CRITICAL body, got {body.count(common_path)}\n{digest}"
+        # The N-affected line names enough consumers to be useful
+        assert "affects 5 tasks" in digest
+        assert "AnkaIntraday0930" in digest
+
+    def test_status_header_lists_run_label_and_counts(self):
+        # Header line on every digest carries the four-tuple of counts so the
+        # user can scan one line and know if they need to dig in.
+        i_new = Issue(IssueKind.OUTPUT_STALE, "TaskNew", "p1.json", "", "critical")
+        i_ongoing = Issue(IssueKind.OUTPUT_STALE, "TaskOngoing", "p2.json", "", "critical")
+        state = State(last_run="", active_issues={
+            stable_key(i_new): {"first_seen": "", "last_seen": "", "alert_count": 1},
+            stable_key(i_ongoing): {"first_seen": "", "last_seen": "", "alert_count": 4},
+        })
+        digest = build_digest(
+            run_label="Intraday check", now_iso="2026-04-30T11:00:00+05:30",
+            current_issues=[i_new, i_ongoing],
+            resolved_keys=["TaskGone||OUTPUT_STALE"],
+            state=state,
+            is_new={stable_key(i_new): True, stable_key(i_ongoing): False},
+        )
+        assert "Intraday check" in digest
+        assert "NEW: 1" in digest
+        assert "ESCALATED: 0" in digest
+        assert "RESOLVED: 1" in digest
+        assert "ONGOING: 1" in digest
+        # New is loud
+        assert "TaskNew" in digest
+        # Ongoing is suppressed
+        assert "TaskOngoing" not in digest

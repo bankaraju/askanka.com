@@ -123,44 +123,147 @@ def build_digest(
 ) -> str:
     """Assemble the Telegram-ready digest message.
 
-    now_iso must be an ISO-8601 timestamp starting "YYYY-MM-DDTHH:MM:..."
-    (e.g. datetime.isoformat() on an aware datetime). Only the first 16
-    characters are rendered in the header.
+    Reform 2026-04-30: digest is NEW + ESCALATED + RESOLVED only. Steady-state
+    "ongoing" issues are tracked in pipeline/data/watchdog_state.json but NOT
+    re-printed every cycle — that produced 32 alerts/hour the user ignored, and
+    real fires (silent CRITICAL OUTPUT_MISSING) drowned in the noise.
+
+    Header line carries NEW/ESCALATED/RESOLVED/ONGOING counts so the user can
+    confirm the watchdog is alive every cycle without scrolling.
+
+    Fan-out collapse: when N tasks share a stale output_path (one source-of-truth
+    feeding many consumers), render the path once with "(affects N tasks: ...)"
+    rather than N separate alerts.
+
+    now_iso must be an ISO-8601 timestamp starting "YYYY-MM-DDTHH:MM:..." —
+    only the first 16 characters render in the header.
     """
-    by_bucket: dict[str, list[Issue]] = {"CRITICAL": [], "WARN": [], "DRIFT": []}
+    # ----- Filter to renderable issues (drop info-tier; ORPHAN/GHOST -> DRIFT bucket)
+    renderable: list[Issue] = []
     for issue in current_issues:
         if issue.kind in (IssueKind.ORPHAN_TASK, IssueKind.INVENTORY_GHOST):
-            by_bucket["DRIFT"].append(issue)
+            renderable.append(issue)
             continue
         tier = (issue.tier or "info").upper()
         if tier in ("CRITICAL", "WARN"):
-            by_bucket[tier].append(issue)
-        # info-tier issues are logged but not surfaced in the Telegram digest
+            renderable.append(issue)
 
-    total = sum(len(v) for v in by_bucket.values())
-    header = f"🚨 Anka Watchdog — {now_iso[:16].replace('T', ' ')} IST\n{run_label} • {total} issue{'s' if total != 1 else ''}"
+    # ----- Partition into to-show (NEW or ESCALATED-this-cycle) vs ongoing (suppressed)
+    to_show: list[tuple[Issue, int, bool]] = []  # (issue, alert_count, is_new_flag)
+    ongoing_count = 0
+    new_n = 0
+    esc_n = 0
+    for issue in renderable:
+        key = stable_key(issue)
+        count = state.active_issues.get(key, {}).get("alert_count", 1)
+        is_new_flag = is_new.get(key, True)
+        is_escalated = (
+            (not is_new_flag)
+            and count >= ESCALATION_COUNT
+            and count % ESCALATION_COUNT == 0
+        )
+        if is_new_flag:
+            to_show.append((issue, count, True))
+            new_n += 1
+        elif is_escalated:
+            to_show.append((issue, count, False))
+            esc_n += 1
+        else:
+            ongoing_count += 1
 
-    sections = [header, ""]
+    # ----- Bucket the to-show issues
+    def _bucket_for(issue: Issue) -> str:
+        if issue.kind in (IssueKind.ORPHAN_TASK, IssueKind.INVENTORY_GHOST):
+            return "DRIFT"
+        return (issue.tier or "info").upper()
+
+    by_bucket: dict[str, list[tuple[Issue, int, bool]]] = {
+        "CRITICAL": [], "WARN": [], "DRIFT": [],
+    }
+    for issue, count, is_new_flag in to_show:
+        by_bucket[_bucket_for(issue)].append((issue, count, is_new_flag))
+
+    # ----- Header: status line scannable in one glance
+    header = (
+        f"🚨 Anka Watchdog — {now_iso[:16].replace('T', ' ')} IST\n"
+        f"{run_label} • NEW: {new_n} • ESCALATED: {esc_n} "
+        f"• RESOLVED: {len(resolved_keys)} • ONGOING: {ongoing_count}"
+    )
+
+    sections = [header]
+
+    # ----- Bucket bodies (only emit non-empty buckets)
     for bucket in ("CRITICAL", "WARN", "DRIFT"):
         items = by_bucket[bucket]
+        if not items:
+            continue
+        sections.append("")
         sections.append(f"{bucket} ({len(items)}):")
-        for issue in items:
-            key = stable_key(issue)
-            count = state.active_issues.get(key, {}).get("alert_count", 1)
-            if is_new.get(key, True):
-                sections.append(_format_issue_loud(issue))
-            elif count >= ESCALATION_COUNT and count % ESCALATION_COUNT == 0:
-                sections.append(f"  ⚠️ STILL BROKEN AFTER {count // 2} DAYS")
+
+        # Fan-out collapse: group OUTPUT_STALE/OUTPUT_MISSING by output_path
+        # so a single stale source-of-truth doesn't print N consumer alerts.
+        path_groups: dict[str, list[tuple[Issue, int, bool]]] = {}
+        per_task: list[tuple[Issue, int, bool]] = []
+        for issue, count, is_new_flag in items:
+            if (
+                issue.kind in (IssueKind.OUTPUT_STALE, IssueKind.OUTPUT_MISSING)
+                and issue.output_path
+            ):
+                path_groups.setdefault(issue.output_path, []).append(
+                    (issue, count, is_new_flag)
+                )
+            else:
+                per_task.append((issue, count, is_new_flag))
+
+        for path, group in path_groups.items():
+            if len(group) == 1:
+                issue, count, is_new_flag = group[0]
+                if not is_new_flag:
+                    sections.append(f"  ⚠️ STILL BROKEN — run {count}")
                 sections.append(_format_issue_loud(issue))
             else:
-                sections.append(_format_issue_compact(issue, count))
-        sections.append("")
+                # Many consumers, one root cause — render the path once.
+                sample = group[0][0]
+                kind_str = sample.kind.value.lower().replace("_", " ")
+                task_names = sorted({i.task_name for i, _, _ in group})
+                shown = task_names[:3]
+                more = len(task_names) - len(shown)
+                tail = f", +{more} more" if more > 0 else ""
+                # If any in the group is escalated, surface that
+                any_esc = any(
+                    (not new_flag) and count >= ESCALATION_COUNT
+                    and count % ESCALATION_COUNT == 0
+                    for _, count, new_flag in group
+                )
+                if any_esc:
+                    sections.append("  ⚠️ STILL BROKEN")
+                sections.append(
+                    f"  • {kind_str}: {sample.output_path}  {sample.detail}".rstrip()
+                )
+                sections.append(
+                    f"    affects {len(group)} tasks: {', '.join(shown)}{tail}"
+                )
 
+        for issue, count, is_new_flag in per_task:
+            if not is_new_flag:
+                sections.append(f"  ⚠️ STILL BROKEN — run {count}")
+            sections.append(_format_issue_loud(issue))
+
+    # ----- Resolved tail
     if resolved_keys:
+        sections.append("")
         sections.append(f"RESOLVED ({len(resolved_keys)}):")
         for key in resolved_keys:
             task_name = key.split("|")[0]
             sections.append(f"  ✅ {task_name} — fresh again")
+
+    # ----- Suppressed-ongoing footer (for trust: prove the watchdog still tracks)
+    if ongoing_count > 0:
+        sections.append("")
+        sections.append(
+            f"({ongoing_count} ongoing issue{'s' if ongoing_count != 1 else ''} "
+            f"suppressed — see pipeline/data/watchdog_state.json)"
+        )
 
     return "\n".join(sections).rstrip() + "\n"
 
