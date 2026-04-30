@@ -213,8 +213,7 @@ def cmd_close(date_override: str | None = None) -> int:
     from pipeline.research.phase_c_backtest import live_paper
     date_str = date_override or _date.today().isoformat()
     ledger = live_paper._load()  # noqa: SLF001 — intentional reuse
-    open_syms = sorted({e["symbol"] for e in ledger
-                        if e["date"] == date_str and e["status"] == "OPEN"})
+    open_syms = sorted({e["symbol"] for e in ledger if e["status"] == "OPEN"})
     if not open_syms:
         log.info("no OPEN entries for %s; nothing to close", date_str)
         return 0

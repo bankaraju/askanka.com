@@ -113,7 +113,7 @@ def record_opens(signals: pd.DataFrame) -> int:
 
 
 def close_at_1430(date_str: str, exit_prices: dict[str, float]) -> int:
-    """Mechanically close all OPEN entries for ``date_str`` at supplied prices.
+    """Mechanically close every OPEN entry at the supplied prices.
 
     LONG P&L: ``(exit - entry) / entry * notional``.
     SHORT P&L: ``(entry - exit) / entry * notional`` (signed via direction).
@@ -123,9 +123,10 @@ def close_at_1430(date_str: str, exit_prices: dict[str, float]) -> int:
     Symbols with no entry in ``exit_prices`` are skipped silently and a
     debug-level message is logged so an operator can audit gaps.
 
-    Args:
-        date_str: The trade date (``YYYY-MM-DD``) whose OPEN entries to close.
-        exit_prices: Mapping ``{symbol: 14:30 IST exit price}``.
+    Why no date filter: TIME_STOP semantics (spec §5) require flattening every
+    open paper position at 14:30 IST. Rows whose ``date`` is older than today
+    (manual VERIFY entries, late-stamped scans) would otherwise strand. The
+    ``date_str`` argument is retained as the exit-timestamp source, not a filter.
 
     Returns:
         Number of entries transitioned from OPEN to CLOSED.
@@ -133,7 +134,7 @@ def close_at_1430(date_str: str, exit_prices: dict[str, float]) -> int:
     ledger = _load()
     closed = 0
     for entry in ledger:
-        if entry["date"] != date_str or entry["status"] != "OPEN":
+        if entry["status"] != "OPEN":
             continue
         sym = entry["symbol"]
         if sym not in exit_prices:

@@ -70,7 +70,14 @@ def test_record_opens_with_empty_dataframe_returns_zero(tmp_path, monkeypatch):
     assert not (tmp_path / "ledger.json").exists()
 
 
-def test_close_at_1430_no_matching_dates_returns_zero(tmp_path, monkeypatch):
+def test_close_at_1430_closes_open_rows_regardless_of_date(tmp_path, monkeypatch):
+    """TIME_STOP semantics: 14:30 sweep flattens EVERY open row.
+
+    Regression for 2026-04-30 stranded-rows bug: cmd_close used to filter by
+    date, which left manual-VERIFY rows (signal_time after 14:30 of their
+    open-day) unreachable forever. ``date_str`` is now an exit-timestamp
+    only, never a filter.
+    """
     monkeypatch.setattr(live_paper, "_LEDGER_PATH", tmp_path / "ledger.json")
     sig = pd.DataFrame([{
         "date": "2026-04-20", "signal_time": "2026-04-20 09:30:00", "symbol": "A",
@@ -79,7 +86,10 @@ def test_close_at_1430_no_matching_dates_returns_zero(tmp_path, monkeypatch):
     }])
     live_paper.record_opens(sig)
     n = live_paper.close_at_1430("2026-04-21", exit_prices={"A": 102.0})
-    assert n == 0
+    assert n == 1
+    data = json.loads((tmp_path / "ledger.json").read_text(encoding="utf-8"))
+    assert data[0]["status"] == "CLOSED"
+    assert data[0]["exit_time"] == "2026-04-21 14:30:00"
 
 
 def test_close_at_1430_symbol_missing_from_exit_prices_skipped(tmp_path, monkeypatch):
