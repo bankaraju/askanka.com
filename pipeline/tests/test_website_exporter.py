@@ -63,7 +63,11 @@ def test_live_status_only_positions_and_fragility(tmp_path, monkeypatch):
     pos = out["positions"][0]
     # Production renders cryptic names (see _CRYPTIC_NAMES in website_exporter)
     assert pos["spread_name"] == "Sovereign Shield Alpha"
-    assert pos["spread_pnl_pct"] == 11.14
+    # spread_pnl_pct is now always re-computed from per-leg current/pnl_pct in
+    # this same response (post-2026-04-30 PETRONET contradiction fix). The old
+    # path preferred the tracker's stale `cumulative` field when non-zero,
+    # which let the spread total disagree with the leg numbers shown beside it.
+    assert pos["spread_pnl_pct"] == 30.91
 
 
 from datetime import datetime, timedelta, timezone

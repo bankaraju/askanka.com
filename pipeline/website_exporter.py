@@ -378,10 +378,23 @@ def export_live_status() -> dict:
             return sum(pnls) / len(pnls) if pnls else 0.0
 
         computed_spread_pnl = round(_avg(long_mtm) + _avg(short_mtm), 2)
-        # Prefer tracker's cumulative if it has a non-zero value; fall back to MTM.
-        cumulative = dl.get("cumulative") if dl.get("cumulative") else computed_spread_pnl
+        # spread_pnl_pct must agree with the per-leg current/pnl_pct in this same
+        # response — otherwise the UI shows entry→entry on the leg and a non-zero
+        # P&L on the spread, which is the 2026-04-30 PETRONET ₹278.45→₹278.45/-0.92%
+        # contradiction (#75). signal_tracker writes _data_levels.cumulative from
+        # an earlier intraday cycle's LTP fetch; reusing that here while the legs
+        # show today's fresh fetch is what desyncs them. Always use the freshly
+        # computed value so all three views (entry, current, P&L) agree.
+        cumulative = computed_spread_pnl
+        # todays_move is genuinely a different concept (vs yesterday's close, not
+        # vs entry) and requires the prev_close snapshot signal_tracker stores.
+        # Keep that path — it's read-only against today's fetch.
         todays_move = dl.get("todays_move") if dl.get("todays_move") else computed_spread_pnl
-        peak = sig.get("peak_spread_pnl_pct") or computed_spread_pnl
+        # Peak = best (highest) cumulative since entry; clamped to 0 because a
+        # position that's only ever been red has no positive peak to lock the
+        # trail to. Old fallback to computed_spread_pnl displayed the live
+        # negative P&L as "Peak", which is nonsense for a trailing-stop UI.
+        peak = max(sig.get("peak_spread_pnl_pct") or 0.0, 0.0)
 
         positions.append({
             "signal_id": sig.get("signal_id", ""),
