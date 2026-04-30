@@ -396,12 +396,45 @@ def _enrich_h001_row(row: dict, ltps: dict[str, float],
     }
 
 
+def _cohort_stats(rows: list[dict]) -> dict:
+    """Per-row breakdown shared by the filter_tag and sector aggregations.
+
+    Returns ``{"n", "wins", "losses", "win_rate", "mean_pnl_pct"}`` for a
+    list of marked rows. ``win_rate`` is wins / (wins + losses); flat
+    rows (pnl == 0) count as neither, matching how a binomial null is
+    framed in the H-001 spec.
+    """
+    marked = [r for r in rows if r.get("pnl_pct") is not None]
+    if not marked:
+        return {"n": 0, "wins": 0, "losses": 0, "win_rate": None, "mean_pnl_pct": 0.0}
+    wins = sum(1 for r in marked if r["pnl_pct"] > 0)
+    losses = sum(1 for r in marked if r["pnl_pct"] < 0)
+    decided = wins + losses
+    return {
+        "n": len(marked),
+        "wins": wins,
+        "losses": losses,
+        "win_rate": round(wins / decided, 3) if decided else None,
+        "mean_pnl_pct": round(sum(r["pnl_pct"] for r in marked) / len(marked), 3),
+    }
+
+
 def _aggregate_pnl(rows: list[dict]) -> dict:
     """Equal-weighted average P&L across all trades with a usable mark.
 
     Average (not sum) is the right portfolio number: if you sized equally
     across N positions, the average per-trade % == your portfolio % return.
     Sum-of-percents is meaningless — it scales with N and isn't a return.
+
+    Also surfaces three breakdowns the operator uses to spot what's
+    actually working today:
+      * by_filter_tag: EARLY vs LATE entry-timing cohort hit-rate + mean
+        P&L. The H-001 frozen tertile cuts predict ~70% win for EARLY,
+        ~37% for LATE; this is the live read against that prior.
+      * by_sector: top sectors by abs(mean P&L), with trade count and
+        hit rate. Lets the operator notice sectoral concentration in
+        today's basket without manually grouping.
+      * wins / losses: aggregate hit/miss count across all marked rows.
     """
     closed_rows = [r for r in rows if r["status"] in {"STOPPED", "TIME_CLOSED"}]
     open_rows = [r for r in rows if r["status"] in {"ACTIVE", "TRAIL_ARMED", "AT_RISK"}]
@@ -412,6 +445,36 @@ def _aggregate_pnl(rows: list[dict]) -> dict:
     def _mean(xs):
         return round(sum(xs) / len(xs), 3) if xs else 0.0
 
+    overall = _cohort_stats(all_marked)
+
+    # By filter_tag (entry-timing cohort): emit EARLY/LATE/N/A always so
+    # the UI can show 0-row tiles consistently rather than missing keys.
+    from collections import defaultdict
+    tag_buckets: dict[str, list] = defaultdict(list)
+    for r in all_marked:
+        tag_buckets[r.get("filter_tag") or "N/A"].append(r)
+    by_filter_tag = {
+        tag: _cohort_stats(tag_buckets.get(tag, []))
+        for tag in ("EARLY", "LATE", "N/A")
+    }
+
+    # By sector: sorted by abs(mean_pnl) desc, capped at 8 to keep the
+    # panel scannable. Sectors with n<2 are dropped — single-trade
+    # "sectoral plays" are noise, not signal.
+    sec_buckets: dict[str, list] = defaultdict(list)
+    for r in all_marked:
+        key = r.get("sector_display") or "Unknown"
+        sec_buckets[key].append(r)
+    by_sector_full = []
+    for sector, sec_rows in sec_buckets.items():
+        if len(sec_rows) < 2:
+            continue
+        s = _cohort_stats(sec_rows)
+        s["sector"] = sector
+        by_sector_full.append(s)
+    by_sector_full.sort(key=lambda s: -abs(s.get("mean_pnl_pct") or 0))
+    by_sector = by_sector_full[:8]
+
     return {
         "n_open": len(open_rows),
         "n_closed": len(closed_rows),
@@ -420,6 +483,11 @@ def _aggregate_pnl(rows: list[dict]) -> dict:
         "mean_pnl_pct_gross": _mean(gross_vals),
         "mean_pnl_pct_net": _mean(net_vals),
         "round_trip_cost_pct": _ROUND_TRIP_COST_PCT,
+        "wins": overall["wins"],
+        "losses": overall["losses"],
+        "win_rate": overall["win_rate"],
+        "by_filter_tag": by_filter_tag,
+        "by_sector": by_sector,
         # Kept for back-compat with anything still reading the sums:
         "realized_pnl_pp_sum": round(sum(r["pnl_pct"] for r in closed_rows if r.get("pnl_pct") is not None), 3),
         "open_marked_pnl_pp_sum": round(sum(r["pnl_pct"] for r in open_rows if r.get("pnl_pct") is not None), 3),

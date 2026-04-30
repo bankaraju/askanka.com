@@ -114,6 +114,12 @@ function renderStrip(data) {
   const badges = data.badges || {};
   const badgeHtml = Object.entries(badges).map(([key, b]) => renderBadge(key, b)).join('');
 
+  // Win/loss summary across all marked rows (overall hit rate).
+  const wins = agg.wins || 0;
+  const losses = agg.losses || 0;
+  const winRate = agg.win_rate;
+  const winRateStr = winRate == null ? '—' : `${(winRate * 100).toFixed(0)}%`;
+
   document.getElementById('live-monitor-strip').innerHTML = `
     <div class="live-monitor__top">
       <div class="live-monitor__regime">
@@ -132,6 +138,9 @@ function renderStrip(data) {
           ${agg.n_open || 0} open · ${agg.n_closed || 0} closed · ${agg.n_no_ltp || 0} no LTP
           · ${nWithPnl} marked · cost ${(rtCost * 100).toFixed(0)} bps/trade
         </span>
+        <span class="live-monitor__sub">
+          <strong>${winRateStr}</strong> hit rate · ${wins}W / ${losses}L
+        </span>
       </div>
       <div class="live-monitor__time">
         <span class="live-monitor__label">Mechanical close</span>
@@ -140,6 +149,74 @@ function renderStrip(data) {
     </div>
     <div class="live-monitor__badges">
       ${badgeHtml}
+    </div>
+    ${renderBreakdowns(agg)}
+  `;
+}
+
+// Cohort + sector breakdowns. Renders as two compact tables under the
+// strip — operator scans them for "what's actually working today" without
+// regrouping the row table by hand. Hidden when there are no marked rows
+// (e.g. pre-09:30 or before any LTPs come in).
+function renderBreakdowns(agg) {
+  if (!agg || (agg.n_with_pnl || 0) === 0) return '';
+  const tags = agg.by_filter_tag || {};
+  const sectors = agg.by_sector || [];
+
+  const tagRow = (tag) => {
+    const s = tags[tag] || {n: 0, wins: 0, losses: 0, win_rate: null, mean_pnl_pct: 0};
+    if (s.n === 0) return '';
+    const wr = s.win_rate == null ? '—' : `${(s.win_rate * 100).toFixed(0)}%`;
+    const pnl = s.mean_pnl_pct;
+    const cls = pnl >= 0 ? 'text-green' : 'text-red';
+    return `
+      <tr>
+        <td><span class="filter-pill filter-pill--${tag.toLowerCase().replace('/','')}">${tag}</span></td>
+        <td class="mono">${s.n}</td>
+        <td class="mono">${s.wins}W / ${s.losses}L</td>
+        <td class="mono">${wr}</td>
+        <td class="mono ${cls}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}%</td>
+      </tr>`;
+  };
+
+  const sectorRow = (s) => {
+    const wr = s.win_rate == null ? '—' : `${(s.win_rate * 100).toFixed(0)}%`;
+    const pnl = s.mean_pnl_pct;
+    const cls = pnl >= 0 ? 'text-green' : 'text-red';
+    return `
+      <tr>
+        <td>${escapeHtml(s.sector)}</td>
+        <td class="mono">${s.n}</td>
+        <td class="mono">${s.wins}W / ${s.losses}L</td>
+        <td class="mono">${wr}</td>
+        <td class="mono ${cls}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}%</td>
+      </tr>`;
+  };
+
+  const sectorBlock = sectors.length === 0
+    ? '<div class="live-monitor__breakdown-empty">no sector with n≥2 yet</div>'
+    : `<table class="live-monitor__breakdown-table">
+        <thead><tr><th>Sector</th><th>n</th><th>W/L</th><th>Win %</th><th>Mean P&amp;L</th></tr></thead>
+        <tbody>${sectors.map(sectorRow).join('')}</tbody>
+      </table>`;
+
+  return `
+    <div class="live-monitor__breakdowns">
+      <div class="live-monitor__breakdown">
+        <div class="live-monitor__breakdown-title">Entry-timing cohort (EARLY vs LATE)</div>
+        <table class="live-monitor__breakdown-table">
+          <thead><tr><th>Tag</th><th>n</th><th>W/L</th><th>Win %</th><th>Mean P&amp;L</th></tr></thead>
+          <tbody>
+            ${tagRow('EARLY')}
+            ${tagRow('LATE')}
+            ${tagRow('N/A')}
+          </tbody>
+        </table>
+      </div>
+      <div class="live-monitor__breakdown">
+        <div class="live-monitor__breakdown-title">Sectoral concentration (n≥2, top 8 by |mean P&amp;L|)</div>
+        ${sectorBlock}
+      </div>
     </div>
   `;
 }

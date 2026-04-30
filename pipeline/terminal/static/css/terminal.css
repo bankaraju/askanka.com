@@ -995,6 +995,48 @@ h3 { font-size: 1.125rem; }
   padding-top: var(--spacing-sm);
 }
 
+.live-monitor__breakdowns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 900px) {
+  .live-monitor__breakdowns { grid-template-columns: 1fr; }
+}
+.live-monitor__breakdown-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.live-monitor__breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.live-monitor__breakdown-table th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 8px;
+}
+.live-monitor__breakdown-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border-subtle, var(--border));
+}
+.live-monitor__breakdown-table tr:last-child td { border-bottom: none; }
+.live-monitor__breakdown-empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 6px 0;
+}
+
 .provenance-badge {
   display: inline-flex;
   align-items: center;
