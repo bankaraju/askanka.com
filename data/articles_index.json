@@ -2,6 +2,15 @@
   "articles": [
     {
       "date": "2026-04-30",
+      "segment": "postmortem",
+      "filename": "postmortem-2026-04-30-phase-c-petronet-opportunity-lag.md",
+      "headline": "Phase C: PETRONET OPPORTUNITY_LAG: post-mortem (-0.18%)",
+      "category": "TRADE POST-MORTEM",
+      "color": "#6b7280",
+      "published_at": "April 30, 2026"
+    },
+    {
+      "date": "2026-04-30",
       "segment": "epstein",
       "filename": "2026-04-30-epstein.html",
       "headline": "The Disbarment Domino: Prosecutor's Bad News for DOJ Unveils New Layer of Epstein Obstruction",
