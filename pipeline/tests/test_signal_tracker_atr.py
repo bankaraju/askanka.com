@@ -157,25 +157,11 @@ def test_conviction_decay_requires_both_absolute_and_relative():
     assert status == "OPEN"
 
 
-def test_z_cross_closes_correlation_break(monkeypatch):
-    """CORRELATION_BREAK signal: symbol no longer appears as same-direction
-    actionable break in today's correlation_breaks.json → Z_CROSS exit."""
-    from unittest.mock import patch
-    sig = _mk_signal(stop_pct=-2.3, source="CORRELATION_BREAK")
-    sig["entry_score"] = 80
-    sig["rescore"] = {"current_score": 70, "score_delta": 10,
-                      "gate_reason_current": "ok", "rescored_at": "x"}
-    with patch.object(signal_tracker, "compute_signal_pnl",
-                      return_value={"spread_pnl_pct": 2.0}), \
-         patch.object(signal_tracker, "_compute_todays_spread_move", return_value=0.5), \
-         patch.object(signal_tracker, "get_levels_for_spread",
-                      return_value={"daily_std": 2.0, "avg_favorable_move": 2.0,
-                                    "entry_level": 0.0, "stop_level": -1.5,
-                                    "cum_percentile": 50.0, "cum_peak": 5.0, "cum_trough": -2.0}), \
-         patch.object(signal_tracker, "_load_current_breaks_for_zcross",
-                      return_value={"breaks": [{"symbol": "OTHER", "trade_rec": "SHORT"}]}):
-        status, _ = signal_tracker.check_signal_status(sig, current_prices={"BHEL": 320.0})
-    assert status == "STOPPED_OUT_ZCROSS"
+# Z_CROSS exit was deliberately removed for CORRELATION_BREAK source on
+# 2026-04-27 (commit 8d0ce32) per direct user directive: "no Z cross selling —
+# same yardsticks of measurements". CORRELATION_BREAK now uses ATR stop +
+# mechanical 14:30 IST TIME_STOP only. The legacy test that asserted
+# STOPPED_OUT_ZCROSS for this source is intentionally removed.
 
 
 def test_z_cross_only_applies_to_correlation_break():

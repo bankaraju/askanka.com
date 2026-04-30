@@ -6,9 +6,19 @@ Usage:
     python -m pipeline.terminal --no-open    # don't auto-open browser
 """
 import argparse
+import sys
 import threading
 import time
 import webbrowser
+from pathlib import Path
+
+# Legacy modules (signal_tracker, kite_client, et al) use bare top-level
+# imports like `from config import ...` that resolve only when pipeline/
+# is on sys.path. Add it so /api/live_ltp can route through
+# signal_tracker.fetch_current_prices.
+_PIPELINE_DIR = Path(__file__).resolve().parent.parent
+if str(_PIPELINE_DIR) not in sys.path:
+    sys.path.insert(0, str(_PIPELINE_DIR))
 
 
 def parse_args(argv=None):

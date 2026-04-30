@@ -35,10 +35,19 @@ def test_track_record_summary(mock_track):
 
 
 def test_equity_curve(mock_track):
+    """Equity curve plots per-trade running average (each trade = 1 unit), not
+    portfolio-sized cumulative. Sum is exposed alongside as `total_pnl_sum_pct`
+    for the "if sized 1u/trade" view (rewrite #310)."""
     from pipeline.terminal.app import app
     data = TestClient(app).get("/api/track-record/equity-curve").json()
     assert len(data["curve"]) == 3
-    assert data["total_return"] == 3.8  # 3.2 + (-1.5) + 2.1
+    assert data["n"] == 3
+    # 3.2 + (-1.5) + 2.1 = 3.8 sum
+    assert data["total_pnl_sum_pct"] == 3.8
+    # mean of [3.2, -1.5, 2.1] = 1.2666... → rounded to 1.27
+    assert data["avg_pnl_pct"] == 1.27
+    # Curve values are running per-trade averages, chronological by close_date.
+    assert data["curve"][-1]["value"] == round(3.8 / 3, 3)
 
 
 def test_track_record_missing_file(tmp_path, monkeypatch):
