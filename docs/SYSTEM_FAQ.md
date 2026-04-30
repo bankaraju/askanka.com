@@ -4,7 +4,7 @@ A living reference of Q&A about how the Anka research system actually works. Syn
 
 > **Purpose:** stop re-asking the same questions across sessions. When something is asked and answered well in chat, it lands here.
 
-**Last updated:** 2026-04-29
+**Last updated:** 2026-04-30
 
 ---
 
@@ -20,7 +20,11 @@ A living reference of Q&A about how the Anka research system actually works. Syn
 8. [Long-short pairing](#8-long-short-pairing)
 9. [Live trade execution](#9-live-trade-execution)
 10. [Universe definitions](#10-universe-definitions)
-11. [Glossary of acronyms](#11-glossary)
+11. [Z-score — the trigger](#11-z-score)
+12. [Technical indicators layer (the 10)](#12-technical-indicators)
+13. [Stock selection pipeline (273 F&O → today's list)](#13-stock-selection)
+14. [Why each test exists (pedagogical)](#14-why-each-test)
+15. [Glossary of acronyms](#15-glossary)
 
 ---
 
@@ -209,7 +213,163 @@ History trend: 2024-01: 183 → 2024-11 jump to 223 (NSE expansion) → 2025-01 
 
 ---
 
-## 11. Glossary
+## 11. Z-score
+
+### Q: What is the Z-score in plain English?
+
+**A:** Z = how many standard deviations a number is away from its rolling mean. If a stock's correlation with its sector usually sits between 0.4 and 0.6, and today it dropped to 0.1, that's *unusually* far from normal. The Z-score quantifies "unusual" — Z=2 means "two standard deviations below the rolling mean," i.e. an event that happens roughly 2.5% of the time under a normal distribution.
+
+In Anka, Z-score is computed on **a 60-day rolling window** of the daily correlation between each F&O stock and its sectoral regime. The break engine fires when |Z| ≥ 2.0.
+
+### Q: Why ±2σ specifically — not ±1σ or ±3σ?
+
+**A:** Empirical, not theoretical. Tested at multiple thresholds in the mechanical 60-day replay:
+- **±1σ** fires too often (~32% of stock-days), no edge — the signal becomes noise.
+- **±2σ** fires ~5% of stock-days, gives the H-001 forward sample of 105 trades in 3 days. Edge is positive (+0.225% mean, 59% wins on NEUTRAL).
+- **±3σ** fires <1% of stock-days; sample too thin to validate within a holdout window.
+
+±2σ is the sweet spot of "rare enough to be meaningful, common enough to validate." Any future change to the threshold consumes a fresh single-touch holdout per §10.4.
+
+### Q: Where in the pipeline does Z-score fire?
+
+**A:** Three places:
+1. **`pipeline/break_signal_generator.py`** — live intraday break detection, every 15 min during market hours. Reads current correlation, computes Z, fires `BRK-<date>-<ticker>` row if |Z|≥2 and 14:30 cutoff hasn't passed.
+2. **`pipeline/h_2026_04_26_001_paper.py`** — at 09:30 IST, sweeps yesterday's overnight Z values, opens paper positions on |Z|≥2 NEUTRAL-regime breaks. Closes 14:30 mechanical.
+3. **`pipeline/autoresearch/mechanical_replay/runner_v2.py`** — historical replay over 60 days, same Z computation rule applied to every (ticker, day) pair to reconstruct what live would have seen.
+
+### Q: What window is the Z-score rolling on?
+
+**A:** **60 trading days** for the correlation Z. Matches the Kite 1-min historical API's 60-day rolling cap, so live and replay see the same window length. Why 60 days specifically: long enough that a single regime shift doesn't dominate, short enough that the rolling mean tracks the recent market state. Tested vs 30/90/120 in the 04-25 replay sweep — 60 had the cleanest separation between signal and noise.
+
+### Q: What's the "regime gate" on top of Z-score?
+
+**A:** A second filter: `regime_gate_pass = True` requires the day's ETF regime ≠ NEUTRAL. H-002 reads only those rows. The hypothesis is that breaks fire more cleanly when the broad regime is risk-on or risk-off than when the regime is undirected (NEUTRAL). Currently can't be evaluated — every day since 2026-04-22 has been NEUTRAL, so the H-002 gate is closed and all 105 trades have routed through H-001 (unconditional).
+
+---
+
+## 12. Technical indicators
+
+### Q: What are the "10 technical indicators" the system uses?
+
+**A:** The current production set of intraday confirmation features, layered on top of the Z-score signal:
+
+| # | Indicator | Window | What it captures |
+|---|---|---|---|
+| 1 | **VWAP deviation (signed)** | 09:15→09:30 | how far open price has drifted from cumulative VWAP, signed by trade direction |
+| 2 | **ORB-15min %** | 09:15→09:30 | high-low range as % of open — wide = volatile, tight = compression |
+| 3 | **Volume Z** | 09:15→09:30 vs 20-day | first-15-min volume vs trailing 20-day mean of same window |
+| 4 | **Intraday slope %** | 09:15→09:30 30 closes | linear regression slope of 30 1-min closes, normalized to open price |
+| 5 | **Bollinger position** | daily BB(20,2) | z-position of today's open within yesterday's Bollinger envelope (PENDING — being added) |
+| 6 | **ATR(14)** | daily, 14-day | average true range — protective stop multiplier (×2.0 in production) |
+| 7 | **RSI-14** | daily | momentum oscillator; ≥70 overbought, ≤30 oversold |
+| 8 | **MACD signal cross** | daily 12/26/9 | trend-direction confirmation |
+| 9 | **delta-PCR (next month)** | 2-day cumulative | options positioning shift on next-month chain — early conviction signal |
+| 10 | **Sectoral RS** | 09:15→09:30 vs sector index | relative strength of stock vs its NSE sectoral index over the morning |
+
+### Q: How do they enhance the Z-score signal?
+
+**A:** Z-score alone says "something rare happened." The technical layer asks "in which direction is the rarity confirmed by other evidence?" Empirically, on the H-001 forward sample of 105 NEUTRAL trades:
+
+- **Z-only (no filter):** 59.05% wins, +0.225% mean
+- **Z + VWAP cooperative direction (KEEP cell):** 64.71% wins, +0.397% mean — this single filter alone adds **~6pp** on n=85
+- **Z + VWAP rejected (DROP cell):** 35.00% wins, -0.502% mean — confirms the filter is doing real work
+- **Z + ORB_HI + VWAP cooperative:** 92% wins on n=13 (MONITOR — too small to claim PUBLISH)
+
+The technical layer is not a separate signal; it is a *filter* on the Z-trigger. Interpretation: Z-score is necessary but not sufficient — the technical layer separates good Z from noise Z.
+
+### Q: Why is the VWAP filter the strongest cell?
+
+**A:** Two structural reasons:
+1. **VWAP is the institutional reference price.** When price is already extended past VWAP at 09:30 in the trade direction, it usually means the institutional flow has *already moved* — there's no fresh imbalance for the fade to capture. Skipping these saves you from buying the top / selling the bottom of the institutional impulse.
+2. **VWAP captures the morning auction discovery.** First 15 minutes of trading is the price-discovery window where overnight news + Asia + futures gap are absorbed. By 09:30, VWAP shows where the "agreed price" settled. Trades that fade *into* this agreement (price already at VWAP) tend to win; trades that fade *across* it (price extended away) tend to lose.
+
+### Q: Why is Bollinger position still PENDING?
+
+**A:** Per `memory/project_neutral_overlay_family_2026_04_28.md` and ANALYSIS_CATALOG §A.3: backfill in flight 2026-04-29. Hypothesis: "long fade when price is below the lower BB band creates an additional PUBLISH cell on top of VWAPSIGN_LO." Pending feature engineering + 30+ forward closed trades to validate. Currently 0 closed BB-tagged trades.
+
+### Q: How does Volume-Z catch real signals vs noise?
+
+**A:** Volume-Z compares today's 09:15-09:45 volume to the trailing 20-day mean of the same window. A Z-score of +2 means "today's morning volume is 2σ above its 20-day norm" — usually news-driven or institutional accumulation. The intraday panel v1 backtest found ALL/fade with high volume-Z does **not** outperform — pure volume isn't directional. But volume-Z paired with VWAP direction sometimes is. Treated as a context indicator, not a standalone signal.
+
+### Q: Why ATR×2 for stops, not a fixed %?
+
+**A:** A fixed 1% stop on a low-vol stock (ATR=0.4%) is a noise-stop — gets hit by routine wiggle. The same 1% on a high-vol stock (ATR=1.5%) doesn't give the trade room to breathe. ATR×2 sizes the stop to the *stock's own historical volatility* — same statistical "noise tolerance" applied to every name. ×2 was tested vs ×1.5 and ×3 on Phase C: ×2 gave the best ratio of (winners protected / losers cut early).
+
+---
+
+## 13. Stock selection
+
+### Q: From 273 F&O stocks down to today's 5-10 trade candidates — what's the funnel?
+
+**A:** Step by step:
+
+1. **Universe input: 273 F&O canonical** — `pipeline/config/canonical_fno_research_v3.json`. This is the Anka-curated PIT-correct list (handles 5 active aliases like GMRINFRA→GMRAIRPORT). NSE's official F&O list is 206; Anka's 273 includes the historical names that traded F&O during the 5-year backtest window.
+
+2. **Daily data freshness cut:** drop names where the 1-min cache is stale > 1 trading day. Currently 269/273 stocks survive (4 dropouts on 2026-04-29: LTIM has no Kite alias; PEL+SAMMAAN are Kite-only with EODHD gaps; one rotational dropout per day).
+
+3. **Sectoral mapping:** each surviving ticker is mapped to one of ~25 NSE sectoral indices via `pipeline/sector_mapper.py`. Stocks with `sectoral_index=UNKNOWN` are excluded from break detection (currently a known issue affecting 100% of H-001 holdout rows — task #42 pending diagnosis).
+
+4. **Z-score sweep:** for each (ticker, day), compute the 60-day correlation Z of stock-vs-sector. Names with |Z| ≥ 2.0 fire as break candidates. Typical day: 5-15 names fire.
+
+5. **Regime gate:** the day's ETF regime is read from `pipeline/data/today_regime.json`. H-001 ignores regime; H-002 only opens trades when regime ≠ NEUTRAL (currently 0 opens — regime has been NEUTRAL 8+ days).
+
+6. **Direction tag:** each candidate is tagged LONG or SHORT based on the sign of the correlation deviation. This becomes the trade side.
+
+7. **Technical filter (display-only during holdout):** the VWAP-deviation tag adds KEEP / DROP / WATCH cell membership. Currently DISPLAY-ONLY on the terminal, NOT live-gated — promotion to gating requires fresh hypothesis post-2026-05-26 holdout.
+
+8. **14:30 cutoff:** any candidate that fires after 14:30 IST is silently dropped — see `feedback_1430_ist_signal_cutoff.md`.
+
+9. **Output:** the surviving names land in `pipeline/data/research/h_2026_04_26_001/recommendations.csv` as `BRK-<date>-<ticker>` rows. Paper open at Kite LTP. 14:30 mechanical close. Yesterday's run produced ~25-35 such trades per day.
+
+### Q: How many of the 273 actually trade in a typical day?
+
+**A:** On the H-001 NEUTRAL forward sample (3 days, 105 trades): ~35 distinct tickers per day fire on |Z|≥2. Of those ~35:
+- ~21 are tagged LONG, ~84 are tagged SHORT — a real asymmetry; the framework is currently more sensitive to short-side breaks
+- ~85 (KEEP cell) survive the VWAP cooperative-direction filter
+- ~20 (DROP cell) get filtered out
+
+So the *full pipeline* output is ~35 trades/day open at 09:30, ~85% of which would survive the (display-only) VWAP filter to become "high-conviction."
+
+### Q: Why is H-001's `sectoral_index` UNKNOWN on 100% of holdout rows?
+
+**A:** Live bug in the H-001 paper engine — the sectoral mapping step is not being applied at signal-write time. Tracked as task #42. Doesn't break trades (the Z-score itself fires correctly via the live correlation engine), but it prevents per-sector cell aggregation in the cohort tracker. Fix is mechanical — call `sector_mapper.map_one(ticker)` at row-write time.
+
+---
+
+## 14. Why each test
+
+### Q: What is each validation gate actually catching?
+
+| Gate | Section | What it catches | Real-world example |
+|---|---|---|---|
+| **§9 baseline (hit-rate p<0.05)** | core | Random-chance results that look like edge | If you flip a coin 100 times you'll see one 10-streak. p<0.05 against a binomial null says your win rate is unlikely under chance |
+| **§9A Fragility (perturb)** | robustness | Over-fit weights that crumble on tiny parameter changes | A model that reaches 65% at weight=0.50 but 51% at weight=0.55 is fitting noise. ≥4/6 perturbations must stay Sharpe-positive |
+| **§9B Margin (vs always-long/short baseline)** | trivial-baseline | Hit rates that look good only because the market drifted | NIFTY went up 4% during your test → "always go long" hits 56% on its own. Must beat that by ≥0.5pp to count |
+| **§9.5 Sharpe ≥ 0.5** | risk-adj | Strategies with lottery-ticket P&L profile (one big win hides 9 losses) | Sharpe forces consistency — a 65% win rate with -5% one-day drawdown might still fail |
+| **§10.1 MaxDD ≤ 5%** | tail-risk | Strategies that work on average but blow up periodically | A model that produces 70% wins with one -8% week fails — the drawdown disqualifies |
+| **§10.4 Single-touch holdout** | overfitting | Researcher iterating on the holdout set itself | If you test 20 versions of a model on the same OOS window, you're fitting OOS. One shot per spec, no re-fits |
+| **BH-FDR (multi-stock)** | multiple-testing | False positives from testing many stocks | Test 50 stocks at α=0.05 → 2.5 false rejects expected. BH-FDR keeps expected false-discovery rate bounded |
+| **Decade splits** | regime-stability | Strategies that work in one decade and fail in the next | If 2014-2018 prefers fade-low-vol and 2019-2024 prefers fade-high-vol, the strategy is a regime artefact |
+
+### Q: Why so many gates — isn't one or two enough?
+
+**A:** Each gate catches a different failure mode. Hit-rate alone passes lottery-ticket strategies (§9.5 Sharpe catches them). Sharpe alone passes hindsight-fitted models (§9A Fragility catches them). All gates passed but on a single-decade sample passes regime-artefact (decade-split catches it). The "so many gates" is intentional defense-in-depth — H-2026-04-25-002 passed §9 hit-rate but failed §9A (0/6 fragility) AND §9B (margin -0.0090); without those two gates we'd have wasted a holdout slot on a fragile / no-margin model.
+
+### Q: What's the cost of being this strict?
+
+**A:** Most pre-registered hypotheses fail. Of 6 hypotheses pre-registered since 2026-04-23: 4 DEAD (TA-Karpathy v1 RELIANCE, persistent-break v2, earnings-decoupling, etf-stock-tail), 1 POSTPONED (intraday data-driven V1), 1 ACTIVE (sigma-break mechanical, current 105-trade NEUTRAL sample). That's a ~17% pass rate. The user's stance: "winning shadow trade ≠ edge; validate fade direction against 5-yr per-ticker bootstrap null before claiming alpha" (`feedback_alpha_vs_timing_luck.md`). Strictness is the price of not deploying false-edges with real money.
+
+### Q: Why decade-split / OOS holdout — isn't 60-day backtest enough?
+
+**A:** No. 60-day backtest = one regime, one news cycle, one global macro state. A strategy that works on the 60-day replay might be capturing the specific regime of those 60 days (e.g. NEUTRAL stable). Decade-split tests force the strategy to survive multiple regime classes. OOS holdout tests force it to survive *unseen future data* (the harder test). Both are necessary — neither alone is sufficient.
+
+### Q: Why are some tests "report-only" before "gate-blocking" (e.g. Deflated Sharpe)?
+
+**A:** When a metric is new or its threshold is uncertain, ship it report-only first. Collect 30+ holdout-cycles of data on what passes vs fails. Only then promote to gate-blocking with an empirically-calibrated threshold. Per `H-2026-04-29-ta-karpathy-v1` spec v1.1: "Deflated Sharpe metric report-only at v1, gate-blocking at v2 when N≥100 days." Report-only avoids prematurely killing hypotheses on a metric whose pass/fail line we don't yet trust.
+
+---
+
+## 15. Glossary
 
 | Term | Meaning |
 |---|---|
@@ -243,3 +403,12 @@ History trend: 2024-01: 183 → 2024-11 jump to 223 (NSE expansion) → 2025-01 
 - **Cross-referenced with memory:** when a Q&A here is detailed enough to deserve its own memory file, link from here to memory and keep the FAQ entry as a 1–2 sentence summary.
 - **Versioned via git history:** `git log docs/SYSTEM_FAQ.md` shows the trail of when each topic landed.
 - **Source of truth for newcomers:** any new collaborator reads this before asking the same questions.
+
+## Daily-update commitment (added 2026-04-30)
+
+Per Bharat 2026-04-30: "FAQ needs daily update so I don't forget what is happening." Mechanism:
+
+1. **End of every session** that touched a system, hypothesis, or design decision: add a Q&A here. The Q is "what did Bharat ask / what was decided"; the A is the answer with a code/memory link.
+2. **The "Last updated" date at the top** must be bumped on any commit that touches this file. If the date is more than 3 days stale, that's a signal that the FAQ has fallen behind — `/autowrap` should explicitly check and prompt.
+3. **No silent additions.** Each new Q&A must come from an actual chat exchange or design memo. Synthesizing topics from imagination is forbidden — the FAQ should reflect what's *actually* been discussed, not a theoretical curriculum.
+4. **One commit, one section.** When updating, prefer a focused commit per section being touched. Easier to skim git log to find when a topic was last clarified.
