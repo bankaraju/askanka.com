@@ -133,9 +133,14 @@ def load_returns_panel(tickers: Iterable[str], start: date, end: date) -> pd.Dat
 # ---------------------------------------------------------------------------
 # PIT regime tape loader
 # ---------------------------------------------------------------------------
-def load_regime_tape() -> Optional[pd.Series]:
-    """Returns a Series of regime labels indexed by trading date, or None if
-    tape unavailable. Production rule: never use regime_history.csv (hindsight).
+def load_regime_tape() -> Optional[dict[pd.Timestamp, str]]:
+    """Returns a dict {Timestamp -> regime_label} or None if tape unavailable.
+
+    Returning a dict (not a Series) avoids subtle DatetimeIndex identity
+    mismatches between the panel index and the tape index that bit Mode B
+    on first run.
+
+    Production rule: never use regime_history.csv (hindsight).
     """
     if not PIT_REGIME.exists():
         log.warning(
@@ -146,7 +151,11 @@ def load_regime_tape() -> Optional[pd.Series]:
         )
         return None
     df = pd.read_csv(PIT_REGIME, parse_dates=["date"])
-    return pd.Series(df["regime"].values, index=pd.DatetimeIndex(df["date"]).normalize())
+    out: dict[pd.Timestamp, str] = {}
+    for _, row in df.iterrows():
+        ts = pd.Timestamp(row["date"]).normalize()
+        out[ts] = str(row["regime"])
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -290,8 +299,10 @@ def replay_basket(
             cost_20 = COST_BPS_DEFAULT
             cost_30 = COST_BPS_SENSITIVITY
             regime = "ALL"
-            if regime_tape is not None and d in regime_tape.index:
-                regime = str(regime_tape.loc[d])
+            if regime_tape is not None:
+                key = pd.Timestamp(d).normalize()
+                if key in regime_tape:
+                    regime = regime_tape[key]
             rows.append(
                 TradeRow(
                     basket_idx=basket["basket_idx"],
@@ -499,7 +510,10 @@ def run_mode(
     panel = load_returns_panel(universe, start, end)
     regime_tape = load_regime_tape()
     if regime_tape is not None:
-        regime_tape = regime_tape.loc[(regime_tape.index >= pd.Timestamp(start)) & (regime_tape.index <= pd.Timestamp(end))]
+        # window-filter the dict to [start, end]
+        s_ts = pd.Timestamp(start)
+        e_ts = pd.Timestamp(end)
+        regime_tape = {k: v for k, v in regime_tape.items() if s_ts <= k <= e_ts}
 
     if mode == "A":
         if not NEWS_HISTORY.exists():
