@@ -37,12 +37,20 @@ _lib = str(Path(__file__).parent / "lib")
 if _lib not in sys.path:
     sys.path.insert(0, _lib)
 
+# Repo root must be importable so `from pipeline.config import ...` (line ~44)
+# resolves when the .bat scripts cd into pipeline/ before invoking the file
+# bare. Without this, sys.path[0] is pipeline/ and there's no nested
+# pipeline/pipeline/, so the import raises ModuleNotFoundError.
+_repo_root = str(Path(__file__).resolve().parent.parent)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
+
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent / ".env")
 
-from config import INDIA_SIGNAL_STOCKS, INDIA_SPREAD_PAIRS
-from eodhd_client import fetch_eod_series
+from pipeline.config import INDIA_SIGNAL_STOCKS, INDIA_SPREAD_PAIRS
+from pipeline.eodhd_client import fetch_eod_series
 
 # Minimum-sample floor — single source of truth is spread_bootstrap.
 # Import the constant lazily here to avoid a circular import (spread_bootstrap

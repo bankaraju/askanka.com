@@ -32,6 +32,14 @@ _lib = str(Path(__file__).parent / "lib")
 if _lib not in sys.path:
     sys.path.insert(0, _lib)
 
+# Repo root must be importable so `from pipeline.kite_auth import ...` (line ~186)
+# resolves regardless of CWD. .bat scripts cd into pipeline/ before invoking
+# bare `python kite_client.py`, which puts pipeline/ on sys.path[0] but not the
+# project root — package-qualified imports then fail.
+_repo_root = str(Path(__file__).resolve().parent.parent)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
+
 import requests
 from dotenv import load_dotenv
 
