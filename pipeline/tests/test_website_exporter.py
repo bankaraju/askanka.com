@@ -56,6 +56,12 @@ def test_live_status_only_positions_and_fragility(tmp_path, monkeypatch):
     monkeypatch.setattr("website_exporter.OPEN_FILE", OPEN_SIG_FIXTURE)
     monkeypatch.setattr("website_exporter.CLOSED_FILE", tmp_path / "missing.json")
     monkeypatch.setattr("website_exporter.DATA_DIR", tmp_path)
+    # Pin LTPs so the test isn't dependent on live Kite. Long HAL @4500 → 4630 = +2.89%;
+    # Short INFY @1800 → 1750 = +2.78% (price down, short profit). Sum = 5.67% spread P&L.
+    monkeypatch.setattr(
+        "signal_tracker.fetch_current_prices",
+        lambda tickers: {"HAL": 4630.0, "INFY": 1750.0},
+    )
     from website_exporter import export_live_status
     out = export_live_status()
     assert set(out.keys()) == {"updated_at", "positions", "fragility"}
@@ -67,7 +73,13 @@ def test_live_status_only_positions_and_fragility(tmp_path, monkeypatch):
     # this same response (post-2026-04-30 PETRONET contradiction fix). The old
     # path preferred the tracker's stale `cumulative` field when non-zero,
     # which let the spread total disagree with the leg numbers shown beside it.
-    assert pos["spread_pnl_pct"] == 30.91
+    assert pos["spread_pnl_pct"] == 5.67
+    # Day-1 fixture has no _prev_close_* — todays_move == cumulative since entry.
+    # This is the correct semantics; live-ticker recomputes per LTP every 5s.
+    assert pos["todays_move"] == 5.67
+    # prev_close exposed per leg so frontend live-ticker can recompute.
+    assert pos["long_legs"][0]["prev_close"] == 4500.0  # falls back to entry on day-1
+    assert pos["short_legs"][0]["prev_close"] == 1800.0
 
 
 from datetime import datetime, timedelta, timezone

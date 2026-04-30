@@ -55,6 +55,68 @@ function patchPnlCell(ticker, entry, side, ltp) {
   });
 }
 
+// Recompute and patch every per-row "Today" cell on the Dashboard from
+// freshly-patched LTPs, using each leg's data-live-ltp-prev-close attribute.
+// Mirrors signal_tracker._compute_todays_spread_move:
+//   today_move = avg(long_today_moves) + avg(short_today_moves)
+// where each leg's today_move = (ltp/prev_close - 1)*100 for long,
+//                              = (1 - ltp/prev_close)*100 for short.
+//
+// After patching every row, sum the row totals and patch the page-level
+// "Today: ±X.XX%" aggregate. This is the fix for the chronic "Today P&L
+// frozen at +0.58% no matter where the LTP is" — was reported 4×.
+function recomputeTodayCells() {
+  const rows = document.querySelectorAll('[data-live-today-cell]');
+  if (!rows || rows.length === 0) return;
+  const perRowToday = [];
+  rows.forEach(cell => {
+    const sigId = cell.getAttribute('data-live-today-cell');
+    if (!sigId) return;
+    // Find every leg LTP span belonging to this row. The leg spans live in
+    // the same <tr> as the today cell (priceCell column).
+    const tr = cell.closest('tr');
+    if (!tr) return;
+    const legs = tr.querySelectorAll('[data-live-ltp-ticker]');
+    const longMoves = [];
+    const shortMoves = [];
+    legs.forEach(leg => {
+      const prev = parseFloat(leg.getAttribute('data-live-ltp-prev-close'));
+      const side = leg.getAttribute('data-live-ltp-side');
+      // The patched LTP lives in the cell's textContent as "₹N,NNN.NN".
+      const ltpStr = (leg.textContent || '').replace(/[₹,\s]/g, '');
+      const ltp = parseFloat(ltpStr);
+      if (!Number.isFinite(prev) || prev <= 0 || !Number.isFinite(ltp)) return;
+      const pct = side === 'short'
+        ? (1 - ltp / prev) * 100
+        : (ltp / prev - 1) * 100;
+      (side === 'short' ? shortMoves : longMoves).push(pct);
+    });
+    if (longMoves.length + shortMoves.length === 0) {
+      // No live LTPs yet — leave the snapshot value alone.
+      return;
+    }
+    const avg = arr => arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : 0;
+    const today = avg(longMoves) + avg(shortMoves);
+    perRowToday.push(today);
+    // Preserve the warn marker if the snapshot put one there (the snapshot's
+    // <span title="snapshot missing — ..."> ⚠ glyph). Strip it before recompute
+    // and we'll re-derive it by trusting the live recompute now agrees.
+    cell.textContent = fmtPct(today);
+    cell.className = `mono ${pnlClass(today)}`;
+  });
+  // Page-level aggregate: sum across recomputed rows. Only updates the span
+  // if EVERY visible row produced a number (matches positions-table's null
+  // guard logic so we don't paint "Today: NaN%" if a leg LTP fails to fetch).
+  const aggSpan = document.querySelector('[data-live-today-aggregate]');
+  if (!aggSpan) return;
+  if (perRowToday.length === 0 || perRowToday.length !== rows.length) return;
+  const total = perRowToday.reduce((s, v) => s + v, 0);
+  aggSpan.textContent = `Today: ${fmtPct(total)}`;
+  aggSpan.className = `mono ${pnlClass(total)}`;
+  // Inline style to match the snapshot render (preserve baseline font-size).
+  aggSpan.style.fontSize = '1rem';
+}
+
 async function tick() {
   const cells = document.querySelectorAll('[data-live-ltp-ticker]');
   if (!cells || cells.length === 0) return;
@@ -91,6 +153,11 @@ async function tick() {
     const side = c.dataset.liveLtpSide;
     patchPnlCell(ticker, entry, side, ltp);
   });
+  // After every leg LTP has been patched, recompute per-row Today cells +
+  // the page-level aggregate. Order matters: this MUST run after the LTPs
+  // are written so the textContent read inside the recompute sees fresh
+  // values. Failed-fetch rows fall through (no Today change for them).
+  recomputeTodayCells();
 }
 
 let _intervalId = null;

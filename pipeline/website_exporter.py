@@ -341,7 +341,7 @@ def export_live_status() -> dict:
         except Exception as e:
             print(f"[live_status] fetch_current_prices failed: {e} — falling back to entry", file=sys.stderr)
 
-    def _mtm_leg(leg: dict, is_long: bool) -> dict:
+    def _mtm_leg(leg: dict, is_long: bool, sig: dict) -> dict:
         ticker = leg["ticker"]
         entry = leg.get("price", 0) or 0
         current = current_prices.get(ticker)
@@ -350,11 +350,20 @@ def export_live_status() -> dict:
             pnl_pct = 0.0
         else:
             pnl_pct = ((current / entry - 1) * 100) if is_long else ((1 - current / entry) * 100)
+        # prev_close comes from the EOD snapshot signal_tracker writes via
+        # snapshot_eod_prices(). Day-1 positions have no prev_close yet — fall
+        # back to entry so today's move == cumulative since entry (correct
+        # semantics for a same-day open). Surfacing this lets the frontend
+        # live-ticker recompute today's move every 5s from fresh LTPs.
+        prev_close_dict = (sig.get("_prev_close_long") if is_long
+                           else sig.get("_prev_close_short")) or {}
+        prev_close = prev_close_dict.get(ticker, entry)
         return {
             "ticker": ticker,
             "entry": round(entry, 2),
             "current": round(float(current), 2),
             "pnl_pct": round(pnl_pct, 2),
+            "prev_close": round(float(prev_close), 2) if prev_close else None,
         }
 
     # Fresh trust score lookup (per-stock files, not stale signal data)
@@ -364,11 +373,21 @@ def export_live_status() -> dict:
     except Exception:
         _fresh_trust = {}
 
+    # Recompute todays_move from FRESH current_prices every export call (30s).
+    # Old path read _data_levels.todays_move which is only refreshed by the
+    # 15-min intraday signal_tracker cycle — between cycles the dashboard
+    # showed a stale Today P&L while LTP kept moving. Reported 4×; fixing at
+    # the source so backend and frontend can agree.
+    try:
+        from signal_tracker import _compute_todays_spread_move as _today_move_fn
+    except Exception:
+        _today_move_fn = None  # graceful degrade — UI just falls back to dl.todays_move
+
     positions = []
     for sig in open_sigs:
         dl = sig.get("_data_levels", {})
-        long_mtm  = [_mtm_leg(l, is_long=True)  for l in sig.get("long_legs", [])]
-        short_mtm = [_mtm_leg(s, is_long=False) for s in sig.get("short_legs", [])]
+        long_mtm  = [_mtm_leg(l, is_long=True,  sig=sig) for l in sig.get("long_legs", [])]
+        short_mtm = [_mtm_leg(s, is_long=False, sig=sig) for s in sig.get("short_legs", [])]
 
         # Compute spread-level P&L from per-leg MTM when signal_tracker hasn't
         # yet written _data_levels (which is common for freshly-opened signals).
@@ -386,10 +405,16 @@ def export_live_status() -> dict:
         # show today's fresh fetch is what desyncs them. Always use the freshly
         # computed value so all three views (entry, current, P&L) agree.
         cumulative = computed_spread_pnl
-        # todays_move is genuinely a different concept (vs yesterday's close, not
-        # vs entry) and requires the prev_close snapshot signal_tracker stores.
-        # Keep that path — it's read-only against today's fetch.
-        todays_move = dl.get("todays_move") if dl.get("todays_move") else computed_spread_pnl
+        # todays_move = avg(per-leg today-move vs prev_close), computed from
+        # the SAME fresh current_prices used for cumulative above. Falls back
+        # to dl.todays_move only when signal_tracker import is unavailable.
+        if _today_move_fn is not None:
+            try:
+                todays_move = round(_today_move_fn(sig, current_prices), 2)
+            except Exception:
+                todays_move = dl.get("todays_move") if dl.get("todays_move") else computed_spread_pnl
+        else:
+            todays_move = dl.get("todays_move") if dl.get("todays_move") else computed_spread_pnl
         # Peak = best (highest) cumulative since entry; clamped to 0 because a
         # position that's only ever been red has no positive peak to lock the
         # trail to. Old fallback to computed_spread_pnl displayed the live

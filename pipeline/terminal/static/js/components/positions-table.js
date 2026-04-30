@@ -51,8 +51,11 @@ export function render(container, positions) {
     const ticker = leg.ticker || '';
     const dir = leg.pnl_pct != null ? pnlClass(leg.pnl_pct) : '';
     const entryAttr = leg.entry != null ? leg.entry : '';
+    // prev_close drives the live "Today" recompute. Falls back to entry on
+    // day-1 (no EOD snapshot yet) — matches signal_tracker._compute_todays_spread_move.
+    const prevAttr = leg.prev_close != null ? leg.prev_close : entryAttr;
     const liveAttrs = ticker
-      ? ` data-live-ltp-ticker="${ticker}" data-live-ltp-entry="${entryAttr}" data-live-ltp-side="${side}"`
+      ? ` data-live-ltp-ticker="${ticker}" data-live-ltp-entry="${entryAttr}" data-live-ltp-prev-close="${prevAttr}" data-live-ltp-side="${side}"`
       : '';
     const tag = side === 'short' ? 'S' : 'L';
     const tagCls = side === 'short' ? 'text-red' : 'text-green';
@@ -77,8 +80,9 @@ export function render(container, positions) {
       const dir = leg.pnl_pct != null ? pnlClass(leg.pnl_pct) : '';
       const ticker = leg.ticker || '';
       const entryAttr = leg.entry != null ? leg.entry : '';
+      const prevAttr = leg.prev_close != null ? leg.prev_close : entryAttr;
       const liveAttrs = ticker
-        ? ` data-live-ltp-ticker="${ticker}" data-live-ltp-entry="${entryAttr}" data-live-ltp-side="${side}"`
+        ? ` data-live-ltp-ticker="${ticker}" data-live-ltp-entry="${entryAttr}" data-live-ltp-prev-close="${prevAttr}" data-live-ltp-side="${side}"`
         : '';
       return `<span class="mono">₹${fmtPrice(leg.entry)} → <span class="${dir}"${liveAttrs}>₹${fmtPrice(leg.current)}</span></span>`;
     }
@@ -336,13 +340,17 @@ export function render(container, positions) {
       ? ` title="${descRaw.replace(/"/g, '&quot;')}"`
       : '';
 
-    return `<tr${whyTooltip ? ` title="${whyTooltip}"` : ''}>
+    // Row-level signal id lets live-ticker scope its Today recompute to one
+    // row's leg LTPs (so multi-leg basket spreads aggregate correctly).
+    const sigIdAttr = p.signal_id ? ` data-signal-id="${p.signal_id}"` : '';
+    const todayCellAttrs = p.signal_id ? ` data-live-today-cell="${p.signal_id}"` : '';
+    return `<tr${whyTooltip ? ` title="${whyTooltip}"` : ''}${sigIdAttr}>
       <td${nameTitle}>${p.spread_name || p.signal_id || '--'}</td>
       <td>${legsHtml(p)}</td>
       <td>${priceCell(p)}</td>
       <td class="mono">${opened}</td>
       <td class="mono ${pnlClass(pnl)}"${pnlLiveAttr}>${fmtPct(pnl)}${attractBadge ? ' ' + attractBadge : ''}</td>
-      <td class="mono ${pnlClass(todayMove)}" title="${todayTip}">${todayTxt}${todayWarn}</td>
+      <td class="mono ${pnlClass(todayMove)}" title="${todayTip}"${todayCellAttrs}>${todayTxt}${todayWarn}</td>
       <td class="mono ${trailArmed ? 'text-muted' : 'text-red'}" title="${trailArmed ? 'trail armed — daily stop inert. Active guardrail is the Trail column.' : 'Daily stop = -(avg_favorable × 0.50). Per-spread, from 1mo history.'}">${stop}${fallbackDot}</td>
       <td class="mono ${trailArmed ? pnlClass(trailStop) : 'text-muted'}" title="${trailArmed ? 'Active stop — ratcheted to peak minus give-back budget.' : 'Trail not armed yet — peak has not crossed |daily_stop|. Active guardrail is the Stop column.'}">${trail}</td>
       <td class="mono text-green" title="Running peak P&L since entry — trail stop ratchets off this.">${peak}</td>
@@ -366,8 +374,8 @@ export function render(container, positions) {
   const todayCls = totalToday == null ? 'text-muted'
     : totalToday >= 0 ? 'text-green' : 'text-red';
   const todayBlock = totalToday == null
-    ? `<span class="text-muted" style="font-size: 0.875rem;" title="Daily P&L unavailable for ≥1 position (prev-close snapshot missing).">Today: —</span>`
-    : `<span class="mono ${todayCls}" style="font-size: 1rem;" title="Sum of per-position 'Today' moves vs yesterday's close. Day-1 positions count move since entry.">Today: ${fmtPct(totalToday)}</span>`;
+    ? `<span class="text-muted" style="font-size: 0.875rem;" data-live-today-aggregate title="Daily P&L unavailable for ≥1 position (prev-close snapshot missing).">Today: —</span>`
+    : `<span class="mono ${todayCls}" style="font-size: 1rem;" data-live-today-aggregate title="Sum of per-position 'Today' moves vs yesterday's close. Day-1 positions count move since entry.">Today: ${fmtPct(totalToday)}</span>`;
 
   container.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--spacing-md);">
