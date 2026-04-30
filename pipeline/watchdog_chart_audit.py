@@ -231,3 +231,49 @@ def _save_state(state: dict, state_path: Path) -> None:
     tmp = state_path.with_suffix(state_path.suffix + ".tmp")
     tmp.write_text(json.dumps(state, indent=2), encoding="utf-8")
     tmp.replace(state_path)
+
+
+def _main(argv: list[str] | None = None) -> int:
+    """CLI entry — `python -m pipeline.watchdog_chart_audit`.
+
+    Used by the cloud-side companion routine (independent witness for the
+    laptop-down case) so the audit can run from a stateless git checkout
+    with one command. Local laptop runs go through pipeline.watchdog
+    instead — this entry is the non-laptop path. Exit code 0 = healthy,
+    1 = at least one issue, 2 = invocation error.
+    """
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(
+        prog="python -m pipeline.watchdog_chart_audit",
+        description="Chart-v2 health audit (universe + freshness + markers).",
+    )
+    parser.add_argument(
+        "--json", action="store_true",
+        help="Emit findings as JSON to stdout instead of human-readable lines.",
+    )
+    args = parser.parse_args(argv)
+
+    issues = audit_chart_universe()
+    if args.json:
+        print(json.dumps({
+            "ok": not issues,
+            "issue_count": len(issues),
+            "issues": issues,
+            "checked_at": datetime.now().isoformat(),
+        }, indent=2))
+    else:
+        if not issues:
+            print(f"[OK] chart audit clean — universe + freshness + markers all green "
+                  f"({datetime.now():%Y-%m-%d %H:%M})")
+        else:
+            print(f"[FAIL] {len(issues)} issue(s) found:")
+            for i in issues:
+                print(f"  - {i['kind']}: {i['detail']}")
+    return 0 if not issues else 1
+
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(_main())
