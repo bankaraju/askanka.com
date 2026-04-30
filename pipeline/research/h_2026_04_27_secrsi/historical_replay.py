@@ -206,14 +206,23 @@ def _load_sector_map() -> dict[str, str]:
     return {sym: meta.get("sector", "") for sym, meta in full.items()}
 
 
-def _load_universe() -> list[str]:
+def _load_universe(*, sort_by_adv: bool = True) -> list[str]:
     if not CANONICAL.is_file():
         raise SystemExit(f"canonical FNO file missing: {CANONICAL}")
     doc = json.loads(CANONICAL.read_text(encoding="utf-8"))
     valid_from = doc.get("per_ticker_valid_from", {}) or doc.get("tickers", {})
     if isinstance(valid_from, dict):
-        return list(valid_from.keys())
-    return list(valid_from)
+        tickers = list(valid_from.keys())
+    else:
+        tickers = list(valid_from)
+    if sort_by_adv:
+        try:
+            from pipeline.research.auto_spread_discovery.liquidity import _cached_universe_adv
+            adv = _cached_universe_adv()
+            tickers.sort(key=lambda t: -adv.get(t.upper(), 0.0))
+        except Exception:
+            tickers.sort()
+    return tickers
 
 
 # ---- Replay loop ------------------------------------------------------------

@@ -235,13 +235,16 @@ def backfill_ticker(
         time.sleep(sleep_between)
 
     if new_rows and not dry_run:
-        # Sort by datetime to merge with existing rows correctly
-        new_rows.sort(key=lambda r: r[0])
-        # Append to existing file (which preserves prior data)
-        # If file doesn't exist, _write_csv writes header+rows
-        _write_csv(out_path, new_rows, append=True)
-        # Re-sort the file by datetime (in-place) to handle out-of-order chunks
-        _resort_csv(out_path)
+        # Re-read existing to defeat concurrent-writer races (multiple
+        # orchestrator processes hitting same file). Bit us 2026-04-30
+        # when 3 backfills ran in parallel and dedup-against-stale-set
+        # produced 3x rows.
+        fresh_existing = _existing_dt_set(out_path)
+        new_rows = [r for r in new_rows if r[0] not in fresh_existing]
+        if new_rows:
+            new_rows.sort(key=lambda r: r[0])
+            _write_csv(out_path, new_rows, append=True)
+            _resort_csv(out_path)
 
     return results
 
