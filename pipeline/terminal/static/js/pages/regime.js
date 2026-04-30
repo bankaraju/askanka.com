@@ -161,7 +161,7 @@ export async function render(container) {
       const pnlCls = pnl >= 0 ? 'text-green' : 'text-red';
       const pnlSgn = pnl >= 0 ? '+' : '';
       return `<div class="digest-row" title="${_esc(p.spread_name || '')}">
-        <span class="digest-row__label">${dirBadge}${_esc(ticker)}</span>
+        <span class="digest-row__label">${dirBadge}<a class="ticker-link" data-ticker="${_esc(ticker)}" href="#" role="button">${_esc(ticker)}</a></span>
         <span class="digest-row__value mono ${pnlCls}">${pnlSgn}${pnl.toFixed(2)}%</span>
       </div>`;
     }).join('');

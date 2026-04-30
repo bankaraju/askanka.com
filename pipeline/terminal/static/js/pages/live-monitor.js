@@ -49,6 +49,8 @@ const COLUMNS = [
     title: 'Pure price-action geometry (LAG = stock behind peer / OVERSHOOT = stock past peer / DEGENERATE = move too small). PCR-free.' },
   { key: 'classification', label: 'Class',     numeric: false,
     title: 'Geometric classification of the break (LAG / OVERSHOOT / DEGENERATE). PCR-free as of 2026-04-27 — per-stock PCR was illiquid and not a gate.' },
+  { key: 'filter_tag',    label: 'Filter',     numeric: false,
+    title: 'Display-only VWAP-deviation cohort tag (KEEP / DROP / WATCH). Computed from vwap_dev_signed_pct vs frozen tertile cuts. Not yet a live gate per H-001 single-touch holdout discipline.' },
   { key: 'entry_time',    label: 'Open',       numeric: false },
 ];
 
@@ -280,11 +282,26 @@ function renderRow(r) {
   const classCell = r.classification
     ? `<span title="${escapeHtml(r.classification)}">${escapeHtml(r.classification)}</span>`
     : '—';
+  // Filter cell: VWAP-deviation cohort tag (KEEP / DROP / WATCH). Display-only;
+  // not yet a live gate during the H-001 single-touch holdout. Tooltip shows
+  // the raw signed VWAP deviation so the badge is auditable at a glance.
+  // vwap_dev_signed_pct is already in percent units (computed as
+  // (px - vwap)/vwap * 100 at source in intraday_panel_v1.py:92), so we
+  // just format — no extra multiply.
+  const vwapPctStr = r.vwap_dev_signed_pct != null
+    ? `${parseFloat(r.vwap_dev_signed_pct).toFixed(2)}%`
+    : 'n/a';
+  const filterTag = r.filter_tag || null;
+  const filterCell = filterTag
+    ? `<span class="filter-pill filter-pill--${filterTag.toLowerCase()}" title="VWAP signed dev: ${vwapPctStr}">${escapeHtml(filterTag)}</span>`
+    : '<span class="filter-pill filter-pill--none" title="No filter tag (Phase C row or VWAP unavailable)">—</span>';
   return `
     <tr class="row--${(r.status || 'unknown').toLowerCase()} row--engine-${engineCls}">
       <td><span class="engine-pill engine-pill--${engineCls}">${escapeHtml(enginePill)}</span></td>
       <td><span class="${statusClass}">${escapeHtml(r.status || '—')}</span></td>
-      <td class="mono">${escapeHtml(r.ticker || '')}</td>
+      <td class="mono">${r.ticker
+        ? `<a class="ticker-link" data-ticker="${escapeHtml(r.ticker)}" href="#" role="button">${escapeHtml(r.ticker)}</a>`
+        : ''}</td>
       <td>${r.sector_display
         ? `<span class="sector-pill" title="${escapeHtml(r.sector || '')}">${escapeHtml(r.sector_display)}</span>`
         : '<span class="sector-pill sector-pill--unknown">—</span>'}</td>
@@ -297,6 +314,7 @@ function renderRow(r) {
       <td class="mono">${escapeHtml(String(zCell))}</td>
       <td>${geoCell}</td>
       <td>${classCell}</td>
+      <td>${filterCell}</td>
       <td class="mono">${escapeHtml(timeOnly(r.entry_time))}</td>
     </tr>
   `;
