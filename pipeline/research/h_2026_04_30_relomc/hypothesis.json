@@ -1,0 +1,23 @@
+{
+  "hypothesis_id": "H-2026-04-30-RELOMC-EUPHORIA",
+  "spec_ref": "docs/superpowers/specs/2026-04-30-relomc-euphoria-design.md",
+  "registry_ref": "docs/superpowers/hypothesis-registry.jsonl",
+  "long_legs": ["RELIANCE"],
+  "short_legs": ["BPCL", "IOC"],
+  "regime_gate": "V3_CURATED_30_EUPHORIA_at_T_minus_1_close",
+  "entry_time_ist": "09:15",
+  "hold_period_trading_days": 5,
+  "exit_time_ist_on_target_day": "14:25",
+  "stop_loss_pct_per_basket": -3.0,
+  "sizing": "equal_notional_3_legs_dollar_neutral",
+  "cost_round_trip_bps": 20,
+  "holdout_window": ["2026-05-01", "2027-04-30"],
+  "min_holdout_observations": 10,
+  "verdict_bar": {
+    "post_S1_mean_bps_min": 0,
+    "p_value_max": 0.05,
+    "hit_rate_pct_min": 60
+  },
+  "single_touch_locked": true,
+  "standards_version": "1.0_2026-04-23"
+}
