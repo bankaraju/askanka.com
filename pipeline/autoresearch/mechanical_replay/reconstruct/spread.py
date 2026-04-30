@@ -132,7 +132,8 @@ def regenerate(
         merged["spread"] = merged["basket_log_long"] - merged["basket_log_short"]
         merged.set_index(pd.to_datetime(merged["date"]), inplace=True)
 
-        for d in pd.bdate_range(window_start, window_end):
+        from pipeline.autoresearch.mechanical_replay.reconstruct.phase_c import _trading_days
+        for d in _trading_days(window_start, window_end):
             d_norm = pd.Timestamp(d).normalize()
             history = merged[merged.index < d_norm].tail(lookback_days)
             if len(history) < max(20, lookback_days // 2):

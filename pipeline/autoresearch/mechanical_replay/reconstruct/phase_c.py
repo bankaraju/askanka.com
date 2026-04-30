@@ -47,6 +47,23 @@ from pipeline.autoresearch.reverse_regime_breaks import (
 )
 from pipeline.research.phase_c_backtest import profile as profile_mod
 from pipeline.research.phase_c_backtest.regime import _daily_return_at
+from pipeline.trading_calendar import is_trading_day
+
+
+def _trading_days(start: pd.Timestamp, end: pd.Timestamp) -> list[pd.Timestamp]:
+    """Trading days in [start, end] — weekends + NSE holidays excluded.
+
+    Replaces `pd.bdate_range` which only filters weekends. Bit us 2026-04-29
+    when 248/636 phase_c replay rows were tagged FETCH_FAILED for dates that
+    were NSE holidays (Holi, Eid, Mahavir Jayanti, Ambedkar Jayanti).
+    See memory/reference_replay_calendar_bug_2026_04_29.md.
+    """
+    from datetime import datetime, timezone, timedelta
+    IST = timezone(timedelta(hours=5, minutes=30))
+    return [
+        d for d in pd.bdate_range(start, end)
+        if is_trading_day(datetime(d.year, d.month, d.day, tzinfo=IST))
+    ]
 
 log = logging.getLogger(__name__)
 
@@ -74,7 +91,7 @@ def load_pcr_history(
     out: dict[str, dict[str, float]] = {}
     start = pd.Timestamp(window_start).normalize()
     end = pd.Timestamp(window_end).normalize()
-    for d in pd.bdate_range(start, end):
+    for d in _trading_days(start, end):
         date_str = d.strftime("%Y-%m-%d")
         path = pcr_dir / f"{date_str}.parquet"
         if not path.exists():
@@ -188,7 +205,7 @@ def regenerate(
         )
 
     rows: list[dict] = []
-    for d in pd.bdate_range(window_start, window_end):
+    for d in _trading_days(window_start, window_end):
         date_str = d.strftime("%Y-%m-%d")
         regime = regime_by_date.get(date_str)
         if regime is None:

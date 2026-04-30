@@ -70,19 +70,26 @@ TRADES_CSV = DATA_DIR / "trades_with_exit.csv"
 ENGINE_SUMMARY_JSON = DATA_DIR / "engine_summary.json"
 REPORT_MD = _REPO / "docs" / "research" / "mechanical_replay" / "2026-04-25-replay-60day.md"
 
-# Sector → NSE sectoral index map (per canonical audit doc §9)
+# Sector → Kite-tradingsymbol sectoral index map (per canonical audit doc §9).
+# Values are Kite tradingsymbols (with spaces) so the SP1 fetcher's default
+# token resolver returns a non-None instrument_token. Keys cover both legacy
+# labels and SectorMapper.map_all() outputs.
 SECTOR_TO_INDEX = {
-    "Banks": "BANKNIFTY",
-    "IT_Services": "NIFTYIT",
-    "Pharma": "NIFTYPHARMA",
-    "FMCG": "NIFTYFMCG",
-    "Metals_Mining": "NIFTYMETAL",
-    "Power_Utilities": "NIFTYPSUBANK",  # proxy
-    "Auto_Components": "NIFTYAUTO",     # proxy
-    "Consumer_Discretionary": "NIFTYAUTO",  # proxy
-    "Real_Estate": "NIFTYREALTY",
-    "Oil_Gas": "NIFTYENERGY",
-    "Media": "NIFTYMEDIA",
+    "Banks": "NIFTY BANK",
+    "IT_Services": "NIFTY IT",
+    "Pharma": "NIFTY PHARMA",
+    "FMCG": "NIFTY FMCG",
+    "Metals_Mining": "NIFTY METAL",
+    "Power_Utilities": "NIFTY PSU BANK",  # proxy
+    "Auto_Components": "NIFTY AUTO",     # proxy
+    "Consumer_Discretionary": "NIFTY AUTO",  # proxy
+    "Real_Estate": "NIFTY REALTY",
+    "Oil_Gas": "NIFTY ENERGY",
+    "Media": "NIFTY MEDIA",
+    # SectorMapper aliases (post 2026-04-25 wiring)
+    "Autos": "NIFTY AUTO",
+    "Auto_Ancillaries": "NIFTY AUTO",
+    "Real_Estate_Hotels": "NIFTY REALTY",  # proxy
 }
 
 # Phase C classifications considered tradeable per the live engine (post-2026-04-23 split)

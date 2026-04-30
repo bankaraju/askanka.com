@@ -29,17 +29,22 @@ def _normalise_minute_bars(bars: pd.DataFrame) -> pd.DataFrame:
     df = bars.copy()
     if "datetime" in df.columns:
         df["datetime"] = pd.to_datetime(df["datetime"])
+    elif "timestamp_ist" in df.columns:
+        df = df.rename(columns={"timestamp_ist": "datetime"})
+        df["datetime"] = pd.to_datetime(df["datetime"])
     elif "timestamp" in df.columns:
         df = df.rename(columns={"timestamp": "datetime"})
         df["datetime"] = pd.to_datetime(df["datetime"])
     elif "time" in df.columns:
         df = df.rename(columns={"time": "datetime"})
         df["datetime"] = pd.to_datetime(df["datetime"])
-    elif df.index.name in ("datetime", "timestamp", "time"):
+    elif df.index.name in ("datetime", "timestamp_ist", "timestamp", "time"):
         df = df.reset_index().rename(columns={df.index.name: "datetime"})
         df["datetime"] = pd.to_datetime(df["datetime"])
     else:
-        raise ValueError("minute bars must have a datetime/timestamp/time column or index")
+        raise ValueError(
+            "minute bars must have a datetime/timestamp_ist/timestamp/time column or index"
+        )
     if "close" not in df.columns:
         raise ValueError("minute bars must have a `close` column")
     return df[["datetime", "close"]].sort_values("datetime").reset_index(drop=True)

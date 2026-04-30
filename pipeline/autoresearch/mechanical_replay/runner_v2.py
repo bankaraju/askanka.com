@@ -55,6 +55,24 @@ except ImportError:
     sp1_fetcher = None
     sp1_const = None
 
+try:
+    from pipeline.scorecard_v2.sector_mapper import SectorMapper
+except ImportError:
+    SectorMapper = None  # type: ignore
+
+
+def _load_sector_by_ticker() -> dict[str, str]:
+    """Build {ticker: sector} via SectorMapper, gracefully degrade on import fail."""
+    if SectorMapper is None:
+        logger.warning("SectorMapper unavailable — Phase C rows will have null sector")
+        return {}
+    try:
+        m = SectorMapper().map_all()
+        return {t: v.get("sector") for t, v in m.items() if v.get("sector")}
+    except Exception as exc:
+        logger.warning("SectorMapper.map_all failed: %s", exc)
+        return {}
+
 logger = logging.getLogger("mechanical_replay.v2")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -128,12 +146,21 @@ def reconstruct_all(
         "  loaded PCR archive: %d days, ~%d symbols/day",
         n_pcr_days, n_pcr_symbol_avg,
     )
+    sector_by_ticker = _load_sector_by_ticker()
+    n_sec_mapped = sum(
+        1 for t in universe_bars if sector_by_ticker.get(t) in C.SECTOR_TO_INDEX
+    )
+    logger.info(
+        "  sector map: %d/%d tickers map to a sectoral index",
+        n_sec_mapped, len(universe_bars),
+    )
     phase_c_full = recon_phase_c.regenerate(
         window_start=window_start,
         window_end=window_end,
         universe_bars=universe_bars,
         regime_by_date=regime_by_date,
         pcr_by_date=pcr_by_date,
+        sector_by_ticker=sector_by_ticker,
         actionable_only=False,
     )
     # Without per-day PCR archive (a §14 contamination), `classify_break`

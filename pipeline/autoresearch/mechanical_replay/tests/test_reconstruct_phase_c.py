@@ -93,6 +93,39 @@ def test_phase_c_regen_skips_dates_with_no_regime():
     assert out.empty
 
 
+def test_trading_days_excludes_nse_holidays():
+    """Regression for the 2026-04-29 phantom-holiday bug.
+
+    `pd.bdate_range` filters weekends but not gazetted NSE holidays. The replay
+    engine fired Phase C signals on 5 holidays, producing 248 FETCH_FAILED
+    rows. The fix replaces `pd.bdate_range` with `_trading_days`, which
+    additionally consults `pipeline.trading_calendar.is_trading_day`.
+
+    Pinned date: Holi 2026-03-10 — NSE is closed, output must not include it.
+    """
+    holi = pd.Timestamp("2026-03-10")
+    days = phase_c._trading_days(holi - pd.Timedelta(days=2), holi + pd.Timedelta(days=2))
+    day_strs = {d.strftime("%Y-%m-%d") for d in days}
+    assert "2026-03-10" not in day_strs, "Holi must be excluded — NSE closed"
+    # Sanity check: surrounding weekdays that are NOT holidays should be present.
+    assert "2026-03-09" in day_strs  # Monday before Holi
+    assert "2026-03-11" in day_strs  # Wednesday after Holi
+
+
+def test_trading_days_excludes_weekends_and_holidays_together():
+    """Multiple consecutive non-trading days collapse cleanly."""
+    # 2026-03-30 (Mon, Eid), 2026-03-31 (Tue, Mahavir Jayanti) are both holidays.
+    days = phase_c._trading_days(
+        pd.Timestamp("2026-03-27"), pd.Timestamp("2026-04-01")
+    )
+    day_strs = {d.strftime("%Y-%m-%d") for d in days}
+    assert "2026-03-30" not in day_strs
+    assert "2026-03-31" not in day_strs
+    # 2026-03-28/29 are weekend (already filtered by bdate_range).
+    assert "2026-03-27" in day_strs  # Friday
+    assert "2026-04-01" in day_strs  # Wednesday after long weekend
+
+
 def test_phase_c_regen_signal_id_matches_live_format():
     """Roster row should carry a signal_id of the form BRK-<date>-<symbol>."""
     universe_bars = {
