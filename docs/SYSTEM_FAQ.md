@@ -4,7 +4,7 @@ A living reference of Q&A about how the Anka research system actually works. Syn
 
 > **Purpose:** stop re-asking the same questions across sessions. When something is asked and answered well in chat, it lands here.
 
-**Last updated:** 2026-04-30 (evening — skeletons audit Q&As appended)
+**Last updated:** 2026-04-30 (late evening — backtest verdicts §17 appended)
 
 ---
 
@@ -26,6 +26,7 @@ A living reference of Q&A about how the Anka research system actually works. Syn
 14. [Why each test exists (pedagogical)](#14-why-each-test)
 15. [Glossary of acronyms](#15-glossary)
 16. [Skeletons audit Q&As (2026-04-30 evening)](#16-skeletons-audit-qa)
+17. [Backtest verdicts (2026-04-30)](#17-backtest-verdicts-2026-04-30)
 
 ---
 
@@ -459,6 +460,50 @@ Going-forward rule: **trade triggers must be data-primary; news is reassurance, 
 ### Q: What does the new "skeletons audit" document do?
 
 **A:** `docs/SYSTEM_SKELETONS_AUDIT.md` — comprehensive inventory of every system component, registration/audit state, doc-coverage status, and gaps. Tagged with severity (CRITICAL / HIGH / MEDIUM / LOW). Re-run weekly until the doc-coverage column has zero "gap" or "skeleton" rows. Going-forward rule: every system component must have (1) entry in `anka_inventory.json` if scheduled, (2) a spec or design doc, (3) an FAQ entry, (4) a declared `data_primary_trigger` and provenance fields if it generates trades or consumes news.
+
+---
+
+## 17. Backtest verdicts (2026-04-30)
+
+### Q: We ran the 5y backtest of all 13 INDIA_SPREAD_PAIRS baskets — what did it find?
+
+A: **Brutal.** Only **1 PASS cell across 234** regime-conditional cells: Reliance vs OMCs in EUPHORIA, 5d hold (n=28, post-20bp +275 bps, t=4.38, hit 75%, BH-FDR survive). Mode A (news-conditional 2y) had 0 PASS — news conditioning adds nothing the data can prove. Full readout: `docs/research/india_spread_pairs_backtest/findings_2026-04-30.md`.
+
+### Q: So what about "PSU Commodity vs Banks", the most consistent paper earner?
+
+A: **No statistical edge in the 5y data.** Best Mode B cell: t=1.41 (RISK-ON 5d). The live paper P&L is consistent with sample-period luck. Specifically: in the 24 months of news data (Mode A), the basket fired ~23 times — n too small to prove or disprove news conditioning. Recommend: keep paper-trading until the next 12 months adds n, but tag with "no edge proven" in the UI.
+
+### Q: Which baskets are kill candidates?
+
+A: 4 confirmed structural net-losers (negative post-cost mean across every regime over 5y):
+- Reliance vs OMCs (#3) — outside EUPHORIA, where it earns. Inside EUPHORIA, see promotion below.
+- Pharma vs Cyclicals (#5)
+- EV Plays vs ICE Auto (#12)
+- Infra Capex Beneficiaries (#13)
+
+Plan: leave the news-trigger live for now (no behavioral change); when the V1 kill-switch fires per the news-driven framework deprecation, these 4 don't get individual hypothesis registrations. They die as the framework dies.
+
+### Q: Which baskets actually have structural alpha?
+
+A: 4 candidates emerged in the Mode B 5y test:
+- **Defence vs IT (#2) NEUTRAL 5d**: t=3.76, n=882, post +63 bps — fails ONLY hit-rate by 1.0pt
+- **Defence vs IT (#2) RISK-ON 5d**: t=4.80, n=161, post +172 bps — fails MaxDD (path is bumpy)
+- **Defence vs Auto (#7) RISK-ON 5d**: t=4.73, n=161, post +185 bps — same MaxDD issue
+- **Reliance vs OMCs (#3) EUPHORIA 5d**: PASS (the one PASS cell). Promoted to `H-2026-04-30-RELOMC-EUPHORIA`.
+
+The Defence cases need a sizing rework (ATR-scaled notional, not equal-notional) before re-registration. The Defence story is: HAL, BEL beating IT/Auto over 5y — likely a structural sector trend (defence push post-Russia-Ukraine + India's military modernization), not news.
+
+### Q: What does this mean for the news-driven framework?
+
+A: It means **news is reassurance, not alpha**. Per memory `feedback_news_is_reassurance_not_trigger.md`. The 4 surviving baskets earn money STRUCTURALLY — news triggers correlate weakly or not at all with the actual return. Once provenance recording is wired (Task #23 phase 1 in `pipeline.news_provenance` shipped 2026-04-30), news becomes a *contradicts-block* (anti-correlation guard), not a primary trigger. When V1 holdout completes 2026-06-27 and passes, the kill-switch deprecates news triggers entirely.
+
+### Q: What's `H-2026-04-30-RELOMC-EUPHORIA`?
+
+A: The first hypothesis born from this backtest. LONG RELIANCE / SHORT BPCL+IOC, opens at 09:15 IST whenever V3 CURATED-30 regime label = EUPHORIA at T-1 close, hold 5 trading days, exit at T+5 close. Holdout 2026-05-01 → 2027-04-30. EUPHORIA is rare (~5-8 days/year), so verdict is slow by design — single-touch is binding. Spec: `docs/superpowers/specs/2026-04-30-relomc-euphoria-design.md`.
+
+### Q: Did the sector × regime matrix find anything?
+
+A: Yes — 16 sectors qualify in RISK-ON regime over 5y (broad-based bullish). Also 4 in NEUTRAL. None in RISK-OFF / EUPHORIA (small n). This is descriptive evidence that the regime conditioning architecture works: when V3 calls RISK-ON, broad sector longs have positive expectancy. Promotable cells become candidates for autoresearch v2's hypothesis proposal queue. NOT trade signals on their own — they need single-touch holdouts. Findings: `docs/research/sector_regime/sector_regime_matrix_2026-04-30.md`.
 
 ---
 
