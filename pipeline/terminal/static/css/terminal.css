@@ -1076,6 +1076,46 @@ h3 { font-size: 1.125rem; }
 .geo-pill--degenerate { background: rgba(148, 163, 184, 0.12); color: var(--text-secondary); }
 .geo-pill--stale      { background: transparent; color: var(--text-secondary); }
 
+/* Filter pill (display-only VWAP-deviation cohort tag, KEEP / DROP / WATCH).
+ * Holdout discipline: not a live gate yet — the colour is informational so
+ * the user can see at a glance whether a row sits in the historically
+ * profitable VWAP cohort. */
+.filter-pill {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.filter-pill--keep  { background: rgba(34, 197, 94, 0.14); color: #4ade80; }
+.filter-pill--drop  { background: rgba(239, 68, 68, 0.14); color: #f87171; }
+.filter-pill--watch { background: rgba(148, 163, 184, 0.12); color: var(--text-secondary); }
+.filter-pill--none  { background: transparent; color: var(--text-secondary); }
+
+/* Copy-tradingsymbol button on the Phase C paired-shadow open-pairs table.
+ * Styled as a subtle inline mono affordance so it reads as text but signals
+ * clickability. Hover lifts the chrome; the JS handler swaps text to "✓ copied"
+ * for 1.2s on success. Used wherever a tradingsymbol needs to land in Kite. */
+.copy-symbol {
+  font-family: inherit;
+  font-size: inherit;
+  background: rgba(201, 168, 100, 0.08);
+  color: var(--gold, #c9a864);
+  border: 1px solid rgba(201, 168, 100, 0.2);
+  border-radius: 3px;
+  padding: 1px 5px;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.copy-symbol:hover {
+  background: rgba(201, 168, 100, 0.18);
+  border-color: rgba(201, 168, 100, 0.4);
+}
+.copy-symbol:active {
+  background: rgba(201, 168, 100, 0.28);
+}
+
 /* Sector pill — neutral, low-chrome label so it doesn't compete with status/geo. */
 .sector-pill {
   display: inline-block;

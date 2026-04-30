@@ -312,22 +312,61 @@ def _build_futures_signal_id_set(futures_rows: list) -> set:
 
 
 def _project_open_pair(row: dict) -> dict:
-    """Project an OPEN options ledger row to the endpoint's open_pairs schema."""
+    """Project an OPEN options ledger row to the endpoint's open_pairs schema.
+
+    Phase A trader-grade columns (#75 follow-up): expose fields already in the
+    ledger so the UI can show entry premium, position size, max loss, time
+    decay clock, and the drift-vs-rent edge magnitude. Live mark-to-market is
+    Phase B (separate endpoint with Kite quote calls).
+    """
+    strike = row.get("strike")
+    lot_size = row.get("lot_size") or 0
+    lots = row.get("lots") or 0
+    # Max loss for SHORT puts = strike × notional units, since underlying → 0
+    # exhausts the entire strike. SHORT calls are theoretically unbounded; we
+    # cap at None so the UI shows ∞. LONG options: max loss = premium paid.
+    side = row.get("side", "")
+    opt_type = row.get("option_type", "")
+    entry_mid = row.get("entry_mid")
+    if side == "SHORT" and opt_type == "PE" and strike and lot_size and lots:
+        max_loss_inr = float(strike) * float(lot_size) * int(lots)
+    elif side == "SHORT" and opt_type == "CE":
+        max_loss_inr = None  # theoretically unbounded
+    elif side == "LONG" and entry_mid and lot_size and lots:
+        max_loss_inr = float(entry_mid) * float(lot_size) * int(lots)
+    else:
+        max_loss_inr = None
+
+    matrix = row.get("drift_vs_rent_matrix") or {}
+    edge_1m = (matrix.get("1_month") or {}).get("net_edge_pct")
+
     return {
         "signal_id": row.get("signal_id", ""),
         "symbol": row.get("symbol", ""),
-        "side": row.get("side", ""),
-        "option_type": row.get("option_type", ""),
+        "side": side,
+        "option_type": opt_type,
         "tradingsymbol": row.get("tradingsymbol", ""),
-        "strike": row.get("strike"),
+        "strike": strike,
         "expiry_date": row.get("expiry_date", ""),
+        "days_to_expiry": row.get("days_to_expiry"),
         "is_expiry_day": row.get("is_expiry_day", False),
         "drift_vs_rent_tier": row.get("drift_vs_rent_tier", "UNKNOWN"),
         "futures_pnl_pct": None,
         "options_pnl_pct": None,
-        "entry_mid": row.get("entry_mid"),
+        "entry_mid": entry_mid,
+        "entry_bid": row.get("entry_bid"),
+        "entry_ask": row.get("entry_ask"),
+        "spread_pct_at_entry": row.get("spread_pct_at_entry"),
         "entry_iv": row.get("entry_iv"),
         "entry_delta": row.get("entry_delta"),
+        "entry_theta": row.get("entry_theta"),
+        "entry_vega": row.get("entry_vega"),
+        "lot_size": lot_size,
+        "lots": lots,
+        "notional_at_entry": row.get("notional_at_entry"),
+        "max_loss_inr": max_loss_inr,
+        "net_edge_pct_1m": edge_1m,
+        "entry_time": row.get("entry_time", ""),
     }
 
 
