@@ -52,6 +52,7 @@ log = logging.getLogger("anka.phase_c_minute.runner")
 
 REPO = Path(__file__).resolve().parents[3]
 INTRADAY_1M_DIR = REPO / "pipeline" / "data" / "fno_intraday_1m"
+INTRADAY_5M_DIR = REPO / "pipeline" / "data" / "fno_intraday_5m"
 PIT_REGIME_TAPE = REPO / "pipeline" / "data" / "research" / "etf_v3" / "regime_tape_5y_pit.csv"
 OUT_DIR = REPO / "pipeline" / "data" / "research" / "phase_c"
 
@@ -179,6 +180,7 @@ def _replay_one_day(
     rows: list[dict] = []
     snap_times = r.snapshot_times()
     seen_today: set[str] = set()
+    seen_today_research: set[str] = set()  # for POSSIBLE_OPPORTUNITY first-touch
     for ticker, day_bars in minute_cache.items():
         bars = day_bars.get(day)
         if not bars:
@@ -195,6 +197,17 @@ def _replay_one_day(
             snap_bar = next((b for b in bars if b["time"] >= snap_t), None)
             if snap_bar is None or snap_bar["close"] is None:
                 continue
+            # Snap-time tolerance: only fire if a bar exists within 15 minutes
+            # of `snap_t`. Without this, days with sparse / partial coverage
+            # (e.g. holiday-adjacent half-days, broken EODHD captures) let the
+            # engine "snap" to a 15:09 bar at the 11:00 slot, producing a fake
+            # signal whose exit window [11:00..14:30] then has no bars at all.
+            sh, sm, _ = snap_t.split(":")
+            bh, bm, _ = snap_bar["time"].split(":")
+            snap_minutes = int(sh) * 60 + int(sm)
+            bar_minutes = int(bh) * 60 + int(bm)
+            if bar_minutes - snap_minutes > 15:
+                continue
             sig = r.compute_signal_at_snapshot(
                 date=day, snap_time_ist=snap_t, ticker=ticker,
                 regime=regime, sector=sector_map.get(ticker),
@@ -207,41 +220,89 @@ def _replay_one_day(
             if sig is None:
                 continue
             row = asdict(sig)
-            if sig.status == "OPEN" and sig.trade_rec:
+            row["entry_px"] = round(float(snap_bar["close"]), 4)
+            row["atr_14"] = round(atr, 4) if atr is not None else ""
+
+            # Decide synthetic trade direction for research-mode exit simulation.
+            # Live engine routes OPPORTUNITY_LAG only; this code records that
+            # outcome AND simulates POSSIBLE_OPPORTUNITY (mean-revert toward
+            # expected direction = same side as expected return) on first-touch
+            # only — same de-dup discipline as live LAG routing.
+            synth_route: str | None = None
+            synth_side: str | None = None
+            if sig.classification == "OPPORTUNITY_LAG" and sig.trade_rec:
+                synth_route = "LAG"
+                synth_side = sig.trade_rec
+            elif (
+                sig.classification == "POSSIBLE_OPPORTUNITY"
+                and ticker not in seen_today_research
+            ):
+                synth_side = r._direction_from_expected(sig.expected_ret * 100)
+                if synth_side:
+                    synth_route = "POSSIBLE_OPPORTUNITY"
+                    seen_today_research.add(ticker)
+
+            simulate = (
+                synth_route is not None
+                and synth_side is not None
+                and sig.status in ("OPEN", "INFORMATIONAL")
+            )
+            if simulate:
                 exit_px, exit_reason, exit_t = r.simulate_exit(
-                    bars, snap_t, sig.trade_rec, float(snap_bar["close"]), atr,
+                    bars, snap_t, synth_side, float(snap_bar["close"]), atr,
                 )
-                pnl_pct_gross = r.realize_pnl(sig.trade_rec, float(snap_bar["close"]), exit_px)
-                pnl_pct_net = pnl_pct_gross - (COST_BPS / 1e4)
-                row["entry_px"] = round(float(snap_bar["close"]), 4)
-                row["exit_px"] = round(exit_px, 4)
-                row["exit_reason"] = exit_reason
-                row["exit_time_ist"] = exit_t
-                row["pnl_pct_net"] = round(pnl_pct_net, 6)
-                row["pnl_inr_net"] = round(pnl_pct_net * NOTIONAL_INR, 2)
-                row["atr_14"] = round(atr, 4) if atr is not None else ""
-                row["notional_inr"] = NOTIONAL_INR
-                rows.append(row)
+                if exit_reason == "NO_DATA":
+                    # No bars between snap_t and 14:30 — drop from PnL pool;
+                    # record as informational so the row exists for diagnosis.
+                    row["exit_px"] = ""
+                    row["exit_reason"] = "NO_DATA"
+                    row["exit_time_ist"] = ""
+                    row["pnl_pct_net"] = ""
+                    row["pnl_inr_net"] = ""
+                    row["notional_inr"] = ""
+                    row["route_slice"] = ""
+                    row["synth_side"] = ""
+                else:
+                    pnl_pct_gross = r.realize_pnl(
+                        synth_side, float(snap_bar["close"]), exit_px,
+                    )
+                    pnl_pct_net = pnl_pct_gross - (COST_BPS / 1e4)
+                    row["exit_px"] = round(exit_px, 4)
+                    row["exit_reason"] = exit_reason
+                    row["exit_time_ist"] = exit_t
+                    row["pnl_pct_net"] = round(pnl_pct_net, 6)
+                    row["pnl_inr_net"] = round(pnl_pct_net * NOTIONAL_INR, 2)
+                    row["notional_inr"] = NOTIONAL_INR
+                    row["route_slice"] = synth_route
+                    row["synth_side"] = synth_side
             else:
-                # Informational / duplicate / no-trade — record without exit
-                row["entry_px"] = round(float(snap_bar["close"]), 4)
                 row["exit_px"] = ""
                 row["exit_reason"] = ""
                 row["exit_time_ist"] = ""
                 row["pnl_pct_net"] = ""
                 row["pnl_inr_net"] = ""
-                row["atr_14"] = round(atr, 4) if atr is not None else ""
                 row["notional_inr"] = ""
-                rows.append(row)
+                row["route_slice"] = ""
+                row["synth_side"] = ""
+            rows.append(row)
     return rows
 
 
-def _summarize(traded_rows: list[dict]) -> dict:
-    if not traded_rows:
-        return {"n_traded": 0, "mean_bps_net": 0.0, "hit_rate": 0.0,
-                "kill_criteria_met": True}
-    pnls = [float(r["pnl_pct_net"]) for r in traded_rows
-            if r.get("pnl_pct_net") not in (None, "", "INFORMATIONAL")]
+def _summarize_slice(rows: list[dict], slice_name: str) -> dict:
+    """Summarise rows for one route_slice (LAG, POSSIBLE_OPPORTUNITY, or all)."""
+    if slice_name == "all":
+        in_slice = [r for r in rows if r.get("route_slice")]
+    else:
+        in_slice = [r for r in rows if r.get("route_slice") == slice_name]
+    pnls: list[float] = []
+    for r in in_slice:
+        v = r.get("pnl_pct_net")
+        if v in (None, "", "INFORMATIONAL"):
+            continue
+        try:
+            pnls.append(float(v))
+        except (TypeError, ValueError):
+            continue
     if not pnls:
         return {"n_traded": 0, "mean_bps_net": 0.0, "hit_rate": 0.0,
                 "kill_criteria_met": True}
@@ -259,12 +320,58 @@ def _summarize(traded_rows: list[dict]) -> dict:
     }
 
 
+def _summarize(traded_rows: list[dict]) -> dict:
+    """Top-level summary: per-slice (LAG, POSSIBLE_OPPORTUNITY, all) + by_regime."""
+    out: dict = {
+        "lag": _summarize_slice(traded_rows, "LAG"),
+        "possible_opportunity": _summarize_slice(traded_rows, "POSSIBLE_OPPORTUNITY"),
+        "all": _summarize_slice(traded_rows, "all"),
+    }
+    # Live behaviour = LAG-only routing
+    out["n_traded"] = out["lag"]["n_traded"]
+    out["mean_bps_net"] = out["lag"]["mean_bps_net"]
+    out["hit_rate"] = out["lag"]["hit_rate"]
+    out["kill_criteria_met"] = out["lag"]["kill_criteria_met"]
+    # Regime slice for the bigger POSSIBLE_OPPORTUNITY pool
+    by_regime: dict[str, dict] = {}
+    pool = [r for r in traded_rows
+            if r.get("route_slice") == "POSSIBLE_OPPORTUNITY" and r.get("pnl_pct_net") not in (None, "")]
+    if pool:
+        regimes = sorted({r["regime"] for r in pool})
+        for reg in regimes:
+            sub = [r for r in pool if r["regime"] == reg]
+            pnls = []
+            for r in sub:
+                try:
+                    pnls.append(float(r["pnl_pct_net"]))
+                except (TypeError, ValueError):
+                    pass
+            if not pnls:
+                continue
+            mean = statistics.mean(pnls)
+            hit = sum(1 for p in pnls if p > 0) / len(pnls)
+            by_regime[reg] = {
+                "n": len(pnls),
+                "mean_bps_net": round(mean * 1e4, 2),
+                "hit_rate": round(hit, 4),
+            }
+    out["possible_opportunity_by_regime"] = by_regime
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--from", dest="from_d", required=True, help="YYYY-MM-DD")
     ap.add_argument("--to", dest="to_d", required=True)
     ap.add_argument("--max-tickers", type=int, default=None)
     ap.add_argument("--out-dir", default=None)
+    ap.add_argument(
+        "--bar-feed",
+        choices=("1m", "5m"),
+        default="5m",
+        help="Bar feed for snapshots. EODHD 1m has only 45 full-session "
+             "days; 5m has 5y of full coverage. 5m is recommended.",
+    )
     args = ap.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO,
@@ -284,10 +391,12 @@ def main(argv: list[str] | None = None) -> int:
     universe = _load_universe(args.max_tickers)
     log.info("universe: %d tickers", len(universe))
 
+    bar_loader = _load_5m_bars if args.bar_feed == "5m" else _load_1m_bars
+    log.info("bar feed: %s", args.bar_feed)
     minute_cache: dict[str, dict[str, list[dict]]] = {}
     daily_cache: dict[str, list[dict]] = {}
     for t in universe:
-        m = _load_1m_bars(t)  # raw, unadjusted
+        m = bar_loader(t)  # raw, unadjusted
         if m:
             minute_cache[t] = m
         d = _load_daily_ohlc(t)
@@ -343,8 +452,7 @@ def main(argv: list[str] | None = None) -> int:
               "classification", "trade_rec", "intraday_ret", "expected_ret",
               "std_ret", "status", "entry_px", "exit_px", "exit_reason",
               "exit_time_ist", "atr_14", "pnl_pct_net", "pnl_inr_net",
-              "notional_inr"]
-    n_traded = 0
+              "notional_inr", "route_slice", "synth_side"]
     traded_rows: list[dict] = []
     days_replayed = 0
     with csv_path.open("w", encoding="utf-8", newline="") as fp:
@@ -362,8 +470,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             for row in day_rows:
                 writer.writerow(row)
-                if row.get("status") == "OPEN" and row.get("trade_rec"):
-                    n_traded += 1
+                if row.get("route_slice") and row.get("pnl_pct_net") not in (None, ""):
                     traded_rows.append(row)
             days_replayed += 1
 
@@ -383,9 +490,14 @@ def main(argv: list[str] | None = None) -> int:
 
     log.info("rows: %s", csv_path)
     log.info("summary: %s", summary_path)
-    log.info("n_traded=%d  mean_bps_net=%.1f  hit=%.1f%%  kill=%s",
-             summary["n_traded"], summary.get("mean_bps_net", 0),
-             summary.get("hit_rate", 0) * 100, summary.get("kill_criteria_met"))
+    lag = summary["lag"]
+    poss = summary["possible_opportunity"]
+    log.info("LAG (live route): n=%d mean=%.1f bps hit=%.1f%% kill=%s",
+             lag["n_traded"], lag["mean_bps_net"],
+             lag["hit_rate"] * 100, lag["kill_criteria_met"])
+    log.info("POSSIBLE_OPPORTUNITY (research): n=%d mean=%.1f bps hit=%.1f%% kill=%s",
+             poss["n_traded"], poss["mean_bps_net"],
+             poss["hit_rate"] * 100, poss["kill_criteria_met"])
     return 0
 
 
