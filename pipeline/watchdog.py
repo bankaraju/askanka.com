@@ -48,6 +48,7 @@ from pipeline.watchdog_scheduler import (
     check_task_liveness,
     query_anka_tasks,
 )
+from pipeline.track_record_audit import audit_track_record
 
 REPO_ROOT = Path(__file__).parent.parent
 INVENTORY_PATH = REPO_ROOT / "pipeline" / "config" / "anka_inventory.json"
@@ -189,6 +190,21 @@ def run(args: argparse.Namespace, inventory_path: Path = INVENTORY_PATH) -> int:
                 kind=IssueKind.INVENTORY_GHOST, task_name=name,
                 detail="in inventory but missing from scheduler", tier="warn",
             ))
+
+    # 4b. Content audits — fresh mtime is necessary but not sufficient. Detect
+    # the class of bug where data/track_record.json reports stale content
+    # (count drift, avg-pnl drift, or updated_at older than the latest close
+    # in closed_signals.json). Cheap (<10ms); run every cycle. Tier=warn
+    # because the website continues to render — the failure is silent
+    # divergence, not an outage.
+    audit = audit_track_record()
+    if not audit["ok"]:
+        current_issues.append(Issue(
+            kind=IssueKind.CONTENT_DRIFT, task_name="AnkaEODTrackRecord",
+            output_path="data/track_record.json",
+            detail=f"{audit['kind']}: {audit['detail']}",
+            tier="warn",
+        ))
 
     # 5. Dedup + digest
     prior_state = load_state(STATE_PATH)

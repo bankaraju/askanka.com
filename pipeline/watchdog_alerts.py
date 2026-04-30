@@ -17,6 +17,10 @@ class IssueKind(enum.Enum):
     TASK_STALE_RUN = "TASK_STALE_RUN"
     ORPHAN_TASK = "ORPHAN_TASK"
     INVENTORY_GHOST = "INVENTORY_GHOST"
+    # mtime is fresh but content diverges from a source-of-truth: e.g.,
+    # data/track_record.json reports total_closed=58 but closed_signals.json
+    # already has 60 closed rows. Caught by content audits, not by mtime.
+    CONTENT_DRIFT = "CONTENT_DRIFT"
 
 
 @dataclass
