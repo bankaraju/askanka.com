@@ -563,13 +563,19 @@ def run_mode(
     summary_path = out_dir / f"summary_mode{mode}_{date.today().isoformat()}.csv"
     pd.DataFrame([c.__dict__ for c in cells]).to_csv(summary_path, index=False)
 
+    def _safe_rel(p: Path) -> str:
+        try:
+            return str(p.resolve().relative_to(REPO_ROOT))
+        except ValueError:
+            return str(p)
+
     return {
         "status": "ok",
         "mode": mode,
         "n_events": len(all_rows),
         "n_cells": len(cells),
-        "per_event_path": str(per_event_path.relative_to(REPO_ROOT)),
-        "summary_path": str(summary_path.relative_to(REPO_ROOT)),
+        "per_event_path": _safe_rel(per_event_path),
+        "summary_path": _safe_rel(summary_path),
         "verdicts": {
             "PASS": sum(1 for c in cells if c.verdict == "PASS"),
             "FAIL": sum(1 for c in cells if c.verdict.startswith("FAIL")),
