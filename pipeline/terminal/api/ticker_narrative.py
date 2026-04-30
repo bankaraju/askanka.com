@@ -43,11 +43,15 @@ _NO_CACHE = {
 }
 
 
-@router.get("/ticker/{ticker}/narrative")
-def narrative(ticker: str):
+def compute_narrative(ticker: str) -> dict:
+    """Plain-dict narrative — callable without HTTP. The route below
+    wraps this in JSONResponse + cache headers; the chart-audit watchdog
+    check (pipeline.watchdog_chart_audit) calls this directly so it can
+    detect endpoint regressions without binding the audit to an HTTP
+    server being up."""
     ticker = ticker.upper()
-    markers = []
-    summary = []
+    markers: list = []
+    summary: list = []
 
     markers.extend(_phase_c_markers(ticker, summary))
     markers.extend(_closed_signal_markers(ticker, summary))
@@ -64,15 +68,17 @@ def narrative(ticker: str):
 
     markers.sort(key=lambda m: m.get("time", ""))
 
-    return JSONResponse(
-        {
-            "ticker": ticker,
-            "markers": markers,
-            "summary": summary,
-            "marker_count": len(markers),
-        },
-        headers=_NO_CACHE,
-    )
+    return {
+        "ticker": ticker,
+        "markers": markers,
+        "summary": summary,
+        "marker_count": len(markers),
+    }
+
+
+@router.get("/ticker/{ticker}/narrative")
+def narrative(ticker: str):
+    return JSONResponse(compute_narrative(ticker), headers=_NO_CACHE)
 
 
 def _read_json(p: Path):

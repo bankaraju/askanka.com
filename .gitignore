@@ -34,6 +34,19 @@ __pycache__/
 
 # Watchdog runtime state (regenerates each run)
 pipeline/data/watchdog_state.json
+pipeline/data/chart_audit_state.json
 
 # Watchdog fallback alerts log (generated when Telegram fails)
 pipeline/logs/watchdog_alerts.log
+
+# Website runtime data — written by scheduled tasks (deploy_helper, eod_review,
+# eod_track_record, daily_dump, morning_scan). Site deploy is muted since
+# 2026-04-26 re-validation, so these files exist locally but must not be
+# committed. Without this rule every `git status` is polluted by 6+ modified
+# files and there's a real risk of accidentally committing one.
+data/articles_index.json
+data/gap_risk.json
+data/global_regime.json
+data/live_status.json
+data/today_recommendations.json
+data/track_record.json

@@ -49,6 +49,7 @@ from pipeline.watchdog_scheduler import (
     query_anka_tasks,
 )
 from pipeline.track_record_audit import audit_track_record
+from pipeline.watchdog_chart_audit import audit_chart_universe
 
 REPO_ROOT = Path(__file__).parent.parent
 INVENTORY_PATH = REPO_ROOT / "pipeline" / "config" / "anka_inventory.json"
@@ -215,6 +216,20 @@ def run(args: argparse.Namespace, inventory_path: Path = INVENTORY_PATH) -> int:
             kind=IssueKind.CONTENT_DRIFT, task_name="AnkaEODTrackRecord",
             output_path="data/track_record.json",
             detail=f"{audit['kind']}: {audit['detail']}",
+            tier="warn",
+        ))
+
+    # 4c. Chart-v2 health audit — universe coverage, freshness across the
+    # 273-ticker F&O universe, and marker-count regression on six spot-check
+    # tickers. Catches the "April-15 silent freeze" class of failure on every
+    # gate run; dedup state quiets repeats. Tier=warn because charts continue
+    # to render and customers continue to see SOMETHING — the failure is
+    # silent staleness, not an outage.
+    for chart_issue in audit_chart_universe():
+        current_issues.append(Issue(
+            kind=IssueKind.CONTENT_DRIFT, task_name="AnkaChartV2Audit",
+            output_path="pipeline/data/fno_historical/",
+            detail=f"{chart_issue['kind']}: {chart_issue['detail']}",
             tier="warn",
         ))
 

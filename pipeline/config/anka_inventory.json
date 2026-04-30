@@ -915,7 +915,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "09:20 + 16:45 IST. Watchdog gate pass â€” all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift."
+      "notes": "09:20 + 16:45 IST. Watchdog gate pass â€” all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift. Step 4b runs track_record_audit (count/avg-pnl/staleness vs closed_signals); step 4c runs chart_universe_audit (273-ticker coverage + last-bar freshness + 6-ticker narrative-marker regression, state at pipeline/data/chart_audit_state.json) â€” both fire CONTENT_DRIFT alerts via the existing dedup/digest path."
     },
     {
       "task_name": "AnkaWatchdogIntraday",
