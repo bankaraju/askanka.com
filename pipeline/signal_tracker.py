@@ -6,6 +6,20 @@ P&L tracking, lifecycle management, and monitoring for trading signals.
 import json
 import logging
 import math
+import sys as _sys
+from pathlib import Path as _Path
+
+# Repo root must be importable so `from pipeline.config import ...` (below)
+# resolves when the .bat scripts cd into pipeline/ before invoking bare
+# `python signal_tracker.py` or import this module from website_exporter.py
+# under the same CWD. Without this, sys.path[0] is pipeline/ and there's no
+# nested pipeline/pipeline/, so module-level imports raise ModuleNotFoundError
+# AT IMPORT TIME — fetch_current_prices then never gets a chance to run, the
+# website_exporter falls back to current=entry, and live_status.json shows
+# 0% P&L on every leg. Same root cause as commits c2c61a4 + f7ba346.
+_repo_root = str(_Path(__file__).resolve().parent.parent)
+if _repo_root not in _sys.path:
+    _sys.path.insert(0, _repo_root)
 
 # Trail-stop live config. Validated by backtest 2026-04-15 across 1223
 # synthetic 10-day trades from 11 spread pairs (6mo OHLC). bm=1.0 af=1.0
@@ -24,12 +38,12 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import yfinance as yf
 
-from config import (
+from pipeline.config import (
     INDIA_SIGNAL_STOCKS, SIGNAL_STOP_LOSS_PCT,
     SIGNAL_TRAILING_STOP_ACTIVATE_PCT, SIGNAL_TRAILING_STOP_DISTANCE_PCT,
     SIGNAL_ENRICHMENT_ENABLED, SIGNAL_GATE_ENABLED,
 )
-from spread_statistics import get_levels_for_spread
+from pipeline.spread_statistics import get_levels_for_spread
 
 log = logging.getLogger("anka.signal_tracker")
 
@@ -172,7 +186,7 @@ def snap_entry_to_market_open(signals: List[Dict[str, Any]]) -> bool:
 
     Returns True if any signals were updated.
     """
-    from eodhd_client import fetch_realtime
+    from pipeline.eodhd_client import fetch_realtime
     updated = False
     for sig in signals:
         if sig.get("entry_snapped"):
@@ -267,7 +281,7 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     under rate-limiting, blowing past the live_monitor frontend timeout and
     leaving rows at NO_LTP. Kite bulk does the same 60+ tickers in <2s.
     """
-    from eodhd_client import fetch_realtime
+    from pipeline.eodhd_client import fetch_realtime
 
     prices: Dict[str, Optional[float]] = {}
 
@@ -287,7 +301,7 @@ def fetch_current_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     missing = [t for t, p in prices.items() if p is None]
     if missing:
         try:
-            from kite_client import fetch_ltp
+            from pipeline.kite_client import fetch_ltp
             kite_prices = fetch_ltp(missing) or {}
             for t, p in kite_prices.items():
                 if p is not None:
@@ -1297,7 +1311,7 @@ def check_tier_promotions() -> List[Dict[str, Any]]:
     Promotion criteria: 20+ closed EXPLORING signals AND win_rate >= 65%.
     Returns list of {category, spread_name, win_rate, n_closed} dicts.
     """
-    from config import TIER_PROMOTION_MIN_SIGNALS, TIER_PROMOTION_WIN_RATE
+    from pipeline.config import TIER_PROMOTION_MIN_SIGNALS, TIER_PROMOTION_WIN_RATE
 
     closed = load_closed_signals()
     # Group by (category, spread_name) for EXPLORING tier only
