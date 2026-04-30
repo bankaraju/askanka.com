@@ -94,8 +94,12 @@ def _load_weights(weights_path: Path = _WEIGHTS_PATH) -> dict:
     return payload
 
 
-def _fetch_etf_returns(days: int = 1095) -> Optional[pd.DataFrame]:
-    """Download 3yr global ETF + Nifty returns via yfinance.
+def _fetch_etf_returns(days: int = 1825) -> Optional[pd.DataFrame]:
+    """Download 5yr global ETF + Nifty returns via yfinance.
+
+    Window aligned to the rest of the research stack (Pattern Scanner,
+    TA Fingerprint, correlation forensics, sector_panel, sector_correlation
+    all read 5y of F&O history). 1825 = 5 × 365.
 
     Mirrors _fetch_etf_returns() from etf_reoptimize exactly.
     Returns None on failure.

@@ -4,7 +4,7 @@ A living reference of Q&A about how the Anka research system actually works. Syn
 
 > **Purpose:** stop re-asking the same questions across sessions. When something is asked and answered well in chat, it lands here.
 
-**Last updated:** 2026-04-30
+**Last updated:** 2026-04-30 (evening — skeletons audit Q&As appended)
 
 ---
 
@@ -25,6 +25,7 @@ A living reference of Q&A about how the Anka research system actually works. Syn
 13. [Stock selection pipeline (273 F&O → today's list)](#13-stock-selection)
 14. [Why each test exists (pedagogical)](#14-why-each-test)
 15. [Glossary of acronyms](#15-glossary)
+16. [Skeletons audit Q&As (2026-04-30 evening)](#16-skeletons-audit-qa)
 
 ---
 
@@ -394,6 +395,70 @@ So the *full pipeline* output is ~35 trades/day open at 09:30, ~85% of which wou
 | **§9A** | Fragility gate (perturb-and-retest) |
 | **§9B** | Margin-vs-baseline gate |
 | **§10.4** | Single-touch holdout discipline |
+
+---
+
+## 16. Skeletons audit Q&A
+
+These Q&As emerged from the 2026-04-30 evening session "let's open every cupboard". Companion document: `docs/SYSTEM_SKELETONS_AUDIT.md`.
+
+### Q: Why was `AnkaUnifiedBacktest` showing ~777 trading days when we'd standardized everything else on 5 years?
+
+**A:** The change to 5y was applied across F&O CSVs, Pattern Scanner, TA Fingerprint, correlation forensics, sector_panel, sector_correlation studies — but NOT to `pipeline/autoresearch/unified_backtest.py`. That file was last edited at its original commit (`01d08f3`) and stayed on `days=1095` (3y default in `_fetch_etf_returns`). 776 trading days = ~3 calendar years of yfinance data. **Patched 2026-04-30 evening:** line 97 changed to `days=1825` (5y). One-line fix; more importantly the script also tests only 6 of 13 baskets and reports a Sharpe of 13.72 because no costs are deducted — this script will be replaced by Task #24 outputs (full 5y, all 13 baskets, cost-deducted) over the next weekend.
+
+### Q: What is "Commodity-Credit Divergence" (the trade row that's been most consistently in profit)?
+
+**A:** Dashboard label for the basket internally named "PSU Commodity vs Banks" at `pipeline/config.py:153-157`:
+
+```
+long: ONGC + COALINDIA
+short: HDFCBANK + ICICIBANK
+news triggers: escalation, sanctions, hormuz
+```
+
+**Macro thesis:** when geopolitical stress rises, oil and coal benefit from supply premium and government PSU support, while private banks face credit risk and slower loan growth. The 4-leg dollar-neutral structure nets out NIFTY beta and isolates the macro signal. **Why it pays:** stress events are persistent (3-5 days, not spike-and-snap), so multi-day hold captures the full move; high signal-to-noise mapping; 4-leg averaging dampens single-name noise; trail-stop locks the gain.
+
+**Why it's an audit gap:** like the other 12 baskets in `INDIA_SPREAD_PAIRS_DEPRECATED`, it has no formal backtest, no hypothesis-registry entry, no single-touch holdout. Real paper P&L, but not registered evidence of edge. **Action:** Task #24 backtests it first; on pass it becomes `H-2026-04-30-spread-basket-006` with a 60-day single-touch holdout going forward.
+
+### Q: What does INERT mean on a position row?
+
+**A:** Stop-status label, **not a regime label**. Defined in `pipeline/signal_tracker.py:712`. Once the trade's peak P&L exceeds the magnitude of the daily-stop, the trail-stop arms and dominates; the daily stop becomes inactive ("INERT") because we're in profit and the trail is doing the work. Visible in the dashboard at `pipeline/terminal/static/js/components/positions-table.js:265` — the Stop cell renders "INERT" with a tooltip explaining the trail is now active.
+
+### Q: Why does the options paired ledger have only 9 unique tickers (and not the usual RELIANCE/HDFCBANK)?
+
+**A:** The options sidecar is wired into ONLY three engines today: Phase C correlation breaks, Pattern Scanner Top-10, and Intraday V1 framework. **Phase C by construction flags stocks that *diverge* from their sector** — those tend to be mid-caps with idiosyncratic stories, not index-heavy names that track their sector closely. Of the 12 attempted opens, 7 ended SKIPPED_LIQUIDITY because the four-pronged options liquidity gate (5,000 ATM contracts/day OR 50K OI OR 1.5% spread max OR 5+ active strikes) filters thin mid-cap options markets. **The bigger gap:** SECRSI's 8-leg basket, the H-001/H-002 sigma-break engines, and the 13 spread baskets all have NO options sidecar — that's why heavyweight names don't show up. Task #30 wires them, currently paused per user direction until post-backtest review.
+
+### Q: Should we add Indian sectoral indices (Bank NIFTY, NIFTY IT, etc.) to the regime classifier inputs?
+
+**A:** **No — confirmed 2026-04-30.** The regime engine uses 28 global ETFs + 4 macro features as INPUTS to produce a regime label, then uses that label to PREDICT Indian sector behavior (Phase A/B/C). If we add Indian sector indices to the inputs, we contaminate: sectors would partly *define* the regime that's used to *predict* their own behavior — circular. Loses out-of-sample meaning, leaks information in backtests. The clean architecture: regime is exogenous (global ETFs), sector behavior is the dependent variable measured downstream. **What's missing:** a "sector × regime × time-of-day behavior" table that conditions the existing sector_panel returns on the regime label without adding sectors to the regime classifier. That's Task #25.
+
+### Q: What is Banks × NBFC PDR and what did the discovery study find today?
+
+**A:** PDR = Pair-Divergence-Reversion. The user's intuition: stably-correlated sector pairs (Banks × NBFC have +0.825 correlation over 5y, 100% bootstrap stable) should mean-revert when they diverge during a session. Today's intraday study (60-day Kite 1-min cache, Banks × NBFC pair, 11:00 IST signal time, 14:25 IST exit) found the user's intuition is **directionally validated at intraday frequency where the daily test had failed**. At T=11:00 with 1.0σ divergence threshold: n=9 events in 38 trading days, mean +11 bps post 20bp cost, 78% hit rate (7/9), t=1.32. Same pair at T=12:00, 1.5σ: n=6, mean +9 bps, 67% hit. Four cells positive after costs. None passes the formal verdict bar yet (need t>1.7) due to sample size, but the cross-cell consistency (multiple T-points and thresholds, all positive) is the real signal. **Next step:** registered as `H-2026-04-30-pdr-banks-nbfc` (Task #26), riding SECRSI's existing 09:16 capture-opens / 11:00 snapshot / 14:25 close plumbing. No new infrastructure.
+
+### Q: How does today's "EARLY / LATE" filter work on signals?
+
+**A:** Each signal at entry gets classified by its VWAP-deviation tertile:
+- `EARLY` if VWAP-deviation is in the lowest tertile (`< -0.08%`) — i.e., the stock is below its volume-weighted average, which we treat as the early phase of an intraday move
+- `LATE` if in the highest tertile (`> +0.36%`) — the stock has already moved
+- `N/A` for the middle tertile
+
+Live-monitor breakdown rows show separate P&L for EARLY vs LATE so we can see whether the system's edge concentrates in one timing bucket. Implementation: `pipeline/terminal/api/live_monitor.py:_aggregate_pnl` (commit `2654cd5`).
+
+### Q: Why is news so suspect that we're moving to "data-primary, news-as-confirmation only"?
+
+**A:** Two incidents hit 2026-04-30:
+
+1. **Stale news bug** — `website_exporter.export_fno_news` overwrote morning headlines with `[]` at 16:00 EOD because the verdicts filter yielded zero rows. The terminal then displayed yesterday's news as today's. Fixed in commit `64a5f99`.
+2. **Trade trigger fragility** — the 13 spread baskets fire on news-keyword triggers. We have no record of WHICH headline fired the trigger, whether the URL is still resolvable, whether the body has changed since fetch. We could be hallucinating evidence and not know.
+
+**The fix (Task #23 spec):** every news headline cited in any trade row must persist URL + sha256 hash + published_at + fetched_at + classifier_score + verified_today flag. Anti-stale guard (>24h published = no confirmation). Anti-contradiction guard (data says LONG, news says contradicting keyword → BLOCK). Retroactive auditability — at any post-mortem the URL must still resolve and hash must match, else flagged "EVIDENCE_VANISHED".
+
+Going-forward rule: **trade triggers must be data-primary; news is reassurance, never the trigger.**
+
+### Q: What does the new "skeletons audit" document do?
+
+**A:** `docs/SYSTEM_SKELETONS_AUDIT.md` — comprehensive inventory of every system component, registration/audit state, doc-coverage status, and gaps. Tagged with severity (CRITICAL / HIGH / MEDIUM / LOW). Re-run weekly until the doc-coverage column has zero "gap" or "skeleton" rows. Going-forward rule: every system component must have (1) entry in `anka_inventory.json` if scheduled, (2) a spec or design doc, (3) an FAQ entry, (4) a declared `data_primary_trigger` and provenance fields if it generates trades or consumes news.
 
 ---
 
