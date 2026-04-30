@@ -949,7 +949,9 @@
       "tier": "critical",
       "cadence_class": "daily",
       "outputs": [
-        "pipeline/autoresearch/regime_trade_map.json"
+        "pipeline/autoresearch/regime_trade_map.json",
+        "pipeline/data/today_regime.json",
+        "pipeline/data/today_regime.json.provenance.json"
       ],
       "grace_multiplier": 1.5,
       "notes": "04:45 IST daily. etf_daily_signal.py â€” compute today_zone using stored weights. Must run AFTER AnkaDailyDump (04:30)."

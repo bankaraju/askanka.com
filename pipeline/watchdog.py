@@ -50,6 +50,8 @@ from pipeline.watchdog_scheduler import (
 )
 from pipeline.track_record_audit import audit_track_record
 from pipeline.watchdog_chart_audit import audit_chart_universe
+from pipeline.watchdog_content_audits import run_all_audits as run_content_audits
+from pipeline.watchdog_self_heal import dispatch as dispatch_self_heal, write_audit_log
 
 REPO_ROOT = Path(__file__).parent.parent
 INVENTORY_PATH = REPO_ROOT / "pipeline" / "config" / "anka_inventory.json"
@@ -232,6 +234,35 @@ def run(args: argparse.Namespace, inventory_path: Path = INVENTORY_PATH) -> int:
             detail=f"{chart_issue['kind']}: {chart_issue['detail']}",
             tier="warn",
         ))
+
+    # 4d. Content audits the mtime-only path can't see. Each issue may
+    # carry a self_heal action — if so, dispatch automatically and append
+    # a follow-up note to the digest. The audits cover:
+    #   - Stale OPEN rows in paired/shadow ledgers (Phase C, Scanner)
+    #   - Provenance sidecar drift vs its data file
+    #   - Cross-host (VPS) regime file drift vs laptop authoritative copy
+    self_heal_actions: list = []
+    for content_issue in run_content_audits():
+        # Dispatch self-heal first (if any) so detail can mention the result.
+        heal = None
+        if content_issue.get("self_heal") and not args.dry_run:
+            heal = dispatch_self_heal(
+                content_issue["self_heal"], content_issue.get("output_path"),
+            )
+            self_heal_actions.append(heal)
+        detail = f"{content_issue['kind']}: {content_issue['detail']}"
+        if heal:
+            detail += f" | self-heal: {heal['action']} {'OK' if heal['ok'] else 'FAILED'}"
+        # Tier escalates to critical for HOST_DRIFT since it means downstream
+        # tasks on VPS act on wrong data; everything else is warn.
+        tier = "critical" if content_issue["kind"] in ("HOST_DRIFT", "STALE_OPEN_ROWS") else "warn"
+        current_issues.append(Issue(
+            kind=IssueKind.CONTENT_DRIFT, task_name="AnkaContentAudit",
+            output_path=content_issue.get("output_path"),
+            detail=detail, tier=tier,
+        ))
+    if self_heal_actions:
+        write_audit_log(self_heal_actions, REPO_ROOT / "pipeline/logs/self_heal.jsonl")
 
     # 5. Dedup + digest
     prior_state = load_state(STATE_PATH)
