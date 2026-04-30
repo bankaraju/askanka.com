@@ -61,3 +61,77 @@ def test_returns_null_for_explicit_none(monkeypatch):
     r = client.get("/api/live_ltp?tickers=HAL,BEL")
     assert r.status_code == 200
     assert r.json() == {"HAL": None, "BEL": 450.0}
+
+
+# ---------------------------------------------------------------------------
+# Options live LTP — Phase B for the Phase C paired-shadow ledger.
+# ---------------------------------------------------------------------------
+
+def test_options_live_ltp_returns_quote_per_tradingsymbol(monkeypatch):
+    """Each NFO tradingsymbol resolves to a {ltp, bid, ask} dict."""
+    monkeypatch.setattr(
+        live_module, "fetch_option_quotes",
+        lambda ts_list: {
+            ts: {"ltp": 12.5 + i, "bid": 12.0 + i, "ask": 13.0 + i}
+            for i, ts in enumerate(ts_list)
+        },
+    )
+    client = TestClient(app)
+    r = client.get("/api/options/live_ltp?tradingsymbols=HAL26APR4300CE,RELIANCE26APR2400PE")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["HAL26APR4300CE"] == {"ltp": 12.5, "bid": 12.0, "ask": 13.0}
+    assert body["RELIANCE26APR2400PE"] == {"ltp": 13.5, "bid": 13.0, "ask": 14.0}
+
+
+def test_options_live_ltp_returns_null_for_missing(monkeypatch):
+    """Missing tradingsymbols (delisted, illiquid) come back null so the UI
+    keeps the snapshot value visible instead of painting fake zeros."""
+    monkeypatch.setattr(
+        live_module, "fetch_option_quotes",
+        lambda ts_list: {"HAL26APR4300CE": {"ltp": 12.5, "bid": 12.0, "ask": 13.0}},
+    )
+    client = TestClient(app)
+    r = client.get("/api/options/live_ltp?tradingsymbols=HAL26APR4300CE,GHOST26MAY100PE")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["HAL26APR4300CE"]["ltp"] == 12.5
+    assert body["GHOST26MAY100PE"] is None
+
+
+def test_options_live_ltp_rejects_empty(monkeypatch):
+    monkeypatch.setattr(live_module, "fetch_option_quotes", lambda ts_list: {})
+    client = TestClient(app)
+    r = client.get("/api/options/live_ltp?tradingsymbols=")
+    assert r.status_code == 400
+
+
+def test_options_live_ltp_caps_request_size(monkeypatch):
+    monkeypatch.setattr(live_module, "fetch_option_quotes", lambda ts_list: {})
+    client = TestClient(app)
+    payload = ",".join([f"T{i}26APR100CE" for i in range(60)])
+    r = client.get(f"/api/options/live_ltp?tradingsymbols={payload}")
+    assert r.status_code == 400
+
+
+def test_options_live_ltp_uppercases(monkeypatch):
+    """NFO tradingsymbols are case-sensitive on Kite's side; normalize to
+    upper so the route is forgiving of frontend casing."""
+    monkeypatch.setattr(
+        live_module, "fetch_option_quotes",
+        lambda ts_list: {ts: {"ltp": 1.0, "bid": 0.9, "ask": 1.1} for ts in ts_list},
+    )
+    client = TestClient(app)
+    r = client.get("/api/options/live_ltp?tradingsymbols=hal26apr4300ce")
+    assert r.status_code == 200
+    assert "HAL26APR4300CE" in r.json()
+
+
+def test_options_live_ltp_kite_failure_returns_nulls(monkeypatch):
+    """Kite session/network failure → fetch_option_quotes returns {}, route
+    surfaces nulls. The UI keeps showing the snapshot value."""
+    monkeypatch.setattr(live_module, "fetch_option_quotes", lambda ts_list: {})
+    client = TestClient(app)
+    r = client.get("/api/options/live_ltp?tradingsymbols=HAL26APR4300CE,RELIANCE26APR2400PE")
+    assert r.status_code == 200
+    assert r.json() == {"HAL26APR4300CE": None, "RELIANCE26APR2400PE": None}

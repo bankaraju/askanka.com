@@ -94,6 +94,16 @@ function _renderOpenPairs(open) {
       ? `${p.lots}×${p.lot_size}`
       : '--';
 
+    // Live LTP + live P&L: poll /api/options/live_ltp every 10s, patch the
+    // two cells in place. Live P&L sign: SHORT premium (sold) profits when
+    // LTP < entry_mid; LONG premium (bought) profits when LTP > entry_mid.
+    // We tag the cells with data-live-opt-* so options-live-ticker.js can
+    // find them by tradingsymbol after every refresh.
+    const ts = p.tradingsymbol || '';
+    const entryMidAttr = (p.entry_mid != null) ? p.entry_mid : '';
+    const liveAttrs = ts
+      ? ` data-live-opt-ts="${_esc(ts)}" data-live-opt-entry="${entryMidAttr}" data-live-opt-side="${_esc(p.side || '')}"`
+      : '';
     return `<tr title="${_esc(greeksTitle)}">
       <td>${_esc(p.symbol)}</td>
       <td>${position}</td>
@@ -101,6 +111,8 @@ function _renderOpenPairs(open) {
       <td class="mono ${dteCls}">${dte}</td>
       <td>${_copyableSymbol(p.tradingsymbol)}</td>
       <td class="mono">${_fmtPrem(p.entry_mid)}</td>
+      <td class="mono"${liveAttrs} data-live-opt-cell="ltp" title="Live last-traded premium (Kite NFO quote, refresh ~10s)">--</td>
+      <td class="mono"${liveAttrs} data-live-opt-cell="pnl" title="Live mark-to-market — sign-corrected for SHORT (premium decay = profit)">--</td>
       <td class="mono">${_esc(lotsStr)}</td>
       <td class="mono">${_fmtINR(p.notional_at_entry)}</td>
       <td class="mono text-amber" title="Max-loss bound: SHORT PE caps at strike×notional (underlying → 0). SHORT CE = ∞.">${maxLossStr}</td>
@@ -122,6 +134,8 @@ function _renderOpenPairs(open) {
             <th title="Days to expiry — amber when ≤7d (gamma/theta cliff)">DTE</th>
             <th title="Kite tradingsymbol — click to copy">Tradingsymbol</th>
             <th title="Entry premium = (bid+ask)/2 at open">Entry mid</th>
+            <th title="Live last-traded premium (Kite NFO quote, ~10s refresh)">LTP</th>
+            <th title="Live mark-to-market P&amp;L — SHORT profits when LTP < entry, LONG profits when LTP > entry">Live P&amp;L</th>
             <th title="Lots × lot-size (one-lot bound for paper)">Lots</th>
             <th title="Notional at entry = entry_mid × lot_size × lots">Notional</th>
             <th title="Max loss INR — SHORT PE caps at strike×notional, SHORT CE = ∞, LONG = premium paid">Max loss</th>
@@ -136,9 +150,96 @@ function _renderOpenPairs(open) {
       </table>
     </div>
     <p class="text-muted" style="font-size:0.7rem; margin:0.4rem 0 0;">
-      <b>Forensic only.</b> Premiums/Greeks/edge shown are <i>at entry</i>. Live mark-to-market ships in Phase B (Kite quote API per tradingsymbol).
+      <b>Forensic only.</b> Greeks/edge shown are <i>at entry</i>. <b>LTP + Live P&amp;L</b> refresh every ~10s from Kite NFO quote.
       Max loss is the position bound, not a stop — ATR-stop on the underlying futures leg is the active risk control.
     </p>`;
+}
+
+// ---------------------------------------------------------------------------
+// Options live LTP poller — finds every cell tagged data-live-opt-ts on the
+// page, batches the unique tradingsymbols, hits /api/options/live_ltp, and
+// patches the LTP + Live P&L cells in place. SHORT premium profits when
+// LTP < entry_mid; LONG premium profits when LTP > entry_mid. Same lifecycle
+// pattern as live-ticker.js but on a separate poll because the equity LTP
+// path uses signal_tracker.fetch_current_prices which doesn't support NFO.
+// Installed once; survives the parent card's innerHTML re-renders.
+// ---------------------------------------------------------------------------
+
+const OPTIONS_POLL_MS = 10000;
+
+function _fmtOptionPrem(v) {
+  if (v == null || !Number.isFinite(v)) return '--';
+  return `₹${Number(v).toFixed(2)}`;
+}
+
+function _fmtOptionPnl(v) {
+  if (v == null || !Number.isFinite(v)) return '--';
+  const sign = v >= 0 ? '+' : '';
+  return `${sign}${v.toFixed(2)}%`;
+}
+
+function _pnlClass(v) {
+  if (v == null || !Number.isFinite(v)) return '';
+  return v >= 0 ? 'text-green' : 'text-red';
+}
+
+async function _pollOptionsLtps() {
+  const cells = document.querySelectorAll('[data-live-opt-ts][data-live-opt-cell="ltp"]');
+  if (!cells || cells.length === 0) return;
+  const seen = new Set();
+  const tradingsymbols = [];
+  cells.forEach(c => {
+    const ts = c.getAttribute('data-live-opt-ts');
+    if (ts && !seen.has(ts)) {
+      seen.add(ts);
+      tradingsymbols.push(ts);
+    }
+  });
+  if (tradingsymbols.length === 0) return;
+  let data;
+  try {
+    const url = `/api/options/live_ltp?tradingsymbols=${encodeURIComponent(tradingsymbols.slice(0, 50).join(','))}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) return;
+    data = await resp.json();
+  } catch (err) {
+    console.warn('[options-live] poll failed:', err);
+    return;
+  }
+  // Patch LTP + Live P&L cells. The same data-live-opt-ts attribute appears
+  // on BOTH the LTP cell and the P&L cell, so a single querySelectorAll
+  // scoped by cell="ltp" / cell="pnl" hits each pair.
+  const allCells = document.querySelectorAll('[data-live-opt-ts]');
+  allCells.forEach(c => {
+    const ts = c.getAttribute('data-live-opt-ts');
+    const kind = c.getAttribute('data-live-opt-cell');
+    const side = c.getAttribute('data-live-opt-side');
+    const entry = parseFloat(c.getAttribute('data-live-opt-entry'));
+    const quote = data ? data[ts] : null;
+    if (!quote || quote.ltp == null) return;
+    const ltp = Number(quote.ltp);
+    if (kind === 'ltp') {
+      c.textContent = _fmtOptionPrem(ltp);
+    } else if (kind === 'pnl') {
+      if (!Number.isFinite(entry) || entry <= 0) return;
+      // SHORT premium: profit when LTP falls below entry_mid (premium decays).
+      // LONG premium: profit when LTP rises above entry_mid.
+      const pnlPct = side === 'SHORT'
+        ? (1 - ltp / entry) * 100
+        : (ltp / entry - 1) * 100;
+      c.textContent = _fmtOptionPnl(pnlPct);
+      c.className = `mono ${_pnlClass(pnlPct)}`;
+    }
+  });
+}
+
+function _ensureOptionsPollerInstalled() {
+  if (window.__phaseCOptionsPollerInstalled) return;
+  window.__phaseCOptionsPollerInstalled = true;
+  // Fire once immediately so first paint is "live" within ~1 network RTT,
+  // then settle into the 10s cadence. Errors are swallowed by the poller.
+  _pollOptionsLtps();
+  setInterval(_pollOptionsLtps, OPTIONS_POLL_MS);
 }
 
 function _renderCumulative(cum) {
@@ -216,6 +317,7 @@ export function renderPhaseCPairedShadowCard(payload) {
   // Returns empty string if payload is null (endpoint failed, .catch(() => null)).
   if (!payload) return '';
   _ensureCopyHandlerInstalled();
+  _ensureOptionsPollerInstalled();
   const open = payload.open_pairs || [];
   const cum = payload.cumulative || { n_closed: 0, n_unmatched: 0, by_tier: {}, by_expiry_day: {} };
   const openLabel = `Live OPEN pairs (${open.length})`;
