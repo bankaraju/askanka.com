@@ -12,6 +12,17 @@ _DAILY_DIR = _HERE.parent / "data" / "daily"
 _CACHE_DIR = _HERE.parent / "data" / "chart_cache"
 _PHASE_C_BARS = _HERE.parent / "data" / "research" / "phase_c" / "daily_bars"
 _INDIA_HIST = _HERE.parent / "data" / "india_historical"
+# pipeline/data/fno_historical/{TICKER}.csv — refreshed daily by AnkaDailyDump
+# (download_fno_history.py) for the canonical_v3 273-ticker F&O universe. This
+# is the freshest source for the recent tail; phase_c/daily_bars and
+# india_historical have deeper history but are not refreshed daily.
+_FNO_HIST = _HERE.parent / "data" / "fno_historical"
+
+# Tail-staleness threshold (calendar days). If the primary source's last bar
+# is older than this, we extend from _FNO_HIST. 4 covers Mon-after-Thu (3
+# trading-day gap + weekend buffer); the user complained that charts only
+# went up to April 15 — a 14-day stale tail.
+_TAIL_STALE_DAYS = 4
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +33,17 @@ def charts(ticker: str):
 
     Source priority (Indian F&O has rich local history; falling all the way
     to yfinance is a last resort because of rate limiting):
-      1. phase_c/daily_bars/{ticker}.parquet — 4y PIT canonical bars, best.
-      2. india_historical/{ticker}.csv — daily OHLCV from the data pipeline.
+      1. phase_c/daily_bars/{ticker}.parquet — 4y PIT canonical bars, deep
+         history but only refreshed by ad-hoc backfill scripts.
+      2. india_historical/{ticker}.csv — legacy daily OHLCV.
       3. data/daily/*.json — only useful when daily files contain Indian
          stocks (most are US right now; kept for back-compat).
       4. chart_cache/{ticker}.json — local cache populated by yfinance.
       5. yfinance live download — fallback, rate-limited.
+
+    After picking the deepest available source, extend the recent tail from
+    `fno_historical/{ticker}.csv` (refreshed daily by AnkaDailyDump) so the
+    user sees today-1 bars, not stale 10-day-old bars from a frozen cache.
     """
     ticker = ticker.upper()
 
@@ -43,6 +59,13 @@ def charts(ticker: str):
 
     if not candles:
         raise HTTPException(status_code=404, detail=f"No chart data for {ticker}")
+
+    # Extend with fresh tail from fno_historical when the chosen source's
+    # tail is stale. Phase C daily_bars stops at the last backfill date;
+    # india_historical was last refreshed 2026-04-16. fno_historical is the
+    # only source on a daily-refresh cadence, so use it as the always-on
+    # tail extender even when an earlier source had data.
+    candles = _extend_with_fno_tail(ticker, candles)
 
     candles.sort(key=lambda c: c["time"])
     return {"ticker": ticker, "candles": candles, "count": len(candles)}
@@ -79,7 +102,18 @@ def _from_phase_c_parquet(ticker: str) -> list:
 
 
 def _from_india_historical_csv(ticker: str) -> list:
-    path = _INDIA_HIST / f"{ticker}.csv"
+    return _read_titlecase_csv(_INDIA_HIST / f"{ticker}.csv", "india_historical")
+
+
+def _from_fno_historical_csv(ticker: str) -> list:
+    """Read the Date/Open/High/Low/Close/Volume CSV layout produced by
+    pipeline.download_fno_history (AnkaDailyDump). Same shape as
+    india_historical so it goes through the shared reader.
+    """
+    return _read_titlecase_csv(_FNO_HIST / f"{ticker}.csv", "fno_historical")
+
+
+def _read_titlecase_csv(path: Path, source_label: str) -> list:
     if not path.exists():
         return []
     try:
@@ -102,8 +136,37 @@ def _from_india_historical_csv(ticker: str) -> list:
                 continue
         return candles
     except Exception as e:
-        logger.warning("india_historical csv read failed for %s: %s", ticker, e)
+        logger.warning("%s csv read failed for %s: %s", source_label, path.stem, e)
         return []
+
+
+def _extend_with_fno_tail(ticker: str, candles: list) -> list:
+    """If the fno_historical CSV has bars more recent than the primary source's
+    last candle, append them. Idempotent: dates already present in `candles`
+    are skipped (no overwrite — the deeper source wins on overlap so a once-
+    populated 4y phase_c parquet stays authoritative for backtest dates).
+    """
+    if not candles:
+        return candles
+    last_date = candles[-1].get("time", "")
+    try:
+        last_dt = datetime.fromisoformat(last_date)
+    except ValueError:
+        return candles
+    age_days = (datetime.now() - last_dt).days
+    # Only pay the disk read when there's a plausible reason to extend.
+    if age_days < _TAIL_STALE_DAYS:
+        return candles
+    fresh = _from_fno_historical_csv(ticker)
+    if not fresh:
+        return candles
+    have = {c["time"] for c in candles}
+    extras = [c for c in fresh if c["time"] not in have and c["time"] > last_date]
+    if extras:
+        logger.info("chart tail extended for %s: +%d bars from fno_historical "
+                    "(was %s, now %s)", ticker, len(extras), last_date,
+                    extras[-1].get("time"))
+    return candles + extras
 
 
 def _from_daily_files(ticker: str) -> list:
