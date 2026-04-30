@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-05-01",
+      "segment": "war",
+      "filename": "2026-05-01-war.html",
+      "headline": "Hegseth's Pentagon Tenure: The Unseen Hand Enabling Trump's Iran War",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "May 01, 2026"
+    },
+    {
+      "date": "2026-05-01",
+      "segment": "epstein",
+      "filename": "2026-05-01-epstein.html",
+      "headline": "Epstein's Digital Afterlife: The Bannon Files and Shredded Docs Expose a 2026 Cover-Up on Steroids",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "May 01, 2026"
+    },
+    {
       "date": "2026-04-30",
       "segment": "postmortem",
       "filename": "postmortem-2026-04-30-phase-c-petronet-opportunity-lag.md",
