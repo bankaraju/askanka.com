@@ -201,22 +201,46 @@ INDIA_SPREAD_PAIRS_DEPRECATED = [
     },
 ]
 
+# Surgical kill-list from Task #24 5y backtest verdicts (2026-04-30).
+# These baskets are confirmed structural net-losers across every regime/hold
+# tested (post-cost mean < 0, t-stat with wrong sign or insignificant) AND
+# Mode A (news-conditional 2024-2026) shows 0 PASS cells with t > 1.
+# Findings: docs/research/india_spread_pairs_backtest/findings_2026-04-30.md
+# FAQ: docs/SYSTEM_FAQ.md §17.
+#
+# - Reliance vs OMCs:        net-loser ALL 5d ex-EUPHORIA. The EUPHORIA-
+#                            conditional variant lives in
+#                            H-2026-04-30-RELOMC-EUPHORIA.
+# - Pharma vs Cyclicals:     net-loser, no positive cell with t>1.
+# - EV Plays vs ICE Auto:    net-loser, no positive cell with t>1.
+# - Infra Capex Beneficiaries: net-loser, no positive cell with t>1.
+SPREAD_BASKETS_KILLED_BY_TASK24: tuple[str, ...] = (
+    "Reliance vs OMCs",
+    "Pharma vs Cyclicals",
+    "EV Plays vs ICE Auto",
+    "Infra Capex Beneficiaries",
+)
+
 # Compatibility shim — importers that still reference INDIA_SPREAD_PAIRS get
-# an empty list when the V1 kill-switch is active, otherwise see the legacy
-# list. Importers should be migrated off this name in a follow-up PR.
+# an empty list when the V1 kill-switch is active, the kill-list filtered
+# out otherwise. Importers should be migrated off this name in a follow-up PR.
 def _india_spread_pairs():
     # Import is tried both as package path and bare path because callers use
     # both `from config import ...` (bare, when pipeline/ is on sys.path) and
     # `from pipeline.config import ...` (package). On any failure we
-    # conservatively return the legacy list (kill-switch inactive).
+    # conservatively return the full legacy list (V1 kill-switch inactive)
+    # but Task #24 surgical kills still apply.
     try:
         from pipeline.research.intraday_v1.kill_switch import is_news_driven_killed
     except ModuleNotFoundError:
         try:
             from research.intraday_v1.kill_switch import is_news_driven_killed
         except ModuleNotFoundError:
-            return INDIA_SPREAD_PAIRS_DEPRECATED
-    return [] if is_news_driven_killed() else INDIA_SPREAD_PAIRS_DEPRECATED
+            is_news_driven_killed = lambda: False  # type: ignore
+    if is_news_driven_killed():
+        return []
+    return [b for b in INDIA_SPREAD_PAIRS_DEPRECATED
+            if b.get("name") not in SPREAD_BASKETS_KILLED_BY_TASK24]
 
 
 INDIA_SPREAD_PAIRS = _india_spread_pairs()

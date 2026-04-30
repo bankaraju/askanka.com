@@ -481,7 +481,7 @@ A: 4 confirmed structural net-losers (negative post-cost mean across every regim
 - EV Plays vs ICE Auto (#12)
 - Infra Capex Beneficiaries (#13)
 
-Plan: leave the news-trigger live for now (no behavioral change); when the V1 kill-switch fires per the news-driven framework deprecation, these 4 don't get individual hypothesis registrations. They die as the framework dies.
+**Update 2026-04-30:** kill executed surgically via `SPREAD_BASKETS_KILLED_BY_TASK24` in `pipeline/config.py`. The 4 baskets are filtered out of the runtime `INDIA_SPREAD_PAIRS` list while remaining in `INDIA_SPREAD_PAIRS_DEPRECATED` for forensic reference. Active runtime list is now 9 baskets (was 13). Tested in `pipeline/tests/test_spread_basket_kill_switch_task24.py`. The surgical kill is independent of the V1 framework-wide kill-switch — the 4 kills apply now; the framework-wide V1 kill applies when V1 holdout passes 2026-06-27.
 
 ### Q: Which baskets actually have structural alpha?
 
