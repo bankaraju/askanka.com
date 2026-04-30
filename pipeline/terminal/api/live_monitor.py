@@ -208,6 +208,14 @@ def _enrich_row(row: dict, ltps: dict[str, float], atr_map: dict[str, dict],
     side = row.get("side", "LONG")
     entry = float(row.get("entry_px") or row.get("entry_price") or 0.0)
     ltp = ltps.get(sym)
+    # CLOSED rows: fall back to exit_px so the LTP cell is populated post-close
+    # (live LTP fetch is intentionally skipped for closed tickers).
+    if ltp is None and row.get("status") == "CLOSED":
+        try:
+            ex = row.get("exit_px") or row.get("exit_price")
+            ltp = float(ex) if ex not in (None, "") else None
+        except (TypeError, ValueError):
+            ltp = None
     atr_info = atr_map.get(sym, {})
     atr_stop = atr_info.get("stop_price") if isinstance(atr_info, dict) else None
     trail_stop = row.get("trail_stop_px")
@@ -317,7 +325,16 @@ def _enrich_h001_row(row: dict, ltps: dict[str, float],
         entry = float(row.get("entry_px") or 0.0)
     except (TypeError, ValueError):
         entry = 0.0
+    # CLOSED rows: live-LTP fetch is intentionally skipped (no Kite round-trip
+    # for cosmetic display), but the CSV's exit_px is the closing mark — show
+    # it as the "LTP" cell so the column isn't blank for closed trades.
     ltp = ltps.get(sym)
+    if ltp is None and row.get("status") == "CLOSED":
+        try:
+            ex = row.get("exit_px")
+            ltp = float(ex) if ex not in (None, "") else None
+        except (TypeError, ValueError):
+            ltp = None
     try:
         atr_stop = float(row.get("stop_px")) if row.get("stop_px") else None
     except (TypeError, ValueError):
