@@ -190,3 +190,96 @@ class TestCheckTaskLiveness:
         result = check_task_liveness(task, cadence_class="daily", grace_multiplier=1.5,
                                      now_iso="2026-04-16T16:15:47+05:30")
         assert result == TaskLivenessResult.ALIVE
+
+    # --- NextRunTime-aware liveness (per-time-slot tasks) -----------------
+    # Pre-fix: AnkaIntraday0930 ran today 09:30, was queried at 12:16 — the
+    # 2h46m age exceeded the intraday cadence window so the watchdog flagged
+    # 30+ daily HHMM tasks as TASK_STALE_RUN every 15 min. NextRunTime is the
+    # right liveness signal: if it's tomorrow 09:30, the task is on schedule.
+
+    def test_next_run_in_future_alive_even_if_age_exceeds_window(self):
+        # Per-time-slot daily task: ran today 09:30, NextRunTime is tomorrow
+        # 09:30. Age 2h46m > intraday 75-min window — but NextRunTime > now
+        # means the schedule is intact → ALIVE.
+        task = {"TaskName": "AnkaIntraday0930", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-30T09:30:00+05:30",
+                "NextRunTime": "2026-05-01T09:30:00+05:30"}
+        result = check_task_liveness(task, cadence_class="intraday",
+                                     grace_multiplier=2.0,
+                                     now_iso="2026-04-30T12:16:00+05:30")
+        assert result == TaskLivenessResult.ALIVE
+
+    def test_next_run_in_past_with_stale_age_still_flags_stale(self):
+        # Genuinely missed: NextRunTime was today 09:30 but it's now 12:16
+        # and LastRunTime is yesterday — task did not fire today. Both signals
+        # agree this is stale.
+        task = {"TaskName": "AnkaIntraday0930", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-29T09:30:00+05:30",
+                "NextRunTime": "2026-04-30T09:30:00+05:30"}
+        result = check_task_liveness(task, cadence_class="intraday",
+                                     grace_multiplier=2.0,
+                                     now_iso="2026-04-30T12:16:00+05:30")
+        assert result == TaskLivenessResult.TASK_STALE_RUN
+
+    def test_next_run_missing_falls_back_to_age_check(self):
+        # Older Windows builds, or PS query failures, may omit NextRunTime —
+        # behavior must match pre-fix age-only check (existing test fixture).
+        task = {"TaskName": "AnkaIntraday1000", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-16T10:00:00+05:30"}  # no NextRunTime
+        result = check_task_liveness(task, cadence_class="intraday",
+                                     grace_multiplier=2.0,
+                                     now_iso="2026-04-16T12:00:00+05:30")
+        assert result == TaskLivenessResult.TASK_STALE_RUN
+
+    def test_next_run_1999_sentinel_falls_back_to_age_check(self):
+        # PowerShell formats unset NextRunTime as 1999-12-30 (same sentinel
+        # as LastRunTime). Treat as missing — fall through to age check.
+        task = {"TaskName": "AnkaIntraday1000", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-16T10:00:00+05:30",
+                "NextRunTime": "1999-12-30T00:00:00"}
+        result = check_task_liveness(task, cadence_class="intraday",
+                                     grace_multiplier=2.0,
+                                     now_iso="2026-04-16T12:00:00+05:30")
+        assert result == TaskLivenessResult.TASK_STALE_RUN
+
+    def test_next_run_malformed_falls_back_to_age_check(self):
+        task = {"TaskName": "AnkaIntraday1000", "LastTaskResult": 0,
+                "LastRunTime": "2026-04-16T10:00:00+05:30",
+                "NextRunTime": "not-a-date"}
+        result = check_task_liveness(task, cadence_class="intraday",
+                                     grace_multiplier=2.0,
+                                     now_iso="2026-04-16T12:00:00+05:30")
+        assert result == TaskLivenessResult.TASK_STALE_RUN
+
+    def test_freshly_registered_task_with_future_next_run_is_alive(self):
+        # Newly-registered task: LastRunTime is the 1999 sentinel (never fired)
+        # but NextRunTime is later today. Should NOT be flagged NEVER_RAN —
+        # the first fire just hasn't happened yet.
+        task = {"TaskName": "AnkaIntradayV1Shadow_1300", "LastTaskResult": 267011,
+                "LastRunTime": "1999-12-30T00:00:00",
+                "NextRunTime": "2026-04-30T13:00:00+05:30"}
+        result = check_task_liveness(task, cadence_class="intraday",
+                                     grace_multiplier=2.0,
+                                     now_iso="2026-04-30T12:30:00+05:30")
+        assert result == TaskLivenessResult.ALIVE
+
+    def test_truly_never_ran_with_past_next_run_is_never_ran(self):
+        # Task registered weeks ago but never fired AND NextRunTime has come
+        # and gone — this is a real bug, must alert.
+        task = {"TaskName": "AnkaIntradayV1Close", "LastTaskResult": 267011,
+                "LastRunTime": "1999-12-30T00:00:00",
+                "NextRunTime": "2026-04-29T14:30:00+05:30"}  # yesterday
+        result = check_task_liveness(task, cadence_class="daily",
+                                     grace_multiplier=1.5,
+                                     now_iso="2026-04-30T12:30:00+05:30")
+        assert result == TaskLivenessResult.TASK_NEVER_RAN
+
+    def test_never_ran_with_no_next_run_field_is_never_ran(self):
+        # Older Windows / fresh Anka task with no NextRunTime returned —
+        # behavior must match pre-fix (existing fixture in test_never_ran_sentinel).
+        task = {"TaskName": "AnkaGapPredictor", "LastTaskResult": 267011,
+                "LastRunTime": "1999-12-30T00:00:00"}
+        result = check_task_liveness(task, cadence_class="daily",
+                                     grace_multiplier=1.5,
+                                     now_iso="2026-04-30T12:30:00+05:30")
+        assert result == TaskLivenessResult.TASK_NEVER_RAN

@@ -94,11 +94,35 @@ def check_task_liveness(
     now_iso: str,
 ) -> TaskLivenessResult:
     """Classify one live-scheduler task entry against its expected cadence."""
-    # 1999 sentinel = never ran
     last_run_raw = task.get("LastRunTime") or ""
-    if not last_run_raw:
-        return TaskLivenessResult.TASK_NEVER_RAN
-    if last_run_raw.startswith("1999-") or last_run_raw.startswith("0001-"):
+    next_run_raw = task.get("NextRunTime") or ""
+    last_run_is_sentinel = (
+        not last_run_raw
+        or last_run_raw.startswith("1999-")
+        or last_run_raw.startswith("0001-")
+    )
+
+    # Newly-registered task: LastRunTime is the 1999 sentinel but the trigger
+    # has a future NextRunTime — the first fire just hasn't happened yet. This
+    # is the V1 Shadow_HHMM cohort registered mid-day after their HHMM had
+    # passed; their next fire is tomorrow at HHMM. Without this branch the
+    # watchdog flagged 12 healthy tasks as NEVER_RAN every cycle.
+    if last_run_is_sentinel and next_run_raw and not (
+        next_run_raw.startswith("1999-") or next_run_raw.startswith("0001-")
+    ):
+        try:
+            now_dt = datetime.fromisoformat(now_iso)
+            if now_dt.tzinfo is None:
+                now_dt = now_dt.replace(tzinfo=IST)
+            next_run_dt = datetime.fromisoformat(next_run_raw.replace("Z", "+00:00"))
+            if next_run_dt.tzinfo is None:
+                next_run_dt = next_run_dt.replace(tzinfo=IST)
+            if next_run_dt > now_dt:
+                return TaskLivenessResult.ALIVE
+        except (ValueError, AttributeError):
+            pass  # malformed → fall through to NEVER_RAN
+
+    if last_run_is_sentinel:
         return TaskLivenessResult.TASK_NEVER_RAN
 
     # Non-zero result = crashed or failed (but exclude informational codes like SCHED_S_TASK_RUNNING).
@@ -116,6 +140,27 @@ def check_task_liveness(
             now = now.replace(tzinfo=IST)
     except (ValueError, AttributeError):
         return TaskLivenessResult.TASK_STALE_RUN
+
+    # NextRunTime > now means the task is on schedule — Windows Task Scheduler
+    # advances NextRunTime forward only when the previous fire window closed
+    # successfully (or was missed and consumed). For per-time-slot tasks like
+    # AnkaIntraday0930 (fires once daily at HH:MM), age may be ~24h between
+    # fires while the task is perfectly healthy; the only valid liveness signal
+    # is whether the NEXT scheduled run is still in the future. Older Windows
+    # builds may not surface NextRunTime; when absent we fall back to the
+    # cadence-window age check below.
+    next_run_raw = task.get("NextRunTime") or ""
+    if next_run_raw and not (
+        next_run_raw.startswith("1999-") or next_run_raw.startswith("0001-")
+    ):
+        try:
+            next_run = datetime.fromisoformat(next_run_raw.replace("Z", "+00:00"))
+            if next_run.tzinfo is None:
+                next_run = next_run.replace(tzinfo=IST)
+            if next_run > now:
+                return TaskLivenessResult.ALIVE
+        except (ValueError, AttributeError):
+            pass  # malformed NextRunTime → fall through to age check
 
     # Intraday tasks don't run outside market hours — skip age check if we're
     # currently in a no-run window (post-market, pre-market, or weekend).
