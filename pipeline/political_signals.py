@@ -718,17 +718,44 @@ def classify_event_keywords(
 # Event classification -- Tier 2: Claude API
 # ---------------------------------------------------------------------------
 
+def _gemini_rest_classify(prompt: str, gemini_key: str) -> str:
+    """Direct REST call to Gemini Flash. Returns raw model text or empty string."""
+    resp = requests.post(
+        f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_key}",
+        json={
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "maxOutputTokens": 200,
+                "temperature": 0,
+                "responseMimeType": "application/json",
+                "thinkingConfig": {"thinkingBudget": 0},
+            },
+        },
+        timeout=20,
+    )
+    resp.raise_for_status()
+    result = resp.json()
+    candidates = result.get("candidates", [])
+    if not candidates:
+        return ""
+    parts = candidates[0].get("content", {}).get("parts", [])
+    return parts[0].get("text", "").strip() if parts else ""
+
+
 def classify_event_claude(
     headline: str,
     summary: str,
     api_key: Optional[str] = None,
 ) -> tuple[Optional[str], float]:
-    """Tier 2: Call Claude API for ambiguous cases (confidence < 0.6).
+    """Tier 2: LLM classifier for ambiguous cases (confidence < 0.6).
 
-    Uses a direct POST to the Anthropic messages API.
+    Routes through pipeline.gemma4_pilot.wiring.dispatch_for_task so the
+    Gemma 4 shadow runs alongside Gemini for migration evaluation. Falls
+    back to a direct Gemini REST call if the pilot dispatcher errors,
+    so production is never blocked by pilot infrastructure.
+
     Returns (category, confidence_score) or (None, 0.0) on failure.
     """
-    # Use Gemini during shadow period (free tier), fall back to Claude if GEMINI not set
     gemini_key = GEMINI_API_KEY
     if not gemini_key:
         logger.warning("GEMINI_API_KEY not set -- cannot use Tier 2 classification")
@@ -745,36 +772,39 @@ def classify_event_claude(
         f"If none fit, use {{\"category\": null, \"confidence\": 0.0}}"
     )
 
+    content = ""
     try:
-        resp = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_key}",
-            json={
-                "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {
-                    "maxOutputTokens": 200,
-                    "temperature": 0,
-                    "responseMimeType": "application/json",
-                    "thinkingConfig": {"thinkingBudget": 0},
-                },
-            },
-            timeout=20,
+        from pipeline.gemma4_pilot.wiring import dispatch_for_task
+        content = dispatch_for_task(
+            task="news_classification",
+            prompt=prompt,
+            meta={"headline": headline[:200]},
         )
-        resp.raise_for_status()
-        result = resp.json()
-        candidates = result.get("candidates", [])
-        if not candidates:
+    except Exception as exc:
+        logger.debug("Pilot dispatch unavailable, falling back to REST: %s", exc)
+        try:
+            content = _gemini_rest_classify(prompt, gemini_key)
+        except Exception as exc2:
+            logger.warning("Gemini REST fallback failed: %s", exc2)
             return None, 0.0
-        parts = candidates[0].get("content", {}).get("parts", [])
-        content = parts[0].get("text", "").strip() if parts else ""
-        parsed = json.loads(content)
+
+    if not content:
+        return None, 0.0
+
+    try:
+        text = content.strip()
+        if text.startswith("```"):
+            lines = text.splitlines()
+            text = "\n".join(line for line in lines if not line.startswith("```")).strip()
+        parsed = json.loads(text)
         cat = parsed.get("category")
         conf = float(parsed.get("confidence", 0.0))
         if cat and cat in EVENT_TAXONOMY:
-            logger.info("Claude classified as '%s' (%.2f)", cat, conf)
+            logger.info("Classifier returned '%s' (%.2f)", cat, conf)
             return cat, conf
         return None, 0.0
     except Exception as exc:
-        logger.warning("Claude classification failed: %s", exc)
+        logger.warning("Classification parse failed: %s | content=%r", exc, content[:200])
         return None, 0.0
 
 

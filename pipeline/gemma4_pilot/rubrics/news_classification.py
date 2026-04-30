@@ -1,58 +1,37 @@
-"""Rubric for Task #2 -- news classification + sentiment.
+"""Rubric for news classification (Tier-2 Gemini classifier in political_signals.py).
 
-Pass criteria from spec §3.1:
-  1. label ∈ {BULLISH, BEARISH, NEUTRAL, NOT_RELEVANT}
-  2. confidence ∈ [0, 1]
-  3. sector tag from a canonical sector list
+Production prompt expects JSON shape: {"category": <name|null>, "confidence": <float>}
+where category is one of pipeline.config.EVENT_TAXONOMY keys (or null).
 
-Canonical sector list lifted from pipeline/config/sector_map.json if it
-exists; otherwise a hardcoded fallback covering the working universe.
-The fallback list is kept in sync with sector_taxonomy.json the next
-time a sector is added.
+Pass criteria:
+  1. Output parses as JSON object.
+  2. "category" is either null OR a key in EVENT_TAXONOMY.
+  3. "confidence" is a float in [0, 1].
 
 Spec: docs/superpowers/specs/2026-04-28-gemma4-pilot-design.md
-Plan: docs/superpowers/plans/2026-04-28-gemma4-pilot.md (Task 8)
 """
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import Any, Mapping
 
-_VALID_LABELS = {"BULLISH", "BEARISH", "NEUTRAL", "NOT_RELEVANT"}
 
-_SECTOR_MAP_PATH = (
-    Path(__file__).resolve().parents[2] / "config" / "sector_map.json"
-)
-
-
-def _load_sectors() -> set[str]:
-    if not _SECTOR_MAP_PATH.exists():
-        # Fallback so tests don't depend on the live file
+def _load_categories() -> set[str]:
+    try:
+        from pipeline.config import EVENT_TAXONOMY
+        return set(EVENT_TAXONOMY.keys())
+    except Exception:
+        # Fallback so tests don't depend on the live config
         return {
-            "Banking & Financials",
-            "IT",
-            "Auto",
-            "FMCG",
-            "Pharma",
-            "Metals",
-            "Oil & Gas",
-            "Power",
-            "Realty",
-            "Telecom",
-            "Capital Goods",
-            "Cement",
-            "Chemicals",
-            "Consumer Durables",
-            "Media",
+            "escalation", "de_escalation", "ceasefire",
+            "oil_positive", "oil_negative", "sanctions",
+            "hormuz", "defense_spend", "trump_threat", "diplomacy",
+            "rbi_policy", "nbfc_reform", "ev_policy",
+            "tax_reform", "infra_capex", "sebi_regulation",
         }
-    raw = json.loads(_SECTOR_MAP_PATH.read_text())
-    if isinstance(raw, dict):
-        return set(raw.values())
-    return set(raw)
 
 
-CANONICAL_SECTORS = _load_sectors()
+CANONICAL_CATEGORIES = _load_categories()
 
 
 def score(text: str, meta: Mapping[str, Any]) -> dict:
@@ -64,9 +43,13 @@ def score(text: str, meta: Mapping[str, Any]) -> dict:
     if not isinstance(data, dict):
         return {"score": 0.0, "pass": False, "notes": "json_not_object"}
 
-    label = data.get("label")
-    if label not in _VALID_LABELS:
-        return {"score": 0.0, "pass": False, "notes": f"bad_label: {label!r}"}
+    cat = data.get("category")
+    if cat is not None and cat not in CANONICAL_CATEGORIES:
+        return {
+            "score": 0.0,
+            "pass": False,
+            "notes": f"unknown_category: {cat!r}",
+        }
 
     conf = data.get("confidence")
     if not isinstance(conf, (int, float)) or not (0.0 <= float(conf) <= 1.0):
@@ -74,14 +57,6 @@ def score(text: str, meta: Mapping[str, Any]) -> dict:
             "score": 0.0,
             "pass": False,
             "notes": f"bad_confidence: {conf!r}",
-        }
-
-    sector = data.get("sector")
-    if sector not in CANONICAL_SECTORS:
-        return {
-            "score": 0.0,
-            "pass": False,
-            "notes": f"unknown_sector: {sector!r} (must be in canonical list)",
         }
 
     return {"score": 1.0, "pass": True, "notes": "ok"}
