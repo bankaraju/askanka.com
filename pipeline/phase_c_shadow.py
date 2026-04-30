@@ -178,18 +178,22 @@ def cmd_open() -> int:
 
 
 def _close_options_sidecar(date_str: str) -> None:
-    """Best-effort paired-shadow options CLOSE. Never propagates (spec §5)."""
-    from pipeline.research.phase_c_backtest import live_paper
+    """Best-effort paired-shadow options CLOSE. Never propagates (spec §5).
+
+    Sweeps every OPEN row in the options ledger and calls close_options_pair
+    on each. Mirrors the futures cmd_close pattern: status-driven, not
+    date-driven. The previous date-filtered version was a no-op because
+    futures rows carry the signal-generation date in `date`, never the
+    close date — same shape of bug fixed for futures in commit 6843d57.
+    """
     from pipeline import phase_c_options_shadow
-    closed_rows = [
-        e for e in live_paper._load()  # noqa: SLF001
-        if e.get("date") == date_str and e.get("status") == "CLOSED"
-    ]
+    rows = phase_c_options_shadow._load_ledger()  # noqa: SLF001 — intentional
+    open_rows = [r for r in rows if r.get("status") == "OPEN"]
     n_ok = 0
     n_err = 0
     n_noop = 0
-    for row in closed_rows:
-        signal_id = phase_c_options_shadow.build_signal_id(row)
+    for row in open_rows:
+        signal_id = row.get("signal_id")
         try:
             result = phase_c_options_shadow.close_options_pair(signal_id)
             if result is None:
@@ -203,8 +207,8 @@ def _close_options_sidecar(date_str: str) -> None:
                 signal_id, type(exc).__name__, exc,
             )
     log.info(
-        "options sidecar CLOSE: %d ok, %d no-match (no paired row), %d errors",
-        n_ok, n_noop, n_err,
+        "options sidecar CLOSE: %d open swept, %d ok, %d no-match, %d errors",
+        len(open_rows), n_ok, n_noop, n_err,
     )
 
 

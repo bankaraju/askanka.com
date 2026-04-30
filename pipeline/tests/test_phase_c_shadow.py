@@ -362,44 +362,60 @@ def _futures_row(
     }
 
 
-def test_cmd_close_calls_sidecar_for_each_closed_row(tmp_path, monkeypatch):
-    """close_options_pair must be called once per CLOSED futures row after close_at_1430."""
+def _opt_row(signal_id: str, status: str = "OPEN") -> dict:
+    """Minimal options ledger row for sidecar-close tests."""
+    return {
+        "signal_id": signal_id, "status": status,
+        "side": "SHORT", "symbol": signal_id.split("_")[1],
+        "entry_time": "2026-04-29T09:25:00+05:30",
+    }
+
+
+def _seed_options_ledger(monkeypatch, tmp_path, rows):
+    """Repoint phase_c_options_shadow.LEDGER_PATH at a tmp file and seed it."""
+    from pipeline import phase_c_options_shadow
+    opt_path = tmp_path / "options_ledger.json"
+    opt_path.write_text(json.dumps(rows), encoding="utf-8")
+    monkeypatch.setattr(phase_c_options_shadow, "LEDGER_PATH", opt_path)
+    return opt_path
+
+
+def test_cmd_close_sidecar_sweeps_every_open_options_row(tmp_path, monkeypatch):
+    """Sidecar must call close_options_pair on every OPEN row in the options ledger.
+
+    Regression: previously filtered futures rows by `date == date_str`, but
+    `date` is the signal-generation date (never the close date), so the
+    filter never matched and the sidecar close was a silent no-op.
+    Found 2026-04-30: 4 OPEN options legs from 2026-04-28 had been sitting
+    untouched for 2 close runs.
+    """
     from unittest.mock import patch, MagicMock
 
     date_str = "2026-04-29"
     ledger_path = tmp_path / "ledger.json"
     monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
 
-    # Pre-seed: one OPEN row (so cmd_close doesn't early-return) and two already-CLOSED rows
-    # Simulates the state AFTER close_at_1430 ran (rows already transitioned).
-    rows = [
-        _futures_row(date=date_str, symbol="RELIANCE", signal_time="2026-04-29 09:35:00",
-                     status="OPEN"),
-        _futures_row(date=date_str, symbol="INFY", signal_time="2026-04-29 09:40:00",
-                     status="CLOSED"),
-        _futures_row(date=date_str, symbol="TCS", signal_time="2026-04-29 09:45:00",
-                     status="CLOSED"),
-    ]
-    _seed_futures_ledger(ledger_path, rows)
+    # Futures ledger needs at least one OPEN row so cmd_close doesn't early-return
+    _seed_futures_ledger(ledger_path, [
+        _futures_row(date=date_str, symbol="RELIANCE", status="OPEN"),
+    ])
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp", lambda syms: {"RELIANCE": 2400.0})
 
-    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp",
-                        lambda syms: {"RELIANCE": 2400.0})
+    # Options ledger: 3 OPEN legs (signal dates spread across days)
+    _seed_options_ledger(monkeypatch, tmp_path, [
+        _opt_row("2026-04-27_RELIANCE_0935"),
+        _opt_row("2026-04-28_INFY_0940"),
+        _opt_row("2026-04-29_TCS_0945"),
+        _opt_row("2026-04-26_OLD_0930", status="CLOSED"),  # already closed — skip
+    ])
 
-    # close_at_1430 side_effect: mutate the OPEN row to CLOSED in-place on disk
     def fake_close_at_1430(date_str_arg, ltp):
         data = json.loads(ledger_path.read_text(encoding="utf-8"))
-        n = 0
         for row in data:
             if row["date"] == date_str_arg and row["status"] == "OPEN":
-                sym = row["symbol"]
-                if sym in ltp:
-                    row["status"] = "CLOSED"
-                    row["exit_px"] = ltp[sym]
-                    row["exit_time"] = f"{date_str_arg} 14:30:00"
-                    row["exit_reason"] = "TIME_STOP"
-                    n += 1
+                row["status"] = "CLOSED"
         _seed_futures_ledger(ledger_path, data)
-        return n
+        return 1
 
     mock_close_pair = MagicMock(return_value={"status": "CLOSED"})
     with patch.object(live_paper, "close_at_1430", side_effect=fake_close_at_1430), \
@@ -407,12 +423,14 @@ def test_cmd_close_calls_sidecar_for_each_closed_row(tmp_path, monkeypatch):
         rc = phase_c_shadow.cmd_close(date_override=date_str)
 
     assert rc == 0
-    # 3 CLOSED rows after fake_close_at_1430 (2 pre-existing + 1 just closed)
+    # 3 OPEN options rows swept (CLOSED row skipped) — regardless of futures dates
     assert mock_close_pair.call_count == 3
     called_ids = {c.args[0] for c in mock_close_pair.call_args_list}
-    assert "2026-04-29_RELIANCE_0935" in called_ids
-    assert "2026-04-29_INFY_0940" in called_ids
-    assert "2026-04-29_TCS_0945" in called_ids
+    assert called_ids == {
+        "2026-04-27_RELIANCE_0935",
+        "2026-04-28_INFY_0940",
+        "2026-04-29_TCS_0945",
+    }
 
 
 def test_cmd_close_continues_when_sidecar_raises(tmp_path, monkeypatch):
@@ -427,6 +445,7 @@ def test_cmd_close_continues_when_sidecar_raises(tmp_path, monkeypatch):
     _seed_futures_ledger(ledger_path, rows)
     monkeypatch.setattr(phase_c_shadow, "_fetch_ltp",
                         lambda syms: {"RELIANCE": 2400.0})
+    _seed_options_ledger(monkeypatch, tmp_path, [_opt_row("2026-04-29_RELIANCE_0935")])
 
     def fake_close_at_1430(date_str_arg, ltp):
         data = json.loads(ledger_path.read_text(encoding="utf-8"))
@@ -445,13 +464,12 @@ def test_cmd_close_continues_when_sidecar_raises(tmp_path, monkeypatch):
 
 
 def test_cmd_close_skips_sidecar_when_no_opens(tmp_path, monkeypatch, caplog):
-    """When ledger has no OPEN rows for date_str, cmd_close returns 0 and sidecar never fires."""
+    """When futures ledger has no OPEN rows, cmd_close returns 0 and sidecar never fires."""
     from unittest.mock import patch, MagicMock
 
     date_str = "2026-04-29"
     ledger_path = tmp_path / "ledger.json"
     monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
-    # Empty ledger — no OPEN rows
     _seed_futures_ledger(ledger_path, [])
 
     mock_close_pair = MagicMock(return_value={"status": "CLOSED"})
@@ -464,52 +482,20 @@ def test_cmd_close_skips_sidecar_when_no_opens(tmp_path, monkeypatch, caplog):
     assert any("no OPEN entries" in r.message for r in caplog.records)
 
 
-def test_cmd_close_handles_no_match_silently(tmp_path, monkeypatch):
-    """When close_options_pair returns None (no paired row), cmd_close still returns 0."""
+def test_cmd_close_sidecar_skips_already_closed_options(tmp_path, monkeypatch):
+    """Options rows already in a terminal state must not trigger close_options_pair."""
     from unittest.mock import patch, MagicMock
 
     date_str = "2026-04-29"
     ledger_path = tmp_path / "ledger.json"
     monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
+    _seed_futures_ledger(ledger_path, [_futures_row(date=date_str, symbol="RELIANCE", status="OPEN")])
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp", lambda syms: {"RELIANCE": 2400.0})
 
-    rows = [_futures_row(date=date_str, symbol="RELIANCE", status="OPEN")]
-    _seed_futures_ledger(ledger_path, rows)
-    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp",
-                        lambda syms: {"RELIANCE": 2400.0})
-
-    def fake_close_at_1430(date_str_arg, ltp):
-        data = json.loads(ledger_path.read_text(encoding="utf-8"))
-        for row in data:
-            if row["date"] == date_str_arg and row["status"] == "OPEN":
-                row["status"] = "CLOSED"
-        _seed_futures_ledger(ledger_path, data)
-        return 1
-
-    # close_options_pair returns None → no match in options ledger
-    mock_close_pair = MagicMock(return_value=None)
-    with patch.object(live_paper, "close_at_1430", side_effect=fake_close_at_1430), \
-         patch("pipeline.phase_c_options_shadow.close_options_pair", mock_close_pair):
-        rc = phase_c_shadow.cmd_close(date_override=date_str)
-
-    assert rc == 0
-    mock_close_pair.assert_called_once()
-
-
-def test_cmd_close_signal_id_format(tmp_path, monkeypatch):
-    """close_options_pair is called with signal_id in {date}_{symbol}_{HHMM} format."""
-    from unittest.mock import patch, MagicMock
-
-    date_str = "2026-04-29"
-    ledger_path = tmp_path / "ledger.json"
-    monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
-
-    rows = [_futures_row(
-        date=date_str, symbol="RELIANCE",
-        signal_time="2026-04-29 09:35:00", status="OPEN",
-    )]
-    _seed_futures_ledger(ledger_path, rows)
-    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp",
-                        lambda syms: {"RELIANCE": 2400.0})
+    _seed_options_ledger(monkeypatch, tmp_path, [
+        _opt_row("2026-04-29_A_0930", status="CLOSED"),
+        _opt_row("2026-04-29_B_0930", status="TIME_STOP_FAIL_FETCH"),
+    ])
 
     def fake_close_at_1430(date_str_arg, ltp):
         data = json.loads(ledger_path.read_text(encoding="utf-8"))
@@ -525,4 +511,35 @@ def test_cmd_close_signal_id_format(tmp_path, monkeypatch):
         rc = phase_c_shadow.cmd_close(date_override=date_str)
 
     assert rc == 0
-    mock_close_pair.assert_called_once_with("2026-04-29_RELIANCE_0935")
+    mock_close_pair.assert_not_called()
+
+
+def test_cmd_close_sidecar_passes_signal_id_verbatim(tmp_path, monkeypatch):
+    """close_options_pair receives the row's stored signal_id, not a reconstruction."""
+    from unittest.mock import patch, MagicMock
+
+    date_str = "2026-04-29"
+    ledger_path = tmp_path / "ledger.json"
+    monkeypatch.setattr(live_paper, "_LEDGER_PATH", ledger_path)
+    _seed_futures_ledger(ledger_path, [_futures_row(date=date_str, symbol="RELIANCE", status="OPEN")])
+    monkeypatch.setattr(phase_c_shadow, "_fetch_ltp", lambda syms: {"RELIANCE": 2400.0})
+
+    _seed_options_ledger(monkeypatch, tmp_path, [
+        _opt_row("2026-04-28_IEX_1533"),  # the actual stale-row format that triggered the fix
+    ])
+
+    def fake_close_at_1430(date_str_arg, ltp):
+        data = json.loads(ledger_path.read_text(encoding="utf-8"))
+        for row in data:
+            if row["date"] == date_str_arg and row["status"] == "OPEN":
+                row["status"] = "CLOSED"
+        _seed_futures_ledger(ledger_path, data)
+        return 1
+
+    mock_close_pair = MagicMock(return_value={"status": "CLOSED"})
+    with patch.object(live_paper, "close_at_1430", side_effect=fake_close_at_1430), \
+         patch("pipeline.phase_c_options_shadow.close_options_pair", mock_close_pair):
+        rc = phase_c_shadow.cmd_close(date_override=date_str)
+
+    assert rc == 0
+    mock_close_pair.assert_called_once_with("2026-04-28_IEX_1533")
