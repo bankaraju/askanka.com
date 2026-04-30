@@ -301,10 +301,80 @@ def audit_cross_host_regime() -> list[dict]:
     return issues
 
 
+# ---------------------------------------------------------------------------
+# Audit 4 — same-day-content audit for the news feed
+# ---------------------------------------------------------------------------
+
+# data/fno_news.json is written by TWO producers under DIFFERENT schemas:
+#   * morning fno_news_scanner — {updated_at,count,headlines:[...]}
+#   * EOD website_exporter.export_fno_news — flat list of filtered verdicts
+# When the EOD writer's filter yields 0 rows, naive write replaces today's
+# 100+ morning headlines with `[]` (caught 2026-04-30). This audit gates
+# both: file must (a) carry today's IST date in its content and (b) have
+# at least one item or be one of the recognised non-empty shapes.
+
+NEWS_FEED_PATH = REPO_ROOT / "data" / "fno_news.json"
+
+
+def audit_news_feed_today(today_iso: str | None = None) -> list[dict]:
+    """Verify ``data/fno_news.json`` has today's content, in either schema."""
+    issues: list[dict] = []
+    today = today_iso or _today_ist_iso()
+    if not NEWS_FEED_PATH.exists():
+        return issues  # OUTPUT_MISSING handles absence elsewhere
+    try:
+        data = json.loads(NEWS_FEED_PATH.read_text(encoding="utf-8"))
+    except Exception as exc:
+        issues.append({
+            "kind": "NEWS_FEED_UNREADABLE",
+            "detail": f"{NEWS_FEED_PATH.name}: {type(exc).__name__}: {exc}",
+            "output_path": _rel(NEWS_FEED_PATH),
+            "self_heal": "rerun_fno_news_scanner",
+        })
+        return issues
+    # Morning-scanner schema: {updated_at, count, headlines: [...]}
+    if isinstance(data, dict):
+        updated = (data.get("updated_at") or "")[:10]
+        items = data.get("headlines") or data.get("items") or data.get("news") or []
+        if updated and updated != today:
+            issues.append({
+                "kind": "NEWS_FEED_STALE",
+                "detail": f"updated_at={updated!r} but today is {today}",
+                "output_path": _rel(NEWS_FEED_PATH),
+                "self_heal": "rerun_fno_news_scanner",
+            })
+        elif not items:
+            issues.append({
+                "kind": "NEWS_FEED_EMPTY",
+                "detail": "morning-shape file but headlines list is empty",
+                "output_path": _rel(NEWS_FEED_PATH),
+                "self_heal": "rerun_fno_news_scanner",
+            })
+        return issues
+    # Website-exporter schema: flat list of filtered verdicts
+    if isinstance(data, list):
+        if not data:
+            issues.append({
+                "kind": "NEWS_FEED_EMPTY",
+                "detail": "file is `[]` — EOD exporter wrote 0 filtered rows over morning headlines",
+                "output_path": _rel(NEWS_FEED_PATH),
+                "self_heal": "rerun_fno_news_scanner",
+            })
+        return issues
+    issues.append({
+        "kind": "NEWS_FEED_UNKNOWN_SHAPE",
+        "detail": f"unrecognised top-level type: {type(data).__name__}",
+        "output_path": _rel(NEWS_FEED_PATH),
+        "self_heal": None,
+    })
+    return issues
+
+
 def run_all_audits() -> list[dict]:
     """Run every content audit; merge results."""
     issues: list[dict] = []
     issues.extend(audit_stale_open_rows())
     issues.extend(audit_provenance_drift())
     issues.extend(audit_cross_host_regime())
+    issues.extend(audit_news_feed_today())
     return issues

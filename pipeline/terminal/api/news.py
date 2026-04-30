@@ -3,11 +3,14 @@
 Source priority:
   1. data/fno_news.json — populated by morning_scan; preferred when fresh.
   2. pipeline/data/news_verdicts.json — backstop populated by the
-     news-impact engine. Always fresh (refreshed at 16:20 IST), so it
-     keeps the News tab populated even when fno_news.json is clobbered
-     to empty (recurring bug — see memory project_news_intelligence).
+     news-impact engine, **filtered to today's IST date only**. Falling
+     through to yesterday's verdicts is exactly the silent-staleness
+     failure mode that bit 2026-04-30 (dashboard showed 04-29 NO_IMPACT
+     items because EOD clobbered fno_news.json before today's verdicts
+     ran at 16:20).
 """
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from fastapi import APIRouter
 
@@ -16,6 +19,7 @@ router = APIRouter()
 _HERE = Path(__file__).resolve().parent.parent
 _FNO_NEWS_FILE = _HERE.parent.parent / "data" / "fno_news.json"
 _VERDICTS_FILE = _HERE.parent / "data" / "news_verdicts.json"
+_IST = timezone(timedelta(hours=5, minutes=30))
 
 
 def _read_json(path: Path, default=None):
@@ -73,11 +77,36 @@ def _items_from_verdicts(raw) -> list:
     return out
 
 
+def _today_ist() -> str:
+    return datetime.now(_IST).strftime("%Y-%m-%d")
+
+
+def _filter_to_today(items: list) -> list:
+    """Drop items whose published_at/date isn't today (IST). Items missing
+    a date are kept — pre-empting silent fall-through to yesterday's data
+    matters more than perfect coverage of legacy rows.
+    """
+    today = _today_ist()
+    out = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        d = (item.get("date") or item.get("published_at") or "")[:10]
+        if d and d != today:
+            continue
+        out.append(item)
+    return out
+
+
 def _load_items() -> list:
     items = _items_from_fno(_read_json(_FNO_NEWS_FILE, default=[]))
     if items:
         return items
-    return _items_from_verdicts(_read_json(_VERDICTS_FILE, default=[]))
+    # Backstop: only fall through to verdicts if today's verdicts exist.
+    # Yesterday's NO_IMPACT items are not "news" — they're stale rows
+    # presented as fresh, which is the bug pattern we're guarding against.
+    verdict_items = _items_from_verdicts(_read_json(_VERDICTS_FILE, default=[]))
+    return _filter_to_today(verdict_items)
 
 
 @router.get("/news/macro")

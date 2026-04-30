@@ -191,3 +191,64 @@ class TestCrossHostRegime:
         assert len(issues) == 1
         assert issues[0]["kind"] == "VPS_FILE_CORRUPT"
         assert issues[0]["self_heal"] == "push_to_vps"
+
+
+# ---------------------------------------------------------------------------
+# audit_news_feed_today
+# ---------------------------------------------------------------------------
+
+class TestNewsFeedToday:
+    def _setup_path(self, tmp_path, monkeypatch):
+        path = tmp_path / "data" / "fno_news.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        monkeypatch.setattr(audits, "NEWS_FEED_PATH", path)
+        return path
+
+    def test_morning_shape_today_no_issue(self, tmp_path, monkeypatch):
+        path = self._setup_path(tmp_path, monkeypatch)
+        path.write_text(json.dumps({
+            "updated_at": "2026-04-30T09:26:47+05:30",
+            "count": 99,
+            "headlines": [{"title": "x"}] * 99,
+        }))
+        assert audits.audit_news_feed_today(today_iso="2026-04-30") == []
+
+    def test_morning_shape_yesterday_fires_with_self_heal(self, tmp_path, monkeypatch):
+        path = self._setup_path(tmp_path, monkeypatch)
+        path.write_text(json.dumps({
+            "updated_at": "2026-04-29T09:26:47+05:30",
+            "count": 99,
+            "headlines": [{"title": "x"}] * 99,
+        }))
+        issues = audits.audit_news_feed_today(today_iso="2026-04-30")
+        assert len(issues) == 1
+        assert issues[0]["kind"] == "NEWS_FEED_STALE"
+        assert issues[0]["self_heal"] == "rerun_fno_news_scanner"
+
+    def test_empty_list_clobber_fires(self, tmp_path, monkeypatch):
+        # The 2026-04-30 bug: EOD exporter wrote `[]` over morning headlines.
+        path = self._setup_path(tmp_path, monkeypatch)
+        path.write_text("[]")
+        issues = audits.audit_news_feed_today(today_iso="2026-04-30")
+        assert len(issues) == 1
+        assert issues[0]["kind"] == "NEWS_FEED_EMPTY"
+        assert issues[0]["self_heal"] == "rerun_fno_news_scanner"
+
+    def test_filtered_verdicts_with_rows_no_issue(self, tmp_path, monkeypatch):
+        # Website-exporter shape with at least one filtered row is acceptable.
+        path = self._setup_path(tmp_path, monkeypatch)
+        path.write_text(json.dumps([{"ticker": "X", "impact": "HIGH_IMPACT"}]))
+        assert audits.audit_news_feed_today(today_iso="2026-04-30") == []
+
+    def test_unreadable_fires_distinct_kind(self, tmp_path, monkeypatch):
+        path = self._setup_path(tmp_path, monkeypatch)
+        path.write_text("not json {")
+        issues = audits.audit_news_feed_today(today_iso="2026-04-30")
+        assert len(issues) == 1
+        assert issues[0]["kind"] == "NEWS_FEED_UNREADABLE"
+
+    def test_missing_file_skipped(self, tmp_path, monkeypatch):
+        # Don't fire when file is absent — OUTPUT_MISSING handles that path.
+        path = tmp_path / "data" / "fno_news.json"
+        monkeypatch.setattr(audits, "NEWS_FEED_PATH", path)
+        assert audits.audit_news_feed_today(today_iso="2026-04-30") == []

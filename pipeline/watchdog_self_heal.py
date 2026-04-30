@@ -69,6 +69,26 @@ def phase_c_options_sidecar_close() -> dict:
                 "detail": f"{type(exc).__name__}: {exc}"}
 
 
+def rerun_fno_news_scanner() -> dict:
+    """Re-run pipeline.fno_news_scanner to repopulate today's headlines.
+
+    Idempotent: scanner overwrites data/fno_news.json with current
+    Google-News pull. Only ~10s wall-clock; safe to invoke whenever the
+    file is empty/stale. The morning scheduled task fires at 09:26 IST,
+    so this is mostly relevant when something else (e.g. EOD exporter
+    with empty filter result) has clobbered it.
+    """
+    try:
+        from pipeline import fno_news_scanner
+        fno_news_scanner.main()
+        log.info("self-heal rerun_fno_news_scanner: completed")
+        return {"ok": True, "action": "rerun_fno_news_scanner",
+                "detail": "scanner re-run; fno_news.json refreshed"}
+    except Exception as exc:
+        return {"ok": False, "action": "rerun_fno_news_scanner",
+                "detail": f"{type(exc).__name__}: {exc}"}
+
+
 def dispatch(action_name: str, output_path: str | None = None) -> dict:
     """Look up and run a registered self-heal action by name."""
     if action_name == "push_to_vps":
@@ -77,6 +97,8 @@ def dispatch(action_name: str, output_path: str | None = None) -> dict:
         return push_to_vps(output_path)
     if action_name == "phase_c_options_sidecar_close":
         return phase_c_options_sidecar_close()
+    if action_name == "rerun_fno_news_scanner":
+        return rerun_fno_news_scanner()
     return {"ok": False, "action": action_name, "detail": "unknown self-heal action"}
 
 

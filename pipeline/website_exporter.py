@@ -900,6 +900,15 @@ def export_fno_news(source: Path | None = None, out: Path | None = None) -> int:
         r.get("impact") != "HIGH_IMPACT",
         -abs(r.get("hit_rate") or 0),
     ))
+    # Guard: refuse to clobber the existing file with an empty list. The
+    # morning scanner writes 100+ raw headlines at 09:26 in a different
+    # schema (`{updated_at,count,headlines:[...]}`); when verdicts haven't
+    # been refreshed yet (e.g. EOD run before 16:20 task fires) this
+    # filter yields 0 rows and a naive write would replace today's morning
+    # data with `[]`. Caught 2026-04-30 — dashboard fell through to
+    # yesterday's news_verdicts.json after EOD clobber.
+    if not rows_out:
+        return 0
     out.write_text(json.dumps(rows_out, indent=2, default=str, ensure_ascii=False),
                    encoding="utf-8")
     return len(rows_out)
