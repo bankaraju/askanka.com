@@ -343,9 +343,13 @@ def _sharpe(daily_returns: list[float]) -> float:
     return (mu / sd) * (252 ** 0.5)
 
 
+_EMPTY_STATS = {"n": 0, "mean_bps": 0.0, "hit_rate": 0.0, "sharpe": 0.0,
+                "max_dd_bps": 0.0}
+
+
 def _summarize(daily_returns: dict[str, float]) -> dict:
     if not daily_returns:
-        return {"n": 0, "mean_bps": 0.0, "hit_rate": 0.0, "sharpe": 0.0, "max_dd_bps": 0.0}
+        return {"full": dict(_EMPTY_STATS), "per_year": {}}
     by_year: dict[str, list[float]] = {}
     for d, r in daily_returns.items():
         y = d[:4]
