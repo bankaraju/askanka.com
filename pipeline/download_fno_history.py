@@ -28,7 +28,8 @@ logging.basicConfig(
 log = logging.getLogger("fno_download")
 
 PIPELINE_DIR = Path(__file__).parent
-FNO_FILE = PIPELINE_DIR.parent / "opus" / "config" / "fno_stocks.json"
+CANONICAL_V3 = PIPELINE_DIR / "data" / "canonical_fno_research_v3.json"
+FNO_FILE = PIPELINE_DIR.parent / "opus" / "config" / "fno_stocks.json"  # legacy fallback
 HIST_DIR = PIPELINE_DIR / "data" / "fno_historical"
 HIST_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -39,6 +40,10 @@ TICKER_OVERRIDES = {
     "M&MFIN": "M&MFIN.NS",
     "NAM-INDIA": "NAM-INDIA.NS",
     "BAJAJ-AUTO": "BAJAJ-AUTO.NS",
+    # NSE renames yfinance hasn't caught up to (verified live 2026-04-28)
+    "ZOMATO": "ETERNAL.NS",
+    "MCDOWELL-N": "UNITDSPR.NS",
+    "L&TFH": "LTF.NS",
 }
 
 
@@ -50,7 +55,12 @@ def yf_ticker(symbol: str) -> str:
 
 
 def load_fno_universe() -> list[str]:
-    """Load the F&O stock list."""
+    """Load the F&O stock list. Source-of-truth is canonical_fno_research_v3.json
+    (273 tickers); falls back to opus/config/fno_stocks.json (213 tickers) if the
+    canonical file is missing for any reason."""
+    if CANONICAL_V3.exists():
+        data = json.loads(CANONICAL_V3.read_text(encoding="utf-8"))
+        return sorted(data["tickers"])
     data = json.loads(FNO_FILE.read_text(encoding="utf-8"))
     return data["symbols"]
 

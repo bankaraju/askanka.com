@@ -64,6 +64,34 @@ _TRAIL_ARM_PCT = 0.006   # arms at +0.6% favorable
 _TRAIL_DIST_PCT = 1.2    # trail distance, in % units
 
 
+# ---- Sectoral-index lookup (metadata-only — spec §14, NOT in entry rules) -
+#
+# 2026-04-30 fix: sectoral_index was 100% UNKNOWN in the holdout ledger
+# because correlation_breaks.json never carries this key. The defensive
+# fallback at _build_open_row was always firing. The field is descriptive
+# metadata per spec §14 — it does NOT appear in §5 trade rules, §7 baselines,
+# or §8 verdict ladder gates. Therefore populating it real now is SAFE under
+# §10.4 single-touch (no parameter change to entry/exit logic).
+#
+# Lookup uses the same data contract as Phase C v5 (`v4_adapter._SECTOR_INDEX_MAP`)
+# resolved via SectorMapper. Resolved once at module import; new tickers added
+# to opus/artifacts/<sym>/indianapi_stock.json land at next process restart.
+def _build_ticker_to_sector_index() -> dict[str, str]:
+    try:
+        from pipeline.scorecard_v2.sector_mapper import SectorMapper
+        from pipeline.research.phase_c_v5.v4_adapter import _SECTOR_INDEX_MAP
+    except Exception:
+        return {}
+    sector_table = SectorMapper().map_all()
+    return {
+        sym: _SECTOR_INDEX_MAP.get(info.get("sector", ""), "NIFTY")
+        for sym, info in sector_table.items()
+    }
+
+
+_TICKER_TO_SECTOR_INDEX = _build_ticker_to_sector_index()
+
+
 # ---- Time / date helpers (separated for monkeypatching) -------------------
 
 def _today_iso() -> str:
@@ -209,7 +237,9 @@ def _build_open_row(signal: dict, entry_px: float, atr_info: dict,
     side = _side_from_z(z)
     ticker = signal["symbol"]
     sectoral_index = (signal.get("sectoral_index")
-                      or signal.get("sector_index") or "UNKNOWN")
+                      or signal.get("sector_index")
+                      or _TICKER_TO_SECTOR_INDEX.get(ticker)
+                      or "NIFTY")
     atr_14 = atr_info.get("atr_14")
     stop_px = atr_info.get("stop_price")
     vwap_dev_str, filter_tag = _compute_filter_tag(ticker, side)

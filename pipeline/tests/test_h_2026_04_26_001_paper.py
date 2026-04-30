@@ -56,7 +56,7 @@ def stub_env(tmp_path, monkeypatch):
             "atr_14": 1.0, "stop_source": "atr_14",
         },
     )
-    monkeypatch.setattr(paper, "_regime_for_date", lambda d: "CAUTION")
+    monkeypatch.setattr(paper, "_load_today_regime_zone", lambda: "CAUTION")
     monkeypatch.setattr(paper, "_today_iso", lambda: "2026-04-27")
     monkeypatch.setattr(paper, "_now_iso", lambda: "2026-04-27T09:30:00+05:30")
     return {"rec_path": rec_path, "tmp": tmp_path}
@@ -193,7 +193,7 @@ def test_regime_gate_pass_column(stub_env, tmp_path, monkeypatch):
     _write_breaks(tmp_path, monkeypatch, rows)
 
     # NEUTRAL regime → gate FAILS (False)
-    monkeypatch.setattr(paper, "_regime_for_date", lambda d: "NEUTRAL")
+    monkeypatch.setattr(paper, "_load_today_regime_zone", lambda: "NEUTRAL")
     paper.cmd_open()
     written = _read_csv(stub_env["rec_path"])
     assert written[0]["regime"] == "NEUTRAL"
@@ -203,7 +203,7 @@ def test_regime_gate_pass_column(stub_env, tmp_path, monkeypatch):
 def test_regime_gate_pass_caution_passes(stub_env, tmp_path, monkeypatch):
     rows = [_row("ACME", -2.5)]
     _write_breaks(tmp_path, monkeypatch, rows)
-    monkeypatch.setattr(paper, "_regime_for_date", lambda d: "CAUTION")
+    monkeypatch.setattr(paper, "_load_today_regime_zone", lambda: "CAUTION")
     paper.cmd_open()
     written = _read_csv(stub_env["rec_path"])
     assert written[0]["regime"] == "CAUTION"
@@ -230,6 +230,31 @@ def test_csv_has_all_spec_columns(stub_env, tmp_path, monkeypatch):
     assert written["status"] == "OPEN"
     assert written["sectoral_index"] == "NIFTYIT"
     assert written["signal_id"] == "BRK-2026-04-27-ACME"
+
+
+# ---------------------------------------------------------------------------
+# 7b. _load_today_regime_zone reads today_regime.json (canonical live source)
+# ---------------------------------------------------------------------------
+
+def test_load_today_regime_zone_reads_live_source(tmp_path, monkeypatch):
+    """Canonical zone is read from today_regime.json, not regime_history.csv."""
+    p = tmp_path / "today_regime.json"
+    p.write_text(json.dumps({"zone": "NEUTRAL", "regime": "NEUTRAL"}),
+                 encoding="utf-8")
+    monkeypatch.setattr(paper, "_TODAY_REGIME_PATH", p)
+    assert paper._load_today_regime_zone() == "NEUTRAL"
+
+
+def test_load_today_regime_zone_missing_file_returns_unknown(tmp_path, monkeypatch):
+    monkeypatch.setattr(paper, "_TODAY_REGIME_PATH", tmp_path / "nope.json")
+    assert paper._load_today_regime_zone() == "UNKNOWN"
+
+
+def test_load_today_regime_zone_invalid_json_returns_unknown(tmp_path, monkeypatch):
+    p = tmp_path / "today_regime.json"
+    p.write_text("not json", encoding="utf-8")
+    monkeypatch.setattr(paper, "_TODAY_REGIME_PATH", p)
+    assert paper._load_today_regime_zone() == "UNKNOWN"
 
 
 # ---------------------------------------------------------------------------
