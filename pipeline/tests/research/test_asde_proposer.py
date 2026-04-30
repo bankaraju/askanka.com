@@ -73,15 +73,37 @@ def test_legs_a_legs_b_top_k_ordering():
     out = enumerate_candidates(
         sectors=["Banks", "IT_Services"],
         ticker_map=_mock_ticker_map(),
+        adv_map={},  # force alphabetical fallback for deterministic test
     )
     bk_to_it = next(c for c in out if c.sector_a == "Banks"
                     and c.sector_b == "IT_Services" and c.regime == "NEUTRAL"
                     and c.hold == 1)
-    # Alphabetical fallback (v0): top-3 of Banks alphabetically
+    # Empty adv_map -> alphabetical fallback: top-3 of Banks alphabetically
     assert bk_to_it.legs_a == ("AXISBANK", "HDFCBANK", "ICICIBANK")
     assert bk_to_it.legs_b == ("HCLTECH", "INFY", "TCS")
     assert bk_to_it.n_legs_a == PER_SIDE_TOP_K
     assert bk_to_it.n_legs_b == PER_SIDE_TOP_K
+
+
+def test_legs_ranked_by_explicit_adv_map():
+    """When adv_map is provided, legs come back in ADV-descending order."""
+    adv_map = {
+        # Banks: AXISBANK has highest ADV, then HDFCBANK, then SBIN
+        "AXISBANK": 1000.0, "HDFCBANK": 800.0, "SBIN": 500.0,
+        "ICICIBANK": 200.0, "KOTAKBANK": 100.0,
+        # IT_Services
+        "INFY": 1500.0, "TCS": 1200.0, "WIPRO": 900.0, "HCLTECH": 600.0,
+    }
+    out = enumerate_candidates(
+        sectors=["Banks", "IT_Services"],
+        ticker_map=_mock_ticker_map(),
+        adv_map=adv_map,
+    )
+    bk_to_it = next(c for c in out if c.sector_a == "Banks"
+                    and c.sector_b == "IT_Services" and c.regime == "NEUTRAL"
+                    and c.hold == 1)
+    assert bk_to_it.legs_a == ("AXISBANK", "HDFCBANK", "SBIN")
+    assert bk_to_it.legs_b == ("INFY", "TCS", "WIPRO")
 
 
 def test_pair_id_uniqueness():

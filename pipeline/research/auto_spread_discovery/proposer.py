@@ -75,15 +75,24 @@ def _ticker_to_sector() -> dict[str, str]:
     return {t: (v.get("sector") or "Unmapped") for t, v in mapped.items()}
 
 
-def _liquidity_rank(tickers: list[str]) -> list[str]:
-    """Rank by 60d ADV (close * volume mean). Falls back to alphabetical
-    when fno_historical data is unavailable.
+def _liquidity_rank(tickers: list[str],
+                    *, adv_map: dict[str, float] | None = None) -> list[str]:
+    """Rank by 60d ADV (close * volume mean) using fno_historical.
 
-    v0 uses an alphabetical fallback to keep the enumerator pure-stdlib;
-    v1 will swap in the actual ADV computation from
-    pipeline.data.fno_historical.
+    Falls back to alphabetical when fno_historical data is unavailable
+    (preserves v0 test stability when called without an ADV map and
+    no CSVs are present).
     """
-    return sorted(tickers)[:PER_SIDE_TOP_K] if tickers else []
+    if not tickers:
+        return []
+    try:
+        from pipeline.research.auto_spread_discovery.liquidity import rank_top_k_by_adv
+        ranked = rank_top_k_by_adv(tickers, PER_SIDE_TOP_K, adv_map=adv_map)
+        if ranked:
+            return ranked
+    except Exception:
+        pass
+    return sorted(tickers)[:PER_SIDE_TOP_K]
 
 
 def enumerate_candidates(
@@ -91,6 +100,7 @@ def enumerate_candidates(
     today: date | None = None,
     sectors: list[str] | None = None,
     ticker_map: dict[str, str] | None = None,
+    adv_map: dict[str, float] | None = None,
 ) -> list[Candidate]:
     today = today or date.today()
     sectors = sectors or _load_sectors()
@@ -106,8 +116,8 @@ def enumerate_candidates(
         for b in sectors:
             if a == b:
                 continue
-            legs_a = tuple(_liquidity_rank(by_sector.get(a, [])))
-            legs_b = tuple(_liquidity_rank(by_sector.get(b, [])))
+            legs_a = tuple(_liquidity_rank(by_sector.get(a, []), adv_map=adv_map))
+            legs_b = tuple(_liquidity_rank(by_sector.get(b, []), adv_map=adv_map))
             for regime in REGIMES:
                 for hold in HOLDS:
                     pid = f"{a}__VS__{b}__{regime}__{hold}d"
