@@ -188,24 +188,6 @@
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 23, 2026"
-    },
-    {
-      "date": "2026-04-22",
-      "segment": "war",
-      "filename": "2026-04-22-war.html",
-      "headline": "Trump's Hormuz Bluff Called: Iran's Diplomatic Power Play Exposes DC Divisions",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 22, 2026"
-    },
-    {
-      "date": "2026-04-22",
-      "segment": "epstein",
-      "filename": "2026-04-22-epstein.html",
-      "headline": "Trump DOJ 'Shredding Docs' and Bannon's Files Resurface: The Epstein Cover-up's Deliberate Destruction",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 22, 2026"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-29T08:30:07.906747",
-  "predicted_gap_pct": -0.105,
+  "updated_at": "2026-04-30T08:30:07.376306",
+  "predicted_gap_pct": -0.1,
   "direction": "DOWN",
   "severity": "LOW",
   "severity_thresholds": {
@@ -16,40 +16,40 @@
   "contributions": [
     {
       "driver": "NIKKEI",
-      "value": -1.024,
+      "value": -1.0228,
       "coeff": 0.0916,
-      "contribution_pct": -0.0938
+      "contribution_pct": -0.0937
     },
     {
       "driver": "USDINR",
-      "value": 0.2774,
+      "value": 0.1844,
       "coeff": -0.3105,
-      "contribution_pct": -0.0861
+      "contribution_pct": -0.0572
     },
     {
       "driver": "KOSPI",
-      "value": -0.1881,
+      "value": -0.1807,
       "coeff": 0.1624,
-      "contribution_pct": -0.0305
+      "contribution_pct": -0.0293
     },
     {
       "driver": "BRENT",
-      "value": -4.0285,
+      "value": 0.9707,
       "coeff": -0.0071,
-      "contribution_pct": 0.0288
+      "contribution_pct": -0.0069
     },
     {
       "driver": "SPY",
-      "value": -0.4894,
+      "value": -0.0399,
       "coeff": 0.0226,
-      "contribution_pct": -0.0111
+      "contribution_pct": -0.0009
     },
     {
       "driver": "VIX_excess",
-      "value": 3.05,
+      "value": 2.44,
       "coeff": -0.0003,
-      "contribution_pct": -0.0008
+      "contribution_pct": -0.0006
     }
   ],
-  "vix_level": 18.05
+  "vix_level": 17.44
 }
