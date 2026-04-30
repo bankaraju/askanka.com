@@ -1,5 +1,15 @@
 """Anka Terminal — FastAPI application."""
 from pathlib import Path
+import sys
+
+# Make sibling-imports (e.g. `from config import ...`, `from eodhd_client import ...`)
+# resolvable regardless of how uvicorn was launched. Many pipeline/ files use the
+# bare-name import style that only works when `pipeline/` is on sys.path; without
+# this bootstrap, a fresh uvicorn restart silently breaks LTP/PnL the moment any
+# such module is imported lazily inside a request handler.
+_PIPELINE_DIR = Path(__file__).resolve().parent.parent
+if str(_PIPELINE_DIR) not in sys.path:
+    sys.path.insert(0, str(_PIPELINE_DIR))
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -27,6 +37,7 @@ from pipeline.terminal.api.attractiveness import router as attractiveness_router
 from pipeline.terminal.api.ta_attractiveness import router as ta_attractiveness_router
 from pipeline.terminal.api.scanner_pattern import router as scanner_pattern_router
 from pipeline.terminal.api.sidebar_status import router as sidebar_status_router
+from pipeline.terminal.api.ticker_narrative import router as ticker_narrative_router
 
 app = FastAPI(title="Anka Terminal", version="0.1.0")
 
@@ -52,6 +63,7 @@ app.include_router(attractiveness_router, prefix="/api")
 app.include_router(ta_attractiveness_router, prefix="/api")
 app.include_router(scanner_pattern_router)  # route already includes /api/ — no prefix
 app.include_router(sidebar_status_router, prefix="/api")
+app.include_router(ticker_narrative_router, prefix="/api")
 
 _STATIC_DIR = Path(__file__).parent / "static"
 

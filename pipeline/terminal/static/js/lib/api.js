@@ -18,6 +18,7 @@ export async function getTrustScores() { return get('/trust-scores'); }
 export async function getTrackRecord() { return get('/track-record'); }
 export async function getNewsMacro() { return get('/news/macro'); }
 export async function getChart(ticker) { return get(`/charts/${ticker}`); }
+export async function getTickerNarrative(ticker) { return get(`/ticker/${ticker}/narrative`); }
 export async function getTA(ticker) { return get(`/ta/${ticker}`); }
 export async function getNewsStock(ticker) { return get(`/news/${ticker}`); }
 export async function getRiskGates() { return get('/risk-gates'); }
