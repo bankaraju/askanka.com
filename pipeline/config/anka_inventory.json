@@ -1476,6 +1476,17 @@
       "notes": "04:50 IST Mon-Fri. vps_sync_daily.bat â€” pulls back AnkaDailyDump artifacts (pipeline/data/daily/*.json + pipeline/data/flows/*.json + pipeline/data/fno_historical/*.csv) from Contabo VPS via scp. Closes the laptop-side mirror so chart endpoint, FII flows and morning_scan see fresh files. outputs[] empty because the contract is that the destination directories MUST be fresh; the per-directory freshness is checked by AnkaDailyDump's outputs (data/daily/{today}.json) and by the chart-v2 audit (pipeline/data/fno_historical staleness). Registered 2026-04-28."
     },
     {
+      "task_name": "AnkaVPSSyncPostmarket",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "host": "laptop",
+      "outputs": [
+        "pipeline/data/research/h_2026_04_27_secrsi/recommendations.csv"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "15:00 IST Mon-Fri. Closes the post-market visibility lag for VPS-hosted strategy ledgers (SECRSI, TA Karpathy, Gemma 4 audit). Companion to AnkaVPSSyncDaily (04:50). Registered 2026-04-30."
+    },
+    {
       "task_name": "AnkaVPSSyncWeekly",
       "tier": "info",
       "cadence_class": "weekly",

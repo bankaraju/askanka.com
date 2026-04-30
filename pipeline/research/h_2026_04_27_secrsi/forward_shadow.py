@@ -55,6 +55,12 @@ _CSV_COLUMNS = [
     "side", "weight", "stock_pct_at_snap", "regime",
     "entry_time", "entry_px", "atr_14", "stop_px",
     "exit_time", "exit_px", "exit_reason", "pnl_pct", "status",
+    # Retroactive PIT-correction columns. Always empty on forward writes;
+    # only populated by a backfill script when a later audit finds the
+    # `regime` value was sourced from a stale truth file (e.g. the
+    # 2026-04-30 stale-VPS-regime backfill). Keeps the original
+    # recorded value intact for forensic audit.
+    "regime_pit_corrected", "regime_correction_reason",
 ]
 
 _MIN_STOCKS_PER_SECTOR = 4
@@ -220,6 +226,8 @@ def _build_open_row(
         "exit_reason": "",
         "pnl_pct": "",
         "status": "OPEN",
+        "regime_pit_corrected": "",
+        "regime_correction_reason": "",
     }
 
 
