@@ -1,6 +1,10 @@
 {
   "version": 1,
-  "updated": "2026-04-28",
+  "updated": "2026-04-30",
+  "event_driven_paths": [
+    "pipeline/data/signals/open_signals.json",
+    "pipeline/data/signals/closed_signals.json"
+  ],
   "tasks": [
     {
       "task_name": "AnkaCorrelationBreaks",

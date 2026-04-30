@@ -41,6 +41,18 @@ def load_inventory(path: Path) -> dict[str, Any]:
     if "tasks" not in data or not isinstance(data["tasks"], list):
         raise InventoryError("inventory missing or non-list 'tasks' field")
 
+    # Optional: paths whose freshness is event-driven (only update when an
+    # event happens, e.g. closed_signals.json on signal close). The watchdog
+    # SKIPS the cyclical OUTPUT_STALE check on these paths but still flags
+    # OUTPUT_MISSING. Without this, a quiet day produces N false-positive
+    # OUTPUT_STALE alerts (one per task that lists the file in `outputs`).
+    edp = data.get("event_driven_paths", [])
+    if not isinstance(edp, list):
+        raise InventoryError(
+            f"event_driven_paths must be a list, got {type(edp).__name__}")
+    if not all(isinstance(p, str) for p in edp):
+        raise InventoryError("event_driven_paths must be a list of strings")
+
     for i, task in enumerate(data["tasks"]):
         if not isinstance(task, dict):
             raise InventoryError(f"tasks[{i}] is not an object")

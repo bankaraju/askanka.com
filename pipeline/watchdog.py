@@ -83,8 +83,15 @@ def _filter_tasks_by_tier(inventory: dict, tier_filter):
     return [t for t in inventory["tasks"] if t["tier"] == tier_filter]
 
 
-def _eval_task(task: dict, live_by_name: dict, now: datetime) -> list:
-    """Evaluate one inventory task — return a list of issues (may be empty)."""
+def _eval_task(task: dict, live_by_name: dict, now: datetime,
+               event_driven_paths: frozenset[str] = frozenset()) -> list:
+    """Evaluate one inventory task — return a list of issues (may be empty).
+
+    `event_driven_paths` lists output paths that only update when an event
+    happens (e.g. closed_signals.json on signal-close). For these the
+    OUTPUT_STALE check is skipped — a quiet day shouldn't fire a false
+    alarm. OUTPUT_MISSING still fires (a missing file is always a fault).
+    """
     issues = []
     task_name = task["task_name"]
     tier = task["tier"]
@@ -105,6 +112,9 @@ def _eval_task(task: dict, live_by_name: dict, now: datetime) -> list:
                 output_path=expanded, detail="file does not exist",
                 tier=tier,
             ))
+        elif result == FreshnessResult.OUTPUT_STALE and expanded in event_driven_paths:
+            # Event-driven: stale-by-mtime is expected on quiet days. Suppress.
+            continue
         elif result == FreshnessResult.OUTPUT_STALE:
             try:
                 mtime = datetime.fromtimestamp(path.stat().st_mtime, tz=IST)
@@ -173,9 +183,11 @@ def run(args: argparse.Namespace, inventory_path: Path = INVENTORY_PATH) -> int:
 
     # 3. Evaluate each inventory task (filtered by tier if requested)
     selected = _filter_tasks_by_tier(inventory, args.tier)
+    event_driven_paths = frozenset(inventory.get("event_driven_paths", []))
     current_issues = []
     for task in selected:
-        current_issues.extend(_eval_task(task, live_by_name, now))
+        current_issues.extend(_eval_task(task, live_by_name, now,
+                                         event_driven_paths))
 
     # 4. Drift checks — only on --all (gate) runs, and only if scheduler query worked
     if not args.tier and not drift_skipped:
