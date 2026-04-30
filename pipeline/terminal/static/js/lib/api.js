@@ -1,7 +1,11 @@
 const BASE = '/api';
 
 export async function get(path) {
-  const resp = await fetch(`${BASE}${path}`);
+  // cache:'no-store' on every call — chart/freshness endpoints were silently
+  // serving 2-week-stale responses out of the HTTP cache because FastAPI
+  // emits no validators by default. no-store is correct for a per-request
+  // research terminal where every page has a "what's the latest" assumption.
+  const resp = await fetch(`${BASE}${path}`, { cache: 'no-store' });
   if (!resp.ok) throw new Error(`API ${path}: ${resp.status}`);
   return resp.json();
 }

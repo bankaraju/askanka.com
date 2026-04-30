@@ -124,9 +124,19 @@ export async function open(ticker) {
     if (_lastTicker !== String(ticker).toUpperCase()) return;  // superseded
     const candles = (data && data.candles) || [];
     _renderCandles(candles);
-    _setStatus(candles.length
-      ? `${candles.length} daily candles`
-      : 'No chart data available for this ticker');
+    if (candles.length) {
+      // Surface the last-bar date inline so silent-staleness (e.g. the
+      // April-15-for-two-weeks bug) is impossible to miss without reading
+      // the chart's x-axis.
+      const last = candles[candles.length - 1].time;
+      const ageDays = Math.floor((Date.now() - new Date(last).getTime()) / 86400000);
+      const ageLabel = ageDays <= 1 ? 'fresh'
+        : ageDays <= 4 ? `${ageDays}d ago`
+        : `⚠ ${ageDays}d old`;
+      _setStatus(`${candles.length} daily candles · last ${last} (${ageLabel})`);
+    } else {
+      _setStatus('No chart data available for this ticker');
+    }
   } catch (err) {
     _renderCandles([]);
     _setStatus(`Failed to load chart: ${err && err.message ? err.message : err}`);

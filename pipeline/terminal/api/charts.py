@@ -4,8 +4,20 @@ import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
+
+# Cache-Control no-store on every chart response. Without this, the browser
+# happily served the April-15 tail for two weeks after AnkaDailyDump caught up:
+# fetch() defaults to HTTP-cache semantics, and FastAPI emits no validators,
+# so heuristic freshness took over. The user's terminal is single-tab and
+# refreshes are rare — silent staleness is the worst failure mode.
+_NO_CACHE = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "Pragma": "no-cache",
+    "Expires": "0",
+}
 
 _HERE = Path(__file__).resolve().parent.parent
 _DAILY_DIR = _HERE.parent / "data" / "daily"
@@ -68,7 +80,10 @@ def charts(ticker: str):
     candles = _extend_with_fno_tail(ticker, candles)
 
     candles.sort(key=lambda c: c["time"])
-    return {"ticker": ticker, "candles": candles, "count": len(candles)}
+    return JSONResponse(
+        {"ticker": ticker, "candles": candles, "count": len(candles)},
+        headers=_NO_CACHE,
+    )
 
 
 def _from_phase_c_parquet(ticker: str) -> list:
