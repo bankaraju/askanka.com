@@ -43,6 +43,7 @@ from typing import Mapping
 import pandas as pd
 
 from pipeline.research.phase_c_minute import replay as r
+from pipeline.research.phase_c_minute import corp_action_adjuster as ca
 from pipeline.research.h_2026_04_27_secrsi.historical_replay import (
     _atr_pit, _load_daily_ohlc, _load_5m_bars,
 )
@@ -73,8 +74,11 @@ def _load_regime_tape(window_from: str, window_to: str) -> dict[str, str]:
     return tape
 
 
-def _load_1m_bars(ticker: str) -> dict[str, list[dict]] | None:
-    """Reuse the 5m loader (same CSV schema)."""
+def _load_1m_bars(
+    ticker: str,
+    splits_cache: dict[str, list[tuple[str, float]]] | None = None,
+) -> dict[str, list[dict]] | None:
+    """Reuse the 5m loader (same CSV schema). Apply split adjustment if cache provided."""
     p = INTRADAY_1M_DIR / f"{ticker}.csv"
     if not p.is_file():
         return None
@@ -101,6 +105,10 @@ def _load_1m_bars(ticker: str) -> dict[str, list[dict]] | None:
             by_day.setdefault(d, []).append(bar)
     for d in by_day:
         by_day[d].sort(key=lambda b: b["time"])
+    if splits_cache is not None:
+        splits = splits_cache.get(ticker, [])
+        if splits:
+            by_day = ca.adjust_bars(by_day, splits)
     return by_day
 
 
@@ -279,12 +287,31 @@ def main(argv: list[str] | None = None) -> int:
     minute_cache: dict[str, dict[str, list[dict]]] = {}
     daily_cache: dict[str, list[dict]] = {}
     for t in universe:
-        m = _load_1m_bars(t)
+        m = _load_1m_bars(t)  # raw, unadjusted
         if m:
             minute_cache[t] = m
         d = _load_daily_ohlc(t)
         if d:
             daily_cache[t] = d
+
+    # Empirical corp-action adjustment: derive per-date factor from
+    # (adjusted_daily_close / raw_1m_last_close) so 1m bars match the
+    # adjusted daily series the profile is trained on.
+    n_adjusted = 0
+    for t in list(minute_cache.keys()):
+        if t not in daily_cache:
+            continue
+        ftable = ca.empirical_factor_table(minute_cache[t], daily_cache[t])
+        if not ftable:
+            continue
+        non_unity = sum(1 for f in ftable.values() if abs(f - 1.0) > 0.02)
+        if non_unity > 0:
+            minute_cache[t] = ca.adjust_bars_empirical(minute_cache[t], ftable)
+            n_adjusted += 1
+            log.info("corp-action adjusted %s: %d / %d days had factor != 1",
+                     t, non_unity, len(ftable))
+    log.info("corp-action adjustment applied to %d / %d tickers",
+             n_adjusted, len(minute_cache))
 
     log.info("1m loaded: %d / %d  daily loaded: %d / %d",
              len(minute_cache), len(universe), len(daily_cache), len(universe))
