@@ -10,14 +10,25 @@ A high positive value means the stock has already extended past VWAP
 in the trade's intended direction — a "late" entry. The 2026-04-29
 NEUTRAL cohort tracker showed:
 
-    bottom tertile (LO):    77% wins (n=35)  ← KEEP
-    middle tertile (MID):   63% wins (n=35)  ← KEEP
-    top tertile (HI):       37% wins (n=35)  ← DROP
+    bottom tertile (LO):    77% wins (n=35)  ← EARLY (took position before/early in the move)
+    middle tertile (MID):   63% wins (n=35)  ← EARLY
+    top tertile (HI):       37% wins (n=35)  ← LATE  (took position after rally already started)
 
 Cut points are FROZEN here so live entry tagging is reproducible. They
 were derived from the 105-row 2026-04-27..29 NEUTRAL forward sample.
 The cohort tracker re-fits cuts on growing sample for evidence; this
 module's cuts only update on a pre-registered hypothesis swap.
+
+2026-04-30 LABEL RENAME (commercial-readability):
+    KEEP → EARLY
+    DROP → LATE
+    WATCH → N/A
+The old labels read like P&L verdicts ("DROP = drop this trade"). The new
+labels describe WHEN you entered relative to the move. Cut points and
+tertile assignments are unchanged — this is a metadata-only rename per
+backtesting-specs §14, not a §10.4 parameter change. Old CSV rows tagged
+KEEP/DROP/WATCH are still readable and the UI normalizes them at display
+time so historical and live rows show consistent vocabulary.
 
 Per backtesting-specs §10.4 strict, the filter is DISPLAY-ONLY during
 the H-001 holdout window (until 2026-05-26). It tags every row but
@@ -38,17 +49,49 @@ _IST = timezone(timedelta(hours=5, minutes=30))
 VWAP_DEV_SIGNED_LO_CUT = -0.0008
 VWAP_DEV_SIGNED_HI_CUT = +0.0036
 
-KEEP = "KEEP"      # LO + MID tertiles
-DROP = "DROP"      # HI tertile (late entry)
-WATCH = "WATCH"    # data unavailable — neither KEEP nor DROP
+EARLY = "EARLY"    # LO + MID tertiles — entered before/early in the move
+LATE = "LATE"      # HI tertile — entered after rally already extended
+NA = "N/A"         # data unavailable — neither EARLY nor LATE
+
+# Backward-compat aliases for the on-disk values written by code paths that
+# pre-date this rename. Anything reading the CSV ledgers should normalize
+# via normalize_legacy_tag() before display. Do not remove until every row
+# in every active ledger has been written under the new vocabulary (estimate
+# 2026-05-26, end of H-001 holdout window).
+_LEGACY_TO_NEW = {
+    "KEEP": EARLY,
+    "DROP": LATE,
+    "WATCH": NA,
+}
+
+
+def normalize_legacy_tag(tag: Optional[str]) -> Optional[str]:
+    """Map any legacy KEEP/DROP/WATCH value to the new EARLY/LATE/N/A label.
+
+    Called at the API boundary so historical CSV rows display consistently
+    with newly-written rows. New labels pass through unchanged.
+    """
+    if not tag:
+        return tag
+    return _LEGACY_TO_NEW.get(tag, tag)
 
 
 def classify(vwap_dev_signed: Optional[float]) -> str:
     if vwap_dev_signed is None:
-        return WATCH
+        return NA
     if vwap_dev_signed >= VWAP_DEV_SIGNED_HI_CUT:
-        return DROP
-    return KEEP
+        return LATE
+    return EARLY
+
+
+# ---------------------------------------------------------------------------
+# Legacy export aliases — kept so any out-of-tree caller importing
+# `KEEP/DROP/WATCH` continues to work. Internal callers should use the new
+# names directly.
+# ---------------------------------------------------------------------------
+KEEP = EARLY
+DROP = LATE
+WATCH = NA
 
 
 def compute_vwap_dev_signed(

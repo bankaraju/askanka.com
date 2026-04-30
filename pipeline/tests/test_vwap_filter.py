@@ -7,13 +7,54 @@ from unittest.mock import patch
 import pytest
 
 from pipeline.research.vwap_filter import (
-    DROP, KEEP, WATCH,
+    DROP, KEEP, WATCH,                # legacy aliases (kept compat)
+    EARLY, LATE, NA,                  # current canonical labels
     VWAP_DEV_SIGNED_HI_CUT,
     VWAP_DEV_SIGNED_LO_CUT,
     classify,
     compute_filter_tag,
     compute_vwap_dev_signed,
+    normalize_legacy_tag,
 )
+
+
+# ---------------------------------------------------------------------------
+# 0. Label rename invariants — legacy constants must alias to new ones so
+#    historical callers keep working without value mismatches.
+# ---------------------------------------------------------------------------
+
+class TestLabelRename:
+    def test_legacy_aliases_equal_new(self):
+        # The on-disk equality (e.g. row.filter_tag == KEEP comparisons in
+        # historical code paths) must still resolve correctly.
+        assert KEEP == EARLY == "EARLY"
+        assert DROP == LATE == "LATE"
+        assert WATCH == NA == "N/A"
+
+    def test_normalize_legacy_keep(self):
+        assert normalize_legacy_tag("KEEP") == "EARLY"
+
+    def test_normalize_legacy_drop(self):
+        assert normalize_legacy_tag("DROP") == "LATE"
+
+    def test_normalize_legacy_watch(self):
+        assert normalize_legacy_tag("WATCH") == "N/A"
+
+    def test_normalize_passthrough_for_new_labels(self):
+        assert normalize_legacy_tag("EARLY") == "EARLY"
+        assert normalize_legacy_tag("LATE") == "LATE"
+        assert normalize_legacy_tag("N/A") == "N/A"
+
+    def test_normalize_unknown_passthrough(self):
+        # Unrecognized values pass through unchanged so a typo or future
+        # extension doesn't silently get mapped to something arbitrary.
+        assert normalize_legacy_tag("FOO") == "FOO"
+
+    def test_normalize_empty_returns_none_or_falsy(self):
+        # None or "" is "no tag at all" — caller decides default. Helper
+        # returns the input unchanged so callers can handle their own default.
+        assert normalize_legacy_tag(None) is None
+        assert normalize_legacy_tag("") == ""
 
 
 IST = timezone(timedelta(hours=5, minutes=30))

@@ -27,6 +27,20 @@ from typing import Any
 from fastapi import APIRouter
 
 from pipeline import provenance
+from pipeline.research.vwap_filter import normalize_legacy_tag, NA as _FILTER_NA
+
+
+def _normalize_filter_tag(raw: Any) -> str:
+    """Map legacy KEEP/DROP/WATCH on-disk values to EARLY/LATE/N/A.
+
+    Default for an absent or empty value is N/A (data was unavailable at
+    entry — not the same as "skipped"). New writes already emit the
+    EARLY/LATE/N/A vocabulary; this normalize handles older rows so
+    historical and live data display in one consistent vocabulary.
+    """
+    if not raw:
+        return _FILTER_NA
+    return normalize_legacy_tag(raw) or raw
 
 router = APIRouter()
 
@@ -357,7 +371,10 @@ def _enrich_h001_row(row: dict, ltps: dict[str, float],
         "regime_gate_pass": row.get("regime_gate_pass") == "True",
         "sigma_bucket": row.get("sigma_bucket"),
         "vwap_dev_signed_pct": row.get("vwap_dev_signed_pct") or None,
-        "filter_tag": row.get("filter_tag") or "WATCH",
+        # Normalize old KEEP/DROP/WATCH to new EARLY/LATE/NA so historical
+        # rows display consistently with newly-written rows. Default for an
+        # absent value is N/A (data was unavailable at entry, not skipped).
+        "filter_tag": _normalize_filter_tag(row.get("filter_tag")),
         "tag": "H-001" + ("/H-002" if row.get("regime_gate_pass") == "True" else ""),
     }
 

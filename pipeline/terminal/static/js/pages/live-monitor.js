@@ -49,8 +49,8 @@ const COLUMNS = [
     title: 'Pure price-action geometry (LAG = stock behind peer / OVERSHOOT = stock past peer / DEGENERATE = move too small). PCR-free.' },
   { key: 'classification', label: 'Class',     numeric: false,
     title: 'Geometric classification of the break (LAG / OVERSHOOT / DEGENERATE). PCR-free as of 2026-04-27 — per-stock PCR was illiquid and not a gate.' },
-  { key: 'filter_tag',    label: 'Filter',     numeric: false,
-    title: 'Display-only VWAP-deviation cohort tag (KEEP / DROP / WATCH). Computed from vwap_dev_signed_pct vs frozen tertile cuts. Not yet a live gate per H-001 single-touch holdout discipline.' },
+  { key: 'filter_tag',    label: 'Entry timing', numeric: false,
+    title: 'When did we enter relative to the move? EARLY = took position before/early in the rally (cohort win-rate ≈ 70%). LATE = entered after the rally already extended past VWAP (cohort win-rate ≈ 37%). N/A = data unavailable. Display-only — does not gate trade entry during the H-001 holdout.' },
   { key: 'entry_time',    label: 'Open',       numeric: false },
 ];
 
@@ -282,18 +282,26 @@ function renderRow(r) {
   const classCell = r.classification
     ? `<span title="${escapeHtml(r.classification)}">${escapeHtml(r.classification)}</span>`
     : '—';
-  // Filter cell: VWAP-deviation cohort tag (KEEP / DROP / WATCH). Display-only;
-  // not yet a live gate during the H-001 single-touch holdout. Tooltip shows
-  // the raw signed VWAP deviation so the badge is auditable at a glance.
-  // vwap_dev_signed_pct is already in percent units (computed as
-  // (px - vwap)/vwap * 100 at source in intraday_panel_v1.py:92), so we
-  // just format — no extra multiply.
+  // Filter cell: VWAP-deviation cohort tag — EARLY / LATE / N/A.
+  //   EARLY = took position before/early in the move    (cohort win-rate ≈ 70%)
+  //   LATE  = entered after rally already extended       (cohort win-rate ≈ 37%)
+  //   N/A   = data unavailable (skipped fetch, pre-open)
+  // Display-only — not a live gate during the H-001 single-touch holdout.
+  // Tooltip shows the raw signed VWAP deviation so the badge is auditable.
+  // The endpoint normalizes legacy KEEP/DROP/WATCH to EARLY/LATE/N/A
+  // before this renders; old historical rows display with the new vocabulary.
+  // CSS class is the slug of the label (lowercase, no slash) — terminal.css
+  // carries .filter-pill--early/late/na, plus the legacy keep/drop/watch
+  // classes for any pre-cutover render path.
   const vwapPctStr = r.vwap_dev_signed_pct != null
     ? `${parseFloat(r.vwap_dev_signed_pct).toFixed(2)}%`
     : 'n/a';
   const filterTag = r.filter_tag || null;
+  const filterClassSlug = filterTag
+    ? filterTag.toLowerCase().replace('/', '')
+    : 'none';
   const filterCell = filterTag
-    ? `<span class="filter-pill filter-pill--${filterTag.toLowerCase()}" title="VWAP signed dev: ${vwapPctStr}">${escapeHtml(filterTag)}</span>`
+    ? `<span class="filter-pill filter-pill--${filterClassSlug}" title="VWAP signed dev: ${vwapPctStr}">${escapeHtml(filterTag)}</span>`
     : '<span class="filter-pill filter-pill--none" title="No filter tag (Phase C row or VWAP unavailable)">—</span>';
   return `
     <tr class="row--${(r.status || 'unknown').toLowerCase()} row--engine-${engineCls}">
