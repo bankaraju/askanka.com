@@ -94,11 +94,12 @@
       "task_name": "AnkaFeatureScorerIntraday",
       "tier": "warn",
       "cadence_class": "intraday",
+      "host": "embedded",
       "outputs": [
         "pipeline/data/attractiveness_scores.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Intraday apply of Feature Coincidence Scorer models. Runs inside intraday_scan.bat after the correlation break scanner and before website_exporter; writes attractiveness_scores.json consumed by /api/attractiveness. No standalone Windows scheduled task â€” a virtual inventory entry, same pattern as AnkaCorrelationBreaks."
+      "notes": "Intraday apply of Feature Coincidence Scorer models. Runs inside intraday_scan.bat (python -m pipeline.feature_scorer.score_universe) after the correlation break scanner and before website_exporter; writes attractiveness_scores.json consumed by /api/attractiveness. host=embedded â€” no standalone Windows trigger; freshness contract still enforced via output mtime."
     },
     {
       "task_name": "AnkaGapPredictor",
@@ -1291,12 +1292,13 @@
       "task_name": "AnkaIntradayV1Recalibrate",
       "tier": "warn",
       "cadence_class": "monthly",
+      "host": "manual",
       "outputs": [
         "pipeline/data/research/h_2026_04_29_intraday_v1/weights/"
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "Sunday 02:00 IST (last of month). anka_intraday_v1_recalibrate.bat -> runner recalibrate --pool stocks then --pool indices. Refits per-instrument weights."
+      "notes": "Last Sunday of the month, 02:00 IST. anka_intraday_v1_recalibrate.bat -> runner recalibrate --pool stocks then --pool indices. host=manual â€” operator-triggered (Windows Task Scheduler lacks a clean last-Sunday-of-month trigger, and the first recalibration window is end-May 2026 since the holdout started 2026-04-29). Promote to host=laptop with a weekly Sunday 02:00 trigger + self-skip in the .bat once we're ready to automate."
     },
     {
       "task_name": "AnkaIntradayV1Shadow_0930",
@@ -1462,6 +1464,22 @@
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
       "notes": "13:00 IST. anka_intraday_v1_shadow_1300.bat -> runner shadow-eval. 15-min cadence shadow scoring snapshot for V1 holdout. Registered via register_intraday_v1_all.ps1 2026-04-28."
+    },
+    {
+      "task_name": "AnkaVPSSyncDaily",
+      "tier": "warn",
+      "cadence_class": "daily",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "04:50 IST Mon-Fri. vps_sync_daily.bat â€” pulls back AnkaDailyDump artifacts (pipeline/data/daily/*.json + pipeline/data/flows/*.json + pipeline/data/fno_historical/*.csv) from Contabo VPS via scp. Closes the laptop-side mirror so chart endpoint, FII flows and morning_scan see fresh files. outputs[] empty because the contract is that the destination directories MUST be fresh; the per-directory freshness is checked by AnkaDailyDump's outputs (data/daily/{today}.json) and by the chart-v2 audit (pipeline/data/fno_historical staleness). Registered 2026-04-28."
+    },
+    {
+      "task_name": "AnkaVPSSyncWeekly",
+      "tier": "info",
+      "cadence_class": "weekly",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "Sunday 04:00 IST. vps_sync_weekly.bat â€” pulls back AnkaPatternScannerFit artifact (pipeline/data/scanner/pattern_stats.parquet) from Contabo VPS via scp. outputs[] empty because the freshness contract is enforced via AnkaPatternScannerFit's host=vps inventory entry. Registered 2026-04-28."
     }
   ]
 }

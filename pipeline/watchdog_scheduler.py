@@ -72,18 +72,31 @@ def check_drift(inventory: dict, live_tasks: list[dict]) -> tuple[list[str], lis
     orphans = Anka* tasks in scheduler but not in inventory.
     ghosts  = inventory entries whose task_name is not in scheduler.
 
-    Tasks marked ``host: vps`` are excluded from the ghost set: they run as
-    systemd timers on Contabo and are deliberately absent from Windows Task
-    Scheduler. They still count as "known" inventory entries, so a Windows
-    Anka* task with the same name would still register as orphan / not flagged.
+    Inventory entries are excluded from the ghost set in three cases:
+      - ``host: vps``       — runs as a systemd timer on Contabo, deliberately
+                              absent from Windows Task Scheduler.
+      - ``host: embedded``  — runs inline inside another scheduled task's .bat
+                              (e.g. score_universe runs from intraday_scan.bat
+                              rather than its own scheduled trigger). The
+                              inventory entry is virtual — it documents the
+                              freshness contract for the output file but does
+                              not have a standalone scheduler trigger.
+      - ``host: manual``    — operator-triggered (e.g. monthly recalibrate).
+                              The freshness contract still applies but the
+                              cadence is operator discipline, not a trigger.
+
+    They all still count as "known" inventory entries, so an Anka* Windows
+    task with the same name would still register as an orphan elsewhere.
     """
-    vps_hosted = {
-        t["task_name"] for t in inventory["tasks"] if t.get("host") == "vps"
+    non_scheduler_hosts = {"vps", "embedded", "manual"}
+    excluded_from_ghost = {
+        t["task_name"] for t in inventory["tasks"]
+        if t.get("host") in non_scheduler_hosts
     }
     inv_names = {t["task_name"] for t in inventory["tasks"]}
     live_names = {t["TaskName"] for t in live_tasks}
     orphans = sorted(live_names - inv_names)
-    ghosts = sorted((inv_names - live_names) - vps_hosted)
+    ghosts = sorted((inv_names - live_names) - excluded_from_ghost)
     return orphans, ghosts
 
 
