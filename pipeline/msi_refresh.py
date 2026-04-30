@@ -78,6 +78,29 @@ def main() -> int:
         log.error("atomic write failed: %s", exc)
         return 2
 
+    # Refresh the provenance sidecar mtime so PROVENANCE_DRIFT audit doesn't
+    # decay during market hours. We preserve the regime-engine identity from
+    # the existing sidecar (msi_refresh is not the regime producer — only the
+    # msi_score/msi_regime mutator) and append a "last_msi_refresh" field
+    # under extras so a human reading the sidecar sees both producers.
+    # Falls back to a minimal write when no upstream sidecar exists yet.
+    try:
+        from pipeline import provenance as _prov
+        _existing = _prov.read(REGIME_FILE) or {}
+        _extras = dict(_existing.get("extras") or {})
+        _extras["last_msi_refresh"] = msi.get("timestamp")
+        _prov.write(
+            REGIME_FILE,
+            task_name=_existing.get("task_name") or "AnkaMSIRefresh",
+            engine_version=_existing.get("engine_version") or "unknown_upstream",
+            expected_cadence_seconds=_existing.get("expected_cadence_seconds") or 86400,
+            extras=_extras,
+            git_sha=_existing.get("git_sha"),
+            started_at=_existing.get("started_at"),  # preserve original origin time
+        )
+    except Exception as exc:
+        log.warning("provenance refresh failed (non-fatal): %s", exc)
+
     log.info(
         "MSI refreshed: %.1f (%s) at %s",
         msi["msi_score"], msi["regime"], msi["timestamp"],
