@@ -78,6 +78,35 @@ def _features_for_entry(df_min: pd.DataFrame) -> dict:
     )
 
 
+def _bollinger_position(ticker: str, date_str: str, px_at_0930: float,
+                        lookback: int = 20) -> Optional[float]:
+    """Daily Bollinger position at entry: (px - SMA_n) / (2 * stdev_n).
+
+    Computed from the 1-min cache parquet by taking the 15:25 close of the
+    prior `lookback` trading days. Range is typically [-1, +1] but can
+    exceed when price punches through the band. Returns None when the
+    parquet is missing or has fewer than `lookback` prior days of history.
+    """
+    p = CACHE_1MIN / f"{ticker}.parquet"
+    if not p.exists():
+        return None
+    df = pd.read_parquet(p)
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df["date"] = df["timestamp"].dt.date.astype(str)
+    prior = df[df["date"] < date_str]
+    if prior.empty:
+        return None
+    daily_close = prior.groupby("date")["close"].last().sort_index()
+    if len(daily_close) < lookback:
+        return None
+    window = daily_close.tail(lookback)
+    mu = float(window.mean())
+    sigma = float(window.std(ddof=1))
+    if sigma <= 1e-9:
+        return None
+    return (px_at_0930 - mu) / (2.0 * sigma)
+
+
 def _nifty_direction_at_0930(date_str: str) -> Optional[float]:
     if not NIFTY_FILE.exists():
         return None
@@ -144,6 +173,15 @@ def build_cohort_table() -> pd.DataFrame:
         if df_min is not None:
             feat = _features_for_entry(df_min)
 
+        # Bollinger position needs the entry-day 09:30 close, computed inside
+        # _features_for_entry. NaN when the parquet doesn't carry 20 prior
+        # daily closes (early-window tickers) or when sigma collapses.
+        bb_pos = np.nan
+        if df_min is not None and not pd.isna(feat.get("px_at_0930", np.nan)):
+            bb = _bollinger_position(ticker, date_str, feat["px_at_0930"])
+            if bb is not None:
+                bb_pos = float(bb)
+
         if date_str not in nifty_cache:
             nifty_cache[date_str] = _nifty_direction_at_0930(date_str)
         mkt_dir = nifty_cache[date_str]
@@ -159,6 +197,7 @@ def build_cohort_table() -> pd.DataFrame:
             "orb_15min_pct": feat.get("orb_15min_pct", np.nan),
             "vwap_dev_pct": feat.get("vwap_dev_pct", np.nan),
             "trend_slope_per_min_pct": feat.get("trend_slope_per_min_pct", np.nan),
+            "bollinger_pos": bb_pos,
             "nifty_dir_0930_pct": mkt_dir if mkt_dir is not None else np.nan,
             "mkt_dir_label": _classify_market_dir(mkt_dir),
         })
@@ -173,6 +212,11 @@ def aggregate_cells(df: pd.DataFrame) -> pd.DataFrame:
     df["vwap_dev_signed"] = df["vwap_dev_pct"] * side_signed
     df["trend_slope_signed"] = df["trend_slope_per_min_pct"] * side_signed
     df["orb_signed"] = df["orb_15min_pct"]
+    # Bollinger position is sign-aligned with side: LONG entries that fade a
+    # high BB value behave structurally differently from SHORT entries that
+    # fade a low BB value. Multiply by side_signed so LONG_at_HIGH_BB and
+    # SHORT_at_LOW_BB land in the same tertile bucket.
+    df["bollinger_signed"] = df["bollinger_pos"] * side_signed
 
     cells: list[dict] = []
 
@@ -224,6 +268,20 @@ def aggregate_cells(df: pd.DataFrame) -> pd.DataFrame:
         for tag in ("VWAPSIGN_LO", "VWAPSIGN_MID", "VWAPSIGN_HI"):
             add_cell(tag, df.index.isin(feat_cells.index[labels == tag]))
 
+    # Bollinger position cells — same tertile pattern as ORB / VWAPSIGN.
+    # Forensic-only: surfaces whether NEUTRAL-regime entries cluster in
+    # extreme-BB or middle-BB territory and whether forward outcomes differ
+    # by cohort. Not a gate; never feeds the entry rule during the H-001
+    # single-touch holdout (2026-04-27 → 2026-05-26).
+    feat_cells = df.dropna(subset=["bollinger_signed"])
+    if len(feat_cells) >= MONITOR_THRESHOLD:
+        q1 = feat_cells["bollinger_signed"].quantile(1 / 3)
+        q3 = feat_cells["bollinger_signed"].quantile(2 / 3)
+        labels = feat_cells["bollinger_signed"].apply(
+            lambda v: _tertile_label(v, q1, q3, "BB"))
+        for tag in ("BB_LO", "BB_MID", "BB_HI"):
+            add_cell(tag, df.index.isin(feat_cells.index[labels == tag]))
+
     cells_df = pd.DataFrame(cells)
     cells_df["status_rank"] = cells_df["status"].map(
         {"PUBLISH": 0, "MONITOR": 1, "INSUFFICIENT": 2}).fillna(3)
@@ -257,6 +315,7 @@ def write_outputs(trades: pd.DataFrame, cells: pd.DataFrame) -> dict:
         "source": str(H001_CSV.relative_to(PIPELINE_ROOT)),
         "n_trades": int(len(trades)),
         "n_with_features": int(trades["orb_15min_pct"].notna().sum()),
+        "n_with_bollinger": int(trades["bollinger_pos"].notna().sum()),
         "baseline_win_pct": round(trades["win"].mean() * 100, 2),
         "baseline_mean_pnl_pct": round(trades["pnl_pct"].mean(), 3),
         "publish_cells": publish_cells.to_dict(orient="records"),
