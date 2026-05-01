@@ -1,7 +1,7 @@
 {
   "schema_version": "v1.0",
   "frozen_date": "2026-05-01",
-  "notes": "Tier-2 themes authored at v1 freeze. DRAFT — pending Bharat sign-off (Task #80). DATA_CENTRES_ADJACENT membership pending verification at freeze. Members must be re-verified against current canonical_fno_research_v3 + listing dates before first detector run.",
+  "notes": "Tier-2 themes authored at v1 freeze. §4.2 sign-offs resolved 2026-05-01 (Bharat): ABBOTINDIA dropped from CAPEX_PLI_BENEFICIARY (pharma subsidiary, not capex/PLI); NYKAA added to QUICK_COMMERCE (consumer-tech listed cohort; theme expected to grow as more QC names list 2026-2028). DATA_CENTRES_ADJACENT membership still pending verification.",
   "themes": [
     {
       "theme_id": "BANKS_DIGITAL_TAILWIND",
@@ -73,15 +73,15 @@
       "theme_id": "CAPEX_PLI_BENEFICIARY",
       "tier_1_sector": "Capital_goods",
       "rule_kind": "A",
-      "rule_definition": {"members": ["LT", "BHEL", "SIEMENS", "ABB", "ABBOTINDIA", "CGPOWER"]},
-      "rationale": "Capital goods + PLI-aligned engineering names benefiting from manufacturing capex cycle"
+      "rule_definition": {"members": ["LT", "BHEL", "SIEMENS", "ABB", "CGPOWER"]},
+      "rationale": "Capital goods + PLI-aligned engineering names benefiting from manufacturing capex cycle. ABBOTINDIA removed 2026-05-01 (pharma subsidiary, doesn't fit CAPEX/PLI thesis)."
     },
     {
       "theme_id": "QUICK_COMMERCE",
       "tier_1_sector": "Consumer_services",
       "rule_kind": "A",
-      "rule_definition": {"members": ["ZOMATO", "DELHIVERY"], "liquidity_caveat": "limited liquidity for now"},
-      "rationale": "Quick commerce + last-mile delivery; valuation-rerating cohort"
+      "rule_definition": {"members": ["ZOMATO", "DELHIVERY", "NYKAA"], "liquidity_caveat": "limited liquidity for now; cohort expected to grow as more QC names list 2026-2028 (SWIGGY, etc.)"},
+      "rationale": "Quick commerce + last-mile delivery + consumer-tech listed cohort; valuation-rerating theme. NYKAA added 2026-05-01 to satisfy §4.3 ≥3-member minimum and broaden to consumer-tech delivery."
     },
     {
       "theme_id": "EVS_AND_AUTO_TECH",
