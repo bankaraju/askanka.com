@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-05-01T14:01:12.514215+05:30",
-  "count": 96,
+  "updated_at": "2026-05-01T14:16:10.562924+05:30",
+  "count": 97,
   "headlines": [
     {
       "title": "Stocks to buy, sell or hold today, February 18: Infosys, Titan, Varun Beverages, LG Electronics and more - MSN",
@@ -9,6 +9,14 @@
       "published_at": "Thu, 30 Apr 2026 23:24:43 GMT",
       "symbol": "TITAN",
       "stock_name": "Titan Company"
+    },
+    {
+      "title": "Stock market holiday: NSE, BSE to remain closed on this day next week; here's why - Mint",
+      "url": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxObW1TS21oQmQ4VmxHMTEyNGI3TFZ3b1h0dmdfWU1IOW5zRW8zZG5NUThvTTQyVEF3YW85V0xBMmwwdXBzTDhZSkZRcjM4UkZVTlV3amxOZ0hSOU9VQ3N5RlU2Vl9ZU283d1I2V0xuZDFCQ2RFbzNvbTdPaU9QTk1VNHdFOUQ0WVdNcFdGODlHMGlCM2dBMFIwYWd4cFlSdENLQ2FfU3JwdUNVS0ZKcVF4Z1FZdGpEYXh1RlVmeUJfR000M0xpMi03OG5lWHBTU0gtRmZvWURISW5RaDJPVno0UUN5d0VFWndpUTlPTjk0NEXSAfYBQVVfeXFMTW8xNE9KYjlGdmswaXpNcVJ0aUMtdUJFUDlOanJ1MFFqZElyUnYwdU90OG1GMEthTVVrTld6aEFnOTREdWRyQy11QXJ6aXBZYnJmVWNnVUx0Z2xJWXVodWltOXRyVHg5azBsVzlGS3pLR2tBUzFlc0g5eVN5c2pfUmd5em0xRGUwbU5kLVNqMUd3cnhnWjlReWlNcnAwall6SFF4eE54WU1ZaWh5MGRGMzdlYTFveWtEQnpLZmxSTVlyMllKM0RYZnhrMVBXSnNPNkpIUzZIdVVzc055dTduOTY3bUlTMHRpcmhFczRIVUdoZ0lscVlB?oc=5",
+      "source": "Mint",
+      "published_at": "Thu, 30 Apr 2026 23:09:58 GMT",
+      "symbol": "CIPLA",
+      "stock_name": "Cipla"
     },
     {
       "title": "Stocks to watch today: MRF, DLF Project, MRPL, Godrej Properties and more - MSN",
@@ -115,14 +123,6 @@
       "stock_name": "NTPC Power"
     },
     {
-      "title": "Fraud-hit PNB rapped for not making timely regulatory disclosures - AOL.com",
-      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQaV95d1MxeDl4bXVESk1FR1BsSnpFWXl5ZHAzV2tOS09oOElYcDVCU1cyRzM3X2dLOWVWVXZXSEdpUXJuR1VTSWVWSHFQZkJxTmJfMEdOWHhRd0hLSEtpS1I0SDJPemloNklNTk5OWDk2VWlNSmVTdFhhUUtGTmJjQXMwdzdmbnE0WkZRdmNBUkNaS0dFYWVJOWhkUnI5ckEzZG82RFhycTlTdw?oc=5",
-      "source": "AOL.com",
-      "published_at": "Thu, 30 Apr 2026 18:33:51 GMT",
-      "symbol": "PNB",
-      "stock_name": "PNB"
-    },
-    {
       "title": "PNB Keeps MCLR Rates Unchanged for May 2026 - scanx.trade",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNZXQyR3RVa21EYkxnRlZSYXJjM0tsa3JvYzhJODJRUFVETVVFTy01V1FrVkRMU1diWDZDODVFQlM2aTJwbVZRQUktNWpDUzJaVzVTSjgwVVZoRTFLZzlMdEh4dm5ETHFXM2x5X3FkemZzWEI5QTItSHd1bXdycE9TQ1ZubG5pTF9GZkxqZ185YWczOVNLQmxsaEUzQjJCRnVnNHJwcmNzb1hKbjZlU1QtRE9ObHBWamwyZ1BmSDFfdTR3SGQybWRwbw?oc=5",
       "source": "scanx.trade",
@@ -139,6 +139,14 @@
       "stock_name": "ICICI Bank"
     },
     {
+      "title": "Stock market today, March 6: Sensex sinks 1097 pts, Nifty slips 315 pts at 24450 - highlights - MSN",
+      "url": "https://news.google.com/rss/articles/CBMirgNBVV95cUxNRlBRV0dEcmxtQ1I1YlJRdzIyUHRSalcxLXFBTXlKYUduMHV0dmhRME1yZ1pzejdNUXIyYVpKOE1xaDZYME5yb1MxTGFLaVhOdk40NktHa2QwUjVCc3RfY21qTzVVVWk3V1c5U19zZEEwUk85bGFaV0w2Uzl2czI4ZzRxRzlTSC1CbS02TVZkOHNKQV8yQWFFV3pNbnM0bUdsV3o0bjJjU3A2SGtWajhiRnlHVHhJeHFQMEt3OXhHamM3QXcwQjNZeEpOZVMtQXBObEZ6VU1nUzdGaDRMSm80MUxoUXhEbjZVZU9zLXB6dW45MGRBcHhXdHlES3Z1ZzI5UkpvOVdCS0ZVQzFNZ0l2anJtcjJjWE1vbDZqazQ2ejIzTVBjaVpWMUhudkJNTnJ0YjJPbGlTTlpnSTAwSE5kbzV6dnNKUnIxbWhDQXpqcnp2WFRyV1VzU2NqUTI3QjRKTHFFVHZTRFp6QmRPNDQyWVVwR0szdGVXVHhsU2ZLWFdyQllvanlHQVY2SWNWc19KcmFfbmUxcmVxd1hPZlNCNGt4OFhCekZzdl8wVnZn?oc=5",
+      "source": "MSN",
+      "published_at": "Thu, 30 Apr 2026 17:49:51 GMT",
+      "symbol": "PNB",
+      "stock_name": "PNB"
+    },
+    {
       "title": "Tata Power Plans ₹6,500 Cr Solar Component Manufacturing Amid Execution Risks - Whalesbook",
       "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxQbGpLNDFrLTVYZUpMcHVTVVNobFNfbzVENXl5SGtUNFlvOFg0Qk05WXhyRndQMXJkcjZnSmhMUDV3NVkzcXQySUJrWHVXa3ZiYTBqSGVnTzdSVjZKbGFPLVl3OF9YcmU2b0duR3pMaWZKOE82b1luRUxVVEFpMnlBYmcwNmtfQjB4VFVnZ3hIbnhLNmtJeHhEdXJjVTYxV3hzS1dOWG1ZLVBBU0ZNbE9FQjdJRXlIVDdjWngtYV9oTFN1YUlCaUlxSnVmbkNaVTZCOHNTSEk3bERiem1CZUY1U2ZYY2UxamxROTh0a1pLZUNyRXVrQlVqazNKdFgtU3FnQlVZRFc1WEo?oc=5",
       "source": "Whalesbook",
@@ -153,14 +161,6 @@
       "published_at": "Thu, 30 Apr 2026 17:33:39 GMT",
       "symbol": "TECHM",
       "stock_name": "Tech Mahindra"
-    },
-    {
-      "title": "Vodafone Idea AGR Dues Clear! Par ₹64,046 Cr ka Bojh Aur Debt Abhi Bhi Bhari! - Whalesbook",
-      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQaU1lTzAwM1JfTmM0aEktY1MxanF2QWlzemNqcnhJV3FlaGlaTlZTZm56ckhsbWR1cXI1QkxUSDIyTW56V09pTVVvMkFHeEZNSEJXS0pSY3pFa1Jjci05VGtjd0tPSmhHcTVMaGh1WlZ1WWN2OXdnNzhoUW96RkZMZ3N0TFdQU1I5ZzhsXzdyZmpleXpSWnN4dVVnd3JwYlEyQlBjSGtrSDNPd2U2bmJRUXFmQ19wSGpmRTl6YUE0NW5GVU1u?oc=5",
-      "source": "Whalesbook",
-      "published_at": "Thu, 30 Apr 2026 17:05:42 GMT",
-      "symbol": "BHARTIARTL",
-      "stock_name": "Bharti Airtel"
     },
     {
       "title": "IndiGo flight makes emergency landing in Raipur after passenger falls unconscious onboard - NDTV Profit",
@@ -243,14 +243,6 @@
       "stock_name": "Kotak Bank"
     },
     {
-      "title": "Federal Bank looks to grow wealth business, sees no immediate acquisition targets - Moneycontrol.com",
-      "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxORXRWd3VBSlQ5Xzg2a3JBbUFKbzFtTlJCM21DMlVvWDhKejY1d2l5d2NFMEJsU05uSVBzYVZ0ckxfWXQ4QnFJbmxPNmUtU1NiVTBLR1R4b2g2N1VYOEgxYnI2T2tzcl9NSWk4eUVmYkdqRjBEOWo1eDNfSDd0SlY3cW5yS0RzN0tOUEt4bU1JbnRjdDVBSHpTTXJMeTJpbTltQzUtTkd0SldlR0p3d29ZQU8xaGg3UG5hNnByQnpZX2s0eWpvSzZjSUxYRkFhMlNFbmZPNi1GUkNkSjdkMEVuWdIB4AFBVV95cUxORXRWd3VBSlQ5Xzg2a3JBbUFKbzFtTlJCM21DMlVvWDhKejY1d2l5d2NFMEJsU05uSVBzYVZ0ckxfWXQ4QnFJbmxPNmUtU1NiVTBLR1R4b2g2N1VYOEgxYnI2T2tzcl9NSWk4eUVmYkdqRjBEOWo1eDNfSDd0SlY3cW5yS0RzN0tOUEt4bU1JbnRjdDVBSHpTTXJMeTJpbTltQzUtTkd0SldlR0p3d29ZQU8xaGg3UG5hNnByQnpZX2s0eWpvSzZjSUxYRkFhMlNFbmZPNi1GUkNkSjdkMEVuWQ?oc=5",
-      "source": "Moneycontrol.com",
-      "published_at": "Thu, 30 Apr 2026 10:43:34 GMT",
-      "symbol": "KOTAKBANK",
-      "stock_name": "Kotak Bank"
-    },
-    {
       "title": "ITC slides Thursday, still outperforms market - MarketWatch",
       "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPMVVxRGQ0OFdPUTlSelRiMGxDdmlKc19waVFQVU0yZkk4LW5oUWJYQm4weFJMOXRieXNUVWpSTWRKR19IQVlFVjJXUDAxX0t5LWRKX0VSSVNfMDZrS1JDZFgzeVJ1d3Z3Q3RmWDV0UUFJSzdHWDhIZmhmRjZnclV3XzZIazlISzVkN3NyQndxUTJaaVduQXZUYWZNa2dVcG1FTF8zSXVZdS04NjduX2FLWGxkLWp5TjZ6RXFTQWQzNDJzeUpmV0E?oc=5",
       "source": "MarketWatch",
@@ -265,14 +257,6 @@
       "published_at": "Thu, 30 Apr 2026 10:32:00 GMT",
       "symbol": "ASIANPAINT",
       "stock_name": "Asian Paints"
-    },
-    {
-      "title": "Tata Motors Ltd. Share Price Today - Tata Motors Ltd. Stock Price Live NSE/BSE - CNBC TV18",
-      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFAwVW9zZ0tsTklvaXhzVmY0R2xtUFEwT29kRHIzbnRFZVdCUW55cFp5UHh4NlFLczFGaHE5LUx2cGFsdXFDS1NwUGNlRmNjRkRxdjdRZHBOVlMzR2c1MHRfcmtTamVmMS1xNHNDVU4xY0VBX3hKOHZsV2dVWHhDOUE?oc=5",
-      "source": "CNBC TV18",
-      "published_at": "Thu, 30 Apr 2026 10:29:00 GMT",
-      "symbol": "TATAMOTORS",
-      "stock_name": "Tata Motors"
     },
     {
       "title": "Powergrid to raise ₹4,000 crore from SBI; board approves fundraise — key details here - Mint",
@@ -291,12 +275,28 @@
       "stock_name": "Hindustan Unilever"
     },
     {
+      "title": "Tata Motors commercial vehicle sales up 28% at 34,833 units in April - The Economic Times",
+      "url": "https://news.google.com/rss/articles/CBMiigJBVV95cUxNTTVrd0tZdzkza2hKM29YUnB6Q3lGcHUta3oyYlNtYVZmcjh3aThVR051U2Q5UEcwY0Q0QkViM01fUzdyMEI2VFZxRXJUamFoYmRjWkN6Y2diUWY4bVE5c0NmeXQwaFE0VWNfekVuZjZCYkNoLUFZaTVyeE12MnpDaE9TVVlSWEt3d2phZzFfemVRcnhod0pXbXVBdUp1YWF4SnlkM1hYXzlhanpuZVZyNWJCdzVvOVRPNFNZWGY2YTJiVnF6MXFld0V5b0Y1YjYwcVpmcUJKLUp3OTJKZU9iT3dSWHZPNHNzczVfVmZNY21Fb29mRVdTNWlodEMzcElGejJfcFY0M29YZ9IBigJBVV95cUxNTTVrd0tZdzkza2hKM29YUnB6Q3lGcHUta3oyYlNtYVZmcjh3aThVR051U2Q5UEcwY0Q0QkViM01fUzdyMEI2VFZxRXJUamFoYmRjWkN6Y2diUWY4bVE5c0NmeXQwaFE0VWNfekVuZjZCYkNoLUFZaTVyeE12MnpDaE9TVVlSWEt3d2phZzFfemVRcnhod0pXbXVBdUp1YWF4SnlkM1hYXzlhanpuZVZyNWJCdzVvOVRPNFNZWGY2YTJiVnF6MXFld0V5b0Y1YjYwcVpmcUJKLUp3OTJKZU9iT3dSWHZPNHNzczVfVmZNY21Fb29mRVdTNWlodEMzcElGejJfcFY0M29YZw?oc=5",
+      "source": "The Economic Times",
+      "published_at": "Fri, 01 May 2026 08:18:00 GMT",
+      "symbol": "TATAMOTORS",
+      "stock_name": "Tata Motors"
+    },
+    {
       "title": "Coal India Limited Independent Director Satyabrata Panda Ceases Upon Tenure Completion - scanx.trade",
       "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxObFc1WlljNGtsUjhHc29uUXkzSU85U1lKWmMwcWQ2cEw5eS12bTBJcExjRlc1NTZIVXBYUXV6MGFYTUdFcExsdjBNbkdMTzF3b0lvU1lEX1BOVVhmUXZUeEFhOUhFQm52TGVyUXlENEhQNnlLb01lamczRkFBRHNJaWdvTThReFhtMGNYaUFld1FkVUZWYVJlbXplbUhsTlZVNzlLVXV5VWdTaTRDTEhuRVZWa0dIaWhXTFJtVHZpMWJzcm80SVhHZDdTbEd2WGR2OC1nN0xPeHJnMHc?oc=5",
       "source": "scanx.trade",
       "published_at": "Fri, 01 May 2026 08:02:04 GMT",
       "symbol": "COALINDIA",
       "stock_name": "Coal India"
+    },
+    {
+      "title": "NIFTY Bank Share Price | NIFTY Bank Index | NIFTY Bank Today - Mint",
+      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPWW9MdEVGeVlnMDdPaERiSGVOZDFmRHZUckItOXhPQjR2c1EwTEVlTVZ1WVl4dE00MVlSNHhKb25DdW5uaHBRZDFZV2tqbl9RRlhLa2RoQ0JhRlQwTFlOeThGRjN0aXpudldkTHpndjVpSWdhdEkw?oc=5",
+      "source": "Mint",
+      "published_at": "Fri, 01 May 2026 07:49:28 GMT",
+      "symbol": "KOTAKBANK",
+      "stock_name": "Kotak Bank"
     },
     {
       "title": "- The HinduBusinessLine - BusinessLine",
@@ -369,14 +369,6 @@
       "published_at": "Fri, 01 May 2026 06:56:32 GMT",
       "symbol": "ITC",
       "stock_name": "ITC"
-    },
-    {
-      "title": "Govt of Singapore’s India portfolio: 10 stocks rally up to 70% in a year, 5 new Q4 picks unveiled - The Economic Times",
-      "url": "https://news.google.com/rss/articles/CBMihgJBVV95cUxQV0VVbGgwWFV2bUN4ejB2NUVQWkdUSnI0dXFuMFN5NHNXRTdhaU85VTR5MHBXTnExUWJhc0thSU00RjRiLTNrVjN2Z0ZXSkVBRGJSbFA2dVlpa1hpeXlVQzFVUXB5V0dVMG9CSnBNVlljYWJpVWlZNnlkcGdQWFpTZFAzQ3FIVHltQ3Y3TWFibGZrc0RJWlRaSjV5TGVIdmwtQ1k1QS1SNUlZYjFUZGdnZy14MXNnXzNuNXNuMEh2VHRHS2ZFbW1XUGh6bmNENy0weGY5b3VQS1RSOWE2UDlXVEw3R09VbDE4NDk2MXUzY0hrZFN1R3Q0UFhoZ0M2aDB1U196alVn?oc=5",
-      "source": "The Economic Times",
-      "published_at": "Fri, 01 May 2026 06:54:01 GMT",
-      "symbol": "HDFCBANK",
-      "stock_name": "HDFC Bank"
     },
     {
       "title": "ITC, Bandhan Bank, Chennai Petro: Stocks to buy—check price target, stop loss & more - MSN",
@@ -579,6 +571,14 @@
       "stock_name": "HDFC Bank"
     },
     {
+      "title": "Govt of Singapore’s India portfolio: 10 stocks rally up to 70% in a year, 5 new Q4 picks unveiled - The Economic Times",
+      "url": "https://news.google.com/rss/articles/CBMikgJBVV95cUxQb3pkY3Q2eUZSS2pIdDZTVGw0dVhXX1R1ejRrUEd3cjlKX2stVC1oZGRuYTA0Y3lCM1hjdUxYVzVyVHFUNUZhZVE1emFMdXpxbkhBOXVkTzN5ekF3YURYY18ybFJOeVBmOGtRMUlNYTBDbmFQenFMMHp1dGlmOVI4V0tuSmxXbXJyLVlBVlh1eFc4NDA3Y2Myck15ZDBLRlZncFBiWldCQ3pEOEtmWWFBai1BeUx6dm1RdzY3N0lrazgtYkFQNUZjMjhtcDBkRUJNeWEzV3hEMVUzQnAtYUI3LTgteUpFdEJWaFVVVGNwanpqaFpLSUhTX1dDMTYyY1hpNy0wUS04VkhQemduNWVWTS1R?oc=5",
+      "source": "The Economic Times",
+      "published_at": "Fri, 01 May 2026 03:36:28 GMT",
+      "symbol": "HDFCBANK",
+      "stock_name": "HDFC Bank"
+    },
+    {
       "title": "TPREL Board Approves ₹6,500 Crore PV Ingot and Wafer Manufacturing Investment - scanx.trade",
       "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNQ2lnMThsUkV0OUVBdzN5QXoyRzdsZTJZcXIzVjRBS25zUEFYS2ltRnUwWmVmMVFIdHFZZ1VKSEVOSERSeTRWRnkwOEdQQlRMMkplQmRULVE5bnBDdURNQnZobFVxQ1JERG1ock5aUzNtZ29XWXlFeEg4RmxNTUhrNVRWQzVpcWdWV3FEUmJqaF80b2d2ZVkzRTBjc3VJdkc3ZXdPV041UWVHRWNJTjV1Y1RfeGl3YnNLZTFfeHctcVRlRzBYcFlvbVM0WUg3RlhBZUE?oc=5",
       "source": "scanx.trade",
@@ -707,6 +707,14 @@
       "stock_name": "HDFC Bank"
     },
     {
+      "title": "Bharti Airtel, Vedanta, NTPC Green, RBL Bank, NHPC among stocks in focus next week; here's why - MSN",
+      "url": "https://news.google.com/rss/articles/CBMiswNBVV95cUxQNWFaR0J3dEd1dFNLNENHRHZYWTM1RE94NnpHLTBSWlEwQ090MkdPWElNS2x2UmdnajJ1WHM5eG5UYUp5YjVlZ1djVHZvMGc2dThDRkxrVU5MTEtmRk1Dbzh4MHl0YnRWellEelRNUGM2OUhYUzk4RU9sMXhiaWtvRTcwdmdyN0p6Q0NhQVZEdXpmTjZlYkN1MmZ2dU5wWGFXX2g2YzlENXdtdm5HUGNtZ3I0RHpFTGJuY0x1RHhLVWx1UUtfaG9wbXE2VTM1M0xoWUppTWRhQUdEazEtTzAxV1NoaElELTdOZzduM1ktLUpyemd2MXh3a2RtQUdPem90cVRVUFg5enZORmNzdktma3FYV21Mc1kwbXZJd0x4a2hBSGljUTl4RXg4ZUNxTVNzWUZ5ZndsTXpqY2poU25Xb21fMVdtSnpVb0lCSTBWRlFObV9FNUJMN2JVX2w0Z1FQWm9wa2dVVi1yZVVzc25QYVBsVklhTnM3R19JWE14RFhiOWFUREZmTjRGQ2xPbzM4aHBucDhta1lNX3djc3hVQVM1NVlGbHZzWUZMZTJZaTJLS2s?oc=5",
+      "source": "MSN",
+      "published_at": "Fri, 01 May 2026 01:11:07 GMT",
+      "symbol": "JSWSTEEL",
+      "stock_name": "JSW Steel"
+    },
+    {
       "title": "Shriram Finance's MUFG Deal Powers Growth, Challenges Bajaj Valuation - Whalesbook",
       "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxPXzUtYl9FNkFidm9pRW0xQ1pTUTNKZndTNk1UbjRLTC02NC1UXzJHWlE5cHFSRkIxVVZJbGhzWUlmekNqR3FYcGtjYWlpdXFJS0ZublZHcEpxbTdkNFFxZzdKMlVxemtWWV9KOWVtQVJjWlA4dlI3LXJKeWx3Nmk5U3dfdUdHNmFtbG5fMkxsY0EtUlcxNFFTSDlTNFE5dGd6UlVLeGdQcFFKOUVwRXRyNFJfUnlNX2hzVmJ0UTBsd3VLVkZNTTJMaHJDSFhjT0xjaHhhSFNUY1ZNdkY5MGl1bw?oc=5",
       "source": "Whalesbook",
@@ -755,20 +763,20 @@
       "stock_name": "Tech Mahindra"
     },
     {
+      "title": "Reliance, Adani, and the data center race: Mapping the infrastructure winners of India’s AI buildout - financialexpress.com",
+      "url": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxQVVg3cXoyNHhoM2NtNlYxNTltNVJJbl9XN1J6WlZLRHVaU1VVc0dkazFicmpNMTV1TWcycUo0ZUFtcm1ESFdIaVhDdjhLOVRVZDBIT25UeEU5b0pyTWFuVEw0MHRrRkgyWXVTYWRCMnlTS0JrY1hSUThodkhXdDdlYVlBNWFRMmQ0LUUwejBSUm1sQy14R2tiVlZyd3lEVjdpMnpPYWFHUkQ0SVZUcmNFQ0RpeU5IYWc4d2g0MktubW5PTnpsODlKM21OTUdOOF9aUXhITVNKWE81Ty04UnNzRUI2Smw3Y3ZheE83ODVIWi14Z9IB-AFBVV95cUxQU3ZfNG1MOWphTWpibHRvalB4bGFBNVRCWk51NWViMnEwdHpENGNuREJMX2xJdzFFbVYzbHlEcjltWGxLakpVdHA3SGNxVG9YSmw0U002anBRY2Jqb2hXdmQteTV2OVluVjFSQ045Y3VRQm5FMFM0blB5ajNzR0U5eU1sMkNZTDJubGxwSkVpNjNPOVNFeTNGdkh1ajF3Szlxb2daSERNZ0xlRFQyQy10N05UVHZRV01oTkQ4X2k3ZmhNYzF5aUlteXBDVW9DclFBeUhJNWNNWFJJeUYtYjEwQWM2M2ZxMmpyemxwMWI0bUg5Z1l1REVaTA?oc=5",
+      "source": "financialexpress.com",
+      "published_at": "Fri, 01 May 2026 00:00:00 GMT",
+      "symbol": "BHARTIARTL",
+      "stock_name": "Bharti Airtel"
+    },
+    {
       "title": "The 2026 oil spike is here: 3 dividend-rich ‘cash cows’ that look cheap right now - financialexpress.com",
       "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxOWDY2Um9OMXhLX2xlTm5lYmNxUE9TQWE1WFR4Ty1ZSGhHejU3Y0RicTJxNFVtRWdpZDBuMkNCTGxNX2NLbktFYkI2TFFnNzVOdWVianVtZW5oY01SbWxGZHAzaVhRX1lVN2lCbS1NY3JERFp3LVg5VFNpM1RDVG5SbDcwODB2blh2MEJTU21sU2tiTWFicGl0WWdNY2NPXzZhNVgtZ2huTzNBQjZVcTNkQUluanpDcWZpUENFUTc5T003UEhacktIY0RiVjhsS3VraURyU1Zqb2R4Z9IB4AFBVV95cUxQREl3d2RqSHB1NXVZSGFKUzUzOVAtbFdLeEFMM0ZlNnBVMTBVM2xsSHR4Skp1N0tYejhQUVliekZUS0xLSTVkMWgzY3Vtb24yUWJIWFowbGxLU25qWnVybUVjMm1JYkJJc3VSV3ZERXpDQnNnV1ptYXpEbFpCdS1MSEFyTFB6bjR5MExzNWRwbDVIVkRxbTRIaGRIeHh5WVdjZjRmeDNTcHpUMGRlekVvVllPNFpfU2h1d3I3Sk9Kd09uamw2bk1fbF9KRVFPSTYyM2taTDhWaTlRMkJuSHlqSA?oc=5",
       "source": "financialexpress.com",
       "published_at": "Fri, 01 May 2026 00:00:00 GMT",
       "symbol": "ONGC",
       "stock_name": "ONGC"
-    },
-    {
-      "title": "Reliance, Adani, and the data center race: Mapping the infrastructure winners of India’s AI buildout - financialexpress.com",
-      "url": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxQVVg3cXoyNHhoM2NtNlYxNTltNVJJbl9XN1J6WlZLRHVaU1VVc0dkazFicmpNMTV1TWcycUo0ZUFtcm1ESFdIaVhDdjhLOVRVZDBIT25UeEU5b0pyTWFuVEw0MHRrRkgyWXVTYWRCMnlTS0JrY1hSUThodkhXdDdlYVlBNWFRMmQ0LUUwejBSUm1sQy14R2tiVlZyd3lEVjdpMnpPYWFHUkQ0SVZUcmNFQ0RpeU5IYWc4d2g0MktubW5PTnpsODlKM21OTUdOOF9aUXhITVNKWE81Ty04UnNzRUI2Smw3Y3ZheE83ODVIWi14Z9IB-AFBVV95cUxQU3ZfNG1MOWphTWpibHRvalB4bGFBNVRCWk51NWViMnEwdHpENGNuREJMX2xJdzFFbVYzbHlEcjltWGxLakpVdHA3SGNxVG9YSmw0U002anBRY2Jqb2hXdmQteTV2OVluVjFSQ045Y3VRQm5FMFM0blB5ajNzR0U5eU1sMkNZTDJubGxwSkVpNjNPOVNFeTNGdkh1ajF3Szlxb2daSERNZ0xlRFQyQy10N05UVHZRV01oTkQ4X2k3ZmhNYzF5aUlteXBDVW9DclFBeUhJNWNNWFJJeUYtYjEwQWM2M2ZxMmpyemxwMWI0bUg5Z1l1REVaTA?oc=5",
-      "source": "financialexpress.com",
-      "published_at": "Fri, 01 May 2026 00:00:00 GMT",
-      "symbol": "DLF",
-      "stock_name": "DLF Real Estate"
     }
   ]
 }
