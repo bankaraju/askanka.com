@@ -1,0 +1,112 @@
+{
+  "n_neutral_days": 438,
+  "n_triggers": 1029,
+  "trigger_rate_per_day": 2.3493150684931505,
+  "n_unique_tickers_fired": 13,
+  "headline": {
+    "mean_bps_gross": -2.529504587955706,
+    "mean_bps_net_s1": -32.52950458795571,
+    "hit_rate": 0.28960155490767736,
+    "sharpe_per_trade_net_s1": -0.40507145435763264,
+    "sharpe_annual_net_s1": -9.856041915374401
+  },
+  "by_side": {
+    "LONG": {
+      "n": 603,
+      "mean_bps": -34.83751559810766,
+      "hit_rate": 0.2802653399668325
+    },
+    "SHORT": {
+      "n": 426,
+      "mean_bps": -29.26253125668428,
+      "hit_rate": 0.3028169014084507
+    }
+  },
+  "by_sector": {
+    "NBFC_HFC": {
+      "n": 333,
+      "mean_bps": -33.65238285809087,
+      "hit_rate": 0.2672672672672673
+    },
+    "Metals_Mining": {
+      "n": 156,
+      "mean_bps": -24.535496574010033,
+      "hit_rate": 0.3076923076923077
+    },
+    "IT_Services": {
+      "n": 146,
+      "mean_bps": -48.4089854336719,
+      "hit_rate": 0.273972602739726
+    },
+    "Banks": {
+      "n": 172,
+      "mean_bps": -33.871603193091694,
+      "hit_rate": 0.31976744186046513
+    },
+    "Insurance": {
+      "n": 109,
+      "mean_bps": -23.4138688649616,
+      "hit_rate": 0.29357798165137616
+    },
+    "Capital_Markets": {
+      "n": 58,
+      "mean_bps": -10.087342193899655,
+      "hit_rate": 0.41379310344827586
+    },
+    "Pharma": {
+      "n": 51,
+      "mean_bps": -44.646993825503536,
+      "hit_rate": 0.17647058823529413
+    }
+  },
+  "by_exit_reason": {
+    "TIME_STOP": {
+      "n": 539,
+      "mean_bps": 20.0356333686673,
+      "hit_rate": 0.5528756957328386
+    },
+    "STOP": {
+      "n": 490,
+      "mean_bps": -90.35115634024102,
+      "hit_rate": 0.0
+    }
+  },
+  "by_vwap_z_bucket": {
+    "|vwap_z|_1.75-2.00": {
+      "n": 334,
+      "mean_bps": -32.4721855891626,
+      "hit_rate": 0.3023952095808383
+    },
+    "|vwap_z|_2.00-2.50": {
+      "n": 391,
+      "mean_bps": -30.97121036730166,
+      "hit_rate": 0.289002557544757
+    },
+    "|vwap_z|_2.50-3.00": {
+      "n": 178,
+      "mean_bps": -32.882058115466236,
+      "hit_rate": 0.33146067415730335
+    },
+    "|vwap_z|_3.00-4.00": {
+      "n": 112,
+      "mean_bps": -38.50894617117533,
+      "hit_rate": 0.17857142857142858
+    },
+    "|vwap_z|_4.00-99.00": {
+      "n": 14,
+      "mean_bps": -25.099904634752722,
+      "hit_rate": 0.35714285714285715
+    }
+  },
+  "spec_thresholds": {
+    "vwap_dev_z_min": 1.75,
+    "hour_balance_z_min": 1.25,
+    "range_pctile_max": 90.0,
+    "atr_stop_mult": 1.75,
+    "cost_bps_round_trip_s1": 30.0
+  },
+  "training_window": [
+    "2021-05-01",
+    "2024-04-30"
+  ]
+}
