@@ -384,6 +384,40 @@ def load_trendlyne_nifty500_weights(cutoff_date: date) -> pd.DataFrame | None:
     return df
 
 
+_WEIGHTS_RECON_DIR = REPO_ROOT / "pipeline" / "data" / "research" / "theme_detector" / "td_d1"
+
+
+def load_nifty500_weights_reconstructed(cutoff_date: date) -> pd.DataFrame | None:
+    """Load reconstructed NIFTY-500 weight history at-or-before cutoff_date.
+
+    Source: pipeline/scripts/reconstruct_nifty500_weight_history.py — anchors
+    to the latest live NSE snapshot then walks backwards using
+    ffmc_i(d) ≈ ffmc_i(anchor) × close_i(d) / close_i(anchor), renormalised
+    daily over the covered set (≈ 266/500 stocks, 89.97% of canonical weight).
+
+    Returns DataFrame indexed by date (datetime.date) with columns:
+        nse_symbol, ffmc_inr, weight_pct
+    Multi-row per date — group by date or filter on nse_symbol as needed.
+
+    Returns None if no reconstruction CSV exists. Caveats: survivorship bias
+    (today's constituents only); free-float factor assumed constant.
+
+    TD-D1 canonical for backward C2 cap_drift computation.
+    """
+    if not _WEIGHTS_RECON_DIR.is_dir():
+        return None
+    cands = sorted(_WEIGHTS_RECON_DIR.glob("nifty500_weights_reconstructed_*.csv"))
+    if not cands:
+        return None
+    latest = cands[-1]
+    df = pd.read_csv(latest, parse_dates=["date"])
+    df["date"] = df["date"].dt.date
+    df = df[df["date"] <= cutoff_date]
+    if df.empty:
+        return None
+    return df.set_index("date")
+
+
 def load_shareholding_panel(cutoff_date: date) -> pd.DataFrame | None:
     """Load the latest standalone shareholding_panel snapshot at-or-before cutoff.
 
