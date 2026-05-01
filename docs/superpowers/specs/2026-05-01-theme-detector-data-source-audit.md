@@ -18,13 +18,13 @@ The detector composes signals from 9 distinct data sources, organized by Belief 
 |---|---|---|---|---|---|
 | TD-D1 | NIFTY-500 / NIFTY-50 free-float weight history | Confirmation | C2 (cap-drift) | 1 | DATA ACQUISITION REQUIRED |
 | TD-D2 | Sectoral indices daily history | Confirmation | C1 (RS-breakout), C6 (sector breadth) | 1 | EXISTING — Kite + fno_historical |
-| TD-D3 | NSE main-board IPO calendar | Belief | B5 (IPO cluster) | 1 | DATA ACQUISITION REQUIRED |
+| TD-D3 | NSE main-board IPO calendar | Belief | B5 (IPO cluster) | 1 | TRENDLYNE PRO GLOBAL — manual UI export from IPO Center |
 | TD-D4 | M&A corporate announcements | Belief | B1 (M&A flow) | 2 | DATA ACQUISITION REQUIRED |
 | TD-D5 | Capex disclosure announcements | Belief | B2 (capex disclosure) | 2 | NLP LAYER REQUIRED |
 | TD-D6 (auxiliary) | NIFTY-500 constituent membership history | Confirmation | C2/C6 retro-backfill correctness | 1 | DATA ACQUISITION REQUIRED |
-| TD-D7 | NSE quarterly shareholding pattern filings (FII column) | Belief | B3 (FII drift) | 1 | DATA ACQUISITION REQUIRED |
-| TD-D8 | NSE F&O eligibility list history (additions/drops) | Confirmation | C3 (F&O inclusion) | 1 | DATA ACQUISITION REQUIRED |
-| TD-D9 | Quarterly EPS surprise data (consensus vs actual) | Confirmation | C5 (earnings breadth) | 1 | EXISTING — IndianAPI corporate_actions + Screener |
+| TD-D7 | Quarterly shareholding pattern filings (FII column) | Belief | B3 (FII drift) | 1 | TRENDLYNE PRO GLOBAL — manual UI export, see §TD-D7 below |
+| TD-D8 | NSE F&O eligibility list history (additions/drops) | Confirmation | C3 (F&O inclusion) | 1 | OPERATIONAL — pipeline/data/fno_universe_history.json (27 monthly snapshots since 2024-01) |
+| TD-D9 | Quarterly EPS surprise data (consensus vs actual) | Confirmation | C5 (earnings breadth) | 1 | TRENDLYNE PRO GLOBAL — manual UI export (PIT correctness pending verification) |
 | TD-D10 | NSE block deals (forward-only from 2026-04-24) | Belief | B4 (block deal accumulation) | 3 | FORWARD-ONLY (matures 2027) |
 | TD-D11 | Options skew / IV term structure | Confirmation | C4 (options skew) | 3 | FUTURE v2 |
 
