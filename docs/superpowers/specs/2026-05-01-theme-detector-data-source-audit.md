@@ -583,3 +583,38 @@ The Trendlyne UI manual-export landing on 2026-05-01 (see `pipeline/data/trendly
 - Retro-backfill validation per §8 (gates A/B/C/D) has not been run
 
 **Conclusion:** Theme Detector v1 is now **operational in shadow mode**. It MUST NOT be cited as evidence for any downstream hypothesis until the §21 gate above clears.
+
+---
+
+## §8 Retro-backfill infeasibility — material finding (2026-05-01)
+
+The design doc §8 Pass criteria (gates A/B/C/D) require running the detector across 8 reference theme cycles 2018→2024. After Phase 1 build, the data audit reveals this is **structurally infeasible at v1**:
+
+| Required signal | Earliest available data | Coverage of 2018-2024 retro window |
+|---|---|---|
+| **B3 fii_drift** (Trendlyne FII screener) | 2026-05-01 first snapshot | None — no historical FII screener panel |
+| **B5 ipo_cluster** (Trendlyne IPO calendar) | 2023-01-01 (listed_ipos_2023.csv) | Partial — 2023-2024 only; misses Zomato-2021, Defence pre-2023, PSU-bank 2022-H1 |
+| **C2 cap_drift** (Trendlyne multigroup_curtailed) | 2026-05-01 first snapshot | None |
+| **C5 earnings_breadth** (Trendlyne fundamentals_fno) | 2026-05-01 first snapshot | None |
+| **C1 rs_breakout** (fno_historical bars + NIFTY-50) | 2018+ | Full retro window |
+| **C3 fo_inclusion** (fno_universe_history.json) | 2024-01-31 first snapshot | Partial — 2024 only |
+| **C6 sector_breadth** (fno_historical bars) | 2018+ | Full retro window |
+
+Of seven Phase 1 signals, only three (C1, C3 partial, C6) have history into the retro window. PROVENANCE.md confirms the deliberate decision to skip pre-2022 retro-backfill (covid-period contamination). Trendlyne does not offer historical snapshot replay; their data is forward-only from the day Bharat exports it.
+
+**Implication:** §8 gates A/B/C/D as written cannot pass at v1. Two paths:
+
+**Path 1 — Amend §8 to forward-only validation:**
+- Drop the 2018-2024 retro requirement
+- Strengthen §8.3 forward acceptance to N weeks where N is large enough to observe ≥3 stage transitions (estimated 12-16 weeks given the credibility-penalty 12w threshold)
+- Run the detector weekly from 2026-05-04 onward; accept after the 12-16 week window if no glaring failures
+- **Pro:** matches data reality. **Con:** loses the lead-time-vs-historical-cycle measurement that §8 was designed for.
+
+**Path 2 — Run gates A/B/C/D on the 3 historical-data signals only (C1, C3, C6):**
+- Use the bare confirmation bucket (no belief inputs) to evaluate lead-time across the 2022-2024 sub-window (where C3 has data)
+- Document explicitly that this is a confirmation-only retro and the belief-bucket lead-time gate is forward-only
+- **Pro:** preserves a partial historical evidence base. **Con:** confirmation alone tends to lag belief, so lead-time will look worse than the full-detector measurement would.
+
+Path 1 is cleaner. Recommendation: Bharat amends §8 to drop 2018-2024 retro, replace with a 16-week forward acceptance gate starting 2026-05-04. The 4-week shadow per §8.3 stays; the retro requirement is replaced.
+
+**Until Bharat decides between Path 1 and Path 2, the detector continues running in shadow mode and the §21 gate stays closed.**
