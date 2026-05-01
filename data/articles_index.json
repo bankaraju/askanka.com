@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-05-02",
+      "segment": "war",
+      "filename": "2026-05-02-war.html",
+      "headline": "Trump's Hormuz Toll: 'NO CHARITY' Sanction Threat Signals Escalation Beyond Diplomacy",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "May 02, 2026"
+    },
+    {
+      "date": "2026-05-02",
+      "segment": "epstein",
+      "filename": "2026-05-02-epstein.html",
+      "headline": "The Silent Battle: Katie Phang's Lawsuit Against Blanche and DOJ Exposes the True Gatekeepers of Epstein's Secrets",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "May 02, 2026"
+    },
+    {
       "date": "2026-05-01",
       "segment": "war",
       "filename": "2026-05-01-war.html",
