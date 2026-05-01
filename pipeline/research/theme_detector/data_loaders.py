@@ -15,6 +15,28 @@ import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 FNO_HISTORICAL_DIR = REPO_ROOT / "pipeline" / "data" / "fno_historical"
+INDICES_DIR = REPO_ROOT / "pipeline" / "data" / "india_historical" / "indices"
+NIFTY_50_PATH = INDICES_DIR / "NIFTY_daily.csv"
+
+
+def load_nifty_50(cutoff_date: date) -> pd.DataFrame | None:
+    """Load NIFTY-50 daily bars up to (and including) cutoff_date.
+
+    Schema is lower-case (date,open,high,low,close,volume) — different from
+    fno_historical/. This loader normalizes to capitalized columns to match
+    `load_daily_bars` output.
+    """
+    if not NIFTY_50_PATH.exists():
+        return None
+    df = pd.read_csv(NIFTY_50_PATH, parse_dates=["date"])
+    df = df.rename(columns={
+        "date": "Date", "open": "Open", "high": "High",
+        "low": "Low", "close": "Close", "volume": "Volume",
+    })
+    df = df[df["Date"].dt.date <= cutoff_date]
+    if df.empty:
+        return None
+    return df.sort_values("Date").reset_index(drop=True)
 
 
 def load_daily_bars(symbol: str, cutoff_date: date) -> pd.DataFrame | None:
