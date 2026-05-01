@@ -1,0 +1,969 @@
+{
+  "by_exact_snap": {
+    "10:00:00": {
+      "n": 130,
+      "touch_rate": 0.7923,
+      "mean_bps_gross": -8.964,
+      "mean_bps_net_s1": -38.964,
+      "hit_rate_gross": 0.6769,
+      "hit_rate_net_s1": 0.5,
+      "sharpe_per_trade_gross": -0.0879,
+      "sharpe_per_trade_net_s1": -0.3819,
+      "conditional": {
+        "touched": {
+          "n": 103,
+          "mean_bps_gross": 33.227,
+          "hit_rate_gross": 0.8544
+        },
+        "no_touch": {
+          "n": 27,
+          "mean_bps_gross": -169.915,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "10:15:00": {
+      "n": 98,
+      "touch_rate": 0.7755,
+      "mean_bps_gross": 0.491,
+      "mean_bps_net_s1": -29.509,
+      "hit_rate_gross": 0.6939,
+      "hit_rate_net_s1": 0.5306,
+      "sharpe_per_trade_gross": 0.0053,
+      "sharpe_per_trade_net_s1": -0.3167,
+      "conditional": {
+        "touched": {
+          "n": 76,
+          "mean_bps_gross": 40.449,
+          "hit_rate_gross": 0.8947
+        },
+        "no_touch": {
+          "n": 22,
+          "mean_bps_gross": -137.549,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "10:30:00": {
+      "n": 116,
+      "touch_rate": 0.7931,
+      "mean_bps_gross": 8.286,
+      "mean_bps_net_s1": -21.714,
+      "hit_rate_gross": 0.681,
+      "hit_rate_net_s1": 0.5259,
+      "sharpe_per_trade_gross": 0.113,
+      "sharpe_per_trade_net_s1": -0.2961,
+      "conditional": {
+        "touched": {
+          "n": 92,
+          "mean_bps_gross": 35.999,
+          "hit_rate_gross": 0.837
+        },
+        "no_touch": {
+          "n": 24,
+          "mean_bps_gross": -97.946,
+          "hit_rate_gross": 0.0833
+        }
+      }
+    },
+    "10:45:00": {
+      "n": 79,
+      "touch_rate": 0.6835,
+      "mean_bps_gross": 1.56,
+      "mean_bps_net_s1": -28.44,
+      "hit_rate_gross": 0.6076,
+      "hit_rate_net_s1": 0.519,
+      "sharpe_per_trade_gross": 0.0195,
+      "sharpe_per_trade_net_s1": -0.3559,
+      "conditional": {
+        "touched": {
+          "n": 54,
+          "mean_bps_gross": 42.969,
+          "hit_rate_gross": 0.8704
+        },
+        "no_touch": {
+          "n": 25,
+          "mean_bps_gross": -87.883,
+          "hit_rate_gross": 0.04
+        }
+      }
+    },
+    "11:00:00": {
+      "n": 67,
+      "touch_rate": 0.6567,
+      "mean_bps_gross": -15.268,
+      "mean_bps_net_s1": -45.268,
+      "hit_rate_gross": 0.6119,
+      "hit_rate_net_s1": 0.4179,
+      "sharpe_per_trade_gross": -0.1259,
+      "sharpe_per_trade_net_s1": -0.3733,
+      "conditional": {
+        "touched": {
+          "n": 44,
+          "mean_bps_gross": 40.122,
+          "hit_rate_gross": 0.9091
+        },
+        "no_touch": {
+          "n": 23,
+          "mean_bps_gross": -121.232,
+          "hit_rate_gross": 0.0435
+        }
+      }
+    },
+    "11:15:00": {
+      "n": 70,
+      "touch_rate": 0.6286,
+      "mean_bps_gross": -9.262,
+      "mean_bps_net_s1": -39.262,
+      "hit_rate_gross": 0.5857,
+      "hit_rate_net_s1": 0.4,
+      "sharpe_per_trade_gross": -0.0978,
+      "sharpe_per_trade_net_s1": -0.4146,
+      "conditional": {
+        "touched": {
+          "n": 44,
+          "mean_bps_gross": 39.974,
+          "hit_rate_gross": 0.8864
+        },
+        "no_touch": {
+          "n": 26,
+          "mean_bps_gross": -92.584,
+          "hit_rate_gross": 0.0769
+        }
+      }
+    },
+    "11:30:00": {
+      "n": 58,
+      "touch_rate": 0.6034,
+      "mean_bps_gross": -9.676,
+      "mean_bps_net_s1": -39.676,
+      "hit_rate_gross": 0.6207,
+      "hit_rate_net_s1": 0.4483,
+      "sharpe_per_trade_gross": -0.0904,
+      "sharpe_per_trade_net_s1": -0.3707,
+      "conditional": {
+        "touched": {
+          "n": 35,
+          "mean_bps_gross": 53.573,
+          "hit_rate_gross": 0.9714
+        },
+        "no_touch": {
+          "n": 23,
+          "mean_bps_gross": -105.925,
+          "hit_rate_gross": 0.087
+        }
+      }
+    },
+    "11:45:00": {
+      "n": 57,
+      "touch_rate": 0.5614,
+      "mean_bps_gross": 7.443,
+      "mean_bps_net_s1": -22.557,
+      "hit_rate_gross": 0.614,
+      "hit_rate_net_s1": 0.4737,
+      "sharpe_per_trade_gross": 0.1143,
+      "sharpe_per_trade_net_s1": -0.3463,
+      "conditional": {
+        "touched": {
+          "n": 32,
+          "mean_bps_gross": 49.536,
+          "hit_rate_gross": 0.9688
+        },
+        "no_touch": {
+          "n": 25,
+          "mean_bps_gross": -46.435,
+          "hit_rate_gross": 0.16
+        }
+      }
+    },
+    "12:00:00": {
+      "n": 38,
+      "touch_rate": 0.4474,
+      "mean_bps_gross": -21.572,
+      "mean_bps_net_s1": -51.572,
+      "hit_rate_gross": 0.5526,
+      "hit_rate_net_s1": 0.3684,
+      "sharpe_per_trade_gross": -0.2141,
+      "sharpe_per_trade_net_s1": -0.5118,
+      "conditional": {
+        "touched": {
+          "n": 17,
+          "mean_bps_gross": 51.785,
+          "hit_rate_gross": 0.9412
+        },
+        "no_touch": {
+          "n": 21,
+          "mean_bps_gross": -80.957,
+          "hit_rate_gross": 0.2381
+        }
+      }
+    },
+    "12:15:00": {
+      "n": 36,
+      "touch_rate": 0.5556,
+      "mean_bps_gross": -6.538,
+      "mean_bps_net_s1": -36.538,
+      "hit_rate_gross": 0.6667,
+      "hit_rate_net_s1": 0.3889,
+      "sharpe_per_trade_gross": -0.0699,
+      "sharpe_per_trade_net_s1": -0.3909,
+      "conditional": {
+        "touched": {
+          "n": 20,
+          "mean_bps_gross": 52.487,
+          "hit_rate_gross": 0.95
+        },
+        "no_touch": {
+          "n": 16,
+          "mean_bps_gross": -80.318,
+          "hit_rate_gross": 0.3125
+        }
+      }
+    },
+    "12:30:00": {
+      "n": 44,
+      "touch_rate": 0.4545,
+      "mean_bps_gross": -12.924,
+      "mean_bps_net_s1": -42.924,
+      "hit_rate_gross": 0.5455,
+      "hit_rate_net_s1": 0.3636,
+      "sharpe_per_trade_gross": -0.1411,
+      "sharpe_per_trade_net_s1": -0.4686,
+      "conditional": {
+        "touched": {
+          "n": 20,
+          "mean_bps_gross": 52.527,
+          "hit_rate_gross": 0.9
+        },
+        "no_touch": {
+          "n": 24,
+          "mean_bps_gross": -67.467,
+          "hit_rate_gross": 0.25
+        }
+      }
+    },
+    "12:45:00": {
+      "n": 42,
+      "touch_rate": 0.3571,
+      "mean_bps_gross": -30.758,
+      "mean_bps_net_s1": -60.758,
+      "hit_rate_gross": 0.4048,
+      "hit_rate_net_s1": 0.2857,
+      "sharpe_per_trade_gross": -0.2943,
+      "sharpe_per_trade_net_s1": -0.5814,
+      "conditional": {
+        "touched": {
+          "n": 15,
+          "mean_bps_gross": 79.184,
+          "hit_rate_gross": 1.0
+        },
+        "no_touch": {
+          "n": 27,
+          "mean_bps_gross": -91.838,
+          "hit_rate_gross": 0.0741
+        }
+      }
+    },
+    "13:00:00": {
+      "n": 42,
+      "touch_rate": 0.5238,
+      "mean_bps_gross": 20.272,
+      "mean_bps_net_s1": -9.728,
+      "hit_rate_gross": 0.619,
+      "hit_rate_net_s1": 0.5476,
+      "sharpe_per_trade_gross": 0.191,
+      "sharpe_per_trade_net_s1": -0.0916,
+      "conditional": {
+        "touched": {
+          "n": 22,
+          "mean_bps_gross": 96.322,
+          "hit_rate_gross": 1.0
+        },
+        "no_touch": {
+          "n": 20,
+          "mean_bps_gross": -63.383,
+          "hit_rate_gross": 0.2
+        }
+      }
+    },
+    "13:15:00": {
+      "n": 33,
+      "touch_rate": 0.2727,
+      "mean_bps_gross": -16.391,
+      "mean_bps_net_s1": -46.391,
+      "hit_rate_gross": 0.5758,
+      "hit_rate_net_s1": 0.4545,
+      "sharpe_per_trade_gross": -0.128,
+      "sharpe_per_trade_net_s1": -0.3622,
+      "conditional": {
+        "touched": {
+          "n": 9,
+          "mean_bps_gross": 51.653,
+          "hit_rate_gross": 0.8889
+        },
+        "no_touch": {
+          "n": 24,
+          "mean_bps_gross": -41.908,
+          "hit_rate_gross": 0.4583
+        }
+      }
+    },
+    "13:30:00": {
+      "n": 41,
+      "touch_rate": 0.2927,
+      "mean_bps_gross": -9.358,
+      "mean_bps_net_s1": -39.358,
+      "hit_rate_gross": 0.561,
+      "hit_rate_net_s1": 0.439,
+      "sharpe_per_trade_gross": -0.0967,
+      "sharpe_per_trade_net_s1": -0.4065,
+      "conditional": {
+        "touched": {
+          "n": 12,
+          "mean_bps_gross": 71.656,
+          "hit_rate_gross": 1.0
+        },
+        "no_touch": {
+          "n": 29,
+          "mean_bps_gross": -42.882,
+          "hit_rate_gross": 0.3793
+        }
+      }
+    },
+    "13:45:00": {
+      "n": 37,
+      "touch_rate": 0.3243,
+      "mean_bps_gross": 10.053,
+      "mean_bps_net_s1": -19.947,
+      "hit_rate_gross": 0.5946,
+      "hit_rate_net_s1": 0.5405,
+      "sharpe_per_trade_gross": 0.1077,
+      "sharpe_per_trade_net_s1": -0.2137,
+      "conditional": {
+        "touched": {
+          "n": 12,
+          "mean_bps_gross": 85.886,
+          "hit_rate_gross": 1.0
+        },
+        "no_touch": {
+          "n": 25,
+          "mean_bps_gross": -26.347,
+          "hit_rate_gross": 0.4
+        }
+      }
+    },
+    "14:00:00": {
+      "n": 41,
+      "touch_rate": 0.1951,
+      "mean_bps_gross": -22.975,
+      "mean_bps_net_s1": -52.975,
+      "hit_rate_gross": 0.3659,
+      "hit_rate_net_s1": 0.2683,
+      "sharpe_per_trade_gross": -0.2741,
+      "sharpe_per_trade_net_s1": -0.6319,
+      "conditional": {
+        "touched": {
+          "n": 8,
+          "mean_bps_gross": 91.996,
+          "hit_rate_gross": 1.0
+        },
+        "no_touch": {
+          "n": 33,
+          "mean_bps_gross": -50.847,
+          "hit_rate_gross": 0.2121
+        }
+      }
+    }
+  },
+  "by_coarse_30min": {
+    "10:00-10:30": {
+      "n": 228,
+      "touch_rate": 0.7851,
+      "mean_bps_gross": -4.9,
+      "mean_bps_net_s1": -34.9,
+      "hit_rate_gross": 0.6842,
+      "hit_rate_net_s1": 0.5132,
+      "sharpe_per_trade_gross": -0.0498,
+      "sharpe_per_trade_net_s1": -0.3546,
+      "conditional": {
+        "touched": {
+          "n": 179,
+          "mean_bps_gross": 36.293,
+          "hit_rate_gross": 0.8715
+        },
+        "no_touch": {
+          "n": 49,
+          "mean_bps_gross": -155.383,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "10:30-11:00": {
+      "n": 195,
+      "touch_rate": 0.7487,
+      "mean_bps_gross": 5.561,
+      "mean_bps_net_s1": -24.439,
+      "hit_rate_gross": 0.6513,
+      "hit_rate_net_s1": 0.5231,
+      "sharpe_per_trade_gross": 0.073,
+      "sharpe_per_trade_net_s1": -0.321,
+      "conditional": {
+        "touched": {
+          "n": 146,
+          "mean_bps_gross": 38.577,
+          "hit_rate_gross": 0.8493
+        },
+        "no_touch": {
+          "n": 49,
+          "mean_bps_gross": -92.812,
+          "hit_rate_gross": 0.0612
+        }
+      }
+    },
+    "11:00-11:30": {
+      "n": 137,
+      "touch_rate": 0.6423,
+      "mean_bps_gross": -12.2,
+      "mean_bps_net_s1": -42.2,
+      "hit_rate_gross": 0.5985,
+      "hit_rate_net_s1": 0.4088,
+      "sharpe_per_trade_gross": -0.1124,
+      "sharpe_per_trade_net_s1": -0.3887,
+      "conditional": {
+        "touched": {
+          "n": 88,
+          "mean_bps_gross": 40.048,
+          "hit_rate_gross": 0.8977
+        },
+        "no_touch": {
+          "n": 49,
+          "mean_bps_gross": -106.031,
+          "hit_rate_gross": 0.0612
+        }
+      }
+    },
+    "11:30-12:00": {
+      "n": 115,
+      "touch_rate": 0.5826,
+      "mean_bps_gross": -1.191,
+      "mean_bps_net_s1": -31.191,
+      "hit_rate_gross": 0.6174,
+      "hit_rate_net_s1": 0.4609,
+      "sharpe_per_trade_gross": -0.0134,
+      "sharpe_per_trade_net_s1": -0.3497,
+      "conditional": {
+        "touched": {
+          "n": 67,
+          "mean_bps_gross": 51.645,
+          "hit_rate_gross": 0.9701
+        },
+        "no_touch": {
+          "n": 48,
+          "mean_bps_gross": -74.941,
+          "hit_rate_gross": 0.125
+        }
+      }
+    },
+    "12:00-12:30": {
+      "n": 74,
+      "touch_rate": 0.5,
+      "mean_bps_gross": -14.258,
+      "mean_bps_net_s1": -44.258,
+      "hit_rate_gross": 0.6081,
+      "hit_rate_net_s1": 0.3784,
+      "sharpe_per_trade_gross": -0.1461,
+      "sharpe_per_trade_net_s1": -0.4536,
+      "conditional": {
+        "touched": {
+          "n": 37,
+          "mean_bps_gross": 52.164,
+          "hit_rate_gross": 0.9459
+        },
+        "no_touch": {
+          "n": 37,
+          "mean_bps_gross": -80.681,
+          "hit_rate_gross": 0.2703
+        }
+      }
+    },
+    "12:30-13:00": {
+      "n": 86,
+      "touch_rate": 0.407,
+      "mean_bps_gross": -21.634,
+      "mean_bps_net_s1": -51.634,
+      "hit_rate_gross": 0.4767,
+      "hit_rate_net_s1": 0.3256,
+      "sharpe_per_trade_gross": -0.2196,
+      "sharpe_per_trade_net_s1": -0.5241,
+      "conditional": {
+        "touched": {
+          "n": 35,
+          "mean_bps_gross": 63.951,
+          "hit_rate_gross": 0.9429
+        },
+        "no_touch": {
+          "n": 51,
+          "mean_bps_gross": -80.369,
+          "hit_rate_gross": 0.1569
+        }
+      }
+    },
+    "13:00-13:30": {
+      "n": 75,
+      "touch_rate": 0.4133,
+      "mean_bps_gross": 4.14,
+      "mean_bps_net_s1": -25.86,
+      "hit_rate_gross": 0.6,
+      "hit_rate_net_s1": 0.5067,
+      "sharpe_per_trade_gross": 0.0352,
+      "sharpe_per_trade_net_s1": -0.2197,
+      "conditional": {
+        "touched": {
+          "n": 31,
+          "mean_bps_gross": 83.354,
+          "hit_rate_gross": 0.9677
+        },
+        "no_touch": {
+          "n": 44,
+          "mean_bps_gross": -51.67,
+          "hit_rate_gross": 0.3409
+        }
+      }
+    },
+    "13:30-14:00": {
+      "n": 119,
+      "touch_rate": 0.2689,
+      "mean_bps_gross": -8.015,
+      "mean_bps_net_s1": -38.015,
+      "hit_rate_gross": 0.5042,
+      "hit_rate_net_s1": 0.4118,
+      "sharpe_per_trade_gross": -0.0867,
+      "sharpe_per_trade_net_s1": -0.4114,
+      "conditional": {
+        "touched": {
+          "n": 32,
+          "mean_bps_gross": 82.077,
+          "hit_rate_gross": 1.0
+        },
+        "no_touch": {
+          "n": 87,
+          "mean_bps_gross": -41.152,
+          "hit_rate_gross": 0.3218
+        }
+      }
+    }
+  },
+  "cumulative_before": {
+    "before_10:30:00": {
+      "n": 228,
+      "touch_rate": 0.7851,
+      "mean_bps_gross": -4.9,
+      "mean_bps_net_s1": -34.9,
+      "hit_rate_gross": 0.6842,
+      "hit_rate_net_s1": 0.5132,
+      "sharpe_per_trade_gross": -0.0498,
+      "sharpe_per_trade_net_s1": -0.3546,
+      "conditional": {
+        "touched": {
+          "n": 179,
+          "mean_bps_gross": 36.293,
+          "hit_rate_gross": 0.8715
+        },
+        "no_touch": {
+          "n": 49,
+          "mean_bps_gross": -155.383,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "before_11:00:00": {
+      "n": 423,
+      "touch_rate": 0.7683,
+      "mean_bps_gross": -0.078,
+      "mean_bps_net_s1": -30.078,
+      "hit_rate_gross": 0.669,
+      "hit_rate_net_s1": 0.5177,
+      "sharpe_per_trade_gross": -0.0009,
+      "sharpe_per_trade_net_s1": -0.3379,
+      "conditional": {
+        "touched": {
+          "n": 325,
+          "mean_bps_gross": 37.319,
+          "hit_rate_gross": 0.8615
+        },
+        "no_touch": {
+          "n": 98,
+          "mean_bps_gross": -124.097,
+          "hit_rate_gross": 0.0306
+        }
+      }
+    },
+    "before_11:30:00": {
+      "n": 560,
+      "touch_rate": 0.7375,
+      "mean_bps_gross": -3.043,
+      "mean_bps_net_s1": -33.043,
+      "hit_rate_gross": 0.6518,
+      "hit_rate_net_s1": 0.4911,
+      "sharpe_per_trade_gross": -0.0323,
+      "sharpe_per_trade_net_s1": -0.3504,
+      "conditional": {
+        "touched": {
+          "n": 413,
+          "mean_bps_gross": 37.901,
+          "hit_rate_gross": 0.8692
+        },
+        "no_touch": {
+          "n": 147,
+          "mean_bps_gross": -118.075,
+          "hit_rate_gross": 0.0408
+        }
+      }
+    },
+    "before_12:00:00": {
+      "n": 675,
+      "touch_rate": 0.7111,
+      "mean_bps_gross": -2.728,
+      "mean_bps_net_s1": -32.728,
+      "hit_rate_gross": 0.6459,
+      "hit_rate_net_s1": 0.4859,
+      "sharpe_per_trade_gross": -0.0292,
+      "sharpe_per_trade_net_s1": -0.3502,
+      "conditional": {
+        "touched": {
+          "n": 480,
+          "mean_bps_gross": 39.819,
+          "hit_rate_gross": 0.8833
+        },
+        "no_touch": {
+          "n": 195,
+          "mean_bps_gross": -107.457,
+          "hit_rate_gross": 0.0615
+        }
+      }
+    },
+    "before_12:30:00": {
+      "n": 749,
+      "touch_rate": 0.6903,
+      "mean_bps_gross": -3.867,
+      "mean_bps_net_s1": -33.867,
+      "hit_rate_gross": 0.6422,
+      "hit_rate_net_s1": 0.4753,
+      "sharpe_per_trade_gross": -0.0412,
+      "sharpe_per_trade_net_s1": -0.3605,
+      "conditional": {
+        "touched": {
+          "n": 517,
+          "mean_bps_gross": 40.703,
+          "hit_rate_gross": 0.8878
+        },
+        "no_touch": {
+          "n": 232,
+          "mean_bps_gross": -103.187,
+          "hit_rate_gross": 0.0948
+        }
+      }
+    },
+    "before_13:00:00": {
+      "n": 835,
+      "touch_rate": 0.6611,
+      "mean_bps_gross": -5.697,
+      "mean_bps_net_s1": -35.697,
+      "hit_rate_gross": 0.6251,
+      "hit_rate_net_s1": 0.4599,
+      "sharpe_per_trade_gross": -0.0602,
+      "sharpe_per_trade_net_s1": -0.3775,
+      "conditional": {
+        "touched": {
+          "n": 552,
+          "mean_bps_gross": 42.177,
+          "hit_rate_gross": 0.8913
+        },
+        "no_touch": {
+          "n": 283,
+          "mean_bps_gross": -99.075,
+          "hit_rate_gross": 0.106
+        }
+      }
+    },
+    "before_13:30:00": {
+      "n": 910,
+      "touch_rate": 0.6407,
+      "mean_bps_gross": -4.886,
+      "mean_bps_net_s1": -34.886,
+      "hit_rate_gross": 0.6231,
+      "hit_rate_net_s1": 0.4637,
+      "sharpe_per_trade_gross": -0.0505,
+      "sharpe_per_trade_net_s1": -0.3607,
+      "conditional": {
+        "touched": {
+          "n": 583,
+          "mean_bps_gross": 44.366,
+          "hit_rate_gross": 0.8954
+        },
+        "no_touch": {
+          "n": 327,
+          "mean_bps_gross": -92.696,
+          "hit_rate_gross": 0.1376
+        }
+      }
+    },
+    "before_14:00:00": {
+      "n": 988,
+      "touch_rate": 0.6144,
+      "mean_bps_gross": -4.512,
+      "mean_bps_net_s1": -34.512,
+      "hit_rate_gross": 0.6194,
+      "hit_rate_net_s1": 0.4656,
+      "sharpe_per_trade_gross": -0.0467,
+      "sharpe_per_trade_net_s1": -0.3571,
+      "conditional": {
+        "touched": {
+          "n": 607,
+          "mean_bps_gross": 45.727,
+          "hit_rate_gross": 0.8995
+        },
+        "no_touch": {
+          "n": 381,
+          "mean_bps_gross": -84.551,
+          "hit_rate_gross": 0.1732
+        }
+      }
+    },
+    "before_14:15:00": {
+      "n": 1029,
+      "touch_rate": 0.5977,
+      "mean_bps_gross": -5.248,
+      "mean_bps_net_s1": -35.248,
+      "hit_rate_gross": 0.6093,
+      "hit_rate_net_s1": 0.4577,
+      "sharpe_per_trade_gross": -0.0545,
+      "sharpe_per_trade_net_s1": -0.3662,
+      "conditional": {
+        "touched": {
+          "n": 615,
+          "mean_bps_gross": 46.328,
+          "hit_rate_gross": 0.9008
+        },
+        "no_touch": {
+          "n": 414,
+          "mean_bps_gross": -81.864,
+          "hit_rate_gross": 0.1763
+        }
+      }
+    }
+  },
+  "by_side_under_1130": {
+    "LONG": {
+      "n": 351,
+      "touch_rate": 0.7322,
+      "mean_bps_gross": -0.325,
+      "mean_bps_net_s1": -30.325,
+      "hit_rate_gross": 0.6496,
+      "hit_rate_net_s1": 0.4872,
+      "sharpe_per_trade_gross": -0.0037,
+      "sharpe_per_trade_net_s1": -0.3491,
+      "conditional": {
+        "touched": {
+          "n": 257,
+          "mean_bps_gross": 38.54,
+          "hit_rate_gross": 0.8716
+        },
+        "no_touch": {
+          "n": 94,
+          "mean_bps_gross": -106.582,
+          "hit_rate_gross": 0.0426
+        }
+      }
+    },
+    "SHORT": {
+      "n": 209,
+      "touch_rate": 0.7464,
+      "mean_bps_gross": -7.608,
+      "mean_bps_net_s1": -37.608,
+      "hit_rate_gross": 0.6555,
+      "hit_rate_net_s1": 0.4976,
+      "sharpe_per_trade_gross": -0.0721,
+      "sharpe_per_trade_net_s1": -0.3565,
+      "conditional": {
+        "touched": {
+          "n": 156,
+          "mean_bps_gross": 36.847,
+          "hit_rate_gross": 0.8654
+        },
+        "no_touch": {
+          "n": 53,
+          "mean_bps_gross": -138.459,
+          "hit_rate_gross": 0.0377
+        }
+      }
+    }
+  },
+  "by_sector_under_1130": {
+    "Autos": {
+      "n": 0
+    },
+    "Banks": {
+      "n": 68,
+      "touch_rate": 0.6471,
+      "mean_bps_gross": -16.42,
+      "mean_bps_net_s1": -46.42,
+      "hit_rate_gross": 0.5882,
+      "hit_rate_net_s1": 0.4706,
+      "sharpe_per_trade_gross": -0.1636,
+      "sharpe_per_trade_net_s1": -0.4626,
+      "conditional": {
+        "touched": {
+          "n": 44,
+          "mean_bps_gross": 41.849,
+          "hit_rate_gross": 0.9091
+        },
+        "no_touch": {
+          "n": 24,
+          "mean_bps_gross": -123.247,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "Capital_Markets": {
+      "n": 16,
+      "touch_rate": 0.75,
+      "mean_bps_gross": -10.773,
+      "mean_bps_net_s1": -40.773,
+      "hit_rate_gross": 0.625,
+      "hit_rate_net_s1": 0.625,
+      "sharpe_per_trade_gross": -0.0586,
+      "sharpe_per_trade_net_s1": -0.2217,
+      "conditional": {
+        "touched": {
+          "n": 12,
+          "mean_bps_gross": 53.255,
+          "hit_rate_gross": 0.8333
+        },
+        "no_touch": {
+          "n": 4,
+          "mean_bps_gross": -202.856,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "IT_Services": {
+      "n": 74,
+      "touch_rate": 0.6216,
+      "mean_bps_gross": -17.253,
+      "mean_bps_net_s1": -47.253,
+      "hit_rate_gross": 0.473,
+      "hit_rate_net_s1": 0.3784,
+      "sharpe_per_trade_gross": -0.1719,
+      "sharpe_per_trade_net_s1": -0.4709,
+      "conditional": {
+        "touched": {
+          "n": 46,
+          "mean_bps_gross": 40.461,
+          "hit_rate_gross": 0.7174
+        },
+        "no_touch": {
+          "n": 28,
+          "mean_bps_gross": -112.068,
+          "hit_rate_gross": 0.0714
+        }
+      }
+    },
+    "Insurance": {
+      "n": 69,
+      "touch_rate": 0.7536,
+      "mean_bps_gross": -3.381,
+      "mean_bps_net_s1": -33.381,
+      "hit_rate_gross": 0.6522,
+      "hit_rate_net_s1": 0.6087,
+      "sharpe_per_trade_gross": -0.0344,
+      "sharpe_per_trade_net_s1": -0.3395,
+      "conditional": {
+        "touched": {
+          "n": 52,
+          "mean_bps_gross": 43.232,
+          "hit_rate_gross": 0.8462
+        },
+        "no_touch": {
+          "n": 17,
+          "mean_bps_gross": -145.962,
+          "hit_rate_gross": 0.0588
+        }
+      }
+    },
+    "Metals_Mining": {
+      "n": 88,
+      "touch_rate": 0.875,
+      "mean_bps_gross": 15.574,
+      "mean_bps_net_s1": -14.426,
+      "hit_rate_gross": 0.7614,
+      "hit_rate_net_s1": 0.6477,
+      "sharpe_per_trade_gross": 0.1613,
+      "sharpe_per_trade_net_s1": -0.1494,
+      "conditional": {
+        "touched": {
+          "n": 77,
+          "mean_bps_gross": 44.049,
+          "hit_rate_gross": 0.8701
+        },
+        "no_touch": {
+          "n": 11,
+          "mean_bps_gross": -183.748,
+          "hit_rate_gross": 0.0
+        }
+      }
+    },
+    "NBFC_HFC": {
+      "n": 218,
+      "touch_rate": 0.7523,
+      "mean_bps_gross": -1.288,
+      "mean_bps_net_s1": -31.288,
+      "hit_rate_gross": 0.7064,
+      "hit_rate_net_s1": 0.445,
+      "sharpe_per_trade_gross": -0.016,
+      "sharpe_per_trade_net_s1": -0.3888,
+      "conditional": {
+        "touched": {
+          "n": 164,
+          "mean_bps_gross": 31.972,
+          "hit_rate_gross": 0.9207
+        },
+        "no_touch": {
+          "n": 54,
+          "mean_bps_gross": -102.3,
+          "hit_rate_gross": 0.0556
+        }
+      }
+    },
+    "Oil_Gas": {
+      "n": 0
+    },
+    "Pharma": {
+      "n": 27,
+      "touch_rate": 0.6667,
+      "mean_bps_gross": 0.186,
+      "mean_bps_net_s1": -29.814,
+      "hit_rate_gross": 0.5185,
+      "hit_rate_net_s1": 0.3333,
+      "sharpe_per_trade_gross": 0.0043,
+      "sharpe_per_trade_net_s1": -0.6878,
+      "conditional": {
+        "touched": {
+          "n": 18,
+          "mean_bps_gross": 23.779,
+          "hit_rate_gross": 0.7778
+        },
+        "no_touch": {
+          "n": 9,
+          "mean_bps_gross": -47.001,
+          "hit_rate_gross": 0.0
+        }
+      }
+    }
+  },
+  "meta": {
+    "n_input_d0_triggers": 1029,
+    "cost_bps_s1": 30.0,
+    "note": "rows here = one per trigger (variant=VWAP_TOUCH, horizon_D=0). outcome=VWAP_TOUCH means same-day touch happened; outcome=FORCE_CLOSE_NO_TOUCH means session ended without touch. conditional.touched.* = stats on the same-day-touch arm only."
+  }
+}
