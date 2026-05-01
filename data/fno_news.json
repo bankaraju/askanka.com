@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-05-01T09:31:22.782183+05:30",
-  "count": 92,
+  "updated_at": "2026-05-01T09:46:13.705488+05:30",
+  "count": 94,
   "headlines": [
     {
       "title": "Stocks to buy, sell or hold today, February 18: Infosys, Titan, Varun Beverages, LG Electronics and more - MSN",
@@ -9,6 +9,14 @@
       "published_at": "Thu, 30 Apr 2026 23:24:43 GMT",
       "symbol": "TITAN",
       "stock_name": "Titan Company"
+    },
+    {
+      "title": "Stocks to buy today, April 29: Eternal, Maruti Suzuki, Sapphire Foods, Bandhan Bank, Canara HSBC Life and others - MSN",
+      "url": "https://news.google.com/rss/articles/CBMihgNBVV95cUxQTVpBN0tIMjdFSkV0NEFnRzdQbWtuZVJITnBHdk53NmZWLWdPVHhYeVd6UTNJMTVtSWxZand1UVY0T1JkbkRKN3V5RDdpd2NCUVY5NUlYTVllamNNcVNfUDhobzRWdmtlTVpmQW9lWDJvLWQxWkhhdjFEZzRBOWprRV9PeEV3YUF1X0Q3SXVQRTRFUWlvQTh5Y3NFNjAyVW1HRUF3bmd0RER6ZXAwSnpsMThLT2JwSHZTV2VHMlY3RHc5VS1VUjFHOE9DTnhUejBTS0hSMVdmNjdkYW1oS2Q1M05teDNwbFJOMGNvWlZpak5KSDBEc0ZiUVhuN3RIYmR4NHllOFFHdnNpR3oxU29qR2NDNzhScEhyMS1IOUFBb3NaaUNtQ3VrbW0yc3BXZFRCSjR5VVJJcjc0RFhzTHB4STljOXQzTTdmN0tBS1h2VHBuTHlnYTRuTThKeDA1Tk1KeUZ5N1lJVkowcnVDTUVSaHE0aHlQRFFMZU9uYXhUZ0ZMY1RBWnc?oc=5",
+      "source": "MSN",
+      "published_at": "Thu, 30 Apr 2026 23:17:24 GMT",
+      "symbol": "MARUTI",
+      "stock_name": "Maruti Suzuki"
     },
     {
       "title": "Stock market holiday: NSE, BSE to remain closed on this day next week; here's why - Mint",
@@ -25,6 +33,14 @@
       "published_at": "Thu, 30 Apr 2026 22:54:30 GMT",
       "symbol": "DLF",
       "stock_name": "DLF Real Estate"
+    },
+    {
+      "title": "Maruti Suzuki Publishes FY26 Results: ₹140 Dividend, Record Performance - scanx.trade",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQSTRXbzVDaVJpRWUzcTd5S2p4bnRXVlNmYWtZTmFFQlhzV25tVXhNVzVFQUtpTWlhUndrMnh0czB2SjNMR2s1UVBoSjhSZlMxT0J0eFFRX2pfWWxHYzFPZjlmMUN5OUxKVXpNeUl4dmliOElRZHFsb2g3U01rWUJDZ18tekFlZHB6UU0xMFZ3bW9oTnRFdDNFR2JKT1g0WnFtY25FLThkdnJ0MDQ?oc=5",
+      "source": "scanx.trade",
+      "published_at": "Thu, 30 Apr 2026 22:50:56 GMT",
+      "symbol": "MARUTI",
+      "stock_name": "Maruti Suzuki"
     },
     {
       "title": "Government cuts excise duty by Rs 10 on petrol and diesel amid West Asia war - MSN",
@@ -247,8 +263,8 @@
       "url": "https://news.google.com/rss/articles/CBMiogNBVV95cUxPWWM3VFdmR2w1QllZaG44RXFXNzRJREVtMDJuZHg3b0lzT25lTzlMWG5ybkFQUTFNMGgwSG55eUNTMFpaRjB6SmJJS0dlUzBYdjJkN3h1bE5TVUVuQlVNdlVraFIwaGRPODF0U0Vua3BhZVJDNkVxLXJ0enBpR2ZmY3RGQlFBd1F5OWRjN0MzUC1HLTJqNVR4bXQwNExhMkowbmNhRjVaRkVocVhRZzNlRG1ENm8wVnJFWTJYbk5Bb1ZBMVpzZzNDc3VqaVlLSU5WUXhTOERiOU9DWHhlM3ZWV1BOS0d6dXhLWXBOYzNQR3owM0FFZGlaRzQ2Q2NFV3VkaFY4NjE0N3ZoNXdnanc4YjZDY1ZBeVdza3lfOGJzM0tQbW45VWZGdGhyenhUbjdEa0dhSk5BTWFsMWVJbWdrUi0tTzZCWVM0N1BQUmxkTHhrZ0lKTjlxblRKNF9UNktzWlZBeEk5enVaRWZZVmQyRHNacWYwWkRXdF9XVDVzVVphXzJvSlJSak1WNXV0UGxBSjV1cmoyaFBob01VaG1heGdR?oc=5",
       "source": "MSN",
       "published_at": "Thu, 30 Apr 2026 16:24:15 GMT",
-      "symbol": "HAL",
-      "stock_name": "HAL Defence"
+      "symbol": "BEL",
+      "stock_name": "BEL Defence"
     },
     {
       "title": "IT stocks see long unwinding on F&O expiry day as Infosys, HCLTech, Wipro futures slip - MSN",
@@ -507,6 +523,14 @@
       "stock_name": "Bajaj Finance"
     },
     {
+      "title": "Bajaj Finance Stock Gets BUY Upgrade on Strong Growth - Whalesbook",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOY2NCeUNRUVhCLXF0djdueFhFVUVXc2dsRVFJU3NWM1hqMzVsV2NaemhHXzkzT1pVMUZfY0lGVXlldTdWZ2RHVDVaemJWbHQyYXZOQlo2eGVVMEdEREdmNWtnSm01RlFVeXF5bVBPWEE5OHBzRVg5TGdrVmEtMTFlcVJNZ1VKVUNGM3dZTEFDR0MwemF3TTJQUU4wWjdmaG5Zd1QzbTRXNk9BX3pmU291OUZyY1pPM2tkT3BmbzhrLVVTcVdCcGo2Q1paMVJCdw?oc=5",
+      "source": "Whalesbook",
+      "published_at": "Thu, 30 Apr 2026 05:21:27 GMT",
+      "symbol": "BAJFINANCE",
+      "stock_name": "Bajaj Finance"
+    },
+    {
       "title": "Analysts issue buy calls on Bharti Airtel, ITC and Coal India - MSN",
       "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxQc3k3dDlFVjF4T29IN2MwQU5sWjU4M01NcFZPLTVxZFJOcEV5RDN0TElKQXJtRVozS2hHX2xKbVFzLUNsa3hKVG9HZnVUVGhyb3R4QzFhVXR0ZHlHRHZyN25UMGVoSmpnM0IycGRMa1EwNHhpaVRtQ1BhUUNUUmVGYXdBVmZ2eHItbElBdjVRWGp3N1BTVS1HRG5KWVpfN1RBcE00RV83a0NwbHJPRUFoLVhxY3E3S3I0RGVwSk51MnNYU0lkRHJvYW5XdGRYbGRpWXhYVWxpcmVNSk8zUjFZVktPM2I?oc=5",
       "source": "MSN",
@@ -539,28 +563,20 @@
       "stock_name": "IndiGo Airlines"
     },
     {
-      "title": "Will Maruti reclaim ₹15,000-mark in next 3 months? Analyst flags key hurdle - Business Standard",
-      "url": "https://news.google.com/rss/articles/CBMigAJBVV95cUxQU3lzS25lZE1GX3c1X3IyX1BNbmE2VlZUZTBKVm9JMVZxWGwwV3R0cjg5RTlfem9EX2g5blhBYkdhT1djY2taSWMzQ29XTktDNnFKWElJSGd5dExvX0c0bVB0UFpVSzVQYkFXN0lpQXFWWDRQem5xdW85UGFWQk5nUkZ5UlpjQ3dva3JXQjlBN3psT0NrbU5JUjlVdEVPMGM4TGVvdS1Ha2tiSFQyci00ZTdsUHY1SVowRG5ad0JZLUZCR1hPSmZrdUllcDdERmkyM2xfVk9maUtDQURxZGtsTzVta1hVdHhwcXFvTm5KMjljSXlCSkJTbkZ4azR1WWhz0gGGAkFVX3lxTE5tamk0ZUc4ZWNKZ3REbGN5LXRVVEhiUVprNnI5ZmNuZWI2dUVCQWJhdTNPbFRFMWRuNDhYZGlNQ1czYUxUQ1ZHVVZWQXNZbjhoVnFRSVlzVkQxZ2ZXLTNJbmxYcEV5bURQSERlaEd2ZUxnTzdmV296a3FDZkVfOFRGRjMzaEpzMm8yay1QRUNBZ3JWYzR4Y3RhVUdVXzRyQ1lUUzZGNWFVaXV5TFA3SFhoYmJoZGU0am9SUjB5dXVXakMtU0F3bTBmRXJpcjJFTHN1NXk1dFY1NW5LRlJWeFlYSnQ2Z0o3V3lMeS1xcnpvZU1XM0hERENSUjZ1R1lfMG1sUDdxUkE?oc=5",
-      "source": "Business Standard",
-      "published_at": "Thu, 30 Apr 2026 04:05:25 GMT",
-      "symbol": "MARUTI",
-      "stock_name": "Maruti Suzuki"
-    },
-    {
-      "title": "Bajaj Finance shares jump 4% after strong Q4 results. Why Jefferies, Morgan Stanley and others are bullish - The Economic Times",
-      "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxOZklIREVjbXVIdGJFUEpUUkFmSnkxTWRBLVhpZk1xYVZBai1hMHNWZ2xMVXZMVHQ5OFhHb3YtSmhTMEdsc1BvODB3NjNiY1B5Wi16UF9xM2FZM0dmd0FNMTEtLU56ZnIzQXlZQkZQV3lsQkhrYjBvX0MybV9La2xKQnhGRmVTSURTdmdOR2RuajRzT3dRMTJUZ1BhMFpXaHR4RGhxVnA5WGV1RHItY3AybS1zenZScnNSV01LU21kSTRNdlktbEV0ZzNfRE9IdWE1ak4tU1FrTEdneUpGbjVoWVNjV2N3dlFZdHdkS2xUVFBabHI5eS1DQ2k2bllmdGZ1ZmhyOGZ3XzPSAY4CQVVfeXFMTmp2QmplVnR1Nkx3Zlc1Tk41UF9XMldmQUF3eFBYeks1c3BmLXBjYnBBWEZCV3plaGVMTXlVdm9ULVhNNWkzNU1oWFkwVWRyemlpRUZiWmR1Nl9ZTUlQWUdXRmE1X01HVllDU1RlMWtPT1ktU3NrRWUyX1VDcS0tUm1jeHBPVkU1c0lsV1B1RVpkMzk5VmxvUWlaMThpRWdrMlNGQ2xiVnZOVDZzc0p5Q0ZzQ1RqaWc5V3ZaU3RIMEJDaUdST3VnSU5FZUhWX0p4dTE2MGViRnJyWkxMZ1M3aXNRQXNvc1BKbkItWE1uMFZBX1NveUsxc3Z6bC1LeVBLOXByN1Rza2JuNEcyRS1R?oc=5",
-      "source": "The Economic Times",
-      "published_at": "Thu, 30 Apr 2026 04:02:26 GMT",
-      "symbol": "BAJFINANCE",
-      "stock_name": "Bajaj Finance"
-    },
-    {
       "title": "Govt of Singapore’s India portfolio: 10 stocks rally up to 70% in a year, 5 new Q4 picks unveiled - The Economic Times",
       "url": "https://news.google.com/rss/articles/CBMikwJBVV95cUxNbzJfVXhTc0VwTE1EZUhQelhwSkdmcFhxdGV1bUJHMzlvM2tZRE45cjhTSWhYNzVqU3B4WjNXcWlWSjVBR2MyWXRONGdBZ0VQTzhJZXZmRDZ4Y3N0OHkxdFV5SC1oaGl2SVFUN2lLRHBRcndlaWpuMUt0aTJuR21yaVpOb3U3bF93S0hrMTAta05TYkFybXYyYm9LaDMxbGNGVkR4R1RONjVDTGE1LVYyQlNna28tcWtYOWtvY3Z1QXpFODdKQzdGQ2VXR0lhQjY4djJUZ0h4SmJBWWhGdGJXSmQ0cl9tQ3VpbThvbkpPWUdSbTNhT3VVeWNuMXlsdmtyTmpNTl9FejdlWWJGcXpmY3Y1RQ?oc=5",
       "source": "The Economic Times",
       "published_at": "Fri, 01 May 2026 03:59:06 GMT",
       "symbol": "TATAMOTORS",
       "stock_name": "Tata Motors"
+    },
+    {
+      "title": "HAL Chairman & Managing Director D K Sunil steps down - The Economic Times",
+      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQb3E3SUJHUDR3YW9PYTJTUVpMLUdWMF9DM2tIQ0ZsRlA0Y0t0NnBOSUZRYUxYSnNWaExzUlNZZENqa0Q4cm9NNEhDZ0lDa2t0SlBKVFdtZHhnLUlCbHdycTN3ZWQ0OERoTTVhUWE4UktGSGdHNkd6cmEtTFZObzgyRzlBbXlNaHhxM3dsVDJ1ODVCc2c3OVZFOFhhX0RWR0EyVG5aNEt2WU1NYzAtQXlWWUFlQjdBb3FldWhNdnpOSHI3bzBrcldMZGY3ZUxpbXRUVTM0UnNRUDVvVHJw0gHiAUFVX3lxTE14N1JUelFpU1BITmZvaHJPeV9SbTc0VU1VdFpjY3B0WEhZaWVrc0FXLTRYbmhmdkJNSVBuSk9Vd1p3b1FRbGxDNEg3Y2ZJWXlhNUJ3VTRXUjc4V2szeUFuWEdtNzVSallQVTJMNjFrcHNmY1lYRVctTV9JdTJxeDVhZVRHWlZ2NGdiZ1JOTDdVcTZ2M3RDV3F6VzVpZFl3aU1IQVBaNHZ1MnhhVG1yME5lMTZmZFdkNVN4dlBSWHM1eTRJNS00UEpJeWNqV0dlaUVtU2l4TWM0RUhQbTF0RzlSOEE?oc=5",
+      "source": "The Economic Times",
+      "published_at": "Fri, 01 May 2026 03:55:58 GMT",
+      "symbol": "HAL",
+      "stock_name": "HAL Defence"
     },
     {
       "title": "- The HinduBusinessLine - BusinessLine",
@@ -617,6 +633,14 @@
       "published_at": "Fri, 01 May 2026 02:24:16 GMT",
       "symbol": "PNB",
       "stock_name": "PNB"
+    },
+    {
+      "title": "India eyeing partnership for 6th-gen fighter aircraft, to issue AMCA RFP soon: Defence secy; We’re ready - The Times of India",
+      "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOV2dsdElQdTBFU2JOMnFreUdVZGF6Sk14Z3RJRkE0eVE0cFRFbWdLYW15QUdQczRsTGdRTUUxNGpzdUNrelZiYmxELW5IOU9qUUVNTEx4VWU5UHNCQk5LTXBjeVdMcF9ZS20tbzRIQUQxeVBQc0N0WWhNMzdQSzN1RUZzaXZhTzhsT3FSdThwQU1GVm4teGFDdGdrZ1FFN3hXWWtEaTVQN3J5NlBmbTE2WDNlTDg0VVFzQi11cXVyb2ZpQm5PdmVUNGJUT0dfYXltZmNUU1lWUHUta1dTa2tOM1ZlSHBtZXRTQ3lKTldGNkNaWTBxMVJaVEVtNjlRaHRyQ0JWT2RfVWV5NGhzRjFTLU5FdVVROFNCeUQtcmstMVlHVkU3dXkxNFl4ellKTUVubkVwUE9xazZvbEZxam9nMzhn0gHCAkFVX3lxTE5XZ2x0SVB1MEVTYk4ycWt5R1VkYXpKTXhndElGQTR5UTRwVEVtZ0thbXlBR1BzNGxMZ1FNRTE0anN1Q2t6VmJibEQtbkg5T2pRRU1MTHhVZTlQc0JCTktNcGN5V0xwX1lLbS1vNEhBRDF5UFBzQ3RZaE0zN1BLM3VFRnNpdmFPOGxPcVJ1OHBBTUZWbi14YUN0Z2tnUUU3eFdZa0RpNVA3cnk2UGZtMTZYM2VMODRVUXNCLXVxdXJvZmlCbk92ZVQ0YlRPR19heW1mY1RTWVZQdS1rV1Nra04zVmVIcG1ldFNDeUpOV0Y2Q1pZMHExUlpURW02OVFodHJDQlZPZF9VZXk0aHNGMVMtTkV1VVE4U0J5RC1yay0xWUdWRTd1eTE0WXh6WUpNRW5uRXBQT3FrNm9sRnFqb2czOGc?oc=5",
+      "source": "The Times of India",
+      "published_at": "Fri, 01 May 2026 02:14:00 GMT",
+      "symbol": "HAL",
+      "stock_name": "HAL Defence"
     },
     {
       "title": "ONGC Announces Passing of Executive Director Debasish Mukherjee - scanx.trade",
@@ -697,14 +721,6 @@
       "published_at": "Fri, 01 May 2026 00:30:58 GMT",
       "symbol": "RELIANCE",
       "stock_name": "Reliance Industries"
-    },
-    {
-      "title": "Rising govt spending, export demand give Indian defence cos ₹15trn runway - Mint",
-      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNdWJPLUVzTGVLWXdlUkJfcVo3eGRfRDZDb2hnQ0RrYjcxRkNCM3pQc3NqRU0zMkJJOEZId2xhRlBYRWdTbFNjMGMyZ2xKckpnc2NhRF9CSGM2VGVIYV9XZE5rMDl6aFBMSHNmMVNVVGRibXVMMWxkcVBmRHEwUks0RGZnWlhjTWhGRGdNeVg1bFkzOUt1TnpPR1dhSzhWdnJ3WVEtUkQwOEdqNlhtaEdCdmk4VUtrUTZlanA4NDNMSklPZ2hHSkw1RkhFMHhzdUNLellYODRn0gHbAUFVX3lxTE9CRnROSUcydVI1LWNkcGxJbGZLZ2RQMmZwUVo3ZDk0UF9ibmEwTVhrM0Q1WDdBUjBoOVA0enFnMzFtTTZObVRVRWNXZWk2Q1pvN0NxcnR3SEk1eDNmMmhnVnlIUGRoX1A2dEJPbFIxWkxYQmFaeXZ5RkRLcjRMOGg2LUcxSGhXQ3NBQ3A2NkxOMDFseEZPNnlKX055Ty1JVGZST1Rad3pnaGctR2ZWUXoyYXhmR3NaTFNoSDAxU29mWU0zN3VMUWU3ZzdFZnh2WlpGVXRkdlJ5Qi1Idw?oc=5",
-      "source": "Mint",
-      "published_at": "Fri, 01 May 2026 00:30:38 GMT",
-      "symbol": "HAL",
-      "stock_name": "HAL Defence"
     },
     {
       "title": "Tech Mahindra ne kiye Bade Kharidi! Avant Technologies ko Buy Kar BFSI mein Mazbooti - Whalesbook",
