@@ -306,6 +306,8 @@ def run(*, rebuild_features: bool = False, max_cells: int | None = None) -> dict
     """
     universe_path = Path(__file__).resolve().parent / "universe_frozen.json"
     universe = list(json.loads(universe_path.read_text(encoding="utf-8"))["tickers"])
+    sector_map_path = Path(__file__).resolve().parent / "sector_map_frozen.json"
+    sector_map = dict(json.loads(sector_map_path.read_text(encoding="utf-8"))["sector_map"])
 
     log.info("loading candidates...")
     candidates = load_candidates()
@@ -317,7 +319,7 @@ def run(*, rebuild_features: bool = False, max_cells: int | None = None) -> dict
     cache_rows = None if rebuild_features else load_feature_cache()
     if cache_rows is None or len(cache_rows) != len(candidates):
         log.info("computing features for %d candidates (this is heavy)...", len(candidates))
-        cache_rows = build_feature_cache(candidates, universe)
+        cache_rows = build_feature_cache(candidates, universe, sector_map=sector_map)
         save_feature_cache(cache_rows)
     else:
         log.info("reusing feature cache (%d rows)", len(cache_rows))

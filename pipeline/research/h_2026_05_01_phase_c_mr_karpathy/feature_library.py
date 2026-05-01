@@ -143,17 +143,65 @@ def _sector_rs_zscore(ctx: SnapContext) -> float:
 # ---- 5.6 cross-sector correlation delta ------------------------------------
 
 def _xsec_corr_delta_5d(ctx: SnapContext) -> float:
-    """today's pairwise sector-return correlation - trailing 5d mean of same.
+    """Avg pairwise sector-return Pearson correlation over the 5-day window
+    ENDING today, MINUS the same metric over the 5-day window ENDING yesterday.
 
-    Skeleton: returns NaN until the engine wires sector_returns + sector_returns_5d.
-    Full computation uses Pearson over the 8 sector intraday returns vs equally-weighted
-    universe return, averaged pairwise.
+    Inputs: ctx.sector_returns (today's sector → ret @ snap_t)
+            ctx.sector_returns_5d (last N>=5 days, ordered ascending, each a
+            sector → ret @ snap_t dict)
+
+    Returns NaN when fewer than 5 history days are available or fewer than 2
+    sectors have full coverage across the window.
     """
     if not ctx.sector_returns or not ctx.sector_returns_5d:
         return float("nan")
-    # Skeleton placeholder: fall through to NaN until karpathy_search wires the
-    # full pairwise computation. The signature is locked.
-    return float("nan")
+    history = list(ctx.sector_returns_5d)
+    if len(history) < 5:
+        return float("nan")
+
+    # 5-day window ending today: last 4 history days + today.
+    # 5-day window ending yesterday: last 5 history days.
+    today_window = history[-4:] + [ctx.sector_returns]
+    yest_window = history[-5:]
+
+    today_corr = _avg_pairwise_corr(today_window)
+    yest_corr = _avg_pairwise_corr(yest_window)
+    if today_corr is None or yest_corr is None:
+        return float("nan")
+    return today_corr - yest_corr
+
+
+def _avg_pairwise_corr(day_dicts: list[dict[str, float]]) -> float | None:
+    """Pearson over the column vectors of each sector across the day window,
+    averaged over all unordered pairs of sectors with full coverage."""
+    if len(day_dicts) < 3:
+        return None
+    sectors = set(day_dicts[0].keys())
+    for d in day_dicts[1:]:
+        sectors &= set(d.keys())  # only sectors present every day
+    if len(sectors) < 2:
+        return None
+    cols: dict[str, list[float]] = {
+        s: [d[s] for d in day_dicts] for s in sectors
+    }
+    sector_list = sorted(cols.keys())
+    n = len(day_dicts)
+    corrs: list[float] = []
+    for i in range(len(sector_list)):
+        for j in range(i + 1, len(sector_list)):
+            a = cols[sector_list[i]]
+            b = cols[sector_list[j]]
+            mean_a = sum(a) / n
+            mean_b = sum(b) / n
+            num = sum((a[k] - mean_a) * (b[k] - mean_b) for k in range(n))
+            den_a = (sum((a[k] - mean_a) ** 2 for k in range(n))) ** 0.5
+            den_b = (sum((b[k] - mean_b) ** 2 for k in range(n))) ** 0.5
+            if den_a == 0 or den_b == 0:
+                continue
+            corrs.append(num / (den_a * den_b))
+    if not corrs:
+        return None
+    return sum(corrs) / len(corrs)
 
 
 # ---- 5.7 VWAP deviation z-score --------------------------------------------
