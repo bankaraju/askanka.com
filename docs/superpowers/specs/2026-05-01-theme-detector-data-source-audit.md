@@ -27,6 +27,14 @@ The detector composes signals from 9 distinct data sources, organized by Belief 
 | TD-D9 | Quarterly EPS surprise data (consensus vs actual) | Confirmation | C5 (earnings breadth) | 1 | TRENDLYNE PRO GLOBAL — manual UI export (PIT correctness pending verification) |
 | TD-D10 | NSE block deals (forward-only from 2026-04-24) | Belief | B4 (block deal accumulation) | 3 | FORWARD-ONLY (matures 2027) |
 | TD-D11 | Options skew / IV term structure | Confirmation | C4 (options skew) | 3 | FUTURE v2 |
+| TD-D12 | Macro FII/DII cash-market flow history (monthly) | Auxiliary | macro_tape regime gate (future) | aux | LANDED 2026-05-01 — Trendlyne CSV, 2014-01 → 2026-04, NOT wired into any v1 signal |
+| TD-D13 | Daily FII/DII cash-market flow (forward) | Auxiliary | macro_tape, theme detector daily features | aux | OPERATIONAL — pipeline/fii_flows.py scrapes NSE fiidiiTradeReact, writes pipeline/data/flows/<date>.json daily |
+| TD-D14 | Trendlyne F&O multigroup screener (per-stock 91-col snapshot) | Multi | B3 (FII drift), C4 (PCR/OI), C5 (EPS growth + result dates), C6 (sector taxonomy), promoter/MF/institutional holding deltas | 1 | LANDED 2026-05-01 — first snapshot at pipeline/data/trendlyne/raw_exports/multigroup/2026-05-01-multigroup.xlsx, 209 stocks × 91 cols; **drift columns are pre-computed** (FII change QoQ/4Qtr/8Qtr %, MF change 1M/2M/3M/4Qtr %, etc.) — no historical stitching required for the deltas |
+| TD-D15 | Trendlyne F&O contracts chain (option-level snapshot) | Auxiliary | option-positioning signals, IV term structure, far-dated OI | aux | LANDED 2026-05-01 — pipeline/data/trendlyne/raw_exports/fno_contracts/contracts_2026_04_30.xlsx, 14,647 contracts × 34 cols, expiries to 2028-12-26. One-day snapshot; daily refresh impractical via UI download |
+| TD-D12.1 | FII Asset-Class breakdown (monthly, Equity/Debt/Derivatives/Total + MF same) | Auxiliary | macro_tape, regime modifier | aux | LANDED 2026-05-01 — pipeline/data/trendlyne/raw_exports/macro_flow_extended/fii_all_asset_classes_monthly.csv, 148 rows, 2014-01 → 2026-04 |
+| TD-D12.2 | FII Derivatives detail (monthly, Futures + Options gross/sales/net) | Auxiliary | macro_tape derivatives feature | aux | LANDED 2026-05-01 — fii_derivatives_detail_monthly.csv, 142 rows, 2014-07 → 2026-04 |
+| TD-D12.3 | MF (≈ DII) Cash detail (monthly, Equity + Debt gross/sales/net) | Auxiliary | macro_tape DII flow proxy | aux | LANDED 2026-05-01 — mf_cash_detail_monthly.csv, 142 rows, 2014-07 → 2026-04 |
+| TD-D12.4 | MF Derivatives detail (monthly, Futures + Options gross/sales/net) | Auxiliary | macro_tape DII derivatives | aux | LANDED 2026-05-01 — mf_derivatives_detail_monthly.csv, 99 rows, 2017-12 → 2026-04 |
 
 ---
 
@@ -275,6 +283,40 @@ nifty_500_membership_history.parquet
 
 ---
 
+## IndianAPI canonical endpoint catalog (registered as the data carrier for TD-D3 / TD-D7 / TD-D9)
+
+**Reference:** `docs/superpowers/specs/api-1.json` (OpenAPI spec, 20 endpoints).
+
+After ruling out Trendlyne (2000-row cap) and EODHD (no documented India shareholding/EPS), our existing `INDIANAPI_KEY` subscription was confirmed as the carrier for all three Phase-1 missing datasets. Endpoints used:
+
+| TD-Dx | Endpoint | Required params | Notes |
+|---|---|---|---|
+| TD-D7 (FII drift) | `/historical_stats` | `stock_name`, `stats=shareholding_pattern_quarterly` | per-stock quarterly history of shareholding category breakdown |
+| TD-D9 (EPS surprise) | `/stock_forecasts` | `stock_id`, `measure_code=EPS`, `period_type=Interim`, `data_type=Estimates` (or `Actuals`), `age=ThirtyDaysAgo` (or `OneWeekAgo`/`SixtyDaysAgo`/`NinetyDaysAgo`/`Current`) | **PIT-correct consensus** — `DataAge` enum lets us fetch consensus as it stood N days before announcement, satisfying §11 PIT requirement out-of-the-box |
+| TD-D9 (EPS actuals) | `/stock_forecasts` | same as above with `data_type=Actuals` | post-announcement actual EPS |
+| TD-D3 (IPO calendar) | `/ipo` | none | bulk IPO listing dump |
+| TD-D9 (alt: quarterly raw) | `/historical_stats` | `stock_name`, `stats=quarter_results` | per-stock quarterly results history |
+
+### Rate-limit observation (2026-05-01 saga)
+
+- The key has a hidden per-day quota (Bharat reports no upgrade tier exists — fixed-tier API).
+- 429 responses are key-wide (laptop AND VPS both 429), endpoint-agnostic (`/ipo` 429s same as `/historical_stats`), and the body is always `Rate limit exceeded` with no `Retry-After` header.
+- Daily call profile (audited 2026-05-01):
+  - `news_scanner.py` every 15 min × 10 stocks ≈ **960/day** (75% of total)
+  - `news_intelligence.py` hourly × 15 stocks ≈ **120/day**
+  - `earnings_calendar/client.py` daily sweep × 213 ≈ **213/day**
+  - **Total existing load ≈ 1,300/day**
+- Theme detector incremental load:
+  - Shareholding (TD-D7): 213 stocks × 1/quarter ≈ 3/day amortized
+  - EPS surprise (TD-D9): 213 × 4/year × 2 (estimate+actual) ≈ 5/day
+  - IPO calendar (TD-D3): 1/week ≈ 0.1/day
+  - **Total new ≈ 8/day** — negligible vs existing load
+- 2026-05-01 patches landed:
+  - `news_scanner.py` and `news_intelligence.py` now early-exit on first 429 (saves 9-14 wasted calls per cycle when quota is exhausted)
+- Not yet done: throttle `news_scanner` cadence (every 15 → every 30 min) and stock count (top 10 → top 5). Recommended after observing 1 full quota cycle with the early-exit fix.
+
+---
+
 ## TD-D7: NSE quarterly shareholding pattern (FII column) (Phase 1)
 
 ### §6 Registration
@@ -416,6 +458,72 @@ earnings_surprise/<YYYY-Q>.parquet
 
 ---
 
+## TD-D12: Macro FII/DII cash-market monthly flow (auxiliary)
+
+**STATUS: DATA LANDED 2026-05-01. NOT WIRED INTO ANY v1 SIGNAL.**
+
+Distinct from TD-D7 (per-stock quarterly shareholding, B3): TD-D12 is **market-wide aggregate** monthly cash-market flow — useful as a future macro-regime gate or meta-modifier, not a per-name attribution signal. Registered here so the dataset is on-the-books before any future signal consumes it.
+
+### §6 Registration
+
+- **Source primary:** Trendlyne (Pro Global) — `https://trendlyne.com/macro-data/fii-dii/month/cash-month/` (publicly accessible — no login needed)
+- **Source secondary (current-month only, daily granularity):** NSE `fiidiiTradeReact` endpoint — already scraped via `pipeline/fii_flows.py`
+- **Coverage available:** 2014-01 → 2026-04, monthly granularity (147 months)
+- **Acquisition method:** manual CSV export from Trendlyne UI (one-shot historical), refresh monthly going forward
+- **Landed at:** `pipeline/data/trendlyne/raw_exports/macro_flow/fii_dii_monthly_2014_2026.csv`
+
+### §8 Schema contract
+
+```
+fii_dii_monthly.parquet
+  - month_end_date: date  (last day of month)
+  - fii_gross_purchase_inr_cr: float
+  - fii_gross_sales_inr_cr: float
+  - fii_net_inr_cr: float  (= purchase - sales, NSE+BSE combined)
+  - dii_gross_purchase_inr_cr: float
+  - dii_gross_sales_inr_cr: float
+  - dii_net_inr_cr: float
+  - source: str  ("trendlyne" | "nse_fiidiitradereact")
+```
+
+Raw Trendlyne column order: `DATE, FII Gross Purchase, FII Gross Sales, FII Net Purchase / Sales, DII Net Purchase / Sales, DII Gross Sales, DII Gross Purchase` (note column 5/7 reorder vs FII row).
+
+### §9 Cleanliness gates
+
+- `fii_net_inr_cr` ≈ `fii_gross_purchase - fii_gross_sales` (tolerance ±5 cr for rounding)
+- Same identity check for DII row
+- No duplicate `month_end_date`
+- All values numeric, no nulls in any column
+- Calendar continuity: every month from 2014-01 to current-1 must be present
+
+### §10 Adjustment mode
+
+- Provisional flow data — NSE/BSE may revise final settlement values. Accept as-published per Trendlyne snapshot at cutoff.
+- No corporate-action adjustment (this is flow, not stock-level)
+
+### §11 PIT correctness
+
+- Detector / consumer at run date R consumes only rows where `month_end_date <= R - 7d` (1-week settle buffer)
+- For current-month signal, `pipeline/fii_flows.py` (TD-D7's daily-NSE companion endpoint) provides observable-today net flows; the macro monthly file is for historical context only
+
+### §14 Contamination map
+
+- **Provisional vs final:** Trendlyne shows "provisional" cash-market data; T+2 settlement adjustments may revise the latest 1-2 months. Detector should NOT rely on the most-recent month's value as final until confirmed at next monthly refresh.
+- **Known DII-net identity break (2025-05-31):** Cleanliness gate run 2026-05-01 found `dii_gp - dii_gs = 81,560.3 cr` but reported `dii_net = 67,642.3 cr` — a 13,918 cr discrepancy. All 147 other rows reconcile within 0.1 cr. Likely cause: the "Net" field for that month is from a different settlement basis (T+1 vs T+2) than the Gross fields. Consumer code SHOULD compute net independently as `dii_gp - dii_gs` rather than trust the published Net column where it diverges.
+- **Cash-only scope:** This is cash-market flow; it does NOT include F&O / FII derivative positioning. The B3-style FII drift signal SHOULD layer in derivatives data (future TD-D7.1) for completeness.
+- **FPI methodology resets (2019, 2022):** Cross-period comparisons across SEBI category-redefinition boundaries are partly methodology-driven, not pure flow signal.
+- **NOT a per-stock signal:** Cannot be used to attribute flow to any specific name or theme. Macro-regime use only.
+
+### Future signals that may consume TD-D12
+
+- **macro_tape regime gate** — if 3-month rolling FII net flow < −1σ vs 5y mean, dampen detector confirmation scores by 0.2
+- **DII offset detector** — when DII net > FII net by > 50 cr/day for 60 days, flag a "domestic accumulation" regime
+- **Risk-on/off meta-feature** — feed monthly FII direction as a feature into any future regime classifier
+
+None of these are wired at v1. TD-D12 is a stock-the-shelf entry, not an active dependency.
+
+---
+
 ## Cross-source consistency checks
 
 The detector's combined output must satisfy these invariants:
@@ -449,3 +557,29 @@ When this audit is satisfied:
 - `pipeline/config/anka_inventory.json` — add data-collection task entries for TD-D1, TD-D3, TD-D6, TD-D7, TD-D8 (TD-D9 already partially covered by existing earnings ingest)
 - `docs/SYSTEM_OPERATIONS_MANUAL.md` — document data sources under "Theme Detector Data Layer" subsection
 - `memory/reference_theme_detector_data_sources.md` — quick-reference for future sessions
+
+---
+
+## Phase 1 Build status — 2026-05-01
+
+The Trendlyne UI manual-export landing on 2026-05-01 (see `pipeline/data/trendlyne/raw_exports/PROVENANCE.md`) closed the dominant Phase 1 data acquisition gap. This made the seven Phase 1 signals wireable on shipped data, ahead of the spec's data-acquisition tickets (TD-D1, TD-D6, TD-D7, TD-D9) which remain pending in their canonical form.
+
+| Signal | Source used at v1 | Spec source | Wired? | Proxy fidelity |
+|---|---|---|---|---|
+| **B3 fii_drift** | `fii_screener/fii_increasing_*.csv` + `fii_decreasing_full_shareholding_panel_*.csv` (Trendlyne) | TD-D7 NSE quarterly shareholding (FII column) | YES | Direct measure of FII polarity at top-of-distribution; spec source remains preferred for full panel coverage |
+| **B5 ipo_cluster** | `ipo_calendar/listed_ipos_*.csv` (Trendlyne) | TD-D3 NSE main-board IPO calendar | YES | Lacks per-IPO sector tag — uses keyword inference + member-list fallback. v2 wires EODHD/IndianAPI sector tags |
+| **C1 rs_breakout** | `india_historical/indices/NIFTY_daily.csv` + `fno_historical/<SYM>.csv` | TD-D2 sectoral indices | YES | Equal-weighted basket vs NIFTY-50; bypasses per-theme sectoral-index mapping |
+| **C2 cap_drift** | `multigroup_curtailed_returns_shareholding_*.xlsx` "Relative returns vs Nifty50 quarter%" | TD-D1 NIFTY-500 free-float weight delta | PROXY | Uses outperformance-over-quarter as proxy for cap-drift trajectory; spec source pending |
+| **C3 fo_inclusion** | `pipeline/data/fno_universe_history.json` (existing project data) | TD-D8 NSE F&O eligibility list history | YES | Direct |
+| **C5 earnings_breadth** | `multigroup_curtailed_fundamentals_fno_*.xlsx` "Net Profit QoQ Growth %" | TD-D9 quarterly EPS surprise | PROXY | Uses share-positive-QoQ-profit-growth as proxy for share-positive-EPS-surprise; v2 wires IndianAPI consensus stream |
+| **C6 sector_breadth** | `fno_historical/<SYM>.csv` | Daily bars (no spec gap) | YES | Direct (% above 200dMA, 4w-averaged) |
+
+**First lifecycle frame** (2026-05-01, 12 themes): IGNITION 5, PRE_IGNITION 4, DORMANT 3, MATURE/DECAY/FALSE_POSITIVE 0. Top by current_strength: POWER_RENEWABLE_TRANSITION 0.76, CAPEX_PLI_BENEFICIARY 0.70, HOSPITALS_ROBOTICS_LEAN 0.54. Output at `pipeline/data/research/theme_detector/themes_2026-05-01.json`.
+
+**Acceptance gate impact** — §21 of `anka_data_validation_policy_global_standard.md` is **not yet satisfied** by this build:
+- Two signals (C2, C5) are running on documented proxies, not on the spec sources — registered here so any downstream consumer knows the fidelity caveat
+- TD-D1, TD-D6, TD-D7 (canonical), TD-D9 (canonical) remain pending; their Trendlyne substitutes are richer-than-zero but coarser than spec
+- The 4-week shadow window per design doc §8.3 has not started — first frame is t=0
+- Retro-backfill validation per §8 (gates A/B/C/D) has not been run
+
+**Conclusion:** Theme Detector v1 is now **operational in shadow mode**. It MUST NOT be cited as evidence for any downstream hypothesis until the §21 gate above clears.

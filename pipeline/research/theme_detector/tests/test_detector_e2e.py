@@ -4,6 +4,9 @@ Verifies the detector runs without error, emits valid output schema, persists
 state, and that stage_counts sum equals n_themes_total.
 
 When all signals return None (stub mode), all themes should land in DORMANT.
+Stub mode is achieved here by monkeypatching the signal rosters with always-None
+implementations — this keeps the test hermetic regardless of whether real
+signal modules can read live data on the host running the test.
 """
 from __future__ import annotations
 
@@ -13,6 +16,7 @@ from pathlib import Path
 
 import pytest
 
+from pipeline.research.theme_detector import detector as detector_mod
 from pipeline.research.theme_detector.detector import (
     BELIEF_SIGNALS,
     BELIEF_WEIGHTS,
@@ -22,8 +26,19 @@ from pipeline.research.theme_detector.detector import (
     run_detector,
 )
 from pipeline.research.theme_detector.lifecycle import ThemeState
-from pipeline.research.theme_detector.signals.base import SignalResult
+from pipeline.research.theme_detector.signals.base import Signal, SignalResult
 from pipeline.research.theme_detector.state import load_state, save_state
+
+
+class _NullSignal(Signal):
+    """Test-only signal that always returns None — used to force stub mode."""
+
+    def __init__(self, signal_id: str, bucket: str):
+        self.signal_id = signal_id
+        self.bucket = bucket
+
+    def compute_for_theme(self, theme: dict, run_date: date) -> SignalResult:
+        return SignalResult(theme["theme_id"], self.signal_id, None, "stub_mode")
 
 
 @pytest.fixture
@@ -32,7 +47,21 @@ def frozen_themes() -> list[dict]:
     return json.loads(p.read_text(encoding="utf-8"))["themes"]
 
 
-def test_detector_runs_against_frozen_universe_in_stub_mode(frozen_themes):
+@pytest.fixture
+def stub_signals(monkeypatch):
+    """Replace the live signal rosters with always-None stubs.
+
+    Preserves the per-signal IDs so output_signal_breakdown still shows the
+    expected ID set; only the score becomes None universally.
+    """
+    belief_stubs = [_NullSignal(s.signal_id, "belief") for s in BELIEF_SIGNALS]
+    conf_stubs = [_NullSignal(s.signal_id, "confirmation") for s in CONFIRMATION_SIGNALS]
+    monkeypatch.setattr(detector_mod, "BELIEF_SIGNALS", belief_stubs)
+    monkeypatch.setattr(detector_mod, "CONFIRMATION_SIGNALS", conf_stubs)
+    return belief_stubs, conf_stubs
+
+
+def test_detector_runs_against_frozen_universe_in_stub_mode(frozen_themes, stub_signals):
     """Stub mode: every signal returns None. All themes must land in DORMANT."""
     result = run_detector(date(2026, 5, 4), frozen_themes, states={})
     out = result["output"]
@@ -46,7 +75,7 @@ def test_detector_runs_against_frozen_universe_in_stub_mode(frozen_themes):
     assert all(t["downstream_entry_permitted"] for t in out["themes"])
 
 
-def test_detector_carries_state_across_runs(frozen_themes, tmp_path):
+def test_detector_carries_state_across_runs(frozen_themes, stub_signals, tmp_path):
     state_path = tmp_path / "states.json"
 
     result1 = run_detector(date(2026, 5, 4), frozen_themes, states={})

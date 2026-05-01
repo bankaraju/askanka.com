@@ -1,0 +1,854 @@
+{
+  "schema_version": "v1.0",
+  "resolved_date": "2026-05-01",
+  "method": "Cross-reference authored rosters with canonical_fno_research_v3 (273) + opus/artifacts IndianAPI sector tags + description keywords",
+  "canonical_universe_n": 273,
+  "tickers_with_indianapi_artifact": 209,
+  "tickers_missing_indianapi_artifact": 64,
+  "theme_resolutions": {
+    "BANKS_DIGITAL_TAILWIND": {
+      "authored_members": [
+        "HDFCBANK",
+        "ICICIBANK",
+        "KOTAKBANK",
+        "AXISBANK",
+        "SBIN",
+        "INDUSINDBK"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "HDFCBANK",
+          "resolved_ticker": "HDFCBANK",
+          "industry_tag": "Regional Banks",
+          "company_name": "HDFC Bank"
+        },
+        {
+          "authored": "ICICIBANK",
+          "resolved_ticker": "ICICIBANK",
+          "industry_tag": "Regional Banks",
+          "company_name": "ICICI Bank"
+        },
+        {
+          "authored": "KOTAKBANK",
+          "resolved_ticker": "KOTAKBANK",
+          "industry_tag": "Regional Banks",
+          "company_name": "Kotak Mahindra Bank"
+        },
+        {
+          "authored": "AXISBANK",
+          "resolved_ticker": "AXISBANK",
+          "industry_tag": "Regional Banks",
+          "company_name": "AXIS Bank Ltd"
+        },
+        {
+          "authored": "SBIN",
+          "resolved_ticker": "SBIN",
+          "industry_tag": "Regional Banks",
+          "company_name": "State Bank of India"
+        },
+        {
+          "authored": "INDUSINDBK",
+          "resolved_ticker": "INDUSINDBK",
+          "industry_tag": "Regional Banks",
+          "company_name": "Indusind Bank"
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 6,
+      "meets_min_3": true
+    },
+    "BANKS_PSU_REREATING": {
+      "authored_members": [
+        "SBIN",
+        "BANKBARODA",
+        "PNB",
+        "CANBK",
+        "UNIONBANK",
+        "INDIANB"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "SBIN",
+          "resolved_ticker": "SBIN",
+          "industry_tag": "Regional Banks",
+          "company_name": "State Bank of India"
+        },
+        {
+          "authored": "BANKBARODA",
+          "resolved_ticker": "BANKBARODA",
+          "industry_tag": "Regional Banks",
+          "company_name": "Bank of Baroda"
+        },
+        {
+          "authored": "PNB",
+          "resolved_ticker": "PNB",
+          "industry_tag": "Regional Banks",
+          "company_name": "Punjab National Bank"
+        },
+        {
+          "authored": "CANBK",
+          "resolved_ticker": "CANBK",
+          "industry_tag": "Regional Banks",
+          "company_name": "Canara Bank"
+        },
+        {
+          "authored": "UNIONBANK",
+          "resolved_ticker": "UNIONBANK",
+          "industry_tag": "Regional Banks",
+          "company_name": "Union Bank of India"
+        },
+        {
+          "authored": "INDIANB",
+          "resolved_ticker": "INDIANB",
+          "industry_tag": "Regional Banks",
+          "company_name": "Indian Bank"
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 6,
+      "meets_min_3": true
+    },
+    "IT_AI_HEADWIND_MASS": {
+      "authored_members": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "TCS",
+          "resolved_ticker": "TCS",
+          "industry_tag": "Software & Programming",
+          "company_name": "Tata Consultancy Services"
+        },
+        {
+          "authored": "INFY",
+          "resolved_ticker": "INFY",
+          "industry_tag": "Software & Programming",
+          "company_name": "Infosys"
+        },
+        {
+          "authored": "WIPRO",
+          "resolved_ticker": "WIPRO",
+          "industry_tag": "Computer Services",
+          "company_name": "Wipro"
+        },
+        {
+          "authored": "HCLTECH",
+          "resolved_ticker": "HCLTECH",
+          "industry_tag": "Software & Programming",
+          "company_name": "HCL Technologies"
+        },
+        {
+          "authored": "TECHM",
+          "resolved_ticker": "TECHM",
+          "industry_tag": "Software & Programming",
+          "company_name": "Tech Mahindra"
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 5,
+      "meets_min_3": true
+    },
+    "IT_AI_TAILWIND_ER_AND_D": {
+      "authored_members": [
+        "PERSISTENT",
+        "KPITTECH",
+        "COFORGE",
+        "TATAELXSI",
+        "TATATECH",
+        "LTTS",
+        "CYIENT"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "PERSISTENT",
+          "resolved_ticker": "PERSISTENT",
+          "industry_tag": "Software & Programming",
+          "company_name": "Persistent Systems"
+        },
+        {
+          "authored": "KPITTECH",
+          "resolved_ticker": "KPITTECH",
+          "industry_tag": "Software & Programming",
+          "company_name": "KPIT Technologies"
+        },
+        {
+          "authored": "COFORGE",
+          "resolved_ticker": "COFORGE",
+          "industry_tag": "Software & Programming",
+          "company_name": "Coforge"
+        },
+        {
+          "authored": "TATAELXSI",
+          "resolved_ticker": "TATAELXSI",
+          "industry_tag": "Software & Programming",
+          "company_name": "Tata Elxsi"
+        },
+        {
+          "authored": "TATATECH",
+          "resolved_ticker": "TATATECH",
+          "industry_tag": "Computer Services",
+          "company_name": "Tata Technologies"
+        },
+        {
+          "authored": "LTTS",
+          "resolved_ticker": "LTTS",
+          "industry_tag": "",
+          "company_name": ""
+        },
+        {
+          "authored": "CYIENT",
+          "resolved_ticker": "CYIENT",
+          "industry_tag": "",
+          "company_name": ""
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 7,
+      "meets_min_3": true
+    },
+    "DEFENCE_WAR_ECONOMY": {
+      "authored_members": [
+        "HAL",
+        "BEL",
+        "BDL",
+        "MAZDOCK",
+        "GRSE",
+        "COCHINSHIP"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "HAL",
+          "resolved_ticker": "HAL",
+          "industry_tag": "Aerospace & Defense",
+          "company_name": "Hindustan Aeronautics"
+        },
+        {
+          "authored": "BEL",
+          "resolved_ticker": "BEL",
+          "industry_tag": "Aerospace & Defense",
+          "company_name": "Bharat Electronics"
+        },
+        {
+          "authored": "BDL",
+          "resolved_ticker": "BDL",
+          "industry_tag": "Aerospace & Defense",
+          "company_name": "Bharat Dynamics"
+        },
+        {
+          "authored": "MAZDOCK",
+          "resolved_ticker": "MAZDOCK",
+          "industry_tag": "Water Transportation",
+          "company_name": "Mazagon Dock Shipbuilders"
+        },
+        {
+          "authored": "COCHINSHIP",
+          "resolved_ticker": "COCHINSHIP",
+          "industry_tag": "Water Transportation",
+          "company_name": "Cochin Shipyard"
+        }
+      ],
+      "missing_from_universe": [
+        "GRSE"
+      ],
+      "effective_n": 5,
+      "meets_min_3": true
+    },
+    "HOSPITALS_ROBOTICS_LEAN": {
+      "authored_members": [
+        "APOLLOHOSP",
+        "FORTIS",
+        "MAXHEALTH",
+        "NH",
+        "RAINBOW",
+        "KIMS"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "APOLLOHOSP",
+          "resolved_ticker": "APOLLOHOSP",
+          "industry_tag": "Healthcare Facilities",
+          "company_name": "Apollo Hospitals Enterprise"
+        },
+        {
+          "authored": "FORTIS",
+          "resolved_ticker": "FORTIS",
+          "industry_tag": "Healthcare Facilities",
+          "company_name": "Fortis Healthcare"
+        },
+        {
+          "authored": "MAXHEALTH",
+          "resolved_ticker": "MAXHEALTH",
+          "industry_tag": "Healthcare Facilities",
+          "company_name": "Max Healthcare Institute"
+        }
+      ],
+      "missing_from_universe": [
+        "NH",
+        "RAINBOW",
+        "KIMS"
+      ],
+      "effective_n": 3,
+      "meets_min_3": true
+    },
+    "POWER_RENEWABLE_TRANSITION": {
+      "authored_members": [
+        "ADANIGREEN",
+        "NTPC",
+        "TATAPOWER",
+        "SUZLON",
+        "INOXWIND",
+        "JSWENERGY"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "ADANIGREEN",
+          "resolved_ticker": "ADANIGREEN",
+          "industry_tag": "Electric Utilities",
+          "company_name": "Adani Green Energy"
+        },
+        {
+          "authored": "NTPC",
+          "resolved_ticker": "NTPC",
+          "industry_tag": "Electric Utilities",
+          "company_name": "NTPC"
+        },
+        {
+          "authored": "TATAPOWER",
+          "resolved_ticker": "TATAPOWER",
+          "industry_tag": "Electric Utilities",
+          "company_name": "Tata Power Company"
+        },
+        {
+          "authored": "SUZLON",
+          "resolved_ticker": "SUZLON",
+          "industry_tag": "Misc. Capital Goods",
+          "company_name": "Suzlon Energy"
+        },
+        {
+          "authored": "INOXWIND",
+          "resolved_ticker": "INOXWIND",
+          "industry_tag": "Misc. Capital Goods",
+          "company_name": "Inox Wind"
+        },
+        {
+          "authored": "JSWENERGY",
+          "resolved_ticker": "JSWENERGY",
+          "industry_tag": "Electric Utilities",
+          "company_name": "JSW Energy"
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 6,
+      "meets_min_3": true
+    },
+    "CAPEX_PLI_BENEFICIARY": {
+      "authored_members": [
+        "LT",
+        "BHEL",
+        "SIEMENS",
+        "ABB",
+        "ABBOTINDIA",
+        "CGPOWER"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "LT",
+          "resolved_ticker": "LT",
+          "industry_tag": "",
+          "company_name": ""
+        },
+        {
+          "authored": "BHEL",
+          "resolved_ticker": "BHEL",
+          "industry_tag": "Misc. Capital Goods",
+          "company_name": "Bharat Heavy Electricals"
+        },
+        {
+          "authored": "SIEMENS",
+          "resolved_ticker": "SIEMENS",
+          "industry_tag": "Electronic Instr. & Controls",
+          "company_name": "Siemens"
+        },
+        {
+          "authored": "ABB",
+          "resolved_ticker": "ABB",
+          "industry_tag": "Electronic Instr. & Controls",
+          "company_name": "ABB India"
+        },
+        {
+          "authored": "ABBOTINDIA",
+          "resolved_ticker": "ABBOTINDIA",
+          "industry_tag": "",
+          "company_name": ""
+        },
+        {
+          "authored": "CGPOWER",
+          "resolved_ticker": "CGPOWER",
+          "industry_tag": "Electronic Instr. & Controls",
+          "company_name": "CG Power and Industrial Solutions"
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 6,
+      "meets_min_3": true
+    },
+    "QUICK_COMMERCE": {
+      "authored_members": [
+        "ZOMATO",
+        "DELHIVERY"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "ZOMATO",
+          "resolved_ticker": "ZOMATO",
+          "industry_tag": "",
+          "company_name": ""
+        },
+        {
+          "authored": "DELHIVERY",
+          "resolved_ticker": "DELHIVERY",
+          "industry_tag": "Business Services",
+          "company_name": "Delhivery"
+        }
+      ],
+      "missing_from_universe": [],
+      "effective_n": 2,
+      "meets_min_3": false
+    },
+    "EVS_AND_AUTO_TECH": {
+      "authored_members": [
+        "TATAMOTORS",
+        "M&M",
+        "OLAELECTRIC",
+        "SONACOMS",
+        "BOSCHLTD"
+      ],
+      "resolved_in_universe": [
+        {
+          "authored": "TATAMOTORS",
+          "resolved_ticker": "TMPV",
+          "industry_tag": "Auto & Truck Manufacturers",
+          "company_name": "Tata Motors Passenger Vehicles Ltd"
+        },
+        {
+          "authored": "M&M",
+          "resolved_ticker": "M&M",
+          "industry_tag": "",
+          "company_name": ""
+        },
+        {
+          "authored": "SONACOMS",
+          "resolved_ticker": "SONACOMS",
+          "industry_tag": "Auto & Truck Parts",
+          "company_name": "Sona Blw Precision Forgings"
+        },
+        {
+          "authored": "BOSCHLTD",
+          "resolved_ticker": "BOSCHLTD",
+          "industry_tag": "Auto & Truck Parts",
+          "company_name": "Bosch"
+        }
+      ],
+      "missing_from_universe": [
+        "OLAELECTRIC"
+      ],
+      "effective_n": 4,
+      "meets_min_3": true
+    }
+  },
+  "expansion_candidates": {
+    "DEFENCE_WAR_ECONOMY": {
+      "note": "GRSE absent from canonical (not F&O active). Aerospace & Defense IndianAPI tag = same 3 names.",
+      "aerospace_and_defense_industry": [
+        {
+          "ticker": "BDL",
+          "industry": "Aerospace & Defense",
+          "name": "Bharat Dynamics"
+        },
+        {
+          "ticker": "BEL",
+          "industry": "Aerospace & Defense",
+          "name": "Bharat Electronics"
+        },
+        {
+          "ticker": "HAL",
+          "industry": "Aerospace & Defense",
+          "name": "Hindustan Aeronautics"
+        }
+      ]
+    },
+    "EVS_AND_AUTO_TECH": {
+      "note": "OLAELECTRIC absent from canonical (recent listing). Auto industries + EV keyword broaden the candidate pool.",
+      "auto_industries": [
+        {
+          "ticker": "ASHOKLEY",
+          "industry": "Auto & Truck Manufacturers",
+          "name": "Ashok Leyland"
+        },
+        {
+          "ticker": "FORCEMOT",
+          "industry": "Auto & Truck Manufacturers",
+          "name": "Force Motors"
+        },
+        {
+          "ticker": "HYUNDAI",
+          "industry": "Auto & Truck Manufacturers",
+          "name": "Hyundai Motor India"
+        },
+        {
+          "ticker": "MARUTI",
+          "industry": "Auto & Truck Manufacturers",
+          "name": "Maruti Suzuki India"
+        },
+        {
+          "ticker": "CUMMINSIND",
+          "industry": "Auto & Truck Parts",
+          "name": "Cummins India"
+        },
+        {
+          "ticker": "MOTHERSON",
+          "industry": "Auto & Truck Parts",
+          "name": "Samvardhana Motherson International"
+        },
+        {
+          "ticker": "UNOMINDA",
+          "industry": "Auto & Truck Parts",
+          "name": "UNO Minda"
+        }
+      ],
+      "ev_keyword_in_description": [
+        {
+          "ticker": "TIINDIA",
+          "industry": "Recreational Products",
+          "name": "Tube Investments of India"
+        },
+        {
+          "ticker": "EXIDEIND",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Exide Industries"
+        },
+        {
+          "ticker": "BHEL",
+          "industry": "Misc. Capital Goods",
+          "name": "Bharat Heavy Electricals"
+        },
+        {
+          "ticker": "PFC",
+          "industry": "Consumer Financial Services",
+          "name": "Power Finance Corporation"
+        },
+        {
+          "ticker": "UNOMINDA",
+          "industry": "Auto & Truck Parts",
+          "name": "UNO Minda"
+        },
+        {
+          "ticker": "FORCEMOT",
+          "industry": "Auto & Truck Manufacturers",
+          "name": "Force Motors"
+        },
+        {
+          "ticker": "WAAREEENER",
+          "industry": "Semiconductors",
+          "name": "Waaree Energies"
+        },
+        {
+          "ticker": "NATIONALUM",
+          "industry": "Metal Mining",
+          "name": "National Aluminium Company Ltd"
+        },
+        {
+          "ticker": "PREMIERENE",
+          "industry": "Semiconductors",
+          "name": "Premier Energies"
+        }
+      ]
+    },
+    "POWER_RENEWABLE_TRANSITION": {
+      "note": "All 6 authored members in F&O. Electric Utilities IndianAPI tag yields 4 more candidates if expansion desired.",
+      "electric_utilities_industry": [
+        {
+          "ticker": "ADANIENSOL",
+          "industry": "Electric Utilities",
+          "name": "Adani Energy Solutions"
+        },
+        {
+          "ticker": "ADANIPOWER",
+          "industry": "Electric Utilities",
+          "name": "Adani Power"
+        },
+        {
+          "ticker": "IREDA",
+          "industry": "Electric Utilities",
+          "name": "Indian Renewable Energy Development Agency Ltd"
+        },
+        {
+          "ticker": "NHPC",
+          "industry": "Electric Utilities",
+          "name": "NHPC"
+        },
+        {
+          "ticker": "POWERGRID",
+          "industry": "Electric Utilities",
+          "name": "Power Grid Corporation of India"
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "industry": "Electric Utilities",
+          "name": "Torrent Power"
+        }
+      ],
+      "renewable_keyword_in_description": [
+        {
+          "ticker": "HINDZINC",
+          "industry": "Metal Mining",
+          "name": "Hindustan Zinc"
+        },
+        {
+          "ticker": "IOC",
+          "industry": "Oil & Gas - Integrated",
+          "name": "Indian Oil Corporation"
+        },
+        {
+          "ticker": "IREDA",
+          "industry": "Electric Utilities",
+          "name": "Indian Renewable Energy Development Agency Ltd"
+        },
+        {
+          "ticker": "TORNTPOWER",
+          "industry": "Electric Utilities",
+          "name": "Torrent Power"
+        },
+        {
+          "ticker": "ONGC",
+          "industry": "Oil & Gas Operations",
+          "name": "Oil and Natural Gas Corporation"
+        },
+        {
+          "ticker": "EXIDEIND",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Exide Industries"
+        },
+        {
+          "ticker": "POLYCAB",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Polycab India"
+        },
+        {
+          "ticker": "RELIANCE",
+          "industry": "Oil & Gas Operations",
+          "name": "Reliance Industries"
+        },
+        {
+          "ticker": "OIL",
+          "industry": "Oil & Gas Operations",
+          "name": "Oil and Natural Gas Corporation"
+        },
+        {
+          "ticker": "BHEL",
+          "industry": "Misc. Capital Goods",
+          "name": "Bharat Heavy Electricals"
+        },
+        {
+          "ticker": "RECLTD",
+          "industry": "Misc. Financial Services",
+          "name": "REC"
+        },
+        {
+          "ticker": "PATANJALI",
+          "industry": "Food Processing",
+          "name": "Patanjali Foods"
+        },
+        {
+          "ticker": "CROMPTON",
+          "industry": "Appliance & Tool",
+          "name": "Crompton Greaves Consumer Electricals Ltd"
+        },
+        {
+          "ticker": "VOLTAS",
+          "industry": "Misc. Capital Goods",
+          "name": "Voltas"
+        },
+        {
+          "ticker": "ADANIPOWER",
+          "industry": "Electric Utilities",
+          "name": "Adani Power"
+        },
+        {
+          "ticker": "GRASIM",
+          "industry": "Construction - Raw Materials",
+          "name": "Grasim Industries"
+        },
+        {
+          "ticker": "PIIND",
+          "industry": "Chemical Manufacturing",
+          "name": "PI Industries"
+        },
+        {
+          "ticker": "GAIL",
+          "industry": "Natural Gas Utilities",
+          "name": "Gail (India)"
+        },
+        {
+          "ticker": "SOLARINDS",
+          "industry": "Chemical Manufacturing",
+          "name": "Solar Industries India"
+        },
+        {
+          "ticker": "HAVELLS",
+          "industry": "Misc. Fabricated Products",
+          "name": "Havells India"
+        },
+        {
+          "ticker": "IEX",
+          "industry": "Investment Services",
+          "name": "Indian Energy Exchange"
+        },
+        {
+          "ticker": "BAJAJFINSV",
+          "industry": "Insurance (Life)",
+          "name": "Bajaj Finserv"
+        },
+        {
+          "ticker": "HINDPETRO",
+          "industry": "Oil & Gas Operations",
+          "name": "Hindustan Petroleum Corporation Ltd"
+        },
+        {
+          "ticker": "BEL",
+          "industry": "Aerospace & Defense",
+          "name": "Bharat Electronics"
+        },
+        {
+          "ticker": "WAAREEENER",
+          "industry": "Semiconductors",
+          "name": "Waaree Energies"
+        },
+        {
+          "ticker": "NATIONALUM",
+          "industry": "Metal Mining",
+          "name": "National Aluminium Company Ltd"
+        },
+        {
+          "ticker": "PREMIERENE",
+          "industry": "Semiconductors",
+          "name": "Premier Energies"
+        },
+        {
+          "ticker": "NHPC",
+          "industry": "Electric Utilities",
+          "name": "NHPC"
+        }
+      ]
+    },
+    "HOSPITALS_ROBOTICS_LEAN": {
+      "note": "NH, RAINBOW, KIMS absent from canonical. Effective N=3 — meets minimum but tightest theme.",
+      "healthcare_facilities_industry": [
+        {
+          "ticker": "APOLLOHOSP",
+          "industry": "Healthcare Facilities",
+          "name": "Apollo Hospitals Enterprise"
+        },
+        {
+          "ticker": "FORTIS",
+          "industry": "Healthcare Facilities",
+          "name": "Fortis Healthcare"
+        },
+        {
+          "ticker": "MAXHEALTH",
+          "industry": "Healthcare Facilities",
+          "name": "Max Healthcare Institute"
+        }
+      ]
+    },
+    "CAPEX_PLI_BENEFICIARY": {
+      "note": "ABBOTINDIA = Abbott India (pharma) — likely a §4.2 typo. Recommend replace with CUMMINSIND or THERMAX.",
+      "misc_capital_goods_industry": [
+        {
+          "ticker": "AMBER",
+          "industry": "Misc. Capital Goods",
+          "name": "Amber Enterprises India"
+        },
+        {
+          "ticker": "BHEL",
+          "industry": "Misc. Capital Goods",
+          "name": "Bharat Heavy Electricals"
+        },
+        {
+          "ticker": "BLUESTARCO",
+          "industry": "Misc. Capital Goods",
+          "name": "Blue Star"
+        },
+        {
+          "ticker": "INOXWIND",
+          "industry": "Misc. Capital Goods",
+          "name": "Inox Wind"
+        },
+        {
+          "ticker": "SUZLON",
+          "industry": "Misc. Capital Goods",
+          "name": "Suzlon Energy"
+        },
+        {
+          "ticker": "VOLTAS",
+          "industry": "Misc. Capital Goods",
+          "name": "Voltas"
+        }
+      ],
+      "electronic_instruments_industry": [
+        {
+          "ticker": "ABB",
+          "industry": "Electronic Instr. & Controls",
+          "name": "ABB India"
+        },
+        {
+          "ticker": "CGPOWER",
+          "industry": "Electronic Instr. & Controls",
+          "name": "CG Power and Industrial Solutions"
+        },
+        {
+          "ticker": "EXIDEIND",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Exide Industries"
+        },
+        {
+          "ticker": "KAYNES",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Kaynes Technology India"
+        },
+        {
+          "ticker": "KEI",
+          "industry": "Electronic Instr. & Controls",
+          "name": "KEI Industries"
+        },
+        {
+          "ticker": "POLYCAB",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Polycab India"
+        },
+        {
+          "ticker": "POWERINDIA",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Hitachi Energy India"
+        },
+        {
+          "ticker": "SIEMENS",
+          "industry": "Electronic Instr. & Controls",
+          "name": "Siemens"
+        }
+      ]
+    }
+  },
+  "notes_for_signoff": [
+    "GRSE: drop from DEFENCE_WAR_ECONOMY (not F&O). Effective N=5.",
+    "OLAELECTRIC: drop or wait for F&O inclusion. EVS_AND_AUTO_TECH effective N=4.",
+    "NH/RAINBOW/KIMS: drop from HOSPITALS_ROBOTICS_LEAN. Effective N=3 — at min.",
+    "ABBOTINDIA: pharma in cap-goods theme — likely typo. Recommend CUMMINSIND or THERMAX.",
+    "DATA_CENTRES_ADJACENT: membership pending; ANANTRAJ + NETLINK not in canonical F&O.",
+    "64/273 canonical tickers lack opus/artifacts indianapi_stock.json — SectorMapper would silently degrade them. Sweep pending."
+  ]
+}
