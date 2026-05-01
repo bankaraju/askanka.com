@@ -303,6 +303,87 @@ def load_results_dashboard(cutoff_date: date) -> pd.DataFrame | None:
     return rd
 
 
+_NIFTY500_WEIGHTS_DIR = TRENDLYNE_ROOT / "nifty500_weights"
+
+
+def load_nifty500_weights(
+    cutoff_date: date,
+    index_name: str = "NIFTY 500",
+) -> pd.DataFrame | None:
+    """Load NSE-source index constituent weights at-or-before cutoff_date.
+
+    Source: pipeline/scripts/fetch_nse_index_weights.py — pulls
+    /api/equity-stockIndices and computes weight_pct = ffmc / sum(ffmc).
+    Snapshots written to TRENDLYNE_ROOT/nifty500_weights/<slug>_weights_<date>.csv.
+
+    Returns DataFrame indexed by NSE symbol with columns:
+        snapshot_date, index_name, ffmc_inr, weight_pct, last_price,
+        p_change_1d, p_change_30d, p_change_365d, year_high, year_low,
+        total_traded_value_inr.
+
+    Returns None if no snapshot at-or-before cutoff exists for the requested
+    index. Forward-only: history starts from first scraper run (2026-05-02).
+
+    TD-D1 canonical source. Replaces v1 C2 cap_drift proxy once 6m of history
+    has accumulated (≈ 2026-11-02).
+    """
+    if not _NIFTY500_WEIGHTS_DIR.is_dir():
+        return None
+    slug = index_name.lower().replace(" ", "_")
+    cands = sorted(_NIFTY500_WEIGHTS_DIR.glob(f"{slug}_weights_*.csv"))
+    if not cands:
+        return None
+    chosen: Path | None = None
+    for p in reversed(cands):
+        snapshot_date = _date_from_filename(p.name)
+        if snapshot_date is None:
+            continue
+        if snapshot_date <= cutoff_date:
+            chosen = p
+            break
+    if chosen is None:
+        return None
+    df = pd.read_csv(chosen)
+    if "nse_symbol" not in df.columns:
+        return None
+    df = df.dropna(subset=["nse_symbol"]).set_index("nse_symbol")
+    return df
+
+
+def load_trendlyne_nifty500_weights(cutoff_date: date) -> pd.DataFrame | None:
+    """Load Trendlyne-source NIFTY-500 weights at-or-before cutoff_date.
+
+    Source: docs/superpowers/specs/New folder/nifty 500.xlsx → manually parsed
+    to TRENDLYNE_ROOT/nifty500_weights/trendlyne_nifty500_parsed_<date>.csv.
+
+    Schema: snapshot_date, source, Company, nse_symbol, weight_pct.
+
+    Sister of load_nifty500_weights for cross-validation. Note: methodology
+    differs (free-float vs Trendlyne adj) — HDFCBANK NSE 6.03% vs Trendlyne 3.0%.
+    Returns None if no parsed CSV at-or-before cutoff exists.
+    """
+    if not _NIFTY500_WEIGHTS_DIR.is_dir():
+        return None
+    cands = sorted(_NIFTY500_WEIGHTS_DIR.glob("trendlyne_nifty500_parsed_*.csv"))
+    if not cands:
+        return None
+    chosen: Path | None = None
+    for p in reversed(cands):
+        snapshot_date = _date_from_filename(p.name)
+        if snapshot_date is None:
+            continue
+        if snapshot_date <= cutoff_date:
+            chosen = p
+            break
+    if chosen is None:
+        return None
+    df = pd.read_csv(chosen)
+    if "nse_symbol" not in df.columns:
+        return None
+    df = df.dropna(subset=["nse_symbol"]).set_index("nse_symbol")
+    return df
+
+
 def load_shareholding_panel(cutoff_date: date) -> pd.DataFrame | None:
     """Load the latest standalone shareholding_panel snapshot at-or-before cutoff.
 
