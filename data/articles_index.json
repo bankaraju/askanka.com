@@ -197,24 +197,6 @@
       "category": "INVESTIGATION",
       "color": "#d4a855",
       "published_at": "April 26, 2026"
-    },
-    {
-      "date": "2026-04-23",
-      "segment": "war",
-      "filename": "2026-04-23-war.html",
-      "headline": "IRGC's Underwater Gambit: Hormuz Cables Targeted, India's Digital Lifeline at Risk",
-      "category": "GEOPOLITICAL ANALYSIS",
-      "color": "#ef4444",
-      "published_at": "April 23, 2026"
-    },
-    {
-      "date": "2026-04-23",
-      "segment": "epstein",
-      "filename": "2026-04-23-epstein.html",
-      "headline": "Trump's Desperate Bid to Silence Epstein Truth: DOJ Runs from Testimony as Release Halted",
-      "category": "INVESTIGATION",
-      "color": "#d4a855",
-      "published_at": "April 23, 2026"
     }
   ]
 }
