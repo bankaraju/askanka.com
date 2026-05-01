@@ -1,23 +1,42 @@
 # H-2026-05-01-NEUTRAL-001 — Neutral Intraday Fair-Value Reversion (NIFR) v1
 
-## 0. Status — TRACK 1 EXPLORATION VERDICT 2026-05-01
+## 0. Status — EXPLORATION COMPLETE 2026-05-01: FAMILY DEAD ON STOCKS AT S1 COST
 
-**TRACK 1 (forensic 5y replay): NEGATIVE. Not registered. Holdout slot preserved.**
+**Final verdict: NOT REGISTERED. Family dead at any reasonable stock S1 cost. Single-touch holdout slot preserved (never opened).**
 
-The Track-1 dispersion explorer (`pipeline/research/h_2026_05_01_neutral_fair_value_reversion/dispersion_explorer.py`) ran the §6 trigger on 2021-05-01 → 2024-04-30 across the §4 frozen 100-ticker universe before any registration row was written. Result over 438 NEUTRAL days, 1,029 triggers:
+Four-stage forensic completed before any hypothesis row was written:
 
-| Metric | Required for Track 2 | Track 1 actual |
-|---|---|---|
-| Mean bps net S1 | ≥ +25 | **−32.5** |
-| Mean bps gross | (informational) | **−2.5** |
-| Hit rate | ≥ 55% | **29.0%** |
-| Sharpe per-trade net S1 | > 0.15 | **−0.41** |
+### Stage 1 — Dispersion explorer (ATR×1.75 stop + 14:30 TIME_STOP)
+Ran §6 trigger on 2021-05-01 → 2024-04-30 across §4 frozen 100-ticker universe. Result over 438 NEUTRAL days, 1,029 triggers: **mean −32.5 bps net S1, hit 29%, Sharpe per-trade −0.41**. Decomposition revealed ATR×1.75 stops 47.6% of trades at −90 bps before reversion can complete — exit mis-specified.
 
-**Decomposition:** TIME_STOP exits (n=539) earn gross +20 bps at 55.3% hit — the reversion mechanism is real but small. STOP exits at ATR×1.75 (n=490) lose −90 bps at 0% hit — the stop is mis-specified and dominates. Even with a corrected stop, gross +20 bps does not clear the 30 bps S1 cost. No |vwap_z| bucket is profitable; no monotone improvement at higher z.
+### Stage 2 — Horizon extender (VWAP-touch exit, no ATR stop, D0..D5 holds)
+Replaced ATR stop with VWAP-touch within window. **100% of triggers eventually touch VWAP within D1; D2-D5 add zero incremental touches.** Hidden insight: the 615 same-day touchers earn **+46.3 bps gross / +16.3 bps net at Sharpe per-trade 0.42** — real intraday reversion mechanism. But same-day touch is selection-on-outcome; the 414 D1+ touchers lose −95.5 bps gross, dominating the unconditional mean.
 
-**Decision:** do **not** burn the single-touch holdout slot on this exact §6 trigger. The Karpathy 6-of-8 qualifier in §10 cannot rescue a setup whose gross expectancy is structurally near-zero — qualifiers select sub-cells, they do not create positive expectancy.
+### Stage 3 — Time-of-day analyzer
+Sweep of "before HH:MM" gates. Touch rate rises from 60% (all-day) to 78% (before 10:30) — but unconditional gross mean stays at ~0 bps across every cutoff. The rate improvement is offset by the 22% no-touch tail's −155 bps mean. Time-of-day alone insufficient.
 
-**What stays open:** widened-stop forensic (ATR×3 / ATR×4), VWAP-touch exit, sector-pair NEUTRAL fade — each requires its own exploration before any registration. See `memory/project_h_2026_05_01_nifr_track1_dispersion.md` for the full forensic record. Spec §3-§17 below remains the **definition** of the family — preserved for future reference if a re-attempt is mounted with a different trigger / stop / exit choice (which would be a new hypothesis_id, not an amendment per backtesting-specs §10.4).
+### Stage 4 — Qualifier grid search (201 two-feature gates, walk-forward 694/335 split)
+Comprehensive search over 6 entry-time features × percentile thresholds × 2-feature combinations: **0 / 201 gates with positive train net mean. 0 / 201 with test net mean lower CI > 0.** Best train gate: −19.4 bps net at 66% hit. Family fails on the training fold itself, not just OOS.
+
+### Why the family is structurally dead
+
+Gross expectancy is near-zero (−5 bps unconditional gross). Qualifiers select sub-cells; they don't create edge. The 30 bps S1 round-trip cost is binding — even at 15 bps (best-case F&O futures slippage), best gates still land negative. Within-touched arm correlations of 0.35 are useless for tradeable qualifier because touch outcome is unobservable at entry.
+
+### Math ceiling, made explicit
+
+The unconditional mean equation: `P(touch) × E[touched] + (1−P) × E[no_touch]`. With measured E[touched] = +46 bps gross and E[no_touch] = −82 bps gross, no value of P ≤ 1 produces +55 bps gross (the level needed to clear +25 bps net at 30 bps S1 cost). A perfect touch classifier caps at the touched-arm baseline of +46 bps gross / +16 bps net — 9 bps short of the spec §1 threshold.
+
+### What remains open
+
+- **Path (b) — options-leverage forensic with asymmetric payoff structure.** Plain delta-1 options multiply both wins and losses linearly, so they don't change unconditional expectancy. But asymmetric payoffs (long premium, OTM strikes, defined-risk) can convert the +46 bps reversion arm into positive-EV trades by capping the −82 bps no-touch loss. This is a NEW hypothesis family with different payoff math, not a continuation of NIFR.
+- **Different setups in NEUTRAL** — sector-pair fade, opening-range fade (NEUTRAL OR), late-session reversal — all listed in `memory/project_neutral_overlay_family_2026_04_28.md`. Each requires its own forensic before registration.
+
+### Files (forensic record, in repo)
+Engine: `dispersion_explorer.py`, `horizon_extender.py`, `tod_analyzer.py`, `qualifier_diagnostic.py`, `qualifier_grid_search.py`
+Outputs: `explorer_*.csv/json`, `horizon_*.csv/json`, `tod_summary.json`, `qualifier_grid_summary.json`
+Memory: `project_h_2026_05_01_nifr_track1_dispersion.md`
+
+**Spec §3-§17 below preserved as family definition for forensic reference. Re-attempt requires fresh hypothesis_id with materially different setup (trigger / exit / payoff structure) per backtesting-specs §10.4 — no parameter retries on the closed exploration.**
 
 ---
 
