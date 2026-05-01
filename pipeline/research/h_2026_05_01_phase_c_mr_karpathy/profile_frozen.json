@@ -1,0 +1,3167 @@
+{
+  "hypothesis_id": "H-2026-05-01-phase-c-mr-karpathy-v1",
+  "cutoff_date": "2026-04-04",
+  "lookback_years": 2,
+  "universe_size": 100,
+  "covered_tickers": 100,
+  "profile": {
+    "HDFCBANK": {
+      "CAUTION": {
+        "expected_return": -0.00047149123643473165,
+        "std_return": 0.012300055638967768,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0011676829239539055,
+        "std_return": 0.017504771606228712,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00011897199198017382,
+        "std_return": 0.011939828814913072,
+        "hit_rate": 0.5027624309392266,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005962543070021147,
+        "std_return": 0.013002133330864564,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0019718366333949778,
+        "std_return": 0.012034330402463867,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "RELIANCE": {
+      "CAUTION": {
+        "expected_return": 0.0006286579578262952,
+        "std_return": 0.012252992514312168,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0005791162961828799,
+        "std_return": 0.013368847248176406,
+        "hit_rate": 0.3,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00034760927078767725,
+        "std_return": 0.013215505703067763,
+        "hit_rate": 0.4972375690607735,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006608680361413625,
+        "std_return": 0.017201800915621072,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002815255262053792,
+        "std_return": 0.014363344684361712,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "ICICIBANK": {
+      "CAUTION": {
+        "expected_return": 0.002243694575357808,
+        "std_return": 0.014253973559272687,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": 0.0015366002077281892,
+        "std_return": 0.014037522524565095,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 8.221954406652788e-05,
+        "std_return": 0.011684909082167136,
+        "hit_rate": 0.4972375690607735,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.004204522366635053,
+        "std_return": 0.010453132619033566,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.001290341562424411,
+        "std_return": 0.012649543669762939,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "SBIN": {
+      "CAUTION": {
+        "expected_return": 0.0014495139197907112,
+        "std_return": 0.014432222457197505,
+        "hit_rate": 0.5686274509803921,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0034344224884337972,
+        "std_return": 0.011911695421449561,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0007924857066011293,
+        "std_return": 0.015898880603598203,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0011778459022627069,
+        "std_return": 0.014167865128026631,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0012137182377987316,
+        "std_return": 0.017950910494670656,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "INFY": {
+      "CAUTION": {
+        "expected_return": -0.0005175289478915531,
+        "std_return": 0.016825193396150476,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008887675701869513,
+        "std_return": 0.02037016120646457,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -2.04596807493654e-05,
+        "std_return": 0.015169940887271237,
+        "hit_rate": 0.494475138121547,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0038527282002073227,
+        "std_return": 0.008298931786499316,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 4.878526899685217e-05,
+        "std_return": 0.0155430445341363,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "BHARTIARTL": {
+      "CAUTION": {
+        "expected_return": 7.349735350418097e-05,
+        "std_return": 0.013584155725516831,
+        "hit_rate": 0.45098039215686275,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0019386459673286006,
+        "std_return": 0.009513216925044409,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0010449372308428797,
+        "std_return": 0.013762708338550747,
+        "hit_rate": 0.5386740331491713,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0036388490436077923,
+        "std_return": 0.01113937687607967,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0025201720185894427,
+        "std_return": 0.013673876010170376,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "LT": {
+      "CAUTION": {
+        "expected_return": -0.0005043700377480717,
+        "std_return": 0.022085067315108,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.002008382535685027,
+        "std_return": 0.007859398720404346,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0002430761658427985,
+        "std_return": 0.015720697748759883,
+        "hit_rate": 0.505524861878453,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008572699195471477,
+        "std_return": 0.013881627243804331,
+        "hit_rate": 0.8461538461538461,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0019548388974772618,
+        "std_return": 0.019859940729086173,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "VEDL": {
+      "CAUTION": {
+        "expected_return": 0.0008690552714656896,
+        "std_return": 0.02827331955169905,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.009399142837672337,
+        "std_return": 0.01592517070806142,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0023731483381243153,
+        "std_return": 0.021092876194123616,
+        "hit_rate": 0.5441988950276243,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0014243828217495548,
+        "std_return": 0.019414794618406464,
+        "hit_rate": 0.38461538461538464,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004261357993918939,
+        "std_return": 0.01973766665588267,
+        "hit_rate": 0.625,
+        "n": 56
+      }
+    },
+    "TCS": {
+      "CAUTION": {
+        "expected_return": -0.0012802526183959425,
+        "std_return": 0.011420992095555643,
+        "hit_rate": 0.6470588235294118,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.004380421699370807,
+        "std_return": 0.00782838576661848,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0005038610330883612,
+        "std_return": 0.013429385990509392,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0009066066803488093,
+        "std_return": 0.00645562948709894,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.001813697547761155,
+        "std_return": 0.016471170771160358,
+        "hit_rate": 0.6071428571428571,
+        "n": 56
+      }
+    },
+    "M&M": {
+      "CAUTION": {
+        "expected_return": 0.00431263832046777,
+        "std_return": 0.022412647106859578,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.010937925339728417,
+        "std_return": 0.02036171609540606,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00018439160022381003,
+        "std_return": 0.01798392691934019,
+        "hit_rate": 0.5,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0006279504942000238,
+        "std_return": 0.021297309139569183,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.006049888877309312,
+        "std_return": 0.018656131783494748,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "MCX": {
+      "CAUTION": {
+        "expected_return": 0.0027021753819346716,
+        "std_return": 0.02533246297345731,
+        "hit_rate": 0.5686274509803921,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0075979355860850695,
+        "std_return": 0.02214735924179795,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.002600717333836901,
+        "std_return": 0.025867021872452118,
+        "hit_rate": 0.5359116022099447,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0032348866290812326,
+        "std_return": 0.021286799639353194,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.007480767266295937,
+        "std_return": 0.02530688255491744,
+        "hit_rate": 0.5892857142857143,
+        "n": 56
+      }
+    },
+    "AXISBANK": {
+      "CAUTION": {
+        "expected_return": 2.1045202809489826e-05,
+        "std_return": 0.01523816005113428,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": 0.0005752981900842169,
+        "std_return": 0.023295430142598605,
+        "hit_rate": 0.3,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0010320517727542891,
+        "std_return": 0.014473543407750207,
+        "hit_rate": 0.5165745856353591,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.00511660773588525,
+        "std_return": 0.018663772879052576,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.002367614042269315,
+        "std_return": 0.016959379952280577,
+        "hit_rate": 0.625,
+        "n": 56
+      }
+    },
+    "BAJFINANCE": {
+      "CAUTION": {
+        "expected_return": -0.0008739802285393505,
+        "std_return": 0.01818484185994282,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.011847723755394547,
+        "std_return": 0.011451309396121937,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0010058193054384096,
+        "std_return": 0.01758856579226118,
+        "hit_rate": 0.5193370165745856,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.00286984356632026,
+        "std_return": 0.015879869291396138,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0007990456750020683,
+        "std_return": 0.016790439317189494,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "BEL": {
+      "CAUTION": {
+        "expected_return": 0.0045360707071790485,
+        "std_return": 0.022119436799175142,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007159503577518944,
+        "std_return": 0.015387361083216434,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0015379426283148462,
+        "std_return": 0.021649978566076727,
+        "hit_rate": 0.5,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008122702076942597,
+        "std_return": 0.023281918347993428,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0033734332076230905,
+        "std_return": 0.02189646737130422,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "DIXON": {
+      "CAUTION": {
+        "expected_return": 0.007155232120133842,
+        "std_return": 0.02917241876957932,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.002820278124464537,
+        "std_return": 0.012772645457143562,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00011308301401712664,
+        "std_return": 0.024246329145931982,
+        "hit_rate": 0.5303867403314917,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006231471977825877,
+        "std_return": 0.03423180386333422,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002994460105874972,
+        "std_return": 0.03265875378899403,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "SHRIRAMFIN": {
+      "CAUTION": {
+        "expected_return": 0.002693080251329982,
+        "std_return": 0.02819101147106929,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008205682268432846,
+        "std_return": 0.018511706351506008,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0018142870178170928,
+        "std_return": 0.02160952921862199,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.004255539376609625,
+        "std_return": 0.018728042370218637,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.001099754720289842,
+        "std_return": 0.025675017924145126,
+        "hit_rate": 0.44642857142857145,
+        "n": 56
+      }
+    },
+    "KOTAKBANK": {
+      "CAUTION": {
+        "expected_return": -7.477685739439267e-05,
+        "std_return": 0.017158044651249652,
+        "hit_rate": 0.4117647058823529,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007272633623621683,
+        "std_return": 0.018712105520592343,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0006438030463668038,
+        "std_return": 0.01447934102741013,
+        "hit_rate": 0.494475138121547,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005274063046152291,
+        "std_return": 0.011629627216193322,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -1.808749502733853e-05,
+        "std_return": 0.015372218017264652,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "INDIGO": {
+      "CAUTION": {
+        "expected_return": 0.002533271606227843,
+        "std_return": 0.021129396912899025,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0025094580024795253,
+        "std_return": 0.01607315473640569,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00017409989922944995,
+        "std_return": 0.018443925703525484,
+        "hit_rate": 0.505524861878453,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.003905020935117405,
+        "std_return": 0.024525345803364823,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0028685335699727955,
+        "std_return": 0.022032441693619564,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "MARUTI": {
+      "CAUTION": {
+        "expected_return": 0.0030988564849929712,
+        "std_return": 0.014366658526134255,
+        "hit_rate": 0.5686274509803921,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006838988147977787,
+        "std_return": 0.009116454316178189,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -6.073808375634503e-05,
+        "std_return": 0.014235379760322967,
+        "hit_rate": 0.5193370165745856,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -1.0819752184421105e-05,
+        "std_return": 0.019688442252764733,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0004382756390340121,
+        "std_return": 0.011902641495785054,
+        "hit_rate": 0.4642857142857143,
+        "n": 56
+      }
+    },
+    "ITC": {
+      "CAUTION": {
+        "expected_return": 0.00020048134374698475,
+        "std_return": 0.011434769121572153,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.004137323695625095,
+        "std_return": 0.007686078550690458,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0009861794186476192,
+        "std_return": 0.011714165832069892,
+        "hit_rate": 0.5414364640883977,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0038466698910699392,
+        "std_return": 0.011827932967958072,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004170712050274312,
+        "std_return": 0.013283913695791854,
+        "hit_rate": 0.5892857142857143,
+        "n": 56
+      }
+    },
+    "HAL": {
+      "CAUTION": {
+        "expected_return": 0.0021603727949338646,
+        "std_return": 0.024419833178159003,
+        "hit_rate": 0.43137254901960786,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007788949843599247,
+        "std_return": 0.02264055560130826,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00027682810220597574,
+        "std_return": 0.022610860977028614,
+        "hit_rate": 0.5220994475138122,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006299580281551941,
+        "std_return": 0.024161196054094034,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0026808420771337526,
+        "std_return": 0.02409146682698092,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "TATASTEEL": {
+      "CAUTION": {
+        "expected_return": 0.0016243670176235956,
+        "std_return": 0.021655453360243968,
+        "hit_rate": 0.6470588235294118,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007301378877749187,
+        "std_return": 0.014444398672596226,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0005215042142675568,
+        "std_return": 0.017915392407300716,
+        "hit_rate": 0.5,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0017514540917116068,
+        "std_return": 0.013331622558648872,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0023095586057639205,
+        "std_return": 0.020573781164354082,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "HINDALCO": {
+      "CAUTION": {
+        "expected_return": -0.0003498336827446319,
+        "std_return": 0.021415547803689906,
+        "hit_rate": 0.35294117647058826,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0042383529500667925,
+        "std_return": 0.019895260715065814,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0012837180027895838,
+        "std_return": 0.018263643934383792,
+        "hit_rate": 0.5386740331491713,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0014157442636440177,
+        "std_return": 0.013241953870314764,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0028104915702318106,
+        "std_return": 0.01773568976495547,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "WAAREEENER": {
+      "CAUTION": {
+        "expected_return": 0.010534449554292655,
+        "std_return": 0.040781568115092676,
+        "hit_rate": 0.5526315789473685,
+        "n": 38
+      },
+      "EUPHORIA": {
+        "expected_return": 0.014842723628987775,
+        "std_return": 0.01063332774533778,
+        "hit_rate": 1.0,
+        "n": 5
+      },
+      "NEUTRAL": {
+        "expected_return": 0.000511303568213556,
+        "std_return": 0.03235536108328796,
+        "hit_rate": 0.4740740740740741,
+        "n": 270
+      },
+      "RISK-ON": {
+        "expected_return": -0.0017811492447271319,
+        "std_return": 0.028534591758167638,
+        "hit_rate": 0.5675675675675675,
+        "n": 37
+      }
+    },
+    "ONGC": {
+      "CAUTION": {
+        "expected_return": 0.0010861753086607545,
+        "std_return": 0.019138275006019244,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0064326132144946315,
+        "std_return": 0.009541698624297715,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00044226407215502663,
+        "std_return": 0.019323542484382793,
+        "hit_rate": 0.4972375690607735,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006495777165872207,
+        "std_return": 0.0164257917472921,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0035390837073996967,
+        "std_return": 0.019082585353759854,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "KAYNES": {
+      "CAUTION": {
+        "expected_return": 0.007792804372898797,
+        "std_return": 0.040331292177447145,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.002554964017585093,
+        "std_return": 0.021238460630932064,
+        "hit_rate": 0.3,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0004289792222614201,
+        "std_return": 0.03335864568891738,
+        "hit_rate": 0.4861878453038674,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.009855542886027182,
+        "std_return": 0.03392198392375603,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0031615726367092106,
+        "std_return": 0.03234939454884996,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "NATIONALUM": {
+      "CAUTION": {
+        "expected_return": -0.0022447976248845198,
+        "std_return": 0.032439879244248286,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.002658946586526656,
+        "std_return": 0.023966565517100493,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.002508042435335288,
+        "std_return": 0.02703217706317799,
+        "hit_rate": 0.5303867403314917,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0032811023071293707,
+        "std_return": 0.029013645101164245,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.005752003395683916,
+        "std_return": 0.021267015730424145,
+        "hit_rate": 0.6071428571428571,
+        "n": 56
+      }
+    },
+    "HCLTECH": {
+      "CAUTION": {
+        "expected_return": -0.0006365807149427563,
+        "std_return": 0.020681640245682427,
+        "hit_rate": 0.5882352941176471,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0024651671313128177,
+        "std_return": 0.010542097065520301,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0001267084816706229,
+        "std_return": 0.015073886171795716,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.00214446193354463,
+        "std_return": 0.0094534642037844,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -8.628002205895593e-05,
+        "std_return": 0.013462207479515044,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "COALINDIA": {
+      "CAUTION": {
+        "expected_return": -0.000823624287472907,
+        "std_return": 0.019114009995018114,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.00500299201076323,
+        "std_return": 0.010165948545704242,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0004344426878538637,
+        "std_return": 0.01664327451311494,
+        "hit_rate": 0.5193370165745856,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005076519750617967,
+        "std_return": 0.015446742257834076,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0036174966837456157,
+        "std_return": 0.01575400536591632,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "SUNPHARMA": {
+      "CAUTION": {
+        "expected_return": -0.00022899541234010305,
+        "std_return": 0.012458293615208156,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0027638640551573166,
+        "std_return": 0.006896817226979173,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 5.451034753522736e-05,
+        "std_return": 0.01259708944146378,
+        "hit_rate": 0.5303867403314917,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.00010658540479232451,
+        "std_return": 0.012679544769004049,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0024757151595103943,
+        "std_return": 0.011775305634262843,
+        "hit_rate": 0.5892857142857143,
+        "n": 56
+      }
+    },
+    "POWERGRID": {
+      "CAUTION": {
+        "expected_return": 0.00047919699735047216,
+        "std_return": 0.01703395713432525,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.005249689278809944,
+        "std_return": 0.01018498898177517,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -1.1979682980001796e-05,
+        "std_return": 0.01590363925666393,
+        "hit_rate": 0.47513812154696133,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0015392824857149647,
+        "std_return": 0.020874676806329727,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004144498220586647,
+        "std_return": 0.018138379921398464,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "NTPC": {
+      "CAUTION": {
+        "expected_return": -0.00016827453204013837,
+        "std_return": 0.014225298010678546,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006318177927972823,
+        "std_return": 0.01540868977062438,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0003437592864829788,
+        "std_return": 0.01597098264642834,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0010399739881585056,
+        "std_return": 0.017285663541902304,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0017556960147425118,
+        "std_return": 0.021307284317641992,
+        "hit_rate": 0.4107142857142857,
+        "n": 56
+      }
+    },
+    "IDEA": {
+      "CAUTION": {
+        "expected_return": 0.0014119784162579965,
+        "std_return": 0.036936013149486996,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.01146003102248081,
+        "std_return": 0.02413335921500091,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0014068920452625527,
+        "std_return": 0.035686153021405306,
+        "hit_rate": 0.4530386740331492,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.019727873232306157,
+        "std_return": 0.028432728173206922,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.005656326589193324,
+        "std_return": 0.035713394394350645,
+        "hit_rate": 0.6071428571428571,
+        "n": 56
+      }
+    },
+    "ADANIPORTS": {
+      "CAUTION": {
+        "expected_return": -0.004154939011913339,
+        "std_return": 0.02396762853205569,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.009482579136708469,
+        "std_return": 0.016285384917174874,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00020014002934030272,
+        "std_return": 0.020470624308775526,
+        "hit_rate": 0.494475138121547,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005726499193312166,
+        "std_return": 0.023953643203544747,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.008100935364875524,
+        "std_return": 0.02766121582221843,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "EICHERMOT": {
+      "CAUTION": {
+        "expected_return": 0.005251578021992642,
+        "std_return": 0.01818627034078676,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": 0.002107834896448091,
+        "std_return": 0.02833025829077877,
+        "hit_rate": 0.4,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0008922680904541999,
+        "std_return": 0.015146460423768883,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0065425865094106755,
+        "std_return": 0.016140979727773536,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0012272494681119755,
+        "std_return": 0.014096429656749137,
+        "hit_rate": 0.48214285714285715,
+        "n": 56
+      }
+    },
+    "PERSISTENT": {
+      "CAUTION": {
+        "expected_return": -0.0005134290748020968,
+        "std_return": 0.018129034019230068,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006277328834614115,
+        "std_return": 0.018275994789586365,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0007944715557614143,
+        "std_return": 0.022280170910594397,
+        "hit_rate": 0.5193370165745856,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 4.93683935647646e-05,
+        "std_return": 0.023291065646245238,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0031329900966113006,
+        "std_return": 0.02705064342912043,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "COFORGE": {
+      "CAUTION": {
+        "expected_return": 0.00016867653634467398,
+        "std_return": 0.02167530672923301,
+        "hit_rate": 0.43137254901960786,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008566201344967005,
+        "std_return": 0.019895046172602692,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00036353322791090285,
+        "std_return": 0.023574053794062737,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0016667938804543715,
+        "std_return": 0.012392053522286103,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0014998616848996718,
+        "std_return": 0.020623294799625803,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "HINDUNILVR": {
+      "CAUTION": {
+        "expected_return": 0.0007533329958604211,
+        "std_return": 0.010584039066971558,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006891979473213716,
+        "std_return": 0.012358334051856077,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00015338220784837106,
+        "std_return": 0.01312792115829715,
+        "hit_rate": 0.511049723756906,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.004545299515501729,
+        "std_return": 0.010738109533371686,
+        "hit_rate": 0.8461538461538461,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002290042727064716,
+        "std_return": 0.010411052747877701,
+        "hit_rate": 0.6071428571428571,
+        "n": 56
+      }
+    },
+    "TITAN": {
+      "CAUTION": {
+        "expected_return": 0.0014502279610035414,
+        "std_return": 0.013878684807786073,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0044459759958130896,
+        "std_return": 0.013488660013808614,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00010533393606819254,
+        "std_return": 0.014174470107248456,
+        "hit_rate": 0.5027624309392266,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008083050178080309,
+        "std_return": 0.012908133905552793,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0032059906863139876,
+        "std_return": 0.015128816184530281,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "TRENT": {
+      "CAUTION": {
+        "expected_return": 0.001878184429800763,
+        "std_return": 0.03393936882218289,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007592777761047465,
+        "std_return": 0.015502842486691886,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0007114317943167692,
+        "std_return": 0.02154700512368779,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.00042697728884083947,
+        "std_return": 0.03201509930890888,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004802768540909059,
+        "std_return": 0.02209198390305317,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "ADANIENT": {
+      "CAUTION": {
+        "expected_return": -0.004889834693455486,
+        "std_return": 0.035919367966519435,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.005400245059810516,
+        "std_return": 0.013434179343173858,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0007860545883541795,
+        "std_return": 0.023210151847575196,
+        "hit_rate": 0.5414364640883977,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0023061294031141177,
+        "std_return": 0.02162841129415204,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.003939131715427632,
+        "std_return": 0.028764536458886308,
+        "hit_rate": 0.4642857142857143,
+        "n": 56
+      }
+    },
+    "JIOFIN": {
+      "CAUTION": {
+        "expected_return": 0.0015623395863506562,
+        "std_return": 0.021105726157865618,
+        "hit_rate": 0.4117647058823529,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0027822828295581805,
+        "std_return": 0.025301057874747103,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0008730505767400458,
+        "std_return": 0.018903176632708574,
+        "hit_rate": 0.4958217270194986,
+        "n": 359
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006264101898815894,
+        "std_return": 0.017270016391213002,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.0003436544424679539,
+        "std_return": 0.01904237417065803,
+        "hit_rate": 0.625,
+        "n": 56
+      }
+    },
+    "ASHOKLEY": {
+      "CAUTION": {
+        "expected_return": 0.004953921707275839,
+        "std_return": 0.02294778307450757,
+        "hit_rate": 0.6666666666666666,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008104336295656423,
+        "std_return": 0.013690571059803354,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.001525087195593026,
+        "std_return": 0.020339773971017033,
+        "hit_rate": 0.5138121546961326,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.00779329470900665,
+        "std_return": 0.01290514571485021,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.001253708691990592,
+        "std_return": 0.022263329257071595,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "WIPRO": {
+      "CAUTION": {
+        "expected_return": -0.000976155857687391,
+        "std_return": 0.015474533289204449,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0017335141407037956,
+        "std_return": 0.01806253860794964,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00022939840799891863,
+        "std_return": 0.01645937457142896,
+        "hit_rate": 0.511049723756906,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0005938638848857608,
+        "std_return": 0.013069630790763922,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.002210766421868452,
+        "std_return": 0.021437689039695656,
+        "hit_rate": 0.48214285714285715,
+        "n": 56
+      }
+    },
+    "BHEL": {
+      "CAUTION": {
+        "expected_return": 0.004171457205346949,
+        "std_return": 0.027965820933270692,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.012433758456871502,
+        "std_return": 0.024526694810342985,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0004713699388967564,
+        "std_return": 0.025326672467542315,
+        "hit_rate": 0.5331491712707183,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.012699220023420584,
+        "std_return": 0.02505526514671165,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.001165144889459392,
+        "std_return": 0.02283363454631654,
+        "hit_rate": 0.6071428571428571,
+        "n": 56
+      }
+    },
+    "SAIL": {
+      "CAUTION": {
+        "expected_return": -0.0010475996855221362,
+        "std_return": 0.028466893741948742,
+        "hit_rate": 0.45098039215686275,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008632610478948899,
+        "std_return": 0.012736244758700874,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0008716695594728186,
+        "std_return": 0.025024582363775503,
+        "hit_rate": 0.5331491712707183,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.007629393818292418,
+        "std_return": 0.023323233754212785,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.003226872345999602,
+        "std_return": 0.022949516561175918,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "PFC": {
+      "CAUTION": {
+        "expected_return": 0.0001817141991833817,
+        "std_return": 0.02575069627802849,
+        "hit_rate": 0.43137254901960786,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008009428802540686,
+        "std_return": 0.013477057180686067,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0001515002661233081,
+        "std_return": 0.02486204034590438,
+        "hit_rate": 0.5165745856353591,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005943745371907705,
+        "std_return": 0.031799104183920276,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.005228622954629116,
+        "std_return": 0.028189221627857884,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "TMPV": {
+      "CAUTION": {
+        "expected_return": -0.0002803540768483437,
+        "std_return": 0.02504874985891923,
+        "hit_rate": 0.42857142857142855,
+        "n": 7
+      },
+      "NEUTRAL": {
+        "expected_return": -0.002629812530053419,
+        "std_return": 0.017426201385288508,
+        "hit_rate": 0.5632183908045977,
+        "n": 87
+      },
+      "RISK-ON": {
+        "expected_return": -0.0010718671921631105,
+        "std_return": 0.01941087287586509,
+        "hit_rate": 0.5555555555555556,
+        "n": 18
+      }
+    },
+    "BPCL": {
+      "CAUTION": {
+        "expected_return": -0.0013296861413979498,
+        "std_return": 0.01689492795388275,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008700020526926788,
+        "std_return": 0.01609353199963192,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0005035744618747014,
+        "std_return": 0.018613020451360304,
+        "hit_rate": 0.494475138121547,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.002322622682035271,
+        "std_return": 0.02695482170625291,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002051999198720767,
+        "std_return": 0.0206455370909819,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "ULTRACEMCO": {
+      "CAUTION": {
+        "expected_return": 0.0012260099902412873,
+        "std_return": 0.016631511952236305,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006940424095410425,
+        "std_return": 0.011168764582180662,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00024762143222609124,
+        "std_return": 0.0144683266658512,
+        "hit_rate": 0.5,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006213211046774798,
+        "std_return": 0.013905313292800273,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002030030270388652,
+        "std_return": 0.01575301918730192,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "CANBK": {
+      "CAUTION": {
+        "expected_return": -4.379378325400961e-05,
+        "std_return": 0.020774584138920638,
+        "hit_rate": 0.5882352941176471,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007287172374017714,
+        "std_return": 0.016176715371974702,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0006058912518317536,
+        "std_return": 0.02055066851676262,
+        "hit_rate": 0.5193370165745856,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008756989017463562,
+        "std_return": 0.019815367030650746,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002858820419315291,
+        "std_return": 0.020846744154227166,
+        "hit_rate": 0.4642857142857143,
+        "n": 56
+      }
+    },
+    "SWIGGY": {
+      "CAUTION": {
+        "expected_return": -0.003826451549532583,
+        "std_return": 0.02901722582538896,
+        "hit_rate": 0.5263157894736842,
+        "n": 38
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0006577837383463672,
+        "std_return": 0.028503644468768328,
+        "hit_rate": 0.5346153846153846,
+        "n": 260
+      },
+      "RISK-ON": {
+        "expected_return": 0.0020529306354194897,
+        "std_return": 0.0325760971516612,
+        "hit_rate": 0.5675675675675675,
+        "n": 37
+      }
+    },
+    "TECHM": {
+      "CAUTION": {
+        "expected_return": 2.1774299653673882e-05,
+        "std_return": 0.020207135663643,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.002562278657261907,
+        "std_return": 0.013273644507181345,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00038067318232128626,
+        "std_return": 0.015766108770818105,
+        "hit_rate": 0.5027624309392266,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0019274469127111666,
+        "std_return": 0.01587985023254177,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0009159111703842497,
+        "std_return": 0.016256471023459555,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "MUTHOOTFIN": {
+      "CAUTION": {
+        "expected_return": -0.0005093925303332105,
+        "std_return": 0.020879696309638963,
+        "hit_rate": 0.4117647058823529,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0037400697766083457,
+        "std_return": 0.008390265850165576,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0024552200177980145,
+        "std_return": 0.020075256509674844,
+        "hit_rate": 0.5497237569060773,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.003980672223601365,
+        "std_return": 0.019211688425923044,
+        "hit_rate": 0.38461538461538464,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 2.210852045321906e-05,
+        "std_return": 0.02301790843896723,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "CUMMINSIND": {
+      "CAUTION": {
+        "expected_return": 0.0018784669686896995,
+        "std_return": 0.02087363394717275,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.010953703744552701,
+        "std_return": 0.024152705081988083,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0011464639189119762,
+        "std_return": 0.01979155669395456,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.004006466472521914,
+        "std_return": 0.022086391187500495,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.003533981660366737,
+        "std_return": 0.021402464081546342,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "POLYCAB": {
+      "CAUTION": {
+        "expected_return": -0.002869907811074245,
+        "std_return": 0.036357051821459666,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.014405955945513516,
+        "std_return": 0.018684434038620253,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0017489397661475258,
+        "std_return": 0.01835616346903316,
+        "hit_rate": 0.56353591160221,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.004941647270209592,
+        "std_return": 0.02544052441197683,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0003765695259582484,
+        "std_return": 0.02022163948370137,
+        "hit_rate": 0.48214285714285715,
+        "n": 56
+      }
+    },
+    "PAYTM": {
+      "CAUTION": {
+        "expected_return": -0.0008973401187553011,
+        "std_return": 0.031572341254009574,
+        "hit_rate": 0.5686274509803921,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.004325016687442918,
+        "std_return": 0.028389535610522296,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.002914703365424341,
+        "std_return": 0.026693825337455183,
+        "hit_rate": 0.4972375690607735,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0008886621724080595,
+        "std_return": 0.057260210299332086,
+        "hit_rate": 0.38461538461538464,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0018551730357288995,
+        "std_return": 0.03416590566168011,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "POLICYBZR": {
+      "CAUTION": {
+        "expected_return": -0.0005663317893487155,
+        "std_return": 0.031168007559110734,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": 0.007962143055406146,
+        "std_return": 0.022865525914993686,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0004933886039587508,
+        "std_return": 0.024239683894826832,
+        "hit_rate": 0.5,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.00733826364425078,
+        "std_return": 0.03184311387572577,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0031874854304819616,
+        "std_return": 0.031226589164668524,
+        "hit_rate": 0.44642857142857145,
+        "n": 56
+      }
+    },
+    "ASIANPAINT": {
+      "CAUTION": {
+        "expected_return": 0.00035720326834795264,
+        "std_return": 0.013732785053272549,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0018699383907245348,
+        "std_return": 0.015240328864446559,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0005344576631759112,
+        "std_return": 0.01423482669205847,
+        "hit_rate": 0.505524861878453,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.004354890672227787,
+        "std_return": 0.014429047647080674,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0007995698952154295,
+        "std_return": 0.012655958574118642,
+        "hit_rate": 0.48214285714285715,
+        "n": 56
+      }
+    },
+    "IDFCFIRSTB": {
+      "CAUTION": {
+        "expected_return": 0.0007000942432055545,
+        "std_return": 0.01924029247307167,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.009737228722363545,
+        "std_return": 0.011974148699055456,
+        "hit_rate": 0.9,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -8.727588898768388e-05,
+        "std_return": 0.019842291089309086,
+        "hit_rate": 0.511049723756906,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006206644092190439,
+        "std_return": 0.013392449841946895,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.0003127196487886032,
+        "std_return": 0.01557862692505092,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "APOLLOHOSP": {
+      "CAUTION": {
+        "expected_return": -0.0007472881861660887,
+        "std_return": 0.013575369297317268,
+        "hit_rate": 0.5686274509803921,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007589289852694947,
+        "std_return": 0.010512129029838753,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0008785464456835766,
+        "std_return": 0.01359497671682288,
+        "hit_rate": 0.4972375690607735,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0021463758941172497,
+        "std_return": 0.0152758065560133,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.000114230269194491,
+        "std_return": 0.012140601762017925,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "INDUSINDBK": {
+      "CAUTION": {
+        "expected_return": -0.0049536155769725355,
+        "std_return": 0.042591031710624845,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.009668533957430437,
+        "std_return": 0.010326028170713734,
+        "hit_rate": 0.9,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00019014998409347286,
+        "std_return": 0.02016399745807549,
+        "hit_rate": 0.494475138121547,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.012240284554260815,
+        "std_return": 0.014503495194950889,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0006639406557682688,
+        "std_return": 0.01900198787398498,
+        "hit_rate": 0.42857142857142855,
+        "n": 56
+      }
+    },
+    "HINDPETRO": {
+      "CAUTION": {
+        "expected_return": -0.002501755994475138,
+        "std_return": 0.01927578333516683,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": 0.0009079400616652689,
+        "std_return": 0.02208846061988676,
+        "hit_rate": 0.4,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0007747959241808233,
+        "std_return": 0.02250473895141857,
+        "hit_rate": 0.5359116022099447,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006881831869938267,
+        "std_return": 0.02624039660599125,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002443775328780209,
+        "std_return": 0.025081492156821678,
+        "hit_rate": 0.48214285714285715,
+        "n": 56
+      }
+    },
+    "TVSMOTOR": {
+      "CAUTION": {
+        "expected_return": 0.00503054195686647,
+        "std_return": 0.018061789993645338,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006843415552544208,
+        "std_return": 0.015230904245788213,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0005664035180692243,
+        "std_return": 0.01674142651019896,
+        "hit_rate": 0.511049723756906,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0073098147618220624,
+        "std_return": 0.024144299444699452,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004867057769553927,
+        "std_return": 0.01509791165862308,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "RECLTD": {
+      "CAUTION": {
+        "expected_return": -0.001266575766541242,
+        "std_return": 0.02848472612838845,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.005584431467452866,
+        "std_return": 0.014645958785598382,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00038211846071948836,
+        "std_return": 0.025208742595736553,
+        "hit_rate": 0.4889502762430939,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.007605206524857086,
+        "std_return": 0.027170233314142343,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004324472507846864,
+        "std_return": 0.029341045225656816,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "IOC": {
+      "CAUTION": {
+        "expected_return": 0.0002665581157469094,
+        "std_return": 0.017765213146153588,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007485058793730293,
+        "std_return": 0.014520597176816336,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0001314287699728084,
+        "std_return": 0.01683714863804643,
+        "hit_rate": 0.46408839779005523,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005591482112842439,
+        "std_return": 0.02405988435100306,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002062547051658915,
+        "std_return": 0.021331317097068616,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "HDFCAMC": {
+      "CAUTION": {
+        "expected_return": 0.0035446505688983194,
+        "std_return": 0.019891561502081396,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0010347586533771547,
+        "std_return": 0.026299232597266665,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00022075270010552689,
+        "std_return": 0.019308681122048,
+        "hit_rate": 0.494475138121547,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0033081834663653852,
+        "std_return": 0.021474711863734054,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002662717809480095,
+        "std_return": 0.022179122022790227,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "BAJAJ-AUTO": {
+      "CAUTION": {
+        "expected_return": 0.003536039773579015,
+        "std_return": 0.016576395375349846,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.01610713037165503,
+        "std_return": 0.045727790929072955,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -4.913977976881129e-05,
+        "std_return": 0.014436391892949487,
+        "hit_rate": 0.4889502762430939,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008253055638975356,
+        "std_return": 0.016197676510460623,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0030283612648195424,
+        "std_return": 0.014706738612610546,
+        "hit_rate": 0.6607142857142857,
+        "n": 56
+      }
+    },
+    "VMM": {
+      "CAUTION": {
+        "expected_return": 0.0041520776924218366,
+        "std_return": 0.025677181982357647,
+        "hit_rate": 0.5555555555555556,
+        "n": 36
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0005222651364505397,
+        "std_return": 0.022872475506484417,
+        "hit_rate": 0.5206611570247934,
+        "n": 242
+      },
+      "RISK-ON": {
+        "expected_return": 0.001578855860815807,
+        "std_return": 0.018715223479840667,
+        "hit_rate": 0.4444444444444444,
+        "n": 36
+      }
+    },
+    "BANKBARODA": {
+      "CAUTION": {
+        "expected_return": -0.0002891619823301341,
+        "std_return": 0.0179963045291799,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.005913678738147454,
+        "std_return": 0.016771589128513197,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00015231022519838193,
+        "std_return": 0.01970945299980378,
+        "hit_rate": 0.5027624309392266,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.002126218553538715,
+        "std_return": 0.016687446114659225,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0022945260027713954,
+        "std_return": 0.024106080539805345,
+        "hit_rate": 0.4642857142857143,
+        "n": 56
+      }
+    },
+    "ABB": {
+      "CAUTION": {
+        "expected_return": -0.0004909384742775308,
+        "std_return": 0.024806489397487818,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.011766188180240111,
+        "std_return": 0.023336049564635614,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0004806859512072137,
+        "std_return": 0.020826644416488824,
+        "hit_rate": 0.5248618784530387,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0026155611213442434,
+        "std_return": 0.027130773121197122,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0014608845516991165,
+        "std_return": 0.017978426243621913,
+        "hit_rate": 0.5892857142857143,
+        "n": 56
+      }
+    },
+    "CHOLAFIN": {
+      "CAUTION": {
+        "expected_return": -0.001931487285551322,
+        "std_return": 0.022902445589202635,
+        "hit_rate": 0.5882352941176471,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.012168621268098468,
+        "std_return": 0.009425642194807128,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0011934902935404432,
+        "std_return": 0.021001745312209115,
+        "hit_rate": 0.47790055248618785,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005563809860523585,
+        "std_return": 0.020373088690052794,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0015856808744747744,
+        "std_return": 0.018877220935076978,
+        "hit_rate": 0.4107142857142857,
+        "n": 56
+      }
+    },
+    "DLF": {
+      "CAUTION": {
+        "expected_return": -0.0013140507871030594,
+        "std_return": 0.025485278775849315,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0014615225900548423,
+        "std_return": 0.01855197174097173,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0012182793014262126,
+        "std_return": 0.01891430522225008,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008880182525407497,
+        "std_return": 0.021262857932221026,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.003977475531049199,
+        "std_return": 0.02246614728187469,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "AUBANK": {
+      "CAUTION": {
+        "expected_return": 0.003240464828334863,
+        "std_return": 0.026423425799927035,
+        "hit_rate": 0.4117647058823529,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006663476470180752,
+        "std_return": 0.01575656155381019,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00039386836439026424,
+        "std_return": 0.01815873616761562,
+        "hit_rate": 0.511049723756906,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.009408976875019856,
+        "std_return": 0.017056925913407073,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004661392699984529,
+        "std_return": 0.019125985490076873,
+        "hit_rate": 0.6071428571428571,
+        "n": 56
+      }
+    },
+    "HEROMOTOCO": {
+      "CAUTION": {
+        "expected_return": 0.0041476476228761135,
+        "std_return": 0.018262421411379,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.009925496369432652,
+        "std_return": 0.019082574520206192,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0006092430496454675,
+        "std_return": 0.01642133260697316,
+        "hit_rate": 0.5,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.011429807440717182,
+        "std_return": 0.013802373165093952,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0009866754918299026,
+        "std_return": 0.013115119229946189,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "TATAPOWER": {
+      "CAUTION": {
+        "expected_return": 0.0015827459683080425,
+        "std_return": 0.018627402268023185,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008216304771887662,
+        "std_return": 0.018537440854576974,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00014642906589969158,
+        "std_return": 0.017060615462255763,
+        "hit_rate": 0.46685082872928174,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0026923425722978987,
+        "std_return": 0.023127892962306915,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0019062595247400069,
+        "std_return": 0.018069573764884023,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "BHARATFORG": {
+      "CAUTION": {
+        "expected_return": 0.003926146030404285,
+        "std_return": 0.032230782165631064,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.005252875909454946,
+        "std_return": 0.016772233164387914,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00032309906959563354,
+        "std_return": 0.019149389780356477,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.004388564278562131,
+        "std_return": 0.017489833623913164,
+        "hit_rate": 0.6923076923076923,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.004761431856181715,
+        "std_return": 0.020075250505361308,
+        "hit_rate": 0.5535714285714286,
+        "n": 56
+      }
+    },
+    "MOTHERSON": {
+      "CAUTION": {
+        "expected_return": 0.0014595327043022525,
+        "std_return": 0.021998870099137337,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.01112448044987684,
+        "std_return": 0.026696965249550772,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0008677043610049081,
+        "std_return": 0.021294888106717088,
+        "hit_rate": 0.5220994475138122,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0010298535040638756,
+        "std_return": 0.021624451009455516,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002701314515257698,
+        "std_return": 0.026260778337216382,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "GODREJPROP": {
+      "CAUTION": {
+        "expected_return": 0.0028848516584105916,
+        "std_return": 0.02750234202622014,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.002134796485509827,
+        "std_return": 0.026597302338126235,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.001122403964442622,
+        "std_return": 0.02400691039305919,
+        "hit_rate": 0.5027624309392266,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.008406327035460591,
+        "std_return": 0.031135620085219227,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0010846185863825253,
+        "std_return": 0.02359598967077648,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "GRASIM": {
+      "CAUTION": {
+        "expected_return": 0.00020887608563523473,
+        "std_return": 0.015380678616367377,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0005099055172605893,
+        "std_return": 0.01473840829923295,
+        "hit_rate": 0.4,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00014781470984563956,
+        "std_return": 0.014300307902072424,
+        "hit_rate": 0.4861878453038674,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.00027140298004760043,
+        "std_return": 0.01449313068155654,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0019618491935881393,
+        "std_return": 0.015164353178816623,
+        "hit_rate": 0.44642857142857145,
+        "n": 56
+      }
+    },
+    "INDUSTOWER": {
+      "CAUTION": {
+        "expected_return": 0.0025218509467659703,
+        "std_return": 0.018291706399741568,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.005930169056137036,
+        "std_return": 0.008222809233501549,
+        "hit_rate": 0.9,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0009401632201248414,
+        "std_return": 0.020695619675706593,
+        "hit_rate": 0.5165745856353591,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0081720392493431,
+        "std_return": 0.018062463533096124,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002486605024050473,
+        "std_return": 0.02374360376526325,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "BAJAJFINSV": {
+      "CAUTION": {
+        "expected_return": -0.00020798017294283954,
+        "std_return": 0.01558416712621085,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.011770893623263612,
+        "std_return": 0.012491167927651082,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0001681927021265789,
+        "std_return": 0.015164566997615427,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0019889942639266076,
+        "std_return": 0.016851611509345082,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0025308585055699023,
+        "std_return": 0.01521782751643315,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "FEDERALBNK": {
+      "CAUTION": {
+        "expected_return": 0.0009406208584805001,
+        "std_return": 0.014416483455418174,
+        "hit_rate": 0.45098039215686275,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.008617931595437856,
+        "std_return": 0.013875202105351628,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0013266997013456822,
+        "std_return": 0.016135706711507738,
+        "hit_rate": 0.5276243093922652,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.003137097164681938,
+        "std_return": 0.017133487472905693,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0024584202602731453,
+        "std_return": 0.016168535348601392,
+        "hit_rate": 0.625,
+        "n": 56
+      }
+    },
+    "SBILIFE": {
+      "CAUTION": {
+        "expected_return": -0.0015814101213880553,
+        "std_return": 0.014770944952699278,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007104252736203409,
+        "std_return": 0.01754305617554686,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.001066667168064141,
+        "std_return": 0.013417004900461918,
+        "hit_rate": 0.5082872928176796,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0052155202340484425,
+        "std_return": 0.012905090371699764,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0012653633137524026,
+        "std_return": 0.015782751121852515,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "HDFCLIFE": {
+      "CAUTION": {
+        "expected_return": -0.001737596029508027,
+        "std_return": 0.014646395377048631,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006537019111121267,
+        "std_return": 0.021254940092394346,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0004254160370906597,
+        "std_return": 0.013845431273007018,
+        "hit_rate": 0.4889502762430939,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.001180340868644688,
+        "std_return": 0.00995347466123703,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.00017229410854967264,
+        "std_return": 0.015365792754924588,
+        "hit_rate": 0.4642857142857143,
+        "n": 56
+      }
+    },
+    "ABCAPITAL": {
+      "CAUTION": {
+        "expected_return": 0.002334131605991331,
+        "std_return": 0.022614013950094804,
+        "hit_rate": 0.45098039215686275,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.00981856348700263,
+        "std_return": 0.019311787976322235,
+        "hit_rate": 0.5,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0012649013335469367,
+        "std_return": 0.02136849018304075,
+        "hit_rate": 0.4889502762430939,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006728286391771894,
+        "std_return": 0.01817784465356336,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0014186209202505953,
+        "std_return": 0.01734316031375971,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    },
+    "DRREDDY": {
+      "CAUTION": {
+        "expected_return": -0.0008961388682379472,
+        "std_return": 0.013978057194796566,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.004279430689772767,
+        "std_return": 0.010745512770558683,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0001954783232617041,
+        "std_return": 0.013197124741107043,
+        "hit_rate": 0.5248618784530387,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0024713811807146003,
+        "std_return": 0.00878137460226193,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0018799599599669775,
+        "std_return": 0.014125913801381762,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "CIPLA": {
+      "CAUTION": {
+        "expected_return": -0.0015570881774119103,
+        "std_return": 0.01229605981500177,
+        "hit_rate": 0.5294117647058824,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.00740963510176742,
+        "std_return": 0.008571912058153615,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00030940973189064224,
+        "std_return": 0.014263636885503247,
+        "hit_rate": 0.505524861878453,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.002036218897459453,
+        "std_return": 0.01440853037773521,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.001677707081021228,
+        "std_return": 0.014368994098091517,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "GAIL": {
+      "CAUTION": {
+        "expected_return": 0.005125600426304504,
+        "std_return": 0.025411160553496095,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.00989282630879168,
+        "std_return": 0.019888591352059014,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0010403390032081069,
+        "std_return": 0.01906111625619773,
+        "hit_rate": 0.5248618784530387,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0005184252303027744,
+        "std_return": 0.020817961590945247,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0021763967699372283,
+        "std_return": 0.027523944426389037,
+        "hit_rate": 0.5714285714285714,
+        "n": 56
+      }
+    },
+    "AUROPHARMA": {
+      "CAUTION": {
+        "expected_return": 0.002057585074131693,
+        "std_return": 0.021188742206495782,
+        "hit_rate": 0.47058823529411764,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.004105606788874938,
+        "std_return": 0.008636543677062297,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0006136196872361721,
+        "std_return": 0.01713736266072475,
+        "hit_rate": 0.49171270718232046,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.003365524474703755,
+        "std_return": 0.018163617317352516,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.00016623899697253735,
+        "std_return": 0.018799370851836285,
+        "hit_rate": 0.44642857142857145,
+        "n": 56
+      }
+    },
+    "PNB": {
+      "CAUTION": {
+        "expected_return": 0.0001544103736126193,
+        "std_return": 0.019171977657054792,
+        "hit_rate": 0.45098039215686275,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.006466203850290386,
+        "std_return": 0.014571114178761146,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00037982199565811023,
+        "std_return": 0.02022077753959544,
+        "hit_rate": 0.47513812154696133,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.007763845440643338,
+        "std_return": 0.019529074146244975,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.002692323179868543,
+        "std_return": 0.020549886015156345,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "ADANIENSOL": {
+      "CAUTION": {
+        "expected_return": -0.003613798228865724,
+        "std_return": 0.03476629162410431,
+        "hit_rate": 0.49019607843137253,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": 0.01163876966724935,
+        "std_return": 0.03831631169297961,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0004707798811295353,
+        "std_return": 0.028147931218972827,
+        "hit_rate": 0.5125348189415042,
+        "n": 359
+      },
+      "RISK-OFF": {
+        "expected_return": -0.00987891809758384,
+        "std_return": 0.035372977892330515,
+        "hit_rate": 0.7692307692307693,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.007677488473991957,
+        "std_return": 0.03255081155844684,
+        "hit_rate": 0.625,
+        "n": 56
+      }
+    },
+    "JSWSTEEL": {
+      "CAUTION": {
+        "expected_return": 0.0014986018389715212,
+        "std_return": 0.019416213453102526,
+        "hit_rate": 0.6078431372549019,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007740506832139127,
+        "std_return": 0.012445755348149293,
+        "hit_rate": 0.7,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0007240604867727633,
+        "std_return": 0.015648148625002856,
+        "hit_rate": 0.5220994475138122,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0006379193932420668,
+        "std_return": 0.013766194371923623,
+        "hit_rate": 0.38461538461538464,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0014960180634978437,
+        "std_return": 0.020091115705913445,
+        "hit_rate": 0.44642857142857145,
+        "n": 56
+      }
+    },
+    "NMDC": {
+      "CAUTION": {
+        "expected_return": 0.0020011173428678584,
+        "std_return": 0.025443302529947073,
+        "hit_rate": 0.5686274509803921,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.012044782770944585,
+        "std_return": 0.019820698819108203,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00037513015723801487,
+        "std_return": 0.020860593682998363,
+        "hit_rate": 0.5331491712707183,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.001904802612423087,
+        "std_return": 0.025810914626097692,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0035421661852630443,
+        "std_return": 0.021928562121368633,
+        "hit_rate": 0.5178571428571429,
+        "n": 56
+      }
+    },
+    "BRITANNIA": {
+      "CAUTION": {
+        "expected_return": 0.0024925344464730333,
+        "std_return": 0.012199966846469028,
+        "hit_rate": 0.6274509803921569,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.011394126726499264,
+        "std_return": 0.02812467291539932,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.00012213615496711722,
+        "std_return": 0.012576032872863543,
+        "hit_rate": 0.5027624309392266,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.001741649831719581,
+        "std_return": 0.013686830658823,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0028011851389348414,
+        "std_return": 0.011317816566878625,
+        "hit_rate": 0.6428571428571429,
+        "n": 56
+      }
+    },
+    "NAUKRI": {
+      "CAUTION": {
+        "expected_return": 0.00685278067290549,
+        "std_return": 0.02413835993880026,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007010897829436891,
+        "std_return": 0.016768683206260064,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0005688474382042368,
+        "std_return": 0.019420817787616756,
+        "hit_rate": 0.5414364640883977,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0009872693687275912,
+        "std_return": 0.02281871979766327,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.002156991857560555,
+        "std_return": 0.018850085356949722,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "LUPIN": {
+      "CAUTION": {
+        "expected_return": 0.0010859394097430825,
+        "std_return": 0.018469641549871376,
+        "hit_rate": 0.5098039215686274,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007316172880905003,
+        "std_return": 0.01107052537193932,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0015197832085444168,
+        "std_return": 0.016321119336705135,
+        "hit_rate": 0.5552486187845304,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.0019649827388030527,
+        "std_return": 0.018055669249221414,
+        "hit_rate": 0.5384615384615384,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": -0.0011094707030477682,
+        "std_return": 0.015230051758302575,
+        "hit_rate": 0.48214285714285715,
+        "n": 56
+      }
+    },
+    "PREMIERENE": {
+      "CAUTION": {
+        "expected_return": 0.00990557932963022,
+        "std_return": 0.029394948519900384,
+        "hit_rate": 0.625,
+        "n": 40
+      },
+      "EUPHORIA": {
+        "expected_return": -0.012023740059952336,
+        "std_return": 0.02627898639979408,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.0002678318133696128,
+        "std_return": 0.03090893551669286,
+        "hit_rate": 0.53125,
+        "n": 288
+      },
+      "RISK-OFF": {
+        "expected_return": -0.005046386899751309,
+        "std_return": 0.035003805328268515,
+        "hit_rate": 0.46153846153846156,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0030893074227918067,
+        "std_return": 0.03051918080158513,
+        "hit_rate": 0.575,
+        "n": 40
+      }
+    },
+    "DIVISLAB": {
+      "CAUTION": {
+        "expected_return": 0.0006361001629042653,
+        "std_return": 0.017676618969631325,
+        "hit_rate": 0.5490196078431373,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.007669982125938413,
+        "std_return": 0.007393721282815291,
+        "hit_rate": 0.8,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": 0.0011131340377156646,
+        "std_return": 0.016341831873592127,
+        "hit_rate": 0.5248618784530387,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": 0.0044731233600920055,
+        "std_return": 0.02611140308359739,
+        "hit_rate": 0.38461538461538464,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0023049498452281303,
+        "std_return": 0.014234850515361936,
+        "hit_rate": 0.5,
+        "n": 56
+      }
+    },
+    "UPL": {
+      "CAUTION": {
+        "expected_return": 0.005010833877934927,
+        "std_return": 0.018942447082118712,
+        "hit_rate": 0.6470588235294118,
+        "n": 51
+      },
+      "EUPHORIA": {
+        "expected_return": -0.0035568127205715004,
+        "std_return": 0.017070796372436078,
+        "hit_rate": 0.6,
+        "n": 10
+      },
+      "NEUTRAL": {
+        "expected_return": -0.00024342412941363118,
+        "std_return": 0.01982271197420926,
+        "hit_rate": 0.49171270718232046,
+        "n": 362
+      },
+      "RISK-OFF": {
+        "expected_return": -0.006638478909136867,
+        "std_return": 0.014630042313580387,
+        "hit_rate": 0.6153846153846154,
+        "n": 13
+      },
+      "RISK-ON": {
+        "expected_return": 0.0041372428611987444,
+        "std_return": 0.01811348069437597,
+        "hit_rate": 0.5357142857142857,
+        "n": 56
+      }
+    }
+  }
+}
