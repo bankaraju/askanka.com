@@ -136,16 +136,20 @@ def generate_signal(
 
     features = compute_features(ctx)
 
-    qualifier_score = 0.0
-    qualifier_threshold = 0.0
-    if cell is not None:
-        score = _qualifier_score(features, cell)
-        if score is None:
-            return None
-        if score < cell.threshold:
-            return None
-        qualifier_score = score
-        qualifier_threshold = cell.threshold
+    # REGISTRATION_FAIL safety: the spec section 9 requires a chosen Karpathy
+    # cell. If karpathy_chosen_cell.json is missing (search returned no
+    # survivor), we MUST NOT fire trades — that would be the unqualified
+    # version of the hypothesis, not the one registered.
+    if cell is None:
+        return None
+
+    score = _qualifier_score(features, cell)
+    if score is None:
+        return None
+    if score < cell.threshold:
+        return None
+    qualifier_score = score
+    qualifier_threshold = cell.threshold
 
     return Signal(
         hypothesis_id=HYPOTHESIS_ID,

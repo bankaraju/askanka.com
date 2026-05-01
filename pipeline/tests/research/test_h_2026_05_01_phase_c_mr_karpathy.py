@@ -276,7 +276,11 @@ def test_generate_signal_filters_neutral_regime(monkeypatch):
     assert sig is None
 
 
-def test_generate_signal_passes_no_qualifier(monkeypatch):
+def test_generate_signal_blocks_when_no_chosen_cell(monkeypatch):
+    """REGISTRATION_FAIL safety: spec section 9 requires a chosen Karpathy cell.
+    If karpathy_chosen_cell.json is missing, the engine MUST NOT fire trades —
+    that would be the unqualified version of the hypothesis, not the registered
+    one."""
     monkeypatch.setattr(
         "pipeline.research.h_2026_05_01_phase_c_mr_karpathy.mr_signal_generator.is_event_day",
         lambda d: False,
@@ -296,10 +300,7 @@ def test_generate_signal_passes_no_qualifier(monkeypatch):
         classification="POSSIBLE_OPPORTUNITY",
         cell=None,
     )
-    assert sig is not None
-    assert sig.side == "LONG"
-    assert sig.regime == "RISK-ON"
-    assert sig.classification == "POSSIBLE_OPPORTUNITY"
+    assert sig is None
 
 
 def test_generate_signal_filters_below_qualifier_threshold(monkeypatch):
