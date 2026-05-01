@@ -911,6 +911,14 @@
       "notes": "Sunday 22:00 IST. Backtest refresh for spread library."
     },
     {
+      "task_name": "AnkaTrendlyneSnapshot",
+      "tier": "info",
+      "cadence_class": "weekly",
+      "outputs": [],
+      "grace_multiplier": 1.5,
+      "notes": "Mondays 06:00 IST. Telegram nudge to manually export Trendlyne multigroup screener (209-stock F&O view, 91 cols) into docs/superpowers/specs/New folder/. Each weekly snapshot becomes a frame in Theme Detector v1 lifecycle movie (13w -> B3 drift trajectory; 26w -> FALSE_POSITIVE detection). Primary deploy: VPS systemd anka-trendlyne-snapshot.timer; .bat fallback for laptop. No outputs file (manual download artefact only)."
+    },
+    {
       "task_name": "AnkaWatchdogGate",
       "tier": "info",
       "cadence_class": "daily",
@@ -1195,6 +1203,17 @@
       ],
       "grace_multiplier": 2.0,
       "notes": "Sun 02:00 IST weekly. MIGRATED TO VPS 2026-04-28 (anka-pattern-scanner-fit.timer + .service systemd unit on Contabo). python -m pipeline.cli_pattern_scanner fit. 5-year walk-forward fit of TA pattern stats across the F&O universe. ~14-min wall on VPS (vs ~71 min on laptop). Output consumed daily by AnkaPatternScannerScan. Laptop pulls back via AnkaVPSSyncWeekly 04:00 IST Sun. Wired in T9 amended."
+    },
+    {
+      "task_name": "AnkaThemeDetector",
+      "tier": "warn",
+      "cadence_class": "weekly",
+      "host": "laptop",
+      "outputs": [
+        "pipeline/data/research/theme_detector/state/theme_states.json"
+      ],
+      "grace_multiplier": 2.0,
+      "notes": "Sun 23:00 IST weekly. anka_theme_detector.bat -- python -m pipeline.research.theme_detector.detector against themes_frozen.json. Phase 1 v1.0 wired 2026-05-01 (#76). Writes themes_<date>.json + updates state file (mtime is freshness contract). Laptop-only because Trendlyne raw_exports land manually on laptop and are gitignored (not on VPS). Shadow-mode operational; NOT yet citable as evidence per §21 of data validation policy (C2/C5 proxies + 4-week shadow window pending). Spec: docs/superpowers/specs/2026-05-01-theme-detector-design.md §4."
     },
     {
       "task_name": "AnkaScannerPairedOpen",

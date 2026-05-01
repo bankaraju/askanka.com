@@ -145,7 +145,9 @@ Note: website_exporter.py is invoked from morning_scan (09:25), every intraday c
 - Sunday 01:30 — AnkaTAScorerFit: RELIANCE TA model walk-forward fit — writes `ta_feature_models.json` (warn)
 - Sunday 22:00 — AnkaWeeklyAgg + AnkaWeeklyStats: weekly spread statistics (warn)
 - Friday 16:00 — AnkaWeeklyReport: weekly performance report → Telegram (warn)
+- Monday 06:00 — AnkaTrendlyneSnapshot: Telegram nudge to manually export Trendlyne multigroup snapshot (209-stock F&O view, 91 cols) into `docs/superpowers/specs/New folder/`; auto-router relocates to `pipeline/data/trendlyne/raw_exports/multigroup/`. Each weekly snapshot = one frame in Theme Detector v1 lifecycle movie (13w → B3 drift trajectory; 26w → FALSE_POSITIVE detection). VPS systemd primary; .bat fallback (info)
 - Sunday 02:00 (last of month) — AnkaIntradayV1Recalibrate: monthly Karpathy refit on prior 60-trading-day window (warn)
+- Sunday 23:00 — AnkaThemeDetector: Theme Detector v1 weekly run; emits `pipeline/data/research/theme_detector/themes_<date>.json` lifecycle frame across 12 themes. Laptop-only (Trendlyne raw_exports gitignored, on laptop). Shadow-mode operational, NOT yet citable as evidence per §21 of data validation policy (C2/C5 proxies + 4-week shadow window pending). Spec: `docs/superpowers/specs/2026-05-01-theme-detector-design.md` (warn)
 
 **VPS Execution Foundation (Contabo, systemd timers — runs continuously regardless of laptop state):**
 - Every 10 min — AnkaAutoPush: push every local branch on VPS to GitHub (RPO ≤ 10 min). `pipeline/scripts/auto_push_branches.sh` (CRITICAL)
