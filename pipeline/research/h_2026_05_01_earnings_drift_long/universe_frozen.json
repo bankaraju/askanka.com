@@ -1,0 +1,25 @@
+{
+  "frozen_at": "2026-05-01T22:00:00+05:30",
+  "frozen_by": "H-2026-05-01-earnings-drift-long-v1 spec freeze",
+  "spec_ref": "docs/superpowers/specs/2026-05-01-earnings-drift-long-v1-design.md",
+  "sectors": ["Banks", "IT_Services"],
+  "universe": {
+    "Banks": [
+      "AUBANK", "AXISBANK", "BANDHANBNK", "BANKBARODA", "BANKINDIA",
+      "CANBK", "CUB", "FEDERALBNK", "HDFCBANK", "ICICIBANK",
+      "IDFCFIRSTB", "INDIANB", "INDUSINDBK", "KOTAKBANK", "PNB",
+      "RBLBANK", "SBIN", "UNIONBANK", "YESBANK"
+    ],
+    "IT_Services": [
+      "BSOFT", "COFORGE", "CYIENT", "ETERNAL", "HCLTECH",
+      "INDIAMART", "INFY", "KPITTECH", "LTIM", "LTM",
+      "LTTS", "MPHASIS", "NAUKRI", "OFSS", "PERSISTENT",
+      "POLICYBZR", "TATAELXSI", "TATATECH", "TCS", "TECHM",
+      "WIPRO"
+    ]
+  },
+  "n_total": 40,
+  "n_banks": 19,
+  "n_it_services": 21,
+  "notes": "Source: pipeline.scorecard_v2.sector_mapper.SectorMapper.map_all() filtered to {Banks, IT_Services} and intersected with canonical_fno_research_v3.json. Frozen at registration; engine reads this file (not live SectorMapper) to avoid mid-holdout reclassification drift. Stage A in-sample (2021-05-01 → 2024-04-30) ran on this exact 40-name list."
+}

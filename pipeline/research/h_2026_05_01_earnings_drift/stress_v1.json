@@ -1,0 +1,370 @@
+{
+  "meta": {
+    "n_events": 314,
+    "stage": "Stage_A_stress_v1"
+  },
+  "by_fy": {
+    "2022": {
+      "h1": {
+        "n": 39,
+        "gross": 45.62,
+        "std": 327.45,
+        "sharpe": 0.139,
+        "hit_gross": 0.564,
+        "net_15": 30.62,
+        "net_20": 25.62
+      },
+      "h5": {
+        "n": 39,
+        "gross": 238.89,
+        "std": 809.0,
+        "sharpe": 0.295,
+        "hit_gross": 0.59,
+        "net_15": 223.89,
+        "net_20": 218.89
+      },
+      "h10": {
+        "n": 39,
+        "gross": 86.67,
+        "std": 1204.53,
+        "sharpe": 0.072,
+        "hit_gross": 0.436,
+        "net_15": 71.67,
+        "net_20": 66.67
+      },
+      "h21": {
+        "n": 39,
+        "gross": -315.16,
+        "std": 1757.83,
+        "sharpe": -0.179,
+        "hit_gross": 0.205,
+        "net_15": -330.16,
+        "net_20": -335.16
+      }
+    },
+    "2023": {
+      "h1": {
+        "n": 128,
+        "gross": 51.34,
+        "std": 277.04,
+        "sharpe": 0.185,
+        "hit_gross": 0.578,
+        "net_15": 36.34,
+        "net_20": 31.34
+      },
+      "h5": {
+        "n": 128,
+        "gross": 58.05,
+        "std": 664.89,
+        "sharpe": 0.087,
+        "hit_gross": 0.531,
+        "net_15": 43.05,
+        "net_20": 38.05
+      },
+      "h10": {
+        "n": 128,
+        "gross": 103.55,
+        "std": 892.17,
+        "sharpe": 0.116,
+        "hit_gross": 0.562,
+        "net_15": 88.55,
+        "net_20": 83.55
+      },
+      "h21": {
+        "n": 128,
+        "gross": 355.98,
+        "std": 1214.15,
+        "sharpe": 0.293,
+        "hit_gross": 0.602,
+        "net_15": 340.98,
+        "net_20": 335.98
+      }
+    },
+    "2024": {
+      "h1": {
+        "n": 128,
+        "gross": -14.27,
+        "std": 282.12,
+        "sharpe": -0.051,
+        "hit_gross": 0.422,
+        "net_15": -29.27,
+        "net_20": -34.27
+      },
+      "h5": {
+        "n": 128,
+        "gross": 46.61,
+        "std": 697.86,
+        "sharpe": 0.067,
+        "hit_gross": 0.5,
+        "net_15": 31.61,
+        "net_20": 26.61
+      },
+      "h10": {
+        "n": 128,
+        "gross": 181.71,
+        "std": 849.39,
+        "sharpe": 0.214,
+        "hit_gross": 0.531,
+        "net_15": 166.71,
+        "net_20": 161.71
+      },
+      "h21": {
+        "n": 128,
+        "gross": 431.26,
+        "std": 1053.84,
+        "sharpe": 0.409,
+        "hit_gross": 0.641,
+        "net_15": 416.26,
+        "net_20": 411.26
+      }
+    },
+    "2025": {
+      "h1": {
+        "n": 19,
+        "gross": -35.32,
+        "std": 403.42,
+        "sharpe": -0.088,
+        "hit_gross": 0.579,
+        "net_15": -50.32,
+        "net_20": -55.32
+      },
+      "h5": {
+        "n": 19,
+        "gross": -93.01,
+        "std": 678.22,
+        "sharpe": -0.137,
+        "hit_gross": 0.526,
+        "net_15": -108.01,
+        "net_20": -113.01
+      },
+      "h10": {
+        "n": 19,
+        "gross": -269.4,
+        "std": 707.26,
+        "sharpe": -0.381,
+        "hit_gross": 0.421,
+        "net_15": -284.4,
+        "net_20": -289.4
+      },
+      "h21": {
+        "n": 19,
+        "gross": -72.48,
+        "std": 742.11,
+        "sharpe": -0.098,
+        "hit_gross": 0.421,
+        "net_15": -87.48,
+        "net_20": -92.48
+      }
+    }
+  },
+  "by_sector": {
+    "Banks": {
+      "h5": {
+        "n": 176,
+        "gross": 35.78,
+        "std": 685.27,
+        "sharpe": 0.052,
+        "hit_gross": 0.5,
+        "net_15": 20.78,
+        "net_20": 15.78
+      },
+      "h21": {
+        "n": 176,
+        "gross": 156.23,
+        "std": 1134.04,
+        "sharpe": 0.138,
+        "hit_gross": 0.494,
+        "net_15": 141.23,
+        "net_20": 136.23
+      }
+    },
+    "IT_Services": {
+      "h5": {
+        "n": 138,
+        "gross": 106.15,
+        "std": 716.26,
+        "sharpe": 0.148,
+        "hit_gross": 0.558,
+        "net_15": 91.15,
+        "net_20": 86.15
+      },
+      "h21": {
+        "n": 138,
+        "gross": 431.89,
+        "std": 1335.92,
+        "sharpe": 0.323,
+        "hit_gross": 0.638,
+        "net_15": 416.89,
+        "net_20": 411.89
+      }
+    }
+  },
+  "bivariate_h5": {
+    "vol_Q5_only": {
+      "n": 62,
+      "gross": 256.67,
+      "std": 773.53,
+      "sharpe": 0.332,
+      "hit_gross": 0.613,
+      "net_15": 241.67,
+      "net_20": 236.67
+    },
+    "vol_Q5_x_trust_top60": {
+      "n": 34,
+      "gross": 217.51,
+      "std": 632.68,
+      "sharpe": 0.344,
+      "hit_gross": 0.618,
+      "net_15": 202.51,
+      "net_20": 197.51
+    },
+    "vol_Q5_x_trust_Q5": {
+      "n": 15,
+      "gross": 234.95,
+      "std": 523.75,
+      "sharpe": 0.449,
+      "hit_gross": 0.533,
+      "net_15": 219.95,
+      "net_20": 214.95
+    },
+    "vol_Q1_x_trust_Q1": {
+      "n": 18,
+      "gross": -270.75,
+      "std": 610.66,
+      "sharpe": -0.443,
+      "hit_gross": 0.444,
+      "net_15": -285.75,
+      "net_20": -290.75
+    },
+    "vol_Q5_x_short_mom_pos": {
+      "n": 34,
+      "gross": 297.22,
+      "std": 888.19,
+      "sharpe": 0.335,
+      "hit_gross": 0.559,
+      "net_15": 282.22,
+      "net_20": 277.22
+    },
+    "vol_Q5_x_short_mom_neg": {
+      "n": 28,
+      "gross": 207.43,
+      "std": 618.92,
+      "sharpe": 0.335,
+      "hit_gross": 0.679,
+      "net_15": 192.43,
+      "net_20": 187.43
+    },
+    "vol_Q1_x_short_mom_neg": {
+      "n": 33,
+      "gross": -342.29,
+      "std": 616.24,
+      "sharpe": -0.555,
+      "hit_gross": 0.424,
+      "net_15": -357.29,
+      "net_20": -362.29
+    }
+  },
+  "straddle_by_vol_quintile_h5": {
+    "realized_vol_q1": {
+      "n": 64,
+      "vol_range_pct": [
+        9.26,
+        20.24
+      ],
+      "long_call_gross": 759.6,
+      "long_put_gross": 8267.9,
+      "long_straddle_gross": 3903.1,
+      "futures_gross": -104.6
+    },
+    "realized_vol_q2": {
+      "n": 63,
+      "vol_range_pct": [
+        20.24,
+        24.57
+      ],
+      "long_call_gross": 763.9,
+      "long_put_gross": 2825.3,
+      "long_straddle_gross": 1666.0,
+      "futures_gross": -25.6
+    },
+    "realized_vol_q3": {
+      "n": 64,
+      "vol_range_pct": [
+        24.62,
+        29.38
+      ],
+      "long_call_gross": 737.1,
+      "long_put_gross": 5134.8,
+      "long_straddle_gross": 2709.8,
+      "futures_gross": -98.5
+    },
+    "realized_vol_q4": {
+      "n": 63,
+      "vol_range_pct": [
+        29.52,
+        38.82
+      ],
+      "long_call_gross": 3918.9,
+      "long_put_gross": -1297.6,
+      "long_straddle_gross": 1512.5,
+      "futures_gross": 228.4
+    },
+    "realized_vol_q5": {
+      "n": 64,
+      "vol_range_pct": [
+        38.85,
+        100.19
+      ],
+      "long_call_gross": 4203.7,
+      "long_put_gross": -1934.6,
+      "long_straddle_gross": 1318.1,
+      "futures_gross": 338.2
+    }
+  },
+  "straddle_by_fy_h5": {
+    "2022": {
+      "n": 41,
+      "long_straddle_gross": 2458.3,
+      "futures_gross": 300.0,
+      "long_call_gross": 4900.7,
+      "long_put_gross": -255.7
+    },
+    "2023": {
+      "n": 128,
+      "long_straddle_gross": 1437.0,
+      "futures_gross": 58.1,
+      "long_call_gross": 1498.7,
+      "long_put_gross": 1489.2
+    },
+    "2024": {
+      "n": 128,
+      "long_straddle_gross": 2621.6,
+      "futures_gross": 46.6,
+      "long_call_gross": 1994.2,
+      "long_put_gross": 3671.6
+    },
+    "2025": {
+      "n": 21,
+      "long_straddle_gross": 4168.3,
+      "futures_gross": -203.6,
+      "long_call_gross": 562.9,
+      "long_put_gross": 8576.2
+    }
+  },
+  "h5_minus_trailing_sector_drift_naive": {
+    "n": 314,
+    "gross": 66.62,
+    "std": 758.03,
+    "sharpe": 0.088,
+    "hit_gross": 0.484,
+    "net_15": 51.62,
+    "net_20": 46.62
+  },
+  "h5_minus_trailing_sector_drift_caveat": "TRAILING sector drift is a backward-looking proxy. Real forward-sector-neutral H=5 requires sector index forward return at event date and is a v2 build item.",
+  "events_by_fy": {
+    "2022": 39,
+    "2023": 128,
+    "2024": 128,
+    "2025": 19
+  }
+}

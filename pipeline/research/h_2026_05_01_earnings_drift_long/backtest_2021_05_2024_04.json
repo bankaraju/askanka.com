@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "n_qualified_trades": 32,
+    "n_calendar_events": 400,
+    "n_skipped": 28,
+    "window_start": "2021-05-01",
+    "window_end": "2024-04-30",
+    "spec_ref": "docs/superpowers/specs/2026-05-01-earnings-drift-long-v1-design.md",
+    "frozen_thresholds": {
+      "vol_z_min": 0.52,
+      "short_mom_bps_min": 0.0,
+      "realized_vol_21d_pct_min": 29.0,
+      "allowed_regimes": [
+        "NEUTRAL",
+        "RISK-ON"
+      ],
+      "hold_trading_days": 5,
+      "stop_atr_mult": 2.0
+    }
+  },
+  "headline": {
+    "n": 32,
+    "gross_mean_bps": 281.39,
+    "gross_std_bps": 957.87,
+    "net_s0_mean_bps": 271.39,
+    "net_s1_mean_bps": 261.39,
+    "net_s2_mean_bps": 251.39,
+    "hit_gross": 0.5312,
+    "hit_net_s1": 0.5312,
+    "sharpe_ann_s1": 1.937,
+    "max_drawdown_bps": -3435.43
+  },
+  "by_exit_reason": {
+    "atr_stop": {
+      "n": 5,
+      "gross_mean_bps": -821.61
+    },
+    "time_stop": {
+      "n": 27,
+      "gross_mean_bps": 485.66
+    }
+  },
+  "by_fy": {
+    "2022": {
+      "n": 11,
+      "gross_mean_bps": -157.15,
+      "net_s1_mean_bps": -177.15,
+      "hit": 0.3636
+    },
+    "2023": {
+      "n": 13,
+      "gross_mean_bps": 319.78,
+      "net_s1_mean_bps": 299.78,
+      "hit": 0.4615
+    },
+    "2024": {
+      "n": 8,
+      "gross_mean_bps": 822.02,
+      "net_s1_mean_bps": 802.02,
+      "hit": 0.875
+    }
+  },
+  "by_sector": {
+    "Banks": {
+      "n": 17,
+      "gross_mean_bps": 324.13,
+      "net_s1_mean_bps": 304.13,
+      "hit": 0.5882
+    },
+    "IT_Services": {
+      "n": 15,
+      "gross_mean_bps": 232.96,
+      "net_s1_mean_bps": 212.96,
+      "hit": 0.4667
+    }
+  }
+}
