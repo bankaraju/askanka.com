@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-05-01T09:46:13.705488+05:30",
-  "count": 94,
+  "updated_at": "2026-05-01T10:01:21.979907+05:30",
+  "count": 91,
   "headlines": [
     {
       "title": "Stocks to buy, sell or hold today, February 18: Infosys, Titan, Varun Beverages, LG Electronics and more - MSN",
@@ -9,14 +9,6 @@
       "published_at": "Thu, 30 Apr 2026 23:24:43 GMT",
       "symbol": "TITAN",
       "stock_name": "Titan Company"
-    },
-    {
-      "title": "Stocks to buy today, April 29: Eternal, Maruti Suzuki, Sapphire Foods, Bandhan Bank, Canara HSBC Life and others - MSN",
-      "url": "https://news.google.com/rss/articles/CBMihgNBVV95cUxQTVpBN0tIMjdFSkV0NEFnRzdQbWtuZVJITnBHdk53NmZWLWdPVHhYeVd6UTNJMTVtSWxZand1UVY0T1JkbkRKN3V5RDdpd2NCUVY5NUlYTVllamNNcVNfUDhobzRWdmtlTVpmQW9lWDJvLWQxWkhhdjFEZzRBOWprRV9PeEV3YUF1X0Q3SXVQRTRFUWlvQTh5Y3NFNjAyVW1HRUF3bmd0RER6ZXAwSnpsMThLT2JwSHZTV2VHMlY3RHc5VS1VUjFHOE9DTnhUejBTS0hSMVdmNjdkYW1oS2Q1M05teDNwbFJOMGNvWlZpak5KSDBEc0ZiUVhuN3RIYmR4NHllOFFHdnNpR3oxU29qR2NDNzhScEhyMS1IOUFBb3NaaUNtQ3VrbW0yc3BXZFRCSjR5VVJJcjc0RFhzTHB4STljOXQzTTdmN0tBS1h2VHBuTHlnYTRuTThKeDA1Tk1KeUZ5N1lJVkowcnVDTUVSaHE0aHlQRFFMZU9uYXhUZ0ZMY1RBWnc?oc=5",
-      "source": "MSN",
-      "published_at": "Thu, 30 Apr 2026 23:17:24 GMT",
-      "symbol": "MARUTI",
-      "stock_name": "Maruti Suzuki"
     },
     {
       "title": "Stock market holiday: NSE, BSE to remain closed on this day next week; here's why - Mint",
@@ -235,14 +227,6 @@
       "stock_name": "Mahindra"
     },
     {
-      "title": "Ashish Parthasarthy Sells 5,600 Shares of HDFC Bank (NYSE:HDB) Stock - MarketBeat",
-      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNZEdUQ09SQ1NTVUhSaVdGZ0FmNS1MbGRKM2NRbmZBRlJ6Rkl1RDZQcDBBdVhEQTJVYkVFaFR5NkxiR0w2d1hIME14TFJsazF3cjdqRjdUSHl0c3Y4a3N6NkVCWEdjQWtibGZpaENadGI3RVljazVGRVZzS1NoTEwydl9CYlc3OGdCZ3N0RGUxeS15TnRGWmViVV9vWHAtcnFxM0ptVDhqOVhtZGhIY3NBX1l1WVdDd1E0NkE?oc=5",
-      "source": "MarketBeat",
-      "published_at": "Thu, 30 Apr 2026 17:02:22 GMT",
-      "symbol": "HDFCBANK",
-      "stock_name": "HDFC Bank"
-    },
-    {
       "title": "IndiGo flight makes emergency landing in Raipur after passenger falls unconscious onboard - NDTV Profit",
       "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNZk1BQmRKWHRHcmhNbkpMRnFSNU9acHpqSTB4S3hBMElhT3g3NWE2MFY5QzUxR1l4YjRlQWtfRGpKOVNJSHpfd20wTHNhbUZ5QlUzWXpPUkQ3VC1naHI0aDFCS3BsNkVaOTF2WjU3eE5vYVdBOFVkUUZjME53Tk5VWVhCVE1DZ3NjYXEtZW9ObkVfVi11MFo2WGN3ajlpRURuaHRfMEFwR3E1ejRXSTVwT3hNVkZMeVlBZExVQ2ppUTdRT2M4QzN2c1pMONIB0wFBVV95cUxOLTlMdkRwYlB0cHJKQnY1aGpBcVFCRUx0QXhJSVNHajJNVlVISGdLNENLTUpRWkZ5VlhHRV9SUjBuWGo2aFpqb0hYY3ZmNnFMcUU1eTZ1NHZfUGNrUXlMTENieEJmRkpQRnFkUUJmX2N6S3VtOGdEbGZoRVB2cWlXQm9JUkZQbHhEX0o0VjZNUG9vSVZ4dmhHZF96d0E2NEtESnUyMm9zWHVpVEF2ZXJXY3lUX080YmQtOEE5MzQ0N3NrUGNLd1dBd0FENVJRc1NsODBR?oc=5",
       "source": "NDTV Profit",
@@ -275,20 +259,12 @@
       "stock_name": "Wipro"
     },
     {
-      "title": "India's Adani Enterprises posts fourth-quarter loss - marketscreener.com",
-      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNQnJOandqVW83d2JTWVdpVGZOZnZSdjd0bkxUa2pDb2RfTHI0elRxaXhxMWprWHRoRTNVQTFNbU43QkZuTk1BOVF4di1IZkltWFE2MWlUSEhVMWlZZzVzNHhZa19mUmozV3pWTDk5VGdqOGNIU25XejJwUkhMNGt4RVhmUG01Ym9ldXU0M0JLQV93LWNsRVpGZExZeEVoNDNEVEtkd3ZNWQ?oc=5",
-      "source": "marketscreener.com",
-      "published_at": "Thu, 30 Apr 2026 15:27:32 GMT",
-      "symbol": "ADANIENT",
-      "stock_name": "Adani Enterprises"
-    },
-    {
       "title": "Only 4 Nifty stocks delivered positive returns in March - MSN",
       "url": "https://news.google.com/rss/articles/CBMi4wJBVV95cUxQd2gyMW1BOE1zZWFzNlRBLU1zc01zVGpDdFAwbWhHd0pOR0FmWG1nUE1panVuUDJUV2Y0aVlQQ3pIQXpsYXJ3ZGxVRzRfaGFoMTJQZldwXzRKNHFvbnlwSGRRV0twa3JmZXdwbE5KZmtSNzRobDliR0E3U2prSVFhQWVEaGxYZ0RrZFZzWEJFR1hIQ3lBdFl0OEU0R0k3MENqRkEtbWV2YWxYNktmWE11dGJLcEdmUnBPLUtYckpnVklNeDhqVktyRURMMmNTX2ExVXNwTzJKMVZyVXZZcUZNNmJ1dDNtaHcxS0ZGbHBJekYyZmkxU1FLTFVXdk9UZVpWRWplWVJCOGhMQlFsZi0xQXdodTJWTDVvMXBkZzQ2ejl3NzdFbkdiWUM1Q3ZPa01IdzRIb3dPSWgtSC1RMzJHOVRQbjV5TWFDeHkyeUk0YmpjRmFtLUM5WXZIeHpWZVpQaUUw?oc=5",
       "source": "MSN",
       "published_at": "Thu, 30 Apr 2026 15:17:17 GMT",
-      "symbol": "SUNPHARMA",
-      "stock_name": "Sun Pharma"
+      "symbol": "ONGC",
+      "stock_name": "ONGC"
     },
     {
       "title": "Indian stocks at 6-wk highs as Mideast war recedes; Adani Group surges; oil falls - MSN",
@@ -379,14 +355,6 @@
       "stock_name": "Kotak Bank"
     },
     {
-      "title": "Axis Bank slides Thursday, underperforms competitors - MarketWatch",
-      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxPbmpGVE5nR1M3ekcxZUZ5bFBLVW5RTW9FQnNyYWl5R1g4Tm44d3RUbUFXNXlTNEZ6V0ZkTDNNaEhneTEyb0ljM1V3bUcyS3gzelpGcjlhZVlBZ0o3enRxVFVwc2xuNkUyRG1qVi1vR2JqYlJEWERZbm04WnZtVHUxN3Z4VEJwUjk5c3R3ekc1THYtTFBpSVlaSXBrZmFweU02WUU2cFkzaGlFTHo3RkhGQ3VLWjctdU1TZ3BUdTBSZXJBNmxFckE3dzlFYWhZdlk?oc=5",
-      "source": "MarketWatch",
-      "published_at": "Thu, 30 Apr 2026 10:33:00 GMT",
-      "symbol": "AXISBANK",
-      "stock_name": "Axis Bank"
-    },
-    {
       "title": "ITC slides Thursday, still outperforms market - MarketWatch",
       "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPMVVxRGQ0OFdPUTlSelRiMGxDdmlKc19waVFQVU0yZkk4LW5oUWJYQm4weFJMOXRieXNUVWpSTWRKR19IQVlFVjJXUDAxX0t5LWRKX0VSSVNfMDZrS1JDZFgzeVJ1d3Z3Q3RmWDV0UUFJSzdHWDhIZmhmRjZnclV3XzZIazlISzVkN3NyQndxUTJaaVduQXZUYWZNa2dVcG1FTF8zSXVZdS04NjduX2FLWGxkLWp5TjZ6RXFTQWQzNDJzeUpmV0E?oc=5",
       "source": "MarketWatch",
@@ -419,14 +387,6 @@
       "stock_name": "Adani Enterprises"
     },
     {
-      "title": "HCL Tech share price crashes over 10%; Rs 38,000 crore gone from market cap as brokerages downgrade stock - here's why - MSN",
-      "url": "https://news.google.com/rss/articles/CBMiswNBVV95cUxOZjFEZW1CczRQNkEya1o0clRHSEVwQkIyQjJKWGZEeEJfcFF5cW1tc1Q2ODJxU0pObG1WX2gwR1NGVGI2dG04dm9aV3ZDMjdoZmpPZ01qOHk3blRPU0JSSVVVTGNaTExDNTNVQjdENi0zYUx4MkxvbDhfVzZScmxFR0V1YUludS1kRG1wSHpqUGhUaWhOckxiRnk5R2J3czkyb2Zlbjdlb1RfU2xXelJZeGcwX19fS3VkeW9ETkRjVkpaLU82ZmY4R25iMHNZTEYxUW0zTkFxdGt1dEFkT3JCbjh6a01BWDR3ZHJfal9XUlg5bHMwRkI0WVJxdlhobkRkT0lyclNMcTJUXzhZTWdQZENCaFpZSThjLWxZWTdlcjM0OFM2MUdkdGE1X3drUVloalJITkJUSXdRRGFONHVlOF9Cb3FVS2xUVW9UX3N4Qk93cENXUUg4U1ltSW15TDNHWjJJd1ViRTN2SXFuS1pvRDdlajRJOXBuZUNFWHBzbEdLT1VVS0RVTlhUTmN0LVU1NXh2NnhkbkNVazJBT1FzWmNOZy1XQnp6aFdKQmZ3SS1JTWc?oc=5",
-      "source": "MSN",
-      "published_at": "Thu, 30 Apr 2026 10:00:30 GMT",
-      "symbol": "HCLTECH",
-      "stock_name": "HCL Tech"
-    },
-    {
       "title": "NTPC Announces Senior Management Changes with Executive Director's Superannuation - scanx.trade",
       "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPc3JtallxRkNES2FYZDd2bWp3cWxTWHpsbEtxdFRtRHpRYzFwVWR1dU5yX0ZjQ0k2bVRGOXlMc1JHTnU0VFdaZzlfM3h1VHM2Q05Ua1FPRUhDcnlvSE9PcE5Nc1J6YWROZGtDZk5mb1BkakVBME8yT2dWOUZPQTctVjVWaWtmdTRqQmVLellUd3RkV0I1TTBGQTJPOW0welhzZzhUTm9BWk9jTm1meTJoREVQa1AzZnBVNDd5TU5yZFp1M0xHMXMxUGJ2Qm9XM2w4dWNNZQ?oc=5",
       "source": "scanx.trade",
@@ -443,12 +403,36 @@
       "stock_name": "Sun Pharma"
     },
     {
+      "title": "Vedanta Splits into 5 Companies; Shares Drop on Demerger Ex-Date - Whalesbook",
+      "url": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxQeUpGeDdTbzRZelRiRzJkbDFnYWhRRTgwWXkzNG1GOG54NzNwS3JwRi1uOVBQUWJUQ0dsLWNfTVc2eGpCSXV4V0ZDenBnNGNwdDl6a3FmLXdOWHd5YXBSZ0tGV2EtRnZ0Qi05RENHOW5JVkJ4d1E4WTg1MjNpNzduOWhfbmJWeHJ6bDc5bkNiSzdNQjVkOHhQcjhRajJobEZlY2toYTIwNFhSTEhtVkYtZ09rS3pWeEQxSjlvZUpvakJsY2NmV2I5MXhWVFhuYW8za1NpR0xPT1RBaC1uNVFoWnZWMWQ2Ulhv?oc=5",
+      "source": "Whalesbook",
+      "published_at": "Thu, 30 Apr 2026 09:12:59 GMT",
+      "symbol": "VEDL",
+      "stock_name": "Vedanta"
+    },
+    {
+      "title": "Bajaj Finserv Q4 results: Net profit rises 5% to Rs 2,539 crore, NBFC declares Rs 1.5 dividend - Moneycontrol.com",
+      "url": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxPdXZKS29mT2t0N1ZBa3hBUWsyMndNMnIxZ2dENVNJR09YYUc2aU1RRnlINUxIeGhLRnY4ei1lOTdDU1pUcXYzRFBfLUpxX1Q1dWlJbzdITXVBWGlZN0p3N2cwOWowTHFpVEk3ZVBwako5a0Y2ZWVueTY2N00xSnVWNTc2em1QcTdxU2JWMmlEclNKTVlWMHVuRGdPcWRmNWxPaEktMW5WWWdTSUxVZDJWZEl5RHA4emhFNjg5YTd1azdnSW1GNm1RUlAzLXpiNDJIck5UbW1kalo4WGtUZmVtemVQQTB2Q003Y3Z4Z2Nsemhqd9IB8gFBVV95cUxPdXZKS29mT2t0N1ZBa3hBUWsyMndNMnIxZ2dENVNJR09YYUc2aU1RRnlINUxIeGhLRnY4ei1lOTdDU1pUcXYzRFBfLUpxX1Q1dWlJbzdITXVBWGlZN0p3N2cwOWowTHFpVEk3ZVBwako5a0Y2ZWVueTY2N00xSnVWNTc2em1QcTdxU2JWMmlEclNKTVlWMHVuRGdPcWRmNWxPaEktMW5WWWdTSUxVZDJWZEl5RHA4emhFNjg5YTd1azdnSW1GNm1RUlAzLXpiNDJIck5UbW1kalo4WGtUZmVtemVQQTB2Q003Y3Z4Z2Nsemhqdw?oc=5",
+      "source": "Moneycontrol.com",
+      "published_at": "Thu, 30 Apr 2026 09:00:40 GMT",
+      "symbol": "BAJFINANCE",
+      "stock_name": "Bajaj Finance"
+    },
+    {
       "title": "ITC, HUL, Marico, GCPL: Will RM inflation hit Q1 margins? Targets - Business Today",
       "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNTUR2RXlQYi04Qm0zU0JaVVpkbkF1NWVXbGhSWl9lLU9COVd4aXRvTjdhNU9vZktGa3BMb240Ui1LaFIxWWlSSDUwWG1kaEQzWlp1dTNTWFhRbkxvQlhRWjFYVG1rcXQ5THdmUm80Zl85TzJsQjM0cmxMaU9ENlZ1ZEs2TTdkQVJhV3JrZTA2dWRrOU5XSEpZWWJZOXRNcEctSTVlay0zaEZDbXZUUUlRM1lKWFdaV0RXMEF4XzNmYzZ2ZE9Qc3RR0gHMAUFVX3lxTE5mN2pBSEd5NDZRa3hpR0JhY1kxLTlLYTNfNTJRbUU4YWNjZy1QM2pTd1BISk9HWVJxamxmSHd6N2cxSk5Gd2dCWnJYYWJIVmpNSVY3ejJ1VTBBNUtfMkFYaHJiN1dPbm1tWWh4bFJzZEJYVkkzY3d6LUNhaXFNdUM0algxRkk1QTFNVEFET05LNGJZWV84UVlmSWZtSEY5SGRrY0dOTnI3Qk9VQ01nSk1hc2xsbzA5S2l5YlY3bFlMZnNmaW9sQXhuY3cxMg?oc=5",
       "source": "Business Today",
       "published_at": "Thu, 30 Apr 2026 08:52:36 GMT",
       "symbol": "ITC",
       "stock_name": "ITC"
+    },
+    {
+      "title": "CEAT, Other Tyre Stocks Deflate As Indigo And Spicejet Fly Into Turbulence Over Oil Boil - HDFC Sky",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQYmRVNExnVE1wVjZJbFpmMlNrZlV4WGt5eU43NnloSUVSUHZvS0J4bkF0YUQ0dEYyeWdIb0RpZUYyMFNVVXdQaHRlZnd2cnk0VGNyVFYyeW81NjdrSTRNZkpUdDF6Q3NpV2llSnNfODRiQXlIYmJuY3BsVGJoc0dORmUya0gySy1icjNXcE01N1NobFRPOS1GSkYyY014RURTNUtLMWFsSkVnVERJa1pYdjhR?oc=5",
+      "source": "HDFC Sky",
+      "published_at": "Thu, 30 Apr 2026 08:49:46 GMT",
+      "symbol": "INDIGO",
+      "stock_name": "IndiGo Airlines"
     },
     {
       "title": "ICICI Bank Allots 699,237 Equity Shares Under Employee Stock Option Scheme-2000 - scanx.trade",
@@ -547,28 +531,20 @@
       "stock_name": "BPCL"
     },
     {
-      "title": "Vedanta Demerger Effect: Share Price Drops To Rs 290 From Rs 773 - NDTV Profit",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOSTIxYW16VV9veWZ6eEN2WVpkXzJucDJESVZMTHJKb3RiRUN6MXRXeExTd1RDZ2h5UlBQVE1QaW9XdTR5Tkc1eHhXVFRRdFI2UGpVcnpnUW9LZDdnaWJNc3phV29mNjBKTjFZMFNnWE1qSGFodUwzVVJMNW5nVU1pWHM1UGNnRHUtcXlSaVVaV3ZzOGZRdlNTZmFSck9yem5ySEFR0gGrAUFVX3lxTE00QzhGOFBMaHY1Q2VZQWdtd041S2RUdklQWmVTelk2bkVNZzMtM0xLN1h6UERtd1RJcVFmRlEtWGRKNkpyS042aDNPZ1BDU0JNRmRJX2lfUmdBS0JHdzVMVlB4eXRJajk3Y0JlaE84X1pHMEdPX3BYajVWU09MamFxaTlYMDIwQVF1M3ltWVI5YmVaYVNlTjgyV3NKRkx2bHRqbFkzOV9JWERwSQ?oc=5",
-      "source": "NDTV Profit",
-      "published_at": "Thu, 30 Apr 2026 04:25:28 GMT",
-      "symbol": "VEDL",
-      "stock_name": "Vedanta"
-    },
-    {
-      "title": "IndiGo Shares Slide 2% Amid Soaring Fuel Prices and Market Sell-off - Whalesbook",
-      "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOMEJTX3VhQnJBYXI4bHc0Nld4ZEhjRVFPbU45QzRWRjdOaE50Q1M3b283dlJrUllyVHJWR00tWDR0aVBGWWNlZ0NGeG5pNk9fSy02Q2lNM0NaaFdUcGVJc1hKUnFtY05KZzVBSl9RM2xsd2ptejJVT3hlWDFnOWdvZWhLS3dSSVBaSDdTZjhxTXFVUnVGWVZheVVMSHI4Q2pJMW50MzV0M0haTDFDczZVSGhJaUNGdTFqN2tBMGItMWRjcG43R05IUnNMTVVvMzhnaFB1SUFyRnZ5VGNvc1pZX3RvV2tNNFdNX2NHTzV4MUtsU0E?oc=5",
-      "source": "Whalesbook",
-      "published_at": "Thu, 30 Apr 2026 04:21:39 GMT",
-      "symbol": "INDIGO",
-      "stock_name": "IndiGo Airlines"
-    },
-    {
       "title": "Govt of Singapore’s India portfolio: 10 stocks rally up to 70% in a year, 5 new Q4 picks unveiled - The Economic Times",
-      "url": "https://news.google.com/rss/articles/CBMikwJBVV95cUxNbzJfVXhTc0VwTE1EZUhQelhwSkdmcFhxdGV1bUJHMzlvM2tZRE45cjhTSWhYNzVqU3B4WjNXcWlWSjVBR2MyWXRONGdBZ0VQTzhJZXZmRDZ4Y3N0OHkxdFV5SC1oaGl2SVFUN2lLRHBRcndlaWpuMUt0aTJuR21yaVpOb3U3bF93S0hrMTAta05TYkFybXYyYm9LaDMxbGNGVkR4R1RONjVDTGE1LVYyQlNna28tcWtYOWtvY3Z1QXpFODdKQzdGQ2VXR0lhQjY4djJUZ0h4SmJBWWhGdGJXSmQ0cl9tQ3VpbThvbkpPWUdSbTNhT3VVeWNuMXlsdmtyTmpNTl9FejdlWWJGcXpmY3Y1RQ?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMihgJBVV95cUxQV0VVbGgwWFV2bUN4ejB2NUVQWkdUSnI0dXFuMFN5NHNXRTdhaU85VTR5MHBXTnExUWJhc0thSU00RjRiLTNrVjN2Z0ZXSkVBRGJSbFA2dVlpa1hpeXlVQzFVUXB5V0dVMG9CSnBNVlljYWJpVWlZNnlkcGdQWFpTZFAzQ3FIVHltQ3Y3TWFibGZrc0RJWlRaSjV5TGVIdmwtQ1k1QS1SNUlZYjFUZGdnZy14MXNnXzNuNXNuMEh2VHRHS2ZFbW1XUGh6bmNENy0weGY5b3VQS1RSOWE2UDlXVEw3R09VbDE4NDk2MXUzY0hrZFN1R3Q0UFhoZ0M2aDB1U196alVn?oc=5",
       "source": "The Economic Times",
-      "published_at": "Fri, 01 May 2026 03:59:06 GMT",
-      "symbol": "TATAMOTORS",
-      "stock_name": "Tata Motors"
+      "published_at": "Fri, 01 May 2026 04:25:37 GMT",
+      "symbol": "HDFCBANK",
+      "stock_name": "HDFC Bank"
+    },
+    {
+      "title": "Weekly Wrap: NIFTY50 lost 0.7%, SENSEX down 750 points this week; Axis Bank, Shriram Finance among top losers - Upstox",
+      "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxOMzhZMkxIS2NhbXdrLXNkWTdvNnZkZkpPcE5zU0FDeVpVaXd1WExDYjdSb3MweFM3RDd4YUdpRURGUW1JYUg1U01zNFFlbi1EWDVpeUc1MHZNU0Y4aGhDSkdjSWpJRW9YM2RYdml5aTJuV011dVFmUkp2bFVoT05HWlNFOU5vbG5CRy1ndkJSMHUyVjNNVzMxbHgtMWJza2lETEM3b3U3bEo2UzNqaEpMUGVlTlYxaWxYcm5tZHRfWDc5WDZKMW14VlItU2psQ0xfcnpsMlJHREM1VjRFRnRqc05ibHN4NTFQU2hMdUVFdHNoSzZfS1k4?oc=5",
+      "source": "Upstox",
+      "published_at": "Fri, 01 May 2026 04:13:56 GMT",
+      "symbol": "AXISBANK",
+      "stock_name": "Axis Bank"
     },
     {
       "title": "HAL Chairman & Managing Director D K Sunil steps down - The Economic Times",
@@ -583,8 +559,8 @@
       "url": "https://news.google.com/rss/articles/CBMi3gJBVV95cUxQcndzczV2eHhMVUZMcnJqZHotZlRYcU1ZVXZxTk01bVE5SXg2cmZjcnQyTktDc1kwaEQxVTZ2WTQxUDdhVDQxZERRejhEWGFfS29FTm1rbVdQUEJGaEdfcGhiTk4wX0N0QXB1MzY2TlAwWG8yQTVnT2NFa19RZXBLMHBSSm8yemJKdnV5STgxZFBVSXB1cW1nRDJGbTQtMk42QjRON2g2Y2IwcTByUndVcmZMOHpQTWlIWXRTa0FlZ0FZYVJQa3kwcXZkOTFzQlE4TWVuNkRYblk4RllJaURtSlpoVTZVZWl1OXctdExWWVRCdlJUN1VyOWx1cFAyalpsQkZoSHE0MTVPQVNtNk1uakV6eXByR1B1ZFpBZlhQY0ZxeXJScHItaHcwVlpBRDV3eU42RGp5bHRtM0tyS2RUY25IRDJsMWhwdnN5bjdRMFZoNkVsZUtyVVNNem50UQ?oc=5",
       "source": "BusinessLine",
       "published_at": "Fri, 01 May 2026 03:16:56 GMT",
-      "symbol": "BAJFINANCE",
-      "stock_name": "Bajaj Finance"
+      "symbol": "MARUTI",
+      "stock_name": "Maruti Suzuki"
     },
     {
       "title": "AM/NS India: **93%** EBITDA Jump Ke Baad, **$8 Billion** Ka Steel Plant Plan! Kya India Karega Dominate? - Whalesbook",
