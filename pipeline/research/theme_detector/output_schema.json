@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Theme Detector v1 — weekly output",
+  "type": "object",
+  "required": ["run_date", "detector_version", "n_themes_total", "stage_counts", "themes"],
+  "properties": {
+    "run_date": {"type": "string", "format": "date"},
+    "detector_version": {"type": "string"},
+    "n_themes_total": {"type": "integer", "minimum": 0},
+    "stage_counts": {
+      "type": "object",
+      "required": ["DORMANT", "PRE_IGNITION", "IGNITION", "MATURE", "DECAY", "FALSE_POSITIVE"],
+      "properties": {
+        "DORMANT": {"type": "integer", "minimum": 0},
+        "PRE_IGNITION": {"type": "integer", "minimum": 0},
+        "IGNITION": {"type": "integer", "minimum": 0},
+        "MATURE": {"type": "integer", "minimum": 0},
+        "DECAY": {"type": "integer", "minimum": 0},
+        "FALSE_POSITIVE": {"type": "integer", "minimum": 0}
+      }
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "theme_id", "lifecycle_stage", "lifecycle_stage_age_weeks",
+          "belief_score", "confirmation_score", "credibility_penalty",
+          "current_strength", "signal_breakdown", "members",
+          "downstream_entry_permitted"
+        ],
+        "properties": {
+          "theme_id": {"type": "string"},
+          "lifecycle_stage": {
+            "type": "string",
+            "enum": ["DORMANT", "PRE_IGNITION", "IGNITION", "MATURE", "DECAY", "FALSE_POSITIVE"]
+          },
+          "lifecycle_stage_age_weeks": {"type": "integer", "minimum": 0},
+          "first_detected_date": {"type": ["string", "null"], "format": "date"},
+          "first_pre_ignition_date": {"type": ["string", "null"], "format": "date"},
+          "first_ignition_date": {"type": ["string", "null"], "format": "date"},
+          "belief_score": {"type": "number", "minimum": 0, "maximum": 1},
+          "confirmation_score": {"type": "number", "minimum": 0, "maximum": 1},
+          "credibility_penalty": {"type": "number", "minimum": 0, "maximum": 1},
+          "current_strength": {"type": "number", "minimum": 0, "maximum": 1},
+          "signal_breakdown": {"type": "object"},
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["symbol", "theme_strength_per_name"],
+              "properties": {
+                "symbol": {"type": "string"},
+                "theme_strength_per_name": {"type": "number", "minimum": 0, "maximum": 1},
+                "free_float_weight_pct": {"type": ["number", "null"]},
+                "adv_60d_inr_cr": {"type": ["number", "null"]},
+                "fno_eligible": {"type": ["boolean", "null"]}
+              }
+            }
+          },
+          "warnings": {"type": "array", "items": {"type": "string"}},
+          "downstream_entry_permitted": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

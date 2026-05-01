@@ -1,0 +1,94 @@
+{
+  "schema_version": "v1.0",
+  "frozen_date": "2026-05-01",
+  "notes": "Tier-2 themes authored at v1 freeze. DRAFT — pending Bharat sign-off (Task #80). DATA_CENTRES_ADJACENT membership pending verification at freeze. Members must be re-verified against current canonical_fno_research_v3 + listing dates before first detector run.",
+  "themes": [
+    {
+      "theme_id": "BANKS_DIGITAL_TAILWIND",
+      "tier_1_sector": "Banks",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["HDFCBANK", "ICICIBANK", "KOTAKBANK", "AXISBANK", "SBIN", "INDUSINDBK"]},
+      "rationale": "Private + private-style PSU banks benefiting from digital banking adoption + UPI ecosystem leadership"
+    },
+    {
+      "theme_id": "BANKS_PSU_REREATING",
+      "tier_1_sector": "Banks",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["SBIN", "BANKBARODA", "PNB", "CANBK", "UNIONBANK", "INDIANB"]},
+      "rationale": "PSU banks rerating post-asset-quality cleanup; structurally distinct from private banks"
+    },
+    {
+      "theme_id": "IT_AI_HEADWIND_MASS",
+      "tier_1_sector": "IT_Services",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["TCS", "INFY", "WIPRO", "HCLTECH", "TECHM"]},
+      "rationale": "Large-cap mass IT services facing AI-driven productivity headwind on commodity work"
+    },
+    {
+      "theme_id": "IT_AI_TAILWIND_ER_AND_D",
+      "tier_1_sector": "IT_Services",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["PERSISTENT", "KPITTECH", "COFORGE", "TATAELXSI", "TATATECH", "LTTS", "CYIENT"]},
+      "rationale": "Engineering R&D + niche tech services positioned as AI-tailwind beneficiaries"
+    },
+    {
+      "theme_id": "DEFENCE_WAR_ECONOMY",
+      "tier_1_sector": "Defence",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["HAL", "BEL", "BDL", "MAZDOCK", "GRSE", "COCHINSHIP"]},
+      "rationale": "Indian defence-PSU set benefiting from war-economy capex cycle (post-2022 Russia-Ukraine onset)"
+    },
+    {
+      "theme_id": "HOSPITALS_ROBOTICS_LEAN",
+      "tier_1_sector": "Hospitals",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["APOLLOHOSP", "FORTIS", "MAXHEALTH", "NH", "RAINBOW", "KIMS"]},
+      "rationale": "Listed hospital chains positioned for robotic-surgery + outpatient-margin transition"
+    },
+    {
+      "theme_id": "DATA_CENTRES_ADJACENT",
+      "tier_1_sector": "Power_Realty_Tech",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["ANANTRAJ", "NETLINK"], "membership_status": "DRAFT_PENDING_VERIFICATION"},
+      "rationale": "Data-centre capex cluster — names with explicit DC capex announcements + adjacent power/realty exposure"
+    },
+    {
+      "theme_id": "NEW_ECONOMY_LISTINGS_2020_22_COHORT",
+      "tier_1_sector": "Multi",
+      "rule_kind": "B",
+      "rule_definition": {
+        "predicate": "listing_year in [2020, 2021, 2022] AND sector in ['Consumer-services', 'Tech', 'Logistics'] AND was_loss_making_at_listing == True",
+        "min_members_required": 3
+      },
+      "rationale": "Loss-making-at-listing new-economy IPO cohort; structurally distinct from profitable-listing names"
+    },
+    {
+      "theme_id": "POWER_RENEWABLE_TRANSITION",
+      "tier_1_sector": "Power",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["ADANIGREEN", "NTPC", "TATAPOWER", "SUZLON", "INOXWIND", "JSWENERGY"]},
+      "rationale": "Renewable energy + transition-power names; PLI-batteries-driven capex"
+    },
+    {
+      "theme_id": "CAPEX_PLI_BENEFICIARY",
+      "tier_1_sector": "Capital_goods",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["LT", "BHEL", "SIEMENS", "ABB", "ABBOTINDIA", "CGPOWER"]},
+      "rationale": "Capital goods + PLI-aligned engineering names benefiting from manufacturing capex cycle"
+    },
+    {
+      "theme_id": "QUICK_COMMERCE",
+      "tier_1_sector": "Consumer_services",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["ZOMATO", "DELHIVERY"], "liquidity_caveat": "limited liquidity for now"},
+      "rationale": "Quick commerce + last-mile delivery; valuation-rerating cohort"
+    },
+    {
+      "theme_id": "EVS_AND_AUTO_TECH",
+      "tier_1_sector": "Auto",
+      "rule_kind": "A",
+      "rule_definition": {"members": ["TATAMOTORS", "M&M", "OLAELECTRIC", "SONACOMS", "BOSCHLTD"]},
+      "rationale": "EV + auto-tech transition cohort; KPITTECH overlaps with IT_AI_TAILWIND_ER_AND_D by design"
+    }
+  ]
+}
