@@ -35,6 +35,9 @@ ROOT = Path(__file__).resolve().parents[3]
 LEDGER_PATH = ROOT / "pipeline" / "data" / "research" / "h_2026_05_01_earnings_drift_long" / "recommendations.csv"
 HOLD_TRADING_DAYS = 5
 
+HOLDOUT_START = date(2026, 5, 4)
+HOLDOUT_END = date(2026, 10, 31)
+
 LEDGER_COLS = [
     "id", "status", "symbol", "event_date", "entry_date", "exit_date",
     "side", "entry_price", "exit_price", "exit_reason",
@@ -95,6 +98,10 @@ def open_today(entry_date: date | None = None) -> int:
     """Run signal generator + write OPEN ledger rows. Returns count opened."""
     ed = entry_date or _ist_now().date()
     print(f"\n[earnings_drift_engine.open_today] entry_date={ed}")
+
+    if ed < HOLDOUT_START or ed > HOLDOUT_END:
+        print(f"  SKIP: {ed} outside holdout window [{HOLDOUT_START} .. {HOLDOUT_END}]")
+        return 0
 
     cands = generate_signals_for_entry_date(ed)
     print(f"  qualified candidates: {len(cands)}")
@@ -188,6 +195,10 @@ def close_today(today: date | None = None) -> int:
     """Mechanical TIME_STOP close at 14:30 IST. Returns count closed."""
     today = today or _ist_now().date()
     print(f"\n[earnings_drift_engine.close_today] today={today}")
+
+    if today < HOLDOUT_START:
+        print(f"  SKIP: {today} before holdout start {HOLDOUT_START}")
+        return 0
 
     rows = _read_ledger()
     if not rows:

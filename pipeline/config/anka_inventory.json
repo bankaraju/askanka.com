@@ -1088,6 +1088,26 @@
       "notes": "14:30 IST daily during holdout 2026-04-27 -> 2026-05-26. h_2026_04_26_001_paper_close.bat -- mechanical TIME_STOP per spec section 5: closes all OPEN rows at Kite LTP. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
     },
     {
+      "task_name": "AnkaEarningsDriftOpen",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/research/h_2026_05_01_earnings_drift_long/recommendations.csv"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "14:25 IST daily during holdout 2026-05-04 -> 2026-08-01 (auto-extend 2026-10-31 if n<20). h_2026_05_01_earnings_drift_open.bat -- H-2026-05-01-EARNINGS-DRIFT-LONG-v1: opens LONG on (symbol, event_date) where event_date == next trading day, vol_z >= 0.52, short_mom > 0, realized_vol_21d_pct >= 29, regime in {NEUTRAL, RISK-ON}. Frozen 40-name universe (NIFTY Bank + IT). First-touch dedup per (symbol, event_date). Spec: docs/superpowers/specs/2026-05-01-earnings-drift-long-v1-design.md. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
+      "task_name": "AnkaEarningsDriftClose",
+      "tier": "info",
+      "cadence_class": "daily",
+      "outputs": [
+        "pipeline/data/research/h_2026_05_01_earnings_drift_long/recommendations.csv"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "14:30 IST daily during holdout 2026-05-04 -> 2026-08-01 (auto-extend 2026-10-31 if n<20). h_2026_05_01_earnings_drift_close.bat -- mechanical TIME_STOP per spec section 7: scans OPEN rows where (entry_date + 5 trading days) <= today, closes at Kite LTP, writes gross_bps + net_s1_bps. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
       "task_name": "AnkaPhaseCMRKarpathyOpen",
       "tier": "info",
       "cadence_class": "daily",
