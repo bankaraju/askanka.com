@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "n_events": 314,
+    "n_with_any_insider_activity": 20,
+    "window_days": 30,
+    "insider_categories": [
+      "Director",
+      "Immediate relative",
+      "Key Managerial Personnel",
+      "Promoter Group",
+      "Promoters"
+    ],
+    "method": "PIT-clean: filing_date <= event_date - 1 day",
+    "data_source": "pipeline/data/insider_trades/<YYYY-MM>.parquet"
+  },
+  "by_direction": {
+    "BEAT_LIKE": {
+      "n": 160,
+      "n_with_insider": 8,
+      "insider_buy_inr_mean_lakhs": 86.4,
+      "insider_sell_inr_mean_lakhs": 6987.5,
+      "insider_net_inr_mean_lakhs": -6901.1,
+      "insider_net_inr_median_lakhs": 0.0,
+      "share_pos_net_pct": 3.12,
+      "share_neg_net_pct": 1.88
+    },
+    "MISS_LIKE": {
+      "n": 154,
+      "n_with_insider": 12,
+      "insider_buy_inr_mean_lakhs": 71.2,
+      "insider_sell_inr_mean_lakhs": 21.8,
+      "insider_net_inr_mean_lakhs": 49.4,
+      "insider_net_inr_median_lakhs": 0.0,
+      "share_pos_net_pct": 5.84,
+      "share_neg_net_pct": 1.95
+    }
+  },
+  "cross_tab_direction_x_insider_sign": {
+    "BEAT_LIKE_POS": 5,
+    "BEAT_LIKE_NEG": 3,
+    "BEAT_LIKE_ZERO": 152,
+    "MISS_LIKE_POS": 9,
+    "MISS_LIKE_NEG": 3,
+    "MISS_LIKE_ZERO": 142
+  },
+  "by_sector_direction": {
+    "Banks_BEAT_LIKE": {
+      "n": 86,
+      "n_with_insider": 2,
+      "insider_net_inr_mean_lakhs": 3.5,
+      "share_pos_net_pct": 2.33
+    },
+    "Banks_MISS_LIKE": {
+      "n": 90,
+      "n_with_insider": 9,
+      "insider_net_inr_mean_lakhs": 6.7,
+      "share_pos_net_pct": 7.78
+    },
+    "IT_Services_BEAT_LIKE": {
+      "n": 74,
+      "n_with_insider": 6,
+      "insider_net_inr_mean_lakhs": -14925.4,
+      "share_pos_net_pct": 4.05
+    },
+    "IT_Services_MISS_LIKE": {
+      "n": 64,
+      "n_with_insider": 3,
+      "insider_net_inr_mean_lakhs": 109.4,
+      "share_pos_net_pct": 3.12
+    }
+  },
+  "pit_signal_strength": {
+    "n_pos_insider_net": 14,
+    "n_neg_insider_net": 6,
+    "p(BEAT | insider_net>0)": 0.3571,
+    "p(BEAT | insider_net<0)": 0.5,
+    "p(BEAT | unconditional)": 0.5096,
+    "lift_pos_minus_unconditional_pct": -15.24,
+    "lift_neg_minus_unconditional_pct": -0.96
+  }
+}
