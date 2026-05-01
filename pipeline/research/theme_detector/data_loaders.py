@@ -170,6 +170,139 @@ def load_ipo_calendar(cutoff_date: date) -> pd.DataFrame | None:
     return full.reset_index(drop=True)
 
 
+def _normalize_stock_name(name: str | None) -> str | None:
+    """Normalize a Trendlyne 'Stock' or 'Stock Name' string for cross-snapshot
+    fuzzy matching. Strips common corporate-form suffixes + non-alphanumeric.
+    """
+    if not isinstance(name, str):
+        return None
+    import re
+
+    s = name.lower()
+    for suf in (" ltd.", " ltd", " limited", " inc.", " corp.", " corporation", ".."):
+        s = s.replace(suf, "")
+    s = re.sub(r"[^a-z0-9]", "", s)
+    return s.strip() or None
+
+
+def _build_name_to_nse_bridge(cutoff_date: date) -> dict[str, str]:
+    """Union of every available "Stock Name → NSE Code" mapping at-or-before cutoff.
+
+    Trendlyne exports use full company names ("Reliance Industries Ltd.") while
+    every theme membership / signal lookup is keyed by NSE Code ("RELIANCE").
+    Different exports cover different universes — multigroup_curtailed has 2,000
+    NSE-listed stocks, the F&O multigroup has 209, and the periodic Nifty 500+
+    fundamentals export has ~537. Union all three to maximize canonical
+    cross-snapshot joinability.
+
+    Returns dict normalized_name → NSE Code. Names are normalized via
+    `_normalize_stock_name` (lowercase + corporate-suffix strip + alphanumeric).
+    """
+    bridge: dict[str, str] = {}
+
+    multigroup_dir = TRENDLYNE_ROOT / "multigroup"
+    if multigroup_dir.is_dir():
+        for p in sorted(multigroup_dir.glob("*.xlsx")):
+            snap_d = _date_from_filename(p.name)
+            if snap_d is not None and snap_d > cutoff_date:
+                continue
+            try:
+                df = pd.read_excel(p)
+            except Exception:
+                continue
+            if "Stock Name" not in df.columns or "NSE Code" not in df.columns:
+                continue
+            for n, nse in zip(df["Stock Name"].apply(_normalize_stock_name), df["NSE Code"]):
+                if isinstance(n, str) and isinstance(nse, str):
+                    bridge.setdefault(n, nse)
+
+    curtailed_dir = TRENDLYNE_ROOT / "multigroup_curtailed"
+    if curtailed_dir.is_dir():
+        for p in sorted(curtailed_dir.glob("multigroup_curtailed_returns_shareholding_*.xlsx")):
+            snap_d = _date_from_filename(p.name)
+            if snap_d is not None and snap_d > cutoff_date:
+                continue
+            try:
+                df = pd.read_excel(p, header=3)
+            except Exception:
+                continue
+            if "Stock Name" not in df.columns or "NSE Code" not in df.columns:
+                continue
+            for n, nse in zip(df["Stock Name"].apply(_normalize_stock_name), df["NSE Code"]):
+                if isinstance(n, str) and isinstance(nse, str):
+                    bridge.setdefault(n, nse)
+
+    return bridge
+
+
+def load_results_dashboard(cutoff_date: date) -> pd.DataFrame | None:
+    """Load the latest Trendlyne results_dashboard quarterly snapshot at-or-before
+    cutoff, joined to NSE Code via the union of all multigroup name→NSE bridges
+    available at-or-before cutoff (multigroup + multigroup_curtailed).
+
+    Canonical TD-D9 source: the quarterly_results CSV exposes "Net Profit
+    Surprise Qtr %" (actual vs consensus) and "Revenue Surprise Qtr %" — these
+    are the proper EPS-surprise fields the C5 spec calls for, in contrast to
+    the v1 proxy (Net Profit QoQ Growth %).
+
+    The CSV is keyed by full company name ("Reliance Industries Ltd."); we
+    rebuild the NSE Code via fuzzy normalization against the curtailed
+    snapshot. Rows whose name fails to match any NSE Code are dropped (they
+    are typically non-F&O small-caps outside our universe).
+
+    Surprise columns are coerced to numeric — Trendlyne uses literal "-" for
+    "consensus not available", which becomes NaN. Caller decides how to handle
+    NaN coverage.
+
+    Returns DataFrame indexed by NSE Code with columns:
+        - "Stock" (full company name)
+        - "Last Result Updated"
+        - "Net Profit Surprise Qtr %" (numeric)
+        - "Revenue Surprise Qtr %" (numeric)
+        - "Net Profit Qtr Growth YoY %" (numeric)
+        - "Revenue Growth Qtr YoY %" (numeric)
+
+    Returns None when CSV missing OR bridge snapshot missing OR < 1 row matches.
+    """
+    sd = TRENDLYNE_ROOT / "results_dashboard"
+    if not sd.is_dir():
+        return None
+    cands = sorted(sd.glob("quarterly_results_*.csv"))
+    if not cands:
+        return None
+    p = cands[-1]
+    snapshot_date = _date_from_filename(p.name)
+    if snapshot_date is not None and snapshot_date > cutoff_date:
+        return None
+    rd = pd.read_csv(p, encoding="utf-8-sig")
+    if "Stock" not in rd.columns:
+        return None
+
+    name_to_nse = _build_name_to_nse_bridge(cutoff_date)
+    if not name_to_nse:
+        return None
+
+    rd["_norm"] = rd["Stock"].apply(_normalize_stock_name)
+    rd["NSE Code"] = rd["_norm"].map(name_to_nse)
+    rd = rd[rd["NSE Code"].notna()].copy()
+    if rd.empty:
+        return None
+
+    for col in (
+        "Net Profit Surprise Qtr %",
+        "Revenue Surprise Qtr %",
+        "Net Profit Qtr Growth YoY %",
+        "Revenue Growth Qtr YoY %",
+    ):
+        if col in rd.columns:
+            rd[col] = pd.to_numeric(rd[col], errors="coerce")
+
+    rd = rd.drop(columns=["_norm"])
+    rd = rd.drop_duplicates(subset=["NSE Code"], keep="first")
+    rd = rd.set_index("NSE Code")
+    return rd
+
+
 def load_shareholding_panel(cutoff_date: date) -> pd.DataFrame | None:
     """Load the latest standalone shareholding_panel snapshot at-or-before cutoff.
 
