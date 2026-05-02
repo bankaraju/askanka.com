@@ -1,7 +1,7 @@
 # Hermes Agent — Install on Contabo VPS, backed by local Gemma 4
 
 **Date:** 2026-05-02
-**Status:** Install in progress — gating on user approval to execute `setup-hermes.sh` on the VPS (harness flagged "Untrusted Code Integration" on first attempt).
+**Status:** ✅ Installed and wired to local Gemma 4 (2026-05-02 13:46 IST). Sanity prompt verified end-to-end.
 **Author:** Claude (auto mode) on Bharat's instruction
 **License of installed software:** MIT (Hermes Agent), Apache 2.0 (Gemma 4 — already running)
 
@@ -89,33 +89,49 @@ hermes --version
 hermes doctor
 ```
 
-### 3. Wire model to local Gemma 4
+### 3. Wire model to local Gemma 4 (as actually shipped 2026-05-02)
 
-Hermes accepts any OpenAI-compatible endpoint. Ollama's `/v1` route is OpenAI-compatible — no shim needed.
+Hermes accepts any OpenAI-compatible endpoint. Ollama's `/v1` route is OpenAI-compatible. The CLI has no `hermes config set` subcommand — config is file-based at `~/.hermes/config.yaml` (canonical user config, takes precedence over project-local `cli-config.yaml`).
 
-Preferred (declarative):
-```bash
-hermes config set provider openai-compatible
-hermes config set base_url http://127.0.0.1:11434/v1
-hermes config set model gemma4:26b
-hermes config set api_key ollama   # Ollama ignores the key; any string works
+`~/.hermes/config.yaml`:
+```yaml
+model:
+  default: "gemma4:26b"
+  provider: "custom"          # alias "ollama" was NOT honored; "custom" works
+  base_url: "http://127.0.0.1:11434/v1"
+
+providers:
+  custom:
+    request_timeout_seconds: 600
+    stale_timeout_seconds: 1200
 ```
 
-Fallback (interactive, if `config set` keys differ from above):
-```bash
-hermes model     # walks through provider + endpoint + model picker
+`~/.hermes/.env` (chmod 600):
+```
+OPENAI_BASE_URL=http://127.0.0.1:11434/v1
+OPENAI_API_KEY=ollama
 ```
 
-Exact key names will be confirmed against `hermes config --help` at install time; this spec records intent, not the literal CLI invocation.
+The `OPENAI_API_KEY` is a placeholder string — Ollama ignores Authorization headers but Hermes' OpenAI client requires the variable to be non-empty.
 
-### 4. Verify
+**Failure mode observed during install:** with `provider: "ollama"` (the alias the example claims maps to "custom"), Hermes silently fell through to its `auto` provider chain and tried OpenRouter, returning empty output and writing 401 dumps under `~/.hermes/sessions/request_dump_*.json`. Setting `provider: "custom"` explicitly fixed it.
+
+**Token budget gotcha:** Gemma 4 emits its answer in two fields, `reasoning` and `content`. With small `max_tokens`, Gemma fills `reasoning` and leaves `content` empty — Hermes prints nothing. Don't cap `max_tokens` low; the default (model native ceiling) is correct.
+
+### 4. Verify (actually run 2026-05-02 13:46 IST)
 
 ```bash
-hermes doctor                                    # all green
-echo "Reply with PONG only." | hermes --no-tools # one-shot sanity prompt
+~/.local/bin/hermes doctor       # all critical checks green
+~/.local/bin/hermes -z 'In one short sentence: what is 2 plus 2?'
+# → "2 + 2 = 4."
 ```
 
-Pass criteria: doctor green, sanity prompt returns "PONG" (or close) within ~30 s on Contabo CPU. If it stalls > 2 min, abort and check Ollama logs (`journalctl -u ollama -n 50`).
+Confirmed in `~/.hermes/sessions/session_20260502_134651_b74e5e.json`:
+- `base_url`: `http://127.0.0.1:11434/v1`
+- `model`: `gemma4:26b`
+- assistant content: `2 + 2 = 4.`
+
+Pass criteria met: doctor green on critical sections (Python/venv/config files/core tools), sanity prompt routed through local Ollama, response < 60 s.
 
 ## Out of scope (deferred, easy to add later)
 
@@ -164,17 +180,46 @@ If/when a Hermes-driven pipeline task is added later, that future change ships w
 
 ## Verification checklist
 
-- [ ] `setup-hermes.sh` exits 0
-- [ ] `which hermes` → `~/.local/bin/hermes`
-- [ ] `hermes --version` prints a version
-- [ ] `hermes doctor` → all green
-- [ ] `hermes config get provider` → `openai-compatible` (or platform's equivalent)
-- [ ] `hermes config get base_url` → `http://127.0.0.1:11434/v1`
-- [ ] `hermes config get model` → `gemma4:26b`
-- [ ] One-shot sanity prompt returns a Gemma-4-style answer within 60 s
-- [ ] Memory file `memory/reference_hermes_agent_contabo.md` created
+- [x] `setup-hermes.sh` exits 0 (run prior to this session)
+- [x] `which hermes` → `~/.local/bin/hermes` (symlink, target `~/hermes-agent/venv/bin/hermes`)
+- [x] `hermes doctor` → all critical checks green (Python/venv/config/core tools); optional warnings ignored (no Discord/Telegram/OpenRouter — by design)
+- [x] `~/.hermes/config.yaml` set: `provider: custom`, `base_url: http://127.0.0.1:11434/v1`, `default: gemma4:26b`
+- [x] `~/.hermes/.env` set: `OPENAI_BASE_URL`, `OPENAI_API_KEY=ollama` (chmod 600)
+- [x] One-shot sanity prompt routed through local Ollama, returned `2 + 2 = 4.` within seconds
+- [x] Memory file `memory/reference_hermes_agent_contabo.md` created
+
+## Strategic split — Claude = teacher, Hermes = operator (user-stated 2026-05-02)
+
+This install is step 1 of a longer-term split between two agents:
+
+| Agent | Role | Tasks |
+|---|---|---|
+| **Claude Code (4.7)** | Teacher / designer | Deep research, system design, hard debugging, architecture decisions, writing/refining Hermes skills, fixing Hermes failures |
+| **Hermes (on Contabo, Gemma 4 backend)** | Operator | Run repeatable workflows, store memory, evolve skill files over time |
+| **Gemma 4 (local Ollama)** | Cheap worker model | Default for routine generation tasks |
+
+**What Hermes can learn:** procedures and skill files. It does **not** train Gemma's weights.
+
+**Tasks to shift off Claude (routine):** summaries, file organization, daily reports, research collection, note cleanup, routine coding chores.
+
+**Tasks Claude keeps:** deep research, system design, hard debugging, architecture decisions.
+
+**Rule of thumb:**
+- If task is repeatable → teach Hermes.
+- If task is high-stakes or novel → use Claude.
+
+**30-day ramp:**
+- **Week 1** — Use Claude to author 5–10 Hermes skills for repetitive tasks.
+- **Week 2** — Let Hermes run them; correct mistakes manually.
+- **Week 3** — Move low-risk daily tasks fully to Hermes + Gemma 4.
+- **Week 4** — Use Claude only when Hermes gets stuck or for high-value thinking.
+
+**Hard boundary:** Hermes does **not** replace the scheduler. Windows Task Scheduler + VPS systemd timers stay authoritative for clockwork firing (09:16 open capture, 14:30 close, etc.). Hermes orchestrates the **content** of LLM-shaped tasks the scheduler triggers — it does not fire them itself. Backtests stay pure code (numpy/pandas) gated through `backtesting-specs.txt`; Hermes can propose hypotheses but cannot promote them.
+
+**Gemma 4 Pilot relationship:** the existing Gemma 4 Pilot (CLAUDE.md, 2026-04-29 → 2026-05-19) is a parallel experiment. Pilot routing through `pipeline/config/llm_routing.json` is unchanged by this install. If a Pilot task graduates to `live` post-2026-05-19, that's the natural moment to evaluate routing it through Hermes-as-operator instead of direct provider calls.
 
 ## Open questions (none blocking)
 
 1. Do we want a `hermes` shortcut command on the laptop that SSHes into Contabo and starts a session? (Trivial bash alias; defer until first use.)
 2. Do we want Hermes to read the askanka.com repo? (Defer — it's a separate workflow; we'd mount the repo or `cd ~/askanka.com` inside Hermes' terminal backend.)
+3. Cloud fallback (e.g. OpenRouter) when Gemma 4 is unreachable? Out of scope for this install — defeats the $0/token rationale unless we cap usage. Revisit only after we have a real failure mode to design against.
