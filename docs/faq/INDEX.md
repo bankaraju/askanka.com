@@ -96,7 +96,7 @@ source path resolves; runs as part of the Sun 04:00 IST sync.
 - Sources:
   - docs/SYSTEM_OPERATIONS_MANUAL.md
   - CLAUDE.md
-  - opus/README.md
+  - opus/CLAUDE.md
 
 ### Spread Intelligence Engine
 - One-line: 5-layer regime-gated pair-trade decision engine — sector rotation,
@@ -187,7 +187,7 @@ source path resolves; runs as part of the Sun 04:00 IST sync.
 - Status: FAILED 2026-04-26 on §9A FRAGILE (0/6) + §9B.1 margin -0.0090 +
   §11B. Single-touch consumed; A1.1–A1.5 amendments in force.
 - Sources:
-  - docs/superpowers/specs/2026-04-25-etf-stock-tail-classifier-design.md
+  - docs/superpowers/specs/2026-04-25-etf-coefficient-stock-tail-classifier-design.md
   - docs/superpowers/hypothesis-registry.jsonl
 
 ### H-2026-04-29-ta-karpathy-v1 (per-stock TA Lasso, top-10 NIFTY)
