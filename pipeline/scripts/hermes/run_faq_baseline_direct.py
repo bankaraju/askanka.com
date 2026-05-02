@@ -27,19 +27,24 @@ INDEX_PATH = REPO / "docs" / "faq" / "INDEX.md"
 QUESTIONS = REPO / "docs" / "faq" / "baseline_questions.json"
 OUT_BASE = Path.home() / ".hermes" / "data" / "faq_runs"
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-MODEL = "gemma4:26b"
+MODEL = "gemma4-8k"
 
 sys.path.insert(0, str(REPO / "pipeline" / "scripts" / "hermes"))
 from parse_citations import extract_citations, extract_quotes  # noqa: E402
 
-SYSTEM = (
-    "You answer ONLY from the askanka.com FAQ INDEX shown below. "
-    "Quote verbatim phrases from INDEX entries when describing facts. "
-    "Cite source paths from the INDEX entries (taken as-is). "
-    "End with a 'Sources:' section listing each cited path on its own bullet line. "
-    "If the topic is not in INDEX, say 'NOT_IN_INDEX' and refuse to answer. "
-    "Do NOT invent facts, model versions, or numbers not present in INDEX."
-)
+SYSTEM = """You answer ONLY from the askanka.com FAQ INDEX shown below. Strict rules:
+
+1. Quote at least one verbatim phrase from the matching INDEX entry. Format each quote as:
+   > "exact phrase from INDEX"
+   — docs/path/to/source.md   (use a path from that INDEX entry's Sources)
+2. End EVERY answer with a 'Sources:' line followed by bullet points listing each cited path:
+   Sources:
+   - docs/path/one.md
+   - docs/path/two.md
+3. Do NOT invent facts, model names, p-values, dates, or numbers not present in INDEX.
+4. Do NOT use LaTeX, markdown headers, or bold/italics — plain prose + quote blocks + Sources only.
+5. If the question's topic is not in INDEX, reply 'NOT_IN_INDEX' and stop.
+"""
 
 
 def build_prompt(index_text: str, question: str) -> str:
