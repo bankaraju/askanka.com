@@ -82,7 +82,12 @@ def score_record(record: dict, scored: dict) -> dict:
     halluc = int(scored["no_hallucination"])
     citation_override = None
 
-    if record["tier"] == 1 and record.get("n_quotes", 0) < 2:
+    n_quotes_loose = record.get("n_quotes_loose")
+    if n_quotes_loose is None:
+        from pipeline.scripts.hermes.parse_citations import extract_quotes_loose
+        n_quotes_loose = len(extract_quotes_loose(record.get("answer_text", "")))
+
+    if record["tier"] == 1 and n_quotes_loose < 2:
         citation_override = 0
         cite = 0
 

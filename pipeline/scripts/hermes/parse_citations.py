@@ -16,6 +16,10 @@ QUOTE_RE = re.compile(
     r'^\s*>\s*"(?P<text>.+?)"\s*\n\s*[—-]\s*(?P<source>[\w./_-]+\.(?:md|txt|jsonl|json|py))',
     re.MULTILINE,
 )
+QUOTE_LOOSE_RE = re.compile(
+    r'^\s*>\s*"(?P<text>[^"\n]+)"\s*$',
+    re.MULTILINE,
+)
 SOURCE_LINE_RE = re.compile(
     r'^\s*-\s+([\w./_-]+\.(?:md|txt|jsonl|json|py))(?:\s+§[\w.]+)?\s*$',
     re.MULTILINE,
@@ -23,11 +27,25 @@ SOURCE_LINE_RE = re.compile(
 
 
 def extract_quotes(answer: str) -> list[dict]:
-    """Return list of {text, source} for every SKILL-compliant quote block."""
+    """Return list of {text, source} for every SKILL-compliant quote block.
+
+    Strict: requires `— path` line directly after the closing quote.
+    """
     return [
         {"text": m.group("text"), "source": m.group("source")}
         for m in QUOTE_RE.finditer(answer)
     ]
+
+
+def extract_quotes_loose(answer: str) -> list[str]:
+    """Count any `> "..."` blockquote regardless of trailing `— path` line.
+
+    Used for grading when Sources block already provides path attribution and
+    only the verbatim-quote count matters. Gemma 4 inconsistently emits the
+    `— path` line right after the quote even when prompted; this counter is
+    forgiving of that.
+    """
+    return [m.group("text") for m in QUOTE_LOOSE_RE.finditer(answer)]
 
 
 def extract_citations(answer: str) -> list[str]:

@@ -39,7 +39,7 @@ def test_score_record_returns_per_dim_max_6():
         "citation": 1, "faithfulness": 2, "completeness": 2, "no_hallucination": 1,
         "notes": "clean"
     }
-    record = {"id": "T1Q3", "tier": 1, "n_quotes": 2}
+    record = {"id": "T1Q3", "tier": 1, "n_quotes_loose": 2}
     out = score_record(record, scored)
     assert out["score"] == 6
     assert out["max"] == 6
@@ -47,9 +47,9 @@ def test_score_record_returns_per_dim_max_6():
 
 
 def test_tier1_zero_quotes_forces_zero_citation():
-    """Tier 1 with <2 quotes -> automatic 0 on citation regardless of grader."""
+    """Tier 1 with <2 loose quotes -> automatic 0 on citation regardless of grader."""
     scored = {"citation": 1, "faithfulness": 2, "completeness": 2, "no_hallucination": 1, "notes": ""}
-    record = {"id": "T1Q5", "tier": 1, "n_quotes": 1}
+    record = {"id": "T1Q5", "tier": 1, "n_quotes_loose": 1}
     out = score_record(record, scored)
     assert out["citation_override"] == 0
     assert out["score"] == 5

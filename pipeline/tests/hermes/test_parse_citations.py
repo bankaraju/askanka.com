@@ -1,4 +1,8 @@
-from pipeline.scripts.hermes.parse_citations import extract_citations, extract_quotes
+from pipeline.scripts.hermes.parse_citations import (
+    extract_citations,
+    extract_quotes,
+    extract_quotes_loose,
+)
 
 
 def test_extracts_inline_citations():
@@ -40,3 +44,22 @@ def test_quote_without_dash_source_is_skipped():
     answer = '> "hello world"\n\nno source line'
     quotes = extract_quotes(answer)
     assert quotes == []
+
+
+def test_extract_quotes_loose_counts_bare_quotes():
+    """Loose counter accepts `> "..."` blocks with or without trailing path."""
+    answer = '''Some prose.
+
+> "first quote without path"
+
+More prose.
+
+> "second quote with path"
+— docs/x.md
+
+End.
+'''
+    loose = extract_quotes_loose(answer)
+    assert len(loose) == 2
+    assert loose[0] == "first quote without path"
+    assert loose[1] == "second quote with path"
