@@ -215,6 +215,23 @@ def write_report_card(date_str: str, records: list[dict], runs_dir: Path) -> Non
     ]
     out.write_text("\n".join(lines), encoding="utf-8")
     print(f"Wrote {out}")
+    sidecar = REPORT_DIR / f"{date_str}-week-1.json"
+    sidecar.write_text(json.dumps({
+        "date": date_str,
+        "n_questions": len(records),
+        "aggregate_pct": pct,
+        "halluc_clean_pct": halluc_pct,
+        "citation_pct": cite_pct,
+        "avg_latency_min": avg_latency_min,
+        "verdict": verdict,
+        "per_tier_pct": {
+            t: round(100 * sum(r["score"] for r in by_tier[t]) / (6 * len(by_tier[t])), 1)
+            for t in (1, 2, 3, 4, 5) if by_tier[t]
+        },
+        "tiers_present": sorted({r["tier"] for r in records}),
+        "records": records,
+    }, indent=2), encoding="utf-8")
+    print(f"Wrote {sidecar}")
 
 
 if __name__ == "__main__":

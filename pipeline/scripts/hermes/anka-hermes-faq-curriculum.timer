@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily timer for Hermes FAQ curriculum (22:00 IST — Contabo system tz is IST)
+
+[Timer]
+OnCalendar=*-*-* 22:00:00
+Persistent=true
+Unit=anka-hermes-faq-curriculum.service
+
+[Install]
+WantedBy=timers.target

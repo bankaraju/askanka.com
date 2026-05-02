@@ -1,0 +1,16 @@
+[Unit]
+Description=Anka Hermes FAQ daily curriculum (Gemma run + Gemini grade + Telegram)
+After=ollama.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+WorkingDirectory=/home/anka/askanka.com
+ExecStart=/bin/bash /home/anka/askanka.com/pipeline/scripts/hermes/run_curriculum_daily.sh
+TimeoutStartSec=8h
+StandardOutput=append:/home/anka/.hermes/data/faq_curriculum_systemd.log
+StandardError=append:/home/anka/.hermes/data/faq_curriculum_systemd.log
+
+[Install]
+WantedBy=multi-user.target
