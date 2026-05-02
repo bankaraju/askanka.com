@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-05-02T04:45:26.994698+05:30",
+  "updated_at": "2026-05-03T04:45:26.197014+05:30",
   "zone": "NEUTRAL",
   "score": 48.2,
   "regime_source": "etf_engine",
   "stable": true,
-  "consecutive_days": 14,
+  "consecutive_days": 15,
   "components": {
     "inst_flow": {
       "raw": null,
@@ -42,5 +42,5 @@
     "usdinr",
     "crude_5d"
   ],
-  "source_timestamp": "2026-05-02T04:45:26.605345+05:30"
+  "source_timestamp": "2026-05-03T04:45:25.918975+05:30"
 }
