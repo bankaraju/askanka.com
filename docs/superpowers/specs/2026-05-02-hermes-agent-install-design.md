@@ -118,6 +118,19 @@ The `OPENAI_API_KEY` is a placeholder string — Ollama ignores Authorization he
 
 **Token budget gotcha:** Gemma 4 emits its answer in two fields, `reasoning` and `content`. With small `max_tokens`, Gemma fills `reasoning` and leaves `content` empty — Hermes prints nothing. Don't cap `max_tokens` low; the default (model native ceiling) is correct.
 
+**Context-window gotcha (discovered 2026-05-02 15:30 IST during system-faq skill bring-up):** Ollama loads Gemma 4 with the model-default 4K context. Hermes Agent hard-requires ≥64K context and refuses to start any skill-driven run otherwise (`ValueError: Model X has a context window of 4,096 tokens, which is below the minimum 64,000 required by Hermes Agent`). Fix without sudo by creating a per-model variant via Modelfile:
+
+```bash
+cat > /tmp/Modelfile.gemma4_64k <<'EOF'
+FROM gemma4:26b
+PARAMETER num_ctx 65536
+EOF
+ollama create gemma4-64k -f /tmp/Modelfile.gemma4_64k
+sed -i 's/gemma4:26b/gemma4-64k/' ~/.hermes/config.yaml
+```
+
+Memory cost: KV cache at 64K context is ~12 GB extra RAM (within Contabo's 64 GB). Latency cost: prefill scales linearly with input — first answer at full skill-context (~10–20K input tokens) takes 5–15 min on CPU. Plan budgets reflect this.
+
 ### 4. Verify (actually run 2026-05-02 13:46 IST)
 
 ```bash
