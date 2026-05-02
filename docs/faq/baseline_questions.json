@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "frozen_at": "2026-05-02",
+  "note": "IMMUTABLE after first run. Do not edit. Future report cards compare against this exact set.",
+  "questions": [
+    {"id": "T1Q1", "tier": 1, "topic": "Karpathy random search", "q": "What is Karpathy random search and how is it used in H-2026-04-29-ta-karpathy-v1?"},
+    {"id": "T1Q2", "tier": 1, "topic": "Lasso L1", "q": "Why does H-2026-04-29-ta-karpathy-v1 use Lasso L1 logistic regression instead of OLS, and what are its inputs?"},
+    {"id": "T1Q3", "tier": 1, "topic": "BH-FDR", "q": "Define Benjamini-Hochberg FDR correction and explain the concrete failure mode that killed H-2026-05-01-phase-c-mr-karpathy-v1."},
+    {"id": "T1Q4", "tier": 1, "topic": "Deflated Sharpe", "q": "What is Deflated Sharpe, and at what point in the H-2026-04-29-ta-karpathy-v1 lifecycle does it become gate-blocking?"},
+    {"id": "T1Q5", "tier": 1, "topic": "Walk-forward CV", "q": "Describe the 4-fold walk-forward cross-validation used in H-2026-04-29-ta-karpathy-v1 and explain why time-respecting CV is required."},
+    {"id": "T1Q6", "tier": 1, "topic": "Permutation null", "q": "What is a permutation null, and how does it compose with BH-FDR in the qualifier-gate stack?"},
+
+    {"id": "T2Q1", "tier": 2, "topic": "Golden Goose", "q": "List the 8 layers of the Golden Goose pipeline in order and explain why ETF regime is the upstream brain."},
+    {"id": "T2Q2", "tier": 2, "topic": "ETF regime v3-CURATED-30", "q": "What is v3-CURATED-30, what edge did it show in cycle-3 evaluation 2026-04-26, and why is v2-faithful dead?"},
+    {"id": "T2Q3", "tier": 2, "topic": "OPUS ANKA Trust Scores", "q": "What does an OPUS ANKA Trust Score grade and how complete is coverage of the 213 F&O universe?"},
+    {"id": "T2Q4", "tier": 2, "topic": "Spread Intelligence", "q": "Name the 5 layers of the Spread Intelligence Engine and explain how regime gates the spread set."},
+    {"id": "T2Q5", "tier": 2, "topic": "Reverse Regime A/B/C", "q": "Distinguish Reverse Regime Phase A, B, and C — what does each produce, and what was the LAG vs OVERSHOOT decision in the 2026-04-23 audit?"},
+    {"id": "T2Q6", "tier": 2, "topic": "Theme Detector v1", "q": "What does the Theme Detector v1 produce weekly, and why is it not yet citable as evidence per the data-validation policy §21?"},
+
+    {"id": "T3Q1", "tier": 3, "topic": "Clockwork", "q": "Where is the canonical inventory of Anka* scheduled tasks, and what fields does it record per task?"},
+    {"id": "T3Q2", "tier": 3, "topic": "Watchdog", "q": "How does the data-freshness watchdog detect stale tasks, and what does it do on a critical-tier stall?"},
+    {"id": "T3Q3", "tier": 3, "topic": "14:30 cutoff", "q": "Why is no new live shadow position opened after 14:30 IST, and which three engines enforce it at the source?"},
+    {"id": "T3Q4", "tier": 3, "topic": "Kill-switch", "q": "What does the kill-switch / strategy-pattern gate enforce, and where is the regex of guarded file patterns?"},
+    {"id": "T3Q5", "tier": 3, "topic": "anka_inventory.json", "q": "What happens if a new Anka* scheduled task is added without an entry in anka_inventory.json?"},
+    {"id": "T3Q6", "tier": 3, "topic": "VPS execution foundation", "q": "What is the architectural split between the laptop and the Contabo VPS, and what was hardened on 2026-04-25?"},
+
+    {"id": "T4Q1", "tier": 4, "topic": "H-2026-04-25-002", "q": "Why did H-2026-04-25-002 (etf-stock-tail-classifier) fail on 2026-04-26, citing the specific §-references from the verdict?"},
+    {"id": "T4Q2", "tier": 4, "topic": "H-2026-04-29-ta-karpathy-v1", "q": "What is the holdout window for H-2026-04-29-ta-karpathy-v1, and what is the honest expectation for stocks that qualify?"},
+    {"id": "T4Q3", "tier": 4, "topic": "H-2026-04-29-intraday-data-driven-v1", "q": "What does H-2026-04-29-intraday-data-driven-v1 do on PASS vs FAIL of its §9/§9A/§9B verdict?"},
+    {"id": "T4Q4", "tier": 4, "topic": "H-2026-04-27-003 SECRSI", "q": "Why does H-2026-04-27-003 SECRSI carry a STRONG NEGATIVE PRIOR after the 2026-05-01 5y replay, and why is its holdout still untouched?"},
+    {"id": "T4Q5", "tier": 4, "topic": "H-2026-05-01-EARNINGS-DRIFT-LONG-v1", "q": "What is the quad-filter for H-2026-05-01-EARNINGS-DRIFT-LONG-v1, and what auto-extension rule applies if the holdout doesn't reach n≥20?"},
+    {"id": "T4Q6", "tier": 4, "topic": "H-2026-05-01-phase-c-mr-karpathy-v1", "q": "Why is H-2026-05-01-phase-c-mr-karpathy-v1 marked REGISTRATION_FAIL, and what would a re-attempt require per backtesting-specs §10.4?"},
+
+    {"id": "T5Q1", "tier": 5, "topic": "backtesting-specs §0", "q": "What does §0 of backtesting-specs.txt say about waivers, and why is it load-bearing?"},
+    {"id": "T5Q2", "tier": 5, "topic": "Single-touch holdout §10.4", "q": "Explain the single-touch holdout rule (§10.4) — what does 'no parameter changes during holdout' mean concretely, and what triggers a fresh registration?"},
+    {"id": "T5Q3", "tier": 5, "topic": "Data-validation §21", "q": "What does §21 of the data-validation policy bind together, and how does it gate model approval?"},
+    {"id": "T5Q4", "tier": 5, "topic": "Doc-sync mandate", "q": "List the artifacts that must update in the same commit when the system changes, per the doc-sync mandate."},
+    {"id": "T5Q5", "tier": 5, "topic": "No-hallucination mandate", "q": "What is the no-hallucination mandate, and what is the operational behavior when a number cannot be looked up?"},
+    {"id": "T5Q6", "tier": 5, "topic": "Subscriber language", "q": "How should 'n=10, 7 wins' be phrased to a subscriber per the plain-English mandate?"}
+  ]
+}
