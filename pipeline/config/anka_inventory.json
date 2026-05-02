@@ -1289,6 +1289,15 @@
       "notes": "Every 15 min. anka-failure-watcher.timer -> check_systemd_failures.sh. WATCHLIST = anka-{auto-push,mirror-push,security-daily,security-weekly,terminal}.service. Flag-file pattern in /var/lib/anka/failure-flags/ ensures one Telegram alert per failure transition (idempotent). The meta-watchdog for VPS-side cron jobs."
     },
     {
+      "task_name": "AnkaFAQSync",
+      "tier": "info",
+      "cadence_class": "weekly",
+      "host": "vps",
+      "outputs": [],
+      "grace_multiplier": 2.0,
+      "notes": "Sun 04:00 IST. anka-faq-sync.timer -> git pull --ff-only origin feat/phase-c-v5 in ~/askanka.com. Refreshes the FAQ source corpus that feeds the Hermes system-faq skill (docs/faq/INDEX.md + every cited source file). info tier — Hermes is interactive, not blocking. Watchdog has no output file to inspect; rely on AnkaFailureWatcher for alerts on service failure transitions."
+    },
+    {
       "task_name": "AnkaSecurityDaily",
       "tier": "warn",
       "cadence_class": "daily",
