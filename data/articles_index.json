@@ -1,6 +1,24 @@
 {
   "articles": [
     {
+      "date": "2026-05-03",
+      "segment": "war",
+      "filename": "2026-05-03-war.html",
+      "headline": "Hezbollah's Drone Blitz: A New Chapter in Israel's Air Superiority Myth",
+      "category": "GEOPOLITICAL ANALYSIS",
+      "color": "#ef4444",
+      "published_at": "May 03, 2026"
+    },
+    {
+      "date": "2026-05-03",
+      "segment": "epstein",
+      "filename": "2026-05-03-epstein.html",
+      "headline": "The 'Epstein Alive' Bombshell: Forensic Evidence Shatters Official Narrative, Demands Accountability",
+      "category": "INVESTIGATION",
+      "color": "#d4a855",
+      "published_at": "May 03, 2026"
+    },
+    {
       "date": "2026-05-02",
       "segment": "war",
       "filename": "2026-05-02-war.html",
