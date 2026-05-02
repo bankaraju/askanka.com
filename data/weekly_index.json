@@ -1,6 +1,17 @@
 {
   "weekly_briefs": [
     {
+      "week": 10,
+      "filename": "week-010.html",
+      "period_start": "2026-04-27",
+      "period_end": "2026-05-01",
+      "title": "Weekly Brief #010 — 2026-04-27 to 2026-05-01",
+      "description": "Automated weekly market analysis. Top winner: ? ?%. Top loser: ? ?%.",
+      "top_winner": {},
+      "top_loser": {},
+      "published_at": "2026-05-02"
+    },
+    {
       "week": 9,
       "filename": "week-009.html",
       "period_start": "2026-04-20",
