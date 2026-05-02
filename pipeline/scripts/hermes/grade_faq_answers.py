@@ -13,6 +13,8 @@ from datetime import datetime
 from pathlib import Path
 
 REPO = Path.home() / "askanka.com"
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
 RUNS_BASE = Path.home() / ".hermes" / "data" / "faq_runs"
 REPORT_DIR = REPO / "docs" / "research" / "hermes_pilot" / "report_cards"
 
@@ -84,7 +86,9 @@ def score_record(record: dict, scored: dict) -> dict:
 
     n_quotes_loose = record.get("n_quotes_loose")
     if n_quotes_loose is None:
-        from pipeline.scripts.hermes.parse_citations import extract_quotes_loose
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).parent))
+        from parse_citations import extract_quotes_loose
         n_quotes_loose = len(extract_quotes_loose(record.get("answer_text", "")))
 
     if record["tier"] == 1 and n_quotes_loose < 2:
@@ -209,7 +213,7 @@ def write_report_card(date_str: str, records: list[dict], runs_dir: Path) -> Non
         "",
         "**Triggered action:** [TODO — fill per acceleration table once spot-check complete]",
     ]
-    out.write_text("\n".join(lines))
+    out.write_text("\n".join(lines), encoding="utf-8")
     print(f"Wrote {out}")
 
 
