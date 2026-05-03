@@ -1,0 +1,161 @@
+{
+  "check_4_pit_audit": {
+    "n_series": 44,
+    "n_fail": 0,
+    "fail_series": [],
+    "pass": true
+  },
+  "check_1_universe": {
+    "n_total_csvs": 276,
+    "n_skipped_missing_ohlcv": 1,
+    "n_universe_qualified": 200,
+    "min_required": 100,
+    "pass": true,
+    "head": [
+      {
+        "ticker": "HDFCBANK",
+        "n_bars": 1114,
+        "adv_cr": 1729.2103708460938
+      },
+      {
+        "ticker": "RELIANCE",
+        "n_bars": 1114,
+        "adv_cr": 1380.4938786972473
+      },
+      {
+        "ticker": "ICICIBANK",
+        "n_bars": 1114,
+        "adv_cr": 1237.6685241052796
+      },
+      {
+        "ticker": "INFY",
+        "n_bars": 1114,
+        "adv_cr": 1058.9476551941345
+      },
+      {
+        "ticker": "BSE",
+        "n_bars": 1114,
+        "adv_cr": 919.2241210569214
+      },
+      {
+        "ticker": "BHARTIARTL",
+        "n_bars": 1114,
+        "adv_cr": 873.3417459020997
+      },
+      {
+        "ticker": "ETERNAL",
+        "n_bars": 1037,
+        "adv_cr": 849.3671438949127
+      },
+      {
+        "ticker": "ZOMATO",
+        "n_bars": 1037,
+        "adv_cr": 849.3671438949127
+      },
+      {
+        "ticker": "TCS",
+        "n_bars": 1114,
+        "adv_cr": 819.5713453671631
+      },
+      {
+        "ticker": "M&M",
+        "n_bars": 1114,
+        "adv_cr": 817.6382401329101
+      }
+    ],
+    "tail": [
+      {
+        "ticker": "POONAWALLA",
+        "n_bars": 1114,
+        "adv_cr": 54.29280496570435
+      },
+      {
+        "ticker": "HUDCO",
+        "n_bars": 1114,
+        "adv_cr": 54.262906362594606
+      },
+      {
+        "ticker": "JSL",
+        "n_bars": 1114,
+        "adv_cr": 53.46011490549927
+      },
+      {
+        "ticker": "PATANJALI",
+        "n_bars": 1114,
+        "adv_cr": 52.13832857125855
+      },
+      {
+        "ticker": "ICICIPRULI",
+        "n_bars": 1114,
+        "adv_cr": 50.54755387998352
+      }
+    ]
+  },
+  "check_2_pca": {
+    "n_etf_cols_used": 30,
+    "n_raw_features": 30,
+    "K_ETF_at_85pct_var": 10,
+    "cum_var_at_K": 0.8540025216592642,
+    "explained_variance_first_10": [
+      0.45811558725613344,
+      0.09045566216401912,
+      0.06715949020214632,
+      0.06428566298970495,
+      0.03696236160960029,
+      0.03573429551809711,
+      0.028419410088903738,
+      0.026982748464545517,
+      0.024078676678886562,
+      0.021808626687227193
+    ],
+    "max_allowed": 12,
+    "pass": true
+  },
+  "check_3_orthogonality": {
+    "n_stocks_sampled": 30,
+    "n_stocks_used": 30,
+    "max_abs_corr_overall": 0.07405993041206946,
+    "by_pc_max_abs_corr": {
+      "PC1": 0.07405993041206946,
+      "PC2": 0.03241018669267185,
+      "PC3": 0.03310193181834456,
+      "PC4": 0.02527541459504564,
+      "PC5": 0.021858368762959633,
+      "PC6": 0.03362178112693347,
+      "PC7": 0.033447879780177665,
+      "PC8": 0.032366536747781484,
+      "PC9": 0.027497326360401104,
+      "PC10": 0.033326644019027275
+    },
+    "by_pc_offender": {
+      "PC1": "range_pct_today",
+      "PC2": "atr_14_pct",
+      "PC3": "dist_50ema_pct",
+      "PC4": "vol_zscore_20",
+      "PC5": "atr_14_pct",
+      "PC6": "vol_zscore_20",
+      "PC7": "vol_zscore_20",
+      "PC8": "vol_zscore_20",
+      "PC9": "atr_14_pct",
+      "PC10": "range_pct_today"
+    },
+    "max_allowed": 0.4,
+    "pass": true
+  },
+  "check_5_sample_size": {
+    "n_train_days": 996,
+    "n_features": 23,
+    "feature_breakdown": {
+      "K_ETF_PCs": 10,
+      "indian_macro": 4,
+      "stock_TA": 6,
+      "DOW": 3
+    },
+    "hl_trading_days": 90,
+    "effective_n": 130.2824254111102,
+    "obs_per_feature_ratio": 5.664453278743922,
+    "min_required_ratio": 5.0,
+    "pass": true
+  },
+  "overall_pass": true
+}

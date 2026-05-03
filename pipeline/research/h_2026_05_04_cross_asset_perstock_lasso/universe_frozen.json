@@ -1,0 +1,1211 @@
+{
+  "frozen_at": "2026-05-03T12:27:41.288799",
+  "window_start": "2021-05-04",
+  "train_end": "2025-10-31",
+  "adv_min_cr": 50.0,
+  "n_tickers": 200,
+  "tickers": [
+    "HDFCBANK",
+    "RELIANCE",
+    "ICICIBANK",
+    "INFY",
+    "BSE",
+    "BHARTIARTL",
+    "ETERNAL",
+    "ZOMATO",
+    "TCS",
+    "M&M",
+    "AXISBANK",
+    "MARUTI",
+    "SBIN",
+    "BAJFINANCE",
+    "KOTAKBANK",
+    "ITC",
+    "LT",
+    "BEL",
+    "HAL",
+    "ADANIPOWER",
+    "IDEA",
+    "TRENT",
+    "INDIGO",
+    "HCLTECH",
+    "VEDL",
+    "DIXON",
+    "MCX",
+    "HEROMOTOCO",
+    "TATASTEEL",
+    "HINDALCO",
+    "SUNPHARMA",
+    "HINDUNILVR",
+    "SUZLON",
+    "BAJAJ-AUTO",
+    "POWERGRID",
+    "SHRIRAMFIN",
+    "GODFRYPHLP",
+    "MAZDOCK",
+    "EICHERMOT",
+    "NTPC",
+    "MAXHEALTH",
+    "TITAN",
+    "CDSL",
+    "ULTRACEMCO",
+    "COFORGE",
+    "TVSMOTOR",
+    "DIVISLAB",
+    "APOLLOHOSP",
+    "RBLBANK",
+    "INDUSTOWER",
+    "ADANIPORTS",
+    "CANBK",
+    "VBL",
+    "TECHM",
+    "INDUSINDBK",
+    "PERSISTENT",
+    "AMBER",
+    "HDFCAMC",
+    "BDL",
+    "CHOLAFIN",
+    "BPCL",
+    "ONGC",
+    "SAMMAANCAP",
+    "WIPRO",
+    "KALYANKJIL",
+    "ADANIENT",
+    "YESBANK",
+    "ANGELONE",
+    "DMART",
+    "ASIANPAINT",
+    "DRREDDY",
+    "BANKBARODA",
+    "POWERINDIA",
+    "HDFCLIFE",
+    "COALINDIA",
+    "BAJAJFINSV",
+    "ASHOKLEY",
+    "PFC",
+    "HINDPETRO",
+    "AUBANK",
+    "CUMMINSIND",
+    "FORTIS",
+    "CIPLA",
+    "BRITANNIA",
+    "PGEL",
+    "GODREJCP",
+    "INDHOTEL",
+    "FORCEMOT",
+    "CGPOWER",
+    "HINDZINC",
+    "JSWSTEEL",
+    "TATAPOWER",
+    "COCHINSHIP",
+    "DLF",
+    "ADANIGREEN",
+    "NAUKRI",
+    "HINDCOPPER",
+    "POLYCAB",
+    "VOLTAS",
+    "SBILIFE",
+    "MOTHERSON",
+    "GRASIM",
+    "PNB",
+    "LAURUSLABS",
+    "LUPIN",
+    "RECLTD",
+    "GAIL",
+    "JINDALSTEL",
+    "RVNL",
+    "L&TFH",
+    "LTF",
+    "BHEL",
+    "NATIONALUM",
+    "NESTLEIND",
+    "MUTHOOTFIN",
+    "UPL",
+    "ABCAPITAL",
+    "SOLARINDS",
+    "ABB",
+    "PNBHOUSING",
+    "MARICO",
+    "FEDERALBNK",
+    "IOC",
+    "NMDC",
+    "IDFCFIRSTB",
+    "LTIM",
+    "LODHA",
+    "GODREJPROP",
+    "SAIL",
+    "GLENMARK",
+    "HAVELLS",
+    "AUROPHARMA",
+    "SONACOMS",
+    "TATACONSUM",
+    "UNIONBANK",
+    "DABUR",
+    "INDIANB",
+    "COLPAL",
+    "JSWENERGY",
+    "UNOMINDA",
+    "CAMS",
+    "MPHASIS",
+    "PRESTIGE",
+    "OFSS",
+    "BOSCHLTD",
+    "MRF",
+    "ICICIGI",
+    "SIEMENS",
+    "AMBUJACEM",
+    "SRF",
+    "BANDHANBNK",
+    "NHPC",
+    "IRFC",
+    "MANAPPURAM",
+    "KEI",
+    "EXIDEIND",
+    "BHARATFORG",
+    "IEX",
+    "PAGEIND",
+    "PHOENIXLTD",
+    "PIDILITIND",
+    "KPITTECH",
+    "JUBLFOOD",
+    "TIINDIA",
+    "BANKINDIA",
+    "DALBHARAT",
+    "BIOCON",
+    "HFCL",
+    "TATAELXSI",
+    "INOXWIND",
+    "OIL",
+    "ZYDUSLIFE",
+    "CROMPTON",
+    "MFSL",
+    "NBCC",
+    "ASTRAL",
+    "SHREECEM",
+    "ZEEL",
+    "TITAGARH",
+    "TORNTPHARM",
+    "JKCEMENT",
+    "BLUESTARCO",
+    "MOTILALOFS",
+    "SBICARD",
+    "OBEROIRLTY",
+    "ALKEM",
+    "GMRAIRPORT",
+    "COROMANDEL",
+    "APLAPOLLO",
+    "360ONE",
+    "NAM-INDIA",
+    "PIIND",
+    "BAJAJHLDNG",
+    "LICHSGFIN",
+    "SUPREMEIND",
+    "POONAWALLA",
+    "HUDCO",
+    "JSL",
+    "PATANJALI",
+    "ICICIPRULI"
+  ],
+  "details": [
+    {
+      "ticker": "HDFCBANK",
+      "n_bars": 1114,
+      "adv_cr": 1729.2103708460938
+    },
+    {
+      "ticker": "RELIANCE",
+      "n_bars": 1114,
+      "adv_cr": 1380.4938786972473
+    },
+    {
+      "ticker": "ICICIBANK",
+      "n_bars": 1114,
+      "adv_cr": 1237.6685241052796
+    },
+    {
+      "ticker": "INFY",
+      "n_bars": 1114,
+      "adv_cr": 1058.9476551941345
+    },
+    {
+      "ticker": "BSE",
+      "n_bars": 1114,
+      "adv_cr": 919.2241210569214
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "n_bars": 1114,
+      "adv_cr": 873.3417459020997
+    },
+    {
+      "ticker": "ETERNAL",
+      "n_bars": 1037,
+      "adv_cr": 849.3671438949127
+    },
+    {
+      "ticker": "ZOMATO",
+      "n_bars": 1037,
+      "adv_cr": 849.3671438949127
+    },
+    {
+      "ticker": "TCS",
+      "n_bars": 1114,
+      "adv_cr": 819.5713453671631
+    },
+    {
+      "ticker": "M&M",
+      "n_bars": 1114,
+      "adv_cr": 817.6382401329101
+    },
+    {
+      "ticker": "AXISBANK",
+      "n_bars": 1114,
+      "adv_cr": 656.6230763346924
+    },
+    {
+      "ticker": "MARUTI",
+      "n_bars": 1114,
+      "adv_cr": 645.77598325
+    },
+    {
+      "ticker": "SBIN",
+      "n_bars": 1114,
+      "adv_cr": 623.7941985308228
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "n_bars": 1114,
+      "adv_cr": 616.4095212167115
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "n_bars": 1114,
+      "adv_cr": 612.5255145160218
+    },
+    {
+      "ticker": "ITC",
+      "n_bars": 1114,
+      "adv_cr": 530.0053089926467
+    },
+    {
+      "ticker": "LT",
+      "n_bars": 1114,
+      "adv_cr": 523.448509394934
+    },
+    {
+      "ticker": "BEL",
+      "n_bars": 1114,
+      "adv_cr": 471.6138905670944
+    },
+    {
+      "ticker": "HAL",
+      "n_bars": 1114,
+      "adv_cr": 448.68482205378416
+    },
+    {
+      "ticker": "ADANIPOWER",
+      "n_bars": 1114,
+      "adv_cr": 432.581471999844
+    },
+    {
+      "ticker": "IDEA",
+      "n_bars": 1114,
+      "adv_cr": 414.4794845981473
+    },
+    {
+      "ticker": "TRENT",
+      "n_bars": 1114,
+      "adv_cr": 413.70475305
+    },
+    {
+      "ticker": "INDIGO",
+      "n_bars": 1114,
+      "adv_cr": 381.0527539
+    },
+    {
+      "ticker": "HCLTECH",
+      "n_bars": 1114,
+      "adv_cr": 380.0197117378967
+    },
+    {
+      "ticker": "VEDL",
+      "n_bars": 1114,
+      "adv_cr": 370.51013661566316
+    },
+    {
+      "ticker": "DIXON",
+      "n_bars": 1114,
+      "adv_cr": 361.10103965
+    },
+    {
+      "ticker": "MCX",
+      "n_bars": 1114,
+      "adv_cr": 352.8330062631836
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "n_bars": 1114,
+      "adv_cr": 341.7534694078613
+    },
+    {
+      "ticker": "TATASTEEL",
+      "n_bars": 1114,
+      "adv_cr": 335.63000575172197
+    },
+    {
+      "ticker": "HINDALCO",
+      "n_bars": 1114,
+      "adv_cr": 331.85796167648925
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "n_bars": 1114,
+      "adv_cr": 323.65384834437253
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "n_bars": 1114,
+      "adv_cr": 320.93368754205324
+    },
+    {
+      "ticker": "SUZLON",
+      "n_bars": 1114,
+      "adv_cr": 312.5110832682064
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "n_bars": 1114,
+      "adv_cr": 311.007310925
+    },
+    {
+      "ticker": "POWERGRID",
+      "n_bars": 1114,
+      "adv_cr": 293.67461229478454
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "n_bars": 1114,
+      "adv_cr": 293.33060449466245
+    },
+    {
+      "ticker": "GODFRYPHLP",
+      "n_bars": 1114,
+      "adv_cr": 292.8342839888672
+    },
+    {
+      "ticker": "MAZDOCK",
+      "n_bars": 1114,
+      "adv_cr": 290.0756326449219
+    },
+    {
+      "ticker": "EICHERMOT",
+      "n_bars": 1114,
+      "adv_cr": 281.51950205
+    },
+    {
+      "ticker": "NTPC",
+      "n_bars": 1114,
+      "adv_cr": 280.3715664709488
+    },
+    {
+      "ticker": "MAXHEALTH",
+      "n_bars": 1114,
+      "adv_cr": 278.61475715886843
+    },
+    {
+      "ticker": "TITAN",
+      "n_bars": 1114,
+      "adv_cr": 268.41168477163086
+    },
+    {
+      "ticker": "CDSL",
+      "n_bars": 1114,
+      "adv_cr": 263.35646076932375
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "n_bars": 1114,
+      "adv_cr": 254.12240495
+    },
+    {
+      "ticker": "COFORGE",
+      "n_bars": 1114,
+      "adv_cr": 246.34660486852417
+    },
+    {
+      "ticker": "TVSMOTOR",
+      "n_bars": 1114,
+      "adv_cr": 244.7558508529175
+    },
+    {
+      "ticker": "DIVISLAB",
+      "n_bars": 1114,
+      "adv_cr": 241.49777785
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "n_bars": 1114,
+      "adv_cr": 241.05139382055665
+    },
+    {
+      "ticker": "RBLBANK",
+      "n_bars": 1114,
+      "adv_cr": 240.48769119504547
+    },
+    {
+      "ticker": "INDUSTOWER",
+      "n_bars": 1114,
+      "adv_cr": 239.95447537443695
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "n_bars": 1114,
+      "adv_cr": 237.05151602249757
+    },
+    {
+      "ticker": "CANBK",
+      "n_bars": 1114,
+      "adv_cr": 234.64788579677202
+    },
+    {
+      "ticker": "VBL",
+      "n_bars": 1114,
+      "adv_cr": 232.49707534194945
+    },
+    {
+      "ticker": "TECHM",
+      "n_bars": 1114,
+      "adv_cr": 225.33580271257324
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "n_bars": 1114,
+      "adv_cr": 221.3335918583435
+    },
+    {
+      "ticker": "PERSISTENT",
+      "n_bars": 1114,
+      "adv_cr": 219.8801320922119
+    },
+    {
+      "ticker": "AMBER",
+      "n_bars": 1114,
+      "adv_cr": 215.032844975
+    },
+    {
+      "ticker": "HDFCAMC",
+      "n_bars": 1114,
+      "adv_cr": 204.653863675
+    },
+    {
+      "ticker": "BDL",
+      "n_bars": 1114,
+      "adv_cr": 204.03777149525757
+    },
+    {
+      "ticker": "CHOLAFIN",
+      "n_bars": 1114,
+      "adv_cr": 196.6854592163452
+    },
+    {
+      "ticker": "BPCL",
+      "n_bars": 1114,
+      "adv_cr": 193.6640229594345
+    },
+    {
+      "ticker": "ONGC",
+      "n_bars": 1114,
+      "adv_cr": 191.31508106386414
+    },
+    {
+      "ticker": "SAMMAANCAP",
+      "n_bars": 1114,
+      "adv_cr": 186.60568618799897
+    },
+    {
+      "ticker": "WIPRO",
+      "n_bars": 1114,
+      "adv_cr": 186.53219964525758
+    },
+    {
+      "ticker": "KALYANKJIL",
+      "n_bars": 1114,
+      "adv_cr": 186.1176924337204
+    },
+    {
+      "ticker": "ADANIENT",
+      "n_bars": 1114,
+      "adv_cr": 183.43477463706054
+    },
+    {
+      "ticker": "YESBANK",
+      "n_bars": 1114,
+      "adv_cr": 182.40827290700625
+    },
+    {
+      "ticker": "ANGELONE",
+      "n_bars": 1114,
+      "adv_cr": 181.90813909996032
+    },
+    {
+      "ticker": "DMART",
+      "n_bars": 1114,
+      "adv_cr": 180.90096000988768
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "n_bars": 1114,
+      "adv_cr": 179.76144904608154
+    },
+    {
+      "ticker": "DRREDDY",
+      "n_bars": 1114,
+      "adv_cr": 178.98705283620606
+    },
+    {
+      "ticker": "BANKBARODA",
+      "n_bars": 1114,
+      "adv_cr": 177.2346885797493
+    },
+    {
+      "ticker": "POWERINDIA",
+      "n_bars": 1114,
+      "adv_cr": 176.55914305
+    },
+    {
+      "ticker": "HDFCLIFE",
+      "n_bars": 1114,
+      "adv_cr": 175.7321776779541
+    },
+    {
+      "ticker": "COALINDIA",
+      "n_bars": 1114,
+      "adv_cr": 175.45223983643035
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "n_bars": 1114,
+      "adv_cr": 175.43740494836425
+    },
+    {
+      "ticker": "ASHOKLEY",
+      "n_bars": 1114,
+      "adv_cr": 174.59386105100862
+    },
+    {
+      "ticker": "PFC",
+      "n_bars": 1114,
+      "adv_cr": 172.26282835349122
+    },
+    {
+      "ticker": "HINDPETRO",
+      "n_bars": 1114,
+      "adv_cr": 171.82812057272338
+    },
+    {
+      "ticker": "AUBANK",
+      "n_bars": 1114,
+      "adv_cr": 169.9644771095459
+    },
+    {
+      "ticker": "CUMMINSIND",
+      "n_bars": 1114,
+      "adv_cr": 168.07713013625488
+    },
+    {
+      "ticker": "FORTIS",
+      "n_bars": 1114,
+      "adv_cr": 168.04541112109985
+    },
+    {
+      "ticker": "CIPLA",
+      "n_bars": 1114,
+      "adv_cr": 168.00656578322753
+    },
+    {
+      "ticker": "BRITANNIA",
+      "n_bars": 1114,
+      "adv_cr": 167.8695361
+    },
+    {
+      "ticker": "PGEL",
+      "n_bars": 1114,
+      "adv_cr": 167.14647571828613
+    },
+    {
+      "ticker": "GODREJCP",
+      "n_bars": 1114,
+      "adv_cr": 160.7581878440552
+    },
+    {
+      "ticker": "INDHOTEL",
+      "n_bars": 1114,
+      "adv_cr": 158.45915811323547
+    },
+    {
+      "ticker": "FORCEMOT",
+      "n_bars": 1073,
+      "adv_cr": 157.60212623789062
+    },
+    {
+      "ticker": "CGPOWER",
+      "n_bars": 1114,
+      "adv_cr": 156.71277303486937
+    },
+    {
+      "ticker": "HINDZINC",
+      "n_bars": 1114,
+      "adv_cr": 156.1408686487732
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "n_bars": 1114,
+      "adv_cr": 155.64599774543456
+    },
+    {
+      "ticker": "TATAPOWER",
+      "n_bars": 1114,
+      "adv_cr": 155.50833427758027
+    },
+    {
+      "ticker": "COCHINSHIP",
+      "n_bars": 1114,
+      "adv_cr": 155.3464116463867
+    },
+    {
+      "ticker": "DLF",
+      "n_bars": 1114,
+      "adv_cr": 154.12694173882142
+    },
+    {
+      "ticker": "ADANIGREEN",
+      "n_bars": 1114,
+      "adv_cr": 152.23457629793702
+    },
+    {
+      "ticker": "NAUKRI",
+      "n_bars": 1114,
+      "adv_cr": 149.19658050229492
+    },
+    {
+      "ticker": "HINDCOPPER",
+      "n_bars": 1114,
+      "adv_cr": 149.08203522807923
+    },
+    {
+      "ticker": "POLYCAB",
+      "n_bars": 1114,
+      "adv_cr": 148.166828175
+    },
+    {
+      "ticker": "VOLTAS",
+      "n_bars": 1114,
+      "adv_cr": 147.49896715388184
+    },
+    {
+      "ticker": "SBILIFE",
+      "n_bars": 1114,
+      "adv_cr": 146.61113153566893
+    },
+    {
+      "ticker": "MOTHERSON",
+      "n_bars": 1114,
+      "adv_cr": 146.22245929347764
+    },
+    {
+      "ticker": "GRASIM",
+      "n_bars": 1114,
+      "adv_cr": 145.10932362493895
+    },
+    {
+      "ticker": "PNB",
+      "n_bars": 1114,
+      "adv_cr": 143.81469684206542
+    },
+    {
+      "ticker": "LAURUSLABS",
+      "n_bars": 1114,
+      "adv_cr": 142.9796523314789
+    },
+    {
+      "ticker": "LUPIN",
+      "n_bars": 1114,
+      "adv_cr": 142.86021432786865
+    },
+    {
+      "ticker": "RECLTD",
+      "n_bars": 1114,
+      "adv_cr": 141.94096518893127
+    },
+    {
+      "ticker": "GAIL",
+      "n_bars": 1114,
+      "adv_cr": 141.53694972302856
+    },
+    {
+      "ticker": "JINDALSTEL",
+      "n_bars": 1114,
+      "adv_cr": 139.65324588112793
+    },
+    {
+      "ticker": "RVNL",
+      "n_bars": 1114,
+      "adv_cr": 137.3841132493103
+    },
+    {
+      "ticker": "L&TFH",
+      "n_bars": 1114,
+      "adv_cr": 134.822800372464
+    },
+    {
+      "ticker": "LTF",
+      "n_bars": 1114,
+      "adv_cr": 134.822800372464
+    },
+    {
+      "ticker": "BHEL",
+      "n_bars": 1114,
+      "adv_cr": 133.77825578476106
+    },
+    {
+      "ticker": "NATIONALUM",
+      "n_bars": 1114,
+      "adv_cr": 133.65452873203583
+    },
+    {
+      "ticker": "NESTLEIND",
+      "n_bars": 1114,
+      "adv_cr": 131.17730928775634
+    },
+    {
+      "ticker": "MUTHOOTFIN",
+      "n_bars": 1114,
+      "adv_cr": 130.07932599564208
+    },
+    {
+      "ticker": "UPL",
+      "n_bars": 1114,
+      "adv_cr": 128.85791775247498
+    },
+    {
+      "ticker": "ABCAPITAL",
+      "n_bars": 1114,
+      "adv_cr": 125.4763906884491
+    },
+    {
+      "ticker": "SOLARINDS",
+      "n_bars": 1114,
+      "adv_cr": 125.2138637
+    },
+    {
+      "ticker": "ABB",
+      "n_bars": 1114,
+      "adv_cr": 123.40648656589356
+    },
+    {
+      "ticker": "PNBHOUSING",
+      "n_bars": 1114,
+      "adv_cr": 123.1876148125
+    },
+    {
+      "ticker": "MARICO",
+      "n_bars": 1114,
+      "adv_cr": 122.62748286030883
+    },
+    {
+      "ticker": "FEDERALBNK",
+      "n_bars": 1114,
+      "adv_cr": 121.5531462160225
+    },
+    {
+      "ticker": "IOC",
+      "n_bars": 1114,
+      "adv_cr": 120.93084856142883
+    },
+    {
+      "ticker": "NMDC",
+      "n_bars": 1114,
+      "adv_cr": 120.79652547958831
+    },
+    {
+      "ticker": "IDFCFIRSTB",
+      "n_bars": 1114,
+      "adv_cr": 119.94920111746598
+    },
+    {
+      "ticker": "LTIM",
+      "n_bars": 1114,
+      "adv_cr": 119.8658179635498
+    },
+    {
+      "ticker": "LODHA",
+      "n_bars": 1114,
+      "adv_cr": 118.85999056380005
+    },
+    {
+      "ticker": "GODREJPROP",
+      "n_bars": 1114,
+      "adv_cr": 117.57876854509277
+    },
+    {
+      "ticker": "SAIL",
+      "n_bars": 1114,
+      "adv_cr": 117.2850790582199
+    },
+    {
+      "ticker": "GLENMARK",
+      "n_bars": 1114,
+      "adv_cr": 115.57555874450684
+    },
+    {
+      "ticker": "HAVELLS",
+      "n_bars": 1114,
+      "adv_cr": 113.60765458605957
+    },
+    {
+      "ticker": "AUROPHARMA",
+      "n_bars": 1114,
+      "adv_cr": 113.19766941467284
+    },
+    {
+      "ticker": "SONACOMS",
+      "n_bars": 1078,
+      "adv_cr": 112.99325158022155
+    },
+    {
+      "ticker": "TATACONSUM",
+      "n_bars": 1114,
+      "adv_cr": 112.27954022098389
+    },
+    {
+      "ticker": "UNIONBANK",
+      "n_bars": 1114,
+      "adv_cr": 109.09958052969665
+    },
+    {
+      "ticker": "DABUR",
+      "n_bars": 1114,
+      "adv_cr": 106.57656856486206
+    },
+    {
+      "ticker": "INDIANB",
+      "n_bars": 1114,
+      "adv_cr": 106.4916415
+    },
+    {
+      "ticker": "COLPAL",
+      "n_bars": 1114,
+      "adv_cr": 106.15854356953125
+    },
+    {
+      "ticker": "JSWENERGY",
+      "n_bars": 1114,
+      "adv_cr": 105.16108932639618
+    },
+    {
+      "ticker": "UNOMINDA",
+      "n_bars": 1114,
+      "adv_cr": 104.77840028413085
+    },
+    {
+      "ticker": "CAMS",
+      "n_bars": 1114,
+      "adv_cr": 103.60537617707824
+    },
+    {
+      "ticker": "MPHASIS",
+      "n_bars": 1114,
+      "adv_cr": 101.96156692624511
+    },
+    {
+      "ticker": "PRESTIGE",
+      "n_bars": 1114,
+      "adv_cr": 100.75727097496949
+    },
+    {
+      "ticker": "OFSS",
+      "n_bars": 1114,
+      "adv_cr": 97.77618276252441
+    },
+    {
+      "ticker": "BOSCHLTD",
+      "n_bars": 1114,
+      "adv_cr": 94.6614455
+    },
+    {
+      "ticker": "MRF",
+      "n_bars": 1114,
+      "adv_cr": 94.65206334453126
+    },
+    {
+      "ticker": "ICICIGI",
+      "n_bars": 1114,
+      "adv_cr": 94.57474989569091
+    },
+    {
+      "ticker": "SIEMENS",
+      "n_bars": 1114,
+      "adv_cr": 93.39737775158692
+    },
+    {
+      "ticker": "AMBUJACEM",
+      "n_bars": 1114,
+      "adv_cr": 91.5303392460022
+    },
+    {
+      "ticker": "SRF",
+      "n_bars": 1114,
+      "adv_cr": 91.35638807113037
+    },
+    {
+      "ticker": "BANDHANBNK",
+      "n_bars": 1114,
+      "adv_cr": 89.3626635868637
+    },
+    {
+      "ticker": "NHPC",
+      "n_bars": 1114,
+      "adv_cr": 89.02020806062318
+    },
+    {
+      "ticker": "IRFC",
+      "n_bars": 1114,
+      "adv_cr": 88.75350130944481
+    },
+    {
+      "ticker": "MANAPPURAM",
+      "n_bars": 1114,
+      "adv_cr": 88.56312681265716
+    },
+    {
+      "ticker": "KEI",
+      "n_bars": 1114,
+      "adv_cr": 85.79072913991699
+    },
+    {
+      "ticker": "EXIDEIND",
+      "n_bars": 1114,
+      "adv_cr": 85.21434922240753
+    },
+    {
+      "ticker": "BHARATFORG",
+      "n_bars": 1114,
+      "adv_cr": 84.47914732199708
+    },
+    {
+      "ticker": "IEX",
+      "n_bars": 1114,
+      "adv_cr": 83.7530850680832
+    },
+    {
+      "ticker": "PAGEIND",
+      "n_bars": 1114,
+      "adv_cr": 83.23348292128907
+    },
+    {
+      "ticker": "PHOENIXLTD",
+      "n_bars": 1114,
+      "adv_cr": 82.5585927958374
+    },
+    {
+      "ticker": "PIDILITIND",
+      "n_bars": 1114,
+      "adv_cr": 82.53595970233154
+    },
+    {
+      "ticker": "KPITTECH",
+      "n_bars": 1114,
+      "adv_cr": 82.535657025708
+    },
+    {
+      "ticker": "JUBLFOOD",
+      "n_bars": 1114,
+      "adv_cr": 81.82573103240966
+    },
+    {
+      "ticker": "TIINDIA",
+      "n_bars": 1114,
+      "adv_cr": 79.31955480982666
+    },
+    {
+      "ticker": "BANKINDIA",
+      "n_bars": 1114,
+      "adv_cr": 78.79109313338319
+    },
+    {
+      "ticker": "DALBHARAT",
+      "n_bars": 1114,
+      "adv_cr": 78.3868224067871
+    },
+    {
+      "ticker": "BIOCON",
+      "n_bars": 1114,
+      "adv_cr": 78.16678238767396
+    },
+    {
+      "ticker": "HFCL",
+      "n_bars": 1114,
+      "adv_cr": 77.61173478823014
+    },
+    {
+      "ticker": "TATAELXSI",
+      "n_bars": 1114,
+      "adv_cr": 77.443706475
+    },
+    {
+      "ticker": "INOXWIND",
+      "n_bars": 1114,
+      "adv_cr": 77.12326376067504
+    },
+    {
+      "ticker": "OIL",
+      "n_bars": 1114,
+      "adv_cr": 76.02507966844178
+    },
+    {
+      "ticker": "ZYDUSLIFE",
+      "n_bars": 1114,
+      "adv_cr": 75.98708803988647
+    },
+    {
+      "ticker": "CROMPTON",
+      "n_bars": 1114,
+      "adv_cr": 75.4231147086319
+    },
+    {
+      "ticker": "MFSL",
+      "n_bars": 1114,
+      "adv_cr": 75.35411466572266
+    },
+    {
+      "ticker": "NBCC",
+      "n_bars": 1114,
+      "adv_cr": 73.48631359067346
+    },
+    {
+      "ticker": "ASTRAL",
+      "n_bars": 1114,
+      "adv_cr": 73.20976569558715
+    },
+    {
+      "ticker": "SHREECEM",
+      "n_bars": 1114,
+      "adv_cr": 73.13781530566406
+    },
+    {
+      "ticker": "ZEEL",
+      "n_bars": 1114,
+      "adv_cr": 73.04552698426781
+    },
+    {
+      "ticker": "TITAGARH",
+      "n_bars": 1114,
+      "adv_cr": 72.43073333349
+    },
+    {
+      "ticker": "TORNTPHARM",
+      "n_bars": 1114,
+      "adv_cr": 71.67289645490723
+    },
+    {
+      "ticker": "JKCEMENT",
+      "n_bars": 1114,
+      "adv_cr": 70.0314826
+    },
+    {
+      "ticker": "BLUESTARCO",
+      "n_bars": 1114,
+      "adv_cr": 69.76834462918701
+    },
+    {
+      "ticker": "MOTILALOFS",
+      "n_bars": 1114,
+      "adv_cr": 69.39743286899414
+    },
+    {
+      "ticker": "SBICARD",
+      "n_bars": 1114,
+      "adv_cr": 67.96378892630615
+    },
+    {
+      "ticker": "OBEROIRLTY",
+      "n_bars": 1114,
+      "adv_cr": 67.89006089918823
+    },
+    {
+      "ticker": "ALKEM",
+      "n_bars": 1114,
+      "adv_cr": 66.83345960463868
+    },
+    {
+      "ticker": "GMRAIRPORT",
+      "n_bars": 1114,
+      "adv_cr": 66.72747646657105
+    },
+    {
+      "ticker": "COROMANDEL",
+      "n_bars": 1114,
+      "adv_cr": 66.61202066785889
+    },
+    {
+      "ticker": "APLAPOLLO",
+      "n_bars": 1114,
+      "adv_cr": 66.38925883035279
+    },
+    {
+      "ticker": "360ONE",
+      "n_bars": 1114,
+      "adv_cr": 65.90405949582214
+    },
+    {
+      "ticker": "NAM-INDIA",
+      "n_bars": 1114,
+      "adv_cr": 64.08890085593262
+    },
+    {
+      "ticker": "PIIND",
+      "n_bars": 1114,
+      "adv_cr": 60.960049848120114
+    },
+    {
+      "ticker": "BAJAJHLDNG",
+      "n_bars": 1114,
+      "adv_cr": 58.3883207
+    },
+    {
+      "ticker": "LICHSGFIN",
+      "n_bars": 1114,
+      "adv_cr": 56.72370240052185
+    },
+    {
+      "ticker": "SUPREMEIND",
+      "n_bars": 1114,
+      "adv_cr": 56.47527570036621
+    },
+    {
+      "ticker": "POONAWALLA",
+      "n_bars": 1114,
+      "adv_cr": 54.29280496570435
+    },
+    {
+      "ticker": "HUDCO",
+      "n_bars": 1114,
+      "adv_cr": 54.262906362594606
+    },
+    {
+      "ticker": "JSL",
+      "n_bars": 1114,
+      "adv_cr": 53.46011490549927
+    },
+    {
+      "ticker": "PATANJALI",
+      "n_bars": 1114,
+      "adv_cr": 52.13832857125855
+    },
+    {
+      "ticker": "ICICIPRULI",
+      "n_bars": 1114,
+      "adv_cr": 50.54755387998352
+    }
+  ]
+}
