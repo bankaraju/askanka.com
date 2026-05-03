@@ -34,9 +34,15 @@ from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.elastic_net_fit i
 from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.walk_forward import (  # noqa: E402
     expanding_quarter_folds, qualifier_check, bh_fdr, permutation_p_value,
 )
+from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.sector_mapping import (  # noqa: E402
+    index_csv_for_sector,
+    load_sectoral_index_close,
+)
+from pipeline.scorecard_v2.sector_mapper import SectorMapper  # noqa: E402
 
 OUT_DIR = REPO / "pipeline" / "research" / "h_2026_05_04_cross_asset_perstock_lasso"
 FNO_CSV_DIR = REPO / "pipeline" / "data" / "fno_historical"
+SECTORAL_DIR = REPO / "pipeline" / "data" / "sectoral_indices"
 
 C_GRID = (0.01, 0.03, 0.1, 0.3, 1.0, 3.0)
 L1_GRID = (0.1, 0.3, 0.5, 0.7, 0.9)
@@ -94,6 +100,11 @@ def main(train_end: pd.Timestamp) -> int:
     universe = _load_universe()
     print(f"[runner] universe size = {len(universe)}")
 
+    # 0. Sector resolution (frozen at fit time; tickers without a sectoral
+    #    index CSV are excluded — preflight already enforced this filter at
+    #    universe-freeze time, so this is a defensive check.)
+    sector_map = SectorMapper().map_all()
+
     # 1. Build panel and ETF 1d returns
     panel = build_panel()
     etf_cols = [c for c in CURATED_FOREIGN_ETFS if c in panel.columns]
@@ -119,19 +130,16 @@ def main(train_end: pd.Timestamp) -> int:
         if len(bars) < 800:
             continue
 
-        # Sector ret 5d (read from sectoral_indices via sector_mapper)
-        try:
-            from pipeline.sector_mapper import map_one
-            sector_name = map_one(ticker)
-        except Exception:
-            sector_name = None
-        if sector_name is None or sector_name == "Unmapped":
+        # Sector ret 5d (read from sectoral_indices via SECTOR_TO_INDEX_FILE map)
+        info = sector_map.get(ticker)
+        sector_key = info.get("sector") if info else None
+        if not sector_key or sector_key == "Unmapped":
             continue
-        sector_path = REPO / "pipeline" / "data" / "sectoral_indices" / f"{sector_name}.csv"
-        if not sector_path.exists():
+        sector_path = index_csv_for_sector(sector_key, SECTORAL_DIR)
+        if sector_path is None or not sector_path.exists():
             continue
-        sector_df = pd.read_csv(sector_path, parse_dates=["Date"]).set_index("Date").sort_index()
-        sector_ret_5d = sector_df["Close"].pct_change(5)
+        sector_close = load_sectoral_index_close(sector_path)
+        sector_ret_5d = sector_close.pct_change(5)
 
         X_pre = build_full_feature_matrix(
             bars=bars,

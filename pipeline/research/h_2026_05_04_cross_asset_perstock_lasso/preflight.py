@@ -28,6 +28,10 @@ from pipeline.autoresearch.etf_v3_loader import (  # noqa: E402
     audit_panel,
     build_panel,
 )
+from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.sector_mapping import (  # noqa: E402
+    index_csv_for_sector,
+)
+from pipeline.scorecard_v2.sector_mapper import SectorMapper  # noqa: E402
 
 WINDOW_START = pd.Timestamp("2021-05-04")
 TRAIN_END = pd.Timestamp("2025-10-31")
@@ -40,6 +44,7 @@ N_DOW = 3
 OUT_DIR = REPO / "pipeline" / "research" / "h_2026_05_04_cross_asset_perstock_lasso"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 FNO_CSV_DIR = REPO / "pipeline" / "data" / "fno_historical"
+SECTORAL_DIR = REPO / "pipeline" / "data" / "sectoral_indices"
 
 
 def check_4_pit_audit() -> dict:
@@ -77,8 +82,10 @@ def _normalise_ohlcv(df: pd.DataFrame) -> pd.DataFrame | None:
 
 
 def check_1_universe() -> tuple[dict, list[dict]]:
+    sector_map = SectorMapper().map_all()
     universe: list[dict] = []
     skipped_no_volume = 0
+    skipped_no_sector_index = 0
     n_total = 0
     for csv_path in sorted(FNO_CSV_DIR.glob("*.csv")):
         n_total += 1
@@ -99,13 +106,26 @@ def check_1_universe() -> tuple[dict, list[dict]]:
         if len(recent) < 50:
             continue
         adv_cr = float((recent["Close"] * recent["Volume"]).median() / 1e7)
-        if adv_cr >= ADV_MIN_CR:
-            universe.append({"ticker": ticker, "n_bars": int(len(df)), "adv_cr": adv_cr})
+        if adv_cr < ADV_MIN_CR:
+            continue
+        info = sector_map.get(ticker)
+        sector_key = info.get("sector") if info else None
+        sector_path = index_csv_for_sector(sector_key, SECTORAL_DIR)
+        if sector_path is None or not sector_path.exists():
+            skipped_no_sector_index += 1
+            continue
+        universe.append({
+            "ticker": ticker,
+            "n_bars": int(len(df)),
+            "adv_cr": adv_cr,
+            "sector_key": sector_key,
+        })
 
     universe_sorted = sorted(universe, key=lambda x: -x["adv_cr"])
     return {
         "n_total_csvs": n_total,
         "n_skipped_missing_ohlcv": skipped_no_volume,
+        "n_skipped_no_sector_index": skipped_no_sector_index,
         "n_universe_qualified": len(universe),
         "min_required": 100,
         "pass": len(universe) >= 100,
