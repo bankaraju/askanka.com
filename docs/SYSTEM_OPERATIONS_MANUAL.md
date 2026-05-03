@@ -923,6 +923,31 @@ source of truth for the verdict.
 - Single-touch holdout per `backtesting-specs.txt §10.4` — no parameter changes mid-window
 - Holdout extends 1 day per `STATUS=NO_KITE_SESSION/STALE_FEED/PARTIAL_COVERAGE_ABORT/INTEGRITY_ISSUE` row
 
+### H-2026-05-04 Cross-Asset Per-Stock Lasso (PRE_REGISTERED 2026-05-03)
+
+**Purpose:** Per (stock, direction) elastic-net logistic on 23 features mixing 30 CURATED foreign-ETF 1d returns (PCA → K_ETF=10) + 4 Indian macro (Nifty near-month ×sqrt(1.5) emphasis + India VIX) + 6 stock TA + 3 day-of-week, on the 200-stock F&O frozen universe.
+
+**Primary unit of inference: BASKET-level pass per spec §1.A** — non-qualified cells are non-tradeable, NOT failed predictions. §1.B null bounds: n_qualifying = 0 → `FAIL_NO_QUALIFIERS`; [1,4] → `FAIL_INSUFFICIENT_QUALIFIERS`; [5,25] → expected; [26,80] → triggers §16.6 amplified leakage audit; >80 → `FAIL_LEAKAGE_SUSPECT`.
+
+**Pre-flight 2026-05-03 (all PASS):** K_ETF=10 at 85.4% var, max abs corr PC×TA = 0.074, 200 stocks at ≥₹50 cr ADV, ratio 5.66:1 at HL=90 trading days.
+
+**Daily lifecycle (VPS systemd, Contabo):**
+- 04:30 IST — `AnkaCrossAssetPredict` writes `today_predictions.json` for qualifying cells.
+- 09:15 IST — `AnkaCrossAssetOpen` fires LONG when p_long≥0.6 AND p_short<0.4 (mirror SHORT). Writes `recommendations.csv`.
+- 14:25 IST — `AnkaCrossAssetClose` mechanical close at Kite LTP, ATR(14)×2 stop checked vs intraday low/high.
+
+**Monthly:** Last Sunday 02:00 IST — `AnkaCrossAssetRecalibrate` (gated on `terminal_state.json` present so it only fires post-verdict, never inside the holdout window per §10.4).
+
+**Engine:** `pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/{runner,predict_today,holdout_ledger,verdict,leakage_audit}.py`.
+**Ledger:** `pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/recommendations.csv` (created on first OPEN).
+**Systemd units:** `pipeline/infra/systemd/anka-cross-asset-{predict,open,close,recalibrate}.{service,timer}`.
+
+**Holdout:** 2026-05-04 → 2026-08-04 (single-touch; auto-extends to 2026-10-31 if n_qualifying < 5). §12 PASS bar: n_qualifying ≥5, ≥60 trades, hit ≥55%, mean P&L ≥+0.4% net@S1, B0/B1/B3/B4 cleared, B2 negative.
+
+**Spec:** `docs/superpowers/specs/2026-05-04-cross-asset-perstock-lasso-v1-design.md`.
+**Plan:** `docs/superpowers/plans/2026-05-04-cross-asset-perstock-lasso-v1.md`.
+**5d ETF horizon explicitly deferred to v2** (would push K_ETF to 18, violates Check 2 cap).
+
 ### Gemma 4 Pilot (2026-04-29 → 2026-05-19)
 
 A 20-day forward-only Tier 2 evaluation of **Gemma 4 26B-A4B local
@@ -1079,6 +1104,7 @@ When the watchdog finds issues:
 | 09:15 | AnkaTAKarpathyOpen | H-2026-04-29-ta-karpathy-v1 holdout OPEN — opens trades for cells passing all 5 qualifier gates at Kite LTP. Holdout 2026-04-29 → 2026-05-28. **VPS systemd**. | info |
 | 09:25 | AnkaMorningScan | THE BIG ONE — regime + tech + OI + news + signals | CRITICAL |
 | 09:25 | AnkaPhaseCShadowOpen | F3 live shadow: record OPEN rows for today's OPPORTUNITY signals + paired-options sidecar (2026-04-27) | info |
+| 09:25 (Mon) | AnkaThemeNeutralPickerOpen | H-2026-05-04-theme-detector-earnings-skip-v1: weekly NEUTRAL theme basket (K=3) with `earnings_density==0` filter. Holdout 2026-05-04 → 2026-08-01 (auto-extend 2026-10-31 if n_NEUTRAL_cutoffs<6). | info |
 
 ### Market Hours (09:30-15:30)
 
@@ -1093,6 +1119,7 @@ Every 15 minutes, two tasks run as a pair:
 | AnkaSecrsiBasketOpen | 11:00 IST — SECRSI: build market-neutral 8-leg basket from sector RS snapshot (H-2026-04-27-003) |
 | AnkaPhaseCShadowClose | 14:30 IST — mechanical close of F3 live shadow positions (TIME_STOP) + paired-options sidecar (2026-04-27) |
 | AnkaSecrsiBasketClose | 14:30 IST — SECRSI: mechanical TIME_STOP close at Kite LTP (H-2026-04-27-003) |
+| AnkaThemeNeutralPickerExitCheck | 14:30 IST daily — H-2026-05-04: mechanical T+21 TIME_STOP at Kite LTP for any basket whose target_close_date ≤ today |
 | AnkaTAKarpathyClose | 15:25 IST — H-2026-04-29-ta-karpathy-v1: mechanical TIME_STOP close at Kite LTP (VPS systemd) |
 | AnkaGemma4AutoDisable | Hourly 09:00–22:00 IST — Gemma 4 Pilot guardrail. 24h shadow rubric <90% (n≥5) → flip task to `disabled` in `llm_routing.json`; 7d pairwise <40% (n≥10) → write `manual_review/<task>.flag`. Pilot 2026-04-29 → 2026-05-19. |
 
