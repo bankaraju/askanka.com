@@ -1,0 +1,10 @@
+[Unit]
+Description=Last Sunday of month 02:00 IST recalibrate (gated on terminal_state.json present)
+
+[Timer]
+OnCalendar=Sun *-*-22..28 02:00:00
+Persistent=true
+Unit=anka-cross-asset-recalibrate.service
+
+[Install]
+WantedBy=timers.target

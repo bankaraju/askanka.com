@@ -1,0 +1,10 @@
+[Unit]
+Description=14:25 IST trading-day close (5 min before universal cutoff)
+
+[Timer]
+OnCalendar=Mon..Fri 14:25:00
+Persistent=true
+Unit=anka-cross-asset-close.service
+
+[Install]
+WantedBy=timers.target

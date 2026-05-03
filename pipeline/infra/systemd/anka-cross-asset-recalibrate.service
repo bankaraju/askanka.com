@@ -1,0 +1,13 @@
+[Unit]
+Description=H-2026-05-04 monthly recalibrate (forbidden during holdout per section 10.4 - this fires AFTER verdict)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+WorkingDirectory=/home/anka/askanka.com
+Environment=PYTHONIOENCODING=utf-8
+ExecStart=/home/anka/askanka.com/.venv/bin/bash -c 'test -f pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/terminal_state.json || { echo "no verdict yet, skipping"; exit 0; }; /home/anka/askanka.com/.venv/bin/python -m pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.runner --train-end $(date +%Y-%m-%d)'
+StandardOutput=append:/home/anka/.local/share/anka/anka-cross-asset-recalibrate.log
+StandardError=append:/home/anka/.local/share/anka/anka-cross-asset-recalibrate.log
+TimeoutStartSec=8h

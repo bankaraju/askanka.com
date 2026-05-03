@@ -1,0 +1,13 @@
+[Unit]
+Description=H-2026-05-04 daily 04:30 IST cross-asset predict
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+WorkingDirectory=/home/anka/askanka.com
+Environment=PYTHONIOENCODING=utf-8
+ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.predict_today
+StandardOutput=append:/home/anka/.local/share/anka/anka-cross-asset-predict.log
+StandardError=append:/home/anka/.local/share/anka/anka-cross-asset-predict.log
+TimeoutStartSec=30min

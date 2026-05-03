@@ -1,0 +1,13 @@
+[Unit]
+Description=H-2026-05-04 09:15 IST open
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=anka
+WorkingDirectory=/home/anka/askanka.com
+Environment=PYTHONIOENCODING=utf-8
+ExecStart=/home/anka/askanka.com/.venv/bin/python -m pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.holdout_ledger open
+StandardOutput=append:/home/anka/.local/share/anka/anka-cross-asset-open.log
+StandardError=append:/home/anka/.local/share/anka/anka-cross-asset-open.log
+TimeoutStartSec=10min

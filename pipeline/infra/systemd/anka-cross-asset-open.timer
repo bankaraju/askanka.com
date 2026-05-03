@@ -1,0 +1,10 @@
+[Unit]
+Description=09:15 IST trading-day open
+
+[Timer]
+OnCalendar=Mon..Fri 09:15:00
+Persistent=true
+Unit=anka-cross-asset-open.service
+
+[Install]
+WantedBy=timers.target
