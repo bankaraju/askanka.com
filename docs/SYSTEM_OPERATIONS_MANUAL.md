@@ -923,13 +923,13 @@ source of truth for the verdict.
 - Single-touch holdout per `backtesting-specs.txt §10.4` — no parameter changes mid-window
 - Holdout extends 1 day per `STATUS=NO_KITE_SESSION/STALE_FEED/PARTIAL_COVERAGE_ABORT/INTEGRITY_ISSUE` row
 
-### H-2026-05-04 Cross-Asset Per-Stock Lasso (PRE_REGISTERED 2026-05-03)
+### H-2026-05-04 Cross-Asset Per-Stock Lasso (PRE_REGISTERED 2026-05-03; PRE_HOLDOUT_FIX 2026-05-03)
 
-**Purpose:** Per (stock, direction) elastic-net logistic on 23 features mixing 30 CURATED foreign-ETF 1d returns (PCA → K_ETF=10) + 4 Indian macro (Nifty near-month ×sqrt(1.5) emphasis + India VIX) + 6 stock TA + 3 day-of-week, on the 200-stock F&O frozen universe.
+**Purpose:** Per (stock, direction) elastic-net logistic on 23 features mixing 30 CURATED foreign-ETF 1d returns (PCA → K_ETF=10) + 4 Indian macro (Nifty near-month ×sqrt(1.5) emphasis + India VIX) + 6 stock TA + 3 day-of-week, on the **101-stock** sector-resolvable F&O universe (200 → 101 after preflight tightened to require a published Nifty sectoral index for own_sector_ret_5d).
 
 **Primary unit of inference: BASKET-level pass per spec §1.A** — non-qualified cells are non-tradeable, NOT failed predictions. §1.B null bounds: n_qualifying = 0 → `FAIL_NO_QUALIFIERS`; [1,4] → `FAIL_INSUFFICIENT_QUALIFIERS`; [5,25] → expected; [26,80] → triggers §16.6 amplified leakage audit; >80 → `FAIL_LEAKAGE_SUSPECT`.
 
-**Pre-flight 2026-05-03 (all PASS):** K_ETF=10 at 85.4% var, max abs corr PC×TA = 0.074, 200 stocks at ≥₹50 cr ADV, ratio 5.66:1 at HL=90 trading days.
+**Pre-flight 2026-05-03 (all PASS, post-amendment):** K_ETF=10 at 85.4% var, max abs corr PC×TA = 0.079, 101 stocks at ≥₹50 cr ADV ∧ sector-resolvable, ratio 5.66:1 at HL=90 trading days.
 
 **Daily lifecycle (VPS systemd, Contabo):**
 - 04:30 IST — `AnkaCrossAssetPredict` writes `today_predictions.json` for qualifying cells.
@@ -938,11 +938,13 @@ source of truth for the verdict.
 
 **Monthly:** Last Sunday 02:00 IST — `AnkaCrossAssetRecalibrate` (gated on `terminal_state.json` present so it only fires post-verdict, never inside the holdout window per §10.4).
 
-**Engine:** `pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/{runner,predict_today,holdout_ledger,verdict,leakage_audit}.py`.
+**Engine:** `pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/{runner,predict_today,holdout_ledger,verdict,leakage_audit,sector_mapping}.py`.
 **Ledger:** `pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/recommendations.csv` (created on first OPEN).
 **Systemd units:** `pipeline/infra/systemd/anka-cross-asset-{predict,open,close,recalibrate}.{service,timer}`.
 
-**Holdout:** 2026-05-04 → 2026-08-04 (single-touch; auto-extends to 2026-10-31 if n_qualifying < 5). §12 PASS bar: n_qualifying ≥5, ≥60 trades, hit ≥55%, mean P&L ≥+0.4% net@S1, B0/B1/B3/B4 cleared, B2 negative.
+**Holdout:** 2026-05-05 → 2026-08-05 (single-touch; auto-extends to 2026-10-31 if n_qualifying < 5; postponed 1 trading day from the original 2026-05-04 → 2026-08-04 window after the PRE_HOLDOUT_FIX amendment landed). §12 PASS bar: n_qualifying ≥5, ≥60 trades, hit ≥55%, mean P&L ≥+0.4% net@S1, B0/B1/B3/B4 cleared, B2 negative.
+
+**PRE_HOLDOUT_FIX 2026-05-03:** runner had a broken sector_mapper import (`pipeline.sector_mapper.map_one` doesn't exist; correct API is `pipeline.scorecard_v2.sector_mapper.SectorMapper().map_all()`) and a §5.3 coverage gap (only 11 of 24 sector_taxonomy keys map to a published Nifty sectoral index). Both surfaced on the first VPS deploy as "0 cells fit". Fix: new `sector_mapping.py` module with explicit `SECTOR_TO_INDEX_FILE`; preflight tightened to require sector-resolvable so universe shrinks 200→101; new test exercises the integration. No scientific parameter changed — thresholds, features, ratios, label semantics, ATR stop, position size, and PASS bars are unchanged.
 
 **Spec:** `docs/superpowers/specs/2026-05-04-cross-asset-perstock-lasso-v1-design.md`.
 **Plan:** `docs/superpowers/plans/2026-05-04-cross-asset-perstock-lasso-v1.md`.

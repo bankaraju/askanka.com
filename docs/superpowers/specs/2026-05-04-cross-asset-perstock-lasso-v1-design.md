@@ -2,9 +2,32 @@
 
 **Hypothesis ID:** `H-2026-05-04-cross-asset-perstock-lasso-v1`
 **Strategy class:** `per-stock-cross-asset-elastic-net`
-**Family scope:** ticker-family, n=up-to-180 (BH-FDR-corrected across (stock × direction) cells)
+**Family scope:** ticker-family, n=101 (BH-FDR-corrected across (stock × direction) cells, 200 → 101 after PRE_HOLDOUT_FIX)
 **Standards version:** 1.0_2026-04-23 (`docs/superpowers/specs/backtesting-specs.txt`)
-**Spec version:** v1.0 (frozen at registry append)
+**Spec version:** v1.0 (frozen at registry append) + PRE_HOLDOUT_FIX amendment 2026-05-03
+
+---
+
+## 0. Amendments (post-registration fixes pre-holdout)
+
+### A1: PRE_HOLDOUT_FIX — sector mapping defect, 2026-05-03 13:52 IST
+
+The first VPS deploy on 2026-05-03 produced "0 cells fit" because (a) the runner imported `pipeline.sector_mapper.map_one`, which does not exist (correct API is `pipeline.scorecard_v2.sector_mapper.SectorMapper().map_all()`), and (b) only 11 of the 24 keys in `pipeline/config/sector_taxonomy.json` map to a published Nifty sectoral index (the §5.3 `own_sector_ret_5d` feature requires one). A bare `try/except Exception` in the runner silently swallowed the import error and dropped every ticker.
+
+**Fix landed before holdout opens:**
+
+- New module `pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/sector_mapping.py` owns `SECTOR_TO_INDEX_FILE` (sector_key → CSV file name) and `load_sectoral_index_close` (handles the lowercase `date,close` convention in `pipeline/data/sectoral_indices/*_daily.csv`).
+- `runner.py` now imports `SectorMapper` from the correct path, builds `sector_map = SectorMapper().map_all()` once at the top of `main()`, and per-ticker resolves through `index_csv_for_sector()`.
+- `preflight.py` Check 1 applies the same filter at universe-freeze time, so `universe_frozen.json` contains only sector-resolvable tickers.
+- New test `pipeline/tests/research/h_2026_05_04_cross_asset_perstock_lasso/test_sector_mapping.py` exercises the integration end-to-end and asserts at least 30 universe tickers resolve to a sectoral index — catches the defect class going forward.
+
+**Universe consequence:** 200 → 101 stocks (just clears the §3 minimum of 100). The dropped 99 stocks belong to sectors with no published Nifty index (NBFC_HFC, Capital_Goods, Capital_Markets, Chemicals, Insurance, Infra_EPC, Consumer_Discretionary, Cement_Building, Logistics_Transport, Defence, Telecom, Business_Services). Pre-flight orthogonality re-measured: max abs corr PC × TA = 0.079 (was 0.074 with broader universe — minor shift, still well under 0.4).
+
+**Holdout consequence:** holdout window postponed 1 trading day to **2026-05-05 09:15 IST → 2026-08-05 14:25 IST**. The hypothesis_id retains the 2026-05-04 date as the registration-locked date matching standard convention; first forward trade is 2026-05-05. Auto-extension trigger date follows the same shift: `n_qualifying < 5` at 2026-08-05 → extends to 2026-10-31.
+
+**No scientific parameter changed.** Thresholds, features, ratios, label semantics, ATR stop, position size, and PASS bars are all unchanged. The §3 universe filter was tightened to require a constraint the §5.3 feature already implicitly imposed; this is a defect-class fix, not a results-driven parameter tweak.
+
+The body of this spec retains its original wording (universe ~180-200, holdout 2026-05-04 → 2026-08-04) where the discussion logic is unaffected by the amendment. Operational scheduling references (§7, §10, §15, §16) and the verdict bar in §12 are read with the amended dates and universe size.
 
 ---
 
@@ -179,7 +202,7 @@ Applied identically at fit and predict — no train/inference mismatch. Mathemat
 
 ### 5.3 Stock-specific TA block (6 features, no PCA)
 
-- `own_sector_ret_5d` — stock's mapped sectoral index 5d return (via `pipeline/sector_mapper.py` `map_all()` — NOTE: `reference_sector_mapper_artifact_dependency.md` flags that map_all reads opus/artifacts. PIT verification at fit time: every stock in frozen universe must resolve to a non-"Unmapped" sector, else excluded.)
+- `own_sector_ret_5d` — stock's mapped sectoral index 5d return (via `pipeline/scorecard_v2/sector_mapper.py` `SectorMapper().map_all()` resolved through `sector_mapping.SECTOR_TO_INDEX_FILE` — see Amendment A1. NOTE: `reference_sector_mapper_artifact_dependency.md` flags that map_all reads opus/artifacts. PIT verification at fit time: every stock in frozen universe must resolve to a non-"Unmapped" sector AND to a published Nifty sectoral index, else excluded; preflight enforces this so universe_frozen.json is by-construction sector-resolvable.)
 - `atr_14_pct` — ATR(14) / close
 - `rsi_14`
 - `dist_50ema_pct` — (close − ema_50) / ema_50
