@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-05-01",
+  "updated": "2026-05-03",
   "event_driven_paths": [
     "pipeline/data/signals/open_signals.json",
     "pipeline/data/signals/closed_signals.json"
@@ -26,7 +26,7 @@
         "articles/{yesterday}-epstein.html"
       ],
       "grace_multiplier": 1.5,
-      "notes": "04:45 IST daily. daily_articles.py â€” writes war + epstein articles and data/articles_index.json. Watchdog verifies YESTERDAY's pair (war + epstein) landed â€” catches silent LLM-rejection / grounding failures in either pillar."
+      "notes": "04:45 IST daily. daily_articles.py \u00e2\u20ac\u201d writes war + epstein articles and data/articles_index.json. Watchdog verifies YESTERDAY's pair (war + epstein) landed \u00e2\u20ac\u201d catches silent LLM-rejection / grounding failures in either pillar."
     },
     {
       "task_name": "AnkaDailyDump",
@@ -49,7 +49,7 @@
         "pipeline/data/earnings_calendar/{today}.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "08:00 IST daily. backfill_earnings_calendar.py (with --asof today). Source: IndianAPI /corporate_actions per F&O ticker. Feeds the H-2026-04-25-001 earnings-decoupling pre-registered hypothesis backtest. Per data validation policy Â§15 freshness contract: snapshot age must not exceed cadence Ã— grace = 36h before WARN."
+      "notes": "08:00 IST daily. backfill_earnings_calendar.py (with --asof today). Source: IndianAPI /corporate_actions per F&O ticker. Feeds the H-2026-04-25-001 earnings-decoupling pre-registered hypothesis backtest. Per data validation policy \u00c2\u00a715 freshness contract: snapshot age must not exceed cadence \u00c3\u2014 grace = 36h before WARN."
     },
     {
       "task_name": "AnkaEODNews",
@@ -59,7 +59,7 @@
         "pipeline/data/news_verdicts.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "16:20 IST. news_backtest.py â€” verdicts on detected news events."
+      "notes": "16:20 IST. news_backtest.py \u00e2\u20ac\u201d verdicts on detected news events."
     },
     {
       "task_name": "AnkaEODReview",
@@ -67,7 +67,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "16:00 IST. Runs run_signals.py --eod â€” prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
+      "notes": "16:00 IST. Runs run_signals.py --eod \u00e2\u20ac\u201d prints EOD dashboard + Telegram send, does not write data files. track_record.json ownership belongs to AnkaEODTrackRecord (website_exporter.py)."
     },
     {
       "task_name": "AnkaEODTrackRecord",
@@ -88,7 +88,7 @@
         "pipeline/data/ticker_feature_models.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Sunday 01:00 IST. fit_feature_scorer.bat â€” quarterly walk-forward fit of Feature Coincidence Scorer logistic-regression models per ticker over the F&O universe. Consumed intraday by score_universe."
+      "notes": "Sunday 01:00 IST. fit_feature_scorer.bat \u00e2\u20ac\u201d quarterly walk-forward fit of Feature Coincidence Scorer logistic-regression models per ticker over the F&O universe. Consumed intraday by score_universe."
     },
     {
       "task_name": "AnkaFeatureScorerIntraday",
@@ -99,7 +99,7 @@
         "pipeline/data/attractiveness_scores.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Intraday apply of Feature Coincidence Scorer models. Runs inside intraday_scan.bat (python -m pipeline.feature_scorer.score_universe) after the correlation break scanner and before website_exporter; writes attractiveness_scores.json consumed by /api/attractiveness. host=embedded â€” no standalone Windows trigger; freshness contract still enforced via output mtime."
+      "notes": "Intraday apply of Feature Coincidence Scorer models. Runs inside intraday_scan.bat (python -m pipeline.feature_scorer.score_universe) after the correlation break scanner and before website_exporter; writes attractiveness_scores.json consumed by /api/attractiveness. host=embedded \u00e2\u20ac\u201d no standalone Windows trigger; freshness contract still enforced via output mtime."
     },
     {
       "task_name": "AnkaGapPredictor",
@@ -110,7 +110,7 @@
         "data/gap_risk.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "08:30 IST. autoresearch/gap_predictor.py â€” overnight gap risk analysis."
+      "notes": "08:30 IST. autoresearch/gap_predictor.py \u00e2\u20ac\u201d overnight gap risk analysis."
     },
     {
       "task_name": "AnkaGemma4HealthCheck",
@@ -158,7 +158,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "09:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "09:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday0945",
@@ -174,7 +174,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "09:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "09:45 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1000",
@@ -190,7 +190,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:00 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1015",
@@ -206,7 +206,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:15 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1030",
@@ -222,7 +222,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1045",
@@ -238,7 +238,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "10:45 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1100",
@@ -254,7 +254,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:00 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1115",
@@ -270,7 +270,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:15 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1130",
@@ -286,7 +286,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1145",
@@ -302,7 +302,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "11:45 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1200",
@@ -318,7 +318,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:00 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1215",
@@ -334,7 +334,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:15 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1230",
@@ -350,7 +350,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1245",
@@ -366,7 +366,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "12:45 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1300",
@@ -382,7 +382,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:00 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1315",
@@ -398,7 +398,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:15 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1330",
@@ -414,7 +414,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1345",
@@ -430,7 +430,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "13:45 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1400",
@@ -446,7 +446,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:00 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1415",
@@ -462,7 +462,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:15 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1430",
@@ -478,7 +478,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1445",
@@ -494,7 +494,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:45 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "14:45 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1500",
@@ -510,7 +510,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:00 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "15:00 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1515",
@@ -526,7 +526,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:15 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "15:15 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaIntraday1530",
@@ -542,7 +542,7 @@
         "pipeline/data/signals/open_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:30 IST. intraday_scan.bat â€” technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
+      "notes": "15:30 IST. intraday_scan.bat \u00e2\u20ac\u201d technicals + OI + news + spread + Phase C. File freshness is shared across the group; task-liveness catches individual missed runs."
     },
     {
       "task_name": "AnkaMorningBrief0730",
@@ -551,7 +551,7 @@
       "host": "vps",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "07:30 IST Mon-Fri. arcbe_brief.bat -> morning_brief.py â€” reads correlation_report (generated by AnkaCorrelationScan) and sends Telegram; no file outputs."
+      "notes": "07:30 IST Mon-Fri. arcbe_brief.bat -> morning_brief.py \u00e2\u20ac\u201d reads correlation_report (generated by AnkaCorrelationScan) and sends Telegram; no file outputs."
     },
     {
       "task_name": "AnkaMorningScan",
@@ -592,7 +592,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "Daily lifecycle. article_lifecycle.py â€” archives articles >7 days old. Modifies articles/index.json but is not the owner."
+      "notes": "Daily lifecycle. article_lifecycle.py \u00e2\u20ac\u201d archives articles >7 days old. Modifies articles/index.json but is not the owner."
     },
     {
       "task_name": "AnkaRefreshKite",
@@ -621,7 +621,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "09:42 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "09:42 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1012",
@@ -632,7 +632,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:12 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "10:12 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1042",
@@ -643,7 +643,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "10:42 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "10:42 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1112",
@@ -654,7 +654,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:12 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "11:12 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1142",
@@ -665,7 +665,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "11:42 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "11:42 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1212",
@@ -676,7 +676,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:12 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "12:12 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1242",
@@ -687,7 +687,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "12:42 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "12:42 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1312",
@@ -698,7 +698,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:12 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "13:12 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1342",
@@ -709,7 +709,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "13:42 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "13:42 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1412",
@@ -720,7 +720,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:12 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "14:12 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1442",
@@ -731,7 +731,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "14:42 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "14:42 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaSignal1512",
@@ -742,7 +742,7 @@
         "pipeline/data/signals/closed_signals.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "15:12 IST. signals.bat Ã¢â€ â€™ run_signals.py Ã¢â€ â€™ signal_tracker. Writes open/closed signals JSON."
+      "notes": "15:12 IST. signals.bat \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 run_signals.py \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 signal_tracker. Writes open/closed signals JSON."
     },
     {
       "task_name": "AnkaTrustEOD",
@@ -890,7 +890,7 @@
       "cadence_class": "weekly",
       "outputs": [],
       "grace_multiplier": 1.25,
-      "notes": "Weekly. weekly_aggregator.py â€” writes date-stamped weekly/week-NNN.json; file-freshness not checked (would need glob)."
+      "notes": "Weekly. weekly_aggregator.py \u00e2\u20ac\u201d writes date-stamped weekly/week-NNN.json; file-freshness not checked (would need glob)."
     },
     {
       "task_name": "AnkaWeeklyReport",
@@ -924,7 +924,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "09:20 + 16:45 IST. Watchdog gate pass â€” all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift. Step 4b runs track_record_audit (count/avg-pnl/staleness vs closed_signals); step 4c runs chart_universe_audit (273-ticker coverage + last-bar freshness + 6-ticker narrative-marker regression, state at pipeline/data/chart_audit_state.json) â€” both fire CONTENT_DRIFT alerts via the existing dedup/digest path."
+      "notes": "09:20 + 16:45 IST. Watchdog gate pass \u00e2\u20ac\u201d all tiers + drift. Registered 2026-04-16. Inventoried to eliminate self-drift. Step 4b runs track_record_audit (count/avg-pnl/staleness vs closed_signals); step 4c runs chart_universe_audit (273-ticker coverage + last-bar freshness + 6-ticker narrative-marker regression, state at pipeline/data/chart_audit_state.json) \u00e2\u20ac\u201d both fire CONTENT_DRIFT alerts via the existing dedup/digest path."
     },
     {
       "task_name": "AnkaWatchdogIntraday",
@@ -932,7 +932,7 @@
       "cadence_class": "intraday",
       "outputs": [],
       "grace_multiplier": 2.0,
-      "notes": "Every 15 min Mon-Fri 09:30-15:30 IST. Watchdog intraday pass â€” critical tier only. Registered 2026-04-16. Inventoried to eliminate self-drift."
+      "notes": "Every 15 min Mon-Fri 09:30-15:30 IST. Watchdog intraday pass \u00e2\u20ac\u201d critical tier only. Registered 2026-04-16. Inventoried to eliminate self-drift."
     },
     {
       "task_name": "AnkaCorrelationScan",
@@ -950,7 +950,7 @@
       "host": "vps",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "Saturday 22:00 IST. MIGRATED TO VPS 2026-04-25 (anka-etf-reoptimize.timer). Golden Goose Plan 1 v2 system DEPRECATED 2026-04-26 (project_etf_v3_failed_2026_04_26.md) — v3 CURATED-30 supersedes; this task remains scheduled but its outputs are not load-bearing this week. outputs[] empty until v3 production engine wired; reverse-sync then needs etf_optimal_weights.json + regime_trade_map.json added to vps_sync_weekly.bat."
+      "notes": "Saturday 22:00 IST. MIGRATED TO VPS 2026-04-25 (anka-etf-reoptimize.timer). Golden Goose Plan 1 v2 system DEPRECATED 2026-04-26 (project_etf_v3_failed_2026_04_26.md) \u2014 v3 CURATED-30 supersedes; this task remains scheduled but its outputs are not load-bearing this week. outputs[] empty until v3 production engine wired; reverse-sync then needs etf_optimal_weights.json + regime_trade_map.json added to vps_sync_weekly.bat."
     },
     {
       "task_name": "AnkaETFSignal",
@@ -962,7 +962,7 @@
         "pipeline/data/today_regime.json.provenance.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "04:45 IST daily. etf_daily_signal.py â€” compute today_zone using stored weights. Must run AFTER AnkaDailyDump (04:30)."
+      "notes": "04:45 IST daily. etf_daily_signal.py \u00e2\u20ac\u201d compute today_zone using stored weights. Must run AFTER AnkaDailyDump (04:30)."
     },
     {
       "task_name": "AnkaUnifiedBacktest",
@@ -982,7 +982,7 @@
         "pipeline/data/research/phase_c/live_paper_options_ledger.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "09:25 IST daily. phase_c_shadow_open.bat — F3 live shadow ledger: filters today's OPPORTUNITY Phase C signals, records OPEN rows at live Kite LTP. Purpose: forward-test the H1 OPPORTUNITY hypothesis (see docs/research/phase-c-validation/). + paired-options sidecar (2026-04-27): also opens ATM-options leg via phase_c_options_shadow.py."
+      "notes": "09:25 IST daily. phase_c_shadow_open.bat \u2014 F3 live shadow ledger: filters today's OPPORTUNITY Phase C signals, records OPEN rows at live Kite LTP. Purpose: forward-test the H1 OPPORTUNITY hypothesis (see docs/research/phase-c-validation/). + paired-options sidecar (2026-04-27): also opens ATM-options leg via phase_c_options_shadow.py."
     },
     {
       "task_name": "AnkaPhaseCShadowClose",
@@ -993,7 +993,7 @@
         "pipeline/data/research/phase_c/live_paper_options_ledger.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "14:30 IST daily. phase_c_shadow_close.bat — mechanical time-stop: transitions all OPEN rows to CLOSED at live Kite LTP. Realized net P&L via cost_model (₹50k notional, 5 bps slippage). + paired-options sidecar (2026-04-27): also closes ATM-options leg via phase_c_options_shadow.py."
+      "notes": "14:30 IST daily. phase_c_shadow_close.bat \u2014 mechanical time-stop: transitions all OPEN rows to CLOSED at live Kite LTP. Realized net P&L via cost_model (\u20b950k notional, 5 bps slippage). + paired-options sidecar (2026-04-27): also closes ATM-options leg via phase_c_options_shadow.py."
     },
     {
       "task_name": "AnkaTAScorerFit",
@@ -1004,7 +1004,7 @@
         "pipeline/data/ta_feature_models.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Sunday 01:30 IST. fit_ta_scorer.bat â€” TA Coincidence Scorer v1 weekly walk-forward fit (RELIANCE pilot). Output consumed daily by AnkaTAScorerScore."
+      "notes": "Sunday 01:30 IST. fit_ta_scorer.bat \u00e2\u20ac\u201d TA Coincidence Scorer v1 weekly walk-forward fit (RELIANCE pilot). Output consumed daily by AnkaTAScorerScore."
     },
     {
       "task_name": "AnkaTAScorerScore",
@@ -1014,7 +1014,7 @@
         "pipeline/data/ta_attractiveness_scores.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Daily 16:00 IST. score_ta_scorer.bat â€” TA Coincidence Scorer v1 daily EOD scoring after bars lock. Output consumed by /api/ta_attractiveness and the TA adapter in the Unified Analysis Panel."
+      "notes": "Daily 16:00 IST. score_ta_scorer.bat \u00e2\u20ac\u201d TA Coincidence Scorer v1 daily EOD scoring after bars lock. Output consumed by /api/ta_attractiveness and the TA adapter in the Unified Analysis Panel."
     },
     {
       "task_name": "AnkaAutoresearchMode2",
@@ -1029,7 +1029,7 @@
         "pipeline/autoresearch/regime_autoresearch/data/proposal_log_euphoria.jsonl"
       ],
       "grace_multiplier": 1.5,
-      "notes": "20:00 IST daily. AnkaAutoresearchMode2.bat â€” v2 Mode 2 overnight autoresearch orchestrator: Haiku proposer + in-sample compiler per regime quantile. Writes sharded proposal_log_<regime>.jsonl files. Freshness contract: 16h."
+      "notes": "20:00 IST daily. AnkaAutoresearchMode2.bat \u00e2\u20ac\u201d v2 Mode 2 overnight autoresearch orchestrator: Haiku proposer + in-sample compiler per regime quantile. Writes sharded proposal_log_<regime>.jsonl files. Freshness contract: 16h."
     },
     {
       "task_name": "AnkaAutoresearchBHFDR",
@@ -1040,7 +1040,7 @@
         "pipeline/autoresearch/regime_autoresearch/data/bh_fdr_batch_state.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "05:00 IST daily. AnkaAutoresearchBHFDR.bat â€” per-regime Benjamini-Hochberg FDR batch check; demotes hypotheses that fail the alpha-corrected p-value threshold. Writes bh_fdr_batch_state.json. Freshness contract: 24h."
+      "notes": "05:00 IST daily. AnkaAutoresearchBHFDR.bat \u00e2\u20ac\u201d per-regime Benjamini-Hochberg FDR batch check; demotes hypotheses that fail the alpha-corrected p-value threshold. Writes bh_fdr_batch_state.json. Freshness contract: 24h."
     },
     {
       "task_name": "AnkaAutoresearchHoldout",
@@ -1051,7 +1051,7 @@
         "pipeline/autoresearch/regime_autoresearch/data/holdout_run_log.jsonl"
       ],
       "grace_multiplier": 1.5,
-      "notes": "05:30 IST daily. AnkaAutoresearchHoldout.bat â€” single-touch holdout runner; evaluates BH-FDR survivors against the held-out data slice and appends result to holdout_run_log.jsonl. Freshness contract: 24h."
+      "notes": "05:30 IST daily. AnkaAutoresearchHoldout.bat \u00e2\u20ac\u201d single-touch holdout runner; evaluates BH-FDR survivors against the held-out data slice and appends result to holdout_run_log.jsonl. Freshness contract: 24h."
     },
     {
       "task_name": "AnkaBulkDeals",
@@ -1062,7 +1062,7 @@
         "pipeline/data/bulk_deals/{prev_biz_day}.parquet"
       ],
       "grace_multiplier": 2.0,
-      "notes": "16:30 IST Mon-Fri. anka-bulk-deals.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.bulk_deals — pulls NSE rolling-today bulk + block deals CSVs from nsearchives.nseindia.com and writes one parquet per trade-date. Forward-only (see memory/reference_nse_bulk_deals_history_unavailable.md). Feeds forensic card v2 bulk_deal_T channel."
+      "notes": "16:30 IST Mon-Fri. anka-bulk-deals.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.bulk_deals \u2014 pulls NSE rolling-today bulk + block deals CSVs from nsearchives.nseindia.com and writes one parquet per trade-date. Forward-only (see memory/reference_nse_bulk_deals_history_unavailable.md). Feeds forensic card v2 bulk_deal_T channel."
     },
     {
       "task_name": "AnkaInsiderTrades",
@@ -1073,7 +1073,7 @@
         "pipeline/data/insider_trades/{this_month}.parquet"
       ],
       "grace_multiplier": 2.0,
-      "notes": "18:30 IST Mon-Fri. anka-insider-trades.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.insider_trades — pulls NSE PIT (insider trading) disclosures from /api/corporates-pit. Pulls last 7 days each run because PIT filings often arrive 1-3 days late. Backfill 2021+ is one-shot. Feeds forensic card v2 insider channel."
+      "notes": "18:30 IST Mon-Fri. anka-insider-trades.timer + .service on VPS systemd (Cohort G 2026-04-28). python -m pipeline.insider_trades \u2014 pulls NSE PIT (insider trading) disclosures from /api/corporates-pit. Pulls last 7 days each run because PIT filings often arrive 1-3 days late. Backfill 2021+ is one-shot. Feeds forensic card v2 insider channel."
     },
     {
       "task_name": "AnkaH20260426001PaperOpen",
@@ -1116,6 +1116,28 @@
       "notes": "14:30 IST daily during holdout 2026-05-04 -> 2026-08-01 (auto-extend 2026-10-31 if n<20). h_2026_05_01_earnings_drift_close.bat -- mechanical TIME_STOP per spec section 7: scans OPEN rows where (entry_date + 5 trading days) <= today, closes at Kite LTP, writes gross_bps + net_s1_bps. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
     },
     {
+      "task_name": "AnkaThemeNeutralPickerOpen",
+      "tier": "info",
+      "cadence_class": "weekly",
+      "host": "vps",
+      "outputs": [
+        "pipeline/data/research/h_2026_05_04_theme_neutral_skip/recommendations.csv"
+      ],
+      "grace_multiplier": 7.5,
+      "notes": "Mondays 09:25 IST during holdout 2026-05-04 -> 2026-08-01 (auto-extend until n_NEUTRAL_cutoffs >= 6 OR 2026-10-31). anka-theme-neutral-picker-open.timer + .service on VPS systemd -- H-2026-05-04-theme-detector-earnings-skip-v1: loads themes_proposer output (with inline propose() fallback), attaches V3-CURATED-30 PIT regime, applies earnings-density==0 filter, picks top-K=3 by v1.4 raw-weight. Skip if regime != NEUTRAL OR <3 themes pass filter. Idempotent on (cutoff). Spec: docs/superpowers/specs/2026-05-04-theme-detector-earnings-skip-v1-design.md. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
+      "task_name": "AnkaThemeNeutralPickerExitCheck",
+      "tier": "info",
+      "cadence_class": "daily",
+      "host": "vps",
+      "outputs": [
+        "pipeline/data/research/h_2026_05_04_theme_neutral_skip/recommendations.csv"
+      ],
+      "grace_multiplier": 1.5,
+      "notes": "14:30 IST Mon-Fri during holdout 2026-05-04 -> 2026-10-31. anka-theme-neutral-picker-exit-check.timer + .service on VPS systemd -- mechanical TIME_STOP per spec section 7: scans OPEN rows where today >= fwd21_target_close_date, closes basket at Kite LTP, computes basket gross + net@15bps + net@20bps. Idempotent. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
       "task_name": "AnkaPhaseCMRKarpathyOpen",
       "tier": "info",
       "cadence_class": "daily",
@@ -1146,7 +1168,7 @@
         "pipeline/data/pit_regime_tape/forward/{today}.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "05:00 IST daily. anka-pit-regime-tape.timer + .service on VPS systemd (Cohort G 2026-04-28). pipeline/scripts/capture_pit_regime_tape_forward.py — freezes today_regime.json into PIT tape forward feed. Load-bearing for NEUTRAL_OVERLAY family (H-2026-04-28-001..004). Audit: 2026-04-28-pit-regime-tape-data-source-audit.md"
+      "notes": "05:00 IST daily. anka-pit-regime-tape.timer + .service on VPS systemd (Cohort G 2026-04-28). pipeline/scripts/capture_pit_regime_tape_forward.py \u2014 freezes today_regime.json into PIT tape forward feed. Load-bearing for NEUTRAL_OVERLAY family (H-2026-04-28-001..004). Audit: 2026-04-28-pit-regime-tape-data-source-audit.md"
     },
     {
       "task_name": "AnkaSecrsiCaptureOpens",
@@ -1213,7 +1235,7 @@
         "pipeline/data/research/theme_detector/state/theme_states.json"
       ],
       "grace_multiplier": 2.0,
-      "notes": "Sun 23:00 IST weekly. anka_theme_detector.bat -- python -m pipeline.research.theme_detector.detector against themes_frozen.json. Phase 1 v1.0 wired 2026-05-01 (#76). Writes themes_<date>.json + updates state file (mtime is freshness contract). Laptop-only because Trendlyne raw_exports land manually on laptop and are gitignored (not on VPS). Shadow-mode operational; NOT yet citable as evidence per §21 of data validation policy (C2/C5 proxies + 4-week shadow window pending). Spec: docs/superpowers/specs/2026-05-01-theme-detector-design.md §4."
+      "notes": "Sun 23:00 IST weekly. anka_theme_detector.bat -- python -m pipeline.research.theme_detector.detector against themes_frozen.json. Phase 1 v1.0 wired 2026-05-01 (#76). Writes themes_<date>.json + updates state file (mtime is freshness contract). Laptop-only because Trendlyne raw_exports land manually on laptop and are gitignored (not on VPS). Shadow-mode operational; NOT yet citable as evidence per \u00a721 of data validation policy (C2/C5 proxies + 4-week shadow window pending). Spec: docs/superpowers/specs/2026-05-01-theme-detector-design.md \u00a74."
     },
     {
       "task_name": "AnkaScannerPairedOpen",
@@ -1224,7 +1246,7 @@
         "pipeline/data/research/scanner/live_paper_scanner_options_ledger.json"
       ],
       "grace_multiplier": 1.5,
-      "notes": "T+1 09:25 IST after pattern scan. scanner_paired_open.bat -- opens paired (futures + options) shadow rows for yesterday's Top-10 from pattern_signals_today.json. Paper engine -- exempt from 14:30 IST cutoff per Q3 of Scanner spec §4."
+      "notes": "T+1 09:25 IST after pattern scan. scanner_paired_open.bat -- opens paired (futures + options) shadow rows for yesterday's Top-10 from pattern_signals_today.json. Paper engine -- exempt from 14:30 IST cutoff per Q3 of Scanner spec \u00a74."
     },
     {
       "task_name": "AnkaScannerPairedClose",
@@ -1295,7 +1317,7 @@
       "host": "vps",
       "outputs": [],
       "grace_multiplier": 2.0,
-      "notes": "Sun 04:00 IST. anka-faq-sync.timer -> git pull --ff-only origin feat/phase-c-v5 in ~/askanka.com. Refreshes the FAQ source corpus that feeds the Hermes system-faq skill (docs/faq/INDEX.md + every cited source file). info tier — Hermes is interactive, not blocking. Watchdog has no output file to inspect; rely on AnkaFailureWatcher for alerts on service failure transitions."
+      "notes": "Sun 04:00 IST. anka-faq-sync.timer -> git pull --ff-only origin feat/phase-c-v5 in ~/askanka.com. Refreshes the FAQ source corpus that feeds the Hermes system-faq skill (docs/faq/INDEX.md + every cited source file). info tier \u2014 Hermes is interactive, not blocking. Watchdog has no output file to inspect; rely on AnkaFailureWatcher for alerts on service failure transitions."
     },
     {
       "task_name": "AnkaSecurityDaily",
@@ -1336,7 +1358,7 @@
       ],
       "grace_multiplier": 1.5,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "04:30 IST Mon-Fri. anka_intraday_v1_loader.bat -> runner loader-refresh. Refreshes Kite 1-min cache for V1 universe (stocks + indices) per data audit §9.1. Registered via register_intraday_v1_all.ps1 2026-04-28."
+      "notes": "04:30 IST Mon-Fri. anka_intraday_v1_loader.bat -> runner loader-refresh. Refreshes Kite 1-min cache for V1 universe (stocks + indices) per data audit \u00a79.1. Registered via register_intraday_v1_all.ps1 2026-04-28."
     },
     {
       "task_name": "AnkaIntradayV1Open",
@@ -1370,7 +1392,7 @@
       ],
       "grace_multiplier": 2.0,
       "hypothesis": "H-2026-04-29-intraday-data-driven-v1",
-      "notes": "Last Sunday of the month, 02:00 IST. anka_intraday_v1_recalibrate.bat -> runner recalibrate --pool stocks then --pool indices. host=manual â€” operator-triggered (Windows Task Scheduler lacks a clean last-Sunday-of-month trigger, and the first recalibration window is end-May 2026 since the holdout started 2026-04-29). Promote to host=laptop with a weekly Sunday 02:00 trigger + self-skip in the .bat once we're ready to automate."
+      "notes": "Last Sunday of the month, 02:00 IST. anka_intraday_v1_recalibrate.bat -> runner recalibrate --pool stocks then --pool indices. host=manual \u00e2\u20ac\u201d operator-triggered (Windows Task Scheduler lacks a clean last-Sunday-of-month trigger, and the first recalibration window is end-May 2026 since the holdout started 2026-04-29). Promote to host=laptop with a weekly Sunday 02:00 trigger + self-skip in the .bat once we're ready to automate."
     },
     {
       "task_name": "AnkaIntradayV1Shadow_0930",
@@ -1543,7 +1565,7 @@
       "cadence_class": "daily",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "04:50 IST Mon-Fri. vps_sync_daily.bat â€” pulls back AnkaDailyDump artifacts (pipeline/data/daily/*.json + pipeline/data/flows/*.json + pipeline/data/fno_historical/*.csv) from Contabo VPS via scp. Closes the laptop-side mirror so chart endpoint, FII flows and morning_scan see fresh files. outputs[] empty because the contract is that the destination directories MUST be fresh; the per-directory freshness is checked by AnkaDailyDump's outputs (data/daily/{today}.json) and by the chart-v2 audit (pipeline/data/fno_historical staleness). Registered 2026-04-28."
+      "notes": "04:50 IST Mon-Fri. vps_sync_daily.bat \u00e2\u20ac\u201d pulls back AnkaDailyDump artifacts (pipeline/data/daily/*.json + pipeline/data/flows/*.json + pipeline/data/fno_historical/*.csv) from Contabo VPS via scp. Closes the laptop-side mirror so chart endpoint, FII flows and morning_scan see fresh files. outputs[] empty because the contract is that the destination directories MUST be fresh; the per-directory freshness is checked by AnkaDailyDump's outputs (data/daily/{today}.json) and by the chart-v2 audit (pipeline/data/fno_historical staleness). Registered 2026-04-28."
     },
     {
       "task_name": "AnkaVPSSyncPostmarket",
@@ -1562,7 +1584,51 @@
       "cadence_class": "weekly",
       "outputs": [],
       "grace_multiplier": 1.5,
-      "notes": "Sunday 04:00 IST. vps_sync_weekly.bat â€” pulls back AnkaPatternScannerFit artifact (pipeline/data/scanner/pattern_stats.parquet) from Contabo VPS via scp. outputs[] empty because the freshness contract is enforced via AnkaPatternScannerFit's host=vps inventory entry. Registered 2026-04-28."
+      "notes": "Sunday 04:00 IST. vps_sync_weekly.bat \u00e2\u20ac\u201d pulls back AnkaPatternScannerFit artifact (pipeline/data/scanner/pattern_stats.parquet) from Contabo VPS via scp. outputs[] empty because the freshness contract is enforced via AnkaPatternScannerFit's host=vps inventory entry. Registered 2026-04-28."
+    },
+    {
+      "task_name": "AnkaCrossAssetPredict",
+      "tier": "info",
+      "cadence_class": "daily",
+      "host": "vps",
+      "grace_multiplier": 1.5,
+      "outputs": [
+        "pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/today_predictions.json"
+      ],
+      "notes": "04:30 IST daily on Contabo VPS systemd (anka-cross-asset-predict.timer). H-2026-05-04 cross-asset per-stock EN forward predict for qualifying (stock,direction) cells. Holdout 2026-05-04 -> 2026-08-04. Spec: docs/superpowers/specs/2026-05-04-cross-asset-perstock-lasso-v1-design.md. SINGLE-TOUCH HOLDOUT -- no parameter changes during window."
+    },
+    {
+      "task_name": "AnkaCrossAssetOpen",
+      "tier": "info",
+      "cadence_class": "intraday",
+      "host": "vps",
+      "grace_multiplier": 1.5,
+      "outputs": [
+        "pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/recommendations.csv"
+      ],
+      "notes": "09:15 IST trading days on Contabo VPS systemd (anka-cross-asset-open.timer). H-2026-05-04 fires LONG/SHORT at Kite LTP for cells where p_long>=0.6 AND p_short<0.4 (mirror for SHORT). Per-leg ATR(14)x2 stop. Holdout 2026-05-04 -> 2026-08-04."
+    },
+    {
+      "task_name": "AnkaCrossAssetClose",
+      "tier": "info",
+      "cadence_class": "intraday",
+      "host": "vps",
+      "grace_multiplier": 1.5,
+      "outputs": [
+        "pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/recommendations.csv"
+      ],
+      "notes": "14:25 IST trading days on Contabo VPS systemd (anka-cross-asset-close.timer). H-2026-05-04 mechanical TIME_STOP at Kite LTP (or ATR_STOP if intraday touched). 5 min before universal 14:30 IST cutoff. Holdout 2026-05-04 -> 2026-08-04."
+    },
+    {
+      "task_name": "AnkaCrossAssetRecalibrate",
+      "tier": "info",
+      "cadence_class": "monthly",
+      "host": "vps",
+      "grace_multiplier": 1.5,
+      "outputs": [
+        "pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/manifest.json"
+      ],
+      "notes": "Last Sunday of month 02:00 IST on Contabo VPS systemd (anka-cross-asset-recalibrate.timer). H-2026-05-04 monthly refit. GATED on terminal_state.json present (post-verdict). Forbidden during active holdout window per backtesting-specs.txt section 10.4. Will skip silently if terminal_state.json missing."
     }
   ]
 }
