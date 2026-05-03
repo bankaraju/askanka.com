@@ -50,7 +50,7 @@ def load_source_content(citations: list[str]) -> dict[str, str]:
         full = REPO / path
         if full.exists():
             try:
-                out[path] = full.read_text(encoding="utf-8", errors="replace")[:8000]
+                out[path] = full.read_text(encoding="utf-8", errors="replace")[:24000]
             except Exception as e:
                 out[path] = f"<read-error: {e}>"
         else:

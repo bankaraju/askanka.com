@@ -1,0 +1,95 @@
+{
+  "date": "2026-05-03",
+  "n_questions": 6,
+  "aggregate_pct": 66.7,
+  "halluc_clean_pct": 50.0,
+  "citation_pct": 100.0,
+  "avg_latency_min": 24.1,
+  "verdict": "FAIL",
+  "per_tier_pct": {
+    "5": 66.7
+  },
+  "tiers_present": [
+    5
+  ],
+  "records": [
+    {
+      "id": "T5Q1",
+      "tier": 5,
+      "citation": 1,
+      "faithfulness": 2,
+      "completeness": 2,
+      "no_hallucination": 1,
+      "score": 6,
+      "max": 6,
+      "pass": true,
+      "citation_override": null,
+      "notes": "The answer accurately states that Section 0 principles cannot be waived and correctly explains this is load-bearing because other deviations *do* require waivers, highlighting the special, unbendable nature of Section 0. All information is directly from the cited source."
+    },
+    {
+      "id": "T5Q2",
+      "tier": 5,
+      "citation": 1,
+      "faithfulness": 1,
+      "completeness": 2,
+      "no_hallucination": 0,
+      "score": 4,
+      "max": 6,
+      "pass": false,
+      "citation_override": null,
+      "notes": "The agent accurately explains the core rule and cites relevant passages for several claims. However, it hallucinates that 'The training window must be lengthened' as a consequence of rule violation, and the link between violation and a 'fresh hypothesis-registry row' is an interpretation not explicitly stated in the source for a 'violation'."
+    },
+    {
+      "id": "T5Q3",
+      "tier": 5,
+      "citation": 1,
+      "faithfulness": 2,
+      "completeness": 2,
+      "no_hallucination": 1,
+      "score": 6,
+      "max": 6,
+      "pass": true,
+      "citation_override": null,
+      "notes": "The answer accurately states what \u00a721 binds together and provides two direct, verbatim quotes from the source to explain how it gates model approval. All claims are directly traceable to the cited source and fully address the question's depth."
+    },
+    {
+      "id": "T5Q4",
+      "tier": 5,
+      "citation": 1,
+      "faithfulness": 0,
+      "completeness": 0,
+      "no_hallucination": 0,
+      "score": 1,
+      "max": 6,
+      "pass": false,
+      "citation_override": null,
+      "notes": "The agent hallucinates the direct quote and the entire list of artifacts for same-commit updates. The provided source 'CLAUDE.md' does not contain the quoted text and the answer fails to identify the actual specific 'same commit' rule present in the source regarding strategy files and the hypothesis registry."
+    },
+    {
+      "id": "T5Q5",
+      "tier": 5,
+      "citation": 1,
+      "faithfulness": 2,
+      "completeness": 2,
+      "no_hallucination": 1,
+      "score": 6,
+      "max": 6,
+      "pass": true,
+      "citation_override": null,
+      "notes": "The answer accurately defines the no-hallucination mandate and its operational behavior directly from the provided source. All claims are faithfully reproduced and grounded in the cited text."
+    },
+    {
+      "id": "T5Q6",
+      "tier": 5,
+      "citation": 1,
+      "faithfulness": 0,
+      "completeness": 0,
+      "no_hallucination": 0,
+      "score": 1,
+      "max": 6,
+      "pass": false,
+      "citation_override": null,
+      "notes": "The agent cited `CLAUDE.md` but the key phrasing ('No jargon, no internal numbering. 'n=10' \u2192 'worked 7 of 10'.') and the concept of a 'plain-English mandate' for subscribers are not present in the provided source file. The source is entirely about internal project instructions, schedules, and technical specifications, not subscriber communication guidelines. The agent hallucinated the content and its attribution."
+    }
+  ]
+}
