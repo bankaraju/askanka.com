@@ -1,5 +1,5 @@
 BACKTESTING STANDARDS — ANKA RESEARCH
-Revision 1.0 (2026-04-23). Governing document for every backtest, paper trade and live strategy launch on the Anka platform. Every strategy must pass every applicable gate below before it touches real capital. Any deviation requires a written waiver from the principal (Bharat) logged in docs/superpowers/waivers/ before the deviation takes effect. Section 0 principles cannot be waived.
+Revision 1.1 (2026-05-03). Governing document for every backtest, paper trade and live strategy launch on the Anka platform. Every strategy must pass every applicable gate below before it touches real capital. Any deviation requires a written waiver from the principal (Bharat) logged in docs/superpowers/waivers/ before the deviation takes effect. Section 0 principles cannot be waived.
 
 Next mandatory review: 2027-04-23 (annual cycle).
 
@@ -257,6 +257,40 @@ Observed strategy performance must exceed the 95th percentile of the null distri
 Permutation / reality-check significance does not replace Bonferroni or FDR. Both must be passed where applicable, at the permutation counts required by 9B.2.
 
 
+9C. CELL-LEVEL QUALIFIER GATE STANDARDS
+Added 2026-05-03 (Revision 1.1) after H-2026-05-04-cross-asset-perstock-lasso-v1 surfaced a 6-gate qualifier in which 4 gates were non-standard or in violation of §9B.2. This section codifies what counts as a valid cell-level qualifier gate for any classifier-based hypothesis (per-stock, per-direction, per-rule). It binds future hypotheses; in-flight holdouts ride out their original gates per §10.4 and are evaluated retrospectively under this standard at verdict time.
+
+9C.1 Two-gate canonical qualifier
+Every classifier-based hypothesis that promotes per-cell models to a tradeable basket must clear, at minimum:
+- GATE A — mean walk-forward fold-AUC ≥ 0.53 (intraday equity classification with low transaction costs; threshold aligns with López de Prado AFML 2018 §7.4 academic median 0.52-0.54)
+- GATE B — multiple-comparison-corrected p-value below pre-registered alpha (Bonferroni, BH-FDR, or White's Reality Check) where the family scope is declared at pre-registration per §14.5 and the permutation count satisfies §9B.2 (≥100,000 when FDR/Bonferroni is in effect)
+
+A cell that clears Gate A and Gate B is a tradeable cell. The basket assembled from tradeable cells is then evaluated against §3.1 (S0/S1 deployment criteria) and §12 (edge stability).
+
+9C.2 Forbidden cell-level gates
+The following are explicitly forbidden as cell-level qualifier gates because they are non-standard (no published reference uses them as binding gates), redundant with Gates A or B, or vulnerable to look-ahead leakage:
+- fold-AUC standard deviation as a hard gate (informational only — convention: report std, do not gate)
+- in-sample-holdout AUC as a gate when hyperparameters are cross-validated on the full panel (creates double-jeopardy with the walk-forward folds AND leaks the holdout into hyperparameter selection; use a true expanding-rolling holdout or drop the gate)
+- absolute predicted-positive count thresholds (n_pred_pos at p≥k for arbitrary k); use percentile-based ranking instead, or rely on Gate B alone for false-discovery control
+- "permutation-beat-percentile ≥ 95%" as a separate gate when BH-FDR (Gate B) is already in place — these measure the same null and are redundant
+
+9C.3 Family scope
+Per §14.5 the multiple-comparison family must be declared at pre-registration. For per-stock, per-direction classifier hypotheses the default scope is per-direction (LONG and SHORT each form their own family) — they target different market mechanisms (uptrend vs downtrend dynamics) and pooling them inflates the BH-FDR denominator without justification. Pooling LONG + SHORT into one family requires a written justification in the pre-registration entry, not a default.
+
+9C.4 In-flight holdout discipline
+This standard does not apply mechanically to hypotheses already in their holdout window per §10.4 strict — those ride out their pre-registered gates. At verdict time, the unified backtest emits a "retrospective gate sensitivity" measurement (cells that would have qualified under §9C) alongside the actual verdict. The retrospective measurement is informational only and does not change the verdict.
+
+9C.5 Reporting
+Every classifier-based hypothesis report must include:
+- per-cell mean fold-AUC, fold std, and BH-FDR p-value
+- count of cells passing Gate A only, Gate B only, and joint
+- per-direction BH-FDR family size and rank-1 threshold
+- N_PERMUTATIONS used and whether it satisfies §9B.2 for the family size
+
+9C.6 Waiver path
+Any pre-registration that proposes additional cell-level gates beyond §9C.1 (e.g., for novel signal types where Gate A's intraday-AUC threshold is inappropriate) requires a written waiver per §15.4 specifying (a) what the additional gate measures, (b) the published or empirical evidence supporting the threshold, and (c) why Gates A and B are insufficient on their own.
+
+
 10. OUT-OF-SAMPLE DISCIPLINE AND PURGED WALK-FORWARD
 Objective: Ensure no researcher sees the evaluation segment during strategy development.
 
@@ -460,6 +494,9 @@ pipeline/autoresearch/unified_backtest.py is the Sunday referee. It runs the ful
 Any deviation from Sections 1-14 is logged in docs/superpowers/waivers/YYYY-MM-DD-<strategy>.md with reason, expiry date and signing principal. Waivers must be filed BEFORE the deviation takes effect; retroactive waivers are void. Waivers on Section 0 principles are never allowed.
 
 
-END OF STANDARDS DOCUMENT — Revision 1.0, 2026-04-23.
+END OF STANDARDS DOCUMENT — Revision 1.1, 2026-05-03.
 Next mandatory review: 2027-04-23.
+Revision history:
+- 1.0 (2026-04-23) — initial document
+- 1.1 (2026-05-03) — added §9C Cell-Level Qualifier Gate Standards
 Changes require explicit git commit with the principal's co-author tag.

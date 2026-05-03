@@ -5,6 +5,7 @@ from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.walk_forward impo
     expanding_quarter_folds,
     qualifier_check,
     bh_fdr,
+    bh_fdr_per_direction,
     permutation_p_value,
 )
 
@@ -26,28 +27,91 @@ def test_bh_fdr_known_pvalues():
     assert not sig[3]
 
 
-def test_qualifier_check_all_gates():
-    # All-pass case
-    fold_aucs = [0.58, 0.59, 0.57, 0.60]
-    p_value = 0.01
-    in_sample_holdout_auc = 0.57
-    n_pred_pos_isho = 12
-    perm_beat_pct = 0.97
+def test_qualifier_check_revised_two_gate_pass():
+    """Post-A2 amendment (§9C): only Gate A (fold-AUC) and Gate B (BH-FDR) gate."""
     qualified, reasons = qualifier_check(
-        fold_aucs=fold_aucs, p_value=p_value, p_threshold=0.05,
-        in_sample_holdout_auc=in_sample_holdout_auc, n_pred_pos_isho=n_pred_pos_isho,
-        perm_beat_pct=perm_beat_pct,
+        fold_aucs=[0.55, 0.54, 0.53, 0.56],
+        bh_fdr_survivor=True,
     )
     assert qualified is True
     assert reasons == []
 
-    # Std too high
-    qualified2, reasons2 = qualifier_check(
-        fold_aucs=[0.58, 0.45, 0.70, 0.55], p_value=0.01, p_threshold=0.05,
-        in_sample_holdout_auc=0.57, n_pred_pos_isho=12, perm_beat_pct=0.97,
+
+def test_qualifier_check_fails_gate_a_below_threshold():
+    """Cell with mean fold-AUC 0.52 fails Gate A at default threshold 0.53."""
+    qualified, reasons = qualifier_check(
+        fold_aucs=[0.50, 0.52, 0.53, 0.53],
+        bh_fdr_survivor=True,
     )
-    assert qualified2 is False
-    assert any("std" in r for r in reasons2)
+    assert qualified is False
+    assert any("Gate A" in r for r in reasons)
+
+
+def test_qualifier_check_fails_gate_b_when_not_bh_fdr_survivor():
+    qualified, reasons = qualifier_check(
+        fold_aucs=[0.55, 0.55, 0.55, 0.55],
+        bh_fdr_survivor=False,
+    )
+    assert qualified is False
+    assert any("Gate B" in r for r in reasons)
+
+
+def test_qualifier_check_custom_threshold():
+    """Threshold is overridable for hypothesis-specific tightening (with waiver per §9C.6)."""
+    qualified, _ = qualifier_check(
+        fold_aucs=[0.54, 0.54, 0.54, 0.54],
+        bh_fdr_survivor=True,
+        fold_auc_threshold=0.55,
+    )
+    assert qualified is False
+
+
+def test_qualifier_check_does_not_gate_on_dropped_metrics():
+    """fold-std, isho-AUC, n_pred_pos, perm_beat should NOT affect the gate decision
+    after A2 (§9C.2 forbids them as gates). The new signature should not even accept them."""
+    import inspect
+    sig = inspect.signature(qualifier_check)
+    forbidden = {"fold_auc_std", "in_sample_holdout_auc", "n_pred_pos_isho", "perm_beat_pct"}
+    assert not (forbidden & set(sig.parameters)), (
+        f"qualifier_check signature must not accept dropped gate args: "
+        f"{forbidden & set(sig.parameters)}"
+    )
+
+
+def test_bh_fdr_per_direction_separate_families():
+    """LONG and SHORT cells form separate BH-FDR families per §9C.3."""
+    # 4 LONG cells with one strong p-value, 4 SHORT cells with all weak
+    cells = [
+        {"ticker": "A", "direction": "LONG", "perm_p_value": 0.001},
+        {"ticker": "B", "direction": "LONG", "perm_p_value": 0.5},
+        {"ticker": "C", "direction": "LONG", "perm_p_value": 0.6},
+        {"ticker": "D", "direction": "LONG", "perm_p_value": 0.7},
+        {"ticker": "A", "direction": "SHORT", "perm_p_value": 0.1},
+        {"ticker": "B", "direction": "SHORT", "perm_p_value": 0.2},
+        {"ticker": "C", "direction": "SHORT", "perm_p_value": 0.3},
+        {"ticker": "D", "direction": "SHORT", "perm_p_value": 0.4},
+    ]
+    surv = bh_fdr_per_direction(cells, alpha=0.05)
+    # In LONG family of n=4, rank-1 threshold is 0.0125; p=0.001 passes
+    assert surv[("A", "LONG")] is True
+    assert surv[("B", "LONG")] is False
+    # SHORT family has no significant p-values
+    assert surv[("A", "SHORT")] is False
+    assert surv[("D", "SHORT")] is False
+
+
+def test_bh_fdr_per_direction_pooled_would_have_been_stricter():
+    """Demonstrates why per-direction is more permissive than pooled BH-FDR
+    (the rationale for §9C.3): same set of cells, smaller family denominator."""
+    cells = [{"ticker": f"T{i}", "direction": "LONG" if i < 50 else "SHORT",
+              "perm_p_value": 0.0008 if i == 0 else 0.5}
+             for i in range(100)]
+    surv = bh_fdr_per_direction(cells, alpha=0.05)
+    # Per-direction LONG family n=50: rank-1 threshold = 0.001; 0.0008 passes
+    assert surv[("T0", "LONG")] is True
+    # Pooled n=100: rank-1 threshold = 0.0005; 0.0008 would fail
+    pooled = bh_fdr(np.array([c["perm_p_value"] for c in cells]), alpha=0.05)
+    assert pooled[0] is np.False_ or bool(pooled[0]) is False
 
 
 def test_permutation_p_value_known_signal():

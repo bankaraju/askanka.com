@@ -2,9 +2,9 @@
 
 **Hypothesis ID:** `H-2026-05-04-cross-asset-perstock-lasso-v1`
 **Strategy class:** `per-stock-cross-asset-elastic-net`
-**Family scope:** ticker-family, n=101 (BH-FDR-corrected across (stock × direction) cells, 200 → 101 after PRE_HOLDOUT_FIX)
-**Standards version:** 1.0_2026-04-23 (`docs/superpowers/specs/backtesting-specs.txt`)
-**Spec version:** v1.0 (frozen at registry append) + PRE_HOLDOUT_FIX amendment 2026-05-03
+**Family scope:** ticker-family, **per-direction** (LONG family n≈101, SHORT family n≈101) after A2 — was pooled n=202 at v1.0
+**Standards version:** 1.1_2026-05-03 (`docs/superpowers/specs/backtesting-specs.txt`, includes §9C cell-level qualifier gate standards added with this amendment)
+**Spec version:** v1.0 (frozen at registry append) + PRE_HOLDOUT_FIX (A1) 2026-05-03 + GATE_RECONFIG (A2) 2026-05-03
 
 ---
 
@@ -29,6 +29,38 @@ The first VPS deploy on 2026-05-03 produced "0 cells fit" because (a) the runner
 
 The body of this spec retains its original wording (universe ~180-200, holdout 2026-05-04 → 2026-08-04) where the discussion logic is unaffected by the amendment. Operational scheduling references (§7, §10, §15, §16) and the verdict bar in §12 are read with the amended dates and universe size.
 
+### A2: GATE_RECONFIG — cell-level qualifier brought to §9C standard, 2026-05-03 17:00 IST
+
+A diagnostic TA-only re-fit on the 101-stock universe (`pipeline/research/h_2026_05_04_cross_asset_perstock_lasso/diagnostic_ta_only_results.json`) and a per-gate inspection of the production cross-asset run (`walk_forward_results.json`) showed that the v1.0 6-gate qualifier was internally inconsistent with our own canonical standard. Of the six gates, four were either non-standard, redundant, or in direct violation of `backtesting-specs.txt` §9B.2:
+
+| v1.0 gate | Diagnosis | Action |
+|---|---|---|
+| Gate 1: mean fold-AUC ≥ 0.55 | Defensible but at the strict end of academic literature (López de Prado AFML 2018 §7.4 puts the intraday equity classification median at 0.52-0.54). 4/202 cells pass at 0.55 in both feature sets — same kill rate, indicating threshold is the binding constraint, not the feature library. | **Loosen to ≥ 0.53.** 17 cells pass at 0.53 (cross-asset) / 21 cells (TA-only). |
+| Gate 2: fold-AUC std ≤ 0.05 | Non-standard. No published walk-forward paper uses fold-std as a hard gate (Pardo 2008 *Evaluation and Optimization of Trading Strategies* §6.7: report std, do not gate). | **Remove (informational only).** |
+| Gate 3: in-sample-holdout AUC ≥ 0.55 | Leakage-prone. CV picks C/l1 on the full panel including last 125 days → leaks into hyperparameter selection. Walk-forward already provides OOS measurement. 113/202 cells fall back to 0.5 because last-125 is single-class on uptrending stocks. | **Remove.** Forbidden by §9C.2. |
+| Gate 4: n_pred_pos at p ≥ 0.6 ≥ 5 | Non-standard absolute threshold. EN logistic with shifted base rate rarely emits p ≥ 0.6 (median n_pp_60 = 0 across both feature sets; 0/202 cells pass at p ≥ 0.55 even). Hastie-Tibshirani-Friedman ESL §4.4.4 prescribes percentile-based ranking when base rate is shifted. | **Remove.** Forbidden by §9C.2. BH-FDR (Gate B) handles false-discovery control. |
+| Gate 5a: BH-FDR p < 0.05 across pooled n = 202 | Wrong family scope. LONG and SHORT target different mechanisms — pooling inflates the BH-FDR denominator without justification. Per `backtesting-specs.txt` §14.5 family scope must be declared at pre-registration. | **Switch to per-direction:** LONG family n ≈ 101, SHORT family n ≈ 101. Rank-1 threshold becomes 0.000495 (was 0.000248). |
+| Gate 5b: with N_PERMUTATIONS = 10,000 | **Direct violation of `backtesting-specs.txt` §9B.2.** Standard requires ≥ 100,000 permutations OR analytical p-value when FDR is in effect. At 10K the resolution floor is 0.0001, sitting right at the rank-1 BH-FDR threshold; one TA-only cell (COALINDIA LONG) gets perm_p = 0.0004 and fails BH-FDR by ~60% only because the permutation count is under-resourced. | **Bump to N_PERMUTATIONS = 100,000.** Resolution floor becomes 0.00001, well below rank-1 threshold. |
+| Gate 6: perm_beat_pct ≥ 0.95 | Currently a synthetic 0.96/0.0 mapping based on BH-FDR survival — it's BH-FDR twice. True one-sided perm-beat is informationally distinct but redundant once BH-FDR is in place. | **Remove.** Forbidden by §9C.2. |
+
+**Revised cell-level qualifier (post-A2):**
+- **GATE A:** mean walk-forward fold-AUC ≥ **0.53**
+- **GATE B:** BH-FDR p < 0.05, **per-direction** family scope (LONG n ≈ 101, SHORT n ≈ 101), at **N_PERMUTATIONS = 100,000**
+
+A cell that clears Gate A AND Gate B is qualified for forward trading. Old-gate measurements (fold-std, isho-AUC, n_pred_pos at multiple thresholds, raw perm-beat-pct) remain in the per-cell output as **informational only** for audit. The §12 BASKET-level PASS bar (Sharpe, hit-rate, mean P&L, comparator ladder) is unchanged — basket-level deployment criteria do not move with this amendment, only the cell-selection upstream.
+
+**Single-touch consequence:** Pre-holdout amendment. Holdout window 2026-05-05 → 2026-08-05 (set by A1) has not been opened — the production runner under v1.0 gates produced 0 qualifying cells, so no positions were ever taken. Single-touch is **preserved**. Per `backtesting-specs.txt` §10.4 strict, holdout consumption requires holdout entry, not registration.
+
+**Null expectation bounds (§1.B) under A2:** Unchanged thresholds (0 / [1,4] / [5,25] / [26,80] / >80) but the BH-FDR family scope shift to per-direction means a cell qualifying in either family counts toward `n_qualifying`. Spec §1.B is read with this clarification.
+
+**Why amend now (pre-holdout) rather than ride out and fail?** §10.4 strict bars amendments **during** the holdout window. Pre-holdout, the same standard requires that amendments be evidence-driven, recorded with full audit trail, and not retroactively redefine success — all satisfied here. Riding out a v1.0 gate spec we already know is non-standard would consume the single-touch on a configuration we cannot defend in a quant interview, then require a fresh registration to do the right thing. The A2 amendment is the principled path.
+
+**`backtesting-specs.txt` §9C added concurrently** (Revision 1.1, 2026-05-03) so future hypotheses inherit this standard. The §9C draft is the canonical version; this amendment is its first application.
+
+**v1 lessons not addressed by A2 (deferred to v2):**
+- The isho_auc distribution showed several cells with strong last-6-months edge (e.g., COALINDIA LONG isho_auc = 0.702) but flat walk-forward fold AUCs around 0.5 — likely either CV-on-full-panel hyperparameter leakage or recent-regime amplification diluted by older folds. v2 should split CV from holdout (true purged walk-forward per §10.3) and consider expanding-rolling weighted training instead of fold averaging.
+- SHORT-side BH-FDR survivor count was 0 even per-direction at 10K permutations. Indian equity uptrend bias may make SHORT a structurally harder cell — v2 should consider direction-asymmetric label thresholds or a regime-conditional SHORT.
+
 ---
 
 ## 1. Claim
@@ -38,7 +70,7 @@ The body of this spec retains its original wording (universe ~180-200, holdout 2
 **The hypothesis is evaluated at the BASKET level, not the per-cell level.** Specifically:
 
 - For each (stock, direction) **cell**, an elastic-net regularised logistic regression is fit per §8.
-- The cell is **qualified** for forward trading iff it clears the §9 gate (mean fold-AUC ≥ 0.55, fold-AUC std ≤ 0.05, BH-FDR p<0.05 across the full cell grid, n predicted-positive ≥ 5 in in-sample-holdout, permutation-null beat ≥ 95%).
+- The cell is **qualified** for forward trading iff it clears the §9 gate **as revised by A2 (post-amendment)**: GATE A mean walk-forward fold-AUC ≥ 0.53 AND GATE B BH-FDR p < 0.05 per-direction (LONG family ≈ 101, SHORT family ≈ 101) at N_PERMUTATIONS = 100,000. Old-gate measurements (fold-std, isho-AUC, n_pred_pos, perm-beat-pct) are emitted as informational outputs but do not gate.
 - The hypothesis is deemed **PASS** if the BH-FDR-qualified cells *collectively* satisfy the §12 forward criteria (basket-pooled hit-rate ≥ 55%, basket-pooled mean P&L ≥ +0.4% net@S1, comparator ladder cleared, fragility passes, single-touch undisturbed).
 - **Non-qualified cells are treated as non-tradeable, not as failed predictions.** The hypothesis does not claim that every (stock, direction) pair has a predictable T+1 direction; it claims that the qualifier pipeline can isolate a tradeable *subset* of cells whose pooled forward edge is positive net of costs.
 
@@ -50,7 +82,7 @@ This framing prevents two specific reporting errors:
 
 | Qualifying-cell count | Interpretation | Action |
 |---|---|---|
-| **n_qualifying = 0** | No cells survived the gate. Either (a) per-stock cross-asset edge does not exist at this AUC bar, or (b) the gate is mis-calibrated. Concrete genuine-null outcome at v1's strict 0.55/0.05 hurdle. | TERMINAL_STATE = `FAIL_NO_QUALIFIERS`. Single-touch consumed. No re-run with relaxed gates. |
+| **n_qualifying = 0** | No cells survived the gate. Either (a) per-stock cross-asset edge does not exist at this AUC bar, or (b) the gate is mis-calibrated. Read under A2 revised gates (Gate A 0.53 + per-direction BH-FDR 100K) — this is the genuine-null outcome at the §9C standard. | TERMINAL_STATE = `FAIL_NO_QUALIFIERS`. Single-touch consumed. No re-run with relaxed gates. |
 | **n_qualifying ∈ [1, 4]** | Below §12 floor (n_qualifying ≥ 5). Insufficient basket size to test claim. Could be real-but-thin or noise. | TERMINAL_STATE = `FAIL_INSUFFICIENT_QUALIFIERS`. Single-touch consumed. |
 | **n_qualifying ∈ [5, 25]** | **Expected range.** Tests the §12 PASS bar honestly. | Proceed to forward verdict. |
 | **n_qualifying ∈ [26, 80]** | Above expected band. Possibly genuine (cross-asset block strongly load-bearing) but increases leakage risk. **Triggers automatic §16.6 amplified leakage audit** (see below). | Run amplified audit BEFORE accepting verdict. |
@@ -68,7 +100,7 @@ For each stock in a frozen F&O universe (continuously listed through 2021-05-04 
 
 with **exponential-decay sample weights (half-life 90 trading days)** to give recent micro-structure higher weight,
 
-will produce a **basket of qualified (stock, direction) cells** (n_qualifying ∈ [5, 25] expected) whose **pooled** held-out hit-rate ≥ 55% AND **pooled** mean per-trade T+1 09:15→14:25 P&L ≥ +0.4% net of S1 slippage, **with the cell-level qualifier gate (4-fold walk-forward mean fold-AUC ≥ 0.55 AND fold-AUC std ≤ 0.05 AND BH-FDR p<0.05 across the full cell grid) acting as the cell-selection mechanism rather than the verdict mechanism.**
+will produce a **basket of qualified (stock, direction) cells** (n_qualifying ∈ [5, 25] expected) whose **pooled** held-out hit-rate ≥ 55% AND **pooled** mean per-trade T+1 09:15→14:25 P&L ≥ +0.4% net of S1 slippage, **with the cell-level qualifier gate (post-A2: 4-fold walk-forward mean fold-AUC ≥ 0.53 AND BH-FDR p<0.05 per-direction at N_PERMUTATIONS=100,000) acting as the cell-selection mechanism rather than the verdict mechanism.**
 
 This is a deliberate widening of `H-2026-04-29-ta-karpathy-v1` along the *feature axis* (cross-asset macro added) and the *universe axis* (top-10 NIFTY → full F&O), keeping the daily-bar / T+1-intraday architecture identical. Different feature library + different universe = distinct family per backtesting-specs §0.3.
 

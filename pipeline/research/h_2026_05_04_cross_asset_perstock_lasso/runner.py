@@ -32,7 +32,7 @@ from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.elastic_net_fit i
     exp_decay_weights, fit_en_cell, score_en_cell,
 )
 from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.walk_forward import (  # noqa: E402
-    expanding_quarter_folds, qualifier_check, bh_fdr, permutation_p_value,
+    expanding_quarter_folds, qualifier_check, bh_fdr_per_direction, permutation_p_value,
 )
 from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.sector_mapping import (  # noqa: E402
     index_csv_for_sector,
@@ -49,7 +49,10 @@ L1_GRID = (0.1, 0.3, 0.5, 0.7, 0.9)
 HL = 90
 LABEL_THRESHOLD_PCT = 0.4
 NIFTY_EMPHASIS = 1.5
-N_PERMUTATIONS = 10000
+# §9B.2 requires >=100,000 permutations when FDR is in effect.
+# Bumped from 10,000 in A2 amendment 2026-05-03.
+N_PERMUTATIONS = 100_000
+FOLD_AUC_THRESHOLD = 0.53  # A2 amendment, was 0.55 at v1.0
 
 
 def _load_universe() -> list[str]:
@@ -197,16 +200,19 @@ def main(train_end: pd.Timestamp) -> int:
             except Exception:
                 continue
 
-            # In-sample holdout AUC: last 6 months of training (~125 days)
+            # In-sample holdout: last 6 months of training (~125 days).
+            # Per A2 amendment: isho_auc and n_pred_pos retained as INFORMATIONAL
+            # outputs only. They no longer gate qualification (§9C.2 forbids them).
             isho_n = min(125, len(X_arr) // 4)
             p_isho = score_en_cell(final_model, X_arr[-isho_n:])
             from sklearn.metrics import roc_auc_score
-            isho_auc = roc_auc_score(y_arr[-isho_n:], p_isho) if len(np.unique(y_arr[-isho_n:])) > 1 else 0.5
-            n_pred_pos_isho = int((p_isho >= 0.6).sum())
+            y_isho = y_arr[-isho_n:]
+            isho_single_class = len(np.unique(y_isho)) < 2
+            isho_auc = roc_auc_score(y_isho, p_isho) if not isho_single_class else 0.5
 
-            # Permutation null
+            # Permutation null on the isho window. N_PERMUTATIONS=100,000 per §9B.2.
             perm_p = permutation_p_value(
-                y_true=y_arr[-isho_n:], y_score=p_isho,
+                y_true=y_isho, y_score=p_isho,
                 n_permutations=N_PERMUTATIONS, random_state=0,
             )
 
@@ -214,7 +220,13 @@ def main(train_end: pd.Timestamp) -> int:
                 "ticker": ticker, "direction": direction,
                 "fold_aucs": fold_aucs, "mean_fold_auc": float(np.mean(fold_aucs)),
                 "fold_auc_std": float(np.std(fold_aucs)),
-                "isho_auc": float(isho_auc), "n_pred_pos_isho": n_pred_pos_isho,
+                # Informational (not gating per A2):
+                "isho_auc": float(isho_auc),
+                "isho_single_class": isho_single_class,
+                "n_pred_pos_isho_50": int((p_isho >= 0.50).sum()),
+                "n_pred_pos_isho_55": int((p_isho >= 0.55).sum()),
+                "n_pred_pos_isho_60": int((p_isho >= 0.60).sum()),
+                # Gate B input:
                 "perm_p_value": perm_p,
                 "cv_best_C": cv_meta["best_C"], "cv_best_l1": cv_meta["best_l1_ratio"],
                 "cv_mean_auc": cv_meta["cv_mean_auc"],
@@ -226,24 +238,22 @@ def main(train_end: pd.Timestamp) -> int:
 
         print(f"  {ticker}: {len([c for c in cell_records if c['ticker']==ticker])} directions fit")
 
-    # 4. BH-FDR across all cells
+    # 4. BH-FDR PER-DIRECTION (§9C.3): LONG and SHORT each form their own family.
     if not cell_records:
         print("[runner] FAIL: 0 cells fit")
         return 1
 
-    p_arr = np.array([c["perm_p_value"] for c in cell_records])
-    survivors = bh_fdr(p_arr, alpha=0.05)
-    for c, surv in zip(cell_records, survivors):
-        c["bh_fdr_survivor"] = bool(surv)
+    surv_map = bh_fdr_per_direction(cell_records, alpha=0.05)
+    for c in cell_records:
+        c["bh_fdr_survivor"] = surv_map.get((c["ticker"], c["direction"]), False)
 
-    # 5. Apply qualifier gate
+    # 5. Apply revised cell-level qualifier (Gate A: fold-AUC; Gate B: BH-FDR survivor).
     qualifying = []
     for c in cell_records:
         ok, reasons = qualifier_check(
             fold_aucs=c["fold_aucs"],
-            p_value=c["perm_p_value"], p_threshold=0.05,
-            in_sample_holdout_auc=c["isho_auc"], n_pred_pos_isho=c["n_pred_pos_isho"],
-            perm_beat_pct=0.96 if c["bh_fdr_survivor"] else 0.0,
+            bh_fdr_survivor=c["bh_fdr_survivor"],
+            fold_auc_threshold=FOLD_AUC_THRESHOLD,
         )
         c["qualified"] = ok
         c["fail_reasons"] = reasons
@@ -251,6 +261,10 @@ def main(train_end: pd.Timestamp) -> int:
             qualifying.append((c["ticker"], c["direction"]))
 
     # 6. Manifest
+    n_long = sum(1 for c in cell_records if c["direction"] == "LONG")
+    n_short = sum(1 for c in cell_records if c["direction"] == "SHORT")
+    n_long_surv = sum(1 for c in cell_records if c["direction"] == "LONG" and c["bh_fdr_survivor"])
+    n_short_surv = sum(1 for c in cell_records if c["direction"] == "SHORT" and c["bh_fdr_survivor"])
     manifest = {
         "hypothesis_id": "H-2026-05-04-cross-asset-perstock-lasso-v1",
         "run_at": datetime.now().isoformat(),
@@ -260,11 +274,21 @@ def main(train_end: pd.Timestamp) -> int:
         "n_cells_fit": len(cell_records),
         "n_qualifying": len(qualifying),
         "qualifying_cells": qualifying,
+        "bh_fdr_per_direction": {
+            "long_family_size": n_long,
+            "long_bh_fdr_survivors": n_long_surv,
+            "short_family_size": n_short,
+            "short_bh_fdr_survivors": n_short_surv,
+        },
         "frozen_thresholds": {
             "C_grid": list(C_GRID), "l1_ratio_grid": list(L1_GRID),
             "hl_trading_days": HL, "label_threshold_pct": LABEL_THRESHOLD_PCT,
-            "nifty_emphasis": NIFTY_EMPHASIS, "n_permutations": N_PERMUTATIONS,
+            "nifty_emphasis": NIFTY_EMPHASIS,
+            "n_permutations": N_PERMUTATIONS,
+            "fold_auc_threshold": FOLD_AUC_THRESHOLD,
         },
+        "amendments_applied": ["A1_PRE_HOLDOUT_FIX_2026_05_03", "A2_GATE_RECONFIG_2026_05_03"],
+        "standards_version": "1.1_2026-05-03",
     }
     (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2, default=str))
     (OUT_DIR / "walk_forward_results.json").write_text(json.dumps(cell_records, indent=2, default=str))

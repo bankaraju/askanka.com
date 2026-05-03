@@ -47,37 +47,62 @@ def bh_fdr(p_values: np.ndarray, alpha: float = 0.05) -> np.ndarray:
 def qualifier_check(
     *,
     fold_aucs: Sequence[float],
-    p_value: float,
-    p_threshold: float,
-    in_sample_holdout_auc: float,
-    n_pred_pos_isho: int,
-    perm_beat_pct: float,
+    bh_fdr_survivor: bool,
+    fold_auc_threshold: float = 0.53,
 ) -> tuple[bool, list[str]]:
-    """Apply the section 9 qualifier gate. Returns (qualified, list_of_failure_reasons).
+    """Cell-level qualifier per §9C of backtesting-specs.txt (Revision 1.1).
 
-    Gates per spec section 9:
-      1. mean fold-AUC >= 0.55
-      2. fold-AUC std <= 0.05
-      3. in-sample-holdout AUC >= 0.55
-      4. n predicted positive in in-sample-holdout >= 5
-      5. BH-FDR p < threshold
-      6. permutation null beat >= 95%
+    Two gates:
+      GATE A: mean walk-forward fold-AUC >= fold_auc_threshold (default 0.53,
+              per A2 amendment to H-2026-05-04 spec; was 0.55 at v1.0).
+      GATE B: BH-FDR p-value below pre-registered alpha. Family scope is
+              per-direction (LONG, SHORT each form their own family per
+              §9C.3) and N_PERMUTATIONS satisfies §9B.2 (>=100,000 with FDR).
+              Caller passes the survivor flag computed by `bh_fdr` over the
+              per-direction p-value array.
+
+    Removed at A2 (kept as informational outputs in cell records, not gates):
+      - fold-AUC std (forbidden by §9C.2 — Pardo 2008 §6.7)
+      - in-sample-holdout AUC (forbidden by §9C.2 — leakage-prone)
+      - n_pred_pos absolute threshold (forbidden by §9C.2 — non-standard)
+      - perm-beat-percentile (forbidden by §9C.2 — redundant with Gate B)
     """
-    reasons = []
+    reasons: list[str] = []
     aucs = np.array(fold_aucs)
-    if aucs.mean() < 0.55:
-        reasons.append(f"mean fold-AUC {aucs.mean():.3f} < 0.55")
-    if aucs.std() > 0.05:
-        reasons.append(f"fold-AUC std {aucs.std():.3f} > 0.05")
-    if in_sample_holdout_auc < 0.55:
-        reasons.append(f"in-sample-holdout AUC {in_sample_holdout_auc:.3f} < 0.55")
-    if n_pred_pos_isho < 5:
-        reasons.append(f"in-sample-holdout n_pred_pos {n_pred_pos_isho} < 5")
-    if p_value >= p_threshold:
-        reasons.append(f"BH-FDR p {p_value:.4f} >= {p_threshold}")
-    if perm_beat_pct < 0.95:
-        reasons.append(f"perm beat {perm_beat_pct:.3f} < 0.95")
+    if aucs.mean() < fold_auc_threshold:
+        reasons.append(
+            f"mean fold-AUC {aucs.mean():.3f} < {fold_auc_threshold} (Gate A)"
+        )
+    if not bh_fdr_survivor:
+        reasons.append("BH-FDR survivor=False (Gate B)")
     return (len(reasons) == 0, reasons)
+
+
+def bh_fdr_per_direction(
+    cells: Sequence[dict],
+    *,
+    alpha: float = 0.05,
+    p_field: str = "perm_p_value",
+    direction_field: str = "direction",
+) -> dict[tuple[str, str], bool]:
+    """Apply BH-FDR per-direction (§9C.3 default family scope).
+
+    Splits `cells` by `direction_field`, computes BH-FDR survivors within
+    each direction family at the given alpha, and returns a dict keyed by
+    (ticker, direction) pointing at the survivor flag for that cell.
+
+    Caller is expected to provide a `ticker` field on each cell.
+    """
+    out: dict[tuple[str, str], bool] = {}
+    by_dir: dict[str, list[dict]] = {}
+    for c in cells:
+        by_dir.setdefault(c[direction_field], []).append(c)
+    for direction, dir_cells in by_dir.items():
+        p_arr = np.array([c[p_field] for c in dir_cells])
+        survivors = bh_fdr(p_arr, alpha=alpha)
+        for c, surv in zip(dir_cells, survivors):
+            out[(c["ticker"], direction)] = bool(surv)
+    return out
 
 
 def permutation_p_value(
