@@ -31,8 +31,14 @@ from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.elastic_net_fit i
 from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.runner import (  # noqa: E402
     _load_bars, NIFTY_EMPHASIS,
 )
+from pipeline.research.h_2026_05_04_cross_asset_perstock_lasso.sector_mapping import (  # noqa: E402
+    index_csv_for_sector,
+    load_sectoral_index_close,
+)
+from pipeline.scorecard_v2.sector_mapper import SectorMapper  # noqa: E402
 
 OUT_DIR = REPO / "pipeline" / "research" / "h_2026_05_04_cross_asset_perstock_lasso"
+SECTORAL_DIR = REPO / "pipeline" / "data" / "sectoral_indices"
 
 
 def main() -> int:
@@ -53,19 +59,19 @@ def main() -> int:
     nifty_close = panel["nifty_close"]
     india_vix = panel["india_vix"]
 
+    sector_map = SectorMapper().map_all()
     predictions = []
     for ticker, direction in qualifying:
         bars = _load_bars(ticker)
         if bars is None or len(bars) < 100:
             continue
-        try:
-            from pipeline.sector_mapper import map_one
-            sector_name = map_one(ticker)
-            sector_path = REPO / "pipeline" / "data" / "sectoral_indices" / f"{sector_name}.csv"
-            sector_df = pd.read_csv(sector_path, parse_dates=["Date"]).set_index("Date").sort_index()
-            sector_ret_5d = sector_df["Close"].pct_change(5)
-        except Exception:
+        info = sector_map.get(ticker)
+        sector_key = info.get("sector") if info else None
+        sector_path = index_csv_for_sector(sector_key, SECTORAL_DIR)
+        if sector_path is None or not sector_path.exists():
             continue
+        sector_close = load_sectoral_index_close(sector_path)
+        sector_ret_5d = sector_close.pct_change(5)
 
         X_pre = build_full_feature_matrix(
             bars=bars, etf_returns_1d=etf_1d,
