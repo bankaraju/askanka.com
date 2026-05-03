@@ -178,6 +178,25 @@ def build_prompt(question: dict, index_block: str, sources: dict[str, str]) -> s
     )
 
 
+def normalize_whitespace(text: str) -> str:
+    """Collapse all whitespace runs to a single space. Used for substring matching
+    where Gemma may re-wrap line breaks inside a quote that's still verbatim by
+    word sequence."""
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def verify_quote_in_source(quote_text: str, sources: dict[str, str]) -> tuple[bool, str | None]:
+    """Return (verified, path) — verified=True iff quote_text is a substring of
+    any source after whitespace normalization. Returns the matching source path."""
+    norm_quote = normalize_whitespace(quote_text)
+    if not norm_quote:
+        return False, None
+    for path, content in sources.items():
+        if norm_quote in normalize_whitespace(content):
+            return True, path
+    return False, None
+
+
 def call_ollama(model: str, prompt: str, num_predict: int = 1000, timeout_s: int = 3600) -> dict:
     req = urllib.request.Request(
         OLLAMA_URL,
@@ -236,12 +255,22 @@ def run_one(question: dict, topic_to_sources: dict[str, list[str]],
     quotes = extract_quotes(answer)
     n_quotes_loose = len(extract_quotes_loose(answer))
 
+    quotes_verified = []
+    for q in quotes:
+        verified, matched_path = verify_quote_in_source(q["text"], sources)
+        quotes_verified.append({**q, "verified": verified, "matched_in": matched_path})
+    n_quotes_verified = sum(1 for q in quotes_verified if q["verified"])
+    any_quote_unverified = any(not q["verified"] for q in quotes_verified) if quotes_verified else False
+
     record = {
         "id": qid, "tier": question["tier"], "topic": question["topic"],
         "index_heading": index_heading, "source_paths": source_paths,
         "q": question["q"], "answer_text": answer,
         "citations": cites, "quotes": quotes,
+        "quotes_verified": quotes_verified,
         "n_quotes": len(quotes), "n_quotes_loose": n_quotes_loose,
+        "n_quotes_verified": n_quotes_verified,
+        "any_quote_unverified": any_quote_unverified,
         "latency_seconds": round(latency, 1),
         "ollama_status": status,
         "prompt_chars": prompt_chars,
@@ -255,7 +284,8 @@ def run_one(question: dict, topic_to_sources: dict[str, list[str]],
     }
     out_path.write_text(json.dumps(record, indent=2))
     print(f"[{qid}] done in {latency:.0f}s, "
-          f"{len(cites)} citations, {len(quotes)} strict / {n_quotes_loose} loose quotes, "
+          f"{len(cites)} citations, {len(quotes)} strict ({n_quotes_verified} verified) "
+          f"/ {n_quotes_loose} loose quotes, "
           f"in={record['prompt_eval_count']}tok out={record['eval_count']}tok", flush=True)
     return record
 

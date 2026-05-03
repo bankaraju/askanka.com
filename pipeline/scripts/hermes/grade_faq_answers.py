@@ -95,6 +95,16 @@ def score_record(record: dict, scored: dict) -> dict:
         citation_override = 0
         cite = 0
 
+    halluc_override = None
+    notes = scored.get("notes", "")
+    quotes_verified = record.get("quotes_verified") or []
+    unverified = [q for q in quotes_verified if not q.get("verified", True)]
+    if unverified:
+        halluc_override = "substring_unverified"
+        halluc = 0
+        sample = unverified[0].get("text", "")[:80].replace("|", " ")
+        notes = f"VERIFIER: {len(unverified)}/{len(quotes_verified)} strict quote(s) not in loaded source — e.g. \"{sample}…\". " + notes
+
     score = cite + faith + comp + halluc
     return {
         "id": record["id"], "tier": record["tier"],
@@ -103,7 +113,8 @@ def score_record(record: dict, scored: dict) -> dict:
         "score": score, "max": 6,
         "pass": score >= 5 and halluc == 1,
         "citation_override": citation_override,
-        "notes": scored.get("notes", ""),
+        "halluc_override": halluc_override,
+        "notes": notes,
     }
 
 
